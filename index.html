@@ -34,11 +34,12 @@
 
 <link href="https://fonts.googleapis.com" rel="preconnect">
 <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
 
 <link href="common.css" rel="stylesheet">
 <link href="index.css?v=2" rel="stylesheet">
-<link href="article.css" rel="stylesheet">
 
 <script>
   window.ExcelLab = window.ExcelLab || {};
@@ -2310,5 +2311,4 @@
 
 </body>
 </html>
-
 

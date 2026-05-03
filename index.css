@@ -524,7 +524,11 @@
   font-size: 0.85em;
   font-weight: 700;
   cursor: pointer;
-  transition: all var(--transition);
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition),
+    background var(--transition),
+    color var(--transition);
   color: #fff;
   text-decoration: none;
   letter-spacing: 0.01em;
@@ -784,7 +788,10 @@
   color: #999;
   cursor: pointer;
   border-bottom: 3px solid transparent;
-  transition: all 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
   white-space: nowrap;
   line-height: 1.4;
 }
@@ -1194,6 +1201,53 @@ body > section.main-content .hero-contact .hero-copy-kicker {
   .ranking-tabs {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ===================================================
+   Mobile performance tuning
+   =================================================== */
+@supports (content-visibility: auto) {
+  @media (max-width: 768px) {
+    .quick-route,
+    .starter-guide,
+    .pickup-section,
+    .home-card.ranking-card,
+    .faq-section,
+    .tab-panel.active .level-legend,
+    .tab-panel.active .category-desc,
+    .tab-panel.active .article-list {
+      content-visibility: auto;
+      contain-intrinsic-size: 1px 720px;
+    }
+
+    .tab-panel.active .article-list {
+      contain-intrinsic-size: 1px 900px;
+    }
+
+    .quick-route,
+    .starter-guide {
+      contain-intrinsic-size: 1px 620px;
+    }
+  }
+}
+
+@media (max-width: 768px), (hover: none) {
+  .hero-copy-kicker,
+  .hero-copy-tag,
+  body > section.main-content .hero-contact .contact-chip {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .new-badge {
+    animation: none;
+  }
+
+  .quick-route-card:hover,
+  .pickup-card:hover,
+  .hero-cta-btn:hover {
+    transform: none;
   }
 }
 
