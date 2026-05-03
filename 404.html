@@ -121,7 +121,13 @@
 <main id="main-content">
 <div class="error-page">
 <div class="category-hero" style="max-width: 600px; margin-bottom: 30px;">
-<img alt="404 Error: ページが見つかりません" decoding="async" loading="lazy" src="image/hero_404.png" width="2752" height="1536">
+<picture>
+<source media="(max-width: 600px)" type="image/avif" srcset="image/hero_404-480.avif 480w, image/hero_404-768.avif 768w" sizes="100vw">
+<source type="image/avif" srcset="image/hero_404-768.avif 768w, image/hero_404-1024.avif 1024w" sizes="600px">
+<source media="(max-width: 600px)" type="image/webp" srcset="image/hero_404-480.webp 480w, image/hero_404-768.webp 768w" sizes="100vw">
+<source type="image/webp" srcset="image/hero_404-768.webp 768w, image/hero_404-1024.webp 1024w" sizes="600px">
+<img alt="404 Error: ページが見つかりません" decoding="async" loading="lazy" src="image/hero_404.png" width="1024" height="572">
+</picture>
 </div>
 <div class="error-code">404</div>
 <h1 class="error-title">ページが見つかりません</h1>

@@ -98,6 +98,26 @@
     return isBackForward || sameOriginReferrer;
   }
 
+  function loadDeferredPanelMedia(panel) {
+    if (!panel) return;
+    panel.querySelectorAll('source[data-srcset]').forEach(function (source) {
+      if (!source.getAttribute('srcset')) {
+        source.setAttribute('srcset', source.getAttribute('data-srcset'));
+      }
+    });
+    panel.querySelectorAll('img[data-src]').forEach(function (img) {
+      if (!img.getAttribute('data-loaded-src')) {
+        img.setAttribute('src', img.getAttribute('data-src'));
+        img.setAttribute('data-loaded-src', 'true');
+      }
+    });
+    panel.querySelectorAll('video[data-poster]').forEach(function (video) {
+      if (!video.getAttribute('poster')) {
+        video.setAttribute('poster', video.getAttribute('data-poster'));
+      }
+    });
+  }
+
   function activateTab(targetId, options) {
     options = options || {};
     var shouldScroll = options.scroll !== false;
@@ -125,6 +145,7 @@
     targetButton.setAttribute('aria-selected', 'true');
     targetButton.setAttribute('tabindex', '0');
     targetPanel.classList.add('active');
+    loadDeferredPanelMedia(targetPanel);
 
     if (updateHash && history.pushState) {
       history.pushState(null, '', '#' + targetId);

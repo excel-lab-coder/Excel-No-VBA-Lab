@@ -3553,3 +3553,163 @@ video::cue {
     table-layout: auto !important;
   }
 }
+
+/* ===================================================
+   Mobile formula readability fix
+   =================================================== */
+@media (max-width: 600px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .article-body,
+  .article-body *,
+  .main-content,
+  .article-layout {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .article-body .formula-box,
+  .article-body .code-block,
+  .article-body .code-readonly,
+  .formula-copy-list,
+  .formula-copy-row,
+  .formula-copy-code {
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .article-body .formula-box,
+  .article-body .code-block,
+  .article-body .code-readonly {
+    padding: 14px;
+    margin: 16px 0 22px;
+    overflow-x: visible !important;
+    overflow-y: visible;
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    border-radius: 8px;
+    font-size: 0.84rem;
+    line-height: 1.7;
+  }
+
+  .article-body .formula-box code,
+  .article-body .formula-copy-code,
+  .article-body .code-block code,
+  .article-body .code-readonly code,
+  .article-body .code-block .code-line,
+  .article-body .code-readonly .code-line,
+  .article-body .code-block span,
+  .article-body .code-readonly span,
+  .article-body code {
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    line-break: anywhere !important;
+  }
+
+  .article-body .formula-box code,
+  .article-body .code-block code,
+  .article-body .code-readonly code {
+    display: block;
+    width: 100%;
+    font-size: 0.84rem;
+    line-height: 1.7;
+  }
+
+  .article-body .code-block .code-line,
+  .article-body .code-readonly .code-line {
+    display: block;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+
+  .article-body .formula-box .copy-btn,
+  .article-body .code-block .copy-btn,
+  .article-body .code-readonly .copy-btn {
+    position: static !important;
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 0 10px auto;
+    padding: 5px 12px;
+    font-size: 0.75rem;
+    line-height: 1.3;
+  }
+
+  .formula-copy-list {
+    overflow-x: visible;
+  }
+
+  .formula-copy-row {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .formula-copy-label {
+    border-right: none;
+    border-bottom: 1px solid #cfd8dc;
+    padding: 9px 11px;
+    font-size: 0.8rem;
+  }
+
+  .formula-copy-code {
+    display: block;
+    padding: 12px;
+    overflow-x: visible;
+    font-size: 0.82rem;
+    line-height: 1.7;
+  }
+
+  .formula-copy-btn {
+    border-left: none;
+    border-top: 1px solid #cfd8dc;
+    padding: 10px;
+    font-size: 0.82rem;
+  }
+
+  .article-body p code,
+  .article-body li code {
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    font-size: 0.88em;
+  }
+
+  .article-body .code-block.code-scroll,
+  .article-body .code-readonly.code-scroll,
+  .article-body .code-block-large,
+  .article-body .m-code-block {
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    white-space: pre !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .article-body .code-block.code-scroll code,
+  .article-body .code-readonly.code-scroll code,
+  .article-body .code-block.code-scroll .code-line,
+  .article-body .code-readonly.code-scroll .code-line,
+  .article-body .code-block.code-scroll span,
+  .article-body .code-readonly.code-scroll span,
+  .article-body .code-block-large code,
+  .article-body .code-block-large .code-line,
+  .article-body .code-block-large span,
+  .article-body .m-code-block code,
+  .article-body .m-code-block .code-line,
+  .article-body .m-code-block span {
+    width: max-content !important;
+    min-width: 100% !important;
+    white-space: pre !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    line-break: auto !important;
+  }
+}

@@ -4,126 +4,858 @@
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<meta content="QRコードの代わりに、VBAからUI Automation (UIA) を使用して、他アプリやWebシステムへ直接自動入力を行う手法を解説します。" name="description">
-<meta content="VBA, UI Automation, UIA, 自動入力, RPA代替" name="keywords">
-<meta content="UIA（UI Automation）で他アプリへ自動入力｜Excel &times; No VBA Lab" property="og:title">
-<meta content="QRコードの代わりに、VBAからUI Automation (UIA) を使用して、他アプリやWebシステムへ直接自動入力を行う手法を解説します。" property="og:description">
+<meta content="VBAからUI Automation (UIA) を使用して、Edge上のHTMLフォームへ3名分のデータをゆっくり自動入力する手法を解説します。" name="description">
+<meta content="VBA, UI Automation, UIA, 自動入力, RPA代替, Edge自動入力, Chrome自動入力" name="keywords">
+<meta content="UIA（UI Automation）で他アプリ・Webフォームへ自動入力｜Excel &times; No VBA Lab" property="og:title">
+<meta content="VBAからUI Automation (UIA) を使用して、Edge上のHTMLフォームへ3名分のデータをゆっくり自動入力する手法を解説します。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_uia_automation.html" rel="canonical">
-<title>UIA（UI Automation）で他アプリへ自動入力｜Excel &times; No VBA Lab</title>
+<title>UIA（UI Automation）で他アプリ・Webフォームへ自動入力｜Excel &times; No VBA Lab</title>
 <link href="https://fonts.googleapis.com" rel="preconnect">
 <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <link href="../common.css" rel="stylesheet">
 <link href="../article.css" rel="stylesheet">
 
-
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"UIA（UI Automation）で他アプリへ自動入力 \u0026horbar; Selenium不要のRPA代替","description":"QRコードの代わりに、VBAからUI Automation (UIA) を使用して、他アプリやWebシステムへ直接自動入力を行う手法を解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_uia_automation.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"UIA（UI Automation）で他アプリ・Webフォームへ自動入力 — Selenium不要のRPA代替","description":"VBAからUI Automation (UIA) を使用して、Edge上のHTMLフォームへ3名分のデータをゆっくり自動入力する手法を解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_uia_automation.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
 </head>
+
 <body>
 <!-- スキップリンク -->
 <a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
-<header class="site-header"><div class="header-inner"><div class="header-brand">
-<div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
-</div></div></header>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
 
 <main class="main-content article-layout" id="main-content">
-<div class="breadcrumb"><a href="../index.html">ホーム</a><span>&rsaquo;</span><a href="../unlocked/index.html">制限解除ラボ</a><span>&rsaquo;</span><strong>UIA（UI Automation）連携</strong></div>
+<div class="breadcrumb">
+  <a href="../index.html">ホーム</a>
+  <span>&rsaquo;</span>
+  <a href="../unlocked/index.html">制限解除ラボ</a>
+  <span>&rsaquo;</span>
+  <strong>UIA（UI Automation）連携</strong>
+</div>
+
 <article class="article-body">
 <div class="article-header">
-<div class="article-meta"><span class="badge badge-all">VBA OK</span><span class="article-date">更新日: 2026-04-24</span></div>
-<h1 class="article-title">UIA（UI Automation）で他アプリへ自動入力 &horbar; Selenium不要のRPA代替</h1>
+  <div class="article-meta">
+    <span class="badge badge-all">VBA OK</span>
+    <span class="article-date">更新日: 2026-04-24</span>
+  </div>
+  <h1 class="article-title">UIA（UI Automation）で他アプリ・Webフォームへ自動入力 &horbar; Selenium不要のRPA代替</h1>
 </div>
+
 <div class="vba-box">
 <strong>💡 本編（VBAなし）との位置づけ</strong>
-<p>VBA禁止の完全閉域環境での代替手法は &rarr; <a href="../qr/01_qr_barcode_control.html">QR Automation Lab 記事①</a> およびQRシリーズ全編を参照してください。VBAが使えるなら、QRのような物理的なエミュレーションではなく、OSネイティブのAPIで確実な制御が可能です。</p>
+<p>VBA禁止の完全閉域環境での代替手法は &rarr; <a href="../qr/01_qr_barcode_control.html">QR Automation Lab 記事①</a> およびQRシリーズ全編を参照してください。VBAが使えるなら、QRのような物理的なエミュレーションではなく、Windows標準のAPIで他アプリやWebフォームを直接制御できます。</p>
 </div>
+
 <section>
 <h2>1. なぜ「UI Automation」なのか？</h2>
-<p>Internet Explorerの廃止に伴い、VBAから直接DOMを操作する「IE制御」は過去のものとなりました。現在Webスクレイピングや自動操作といえば「SeleniumBasic」が有名ですが、これには<strong>「ChromeDriverのバージョン管理」「環境構築（インストール）」が必要</strong>という、実務運用上の大きなハードルがあります。</p>
-<p>そこで最強の選択肢となるのが、Windows OSに標準搭載されているアクセシビリティAPI<strong>「UI Automation (UIA)」</strong>です。インストール不要で、EdgeやChromeなどのモダンブラウザだけでなく、デスクトップアプリ（ERPや会計ソフト等）のボタンやテキストボックスまでVBAから直接制御できます。</p>
-</section>
-<section>
-<h2>2. 準備：UIAutomationClientの参照設定と「Inspect.exe」</h2>
-<p>VBAからUIAを扱うためには、まずVBE（Visual Basic Editor）のメニューから <code>ツール ＞ 参照設定</code> を開き、<strong>「UIAutomationClient」</strong>にチェックを入れます。</p>
-<p>さらに、操作したい画面の要素（ボタンの名前やID）を特定するために、Windows SDKに含まれるツール<strong>「Inspect.exe」</strong>や、オープンソースの<strong>「Accessibility Insights」</strong>を使用します。これを使って、クリックしたいボタンの <code>AutomationId</code> や <code>Name</code> プロパティを調べます。</p>
-</section>
-<section>
-<h2>3. 実践コード：Windows電卓を自動操作する</h2>
-<p>UIAの基本を理解するために、Windows標準の「電卓」アプリをVBAから起動し、「1 + 2 =」を自動でクリックするサンプルコードです。Webブラウザの操作も基本原理は同じです。</p>
-<div class="code-readonly">
-<span class="code-line">Sub UIA_Calculator_Automation()</span>
-<span class="code-line">    Dim uia As New CUIAutomation</span>
-<span class="code-line">    Dim root As IUIAutomationElement</span>
-<span class="code-line">    Dim cond As IUIAutomationCondition</span>
-<span class="code-line">    Dim calcWindow As IUIAutomationElement</span>
-<span class="code-line"> </span>
-<span class="code-line">    ' 1. 電卓を起動して少し待つ</span>
-<span class="code-line">    Call Shell("calc.exe", vbNormalFocus)</span>
-<span class="code-line">    Application.Wait Now + TimeValue("00:00:02")</span>
-<span class="code-line"> </span>
-<span class="code-line">    ' 2. デスクトップ全体（ルート要素）を取得</span>
-<span class="code-line">    Set root = uia.GetRootElement</span>
-<span class="code-line"> </span>
-<span class="code-line">    ' 3. 電卓ウィンドウを Name プロパティで検索</span>
-<span class="code-line">    Set cond = uia.CreatePropertyCondition(UIA_NamePropertyId, "電卓")</span>
-<span class="code-line">    Set calcWindow = root.FindFirst(TreeScope_Children, cond)</span>
-<span class="code-line"> </span>
-<span class="code-line">    If calcWindow Is Nothing Then</span>
-<span class="code-line">        MsgBox "電卓が見つかりません", vbExclamation</span>
-<span class="code-line">        Exit Sub</span>
-<span class="code-line">    End If</span>
-<span class="code-line"> </span>
-<span class="code-line">    ' 4. 操作用のローカル関数でボタンを順番にクリック</span>
-<span class="code-line">    ClickButton calcWindow, uia, "num1Button"</span>
-<span class="code-line">    ClickButton calcWindow, uia, "plusButton"</span>
-<span class="code-line">    ClickButton calcWindow, uia, "num2Button"</span>
-<span class="code-line">    ClickButton calcWindow, uia, "equalButton"</span>
-<span class="code-line"> </span>
-<span class="code-line">    MsgBox "UIAによる自動操作が完了しました。", vbInformation</span>
-<span class="code-line">End Sub</span>
-<span class="code-line"></span>
-<span class="code-line">' --- ボタンをクリックするためのヘルパー関数 ---</span>
-<span class="code-line">Private Sub ClickButton(parent As IUIAutomationElement, uia As CUIAutomation, autoId As String)</span>
-<span class="code-line">    Dim cond As IUIAutomationCondition</span>
-<span class="code-line">    Dim btn As IUIAutomationElement</span>
-<span class="code-line">    Dim invPattern As IUIAutomationInvokePattern</span>
-<span class="code-line"> </span>
-<span class="code-line">    ' AutomationIdで要素を検索</span>
-<span class="code-line">    Set cond = uia.CreatePropertyCondition(UIA_AutomationIdPropertyId, autoId)</span>
-<span class="code-line">    Set btn = parent.FindFirst(TreeScope_Subtree, cond)</span>
-<span class="code-line"> </span>
-<span class="code-line">    If Not btn Is Nothing Then</span>
-<span class="code-line">        ' Invokeパターン（クリック動作）を取得して実行</span>
-<span class="code-line">        Set invPattern = btn.GetCurrentPattern(UIA_InvokePatternId)</span>
-<span class="code-line">        If Not invPattern Is Nothing Then</span>
-<span class="code-line">            invPattern.Invoke</span>
-<span class="code-line">        End If</span>
-<span class="code-line">    End If</span>
-<span class="code-line">End Sub</span>
+
+<p>Internet Explorerの廃止に伴い、VBAから直接DOMを操作する「IE制御」は過去のものとなりました。現在、Webスクレイピングや自動操作といえば「SeleniumBasic」やWebDriver系のツールが有名ですが、これには<strong>「ブラウザドライバのバージョン管理」「環境構築」「社内PCへの導入許可」</strong>といった実務上のハードルがあります。</p>
+
+<p>そこで選択肢になるのが、Windowsに標準搭載されているアクセシビリティAPI<strong>「UI Automation（UIA）」</strong>です。UIAは、画面上のボタン、入力欄、一覧、チェックボックスなどを「UI要素」として取得し、VBAから入力・クリックなどの操作を行う仕組みです。</p>
+
+<p>UIAは、EdgeやChromeなどのモダンブラウザだけでなく、ERP、会計ソフト、受注システム、社内向けのWindowsアプリなどにも応用できます。</p>
+
+<div class="tip-box">
+<strong>この記事の方針：</strong> 電卓のボタン操作ではなく、実務に近い<strong>「HTMLフォームへExcel VBAから自動入力する例」</strong>で説明します。さらに、通常のUIA操作は一瞬で終わってしまうため、この記事では3名分のデータをあえてゆっくり入力し、読者が動きを目で追えるデモにしています。
 </div>
 </section>
+
 <section>
-<h2>4. Webブラウザ（Edge / Chrome）への応用</h2>
-<p>Webブラウザ内のフォームに入力する場合も、<code>UIA_ValuePatternId</code> を取得して <code>SetValue</code> メソッドで文字を流し込み、ボタンを <code>Invoke</code> するだけです。Seleniumのようなバージョン不整合に悩まされることなく、社内システムへの完全な自動入力を実現できます。</p>
-<div class="tip-box">
-<strong>実務でのポイント：</strong> UIAは「画面に描画されている要素」を操作するAPIです。ブラウザのスクロールに隠れている要素は取得できないことがあるため、必要に応じてTabキー（SendKeys）と組み合わせるなどの工夫が実務では効果的です。
-        </div>
+<h2>2. このサンプルで体感できること</h2>
+
+<p>この記事のサンプルコードを実行すると、以下の処理がすべて自動で行われます。</p>
+
+<ol class="philosophy-list">
+<li>VBAが一時フォルダにテスト用HTMLフォームを自動生成する</li>
+<li>EdgeでそのHTMLフォームを開く</li>
+<li>UI Automationでブラウザ画面を探す</li>
+<li>社員番号、氏名、金額、備考の入力欄を探す</li>
+<li>3名分のデータを1項目ずつ、ゆっくり自動入力する</li>
+<li>1名分ごとに登録ボタンをクリックする</li>
+<li>画面下部に登録履歴を追記表示する</li>
+</ol>
+
+<p>つまり、読者はHTMLファイルを別途作る必要がありません。Excel VBAの標準モジュールにコードを貼り付け、マクロを実行するだけで、UIAによる自動入力を体感できます。</p>
+
+<div class="vba-box">
+<strong>このコードの特徴</strong>
+<ul>
+<li><code>UIAutomationClient</code> の参照設定を使います。</li>
+<li><code>CreateObject("UIAutomationClient.CUIAutomation")</code> は使いません。</li>
+<li><code>ADODB.Stream</code> も使いません。</li>
+<li>HTMLファイルはVBA側で自動生成します。</li>
+<li>入力が速すぎて見えない問題を避けるため、入力ごとに短い待機を入れています。</li>
+</ul>
+</div>
 </section>
+
 <section>
-<h2>5. UIAの実務での落とし穴と対策</h2>
-<p>UIAは強力ですが、以下の点に注意が必要です：</p>
+<h2>3. 事前準備</h2>
+
+<p>このサンプルでは、VBAからUI Automationを使うために、最初に1回だけ参照設定を行います。</p>
+
+<ol class="philosophy-list">
+<li>Excelを開く</li>
+<li><code>Alt + F11</code> でVBE（Visual Basic Editor）を開く</li>
+<li><code>ツール ＞ 参照設定</code> を開く</li>
+<li><strong>UIAutomationClient</strong> にチェックを入れる</li>
+<li><code>挿入 ＞ 標準モジュール</code> を選択する</li>
+<li>この記事のコードをそのまま貼り付ける</li>
+<li><code>UIA_体感デモ_3名分_ゆっくり入力</code> を実行する</li>
+</ol>
+
+<div class="tip-box">
+<strong>補足：</strong> UIAオブジェクトは <code>Set uia = New CUIAutomation</code> で作成します。環境によっては <code>CreateObject("UIAutomationClient.CUIAutomation")</code> が429エラーになるため、この記事では参照設定を前提にした安定寄りのコードにしています。
+</div>
+</section>
+
+<section>
+<h2>4. 貼り付けるだけで動く全部入りコード</h2>
+
+<p>以下のコードを、Excel VBAの標準モジュールにそのまま貼り付けてください。貼り付け後、<code>UIA_体感デモ_3名分_ゆっくり入力</code> を実行します。</p>
+
+<div class="code-readonly">
+<pre><code>Option Explicit
+
+' ============================================================
+' UI Automation 体感デモ 3名分 ゆっくり入力版
+'
+' 前提:
+'   VBEの「ツール」→「参照設定」で
+'   「UIAutomationClient」にチェックを入れてください。
+'
+' このコードの目的:
+'   ・VBAがHTMLフォームを自動生成する
+'   ・EdgeでHTMLを開く
+'   ・UI Automationで入力欄を探す
+'   ・3名分のデータをゆっくり入力する
+'   ・登録ボタンを押して履歴を表示する
+'
+' 注意:
+'   ・CreateObject("UIAutomationClient.CUIAutomation") は使いません。
+'   ・ADODB.Stream も使いません。
+' ============================================================
+
+Private Const SCOPE_CHILDREN As Long = 2
+Private Const SCOPE_SUBTREE As Long = 7
+
+Private Const UIA_NAME_PROPERTY_ID As Long = 30005
+Private Const UIA_CONTROL_TYPE_PROPERTY_ID As Long = 30003
+
+Private Const UIA_INVOKE_PATTERN_ID As Long = 10000
+Private Const UIA_VALUE_PATTERN_ID As Long = 10002
+
+Private Const UIA_BUTTON_CONTROL_TYPE_ID As Long = 50000
+Private Const UIA_EDIT_CONTROL_TYPE_ID As Long = 50004
+
+
+Public Sub UIA_体感デモ_3名分_ゆっくり入力()
+
+    Dim uia As CUIAutomation
+    Dim root As IUIAutomationElement
+    Dim browserWindow As IUIAutomationElement
+    Dim htmlPath As String
+    Dim url As String
+
+    Dim data(1 To 3, 1 To 4) As String
+    Dim i As Long
+
+    On Error GoTo ErrHandler
+
+    ' 1. デモ用データ 3名分
+    data(1, 1) = "A001"
+    data(1, 2) = "山田太郎"
+    data(1, 3) = "12500"
+    data(1, 4) = "1人目：UIAで自動入力しています。"
+
+    data(2, 1) = "A002"
+    data(2, 2) = "佐藤花子"
+    data(2, 3) = "23800"
+    data(2, 4) = "2人目：同じフォームに連続入力しています。"
+
+    data(3, 1) = "A003"
+    data(3, 2) = "鈴木一郎"
+    data(3, 3) = "9800"
+    data(3, 4) = "3人目：登録ボタンまで自動で押します。"
+
+    ' 2. UI Automation オブジェクトを作成
+    Set uia = New CUIAutomation
+
+    ' 3. 一時フォルダにHTMLファイルを自動作成
+    htmlPath = Environ$("TEMP") &amp; "\uia_test_form_from_vba.html"
+    CreateSampleHtmlFile htmlPath
+
+    ' 4. file URLに変換
+    url = "file:///" &amp; Replace(htmlPath, "\", "/")
+
+    ' 5. Edgeで開く
+    OpenUrlWithEdge url
+
+    ' 6. ブラウザ起動待ち
+    Application.Wait Now + TimeValue("00:00:03")
+
+    ' 7. デスクトップ全体を取得
+    Set root = uia.GetRootElement
+
+    ' 8. ブラウザウィンドウを探す
+    Set browserWindow = WaitWindowByName(uia, root, "UIA入力練習フォーム", 15)
+
+    If browserWindow Is Nothing Then
+        MsgBox "ブラウザ画面が見つかりませんでした。" &amp; vbCrLf &amp; _
+               "HTMLは作成されています。" &amp; vbCrLf &amp; vbCrLf &amp; _
+               htmlPath, vbExclamation
+        Exit Sub
+    End If
+
+    ' 9. 3名分をゆっくり入力して登録
+    For i = 1 To 3
+
+        Application.StatusBar = i &amp; "人目を入力中..."
+
+        ' 前回入力値を消す
+        SetValueByName uia, browserWindow, "社員番号", ""
+        SetValueByName uia, browserWindow, "氏名", ""
+        SetValueByName uia, browserWindow, "金額", ""
+        SetValueByName uia, browserWindow, "備考", ""
+        DemoPause 0.5
+
+        ' 社員番号
+        SetValueByName uia, browserWindow, "社員番号", data(i, 1)
+        DemoPause 0.8
+
+        ' 氏名
+        SetValueByName uia, browserWindow, "氏名", data(i, 2)
+        DemoPause 0.8
+
+        ' 金額
+        SetValueByName uia, browserWindow, "金額", data(i, 3)
+        DemoPause 0.8
+
+        ' 備考
+        SetValueByName uia, browserWindow, "備考", data(i, 4)
+        DemoPause 0.8
+
+        ' 登録ボタン
+        InvokeButtonByName uia, browserWindow, "登録"
+        DemoPause 1.5
+
+    Next i
+
+    Application.StatusBar = False
+
+    MsgBox "3名分のデモ入力が完了しました。" &amp; vbCrLf &amp; vbCrLf &amp; _
+           "VBAでHTMLを作成し、Edgeを開き、UIAで自動入力しました。" &amp; vbCrLf &amp; vbCrLf &amp; _
+           "作成されたHTML:" &amp; vbCrLf &amp; htmlPath, vbInformation
+
+    Exit Sub
+
+ErrHandler:
+    Application.StatusBar = False
+
+    MsgBox "エラーが発生しました。" &amp; vbCrLf &amp; _
+           "番号: " &amp; Err.Number &amp; vbCrLf &amp; _
+           "内容: " &amp; Err.Description, vbCritical
+
+End Sub
+
+
+' ============================================================
+' テスト用HTMLを作成
+' ADODB.Streamは使わず、通常のファイル出力で保存
+' ============================================================
+Private Sub CreateSampleHtmlFile(ByVal filePath As String)
+
+    Dim html As String
+
+    html = ""
+    html = html &amp; "&lt;!DOCTYPE html&gt;" &amp; vbCrLf
+    html = html &amp; "&lt;html lang=""ja""&gt;" &amp; vbCrLf
+    html = html &amp; "&lt;head&gt;" &amp; vbCrLf
+    html = html &amp; "&lt;meta charset=""shift_jis""&gt;" &amp; vbCrLf
+    html = html &amp; "&lt;title&gt;UIA入力練習フォーム&lt;/title&gt;" &amp; vbCrLf
+
+    html = html &amp; "&lt;style&gt;" &amp; vbCrLf
+    html = html &amp; "body {" &amp; vbCrLf
+    html = html &amp; "    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;" &amp; vbCrLf
+    html = html &amp; "    max-width: 760px;" &amp; vbCrLf
+    html = html &amp; "    margin: 40px auto;" &amp; vbCrLf
+    html = html &amp; "    line-height: 1.8;" &amp; vbCrLf
+    html = html &amp; "    background: #f6f8fb;" &amp; vbCrLf
+    html = html &amp; "    color: #222;" &amp; vbCrLf
+    html = html &amp; "}" &amp; vbCrLf
+
+    html = html &amp; ".card {" &amp; vbCrLf
+    html = html &amp; "    background: #fff;" &amp; vbCrLf
+    html = html &amp; "    border-radius: 14px;" &amp; vbCrLf
+    html = html &amp; "    padding: 28px;" &amp; vbCrLf
+    html = html &amp; "    box-shadow: 0 8px 24px rgba(0,0,0,0.08);" &amp; vbCrLf
+    html = html &amp; "}" &amp; vbCrLf
+
+    html = html &amp; "h1 {" &amp; vbCrLf
+    html = html &amp; "    margin-top: 0;" &amp; vbCrLf
+    html = html &amp; "    font-size: 26px;" &amp; vbCrLf
+    html = html &amp; "}" &amp; vbCrLf
+
+    html = html &amp; ".desc {" &amp; vbCrLf
+    html = html &amp; "    background: #eef5ff;" &amp; vbCrLf
+    html = html &amp; "    border-left: 5px solid #4285f4;" &amp; vbCrLf
+    html = html &amp; "    padding: 12px 16px;" &amp; vbCrLf
+    html = html &amp; "    margin-bottom: 22px;" &amp; vbCrLf
+    html = html &amp; "}" &amp; vbCrLf
+
+    html = html &amp; "label {" &amp; vbCrLf
+    html = html &amp; "    display: block;" &amp; vbCrLf
+    html = html &amp; "    margin-top: 16px;" &amp; vbCrLf
+    html = html &amp; "    font-weight: bold;" &amp; vbCrLf
+    html = html &amp; "}" &amp; vbCrLf
+
+    html = html &amp; "input, textarea, button {" &amp; vbCrLf
+    html = html &amp; "    width: 100%;" &amp; vbCrLf
+    html = html &amp; "    padding: 11px 12px;" &amp; vbCrLf
+    html = html &amp; "    font-size: 16px;" &amp; vbCrLf
+    html = html &amp; "    box-sizing: border-box;" &amp; vbCrLf
+    html = html &amp; "    border-radius: 8px;" &amp; vbCrLf
+    html = html &amp; "    border: 1px solid #ccd3dd;" &amp; vbCrLf
+    html = html &amp; "}" &amp; vbCrLf
+
+    html = html &amp; "textarea {" &amp; vbCrLf
+    html = html &amp; "    min-height: 88px;" &amp; vbCrLf
+    html = html &amp; "}" &amp; vbCrLf
+
+    html = html &amp; "button {" &amp; vbCrLf
+    html = html &amp; "    margin-top: 24px;" &amp; vbCrLf
+    html = html &amp; "    cursor: pointer;" &amp; vbCrLf
+    html = html &amp; "    background: #2563eb;" &amp; vbCrLf
+    html = html &amp; "    color: #fff;" &amp; vbCrLf
+    html = html &amp; "    border: none;" &amp; vbCrLf
+    html = html &amp; "    font-weight: bold;" &amp; vbCrLf
+    html = html &amp; "}" &amp; vbCrLf
+
+    html = html &amp; "button:hover {" &amp; vbCrLf
+    html = html &amp; "    background: #1d4ed8;" &amp; vbCrLf
+    html = html &amp; "}" &amp; vbCrLf
+
+    html = html &amp; "#result {" &amp; vbCrLf
+    html = html &amp; "    margin-top: 24px;" &amp; vbCrLf
+    html = html &amp; "    padding: 14px;" &amp; vbCrLf
+    html = html &amp; "    background: #f3f6fa;" &amp; vbCrLf
+    html = html &amp; "    border-left: 5px solid #999;" &amp; vbCrLf
+    html = html &amp; "    white-space: pre-wrap;" &amp; vbCrLf
+    html = html &amp; "}" &amp; vbCrLf
+
+    html = html &amp; "#result.done {" &amp; vbCrLf
+    html = html &amp; "    background: #ecfdf3;" &amp; vbCrLf
+    html = html &amp; "    border-left-color: #22c55e;" &amp; vbCrLf
+    html = html &amp; "}" &amp; vbCrLf
+
+    html = html &amp; "&lt;/style&gt;" &amp; vbCrLf
+    html = html &amp; "&lt;/head&gt;" &amp; vbCrLf
+
+    html = html &amp; "&lt;body&gt;" &amp; vbCrLf
+    html = html &amp; "&lt;div class=""card""&gt;" &amp; vbCrLf
+    html = html &amp; "&lt;h1&gt;UIA入力練習フォーム&lt;/h1&gt;" &amp; vbCrLf
+
+    html = html &amp; "&lt;div class=""desc""&gt;" &amp; vbCrLf
+    html = html &amp; "この画面はVBAが自動生成したHTMLです。&lt;br&gt;" &amp; vbCrLf
+    html = html &amp; "Excel VBAからUI Automationで、3名分のデータがゆっくり入力されます。" &amp; vbCrLf
+    html = html &amp; "&lt;/div&gt;" &amp; vbCrLf
+
+    html = html &amp; "&lt;form&gt;" &amp; vbCrLf
+
+    html = html &amp; "    &lt;label for=""empCode""&gt;社員番号&lt;/label&gt;" &amp; vbCrLf
+    html = html &amp; "    &lt;input id=""empCode"" type=""text"" aria-label=""社員番号"" placeholder=""ここに社員番号が入ります""&gt;" &amp; vbCrLf
+
+    html = html &amp; "    &lt;label for=""empName""&gt;氏名&lt;/label&gt;" &amp; vbCrLf
+    html = html &amp; "    &lt;input id=""empName"" type=""text"" aria-label=""氏名"" placeholder=""ここに氏名が入ります""&gt;" &amp; vbCrLf
+
+    html = html &amp; "    &lt;label for=""amount""&gt;金額&lt;/label&gt;" &amp; vbCrLf
+    html = html &amp; "    &lt;input id=""amount"" type=""text"" aria-label=""金額"" placeholder=""ここに金額が入ります""&gt;" &amp; vbCrLf
+
+    html = html &amp; "    &lt;label for=""memo""&gt;備考&lt;/label&gt;" &amp; vbCrLf
+    html = html &amp; "    &lt;textarea id=""memo"" aria-label=""備考"" placeholder=""ここに備考が入ります""&gt;&lt;/textarea&gt;" &amp; vbCrLf
+
+    html = html &amp; "    &lt;button id=""registerButton"" type=""button"" aria-label=""登録"" onclick=""registerData();""&gt;登録&lt;/button&gt;" &amp; vbCrLf
+
+    html = html &amp; "&lt;/form&gt;" &amp; vbCrLf
+
+    html = html &amp; "&lt;div id=""result""&gt;未登録&lt;/div&gt;" &amp; vbCrLf
+    html = html &amp; "&lt;/div&gt;" &amp; vbCrLf
+
+    html = html &amp; "&lt;script&gt;" &amp; vbCrLf
+    html = html &amp; "var registerCount = 0;" &amp; vbCrLf
+    html = html &amp; "" &amp; vbCrLf
+    html = html &amp; "function registerData() {" &amp; vbCrLf
+    html = html &amp; "    registerCount++;" &amp; vbCrLf
+    html = html &amp; "    var empCode = document.getElementById('empCode').value;" &amp; vbCrLf
+    html = html &amp; "    var empName = document.getElementById('empName').value;" &amp; vbCrLf
+    html = html &amp; "    var amount = document.getElementById('amount').value;" &amp; vbCrLf
+    html = html &amp; "    var memo = document.getElementById('memo').value;" &amp; vbCrLf
+    html = html &amp; "    var result = document.getElementById('result');" &amp; vbCrLf
+    html = html &amp; "    result.className = 'done';" &amp; vbCrLf
+    html = html &amp; "" &amp; vbCrLf
+    html = html &amp; "    var line =" &amp; vbCrLf
+    html = html &amp; "        '【' + registerCount + '人目 登録完了】' + '\n' +" &amp; vbCrLf
+    html = html &amp; "        '社員番号: ' + empCode + '\n' +" &amp; vbCrLf
+    html = html &amp; "        '氏名: ' + empName + '\n' +" &amp; vbCrLf
+    html = html &amp; "        '金額: ' + amount + '\n' +" &amp; vbCrLf
+    html = html &amp; "        '備考: ' + memo + '\n' +" &amp; vbCrLf
+    html = html &amp; "        '-----------------------------\n';" &amp; vbCrLf
+    html = html &amp; "" &amp; vbCrLf
+    html = html &amp; "    if (result.textContent === '未登録') {" &amp; vbCrLf
+    html = html &amp; "        result.textContent = line;" &amp; vbCrLf
+    html = html &amp; "    } else {" &amp; vbCrLf
+    html = html &amp; "        result.textContent = result.textContent + '\n' + line;" &amp; vbCrLf
+    html = html &amp; "    }" &amp; vbCrLf
+    html = html &amp; "}" &amp; vbCrLf
+    html = html &amp; "&lt;/script&gt;" &amp; vbCrLf
+
+    html = html &amp; "&lt;/body&gt;" &amp; vbCrLf
+    html = html &amp; "&lt;/html&gt;" &amp; vbCrLf
+
+    WriteTextFile filePath, html
+
+End Sub
+
+
+' ============================================================
+' テキストファイルを書き出す
+' ============================================================
+Private Sub WriteTextFile(ByVal filePath As String, ByVal text As String)
+
+    Dim ff As Integer
+
+    ff = FreeFile
+
+    Open filePath For Output As #ff
+    Print #ff, text
+    Close #ff
+
+End Sub
+
+
+' ============================================================
+' EdgeでURLを開く
+' ============================================================
+Private Sub OpenUrlWithEdge(ByVal url As String)
+
+    On Error GoTo Fallback
+
+    Shell "msedge.exe --new-window """ &amp; url &amp; """", vbNormalFocus
+    Exit Sub
+
+Fallback:
+    Err.Clear
+
+    ' Edgeが見つからない場合は既定ブラウザで開く
+    Shell "cmd /c start """" """ &amp; url &amp; """", vbNormalFocus
+
+End Sub
+
+
+' ============================================================
+' タイトルに指定文字を含むウィンドウを待って取得
+' ============================================================
+Private Function WaitWindowByName( _
+    ByVal uia As CUIAutomation, _
+    ByVal root As IUIAutomationElement, _
+    ByVal keyword As String, _
+    ByVal timeoutSeconds As Long) As IUIAutomationElement
+
+    Dim startTime As Single
+    Dim windows As IUIAutomationElementArray
+    Dim cond As IUIAutomationCondition
+    Dim elm As IUIAutomationElement
+    Dim i As Long
+    Dim nameValue As String
+
+    startTime = Timer
+
+    Do While Timer - startTime &lt; timeoutSeconds
+
+        Set cond = uia.CreateTrueCondition
+        Set windows = root.FindAll(SCOPE_CHILDREN, cond)
+
+        For i = 0 To windows.Length - 1
+
+            Set elm = windows.GetElement(i)
+
+            On Error Resume Next
+            nameValue = elm.CurrentName
+            On Error GoTo 0
+
+            If InStr(1, nameValue, keyword, vbTextCompare) &gt; 0 Then
+                Set WaitWindowByName = elm
+                Exit Function
+            End If
+
+        Next i
+
+        DoEvents
+        Application.Wait Now + TimeValue("00:00:01")
+
+    Loop
+
+End Function
+
+
+' ============================================================
+' Name + ControlType で要素を探す
+' ============================================================
+Private Function FindElementByNameAndControlType( _
+    ByVal uia As CUIAutomation, _
+    ByVal parent As IUIAutomationElement, _
+    ByVal elementName As String, _
+    ByVal controlTypeId As Long) As IUIAutomationElement
+
+    Dim condName As IUIAutomationCondition
+    Dim condType As IUIAutomationCondition
+    Dim condAnd As IUIAutomationCondition
+
+    Set condName = uia.CreatePropertyCondition(UIA_NAME_PROPERTY_ID, elementName)
+    Set condType = uia.CreatePropertyCondition(UIA_CONTROL_TYPE_PROPERTY_ID, controlTypeId)
+    Set condAnd = uia.CreateAndCondition(condName, condType)
+
+    Set FindElementByNameAndControlType = parent.FindFirst(SCOPE_SUBTREE, condAnd)
+
+End Function
+
+
+' ============================================================
+' 入力欄へ値を入れる
+' ============================================================
+Private Sub SetValueByName( _
+    ByVal uia As CUIAutomation, _
+    ByVal parent As IUIAutomationElement, _
+    ByVal elementName As String, _
+    ByVal inputValue As String)
+
+    Dim elm As IUIAutomationElement
+    Dim valuePattern As IUIAutomationValuePattern
+
+    Set elm = FindElementByNameAndControlType( _
+                uia, _
+                parent, _
+                elementName, _
+                UIA_EDIT_CONTROL_TYPE_ID)
+
+    If elm Is Nothing Then
+        MsgBox "入力欄が見つかりません: " &amp; elementName, vbExclamation
+        Exit Sub
+    End If
+
+    On Error Resume Next
+    Set valuePattern = elm.GetCurrentPattern(UIA_VALUE_PATTERN_ID)
+
+    If Not valuePattern Is Nothing Then
+        valuePattern.SetValue inputValue
+    End If
+
+    If Err.Number &lt;&gt; 0 Or valuePattern Is Nothing Then
+        Err.Clear
+
+        ' ValuePatternが使えない場合の予備動作
+        elm.SetFocus
+        Application.Wait Now + TimeValue("00:00:01")
+        SendKeys "^a", True
+        SendKeys inputValue, True
+    End If
+
+    On Error GoTo 0
+
+End Sub
+
+
+' ============================================================
+' ボタンをクリックする
+' ============================================================
+Private Sub InvokeButtonByName( _
+    ByVal uia As CUIAutomation, _
+    ByVal parent As IUIAutomationElement, _
+    ByVal elementName As String)
+
+    Dim elm As IUIAutomationElement
+    Dim invokePattern As IUIAutomationInvokePattern
+
+    Set elm = FindElementByNameAndControlType( _
+                uia, _
+                parent, _
+                elementName, _
+                UIA_BUTTON_CONTROL_TYPE_ID)
+
+    If elm Is Nothing Then
+        MsgBox "ボタンが見つかりません: " &amp; elementName, vbExclamation
+        Exit Sub
+    End If
+
+    On Error Resume Next
+    Set invokePattern = elm.GetCurrentPattern(UIA_INVOKE_PATTERN_ID)
+
+    If Not invokePattern Is Nothing Then
+        invokePattern.Invoke
+    End If
+
+    If Err.Number &lt;&gt; 0 Or invokePattern Is Nothing Then
+        Err.Clear
+
+        ' InvokePatternが使えない場合の予備動作
+        elm.SetFocus
+        Application.Wait Now + TimeValue("00:00:01")
+        SendKeys "{ENTER}", True
+    End If
+
+    On Error GoTo 0
+
+End Sub
+
+
+' ============================================================
+' デモ用の短い待機
+'
+' Application.Waitは1秒単位になりやすいため、
+' Timer + DoEvents で小数秒の待機にする
+' ============================================================
+Private Sub DemoPause(Optional ByVal seconds As Double = 0.7)
+
+    Dim startTime As Double
+
+    startTime = Timer
+
+    Do While Timer - startTime &lt; seconds
+        DoEvents
+    Loop
+
+End Sub</code></pre>
+</div>
+</section>
+
+<section>
+<h2>5. 実行すると何が起きるのか？</h2>
+
+<p>このマクロを実行すると、VBAが一時フォルダにHTMLフォームを作成し、Edgeで開きます。その後、UI Automationを使って画面上の入力欄を探し、3名分のデータを順番に入力します。</p>
+
+<p>今回のデモでは、あえて入力ごとに短い待機を入れています。通常のUIA操作は非常に高速なため、待機を入れないと一瞬で完了してしまい、読者が何が起きたのか分かりにくくなるためです。</p>
+
+<p>中心となる処理は以下です。</p>
+
+<div class="code-readonly">
+<pre><code>For i = 1 To 3
+
+    SetValueByName uia, browserWindow, "社員番号", data(i, 1)
+    DemoPause 0.8
+
+    SetValueByName uia, browserWindow, "氏名", data(i, 2)
+    DemoPause 0.8
+
+    SetValueByName uia, browserWindow, "金額", data(i, 3)
+    DemoPause 0.8
+
+    SetValueByName uia, browserWindow, "備考", data(i, 4)
+    DemoPause 0.8
+
+    InvokeButtonByName uia, browserWindow, "登録"
+    DemoPause 1.5
+
+Next i</code></pre>
+</div>
+
+<p>この部分を見ると、VBA側のデータをWebフォームの各項目に入れ、登録ボタンを押す流れが分かります。</p>
+
+<div class="table-responsive">
+<table class="vba-compare-table">
+<thead>
+<tr>
+<th>VBAコード内の名前</th>
+<th>画面上の項目</th>
+<th>実行内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"社員番号"</code></td>
+<td>社員番号入力欄</td>
+<td><code>A001</code>、<code>A002</code>、<code>A003</code> を順番に入力</td>
+</tr>
+<tr>
+<td><code>"氏名"</code></td>
+<td>氏名入力欄</td>
+<td><code>山田太郎</code>、<code>佐藤花子</code>、<code>鈴木一郎</code> を入力</td>
+</tr>
+<tr>
+<td><code>"金額"</code></td>
+<td>金額入力欄</td>
+<td><code>12500</code>、<code>23800</code>、<code>9800</code> を入力</td>
+</tr>
+<tr>
+<td><code>"備考"</code></td>
+<td>備考欄</td>
+<td>各人ごとの説明文を入力</td>
+</tr>
+<tr>
+<td><code>"登録"</code></td>
+<td>登録ボタン</td>
+<td>1名分ごとにクリック</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>電卓の <code>num1Button</code> や <code>plusButton</code> のような内部IDではなく、画面に見える項目名とVBAコードが対応しているため、UIAの動きが理解しやすくなります。</p>
+</section>
+
+<section>
+<h2>6. HTML側とVBA側の対応関係</h2>
+
+<p>このサンプルでは、VBAが生成するHTMLの入力欄に <code>aria-label</code> を付けています。</p>
+
+<p>例えば、社員番号欄は内部的に次のようなHTMLとして作成されています。</p>
+
+<div class="code-readonly">
+<pre><code>&lt;input id="empCode" type="text" aria-label="社員番号"&gt;</code></pre>
+</div>
+
+<p>この <code>aria-label="社員番号"</code> が、EdgeやChromeのUIAツリー上では <code>Name</code> として取得されます。そのため、VBA側では次の条件で探せます。</p>
+
+<div class="code-readonly">
+<pre><code>Set condName = uia.CreatePropertyCondition(UIA_NAME_PROPERTY_ID, "社員番号")</code></pre>
+</div>
+
+<p>ただし、同じ名前のラベルや要素が画面上に存在する可能性があるため、このコードでは <code>Name</code> だけでなく <code>ControlType</code> も組み合わせています。</p>
+
+<div class="code-readonly">
+<pre><code>Set condName = uia.CreatePropertyCondition(UIA_NAME_PROPERTY_ID, elementName)
+Set condType = uia.CreatePropertyCondition(UIA_CONTROL_TYPE_PROPERTY_ID, controlTypeId)
+Set condAnd = uia.CreateAndCondition(condName, condType)</code></pre>
+</div>
+
+<p>これにより、例えば「社員番号という名前を持つ入力欄」だけを探すことができます。</p>
+</section>
+
+<section>
+<h2>7. UIAで使っている2つの操作パターン</h2>
+
+<p>UI Automationでは、画面上の要素を操作するために「パターン」と呼ばれる仕組みを使います。このサンプルで使っている主なパターンは2つです。</p>
+
+<h3>7-1. ValuePattern</h3>
+
+<p><code>ValuePattern</code> は、テキストボックスなど「値を持つ要素」に対して使います。</p>
+
+<div class="code-readonly">
+<pre><code>Set valuePattern = elm.GetCurrentPattern(UIA_VALUE_PATTERN_ID)
+valuePattern.SetValue inputValue</code></pre>
+</div>
+
+<p>この処理によって、社員番号欄や氏名欄へ文字列を直接セットしています。</p>
+
+<h3>7-2. InvokePattern</h3>
+
+<p><code>InvokePattern</code> は、ボタンなど「実行できる要素」に対して使います。</p>
+
+<div class="code-readonly">
+<pre><code>Set invokePattern = elm.GetCurrentPattern(UIA_INVOKE_PATTERN_ID)
+invokePattern.Invoke</code></pre>
+</div>
+
+<p>この処理によって、登録ボタンをクリックしています。</p>
+
+<div class="tip-box">
+<strong>予備動作も入れている理由：</strong> ブラウザや対象アプリによっては、<code>ValuePattern</code> や <code>InvokePattern</code> が期待どおり取得できない場合があります。そのため、このサンプルでは予備動作として <code>SetFocus</code> と <code>SendKeys</code> も入れています。実務では対象アプリごとに最も安定する方法を選びます。
+</div>
+</section>
+
+<section>
+<h2>8. 待機時間を調整する</h2>
+
+<p>デモの速度は、コード内の <code>DemoPause</code> の秒数で調整できます。</p>
+
+<div class="code-readonly">
+<pre><code>DemoPause 0.8</code></pre>
+</div>
+
+<p>もっとゆっくり見せたい場合は、例えば以下のようにします。</p>
+
+<div class="code-readonly">
+<pre><code>DemoPause 1.2</code></pre>
+</div>
+
+<p>逆に、実務処理として高速に動かしたい場合は、<code>DemoPause</code> の行を削除するか、待機時間を短くします。</p>
+
+<div class="tip-box">
+<strong>実務では高速化、説明では低速化：</strong> 実務処理では速い方が便利ですが、記事や教育用デモでは速すぎると理解しづらくなります。そのため、この記事ではあえて低速化しています。
+</div>
+</section>
+
+<section>
+<h2>9. 実務Webシステムへの応用</h2>
+
+<p>このサンプルはローカルHTMLを自動生成して試していますが、考え方は社内Webシステムでも同じです。</p>
+
+<ol class="philosophy-list">
+<li>対象画面をEdgeまたはChromeで開く</li>
+<li>Inspect.exe や Accessibility Insights で入力欄やボタンの情報を調べる</li>
+<li><code>Name</code>、<code>AutomationId</code>、<code>ControlType</code> などで要素を探す</li>
+<li>入力欄には <code>ValuePattern.SetValue</code> を使う</li>
+<li>ボタンには <code>InvokePattern.Invoke</code> を使う</li>
+<li>複数件のデータをループで入力する</li>
+<li>画面遷移後は、要素が出るまで再試行する</li>
+</ol>
+
+<p>実務Webシステムでは、HTML側に分かりやすい <code>aria-label</code> や <code>id</code> が付いていない場合もあります。その場合は、<code>Name</code>、<code>AutomationId</code>、<code>ControlType</code>、<code>ClassName</code> などを組み合わせて対象を絞り込みます。</p>
+
+<h3>9-1. AutomationIdで探す場合</h3>
+
+<p>対象要素に安定した <code>AutomationId</code> がある場合は、<code>Name</code> ではなく <code>AutomationId</code> で探した方が安定することがあります。</p>
+
+<div class="code-readonly">
+<pre><code>Set cond = uia.CreatePropertyCondition(UIA_AutomationIdPropertyId, "empCode")</code></pre>
+</div>
+
+<p>ただし、Webアプリでは <code>AutomationId</code> が取得できない場合や、画面更新のたびに変わる場合もあります。その場合は <code>Name</code> や <code>ControlType</code> と組み合わせます。</p>
+
+<h3>9-2. 複数条件で探す場合</h3>
+
+<p>同じ名前の要素が複数ある場合は、条件を組み合わせます。この記事のサンプルでも、以下のように <code>Name</code> と <code>ControlType</code> を組み合わせています。</p>
+
+<div class="code-readonly">
+<pre><code>Set condName = uia.CreatePropertyCondition(UIA_NAME_PROPERTY_ID, "社員番号")
+Set condType = uia.CreatePropertyCondition(UIA_CONTROL_TYPE_PROPERTY_ID, UIA_EDIT_CONTROL_TYPE_ID)
+
+Set condAnd = uia.CreateAndCondition(condName, condType)
+
+Set elm = parent.FindFirst(SCOPE_SUBTREE, condAnd)</code></pre>
+</div>
+</section>
+
+<section>
+<h2>10. UIAの実務での落とし穴と対策</h2>
+
+<p>UIAは強力ですが、実務では以下の点に注意が必要です。</p>
+
 <ul class="philosophy-list">
-<li><strong>タイミング問題：</strong>画面遷移後にすぐ要素を取得しようとすると <code>Nothing</code> が返る場合があります。<code>Application.Wait</code> や再試行ループを必ず実装してください。</li>
-<li><strong>要素の特定が困難：</strong>Webアプリの場合、AutmationIdがなく Name も動的に変わるケースがあります。PropertyCondition を複数組み合わせた <code>CreateAndCondition</code> で絞り込みましょう。</li>
-<li><strong>管理者権限の壁：</strong>管理者権限で起動しているアプリケーションの要素は、通常権限のExcel VBAからはアクセスできません。同じ権限レベルで実行する必要があります。</li>
-<li><strong>仮想デスクトップ：</strong>Citrixなどの仮想デスクトップ環境では、UIAが正しく動作しないことがあります。その場合はQR Automation Labの手法が代替手段になります。</li>
+<li><strong>タイミング問題：</strong>画面遷移後にすぐ要素を取得しようとすると <code>Nothing</code> が返る場合があります。<code>Application.Wait</code> だけに頼らず、要素が見つかるまで再試行する処理を入れると安定します。</li>
+<li><strong>要素の特定が困難：</strong>Webアプリの場合、<code>AutomationId</code> がなく、<code>Name</code> も動的に変わるケースがあります。その場合は <code>CreateAndCondition</code> で複数条件を組み合わせます。</li>
+<li><strong>同じNameの要素が複数ある：</strong>例えば「検索」というボタンが複数ある画面では、親要素を絞ってからボタンを探す、または <code>ControlType</code> を併用します。</li>
+<li><strong>スクロール外の要素：</strong>UIAは画面に描画されている要素を取得するAPIです。スクロール外や仮想化された一覧の中にある要素は、取得できない場合があります。</li>
+<li><strong>管理者権限の壁：</strong>管理者権限で起動しているアプリケーションの要素は、通常権限のExcel VBAからアクセスできない場合があります。Excelと操作対象アプリを同じ権限レベルで実行する必要があります。</li>
+<li><strong>仮想デスクトップ：</strong>CitrixやVDI環境では、UIAが期待通りに動作しない場合があります。その場合はQR Automation Labのような、USB-HID型QRリーダーを使った物理入力方式が代替手段になります。</li>
+<li><strong>セキュリティ：</strong>パスワードや個人情報を自動入力する場合は、社内規程、ログ、誤送信対策、承認フローを必ず確認してください。</li>
 </ul>
 </section>
+
 <section>
-<h2>6. QR Automation Lab vs UIA &horbar; 環境で選ぶ自動入力手法</h2>
+<h2>11. QR Automation Lab vs UIA &horbar; 環境で選ぶ自動入力手法</h2>
+
 <div class="table-responsive">
 <table class="vba-compare-table">
 <thead>
@@ -145,35 +877,63 @@
 <td>VBA実行が許可されている必要あり</td>
 </tr>
 <tr>
+<td>対象</td>
+<td>入力欄にカーソルを置ける画面全般</td>
+<td>UIAで要素取得できるアプリ・Web画面</td>
+</tr>
+<tr>
 <td>速度</td>
-<td>QR読取1件=1-3秒</td>
-<td>プログラム実行=高速</td>
+<td>QR読取1件=1〜3秒程度</td>
+<td>プログラム実行のため高速</td>
+</tr>
+<tr>
+<td>安定性</td>
+<td>画面構造に依存しにくい</td>
+<td>Name / AutomationId / 画面構造に依存</td>
 </tr>
 <tr>
 <td>仮想デスクトップ</td>
-<td>ハードウェアなので問題なし ✅</td>
-<td>Citrix等で制限あり</td>
+<td>ハードウェア入力なので比較的強い ✅</td>
+<td>Citrix等で制限される場合あり</td>
 </tr>
 <tr>
 <td>推奨環境</td>
 <td><strong>完全閉域・ソフト全面禁止</strong></td>
-<td><strong>VBA許可・ローカルPC</strong></td>
+<td><strong>VBA許可・ローカルPC・UIA取得可能な画面</strong></td>
 </tr>
 </tbody>
 </table>
 </div>
+
 <p>両方の手法を理解しておけば、環境に応じて最適な自動入力手法を選べます。</p>
 </section>
+
 <section>
-<h2>7. 関連記事</h2>
+<h2>12. 公式リファレンス</h2>
+
+<p>UIAを実務で利用する場合は、以下のMicrosoft公式情報も確認しておくと理解が深まります。</p>
+
+<ul class="related-articles">
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-controlpatternsoverview" rel="noopener" target="_blank">Microsoft Learn: UI Automation Control Patterns Overview</a></li>
+<li><a href="https://learn.microsoft.com/en-us/windows/win32/api/uiautomationclient/nf-uiautomationclient-iuiautomationvaluepattern-setvalue" rel="noopener" target="_blank">Microsoft Learn: IUIAutomationValuePattern::SetValue</a></li>
+<li><a href="https://learn.microsoft.com/en-us/dotnet/api/system.windows.automation.invokepattern" rel="noopener" target="_blank">Microsoft Learn: InvokePattern</a></li>
+<li><a href="https://accessibilityinsights.io/docs/windows/overview/" rel="noopener" target="_blank">Accessibility Insights for Windows</a></li>
+</ul>
+</section>
+
+<section>
+<h2>13. 関連記事</h2>
+
 <ul class="related-articles">
 <li><a href="../qr/01_qr_barcode_control.html">⚡ QR① バーコードコントロールでQR生成（本編）</a></li>
 <li><a href="../qr/07_qr_full_system.html">⚡ QR⑦ 6つの技術を統合した入力自動化システム（本編）</a></li>
 <li><a href="../unlocked/index.html">🔓 制限解除ラボ トップに戻る</a></li>
 </ul>
 </section>
+
 </article>
 </main>
+
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
     <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
@@ -181,12 +941,14 @@
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a></p>
   </div>
-<div class="footer-contact-wrap">
-<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
-</div>
-<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+  </div>
+
+  <p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
 </footer>
+
 <script src="../script.js"></script>
 </body>
 </html>
-

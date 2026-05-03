@@ -213,8 +213,10 @@
 
   <div class="category-hero hero-overlay copy-right hero-cobol">
     <picture>
-      <source srcset="../image/hero_cobol.avif" type="image/avif">
-      <source srcset="../image/hero_cobol.webp" type="image/webp">
+      <source media="(max-width: 600px)" type="image/avif" srcset="../image/hero_cobol-480.avif 480w, ../image/hero_cobol-768.avif 768w" sizes="100vw">
+      <source type="image/avif" srcset="../image/hero_cobol-768.avif 768w, ../image/hero_cobol-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <source media="(max-width: 600px)" type="image/webp" srcset="../image/hero_cobol-480.webp 480w, ../image/hero_cobol-768.webp 768w" sizes="100vw">
+      <source type="image/webp" srcset="../image/hero_cobol-768.webp 768w, ../image/hero_cobol-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
       <img alt="COBOL帳票処理 特集" decoding="async" height="576" loading="lazy" src="../image/hero_cobol.png" width="1024">
     </picture>
     <div class="hero-copy">
@@ -233,7 +235,7 @@
   <section class="cobol-selection-guide">
     <div class="guide-intro">
       <div class="guide-visual">
-        <video class="demo-video" aria-label="COBOL帳票をExcelで一瞬で整形するデモ" controls loop muted playsinline preload="metadata" poster="../image/hero_cobol.webp" width="1280" height="720">
+        <video class="demo-video" aria-label="COBOL帳票をExcelで一瞬で整形するデモ" controls loop muted playsinline preload="metadata" poster="../image/hero_cobol-1024.webp" width="1280" height="720">
           <source src="../video/Cobol1.mp4" type="video/mp4">
           <img src="../Gif/Cobol.gif" alt="COBOL帳票をExcelで一瞬で整形するデモ" decoding="async" loading="lazy" width="1280" height="720">
         </video>
