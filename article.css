@@ -2890,3 +2890,339 @@ video::cue {
     font-size: 0.84rem;
   }
 }
+
+/* ===================================================
+   Mobile viewport hardening
+   =================================================== */
+@media (max-width: 640px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .site-header,
+  .main-content,
+  .article-layout,
+  .article-body,
+  .site-footer {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .main-content {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .article-layout {
+    padding: 14px 8px 40px;
+    overflow-x: hidden;
+  }
+
+  .article-body {
+    padding: 18px 12px;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  .article-body > * {
+    max-width: 100%;
+  }
+
+  .header-inner {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .site-title {
+    font-size: clamp(1.18rem, 8vw, 1.7rem);
+    line-height: 1.2;
+    white-space: normal;
+  }
+
+  .site-subtitle {
+    white-space: normal;
+    line-height: 1.45;
+  }
+
+  .breadcrumb {
+    font-size: 0.92rem;
+    padding-bottom: 14px;
+  }
+
+  .article-title {
+    font-size: 1.28rem;
+  }
+
+  .article-body p,
+  .article-body li {
+    font-size: 0.95rem;
+    line-height: 1.85;
+  }
+
+  .goal-section,
+  .method-section,
+  .tips-section,
+  .xdemo-note-good,
+  .xdemo-note-warn,
+  .xdemo-note-danger,
+  .xdemo-note-info,
+  .xdemo-note,
+  .speed-note,
+  .qr-safety-note,
+  .site-footer-trust {
+    padding: 16px 14px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .table-wrapper,
+  .table-responsive,
+  .excel-demo-wrap,
+  .excel-wrap,
+  .a4-paper,
+  .a4-grid,
+  .helper-display-table,
+  .formula-copy-list {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .table-wrapper,
+  .table-responsive,
+  .excel-demo-wrap,
+  .excel-wrap {
+    overflow-x: visible;
+  }
+
+  .article-body table,
+  .article-body .format-table,
+  .article-body .xdemo-table,
+  .article-body .ref-table,
+  .article-body .char-table,
+  .article-body .charmap-table,
+  .article-body .ba-table,
+  .article-body .excel-grid,
+  .article-body .formula-count-table,
+  .article-body .comparison-table,
+  .article-body .arg-table,
+  .article-body .sample-grid,
+  .article-body .vba-compare-table,
+  .article-body .mini-procon,
+  .article-body .form-tbl,
+  .article-body .vs-table,
+  .article-body .cmp-table,
+  .article-body .pattern-table,
+  .article-body .byte-table,
+  .article-body .layout-table,
+  .article-body .sample-table,
+  .article-body .func-table,
+  .article-body .demo-table,
+  .article-body .excel-demo-table,
+  .article-body .helper-display-table,
+  .article-body .compare-table,
+  .article-body .pq-compare-table,
+  .article-body .pq-learn-table,
+  .article-body .pq-ver-table,
+  .article-body .pq-matrix-table,
+  .article-body .pq-ds-table,
+  .article-body .pq-load-table,
+  .article-body .pq-type-table,
+  .article-body .pq-area-table,
+  .article-body .diff-table,
+  .article-body .judge-table,
+  .article-body .pq-mini-table {
+    display: table;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed;
+    overflow: visible;
+    font-size: 0.78rem;
+  }
+
+  .article-body table th,
+  .article-body table td,
+  .article-body .excel-demo-table th,
+  .article-body .excel-demo-table td,
+  .article-body .helper-display-table th,
+  .article-body .helper-display-table td {
+    min-width: 0 !important;
+    max-width: none !important;
+    width: auto !important;
+    padding: 7px 6px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.55;
+  }
+
+  .article-body .excel-row-num,
+  .article-body .excel-demo-table .excel-row,
+  .article-body .excel-demo-table .excel-corner,
+  .article-body table .xd-row {
+    width: 2.4rem !important;
+    min-width: 2.4rem !important;
+    max-width: 2.4rem !important;
+  }
+
+  .article-body .excel-col-letter,
+  .article-body .excel-line1,
+  .article-body .excel-empty {
+    width: 5.2rem !important;
+  }
+
+  .article-body .excel-data-cell,
+  .article-body .excel-formula,
+  .article-body .xd-formula,
+  .article-body .xd-data,
+  .article-body .xd-result {
+    font-size: 0.76rem;
+    line-height: 1.6;
+  }
+
+  .article-body .code-block,
+  .article-body .code-readonly,
+  .article-body .formula-box {
+    max-width: 100%;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .article-body .code-block .code-line,
+  .article-body .code-readonly .code-line,
+  .article-body .code-block span,
+  .article-body .code-readonly span,
+  .article-body .code-block-large,
+  .article-body .code-block-large span,
+  .article-body .formula-box code {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .article-body .code-block-large,
+  .article-body .code-block-large span {
+    white-space: normal !important;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    line-break: anywhere;
+  }
+
+  .formula-copy-code {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .tag-impact,
+  .tag-rare,
+  .tag-prereq,
+  .qr-badge,
+  .cobol-badge,
+  .sym,
+  .ind,
+  .site-footer-links a {
+    white-space: normal;
+  }
+
+  .category-hero.hero-overlay.copy-center .hero-copy,
+  body > section.main-content .hero-contact .hero-copy {
+    left: 50% !important;
+    right: auto !important;
+    transform: translate(-50%, -50%) !important;
+    max-width: 88% !important;
+    text-align: center;
+  }
+
+  .pq-flow,
+  .pq-param-flow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pq-flow-arrow,
+  .pq-param-arrow,
+  .arrow {
+    width: 100%;
+    min-width: 0;
+    min-height: 20px;
+    transform: rotate(90deg);
+  }
+
+  .ribbon-mock {
+    flex-wrap: wrap;
+    gap: 4px 6px;
+    overflow-x: hidden;
+    padding: 8px 8px 0;
+  }
+
+  .ribbon-tab {
+    flex: 1 1 calc(33.333% - 6px);
+    min-width: 0;
+    padding: 6px 4px 8px;
+    text-align: center;
+    white-space: normal;
+    font-size: 0.72rem;
+  }
+
+  .timeline-box {
+    overflow: hidden;
+  }
+
+  .timeline-row {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    gap: 4px;
+  }
+
+  .tl-label {
+    flex: 0 0 100%;
+    margin-bottom: 2px;
+  }
+
+  .timeline-row .tl-bar {
+    flex: 1 1 2.15rem;
+    width: auto !important;
+    min-width: 0;
+    min-height: 28px;
+    padding: 0 5px;
+    font-size: 0.7rem;
+  }
+
+  .timeline-row .tl-gap {
+    flex: 0 0 4px;
+    width: 4px;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 390px) {
+  .main-content {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .article-body {
+    padding: 16px 10px;
+  }
+
+  .article-body table,
+  .article-body .excel-demo-table,
+  .article-body .helper-display-table {
+    font-size: 0.72rem;
+  }
+
+  .article-body table th,
+  .article-body table td {
+    padding: 6px 5px;
+  }
+}
