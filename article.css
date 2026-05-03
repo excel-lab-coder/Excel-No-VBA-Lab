@@ -3331,3 +3331,225 @@ video::cue {
     padding: 6px 5px;
   }
 }
+
+/* ===================================================
+   Mobile article readability improvement
+   スマホ記事可読性改善
+   =================================================== */
+@media (max-width: 600px) {
+  .article-layout {
+    padding: 12px 0 40px;
+  }
+
+  .article-body {
+    border-radius: 0;
+    box-shadow: none;
+    padding: 22px 18px;
+    line-height: 1.95;
+  }
+
+  .article-header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+  }
+
+  .article-title {
+    font-size: 1.32rem;
+    line-height: 1.55;
+    letter-spacing: 0.01em;
+  }
+
+  .article-meta {
+    font-size: 0.8rem;
+    gap: 6px;
+  }
+
+  .article-date {
+    margin-left: 0;
+  }
+
+  .article-body h2 {
+    font-size: 1.16rem;
+    line-height: 1.55;
+    margin: 34px 0 14px;
+    padding: 4px 0 4px 12px;
+  }
+
+  .article-body h3 {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin: 26px 0 10px;
+  }
+
+  .article-body p,
+  .article-body li {
+    font-size: 1rem;
+    line-height: 1.95;
+  }
+
+  .article-body ul,
+  .article-body ol {
+    padding-left: 1.3em;
+  }
+
+  .article-body li {
+    margin-bottom: 0.45em;
+  }
+
+  .goal-section,
+  .method-section,
+  .tips-section,
+  .toc-box,
+  .xdemo-note-good,
+  .xdemo-note-warn,
+  .xdemo-note-danger,
+  .xdemo-note-info,
+  .xdemo-note,
+  .speed-note,
+  .qr-safety-note {
+    padding: 17px 16px;
+    margin: 18px 0 24px;
+    border-radius: 10px;
+  }
+
+  .goal-section h2,
+  .method-section h2,
+  .toc-box h3 {
+    font-size: 1.05rem;
+    line-height: 1.55;
+  }
+
+  .toc-box ol {
+    padding-left: 1.25em;
+    line-height: 1.8;
+  }
+
+  .toc-box ol li {
+    font-size: 0.92rem;
+    margin-bottom: 0.35em;
+  }
+
+  .article-body .code-block,
+  .article-body .code-readonly,
+  .article-body .formula-box,
+  .article-body .code-block-large,
+  .article-body .m-code-block {
+    max-width: 100%;
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    font-size: 0.84rem;
+    line-height: 1.6;
+    padding: 14px 14px;
+    white-space: pre !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .article-body .code-block,
+  .article-body .code-readonly,
+  .article-body .formula-box code,
+  .article-body .formula-copy-code,
+  .article-body .code-block .code-line,
+  .article-body .code-readonly .code-line,
+  .article-body .code-block span,
+  .article-body .code-readonly span,
+  .article-body .code-block-large span,
+  .article-body .m-code-block span {
+    white-space: pre !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    line-break: auto !important;
+  }
+
+  .article-body .code-block .code-line,
+  .article-body .code-readonly .code-line {
+    display: block;
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .formula-copy-list {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .formula-copy-row {
+    grid-template-columns: 1fr;
+  }
+
+  .formula-copy-label {
+    border-right: none;
+    border-bottom: 1px solid #cfd8dc;
+  }
+
+  .formula-copy-code {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .formula-copy-btn {
+    border-left: none;
+    border-top: 1px solid #cfd8dc;
+    padding: 10px;
+  }
+
+  .table-wrapper,
+  .table-responsive,
+  .excel-demo-wrap,
+  .excel-wrap {
+    margin: 14px 0 22px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-wrapper::before,
+  .table-responsive::before,
+  .excel-demo-wrap::before,
+  .excel-wrap::before {
+    content: "横にスクロールできます →";
+    display: block;
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: #666;
+    background: #f8f9fa;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .table-wrapper > table,
+  .table-responsive > table,
+  .excel-demo-wrap > table,
+  .excel-wrap > table {
+    width: max-content !important;
+    min-width: max(560px, 100%) !important;
+    table-layout: auto !important;
+    margin: 0;
+  }
+
+  .article-body table {
+    font-size: 0.84rem;
+  }
+
+  .article-body table th,
+  .article-body table td {
+    padding: 9px 10px;
+  }
+
+  .article-body .format-table {
+    font-size: 0.9rem;
+  }
+
+  .article-body .table-wrapper > table,
+  .article-body .table-responsive > table,
+  .article-body .excel-demo-wrap > table,
+  .article-body .excel-wrap > table {
+    display: table !important;
+    width: max-content !important;
+    min-width: max(560px, 100%) !important;
+    table-layout: auto !important;
+  }
+}

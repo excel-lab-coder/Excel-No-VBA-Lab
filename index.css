@@ -1042,5 +1042,160 @@ body > section.main-content .hero-contact .hero-copy-kicker {
   backdrop-filter: blur(4px);
 }
 
+/* ===================================================
+   Mobile home density tuning
+   スマホ時のトップページ情報量調整
+   =================================================== */
+@media (max-width: 600px) {
+  .hero-practical,
+  .site-description,
+  .quick-route,
+  .starter-guide,
+  .pickup-section,
+  .faq-section {
+    margin-bottom: 22px;
+  }
+
+  .hero-practical {
+    padding: 14px 16px;
+    font-size: 0.94rem;
+    line-height: 1.85;
+  }
+
+  .quick-route-icon {
+    display: inline-block;
+    margin: 0 8px 0 0;
+    font-size: 1.15rem;
+    vertical-align: -0.1em;
+  }
+
+  .quick-route-title {
+    display: inline;
+    font-size: 0.98rem;
+  }
+
+  .quick-route-text {
+    margin-top: 4px;
+    font-size: 0.84rem;
+    line-height: 1.65;
+  }
+
+  .starter-resource-row {
+    gap: 8px;
+  }
+
+  .starter-resource-row a {
+    min-height: 34px;
+    padding: 7px 11px;
+    font-size: 0.82rem;
+  }
+
+  .hero-banner {
+    padding: 0;
+  }
+
+  .hero-headline {
+    font-size: 1.04rem;
+    line-height: 1.65;
+  }
+
+  .hero-sub,
+  .hero-answer-text {
+    font-size: 0.94rem;
+    line-height: 1.85;
+  }
+
+  .hero-pain,
+  .hero-stats,
+  .reasons-heading,
+  .reasons-grid {
+    display: none;
+  }
+
+  .weapons-heading {
+    margin-top: 22px;
+  }
+
+  .weapons-grid,
+  .reasons-grid,
+  .version-guide-body,
+  .pickup-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .weapon-card,
+  .reason-card,
+  .pickup-card {
+    padding: 15px 16px;
+    border-radius: 10px;
+  }
+
+  .weapon-card-desc,
+  .reason-card-text,
+  .pickup-card .desc,
+  .pickup-card .qr-desc {
+    font-size: 0.9rem;
+    line-height: 1.75;
+  }
+
+  .version-guide {
+    margin-top: 18px;
+  }
+
+  .version-guide-header,
+  .version-col-title {
+    font-size: 0.96rem;
+    line-height: 1.5;
+  }
+
+  .version-col {
+    padding: 14px 16px;
+  }
+
+  .version-col li {
+    font-size: 0.9rem;
+    line-height: 1.75;
+  }
+
+  .hero-cta-box {
+    padding: 16px;
+    margin-top: 20px;
+  }
+
+  .hero-cta-msg {
+    font-size: 0.92rem;
+    line-height: 1.75;
+  }
+
+  .hero-cta-buttons {
+    gap: 9px;
+  }
+
+  .hero-cta-btn {
+    max-width: none;
+    min-height: 40px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+
+  .pickup-section h2,
+  .faq-section h2 {
+    font-size: 1.06rem;
+    line-height: 1.55;
+  }
+
+  .pickup-card .main-title,
+  .pickup-card .qr-title {
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .ranking-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 
 
