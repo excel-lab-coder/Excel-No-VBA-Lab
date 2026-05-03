@@ -15,6 +15,26 @@
 <link href="../../common.css" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+.xlookup-basic-demo .xd-formula {
+  min-width: 170px;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
+.xlookup-basic-demo .xdemo-table td {
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .xlookup-basic-demo .xd-formula {
+    min-width: 0;
+    font-size: 0.82rem;
+  }
+}
+</style>
 <meta content="Excel × No VBA Lab" property="og:site_name">
 <meta content="https://excel-no-vba-lab.com/functions/latest/article_xlookup_basic.html" property="og:url">
 
@@ -180,7 +200,7 @@
 <!-- =========================================================
          動作イメージ
       ========================================================= -->
-<section class="method-section">
+<section class="method-section xlookup-basic-demo">
 <h3>動作イメージ（完全一致・基本）</h3>
 <div class="xdemo-wrap">
 <div class="xdemo-step-label">動作イメージ</div>
@@ -201,7 +221,7 @@
 <tr>
 <td class="xd-row">2</td>
 <td class="xd-key">1002</td>
-<td class="xd-formula">=XLOOKUP(A2, D:D, E:E, "未登録")</td>
+<td class="xd-formula">=XLOOKUP(A2,<br>D:D,E:E,<br>"未登録")</td>
 </tr>
 <tr>
 <td class="xd-row">3</td>
