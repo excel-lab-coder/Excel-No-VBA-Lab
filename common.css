@@ -500,6 +500,33 @@ a[aria-disabled="true"] { color: #999 !important; cursor: not-allowed; }
 }
 .site-footer a { color: #ba9bff; }
 .site-footer a:hover { color: #ffffff; }
+.site-footer-trust {
+  max-width: 1040px;
+  margin: 0 auto 18px;
+  padding: 18px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.86);
+  text-align: left;
+}
+.site-footer-trust p {
+  margin: 0 0 8px;
+  font-size: 0.86em;
+  line-height: 1.75;
+}
+.site-footer-trust p:last-child { margin-bottom: 0; }
+.site-footer-trust strong { color: #ffffff; }
+.site-footer-trust a {
+  color: #d7c8ff;
+  font-weight: 700;
+}
+.site-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+.site-footer-links a { white-space: nowrap; }
 .footer-contact-wrap { text-align: center; margin-bottom: 12px; }
 .footer-contact-btn {
   display: inline-block;
@@ -512,6 +539,38 @@ a[aria-disabled="true"] { color: #999 !important; cursor: not-allowed; }
   transition: background 0.2s;
 }
 .footer-contact-btn:hover { background: #3f51b5; text-decoration: none; }
+
+.qr-safety-note {
+  background: #fff8e1;
+  border: 1px solid #f3c46a;
+  border-left: 6px solid #d97706;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  margin: 28px 0;
+  padding: 22px 26px;
+}
+.qr-safety-note h2,
+.qr-safety-note h3 {
+  color: #8a4b00;
+  font-size: 1.12em;
+  margin: 0 0 10px;
+}
+.qr-safety-note p {
+  color: #5d4037;
+  font-size: 0.92em;
+  line-height: 1.8;
+  margin-bottom: 10px;
+}
+.qr-safety-note ul {
+  margin: 0;
+  padding-left: 1.2em;
+}
+.qr-safety-note li {
+  color: #5d4037;
+  font-size: 0.9em;
+  line-height: 1.75;
+  margin: 4px 0;
+}
 
 /* ===================================================
    9. ユーティリティ

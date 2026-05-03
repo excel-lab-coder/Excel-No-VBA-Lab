@@ -1,0 +1,9 @@
+order_date,store,category,item_code,quantity,unit_price
+2026-04-01,Tokyo,Office,PEN-001,12,120
+2026-04-01,Tokyo,Office,NOTE-002,8,260
+2026-04-02,Osaka,Parts,PRT-110,3,1800
+2026-04-03,Nagoya,Office,FILE-020,5,420
+2026-04-04,Fukuoka,Parts,PRT-210,2,3200
+2026-04-05,Sendai,Consumable,TAPE-010,10,180
+2026-04-06,Tokyo,Consumable,INK-030,4,960
+2026-04-07,Osaka,Office,NOTE-002,6,260

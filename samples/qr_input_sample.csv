@@ -1,0 +1,6 @@
+scan_order,screen,item_code,lot_no,quantity,send_key,delay_ms
+1,inventory_lookup,ITEM-001,LOT-A001,10,TAB,0
+2,inventory_lookup,ITEM-002,LOT-A002,5,TAB,0
+3,inventory_update,ITEM-003,LOT-B010,1,ENTER,300
+4,inventory_update,ITEM-004,LOT-B011,7,TAB,0
+5,test_register,ITEM-005,LOT-C020,2,ENTER,500

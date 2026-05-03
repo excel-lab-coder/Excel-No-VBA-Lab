@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>サンプルデータ集 | Excel × No VBA Lab</title>
+<meta name="description" content="Excel × No VBA Labの記事検証に使える架空サンプルデータ集。関数、Power Query、COBOL風固定長データ、QR入力検証用データを配布しています。">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">
+<meta property="og:title" content="サンプルデータ集 | Excel × No VBA Lab">
+<meta property="og:description" content="関数、Power Query、COBOL風固定長データ、QR入力検証に使える架空サンプルデータです。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">
+<meta property="og:site_name" content="Excel × No VBA Lab">
+<meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../common.css">
+<link rel="stylesheet" href="../article.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "サンプルデータ集",
+  "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/",
+  "inLanguage": "ja",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Excel × No VBA Lab",
+    "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"
+  }
+}
+</script>
+</head>
+<body class="article-layout">
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel × No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">検証用サンプルデータ</span><span class="sub-main">記事を手元で試すための架空データ集</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+<nav aria-label="パンくずリスト">
+  <div class="breadcrumb">
+    <a href="../index.html">ホーム</a><span>&gt;</span><strong>サンプルデータ集</strong>
+  </div>
+</nav>
+
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta">
+    <span class="badge badge-2016">全バージョン</span>
+    <span class="article-date">更新日: 2026-05-03</span>
+  </div>
+  <h1 class="article-title">サンプルデータ集</h1>
+  <p class="article-summary">記事の手順を本番データに触れずに検証するための架空データです。個人情報や実在する取引情報は含めていません。</p>
+</div>
+
+<section class="goal-section">
+  <h2>使い方</h2>
+  <p>CSVはExcelで直接開くか、Power Queryの「テキスト/CSVから」で取り込んでください。固定長テキストは、Power Queryの列分割やMID/MIDB系の記事の練習用として使えます。</p>
+  <p>業務適用前には、必ず自社の文字コード、桁数、区切り、禁止事項に合わせてコピー環境で検証してください。</p>
+</section>
+
+<section class="method-section">
+  <h2>ダウンロード</h2>
+  <ul class="article-list">
+    <li class="article-item">
+      <a class="article-link" href="./lookup_master_sample.csv" download>lookup_master_sample.csv</a>
+      <p class="article-summary">XLOOKUP、VLOOKUP、INDEX+MATCH、FILTER代替の練習用マスタです。</p>
+    </li>
+    <li class="article-item">
+      <a class="article-link" href="./powerquery_sales_sample.csv" download>powerquery_sales_sample.csv</a>
+      <p class="article-summary">Power Queryでの型変換、集計、グループ化、列追加の練習用売上データです。</p>
+    </li>
+    <li class="article-item">
+      <a class="article-link" href="./cobol_fixed_width_sample.txt" download>cobol_fixed_width_sample.txt</a>
+      <p class="article-summary">COBOL帳票・固定長データ整形の練習用テキストです。ヘッダー行、明細行、フッター行を含みます。</p>
+    </li>
+    <li class="article-item">
+      <a class="article-link" href="./qr_input_sample.csv" download>qr_input_sample.csv</a>
+      <p class="article-summary">QRリーダー入力の読み取り順、Tab/Enter移動、架空ID入力を検証するためのデータです。</p>
+    </li>
+  </ul>
+</section>
+
+<section class="qr-safety-note">
+  <h2>サンプル利用時の注意</h2>
+  <ul>
+    <li>本番ブックへ直接貼り付けず、コピーした検証ブックで試してください。</li>
+    <li>QR検証では、登録・削除・送信が発生しない画面をアクティブにしてから読み取ってください。</li>
+    <li>固定長データは練習用の単純化した構造です。実務帳票では文字コード、全角幅、改ページ、ヘッダー繰り返しを別途確認してください。</li>
+  </ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a></p>
+  </div>
+  <p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>

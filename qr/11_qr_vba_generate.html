@@ -7,18 +7,18 @@
 <title>⑪ VBA標準機能でQRコード生成｜QR Automation Lab｜Excel &times; No VBA Lab</title>
 <meta content="外部ライブラリ不要。VBA標準機能だけで日本語（全角文字）を含むQRコードを生成する方法を完全解説。文字コード（UTF-8/Shift-JIS）の合わせ方、ADODB.StreamでのUTF-8変換コードまで。" name="description">
 <meta content="QRコード,全角,漢字,VBA,ADODB.Stream,閉域環境,データ移行,Excel" name="keywords">
-<link href="https://excel-no-vba-lab.com/qr/11_qr_vba_generate.html" rel="canonical">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html" rel="canonical">
 <meta content="article" property="og:type">
 <meta content="⑪ VBA標準機能だけで全角QRコード生成！閉域環境で漢字をQRに｜QR Automation Lab" property="og:title">
 <meta content="外部ライブラリ不要。VBA標準機能のみで日本語QRコード生成。文字コードの合わせ方とVBA実装コードまで完全解説。" property="og:description">
-<meta content="https://excel-no-vba-lab.com/qr/11_qr_vba_generate.html" property="og:url">
-<meta content="https://excel-no-vba-lab.com/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html" property="og:url">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
 <meta content="Excel &times; No VBA Lab" property="og:site_name">
 <meta content="ja_JP" property="og:locale">
 <meta content="summary_large_image" name="twitter:card">
 <meta content="⑪ VBA標準機能だけで全角QRコード生成｜QR Automation Lab" name="twitter:title">
 <meta content="外部ライブラリ不要。VBA標準機能のみで全角QR生成。文字コードの合わせ方と実装まで完全解説。" name="twitter:description">
-<meta content="https://excel-no-vba-lab.com/image/hero_ogp.png" name="twitter:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" name="twitter:image">
 <meta content="index, follow" name="robots">
 <link href="https://fonts.googleapis.com" rel="preconnect">
 <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
@@ -31,12 +31,12 @@
   "@type":"Article",
   "headline":"⑪ VBA標準機能だけで全角QRコード生成！閉域環境で漢字・ひらがなをQRコードにする完全ガイド",
   "description":"外部ライブラリ不要。VBA標準機能だけで日本語QRコードを生成する方法と文字コードの合わせ方を完全解説。",
-  "image":"https://excel-no-vba-lab.com/ogp.png",
+  "image":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png",
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
-  "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-no-vba-lab.com/ogp.png"}},
+  "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
   "datePublished":"2026-04-17",
   "dateModified":"2026-04-23",
-  "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/qr/11_qr_vba_generate.html"}
+  "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html"}
 }
 </script>
 <script type="application/ld+json">
@@ -44,8 +44,8 @@
   "@context":"https://schema.org",
   "@type":"BreadcrumbList",
   "itemListElement":[
-    {"@type":"ListItem","position":1,"name":"Home","item":"https://excel-no-vba-lab.com/"},
-    {"@type":"ListItem","position":2,"name":"QR Automation Lab","item":"https://excel-no-vba-lab.com/qr/"},
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type":"ListItem","position":2,"name":"QR Automation Lab","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/"},
     {"@type":"ListItem","position":3,"name":"⑪ VBA標準機能で全角QR生成"}
   ]
 }
@@ -773,10 +773,26 @@ QR入力で手入力ミスを減らし、バリデーションで異常値や不
 <li class="current"><span class="lv-adv">[応用]</span> <strong>⑪ VBA標準機能だけで全角QRコード生成（この記事）</strong></li>
 </ol>
 </nav>
+<section class="qr-safety-note" aria-labelledby="qr-safety-title">
+<h2 id="qr-safety-title">QRリーダー連携の運用注意</h2>
+<p>QRリーダーは多くの場合、PCにはキーボード入力として認識されます。Tab、Enter、ファンクションキー、待機時間を組み合わせると登録・更新・削除などの操作まで進められるため、実務投入前の検証手順を必ず固定してください。</p>
+<ul>
+<li>本番データではなく、架空データと検証用画面で読み取り順、セル移動、登録操作を確認する。</li>
+<li>個人情報、認証情報、機密コードをQRにそのまま埋め込まない。必要な場合は最小限のIDに置き換える。</li>
+<li>設定バーコード、初期化手順、復旧手順を保存し、誰が変更したかを記録する。</li>
+<li>キー変換や待機時間を変更した後は、Excel以外の画面がアクティブな状態で誤送信されないか確認する。</li>
+</ul>
+</section>
 </article>
 </main>
 <!-- ===== フッター ===== -->
 <footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a></p>
+  </div>
 <div class="footer-contact-wrap">
 <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
 </div>
