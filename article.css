@@ -2956,6 +2956,20 @@ video::cue {
     font-size: 1.28rem;
   }
 
+  .method-section > h1,
+  .category-header h2 {
+    font-size: 1.48rem;
+    line-height: 1.35;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .method-section > h2 {
+    line-height: 1.4;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
   .article-body p,
   .article-body li {
     font-size: 0.95rem;
@@ -2965,6 +2979,7 @@ video::cue {
   .goal-section,
   .method-section,
   .tips-section,
+  .cobol-selection-guide,
   .xdemo-note-good,
   .xdemo-note-warn,
   .xdemo-note-danger,
@@ -2976,6 +2991,44 @@ video::cue {
     padding: 16px 14px;
     margin-left: 0;
     margin-right: 0;
+  }
+
+  .guide-intro,
+  .solution-patterns-grid,
+  .pipeline-grid,
+  .usecase-grid,
+  .compare-grid,
+  .related-card-grid,
+  .limit-grid,
+  .pq-before-after {
+    grid-template-columns: 1fr !important;
+    gap: 18px;
+  }
+
+  .pattern-card,
+  .pipeline-card,
+  .usecase-card,
+  .compare-card,
+  .related-card {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .pattern-card {
+    padding: 22px 18px 20px 24px;
+  }
+
+  .pattern-card h4,
+  .pattern-desc,
+  .pattern-features li {
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .pattern-badge {
+    max-width: 100%;
+    white-space: normal;
   }
 
   .table-wrapper,
@@ -3058,6 +3111,58 @@ video::cue {
     overflow-wrap: anywhere;
     word-break: break-word;
     line-height: 1.55;
+  }
+
+  .article-body .format-table {
+    display: block !important;
+    width: 100% !important;
+    table-layout: auto !important;
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .article-body .format-table tbody,
+  .article-body .format-table thead,
+  .article-body .format-table tr,
+  .article-body .format-table th,
+  .article-body .format-table td {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .article-body .format-table tr {
+    margin: 0 0 12px;
+    border: 1px solid #d8e3ef;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(26, 61, 92, 0.06);
+  }
+
+  .article-body .format-table th,
+  .article-body .format-table td {
+    border-right: 0;
+    padding: 10px 12px;
+  }
+
+  .article-body .format-table th:not(:last-child),
+  .article-body .format-table td:not(:last-child) {
+    border-bottom: 1px solid #e6edf5;
+  }
+
+  .article-body [style*="display:flex"],
+  .article-body [style*="display: flex"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .article-body [style*="display:flex"] > *,
+  .article-body [style*="display: flex"] > * {
+    width: 100% !important;
+    flex: 1 1 auto !important;
   }
 
   .article-body .excel-row-num,
