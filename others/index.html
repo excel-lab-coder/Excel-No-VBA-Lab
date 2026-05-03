@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>現場実務ラボ総合ガイド｜速度改善・印刷自動化・操作UI改善を実務最適化｜Excel × No VBA Lab</title>
+<meta name="description" content="「現場の細かな手作業が積み重なっている」を実務改善テクニックの体系学習で解決。設定手順に加え、失敗しやすいポイント、エラー時の直し方、運用で詰まりやすい場面まで整理し、Excel 2016以降の実務環境・VBA不要環境でも実務でそのまま使える形で解説します。">
+<meta name="theme-color" content="#1a3d5c">
+<link rel="canonical" href="https://excel-no-vba-lab.com/others/">
+<meta property="og:title" content="現場実務ラボ総合ガイド｜速度改善・印刷自動化・操作UI改善を実務最適化｜Excel × No VBA Lab">
+<meta property="og:description" content="重いブックが止まる、印刷設定に時間がかかる、入力UIが使いにくい。現場実務ラボは、速度改善・印刷自動化・UI改善の実戦テクニックをまとめた総合ページです。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://excel-no-vba-lab.com/others/">
+<meta property="og:site_name" content="Excel × No VBA Lab">
+<meta property="og:image" content="https://excel-no-vba-lab.com/image/hero_ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="現場実務ラボ総合ガイド｜速度改善・印刷自動化・操作UI改善を実務最適化｜Excel × No VBA Lab">
+<meta name="twitter:description" content="重いブックが止まる、印刷設定に時間がかかる、入力UIが使いにくい。現場実務ラボは、速度改善・印刷自動化・UI改善の実戦テクニックをまとめた総合ページです。">
+<meta name="twitter:image" content="https://excel-no-vba-lab.com/image/hero_ogp.png">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../common.css">
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../article.css">
+<script>
+  window.ExcelLab = window.ExcelLab || {};
+  window.ExcelLab.rareTech = {
+    "cobol_irregular": { rarity: 1000 },
+    "cobol_expert": { rarity: 1000 },
+    "qr_hardware": { rarity: 1000 },
+    "qr_series": { rarity: 1000 },
+    "cobol_pq_midb": { rarity: 300 },
+    "print_area": { rarity: 300 },
+    "zip_reverse": { rarity: 300 },
+    "shape_circle": { rarity: 200 },
+    "filter_alt": { rarity: 200 },
+    "m_language": { rarity: 200 },
+    "cobol_advanced": { rarity: 200 },
+    "speed_formula": { rarity: 200 },
+    "speed_lookup": { rarity: 200 },
+    "pq_parameter": { rarity: 200 },
+    "volatile": { rarity: 100 },
+    "label_scrap": { rarity: 100 },
+    "qr_generate": { rarity: 100 },
+    "choosecols": { rarity: 50 }
+  };
+  window.RARETECH_CONFIG = window.ExcelLab.rareTech;
+</script>
+<script type="application/ld+json">
+{
+    "@context":  "https://schema.org",
+    "@type":  "CollectionPage",
+    "name":  "現場実務ラボ",
+    "description":  "重いブックが止まる、印刷設定に時間がかかる、入力UIが使いにくい。現場実務ラボは、速度改善・印刷自動化・UI改善の実戦テクニックをまとめた総合ページです。",
+    "url":  "https://excel-no-vba-lab.com/others/",
+    "inLanguage":  "ja",
+    "isPartOf":  {
+                     "@type":  "WebSite",
+                     "name":  "Excel × No VBA Lab",
+                     "url":  "https://excel-no-vba-lab.com/"
+                 },
+    "hasPart":  [
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "検索関数の速度とメモリ効率",
+                        "url":  "https://excel-no-vba-lab.com/others/speed/article_01_lookup_speed.html",
+                        "position":  1
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "メモリスワップと数式設計",
+                        "url":  "https://excel-no-vba-lab.com/others/speed/article_memory_swap.html",
+                        "position":  2
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "印刷範囲の自動伸縮",
+                        "url":  "https://excel-no-vba-lab.com/others/print/article_print_area.html",
+                        "position":  3
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "10面ラベル印刷",
+                        "url":  "https://excel-no-vba-lab.com/others/print/article_label_print.html",
+                        "position":  4
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "開発タブ\u0026フォームコントロール",
+                        "url":  "https://excel-no-vba-lab.com/others/ui/article_form_controls.html",
+                        "position":  5
+                    }
+                ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context":  "https://schema.org",
+    "@type":  "BreadcrumbList",
+    "itemListElement":  [
+                            {
+                                "@type":  "ListItem",
+                                "position":  1,
+                                "name":  "ホーム",
+                                "item":  "https://excel-no-vba-lab.com/"
+                            },
+                            {
+                                "@type":  "ListItem",
+                                "position":  2,
+                                "name":  "現場実務ラボ",
+                                "item":  "https://excel-no-vba-lab.com/others/"
+                            }
+                        ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context":  "https://schema.org",
+    "@type":  "FAQPage",
+    "mainEntity":  [
+                       {
+                           "@type":  "Question",
+                           "name":  "最初に着手すべき改善は何ですか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "効果が大きいのは速度と印刷です。まず処理時間削減、次に出力手順の標準化を行うと現場負荷が下がります。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "速度改善は関数だけで十分ですか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "多くは関数設計で改善しますが、データ量が大きい場合はPower Queryや設計分割も併用します。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "印刷業務の属人化を防ぐには？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "印刷範囲・開始位置・ラベル位置のルール化と、テンプレート化が有効です。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "UI改善はVBAなしでも可能？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "はい。フォームコントロール、名前定義、図形連動だけでも操作性は大きく改善できます。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "小技カテゴリの使い方は？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "日常業務の詰まりポイント別に参照し、チーム標準として手順化する運用が効果的です。"
+                                              }
+                       }
+                   ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span><span class="sub-main">カテゴリ総合ランディングページ</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+  <nav aria-label="パンくずリスト">
+    <div class="breadcrumb">
+      <a href="../index.html">ホーム</a><span>&gt;</span><strong>現場実務ラボ</strong>
+    </div>
+  </nav>
+
+  <section class="method-section">
+    <h1>現場実務ラボ 総合ガイド</h1>
+    <p class="article-summary">日々の運用負荷を下げるための速度・印刷・UI改善ノウハウを、現場視点でまとめています。</p>
+  </section>
+
+  <section class="method-section">
+    <h2><span class="icon">🧩</span> 読者の課題</h2>
+    <ul class="philosophy-list">
+      <li>ブックが重くて再計算待ちが長い。</li>
+      <li>印刷範囲・ラベル印刷設定が毎回手作業。</li>
+      <li>入力UIが分かりづらく操作ミスが起きる。</li>
+      <li>小技が属人化して引き継げない。</li>
+    </ul>
+  </section>
+
+  <section class="method-section">
+    <h2><span class="icon">✅</span> このカテゴリで解決できること</h2>
+    <ul class="philosophy-list">
+      <li>関数設計とメモリ観点の速度最適化。</li>
+      <li>印刷範囲・ラベル・帳票出力の標準化。</li>
+      <li>フォーム/図形を使った入力補助UIの改善。</li>
+      <li>現場時短テクニックをカテゴリ別に整理。</li>
+    </ul>
+  </section>
+
+
+  <div class="category-hero hero-overlay hero-others-lab">
+    <picture>
+      <source srcset="../image/hero_others_lab_main.avif" type="image/avif">
+      <source srcset="../image/hero_others_lab_main.webp" type="image/webp">
+      <img alt="現場実務ラボ 活用テクニック特集" decoding="async" height="576" loading="lazy" src="../image/hero_others_lab_main.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Practical Excel Lab</div>
+      <div class="hero-copy-title">現場実務ラボ</div>
+      <div class="hero-copy-sub">印刷・速度・UIまで、日々の手間を減らす。</div>
+    </div>
+  </div>
+
+  <div class="category-header">
+    <h2>🛠 現場実務ラボ</h2>
+    <p>
+      印刷・ラベル・フォーム操作・表示形式・速度改善など、
+      関数・パワークエリ・COBOL・QRの枠に収まりきらない
+      「現場で本当に効く」実務改善テクニックをまとめています。
+      VBAなしで毎日の面倒な作業を減らすための横断ラボです。
+    </p>
+  </div>
+
+  <div class="level-legend">
+    <div class="legend-row-levels">
+      <span class="level-legend-item"><span class="lv-dot lv-dot-1"></span>Lv.1 入門</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-2"></span>Lv.2 やさしい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-3"></span>Lv.3 ふつう</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-4"></span>Lv.4 やや難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-5"></span>Lv.5 難しい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-6"></span>Lv.6 かなり難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-7"></span>Lv.7 上級</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-8"></span>Lv.8 超絶技巧</span>
+    </div>
+
+    <div class="legend-row-tags">
+      <span class="legend-tag-desc"><span class="tag-impact">🔥 即戦力</span><span class="tag-desc-text">実務効果が大きい</span></span>
+      <span class="legend-tag-desc"><span class="tag-rare">💎 レアテク</span><span class="tag-desc-text">知る人ぞ知る</span></span>
+    </div>
+  </div>
+
+  <h3 class="subcategory-heading">🚀 限界突破の計算速度</h3>
+
+  <div class="category-hero hero-overlay hero-small hero-others-speed margin-y-16-24 max-width-800">
+    <picture>
+      <source srcset="../image/hero_others_speed.avif" type="image/avif">
+      <source srcset="../image/hero_others_speed.webp" type="image/webp">
+      <img alt="Excel Speed Lab 業務高速化" decoding="async" height="576" loading="lazy" src="../image/hero_others_speed.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Performance</div>
+      <div class="hero-copy-title">Excel Speed Lab</div>
+      <div class="hero-copy-sub">重いブックを、数式設計から軽くする。</div>
+    </div>
+  </div>
+
+  <p class="text-desc">
+    VLOOKUPをINDEX+MATCHに変えても遅いまま？本当の原因はメモリスワップにあるかもしれません。
+    検索関数の選び方から数式の高速化テクニックまで、Excelの処理速度を劇的に引き上げるノウハウです。
+  </p>
+
+  <ul class="article-list" id="list-others-speed">
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../others/speed/article_memory_swap.html">Excelが遅い本当の原因 — メモリスワップと数式設計の関係</a>
+      <p class="article-summary">VLOOKUPをINDEX+MATCHに変えても遅いまま？RAM・SSD・32ビット制限・数式設計の考え方を解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-5">
+        <span class="level-label">Lv.5 難しい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="speed_lookup"></span></span>
+      </div>
+      <a class="article-link" href="../others/speed/article_01_lookup_speed.html">検索関数の速度とメモリ効率</a>
+      <p class="article-summary">VLOOKUP・INDEX+MATCH・XLOOKUPのメモリ消費の違いと、検索設計による高速化を解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="speed_formula"></span></span>
+      </div>
+      <a class="article-link" href="../others/speed/article_02_formula_techniques.html">数式の速度UPテクニック集</a>
+      <p class="article-summary">数式の処理速度を劇的に引き上げる実践テクニック集です。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">🖨 印刷自動化・ラベル印刷</h3>
+
+  <div class="category-hero hero-overlay hero-small hero-others-print margin-y-16-24 max-width-800">
+    <picture>
+      <source srcset="../image/hero_others_print_main.avif" type="image/avif">
+      <source srcset="../image/hero_others_print_main.webp" type="image/webp">
+      <img alt="印刷自動化・ラベル印刷 特集" decoding="async" height="576" loading="lazy" src="../image/hero_others_print_main.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Print Automation</div>
+      <div class="hero-copy-title">印刷自動化ラボ</div>
+      <div class="hero-copy-sub">印刷範囲・ラベル・帳票出力をVBAなしで制御。</div>
+    </div>
+  </div>
+
+  <p class="text-desc">
+    Print_Area、スピンボタン、XLOOKUP、VLOOKUPを組み合わせ、
+    VBAなしで印刷範囲・ラベル・案内文書を自動化する実務シリーズです。
+  </p>
+
+  <ul class="article-list" id="list-others-print">
+    <li class="article-item highlight">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="print_area"></span></span>
+      </div>
+      <a class="article-link" href="../others/print/article_print_area.html">【VBA完全不要】印刷範囲を自動で伸縮させる裏ワザ（名前の管理）</a>
+      <p class="article-summary">データが増えたら印刷範囲も自動で広がり、空白行は印刷されないようにする方法です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/print/article_label_print.html">Excel 10面ラベル印刷 — Print_Area数式で空白シールを自動除外</a>
+      <p class="article-summary">データ件数に応じてPrint_Areaが自動伸縮。VBAもWordも不要でラベル印刷を制御します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="label_scrap"></span></span>
+      </div>
+      <a class="article-link" href="../others/print/article_label_scrap.html">Excelシール残骸を活用 — 開始位置を指定して途中から印刷する方法</a>
+      <p class="article-summary">使いかけのラベルシールを無駄なく活用する方法です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/print/article_mail_print.html">宛名1ページ1枚 案内文書インスタント印刷 — スピンボタン＋Print_Area</a>
+      <p class="article-summary">スピンボタン＋VLOOKUPで差し込み印刷をExcelだけで実現します。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">🎛 操作UI・入力補助</h3>
+
+  <div class="category-hero hero-overlay hero-small hero-others-ui margin-y-16-24 max-width-800">
+    <picture>
+      <source srcset="../image/hero_others_ui.avif" type="image/avif">
+      <source srcset="../image/hero_others_ui.webp" type="image/webp">
+      <img alt="操作UI・入力補助 利便性向上" decoding="async" height="576" loading="lazy" src="../image/hero_others_ui_plain.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Input Support</div>
+      <div class="hero-copy-title">操作UI・入力補助</div>
+      <div class="hero-copy-sub">入力・選択・表示を、現場で使いやすく。</div>
+    </div>
+  </div>
+
+  <ul class="article-list" id="list-others-ui">
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../others/ui/article_form_controls.html">🎛️ 開発タブ＆フォームコントロール完全ガイド</a>
+      <p class="article-summary">スピンボタンなどのフォームコントロールを使い、VBAなしで操作性を改善します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="shape_circle"></span></span>
+      </div>
+      <a class="article-link" href="../others/ui/article_shape_circle.html">セルの文字を○で囲む 表示／非表示 — 名前の管理＋図形（VBA不要）</a>
+      <p class="article-summary">入力値に応じて図形の○を自動表示する、Excelの隠れた仕様を活用したテクニックです。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">⌨ 日常時短・表示整形</h3>
+
+  <ul class="article-list" id="list-others-misc">
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../others/misc/article_shortcuts.html">実務で本当に使うショートカットキー厳選集</a>
+      <p class="article-summary">日常業務で本当に役立つExcelショートカットだけを厳選して紹介します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../others/misc/article_format.html">【保存版】ユーザー定義の表示形式＆TEXT関数 逆引き一覧</a>
+      <p class="article-summary">表示形式コードとTEXT関数の使い方を逆引きで整理します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/misc/article_statusbar.html">電卓不要！ステータスバー（オートカルク）の最強活用術</a>
+      <p class="article-summary">数式を立てずに合計・平均・件数を瞬時に確認できる機能を活用します。</p>
+    </li>
+  </ul>
+
+  <section class="method-section method-section-spaced">
+    <h2><span class="icon">🛣️</span> 推奨学習ルート</h2>
+    <ul class="article-list">
+      <li><a class="article-link" href="./speed/article_01_lookup_speed.html">1. 検索関数の速度とメモリ効率</a><p class="article-summary">性能改善の起点。</p></li>
+      <li><a class="article-link" href="./speed/article_memory_swap.html">2. メモリスワップと数式設計</a><p class="article-summary">重さの根本原因を理解。</p></li>
+      <li><a class="article-link" href="./print/article_print_area.html">3. 印刷範囲の自動伸縮</a><p class="article-summary">印刷運用の定型化。</p></li>
+      <li><a class="article-link" href="./print/article_label_print.html">4. 10面ラベル印刷</a><p class="article-summary">実務頻出のラベル対応。</p></li>
+      <li><a class="article-link" href="./ui/article_form_controls.html">5. 開発タブ&フォームコントロール</a><p class="article-summary">UI改善の基礎。</p></li>
+    </ul>
+  </section>
+
+  <section class="method-section method-section-spaced">
+    <h2><span class="icon">❓</span> FAQ</h2>
+    <ul class="article-list">
+      <li class="article-item"><p class="article-link">Q. 最初に着手すべき改善は何ですか？</p><p class="article-summary">A. 効果が大きいのは速度と印刷です。まず処理時間削減、次に出力手順の標準化を行うと現場負荷が下がります。</p></li>
+      <li class="article-item"><p class="article-link">Q. 速度改善は関数だけで十分ですか？</p><p class="article-summary">A. 多くは関数設計で改善しますが、データ量が大きい場合はPower Queryや設計分割も併用します。</p></li>
+      <li class="article-item"><p class="article-link">Q. 印刷業務の属人化を防ぐには？</p><p class="article-summary">A. 印刷範囲・開始位置・ラベル位置のルール化と、テンプレート化が有効です。</p></li>
+      <li class="article-item"><p class="article-link">Q. UI改善はVBAなしでも可能？</p><p class="article-summary">A. はい。フォームコントロール、名前定義、図形連動だけでも操作性は大きく改善できます。</p></li>
+      <li class="article-item"><p class="article-link">Q. 小技カテゴリの使い方は？</p><p class="article-summary">A. 日常業務の詰まりポイント別に参照し、チーム標準として手順化する運用が効果的です。</p></li>
+    </ul>
+  </section>
+
+  <section class="method-section method-section-spaced">
+    <h2><span class="icon">🔗</span> 関連カテゴリへ</h2>
+    <ul class="article-list">
+      <li class="article-item"><a class="article-link" href="../functions/">📐 関数テクニック総合</a><p class="article-summary">検索・抽出・整形を関数で体系化。</p></li>
+      <li class="article-item"><a class="article-link" href="../powerquery/">🔄 パワークエリ総合</a><p class="article-summary">取り込みから更新運用までを一気通貫。</p></li>
+      <li class="article-item"><a class="article-link" href="../cobol/">🏭 COBOL帳票処理総合</a><p class="article-summary">固定長・不規則帳票をExcelで実務化。</p></li>
+      <li class="article-item"><a class="article-link" href="../qr/">⚡ QR Automation Lab総合</a><p class="article-summary">VBA不要の入力自動化と閉域転送。</p></li>
+      <li class="article-item"><a class="article-link" href="../unlocked/">🔓 制限解除ラボ総合</a><p class="article-summary">VBA可環境で最後の5%を補完。</p></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ（Google Forms）</a>
+  </div>
+  <p>&copy; Excel &times; No VBA Lab &horbar; コンテンツは随時追加中です</p>
+  <p><a href="../index.html">🏠 ホームへ戻る</a></p>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>

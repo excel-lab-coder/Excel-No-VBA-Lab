@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="Power Queryでの数値操作（四則演算・丸め・統計）と日付操作（年月日抽出・期間計算・月末取得）をGUI中心に解説。Excel関数との対応表付き。" name="description">
+<meta content="パワークエリ, Power Query, Excel パワークエリ, VBA不要, Excel実務" name="keywords">
+<meta content="数値と日付を扱う &horbar; 丸め・統計・日付抽出・期間計算｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power Queryでの数値操作（四則演算・丸め・統計）と日付操作（年月日抽出・期間計算・月末取得）をGUI中心に解説。Excel関数との対応表付き。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/advanced/article_pq_number_date.html" rel="canonical">
+<title>数値と日付を扱う &horbar; 丸め・統計・日付抽出・期間計算｜Excel &times; No VBA Lab</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"数値と日付を扱う \u0026horbar; 丸め・統計・日付抽出・期間計算","description":"Power Queryでの数値操作（四則演算・丸め・統計）と日付操作（年月日抽出・期間計算・月末取得）をGUI中心に解説。Excel関数との対応表付き。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/advanced/article_pq_number_date.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>数値と日付を扱う</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">数値と日付を扱う &horbar; 丸め・統計・日付抽出・期間計算</h1>
+</div>
+<!-- ============================== -->
+<section id="goal">
+<h2>このページのゴール</h2>
+<p>Power Queryの「変換」タブと「列の追加」タブにある数値操作（四則演算・丸め・統計）と日付操作（年月日の抽出・期間計算・月末の取得）をGUIで使いこなせるようになることです。Excelの ROUND、YEAR、MONTH、DATEDIF、EOMONTH に対応する操作を中心に解説します。</p>
+</section>
+<!-- ============================== -->
+<section id="arithmetic">
+<h2>四則演算 &horbar; 標準ボタンで計算する</h2>
+<p>数値列を選択した状態で「変換」タブを見ると、「標準」というドロップダウンがあります。ここに基本的な四則演算が並んでいます。</p>
+<table class="ref-table">
+<thead><tr><th>メニュー</th><th>動作</th><th>使い方</th></tr></thead>
+<tbody>
+<tr><td><strong>追加</strong></td><td>各値に固定値を足す</td><td>「追加」&rarr; 数値を入力（例：1000）&rarr; 全行に+1000</td></tr>
+<tr><td><strong>乗算</strong></td><td>各値に固定値を掛ける</td><td>「乗算」&rarr; 数値を入力（例：1.1）&rarr; 全行に&times;1.1（10%増）</td></tr>
+<tr><td><strong>減算</strong></td><td>各値から固定値を引く</td><td>&horbar;</td></tr>
+<tr><td><strong>除算</strong></td><td>各値を固定値で割る</td><td>&horbar;</td></tr>
+<tr><td><strong>整数の除算</strong></td><td>整数部分だけ返す割り算</td><td>7 &divide; 3 = 2（余りは切り捨て）</td></tr>
+<tr><td><strong>剰余</strong></td><td>割り算の余り</td><td>7 mod 3 = 1</td></tr>
+</tbody>
+</table>
+<div class="step-box">
+<h4>操作手順（例：税込み価格を計算 &horbar; 全行&times;1.1）</h4>
+<p>1. 数値列（例：「単価」）のヘッダーをクリックして選択します。<br>
+          2. <strong>変換 タブ &rarr; 標準 &rarr; 乗算</strong> をクリックします。<br>
+          3. 「値」に <strong>1.1</strong> を入力して「OK」。<br>
+          4. 全行の値が1.1倍されます。</p>
+</div>
+<div class="warning-box">
+<strong>「標準」ボタンの演算は固定値との計算だけ</strong><br>
+          「標準」メニューは「すべての行に同じ値を足す/掛ける」操作です。「列A &times; 列B」のように<strong>列同士の計算はカスタム列</strong>を使います。<br>
+          カスタム列での数式例：<code>[単価] * [数量]</code>
+</div>
+<div class="tip-box">
+<strong>列同士の計算をGUIだけで行うもう一つの方法</strong><br>
+          2つの数値列を Ctrl+クリックで選択した状態で<strong>変換タブ &rarr; 標準 &rarr; 乗算</strong>を使うと、2列の値同士を掛け合わせた結果で列が置き換わります。ただしこの場合、元の列が書き換わるため、元データを残したい場合はカスタム列を使ってください。
+        </div>
+</section>
+<!-- ============================== -->
+<section id="rounding">
+<h2>丸め &horbar; 四捨五入・切り上げ・切り捨て</h2>
+<p>ExcelのROUND / ROUNDUP / ROUNDDOWN に対応する操作です。</p>
+<table class="ref-table">
+<thead><tr><th>GUI操作</th><th>Excel関数</th><th>M言語</th><th>動作</th></tr></thead>
+<tbody>
+<tr><td>変換 &rarr; 丸め &rarr; <strong>四捨五入</strong></td><td>ROUND</td><td>Number.Round([列], 桁数)</td><td>指定した小数桁数に四捨五入</td></tr>
+<tr><td>変換 &rarr; 丸め &rarr; <strong>切り上げ</strong></td><td>ROUNDUP</td><td>Number.RoundUp([列], 桁数)</td><td>切り上げ</td></tr>
+<tr><td>変換 &rarr; 丸め &rarr; <strong>切り捨て</strong></td><td>ROUNDDOWN</td><td>Number.RoundDown([列], 桁数)</td><td>切り捨て</td></tr>
+</tbody>
+</table>
+<div class="step-box">
+<h4>操作手順（例：小数第1位に四捨五入）</h4>
+<p>1. 数値列のヘッダーをクリックして選択します。<br>
+          2. <strong>変換 タブ &rarr; 丸め &rarr; 四捨五入</strong> をクリックします。<br>
+          3. 「小数点以下の桁数」に <strong>1</strong> を入力して「OK」。<br>
+          4. 3.14159 &rarr; 3.1、2.678 &rarr; 2.7 のように丸められます。</p>
+</div>
+<div class="warning-box">
+<strong>Power Queryの四捨五入は「銀行丸め」</strong><br>
+          Power Queryの Number.Round は、0.5 ちょうどの場合に<strong>偶数方向に丸める「銀行丸め（Banker's Rounding）」</strong>を使用します。たとえば 2.5 は 2 に、3.5 は 4 に丸められます。Excelの ROUND関数（常に切り上げ）とは結果が異なる場合があります。Excelと同じ挙動にしたい場合は、カスタム列で <code>Number.Round([列], 桁数, RoundingMode.AwayFromZero)</code> と記述します。
+        </div>
+</section>
+<!-- ============================== -->
+<section id="statistics">
+<h2>統計 &horbar; 列全体の集計値を得る</h2>
+<p>「変換」タブの「統計」メニューには、列全体を1つの集計値に変換する機能があります。</p>
+<table class="ref-table">
+<thead><tr><th>メニュー</th><th>Excel関数</th><th>動作</th></tr></thead>
+<tbody>
+<tr><td>統計 &rarr; 合計</td><td>SUM</td><td>列全体の合計</td></tr>
+<tr><td>統計 &rarr; 最小値</td><td>MIN</td><td>列全体の最小値</td></tr>
+<tr><td>統計 &rarr; 最大値</td><td>MAX</td><td>列全体の最大値</td></tr>
+<tr><td>統計 &rarr; 平均</td><td>AVERAGE</td><td>列全体の平均</td></tr>
+<tr><td>統計 &rarr; 中央値</td><td>MEDIAN</td><td>列全体の中央値</td></tr>
+<tr><td>統計 &rarr; 値のカウント</td><td>COUNT</td><td>null以外の値の数</td></tr>
+<tr><td>統計 &rarr; 個別の値のカウント</td><td>なし（ピボットテーブルの「個別のカウント」に相当）</td><td>ユニークな値の数</td></tr>
+</tbody>
+</table>
+<div class="warning-box">
+<strong>注意：統計を実行するとテーブルが1つの値に変わる</strong><br>
+          「統計」の操作を実行すると、テーブル全体がなくなり、1つの値だけが残ります。元のテーブルに「合計列を追加したい」という場合は、カスタム列で <code>List.Sum([売上])</code> のようにList関数を使うか、グループ化機能を使います。「統計」は単体で集計値だけ欲しいときの機能です。
+        </div>
+</section>
+<!-- ============================== -->
+<section id="date-extraction">
+<h2>日付から年・月・日を取り出す</h2>
+<p>ExcelのYEAR / MONTH / DAY関数に対応する操作です。日付型の列を選択すると、「変換」タブと「列の追加」タブに「日付」メニューが表示されます。</p>
+<table class="ref-table">
+<thead><tr><th>GUI操作</th><th>Excel関数</th><th>M言語</th><th>出力例（2026/03/21 の場合）</th></tr></thead>
+<tbody>
+<tr><td>日付 &rarr; 年 &rarr; <strong>年</strong></td><td>YEAR</td><td>Date.Year([日付列])</td><td>2026</td></tr>
+<tr><td>日付 &rarr; 月 &rarr; <strong>月</strong></td><td>MONTH</td><td>Date.Month([日付列])</td><td>3</td></tr>
+<tr><td>日付 &rarr; 日 &rarr; <strong>日</strong></td><td>DAY</td><td>Date.Day([日付列])</td><td>21</td></tr>
+<tr><td>日付 &rarr; 曜日 &rarr; <strong>曜日の名前</strong></td><td>TEXT(A1,"dddd")</td><td>Date.DayOfWeekName([日付列])</td><td>土曜日</td></tr>
+<tr><td>日付 &rarr; 週 &rarr; <strong>年の通算週</strong></td><td>WEEKNUM</td><td>Date.WeekOfYear([日付列])</td><td>12</td></tr>
+<tr><td>日付 &rarr; 四半期 &rarr; <strong>年の四半期</strong></td><td>ROUNDUP(MONTH(A1)/3,0)</td><td>Date.QuarterOfYear([日付列])</td><td>1</td></tr>
+</tbody>
+</table>
+<div class="step-box">
+<h4>操作手順（例：月を取り出す）</h4>
+<p>1. 日付列のヘッダーをクリックして選択します。<br>
+          2. <strong>変換 タブ &rarr; 日付 &rarr; 月 &rarr; 月</strong> をクリックします。<br>
+          3. 日付が月の数値（1〜12）に<strong>置き換わります</strong>。</p>
+<p>元の日付列を残したい場合は、<strong>列の追加 タブ &rarr; 日付 &rarr; 月 &rarr; 月</strong> を使ってください。</p>
+</div>
+<div class="tip-box">
+<strong>「年月」列を作りたい場合</strong><br>
+          「2026年3月」のような年月文字列を作りたい場合は、「例からの列」で最初のセルに「2026年3月」と入力すると、Power Queryが自動推定してくれることが多いです。うまくいかない場合は、カスタム列で次のように記述します：<br>
+<code>Number.ToText(Date.Year([日付列])) & "年" & Number.ToText(Date.Month([日付列])) & "月"</code>
+</div>
+</section>
+<!-- ============================== -->
+<section id="date-calculation">
+<h2>日付の計算 &horbar; 期間・月末・加減算</h2>
+<h3>2つの日付の差を計算する（DATEDIF相当）</h3>
+<p>ExcelのDATEDIF関数に相当する操作です。Power Queryでは日付同士の引き算の結果が「Duration（期間）」型になるため、そこから日数や年数を取り出します。</p>
+<div class="step-box">
+<h4>操作手順（日数を算出）</h4>
+<p>1. <strong>列の追加 タブ &rarr; カスタム列</strong> をクリックします。<br>
+          2. 列名を「経過日数」とし、数式に次のように入力します：</p>
+<div class="code-block">Duration.Days([終了日] - [開始日])</div>
+<p>3. 「OK」をクリックすると、2つの日付の差が日数で表示されます。</p>
+</div>
+<p>年数に変換したい場合は <code>Duration.Days([終了日] - [開始日]) / 365</code> で概算できます。正確な年数が必要な場合は、年・月をそれぞれ抽出して計算する方法が確実です。</p>
+<div class="tip-box">
+<strong>GUIだけで日数差を出す方法</strong><br>
+          2つの日付列があるとき、<strong>列の追加 タブ &rarr; 日付 &rarr; 期間の減算 &rarr; 日数</strong> を使うとカスタム列を使わずにGUIだけで日数差の列を作れます（Excel 2021以降／Microsoft 365）。ただし、この操作がメニューに表示されるのは日付型の列を2つ選択しているときだけです。
+        </div>
+<h3>月末の日付を取得する（EOMONTH相当）</h3>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. 日付列のヘッダーをクリックして選択します。<br>
+          2. <strong>変換 タブ &rarr; 日付 &rarr; 月 &rarr; 月末</strong> をクリックします。<br>
+          3. 各日付がその月の末日に置き換わります（例：2026/03/21 &rarr; 2026/03/31）。</p>
+</div>
+<p>ExcelのEOMONTH(A1, 1)のように「翌月末」を求めたい場合は、先に「月の加算」で1ヶ月足してから「月末」を適用する2ステップで実現します。</p>
+<h3>日付に月や年を加算する</h3>
+<table class="ref-table">
+<thead><tr><th>GUI操作</th><th>動作</th><th>例</th></tr></thead>
+<tbody>
+<tr><td>変換 &rarr; 日付 &rarr; 年 &rarr; 年の加算</td><td>指定した年数を加算</td><td>2026/03/21 + 1年 &rarr; 2027/03/21</td></tr>
+<tr><td>変換 &rarr; 日付 &rarr; 月 &rarr; 月の加算</td><td>指定した月数を加算</td><td>2026/03/21 + 2ヶ月 &rarr; 2026/05/21</td></tr>
+<tr><td>変換 &rarr; 日付 &rarr; 日 &rarr; 日の加算</td><td>指定した日数を加算</td><td>2026/03/21 + 30日 &rarr; 2026/04/20</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ============================== -->
+<section id="date-troubleshooting">
+<h2>日付でよくあるトラブルと対処法</h2>
+<h3>トラブル1：日付がテキスト型のまま認識されない</h3>
+<p>CSVから取り込んだ日付が「2026/03/21」というテキストのまま、日付型に変換できないことがあります。</p>
+<div class="step-box">
+<h4>対処法</h4>
+<p>1. 列のデータ型アイコン（ABC）をクリック。<br>
+          2. 「ロケールを使用&hellip;」を選択。<br>
+          3. データ型で「日付」、ロケールで「日本語（日本）」を選択して「OK」。<br>
+          これで「年/月/日」形式のテキストを正しく日付型に変換できます。</p>
+</div>
+<h3>トラブル2：月と日が入れ替わる</h3>
+<p>「03/04/2026」を取り込んだら、3月4日ではなく4月3日として認識されることがあります。これはPower Queryがアメリカ形式（MM/DD/YYYY）で解釈しているためです。</p>
+<div class="step-box">
+<h4>対処法</h4>
+<p>上記と同様に「ロケールを使用&hellip;」で「日本語（日本）」を指定してください。それでも解決しない場合は、テキスト型のまま列を分割して年・月・日を取り出し、カスタム列で <code>#date([年], [月], [日])</code> のように日付を組み立てる方法が確実です。</p>
+</div>
+<h3>トラブル3：日付/時刻型になっていて時刻部分が邪魔</h3>
+<p>日付だけほしいのに「2026/03/21 0:00:00」のように時刻が付いている場合は、データ型を「日付/時刻」から「日付」に変更するだけで時刻部分が取り除かれます。</p>
+</section>
+<!-- ============================== -->
+<section id="excel-comparison">
+<h2>Excel関数との対応まとめ</h2>
+<h3>数値関数の対応</h3>
+<table class="ref-table">
+<thead><tr><th>Excel関数</th><th>Power Query GUI</th><th>M言語</th><th>注意</th></tr></thead>
+<tbody>
+<tr><td>ROUND</td><td>変換 &rarr; 丸め &rarr; 四捨五入</td><td>Number.Round([列], n)</td><td>銀行丸め（0.5は偶数方向）</td></tr>
+<tr><td>ROUNDUP</td><td>変換 &rarr; 丸め &rarr; 切り上げ</td><td>Number.RoundUp([列], n)</td><td>&horbar;</td></tr>
+<tr><td>ROUNDDOWN</td><td>変換 &rarr; 丸め &rarr; 切り捨て</td><td>Number.RoundDown([列], n)</td><td>&horbar;</td></tr>
+<tr><td>ABS</td><td>変換 &rarr; 科学 &rarr; 絶対値</td><td>Number.Abs([列])</td><td>&horbar;</td></tr>
+<tr><td>SUM（列全体）</td><td>変換 &rarr; 統計 &rarr; 合計</td><td>List.Sum([列])</td><td>テーブルが1値に変わる</td></tr>
+<tr><td>A1*B1（列同士）</td><td>カスタム列</td><td>[列A] * [列B]</td><td>GUIの標準ボタンは固定値のみ</td></tr>
+</tbody>
+</table>
+<h3>日付関数の対応</h3>
+<table class="ref-table">
+<thead><tr><th>Excel関数</th><th>Power Query GUI</th><th>M言語</th><th>注意</th></tr></thead>
+<tbody>
+<tr><td>YEAR</td><td>日付 &rarr; 年 &rarr; 年</td><td>Date.Year([列])</td><td>&horbar;</td></tr>
+<tr><td>MONTH</td><td>日付 &rarr; 月 &rarr; 月</td><td>Date.Month([列])</td><td>&horbar;</td></tr>
+<tr><td>DAY</td><td>日付 &rarr; 日 &rarr; 日</td><td>Date.Day([列])</td><td>&horbar;</td></tr>
+<tr><td>EOMONTH</td><td>日付 &rarr; 月 &rarr; 月末</td><td>Date.EndOfMonth([列])</td><td>翌月末は先に月を加算</td></tr>
+<tr><td>DATEDIF（日数）</td><td>カスタム列</td><td>Duration.Days([終了]-[開始])</td><td>&horbar;</td></tr>
+<tr><td>TODAY</td><td>カスタム列</td><td>DateTime.LocalNow()</td><td>GUIボタンなし</td></tr>
+<tr><td>DATE</td><td>カスタム列</td><td>#date(年, 月, 日)</td><td>GUIボタンなし</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ============================== -->
+<section id="practice">
+<h2>実践例 &horbar; 社員データから勤続年数と給与ランクを算出</h2>
+<h3>サンプルデータ</h3>
+<table class="ba-table">
+<thead><tr><th>社員名</th><th>入社日</th><th>基本給</th></tr></thead>
+<tbody>
+<tr><td>田中</td><td>2015/04/01</td><td>350000</td></tr>
+<tr><td>佐藤</td><td>2020/10/15</td><td>280000</td></tr>
+<tr><td>鈴木</td><td>2023/04/01</td><td>250000</td></tr>
+</tbody>
+</table>
+<div class="step-box">
+<h4>Step 1：勤続日数を算出（カスタム列）</h4>
+<p>列の追加 &rarr; カスタム列 &rarr; 列名「勤続日数」</p>
+<div class="code-block">Duration.Days(DateTime.LocalNow() - [入社日])</div>
+</div>
+<div class="step-box">
+<h4>Step 2：勤続年数に変換（カスタム列）</h4>
+<p>列の追加 &rarr; カスタム列 &rarr; 列名「勤続年数」</p>
+<div class="code-block">Number.RoundDown([勤続日数] / 365, 0)</div>
+</div>
+<div class="step-box">
+<h4>Step 3：入社年度を抽出（GUIで年を取り出す）</h4>
+<p>「入社日」列を選択 &rarr; <strong>列の追加 &rarr; 日付 &rarr; 年 &rarr; 年</strong></p>
+</div>
+<div class="step-box">
+<h4>Step 4：給与を千円単位に丸め</h4>
+<p>「基本給」列を選択 &rarr; <strong>変換 &rarr; 丸め &rarr; 切り捨て</strong> &rarr; 小数点以下の桁数「-3」（マイナスを指定すると千の位で丸められます）</p>
+</div>
+<h3>After</h3>
+<table class="ba-table">
+<thead><tr><th>社員名</th><th>入社日</th><th>基本給</th><th>勤続日数</th><th>勤続年数</th><th>入社年</th></tr></thead>
+<tbody>
+<tr><td>田中</td><td>2015/04/01</td><td>350000</td><td>4007</td><td>10</td><td>2015</td></tr>
+<tr><td>佐藤</td><td>2020/10/15</td><td>280000</td><td>1983</td><td>5</td><td>2020</td></tr>
+<tr><td>鈴木</td><td>2023/04/01</td><td>250000</td><td>1085</td><td>2</td><td>2023</td></tr>
+</tbody>
+</table>
+<p>カスタム列を2回使いましたが、数式はどちらも1行だけです。M言語の深い知識がなくても、このレベルの計算は十分に実用できます。</p>
+</section>
+<!-- ============================== -->
+<section id="summary">
+<h2>まとめ</h2>
+<p>数値と日付の操作で覚えておくべきポイントは4つです。<strong>第一に</strong>、「標準」ボタンは固定値との演算で、列同士の計算にはカスタム列を使うこと。<strong>第二に</strong>、Power Queryの四捨五入は「銀行丸め」であり、Excel の ROUND とは 0.5 ちょうどの処理が異なること。<strong>第三に</strong>、日付操作は「変換」タブだと元の列が書き換わるため、元の日付を残したい場合は「列の追加」タブを使うこと。<strong>第四に</strong>、日付のロケール問題（月日の取り違え）は、「ロケールを使用&hellip;」で日本語を指定することで解決すること。</p>
+<p>これで「パワークエリ GUIマスターシリーズ」全6回が完了です。ここまでの内容を身につければ、日常の Excel 作業の大部分をPower Queryで自動化できるはずです。さらに深い内容（グループ化、ピボット解除、マージ、パラメータクエリ、M言語）は、今後の記事で扱います。</p>
+</section>
+<!-- ============================== -->
+<nav class="nav-series">
+<strong>パワークエリ GUIマスターシリーズ</strong>
+<a href="../basic/article_powerquery_intro.html">⓪ パワークエリとは</a>
+<a href="../basic/article_pq_editor_ui.html">① エディターの画面構成と「適用したステップ」</a>
+<a href="../basic/article_pq_first_steps.html">② 取り込んだ直後にやる5つの定番操作</a>
+<a href="article_pq_text_operations.html">③ テキスト列を整形する</a>
+<a href="article_pq_row_operations.html">④ 行を操る &horbar; フィルター・並べ替え・重複削除・フィル</a>
+<a href="article_pq_add_columns.html">⑤ 新しい列を作る &horbar; 条件列・インデックス・カスタム列</a>
+<a class="current" href="article_pq_number_date.html">⑥ 数値と日付を扱う（このページ）</a>
+</nav>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>XLOOKUP比較編：VLOOKUP・INDEX+MATCHとの使い分け｜Excel &times; No VBA Lab</title>
+<meta content="XLOOKUP・VLOOKUP・INDEX+MATCHの違いと使い分けを徹底比較。VBA禁止環境でどの検索関数を選ぶべきか解説。" name="description">
+<meta content="XLOOKUP VLOOKUP 比較, INDEX MATCH 使い分け, 検索関数 違い, Excel 関数選択, VBA不要" name="keywords">
+<meta content="XLOOKUP比較編：VLOOKUP・INDEX+MATCHとの使い分け｜Excel &times; No VBA Lab" property="og:title">
+<meta content="XLOOKUP・VLOOKUP・INDEX+MATCHの違いと使い分けを徹底比較。VBA禁止環境でどの検索関数を選ぶべきか解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/latest/article_xlookup_vs.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/latest/article_xlookup_vs.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "XLOOKUP比較編：VLOOKUP・INDEX+MATCHとの使い分け",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "XLOOKUP・VLOOKUP・INDEX+MATCHの違いと使い分けを徹底比較。VBA禁止環境でどの検索関数を選ぶべきか解説。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-no-vba-lab.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-no-vba-lab.com/functions/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "XLOOKUP比較編：VLOOKUP・INDEX+MATCHとの使い分け",
+      "item": "https://excel-no-vba-lab.com/functions/latest/article_xlookup_vs.html"
+    }
+  ]
+}</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#functions">関数</a><span>&gt;</span>
+<a href="article_xlookup_basic.html">XLOOKUPシリーズ</a><span>&gt;</span>
+<strong>比較編</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-365">365</span>
+<span class="badge badge-all">全ver</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">XLOOKUP比較編：VLOOKUP・INDEX+MATCHとの徹底比較と使い分け</h1>
+</div>
+<!-- シリーズナビ -->
+<div class="series-nav">
+<h4>📚 XLOOKUPシリーズ</h4>
+<ul>
+<li><a href="article_xlookup_basic.html">① 基本編</a> &horbar; 構文・引数・動作イメージ</li>
+<li><a href="article_xlookup_advanced.html">② 応用編</a> &horbar; 複数列返却・第5/6引数・後ろから検索</li>
+<li class="current">③ 比較編（このページ）&horbar; vs VLOOKUP・INDEX+MATCH の徹底比較</li>
+<li><a href="article_xlookup_multi.html">④ 多条件検索編</a> &horbar; XLOOKUPネストで複数条件</li>
+</ul>
+</div>
+<!-- =========================================================
+         初心者向けメモ
+      ========================================================= -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> 初心者の方へ</h2>
+<div class="xdemo-note-good">
+<strong>💡 まずVLOOKUPから覚えるのもアリです！</strong><br>
+          「検索値」「範囲」「列番号」という概念は最初は難しく感じるかもしれません。<br>
+          VLOOKUPには<strong>「直感的で学習しやすい（初心者向け）」</strong>という大きなメリットがあります。
+          「まず基本のVLOOKUPで感覚を掴んでから、XLOOKUPやINDEX+MATCHにステップアップする」というアプローチで全く問題ありません。
+        </div>
+</section>
+<!-- =========================================================
+         3関数の比較まとめ
+      ========================================================= -->
+<section class="comparison-section">
+<h3>3関数 比較まとめ</h3>
+<div class="table-responsive">
+<div class="table-wrapper"><table class="comparison-table"><caption>データテーブル</caption>
+<thead>
+<tr>
+<th scope="col">項目</th>
+<th scope="col">XLOOKUP</th>
+<th scope="col">VLOOKUP</th>
+<th scope="col">INDEX+MATCH</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>対応バージョン</td>
+<td>2021 / 2024 / 365</td>
+<td>全バージョン</td>
+<td>全バージョン</td>
+</tr>
+<tr>
+<td>列の挿入・削除</td>
+<td>✅ 強い（ずれない）</td>
+<td>❌ 弱い（列番号ズレで致命的）</td>
+<td>✅ 強い（ずれない）</td>
+</tr>
+<tr>
+<td>左側への検索</td>
+<td>✅ 可能</td>
+<td>❌ 不可能</td>
+<td>✅ 可能</td>
+</tr>
+<tr>
+<td>#N/Aの回避</td>
+<td>✅ 引数内で完結</td>
+<td>⚠️ IFERRORが必要</td>
+<td>⚠️ IFERRORが必要</td>
+</tr>
+<tr>
+<td>後ろからの検索</td>
+<td>✅ 可能（-1指定）</td>
+<td>❌ 不可能</td>
+<td>❌ 不可能</td>
+</tr>
+<tr>
+<td>複数列の一括返却</td>
+<td>✅ 可能（スピル展開）</td>
+<td>❌ 1列ずつ</td>
+<td>⚠️ 列ごとに数式が必要</td>
+</tr>
+<tr>
+<td>バイナリ + 完全一致</td>
+<td>✅ 両立可能</td>
+<td>❌ 近似のみ高速</td>
+<td>❌ 不可</td>
+</tr>
+<tr>
+<td>行オフセット（&plusmn;n行）</td>
+<td>❌ 不可</td>
+<td>❌ 不可</td>
+<td>✅ MATCH結果に&plusmn;n</td>
+</tr>
+<tr>
+<td>数式の可読性</td>
+<td>✅ 高い（引数が明確）</td>
+<td>✅ シンプル（慣れれば直感的）</td>
+<td>⚠️ やや低い（入れ子）</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</section>
+<!-- =========================================================
+         VLOOKUPの列挿入・削除問題（詳細解説）
+      ========================================================= -->
+<section class="tips-section">
+<h3>VLOOKUPの最大の弱点：列の挿入・削除で壊れる</h3>
+<p>VLOOKUPは「左から数えて&cir;番目の列」と<strong>列番号を直接数値で指定</strong>します。
+          そのため、検索範囲の途中に列を挿入・削除すると<strong>参照先が決定的にズレてしまい、全く別のデータを引っ張ってくる</strong>という致命的な弱点があります。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=VLOOKUP(A2, D:F, 2, FALSE)　&larr; D列を起点に数えて2列目=E列を返す</span>
+</div>
+<div class="xdemo-note-warn">
+          ⚠️ D列とE列の間に新しい列を挿入すると、数式は変わらず「2列目」を参照するため、<strong>意図しない列のデータが返される</strong>ことになります。
+          気づかないうちに誤ったデータで計算が進むため、実務において非常にリスクが高い問題です。
+        </div>
+<div class="xdemo-note-good">
+          ✅ <strong>XLOOKUP・INDEX+MATCH はセル範囲を直接指定</strong>するため、列挿入・削除に追従して参照がズレることはありません。
+          この「壊れにくさ（堅牢性）」が、実務でXLOOKUPへの移行を推奨する最大の理由の1つです。
+        </div>
+</section>
+<!-- =========================================================
+         旧バージョンでの代替法
+      ========================================================= -->
+<section class="legacy-section">
+<h3>旧バージョンでの代替法</h3>
+<p>XLOOKUPが使えない環境（Excel 2016・2019など）では、以下の代替法を使います。</p>
+<h4>右側の列を取得（VLOOKUP）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(VLOOKUP(A2, D:E, 2, FALSE), "未登録")</span>
+</div>
+<p class="code-comment">シンプルで直感的。ただし列挿入・削除に弱い。</p>
+<h4>左側の列を取得（INDEX + MATCH）</h4>
+<p>VLOOKUPは「検索キーが表の一番左にないといけない」という縛りがあるため、左側を取得するにはこちらを使います。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(INDEX(C:C, MATCH(A2, D:D, 0)), "未登録")</span>
+</div>
+<p class="code-comment">全バージョン対応。列の挿入・削除にも強い。XLOOKUPの旧バージョン代替として最適。</p>
+</section>
+<!-- =========================================================
+         使い分けガイド
+      ========================================================= -->
+<section class="tips-section">
+<h3><span class="icon">📝</span> どれを使えばいいか？ 使い分けガイド</h3>
+<div class="usecase-box usecase-xlookup">
+<h4>✅ XLOOKUP を使うべき場面（Excel 2021 / 2024 / Microsoft 365 など）</h4>
+<ul>
+<li>新規ファイルかつ Excel 2021 / 2024 / Microsoft 365 などの対応環境限定の場合</li>
+<li>左側の列を検索したい場合（VLOOKUPでは不可）</li>
+<li>1本の数式で複数列を一括取得したい場合（スピル活用）</li>
+<li>エラー回避を引数の中だけで完結させたい場合</li>
+<li>最後のヒットを取得したい場合（末尾から検索）</li>
+<li>大量データで高速化したい場合（バイナリ検索 + 完全一致）</li>
+</ul>
+</div>
+<div class="usecase-box usecase-vlookup">
+<h4>⚠️ VLOOKUP でも許容できる場面</h4>
+<ul>
+<li>旧バージョン（〜2019）のExcelを使う場合</li>
+<li>右側の列のみを検索する単純なケース</li>
+<li>既存のVLOOKUP資産を維持・運用する場合</li>
+<li>Excel初学者が「検索の概念」から学ぶ場合（学習目的）</li>
+</ul>
+</div>
+<div class="usecase-box usecase-index">
+<h4>🔵 INDEX+MATCH が依然として最適な場面</h4>
+<ul>
+<li>旧バージョン（〜2019）で左側検索が必要な場合</li>
+<li>ヒット行の「1行上」「2行下」など<strong>行オフセット（&plusmn;n行）</strong>が必要な場合</li>
+<li>MATCH の結果（行番号）を他の計算にも再利用したい場合</li>
+</ul>
+</div>
+</section>
+<!-- シリーズナビ（下部） -->
+<div class="series-nav" style="margin-top:40px;">
+<h4>📚 XLOOKUPシリーズ &horbar; 次のステップへ</h4>
+<ul>
+<li><a href="article_xlookup_basic.html">① 基本編</a> &horbar; 構文・引数・動作イメージ</li>
+<li><a href="article_xlookup_advanced.html">② 応用編</a> &horbar; 複数列まとめて返す・高速検索の使い方</li>
+<li class="current">③ 比較編（このページ）</li>
+<li><a href="article_xlookup_multi.html">④ 多条件検索編</a> &horbar; XLOOKUPネストで複数条件を検索</li>
+</ul>
+</div>
+<!-- 関連記事 -->
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../old/article_index_match.html">INDEX + MATCH &horbar; 全バージョン対応の王道テクニック</a></li>
+<li><a href="../old/article_index_match_multi.html">INDEX + MATCH + 結合キー列 &horbar; 旧バージョンの多条件検索</a></li>
+<li><a href="article_xmatch.html">XMATCH &horbar; MATCH関数との違いと使い分け</a></li>
+<li><a href="../old/article_iferror.html">IFERROR vs IFNA の使い分け</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+

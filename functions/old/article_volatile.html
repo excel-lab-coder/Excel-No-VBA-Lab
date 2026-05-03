@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>【保存版】Excel揮発性関数 完全ガイド｜再計算の仕組み・INDIRECT問題・最適化設計｜Excel &times; No VBA Lab</title>
+<meta content="揮発性関数（INDIRECT・OFFSET・TODAY・NOW等）の仕組みと、激重Excel化を防ぐ非揮発性代替関数への書き換え方法を解説。" name="description">
+<meta content="揮発性関数 Excel, INDIRECT 遅い, OFFSET 代替, 再計算 全体 防ぐ, VBA不要 高速化" name="keywords">
+<meta content="【保存版】Excel揮発性関数 完全ガイド｜再計算の仕組み・INDIRECT問題・最適化設計｜Excel &times; No VBA Lab" property="og:title">
+<meta content="揮発性関数（INDIRECT・OFFSET・TODAY・NOW等）の仕組みと、激重Excel化を防ぐ非揮発性代替関数への書き換え方法を解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/old/article_volatile.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/old/article_volatile.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "【保存版】Excel揮発性関数 完全ガイド",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "揮発性関数（INDIRECT・OFFSET・TODAY・NOW等）の仕組みと、激重Excel化を防ぐ非揮発性代替関数への書き換え方法を解説。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-no-vba-lab.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-no-vba-lab.com/functions/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "【保存版】Excel揮発性関数 完全ガイド",
+      "item": "https://excel-no-vba-lab.com/functions/old/article_volatile.html"
+    }
+  ]
+}</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#others">計算速度</a><span>&gt;</span>
+<strong>揮発性関数 完全ガイド</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">Excel 揮発性関数 完全ガイド<br><span style="font-size:.55em;font-weight:400;color:#666;">&horbar; 再計算の3種類・INDIRECT問題・条件付き書式の超揮発性・シート間設計・構成変更時の落とし穴まで全網羅 &horbar;</span></h1>
+</div>
+<!-- ========== 目次 ========== -->
+<div class="toc-box">
+<h3>この記事の内容</h3>
+<ol>
+<li><a href="#sec-three">再計算の3種類を理解する</a></li>
+<li><a href="#sec-core">核心：「動く列」と「動かない列」を図で理解する</a></li>
+<li><a href="#sec-list">揮発性関数の一覧</a></li>
+<li><a href="#sec-myth">よくある誤解と真実（ROW / COLUMN / INDEX は非揮発性）</a></li>
+<li><a href="#sec-sumif">SUMIF の条件付き揮発性</a></li>
+<li><a href="#sec-infection">IF / CHOOSE の揮発性「感染」規則</a></li>
+<li><a href="#sec-onecell">揮発性関数を「1セルに閉じ込める」パターン</a></li>
+<li><a href="#sec-name">名前の管理（Name Manager）と揮発性</a></li>
+<li><a href="#sec-indirect">INDIRECT の3つの問題点</a></li>
+<li><a href="#sec-actions">揮発性アクション一覧</a></li>
+<li><a href="#sec-restructure">サイト構成変更と揮発性アクションの連鎖</a></li>
+<li><a href="#sec-cond">条件付き書式：「超揮発性」</a></li>
+<li><a href="#sec-sheet">シート間の依存関係と揮発性の影響</a></li>
+<li><a href="#sec-filter">オートフィルタ vs 関数による抽出</a></li>
+<li><a href="#sec-indexfilter">INDEX+MATCH と FILTER関数の違い</a></li>
+<li><a href="#sec-mass">数万行のINDIRECT問題</a></li>
+<li><a href="#sec-gooduse">揮発性関数の正しい使いどころ</a></li>
+<li><a href="#sec-alt">脱・揮発性！代替手段一覧</a></li>
+<li><a href="#sec-summary">まとめチェックリスト</a></li>
+</ol>
+</div>
+<!-- ==========================================================
+         【1】再計算の3種類
+      ========================================================== -->
+<section class="goal-section" id="sec-three">
+<h2><span class="icon">💡</span> 再計算の3種類を理解する</h2>
+<p>Excelの再計算はすべて同じではありません。以下の3種類を区別することが、パフォーマンス改善の出発点です。</p>
+<div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col" style="width:22%">種類</th>
+<th scope="col" style="width:26%">トリガー</th>
+<th class="w-30" scope="col">再計算範囲</th>
+<th scope="col" style="width:22%">コスト</th>
+</tr>
+<tr>
+<td class="col-item">① Smart Recalc<br>（依存関係再計算）</td>
+<td>セルの値が実際に変わったとき</td>
+<td>変更セルに依存する数式だけ</td>
+<td><span class="diff-ok">最小・必要な再計算</span></td>
+</tr>
+<tr>
+<td class="col-item">② 揮発性関数による再計算</td>
+<td>ブック内のどこかで何かが変わったとき</td>
+<td>揮発性関数を<strong>含む</strong>セルすべて</td>
+<td><span class="diff-ng">揮発性数式の数 &times; 計算コスト</span></td>
+</tr>
+<tr>
+<td class="col-item">③ 揮発性アクションによる再計算</td>
+<td>特定の操作（フィルタ、名前変更、行挿入等）</td>
+<td>影響範囲内の全数式が「dirty」マーク</td>
+<td><span class="diff-ng">範囲内の全数式が無条件に再計算</span></td>
+</tr>
+</table></div>
+<div class="xdemo-note">
+<strong>②の重要な性質</strong><br>
+          揮発性関数を含むセルは毎回再計算されます。しかし、再計算した結果が前回と同じ値なら、そこから先の依存セルは①の判断で「変化なし＝再計算不要」となり動きません。<strong>揮発性は「そのセルだけ」で止まり、値が変わらなければ先に伝染しない</strong>のです。
+        </div>
+<div class="xdemo-note-good">
+<strong>例で理解する</strong><br>
+          Z1に <code>=TODAY()</code> を入れ、B1:B1000が <code>=IF(A1&lt;$Z$1,"期限切れ","OK")</code> と参照しているとします。何かのセルを編集すると：<br>
+          1. Z1（揮発性）が再計算される &rarr; 同じ日の作業中は結果が変わらない<br>
+          2. Z1の値が変わらないため、B1:B1000は再計算されない（Smart Recalc）<br>
+          3. 日付が変わった翌日の初回再計算ではZ1の値が変わり、B1:B1000も再計算される（正常な依存関係再計算）
+        </div>
+</section>
+<!-- ==========================================================
+         【2】核心：動く列と動かない列
+      ========================================================== -->
+<section class="method-section" id="sec-core">
+<h2>【2】核心：「動く列」と「動かない列」を図で理解する</h2>
+<p>揮発性関数のパフォーマンス問題を理解するうえで最も重要なポイントは、<strong>「揮発性数式のセルは毎回動くが、その結果が変わらなければ参照先は動かない」</strong>ということです。</p>
+<h3>シナリオ：関係ないセル（Z1）を編集したとき</h3>
+<div class="diagram-wrap">
+<div class="diagram-flex">
+<div class="diagram-col trig">
+<div class="diagram-col-head">Z1 セル（編集した場所）</div>
+<div class="diagram-cell">
+<code>Z1 に「あ」と入力</code><br>
+<span class="st-trig">&larr; これがトリガー</span>
+</div>
+</div>
+<div class="diagram-col arrow-col">
+<div class="big-arrow">&rarr;</div>
+<div class="big-arrow-label">再計算<br>開始</div>
+</div>
+<div class="diagram-col v">
+<div class="diagram-col-head">A列（INDIRECT入りの数式）</div>
+<div class="diagram-cell">
+<code>A1 =IF(INDIRECT("元!"&D1)&gt;100,"大","小")</code><br>
+                結果："大"（前回と同じ）<br>
+<span class="st-run">⚡ 再計算された（揮発性だから）</span>
+</div>
+<div class="diagram-cell">
+<code>A2 =IF(INDIRECT("元!"&D2)&gt;100,"大","小")</code><br>
+                結果："小"（前回と同じ）<br>
+<span class="st-run">⚡ 再計算された（揮発性だから）</span>
+</div>
+<div class="diagram-cell">
+<code>A3 =IF(INDIRECT("元!"&D3)&gt;100,"大","小")</code><br>
+                結果："大"（前回と同じ）<br>
+<span class="st-run">⚡ 再計算された（揮発性だから）</span>
+</div>
+<div class="diagram-cell" style="text-align:center;color:#c62828;font-weight:700">
+                ︙ 30,000行すべて再計算 ︙
+              </div>
+</div>
+<div class="diagram-col arrow-col">
+<div class="big-arrow">&rarr;</div>
+<div class="big-arrow-label">値が<br>変わった？</div>
+</div>
+<div class="diagram-col nv">
+<div class="diagram-col-head">B列（A列を参照する数式）</div>
+<div class="diagram-cell">
+<code>B1 =A1&"："&C1</code><br>
+<span class="st-skip">💤 再計算しない（A1の値が変わっていないから）</span>
+</div>
+<div class="diagram-cell">
+<code>B2 =A2&"："&C2</code><br>
+<span class="st-skip">💤 再計算しない（A2の値が変わっていないから）</span>
+</div>
+<div class="diagram-cell">
+<code>B3 =A3&"："&C3</code><br>
+<span class="st-skip">💤 再計算しない（A3の値が変わっていないから）</span>
+</div>
+<div class="diagram-cell" style="text-align:center;color:#2e7d32;font-weight:700">
+                ︙ 30,000行すべてスキップ ︙
+              </div>
+</div>
+</div>
+</div>
+<h3>処理の流れ（タイムライン）</h3>
+<div class="timeline-flex">
+<div class="tl-step s-run">
+<strong>STEP 1</strong><br>
+            Z1を編集<br>&darr;<br>再計算サイクル開始
+          </div>
+<div class="tl-arrow">&rarr;</div>
+<div class="tl-step s-run">
+<strong>STEP 2</strong><br>
+            A列の揮発性数式を<br><strong>全行再計算</strong><br>
+<span style="color:#c62828">（ここでフリーズ）</span>
+</div>
+<div class="tl-arrow">&rarr;</div>
+<div class="tl-step s-chk">
+<strong>STEP 3</strong><br>
+            A列の結果を<br>前回の値と比較<br>
+<span style="color:#f57f17">&rarr; 全行「同じ」</span>
+</div>
+<div class="tl-arrow">&rarr;</div>
+<div class="tl-step s-skip">
+<strong>STEP 4</strong><br>
+            B列は<br><strong>全行スキップ</strong><br>
+<span style="color:#2e7d32">（計算しない）</span>
+</div>
+</div>
+<div class="xdemo-note-fire">
+<strong>問題の本質はここ</strong><br>
+          B列は動かない。これは良いことです。しかし STEP 2 でA列の30,000個のINDIRECT数式が毎回再計算されること自体がフリーズの原因です。元データが変わっていなくても、INDIRECTを含むA列は「揮発性だから」というだけで必ず全行が動きます。しかもINDIRECTはシングルスレッドなので、マルチコアCPUでも1コアしか使えません。
+        </div>
+<h3>INDEX+MATCH に置き換えた場合</h3>
+<div class="diagram-wrap">
+<div class="diagram-flex">
+<div class="diagram-col trig">
+<div class="diagram-col-head">Z1 セル（編集した場所）</div>
+<div class="diagram-cell">
+<code>Z1 に「あ」と入力</code><br>
+<span class="st-trig">&larr; これがトリガー</span>
+</div>
+</div>
+<div class="diagram-col arrow-col">
+<div class="big-arrow">&rarr;</div>
+<div class="big-arrow-label">再計算<br>開始</div>
+</div>
+<div class="diagram-col nv">
+<div class="diagram-col-head">A列（INDEX+MATCHの数式）</div>
+<div class="diagram-cell">
+<code>A1 =IF(INDEX(元!E:E,MATCH(D1,元!A:A,0))&gt;100,"大","小")</code><br>
+<span class="st-skip">💤 再計算しない（非揮発性・参照先に変化なし）</span>
+</div>
+<div class="diagram-cell">
+<code>A2, A3 ...</code><br>
+<span class="st-skip">💤 再計算しない</span>
+</div>
+<div class="diagram-cell" style="text-align:center;color:#2e7d32;font-weight:700">
+                ︙ 30,000行すべてスキップ ︙
+              </div>
+</div>
+<div class="diagram-col arrow-col">
+<div class="big-arrow">&rarr;</div>
+</div>
+<div class="diagram-col nv">
+<div class="diagram-col-head">B列（A列を参照する数式）</div>
+<div class="diagram-cell">
+<code>B1 =A1&"："&C1</code><br>
+<span class="st-skip">💤 再計算しない</span>
+</div>
+<div class="diagram-cell">
+<code>B2, B3 ...</code><br>
+<span class="st-skip">💤 再計算しない</span>
+</div>
+<div class="diagram-cell" style="text-align:center;color:#2e7d32;font-weight:700">
+                ︙ 30,000行すべてスキップ ︙
+              </div>
+</div>
+</div>
+</div>
+<div class="xdemo-note-good">
+<strong>違いは明白</strong><br>
+          INDEX+MATCH は非揮発性なので、Z1の編集とは無関係 &rarr; A列もB列も一切動かない &rarr; フリーズしない。
+        </div>
+<h3>まとめ：同じ「B列が動かない」でも天と地の差</h3>
+<div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
+<tr>
+<th class="w-20" scope="col"></th>
+<th scope="col" style="width:40%">INDIRECT 方式</th>
+<th scope="col" style="width:40%">INDEX+MATCH 方式</th>
+</tr>
+<tr>
+<td class="col-item">A列</td>
+<td><span class="diff-ng">30,000回再計算（結果は同じ）</span></td>
+<td><span class="diff-ok">0回（再計算しない）</span></td>
+</tr>
+<tr>
+<td class="col-item">B列</td>
+<td><span class="diff-ok">0回（A列の値が変わらないため）</span></td>
+<td><span class="diff-ok">0回（同じ）</span></td>
+</tr>
+<tr>
+<td class="col-item">体感</td>
+<td><span class="diff-ng">数秒〜十数秒フリーズ</span></td>
+<td><span class="diff-ok">一瞬で完了</span></td>
+</tr>
+<tr>
+<td class="col-item">原因</td>
+<td><span class="diff-ng">A列の「無駄な再計算」コスト</span></td>
+<td>&horbar;</td>
+</tr>
+</table></div>
+</section>
+<!-- ==========================================================
+         【3】揮発性関数一覧
+      ========================================================== -->
+<section class="method-section" id="sec-list">
+<h2>【3】揮発性関数の一覧</h2>
+<p>以下はMicrosoft公式ドキュメントおよびCharles Williams（Decision Models / FastExcel）の検証に基づく揮発性関数の一覧です。</p>
+<div class="table-wrapper"><table class="format-table"><caption>データテーブル</caption>
+<tr><th scope="col">関数</th><th scope="col">揮発性</th><th scope="col">リスク・備考</th></tr>
+<tr><td><span class="format-code">INDIRECT()</span></td><td><span class="tag-v">揮発性</span></td><td>シングルスレッド動作・閉じたブック不可・代替推奨</td></tr>
+<tr><td><span class="format-code">OFFSET()</span></td><td><span class="tag-v">揮発性</span></td><td>INDEXで代替可能</td></tr>
+<tr><td><span class="format-code">TODAY()</span></td><td><span class="tag-v">揮発性</span></td><td>1セルに閉じ込めれば影響最小</td></tr>
+<tr><td><span class="format-code">NOW()</span></td><td><span class="tag-v">揮発性</span></td><td>同上</td></tr>
+<tr><td><span class="format-code">RAND()</span></td><td><span class="tag-v">揮発性</span></td><td>毎回値が変わるため依存先も毎回再計算</td></tr>
+<tr><td><span class="format-code">RANDBETWEEN()</span></td><td><span class="tag-v">揮発性</span></td><td>同上</td></tr>
+<tr><td><span class="format-code">RANDARRAY()</span></td><td><span class="tag-v">揮発性</span></td><td>365/2021以降</td></tr>
+<tr><td><span class="format-code">CELL()</span></td><td><span class="tag-v">揮発性</span></td><td>引数によらず揮発性</td></tr>
+<tr><td><span class="format-code">INFO()</span></td><td><span class="tag-v">揮発性</span></td><td>使用頻度は低い</td></tr>
+<tr><td><span class="format-code">SUMIF()</span></td><td><span class="tag-sv">条件付き揮発性</span></td><td>第1引数と第3引数のサイズが異なると揮発性（<a href="#sec-sumif">詳細</a>）</td></tr>
+</table></div>
+<p style="font-size:.85em;color:#666;">出典：<a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/excel-performance/excel-improving-calculation-performance" target="_blank">Microsoft Learn &mdash; Excel Improving Calculation Performance</a>、<a href="https://www.decisionmodels.com/calcsecretsi.htm" target="_blank">Decision Models &mdash; Volatile Excel Functions</a></p>
+</section>
+<!-- ==========================================================
+         【4】よくある誤解と真実
+      ========================================================== -->
+<section class="method-section" id="sec-myth">
+<h2>【4】よくある誤解と真実（Myth Busters）</h2>
+<p>一部のサイトでは以下の関数が「揮発性」と記載されていますが、Microsoft公式ドキュメントとCharles Williamsのテストにより<strong>非揮発性</strong>が確認されています。</p>
+<div class="table-wrapper"><table class="format-table"><caption>データテーブル</caption>
+<tr><th scope="col">関数</th><th scope="col">実際の揮発性</th><th scope="col">根拠</th></tr>
+<tr><td><span class="format-code">ROW()</span></td><td><span class="tag-nv">非揮発性</span></td><td>行挿入時の再計算は依存関係追跡による正常動作</td></tr>
+<tr><td><span class="format-code">COLUMN()</span></td><td><span class="tag-nv">非揮発性</span></td><td>同上</td></tr>
+<tr><td><span class="format-code">ROWS()</span></td><td><span class="tag-nv">非揮発性</span></td><td>Microsoft Learn で明記</td></tr>
+<tr><td><span class="format-code">COLUMNS()</span></td><td><span class="tag-nv">非揮発性</span></td><td>同上</td></tr>
+<tr><td><span class="format-code">AREAS()</span></td><td><span class="tag-nv">非揮発性</span></td><td>同上</td></tr>
+<tr><td><span class="format-code">INDEX()</span></td><td><span class="tag-nv">非揮発性</span></td><td>OFFSETの代替として推奨される理由</td></tr>
+<tr><td><span class="format-code">FILTER()</span></td><td><span class="tag-nv">非揮発性</span></td><td>動的配列関数。ソースデータや条件変更時のみ再計算</td></tr>
+<tr><td><span class="format-code">XLOOKUP()</span></td><td><span class="tag-nv">非揮発性</span></td><td>依存関係追跡のみで動作</td></tr>
+</table></div>
+<div class="xdemo-note-warn">
+<strong>SumProduct Blog での ROW() の記載について</strong><br>
+          SumProductの「A to Z of Excel Functions」ではROW()を「volatile」と記載していますが、Microsoft Learnの "Excel Improving Calculation Performance" ではROW / COLUMN / ROWS / COLUMNS / AREAS / INDEXを「previously documented as volatile but are in fact non-volatile」と明記しています。本ガイドでは公式分類に従います。
+        </div>
+</section>
+<!-- ==========================================================
+         【5】SUMIF条件付き揮発性
+      ========================================================== -->
+<section class="method-section" id="sec-sumif">
+<h2>【5】SUMIF の条件付き揮発性</h2>
+<p><code>SUMIF</code> は通常は非揮発性ですが、第1引数（条件範囲）と第3引数（合計範囲）のサイズが異なる場合に揮発性になります。</p>
+<p class="color-red">❌ 揮発性になるケース（サイズ不一致）</p>
+<div class="code-readonly" data-lang="excel">
+<span class="code-line">=SUMIF(A1:A100, "&gt;0", B1)        &larr; A列100行 vs B列1セル &rarr; 揮発性</span>
+</div>
+<p class="color-2e7d32">✅ 非揮発性のケース（サイズ一致）</p>
+<div class="code-readonly" data-lang="excel">
+<span class="code-line">=SUMIF(A1:A100, "&gt;0", B1:B100)   &larr; 両方100行 &rarr; 非揮発性</span>
+</div>
+<p>整形シートでSUMIFを大量に使う場合、範囲サイズを必ず一致させてください。</p>
+</section>
+<!-- ==========================================================
+         【6】IF / CHOOSEの感染規則
+      ========================================================== -->
+<section class="method-section" id="sec-infection">
+<h2>【6】IF / CHOOSE の揮発性「感染」規則</h2>
+<p>揮発性かどうかは数式の<strong>構文解析（パース）</strong>の段階で決まり、<strong>実行時の評価とは無関係</strong>です。</p>
+<h3>2段階の処理フロー</h3>
+<div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
+<tr><th class="w-20" scope="col">段階</th><th scope="col" style="width:45%">処理内容</th><th class="w-35" scope="col">揮発性判定への影響</th></tr>
+<tr><td class="col-item">① 構文解析<br><span style="font-size:.8em;font-weight:400">（Enter時・ブック読込時）</span></td><td>数式テキストに揮発性関数名が含まれるかチェック</td><td>含まれていればそのセルを「揮発性」としてマーク</td></tr>
+<tr><td class="col-item">② 実行<br><span style="font-size:.8em;font-weight:400">（再計算時）</span></td><td>数式を実際に計算し分岐を決定</td><td>影響なし。揮発性かどうかは①で決定済み</td></tr>
+</table></div>
+<h3>具体例</h3>
+<div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
+<tr><th scope="col" style="width:45%">数式</th><th scope="col" style="width:18%">揮発性？</th><th scope="col" style="width:37%">理由</th></tr>
+<tr>
+<td class="col-item" style="font-size:.85em"><code>=IF(1&gt;0, 1, RAND())</code></td>
+<td><span class="tag-v">揮発性</span></td>
+<td style="text-align:left;font-size:.85em">RAND()は実行されないが、構文に「RAND」が存在 &rarr; 揮発性マーク</td>
+</tr>
+<tr style="background:#fff9c4">
+<td class="col-item" style="font-size:.85em"><code>=IF(1&gt;0, 1, A1)</code><br>（A1に <code>=RAND()</code>）</td>
+<td><span class="tag-nv">非揮発性</span></td>
+<td style="text-align:left;font-size:.85em">構文には「A1」というアドレスだけ。A1の中身は検査されない</td>
+</tr>
+<tr>
+<td class="col-item" style="font-size:.85em"><code>=IF(A1&lt;TODAY(), "期限切れ", "OK")</code></td>
+<td><span class="tag-v">揮発性</span></td>
+<td style="text-align:left;font-size:.85em">「TODAY」が数式テキストに存在</td>
+</tr>
+<tr style="background:#fff9c4">
+<td class="col-item" style="font-size:.85em"><code>=IF(A1&lt;$Z$1, "期限切れ", "OK")</code><br>（Z1に <code>=TODAY()</code>）</td>
+<td><span class="tag-nv">非揮発性</span></td>
+<td style="text-align:left;font-size:.85em">数式テキストに揮発性関数名なし。$Z$1はただのアドレス</td>
+</tr>
+</table></div>
+<div class="xdemo-note">
+<strong>セル参照が揮発性を「感染」させない理由</strong><br>
+          構文解析では <code>$Z$1</code> は「アドレス」として処理されるだけで、Z1の中身を見に行きません。これが「1セルに閉じ込める」パターンの根拠です。
+        </div>
+<div class="xdemo-note-warn">
+<strong>AND / OR に注意</strong><br>
+<code>AND()</code> と <code>OR()</code> はIFと異なり、<strong>すべての引数を常に評価</strong>します。<code>=AND(TRUE, RAND()&gt;0.5)</code> は揮発性であるだけでなく、条件に関わらず毎回 RAND() が実行されます。IFの「短絡評価（条件に応じて片方だけ実行）」とは異なるため注意が必要です。
+        </div>
+</section>
+<!-- ==========================================================
+         【7】1セルに閉じ込める
+      ========================================================== -->
+<section class="method-section" id="sec-onecell">
+<h2>【7】揮発性関数を「1セルに閉じ込める」パターン</h2>
+<div class="scenario-box">
+<h4>シナリオ：1000行の日付列で期限切れかどうかを判定したい</h4>
+</div>
+<p class="color-red">❌ 悪い例：1000行すべてに TODAY() を直接書く</p>
+<div class="code-readonly" data-lang="excel">
+<span class="code-line">B1 =IF(A1&lt;TODAY(),"期限切れ","OK")  &larr; 構文にTODAYがある &rarr; 揮発性</span>
+<span class="code-line">B2 =IF(A2&lt;TODAY(),"期限切れ","OK")</span>
+<span class="code-line">...</span>
+<span class="code-line">B1000 =IF(A1000&lt;TODAY(),"期限切れ","OK")</span>
+<span class="code-line">&rarr; 1000個のセルすべてが揮発性 &rarr; 毎回1000回 TODAY() が再計算される</span>
+</div>
+<p class="color-2e7d32">✅ 良い例：TODAY() は Z1 に1つだけ。他は Z1 を参照</p>
+<p class="code-label-good">Z1 に入れる数式</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TODAY()</span>
+</div>
+<p class="code-label-good">B1:B1000 に入れる数式（非揮発性）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(A1&lt;$Z$1,"期限切れ","OK")</span>
+</div>
+<div class="code-readonly" data-lang="excel">
+<span class="code-line">&rarr; 揮発性数式はZ1の1つだけ</span>
+<span class="code-line">&rarr; 同じ日の作業中はZ1の値が変わらないのでB列も動かない</span>
+</div>
+<div class="xdemo-note-good">
+<strong>なぜ B1:B1000 は非揮発性なのか？</strong><br>
+          前セクションで説明した構文解析の規則のとおり、<code>$Z$1</code> はただのセル参照であり、Excelは Z1 の中身を見に行きません。数式テキスト <code>IF(A1&lt;$Z$1,"期限切れ","OK")</code> に揮発性関数名が含まれないため、非揮発性と判定されます。
+        </div>
+</section>
+<!-- ==========================================================
+         【8】名前の管理
+      ========================================================== -->
+<section class="method-section" id="sec-name">
+<h2>【8】名前の管理（Name Manager）と揮発性</h2>
+<h3>トラップ①：名前の定義に揮発性関数を入れる</h3>
+<p>名前の管理で <code>今日 = TODAY()</code> のような定義を作ると、その名前を参照するすべての数式が揮発性になります。しかも<strong>名前が使われるたびに評価される</strong>ため、100箇所で「今日」を参照すると100回 <code>TODAY()</code> が実行されます。</p>
+<p class="color-red">❌ 名前の管理に揮発性関数を直接定義</p>
+<div class="code-readonly" data-lang="excel">
+<span class="code-line">名前の管理: 今日 = TODAY()</span>
+<span class="code-line">A1 =IF(B1&lt;今日,"期限切れ","OK")  &larr; 名前展開で TODAY() が埋め込まれる &rarr; 揮発性</span>
+<span class="code-line">&rarr; 100箇所で「今日」を使うと、TODAY() が100回評価される</span>
+</div>
+<p class="color-2e7d32">✅ セルに書いて名前はセル参照に</p>
+<p class="code-label-good">Z1 に入れる数式</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TODAY()</span>
+</div>
+<div class="code-readonly" data-lang="excel">
+<span class="code-line">名前の管理: 今日 = Sheet1!$Z$1</span>
+<span class="code-line">A1 =IF(B1&lt;今日,"期限切れ","OK")  &larr; 名前はセル参照に解決 &rarr; 非揮発性</span>
+<span class="code-line">&rarr; TODAY() の評価は Z1 の1回だけ</span>
+</div>
+<h3>トラップ②：名前の操作自体が揮発性アクション</h3>
+<p>名前の管理で名前を<strong>追加・変更・削除</strong>する行為自体が「揮発性アクション」です。参照先が単純なセル範囲（例: <code>=Sheet1!$A$1:$D$50</code>）であっても、名前を操作するだけでブック全体の再計算がトリガーされます。大量の名前を一括整理する際にExcelがフリーズする原因はこれです。</p>
+<div class="xdemo-note-warn">
+<strong>設計指針</strong><br>
+          揮発性関数を名前の定義に直接入れない。揮発性関数は必ず1つのセルに書き、名前にはそのセル参照を設定する。
+        </div>
+</section>
+<!-- ==========================================================
+         【9】INDIRECTの3つの問題点
+      ========================================================== -->
+<section class="method-section" id="sec-indirect">
+<h2>【9】INDIRECT の3つの問題点</h2>
+<div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
+<tr><th scope="col" style="width:8%">#</th><th class="w-25" scope="col">問題</th><th scope="col" style="width:67%">説明</th></tr>
+<tr><td>1</td><td class="col-item">常に揮発性</td><td class="text-left">引数や結果に関係なく、すべての再計算サイクルで再評価される。結果が前回と同じでも計算自体は毎回走る</td></tr>
+<tr><td>2</td><td class="col-item">閉じたブック参照不可</td><td class="text-left">参照先のブックが閉じているとエラー。INDEX/MATCHは閉じたブックでも動作する</td></tr>
+<tr><td>3</td><td class="col-item">シングルスレッド動作</td><td class="text-left">Excelのマルチスレッド再計算を無効化し、1つのCPUコアでしか計算されない。数万行で致命的なボトルネック</td></tr>
+</table></div>
+<div class="xdemo-note-fire">
+<strong>代替手段を検討してください</strong><br>
+          シート切替 &rarr; <code>CHOOSE()</code> または <code>XLOOKUP()</code>、動的範囲 &rarr; <code>INDEX()</code> のコロン構文、カスケードドロップダウン &rarr; <code>FILTER()</code>（365/2021以降）
+        </div>
+</section>
+<!-- ==========================================================
+         【10】揮発性アクション一覧
+      ========================================================== -->
+<section class="method-section" id="sec-actions">
+<h2>【10】揮発性アクション一覧</h2>
+<p>以下の操作は揮発性関数とは無関係に、影響範囲内のすべての数式を「dirty（要再計算）」としてマークします。これが③の再計算です。</p>
+<div class="table-wrapper"><table class="format-table"><caption>データテーブル</caption>
+<tr><th scope="col" style="width:32%">操作</th><th class="w-35" scope="col">影響範囲</th><th scope="col" style="width:33%">備考</th></tr>
+<tr><td>行・列・セルの挿入/削除/移動</td><td>名前付き範囲やクロスシート参照を含む場合、ブック全体</td><td>構造変更は参照を再構築するため</td></tr>
+<tr><td>名前の管理で名前を追加/変更/削除</td><td>ブック全体</td><td>参照先が単純なセル範囲であっても操作自体がトリガー</td></tr>
+<tr><td>シート名変更・シート移動・シート削除</td><td>該当シートを参照する全数式</td><td>参照文字列の更新が必要なため</td></tr>
+<tr><td>オートフィルタ操作</td><td>フィルタ範囲内の全数式</td><td>フィルタ切替のたびに範囲内が全てdirty</td></tr>
+<tr><td>行/列境界線のダブルクリック（自動調整）</td><td>自動計算モード時にブック全体</td><td>画面再描画を伴う</td></tr>
+<tr><td>CSVファイルを開く</td><td>手動計算モードでもブック全体</td><td>Excel仕様の例外的動作</td></tr>
+<tr><td>ゴールシーク</td><td>反復ごとにブック全体</td><td>収束するまで繰り返される</td></tr>
+<tr><td>行の非表示/再表示（Excel 2003のみ）</td><td>ブック全体</td><td>2003限定のレガシー動作。2007以降は発生しない</td></tr>
+</table></div>
+</section>
+<!-- ==========================================================
+         【11】サイト構成変更と揮発性アクションの連鎖
+      ========================================================== -->
+<section class="method-section" id="sec-restructure">
+<h2>【11】ブック構成の変更と揮発性アクションの連鎖 &horbar; 数万行で起きる地獄</h2>
+<p>ブックの構造を変更する操作（シート名変更、シート移動、行列の挿入削除、名前の一括整理など）は<strong>すべて揮発性アクション</strong>です。数万行の数式が入ったブックでこれらを実行すると、構成変更のたびにブック全体が再計算され、深刻なフリーズが発生します。</p>
+<h3>具体的に何が起きるか</h3>
+<div class="scenario-box">
+<h4>シナリオ：整形シートに30,000行の数式があるブックで、シート名を「元データ」&rarr;「原本」に変更する</h4>
+</div>
+<div class="timeline-flex">
+<div class="tl-step s-run">
+<strong>STEP 1</strong><br>
+            シート名を<br>「元データ」&rarr;「原本」<br>に変更
+          </div>
+<div class="tl-arrow">&rarr;</div>
+<div class="tl-step s-run">
+<strong>STEP 2</strong><br>
+            「元データ」を参照する<br><strong>全数式の参照文字列</strong><br>が「原本」に更新される
+          </div>
+<div class="tl-arrow">&rarr;</div>
+<div class="tl-step s-run">
+<strong>STEP 3</strong><br>
+            揮発性アクション発動<br>影響範囲の<strong>全数式</strong>が<br>dirtyマーク
+          </div>
+<div class="tl-arrow">&rarr;</div>
+<div class="tl-step s-run">
+<strong>STEP 4</strong><br>
+            30,000行すべてが<br><strong>再計算される</strong><br>
+<span style="color:#c62828">（フリーズ）</span>
+</div>
+</div>
+<p>さらに悪いことに、この30,000行にINDIRECTやOFFSETが含まれている場合、通常の揮発性再計算（②）に加えて揮発性アクション（③）のdirtyマークが重なり、二重に再計算が走ります。</p>
+<h3>特に危険な操作パターン</h3>
+<div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
+<tr><th class="w-35" scope="col">操作</th><th class="w-30" scope="col">影響</th><th class="w-35" scope="col">対策</th></tr>
+<tr>
+<td class="col-item">シート名の変更</td>
+<td>該当シートを参照する全数式が再計算</td>
+<td>シート名は最初に確定させ、後から変えない</td>
+</tr>
+<tr>
+<td class="col-item">行の大量挿入/削除</td>
+<td>名前付き範囲やクロスシート参照がある場合、ブック全体</td>
+<td>構造変更前に手動計算モードに切替。完了後にCtrl+Alt+F9で一括再計算</td>
+</tr>
+<tr>
+<td class="col-item">名前の一括削除/整理</td>
+<td>1つ削除するたびにブック全体が再計算</td>
+<td>手動計算モードで一括処理。またはVBAで Application.Calculation = xlManual にしてから実行</td>
+</tr>
+<tr>
+<td class="col-item">シートの移動/削除</td>
+<td>参照先を含む全数式</td>
+<td>シート構成は初期段階で確定させる</td>
+</tr>
+<tr>
+<td class="col-item">オートフィルタの切替</td>
+<td>フィルタ範囲内の全数式</td>
+<td>INDEX+MATCH / FILTERで別シートに抽出し、元データにはフィルタを使わない</td>
+</tr>
+</table></div>
+<div class="xdemo-note-fire">
+<strong>実務での教訓</strong><br>
+          「数万行の数式が入ったブックを後から構成変更するのは地獄」。シート名、シート構成、名前の定義は<strong>最初の設計段階で確定</strong>させてください。後から変更すると、変更のたびに数万行が再計算されてExcelがフリーズします。どうしても変更が必要な場合は、必ず<strong>手動計算モード</strong>に切り替えてから行ってください。
+        </div>
+</section>
+<!-- ==========================================================
+         【12】条件付き書式の超揮発性
+      ========================================================== -->
+<section class="method-section" id="sec-cond">
+<h2>【12】条件付き書式：「超揮発性」 <span class="tag-super">超揮発性</span></h2>
+<p>条件付き書式の数式は<strong>画面の再描画（repaint）</strong>のたびに評価されます。揮発性関数よりさらに強力です。</p>
+<div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
+<tr><th scope="col" style="width:34%">操作</th><th scope="col" style="width:33%">通常の揮発性関数</th><th scope="col" style="width:33%">条件付き書式の数式</th></tr>
+<tr><td class="col-item">セルの値を変更</td><td>再計算される</td><td>再評価される</td></tr>
+<tr><td class="col-item">スクロール</td><td><span class="diff-ok">再計算されない</span></td><td><span class="diff-ng">画面に入った行が再評価</span></td></tr>
+<tr><td class="col-item">シート切替（戻る）</td><td><span class="diff-ok">再計算されない</span></td><td><span class="diff-ng">表示領域が再評価</span></td></tr>
+<tr><td class="col-item">ウィンドウ復元</td><td><span class="diff-ok">再計算されない</span></td><td><span class="diff-ng">表示領域が再評価</span></td></tr>
+<tr><td class="col-item">手動計算モード</td><td><span class="diff-ok">抑制できる</span></td><td><span class="diff-ng">抑制できない</span></td></tr>
+<tr><td class="col-item">印刷プレビュー / PDF出力</td><td><span class="diff-ok">再計算されない</span></td><td><span class="diff-ng">全行が一括評価 &rarr; フリーズ</span></td></tr>
+</table></div>
+<h3>再計算範囲は「画面に表示されている部分」だけ</h3>
+<p>通常のスクロール操作では、条件付き書式の再評価は<strong>画面に新しく表示された行だけ</strong>で発生します（1画面30行なら30行分）。画面外の行は評価されません。</p>
+<p>ただし、以下のケースでは<strong>全行が一括評価</strong>されます：</p>
+<div class="xdemo-note-fire">
+<strong>全行が一括評価される危険な操作</strong><br>
+          ・<strong>印刷プレビュー</strong> &mdash; 全ページを描画しようとするため、全1万行の条件付き書式が一気に評価 &rarr; 数十秒フリーズ<br>
+          ・<strong>PDF出力</strong> &mdash; 同上<br>
+          ・<strong>Ctrl+End &rarr; 先頭へ戻る</strong> &mdash; 最終行までジャンプした際に大量の行が描画対象に<br>
+          ・<strong>ページレイアウトビュー</strong> &mdash; 全ページの描画が発生
+        </div>
+<h3>起きること（具体的な症状）</h3>
+<p>1万行に <code>=AND($D1&gt;TODAY(), $E1="")</code> のような条件付き書式を設定した場合：スクロールするたびに画面に入った行の数式が全て評価されます（1画面30行なら30回）。TODAY()は揮発性なのでさらに重くなります。手動計算モードにしても条件付き書式の評価は止められません。上下にスクロールを繰り返すだけでExcelが目に見えてカクつきます。印刷プレビューを表示すると、全1万行を一気に描画しようとして数十秒フリーズすることもあります。</p>
+<h3>対策：補助列を使う</h3>
+<p class="color-red">❌ 条件付き書式にTODAY()を直接書く</p>
+<div class="code-readonly" data-lang="excel">
+<span class="code-line">条件付き書式の数式: =AND($D1&gt;TODAY(), $E1="")</span>
+<span class="code-line">&rarr; 描画のたびに TODAY() を含む数式が評価される</span>
+</div>
+<p class="color-2e7d32">✅ 補助列で計算し、条件付き書式は値比較のみ</p>
+<p class="code-label-good">Z1 に入れる数式</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TODAY()</span>
+</div>
+<p class="code-label-good">補助列 F1 に入れる数式</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(AND(D1&gt;$Z$1, E1=""), 1, 0)</span>
+</div>
+<p class="code-label-good">条件付き書式の数式（単純な値比較 &rarr; 高速）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=$F1=1</span>
+</div>
+<div class="code-readonly" data-lang="excel">
+<span class="code-line">&rarr; 条件付き書式は単純な値比較だけ（高速）</span>
+<span class="code-line">&rarr; TODAY() の評価は Z1 の1回だけ</span>
+<span class="code-line">&rarr; F列の再計算は Smart Recalc で必要なときだけ</span>
+</div>
+<div class="xdemo-note">
+<strong>条件付き書式の範囲を限定する</strong><br>
+          条件付き書式を設定する範囲は必要最小限にしてください。A1:J10000 に設定するよりも、実際にデータがある範囲だけに限定する方が描画時の評価回数が減ります。使わなくなった条件付き書式は必ず削除してください。
+        </div>
+</section>
+<!-- ==========================================================
+         【13】シート間の依存関係
+      ========================================================== -->
+<section class="method-section" id="sec-sheet">
+<h2>【13】シート間の依存関係と揮発性の影響</h2>
+<div class="flow-row">
+<div class="flow-sheet">元データ<br><span style="font-size:.8em">手入力 / 外部取込</span></div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-sheet">整形シート<br><span style="font-size:.8em">数万行の数式</span></div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-sheet">出力シート<br><span style="font-size:.8em">XLOOKUPで表示・印刷</span></div>
+</div>
+<h3>整形シートが再計算される条件</h3>
+<div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
+<tr><th scope="col" style="width:8%">#</th><th scope="col" style="width:52%">条件</th><th scope="col" style="width:40%">再計算の種類</th></tr>
+<tr><td>1</td><td class="text-left">元データの参照先セルが実際に変更された</td><td>① Smart Recalc（正常・必要な再計算）</td></tr>
+<tr><td>2</td><td class="text-left">整形シート自体に揮発性関数がある</td><td>② 揮発性関数による再計算</td></tr>
+<tr><td>3</td><td class="text-left">整形シートに揮発性アクション（フィルタ操作・行挿入・シート名変更等）が行われた</td><td>③ 揮発性アクション</td></tr>
+</table></div>
+<p>出力シートで操作しても、整形シートの元データが変わっていなければ、整形シートの数式は動きません（条件2と3に該当しない限り）。出力シートにある揮発性関数は出力シートだけで再計算され、その結果が変わらなければ整形シートには一切波及しません。</p>
+<h3>整形シートの状態別：影響の比較</h3>
+<div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
+<tr>
+<th class="w-30" scope="col">整形シートの状態</th>
+<th class="w-20" scope="col">再計算回数</th>
+<th scope="col" style="width:18%">コスト</th>
+<th scope="col" style="width:32%">出力シートへの連鎖</th>
+</tr>
+<tr style="background:#fff9c4">
+<td class="col-item">揮発性関数なし</td>
+<td>0</td>
+<td><span class="diff-ok">ゼロ</span></td>
+<td>元データが変わらない限りなし</td>
+</tr>
+<tr>
+<td class="col-item">TODAY() が1セルだけ</td>
+<td>1</td>
+<td><span class="diff-ok">ほぼゼロ</span></td>
+<td>同じ日なら値が変わらないためなし</td>
+</tr>
+<tr>
+<td class="col-item">OFFSET が100個</td>
+<td>100</td>
+<td>中程度</td>
+<td>結果が同じならなし（ただし100回の計算コストは発生）</td>
+</tr>
+<tr>
+<td class="col-item" style="color:#c62828">INDIRECT が数千〜数万個</td>
+<td><span class="diff-ng">数千〜数万</span></td>
+<td><span class="diff-ng">非常に重い</span></td>
+<td>結果が同じでも計算自体でフリーズ</td>
+</tr>
+</table></div>
+<h3>判定フローチャート</h3>
+<div class="code-readonly" data-lang="text">
+<span class="code-line">整形シートに揮発性関数がありますか？</span>
+<span class="code-line">  &boxv;</span>
+<span class="code-line">  &boxvr;&boxh; No  &rarr; ✅ 安全。元データが変わらない限り整形シートは動かない</span>
+<span class="code-line">  &boxv;</span>
+<span class="code-line">  &boxur;&boxh; Yes &rarr; 揮発性数式はいくつ？</span>
+<span class="code-line">            &boxv;</span>
+<span class="code-line">            &boxvr;&boxh; 少数（1〜数個） &rarr; 注意 コストほぼゼロ。許容範囲</span>
+<span class="code-line">            &boxv;                     （TODAY 1個、CELL("filename") 1個 等）</span>
+<span class="code-line">            &boxv;</span>
+<span class="code-line">            &boxur;&boxh; 多数（数百〜数万） &rarr; 要改善！</span>
+<span class="code-line">                                      INDEX+MATCH / XLOOKUP / FILTER に置換</span>
+</div>
+<h3>危険シナリオ：印刷・PDF出力時の連鎖</h3>
+<p>出力シートを印刷・PDF出力する際に最も深刻な遅延が発生します：</p>
+<div class="timeline-flex">
+<div class="tl-step s-run">
+<strong>①</strong><br>
+            出力シートに<br>揮発性関数<br>&rarr; 再計算
+          </div>
+<div class="tl-arrow">&rarr;</div>
+<div class="tl-step s-run">
+<strong>②</strong><br>
+            出力シートに<br>条件付き書式<br>&rarr; <strong>全行</strong>評価<br>
+<span style="font-size:.8em;color:#c62828">（超揮発性）</span>
+</div>
+<div class="tl-arrow">&rarr;</div>
+<div class="tl-step s-run">
+<strong>③</strong><br>
+            整形シートに<br>揮発性関数が数千個<br>&rarr; <strong>全て</strong>再計算
+          </div>
+<div class="tl-arrow">&rarr;</div>
+<div class="tl-step s-chk">
+<strong>④</strong><br>
+            ③の結果が<br>変わった場合<br>&rarr; 出力シートも<br><strong>再度</strong>再計算
+          </div>
+</div>
+<p>このような連鎖が発生するため、整形シートから揮発性関数を排除することが最も効果的な対策です。</p>
+<div class="xdemo-note-fire">
+<strong>対策の鉄則</strong><br>
+          整形シートは揮発性フリーに設計する。XLOOKUP / INDEX+MATCH 等の非揮発性関数だけで構成する。TODAY()はシートごと1セルに閉じ込め、他はそのセル参照。条件付き書式は最小限にし、補助列で判定させる。
+        </div>
+</section>
+<!-- ==========================================================
+         【14】オートフィルタ vs 関数による抽出
+      ========================================================== -->
+<section class="method-section" id="sec-filter">
+<h2>【14】オートフィルタ vs 関数による抽出</h2>
+<p>オートフィルタはフィルタを切り替えるたびにフィルタ範囲内の全数式が dirty としてマークされます（③揮発性アクション）。INDEX+MATCH や FILTER関数で別シートに抽出する方式は、①のSmart Recalcだけで動作します。</p>
+<div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
+<tr>
+<th class="w-25" scope="col">比較項目</th>
+<th class="w-25" scope="col">オートフィルタ</th>
+<th class="w-25" scope="col">INDEX+MATCH</th>
+<th class="w-25" scope="col">FILTER関数</th>
+</tr>
+<tr><td class="col-item">再計算の種類</td><td><span class="diff-ng">③ 揮発性アクション</span></td><td><span class="diff-ok">① Smart Recalc</span></td><td><span class="diff-ok">① Smart Recalc</span></td></tr>
+<tr><td class="col-item">影響範囲</td><td>フィルタ範囲内の全数式</td><td>条件に依存するセルだけ</td><td>FILTER数式と依存先だけ</td></tr>
+<tr><td class="col-item">元データへの影響</td><td>元データの数式もdirtyに</td><td>影響なし</td><td>影響なし</td></tr>
+<tr><td class="col-item">関数の揮発性</td><td>&horbar;</td><td><span class="diff-ok">非揮発性</span></td><td><span class="diff-ok">非揮発性</span></td></tr>
+<tr><td class="col-item">対応バージョン</td><td>全バージョン</td><td>全バージョン</td><td>365 / 2021 / 2024</td></tr>
+</table></div>
+<div class="xdemo-note-good">
+<strong>条件セルを変えたときの再計算は「正常な依存関係再計算」</strong><br>
+          INDEX+MATCHやFILTERで抽出した結果が条件セルの変更に応じて更新されるのは①のSmart Recalcです。これはExcelの正常な動作であり、③の「不要な全範囲dirty」とは根本的に異なります。
+        </div>
+</section>
+<!-- ==========================================================
+         【15】INDEX+MATCH と FILTER関数の違い
+      ========================================================== -->
+<section class="method-section" id="sec-indexfilter">
+<h2>【15】INDEX+MATCH と FILTER関数の違い</h2>
+<p>どちらも非揮発性ですが、動作の仕組みが異なります。</p>
+<div class="compare-grid">
+<div class="compare-left">
+<h4 class="text-blue-dark">INDEX+MATCH：1行1数式</h4>
+<p><code>=INDEX(元データ!A:A, MATCH(H$1, 元データ!C:C, 0))</code><br><br>
+            MATCHが最初の一致行番号を返し、INDEXがその行の値を取得。複数行を抽出するにはSMALL+IF等の追加工夫が必要。行ごとに1つの数式が必要。</p>
+</div>
+<div class="compare-right">
+<h4 style="color:#f57f17;">FILTER関数：1数式でスピル</h4>
+<p><code>=FILTER(元データ!A:E, 元データ!C:C=H1, "該当なし")</code><br><br>
+            条件に一致する全行が1つの数式から自動展開（スピル）。複数条件は * (AND) や + (OR) で組み合わせ。結果の行数が動的に変化。</p>
+</div>
+</div>
+<div class="table-wrapper"><table class="diff-table" style="margin-top:20px"><caption>データテーブル</caption>
+<tr><th class="w-30" scope="col">比較項目</th><th class="w-35" scope="col">INDEX+MATCH</th><th class="w-35" scope="col">FILTER関数</th></tr>
+<tr><td class="col-item">揮発性</td><td><span class="tag-nv">非揮発性</span></td><td><span class="tag-nv">非揮発性</span></td></tr>
+<tr><td class="col-item">数式の数</td><td>抽出行数ぶん（多い）</td><td>1つ（スピルで展開）</td></tr>
+<tr><td class="col-item">複数条件</td><td>SMALL+IF等で複雑</td><td>配列演算で簡潔</td></tr>
+<tr><td class="col-item">結果行数</td><td>固定（事前に枠を用意）</td><td>動的（自動拡縮）</td></tr>
+<tr><td class="col-item">対応バージョン</td><td><span class="diff-ok">全バージョン（Excel 97以降）</span></td><td>Microsoft 365 / Excel 2021 / Excel 2024</td></tr>
+<tr><td class="col-item">再計算コスト</td><td>数式数ぶんの計算</td><td>1数式で一括計算（大量データでは効率的）</td></tr>
+</table></div>
+<div class="xdemo-note">
+<strong>FILTER関数の対応バージョンについて</strong><br>
+          FILTER関数は <strong>Microsoft 365</strong>、<strong>Excel 2021</strong>（コンシューマー版）、<strong>Excel 2024</strong>（コンシューマー版）で使用できます。ただし企業向けの <strong>Office LTSC 2021 / LTSC 2024</strong>（ボリュームライセンス版）ではエディションによって利用できないケースがRedditやMicrosoft Q&Aで報告されています。利用可否は <code>ファイル &rarr; アカウント</code> でExcelのバージョン情報を確認してください。Excel 2019以前では使用できないため、INDEX+MATCHが唯一の選択肢です。
+        </div>
+</section>
+<!-- ==========================================================
+         【16】数万行のINDIRECT問題
+      ========================================================== -->
+<section class="method-section" id="sec-mass">
+<h2>【16】数万行のINDIRECT問題：「結果が変わらなくても動く」コスト</h2>
+<p>「便利だから」とINDIRECTやOFFSETを数万行に使ってしまうケースは、パフォーマンス上の最大の落とし穴です。</p>
+<h3>何が起きるのか（図解）</h3>
+<div class="diagram-wrap">
+<div class="diagram-flex">
+<div class="diagram-col v">
+<div class="diagram-col-head">A列：INDIRECT &times; 30,000行</div>
+<div class="diagram-cell">
+<code>A1 =INDIRECT("元!"&D1)</code><br>
+                結果：150（前回と同じ）<br>
+<span class="st-run">⚡ 再計算された</span>
+</div>
+<div class="diagram-cell">
+<code>A2 =INDIRECT("元!"&D2)</code><br>
+                結果：80（前回と同じ）<br>
+<span class="st-run">⚡ 再計算された</span>
+</div>
+<div class="diagram-cell" style="text-align:center;color:#c62828;font-weight:700">
+                ︙ 30,000行すべて再計算 ︙<br>
+<span style="font-size:.8em">シングルスレッドで数秒〜十数秒</span>
+</div>
+</div>
+<div class="diagram-col arrow-col">
+<div class="big-arrow">&rarr;</div>
+<div class="big-arrow-label">値が<br>変わった？<br><strong>No</strong></div>
+</div>
+<div class="diagram-col nv">
+<div class="diagram-col-head">B列：A列を参照 &times; 30,000行</div>
+<div class="diagram-cell">
+<code>B1 =A1*1.1</code><br>
+<span class="st-skip">💤 スキップ</span>
+</div>
+<div class="diagram-cell">
+<code>B2 =A2*1.1</code><br>
+<span class="st-skip">💤 スキップ</span>
+</div>
+<div class="diagram-cell" style="text-align:center;color:#2e7d32;font-weight:700">
+                ︙ 30,000行すべてスキップ ︙<br>
+<span style="font-size:.8em">A列の値が変わっていないから</span>
+</div>
+</div>
+</div>
+</div>
+<h3>INDIRECTの結果が変わらない場合の詳細</h3>
+<p>元データが一切変更されていない場合、30,000個のINDIRECTは全て再計算されますが、結果の値は前回と同じです。この場合：</p>
+<div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
+<tr><th class="w-30" scope="col">状況</th><th class="w-35" scope="col">A列（INDIRECT）の再計算</th><th class="w-35" scope="col">B列（A列参照）の再計算</th></tr>
+<tr>
+<td class="col-item">元データ変更なし</td>
+<td><span class="diff-ng">30,000回すべて再計算（値は変わらない）</span></td>
+<td><span class="diff-ok">0回（値が変わらないためSmart Recalcでスキップ）</span></td>
+</tr>
+<tr>
+<td class="col-item">元データ1セル変更</td>
+<td><span class="diff-ng">30,000回すべて再計算（1つだけ値が変わる）</span></td>
+<td>変わった1セルに依存するB列の数式だけ</td>
+</tr>
+<tr>
+<td class="col-item">元データ大量変更</td>
+<td><span class="diff-ng">30,000回すべて再計算</span></td>
+<td>変わったセルに依存するB列の数式すべて</td>
+</tr>
+</table></div>
+<p>つまり、<strong>依存先への連鎖は起きません</strong>が、<strong>INDIRECT数式自体の30,000回の再計算コスト</strong>が問題なのです。しかもINDIRECTはシングルスレッドなので、マルチコアCPUでも1コアしか使えず、計算が直列で走ります。</p>
+<h3>INDEX+MATCH / FILTER に置き換えた場合の比較</h3>
+<div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
+<tr><th class="w-30" scope="col">方式</th><th scope="col" style="width:28%">元データ変更なし時</th><th scope="col" style="width:22%">マルチスレッド</th><th class="w-20" scope="col">体感</th></tr>
+<tr>
+<td class="col-item">INDIRECT &times; 30,000</td>
+<td><span class="diff-ng">30,000回</span></td>
+<td><span class="diff-ng">不可（シングルスレッド）</span></td>
+<td><span class="diff-ng">数秒〜十数秒フリーズ</span></td>
+</tr>
+<tr>
+<td class="col-item">INDEX+MATCH &times; 30,000</td>
+<td><span class="diff-ok">0回</span></td>
+<td><span class="diff-ok">可能</span></td>
+<td><span class="diff-ok">一瞬</span></td>
+</tr>
+<tr>
+<td class="col-item">FILTER &times; 1（スピル）</td>
+<td><span class="diff-ok">0回</span></td>
+<td><span class="diff-ok">可能</span></td>
+<td><span class="diff-ok">一瞬</span></td>
+</tr>
+</table></div>
+<div class="xdemo-note-fire">
+<strong>結論</strong><br>
+          「結果が変わらなければB列は動かない」は事実。しかし問題はA列のINDIRECT自体が毎回30,000回も再計算されるコスト。30,000個のINDIRECTがシングルスレッドで毎回再計算されることで、データが変わっていないにもかかわらず数秒〜十数秒のフリーズが発生します。INDEX+MATCHやFILTERに置き換えれば、この無駄な再計算はゼロになります。
+        </div>
+</section>
+<!-- ==========================================================
+         【17】揮発性関数の正しい使いどころ
+      ========================================================== -->
+<section class="method-section" id="sec-gooduse">
+<h2>【17】揮発性関数の正しい使いどころ</h2>
+<p>揮発性関数は「悪」ではありません。適切な場面で使えば便利で、問題は使い方です。重要なのは「数」と「場所」のコントロールです。</p>
+<h3>適切なケース</h3>
+<div class="table-wrapper"><table class="format-table"><caption>データテーブル</caption>
+<tr><th scope="col">ケース</th><th scope="col">関数</th><th scope="col">理由</th></tr>
+<tr><td>ダッシュボードの日付表示（1セル）</td><td><span class="format-code">TODAY()</span></td><td>1セルだけなのでコストほぼゼロ</td></tr>
+<tr><td>乱数によるシミュレーション</td><td><span class="format-code">RAND()</span></td><td>毎回変わることが目的。使い終わったら値で貼り付け</td></tr>
+<tr><td>ファイルパスの取得（1セル）</td><td><span class="format-code">CELL("filename")</span></td><td>コスト軽微</td></tr>
+<tr><td>少数のシート動的参照</td><td><span class="format-code">INDIRECT()</span></td><td>数個なら影響は限定的。数百以上ならCHOOSE/XLOOKUPに置換</td></tr>
+</table></div>
+<h3>避けるべきケース</h3>
+<div class="table-wrapper"><table class="format-table"><caption>データテーブル</caption>
+<tr><th scope="col">ケース</th><th scope="col">問題の関数</th><th scope="col">代替手段</th></tr>
+<tr><td>数千〜数万行のデータ整形</td><td><span class="format-code">INDIRECT / OFFSET</span></td><td>INDEX+MATCH / XLOOKUP / FILTER</td></tr>
+<tr><td>条件付き書式の数式</td><td><span class="format-code">TODAY()</span></td><td>補助列で計算、書式は値比較のみ</td></tr>
+<tr><td>全行に同じ日付比較</td><td><span class="format-code">TODAY()</span> を全行に</td><td>Z1に1つだけ、他は $Z$1 参照</td></tr>
+<tr><td>名前の管理の定義式</td><td>揮発性関数を直接記述</td><td>セルに書いて名前はセル参照に</td></tr>
+</table></div>
+<h3>判断基準：使用数 &times; 依存の深さ</h3>
+<div class="code-readonly" data-lang="text">
+<span class="code-line">          使用数が少ない        使用数が多い</span>
+<span class="code-line">        &boxdr;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxhd;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxdl;</span>
+<span class="code-line">依存が  &boxv; ✅ 許容       &boxv; 注意 要検討   &boxv;</span>
+<span class="code-line">浅い    &boxv; TODAY 1個     &boxv; OFFSET 200個  &boxv;</span>
+<span class="code-line">        &boxvr;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxvh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxvl;</span>
+<span class="code-line">依存が  &boxv; 注意 要検討   &boxv; 要改善！      &boxv;</span>
+<span class="code-line">深い    &boxv; INDIRECT 5個  &boxv; INDIRECT      &boxv;</span>
+<span class="code-line">        &boxv; &rarr;他シート参照  &boxv; 30,000個      &boxv;</span>
+<span class="code-line">        &boxur;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxhu;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxul;</span>
+</div>
+<div class="xdemo-note-warn">
+<strong>過剰な回避にも注意</strong><br>
+          揮発性関数を避けるためにCHOOSEで数十のシート名を手書きしたり、OFFSETの代替で非常に複雑なINDEX式を書いたりすると保守性が低下します。「数個の揮発性関数」と「著しく複雑な非揮発性数式」の間では、コストと保守性のバランスを考えてください。
+        </div>
+</section>
+<!-- ==========================================================
+         【18】代替手段一覧
+      ========================================================== -->
+<section class="method-section" id="sec-alt">
+<h2>【18】脱・揮発性！代替手段一覧</h2>
+<div class="table-wrapper"><table class="format-table"><caption>データテーブル</caption>
+<tr><th class="w-25" scope="col">目的</th><th scope="col" style="width:38%">揮発性の方法</th><th scope="col" style="width:37%">非揮発性の代替</th></tr>
+<tr>
+<td>動的範囲の取得</td>
+<td><code>=OFFSET(A1,0,0,COUNTA(A:A),1)</code></td>
+<td><code>=A1:INDEX(A:A,COUNTA(A:A))</code><br><span style="font-size:.8em;color:#666">（INDEXのコロン構文）</span></td>
+</tr>
+<tr>
+<td>シートの動的切替</td>
+<td><code>=INDIRECT("'"&B1&"'!A1")</code></td>
+<td><code>=CHOOSE(C1, Sheet1!A1, Sheet2!A1, Sheet3!A1)</code><br><span style="font-size:.8em;color:#666">またはテーブル＋XLOOKUP</span></td>
+</tr>
+<tr>
+<td>カスケードドロップダウン</td>
+<td><code>=INDIRECT(D1)</code>（名前参照）</td>
+<td><code>=FILTER(品目一覧, カテゴリ列=D1)</code><br><span style="font-size:.8em;color:#666">（365/2021以降）</span></td>
+</tr>
+<tr>
+<td>今日の日付との比較</td>
+<td>各行に <code>TODAY()</code></td>
+<td>Z1に <code>=TODAY()</code>、各行は <code>$Z$1</code> 参照</td>
+</tr>
+<tr>
+<td>データの抽出・フィルタリング</td>
+<td>オートフィルタ（揮発性アクション）</td>
+<td>INDEX+MATCH / FILTER で別シートに抽出</td>
+</tr>
+</table></div>
+</section>
+<!-- ==========================================================
+         【19】まとめチェックリスト
+      ========================================================== -->
+<section class="goal-section" id="sec-summary" style="margin-top:40px;background:linear-gradient(135deg,#f5f8ff 0%,#e8eaf6 100%);border-radius:10px;padding:24px;">
+<h2><span class="icon">📝</span> まとめチェックリスト</h2>
+<div class="table-wrapper"><table class="diff-table" style="margin-top:16px"><caption>データテーブル</caption>
+<tr><th scope="col" style="width:8%">#</th><th scope="col" style="width:92%">チェック項目</th></tr>
+<tr><td>1</td><td class="text-left">再計算は3種類：① Smart Recalc、② 揮発性関数、③ 揮発性アクション。②と③を最小化する</td></tr>
+<tr><td>2</td><td class="text-left">揮発性関数は「そのセル」が毎回動く。しかし<strong>結果が変わらなければ依存先は動かない</strong></td></tr>
+<tr><td>3</td><td class="text-left">問題は「依存先への連鎖」ではなく<strong>「揮発性数式自体の計算コスト &times; 数」</strong>。INDIRECTはシングルスレッド</td></tr>
+<tr><td>4</td><td class="text-left">IF / CHOOSEの揮発性は構文解析レベル。<strong>セル参照は揮発性を「感染」させない</strong>。AND/ORは全引数を常に評価する</td></tr>
+<tr><td>5</td><td class="text-left">TODAY / NOW は1セルに閉じ込め、名前の管理にも直接書かない（名前は使用箇所ごとに再評価される）</td></tr>
+<tr><td>6</td><td class="text-left">ROW / COLUMN / ROWS / COLUMNS / INDEX / FILTER は<strong>非揮発性</strong>。安心して大量に使える</td></tr>
+<tr><td>7</td><td class="text-left">SUMIFは範囲サイズを一致させる（不一致で揮発性化）</td></tr>
+<tr><td>8</td><td class="text-left">条件付き書式は「超揮発性」。手動計算モードでも止まらない。画面表示部分だけ再評価だが、印刷プレビューでは全行一括評価。補助列を活用</td></tr>
+<tr><td>9</td><td class="text-left">オートフィルタは揮発性アクション。INDEX+MATCH / FILTERによる別シート抽出が高速</td></tr>
+<tr><td>10</td><td class="text-left">名前の追加/変更/削除は揮発性アクション。一括操作時はフリーズ注意</td></tr>
+<tr><td>11</td><td class="text-left"><strong>ブック構成の変更（シート名変更・行列挿入削除・シート移動削除）は揮発性アクション</strong>。数万行のブックでは必ず手動計算モードで実行する</td></tr>
+<tr><td>12</td><td class="text-left">整形シートは揮発性フリーに設計する。数万行のINDIRECTはデータが変わらなくても毎回フリーズ。出力シートとの連鎖にも注意</td></tr>
+<tr><td>13</td><td class="text-left">揮発性関数は「悪」ではない。少数・浅い依存なら問題ない。排除しすぎて保守性を犠牲にしない</td></tr>
+<tr><td>14</td><td class="text-left">シート名・シート構成・名前の定義は<strong>最初の設計段階で確定</strong>させる。後からの変更は揮発性アクションの嵐になる</td></tr>
+</table></div>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../latest/article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
+<li><a href="../latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+<li><a href="../latest/article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
+<li><a href="../latest/article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

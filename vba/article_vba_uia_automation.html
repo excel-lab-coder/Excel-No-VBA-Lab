@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="QRコードの代わりに、VBAからUI Automation (UIA) を使用して、他アプリやWebシステムへ直接自動入力を行う手法を解説します。" name="description">
+<meta content="VBA, UI Automation, UIA, 自動入力, RPA代替" name="keywords">
+<meta content="UIA（UI Automation）で他アプリへ自動入力｜Excel &times; No VBA Lab" property="og:title">
+<meta content="QRコードの代わりに、VBAからUI Automation (UIA) を使用して、他アプリやWebシステムへ直接自動入力を行う手法を解説します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/vba/article_vba_uia_automation.html" rel="canonical">
+<title>UIA（UI Automation）で他アプリへ自動入力｜Excel &times; No VBA Lab</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"UIA（UI Automation）で他アプリへ自動入力 \u0026horbar; Selenium不要のRPA代替","description":"QRコードの代わりに、VBAからUI Automation (UIA) を使用して、他アプリやWebシステムへ直接自動入力を行う手法を解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/vba/article_vba_uia_automation.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../index.html">ホーム</a><span>&rsaquo;</span><a href="../unlocked/index.html">制限解除ラボ</a><span>&rsaquo;</span><strong>UIA（UI Automation）連携</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-all">VBA OK</span><span class="article-date">更新日: 2026-04-24</span></div>
+<h1 class="article-title">UIA（UI Automation）で他アプリへ自動入力 &horbar; Selenium不要のRPA代替</h1>
+</div>
+<div class="vba-box">
+<strong>💡 本編（VBAなし）との位置づけ</strong>
+<p>VBA禁止の完全閉域環境での代替手法は &rarr; <a href="../qr/01_qr_barcode_control.html">QR Automation Lab 記事①</a> およびQRシリーズ全編を参照してください。VBAが使えるなら、QRのような物理的なエミュレーションではなく、OSネイティブのAPIで確実な制御が可能です。</p>
+</div>
+<section>
+<h2>1. なぜ「UI Automation」なのか？</h2>
+<p>Internet Explorerの廃止に伴い、VBAから直接DOMを操作する「IE制御」は過去のものとなりました。現在Webスクレイピングや自動操作といえば「SeleniumBasic」が有名ですが、これには<strong>「ChromeDriverのバージョン管理」「環境構築（インストール）」が必要</strong>という、実務運用上の大きなハードルがあります。</p>
+<p>そこで最強の選択肢となるのが、Windows OSに標準搭載されているアクセシビリティAPI<strong>「UI Automation (UIA)」</strong>です。インストール不要で、EdgeやChromeなどのモダンブラウザだけでなく、デスクトップアプリ（ERPや会計ソフト等）のボタンやテキストボックスまでVBAから直接制御できます。</p>
+</section>
+<section>
+<h2>2. 準備：UIAutomationClientの参照設定と「Inspect.exe」</h2>
+<p>VBAからUIAを扱うためには、まずVBE（Visual Basic Editor）のメニューから <code>ツール ＞ 参照設定</code> を開き、<strong>「UIAutomationClient」</strong>にチェックを入れます。</p>
+<p>さらに、操作したい画面の要素（ボタンの名前やID）を特定するために、Windows SDKに含まれるツール<strong>「Inspect.exe」</strong>や、オープンソースの<strong>「Accessibility Insights」</strong>を使用します。これを使って、クリックしたいボタンの <code>AutomationId</code> や <code>Name</code> プロパティを調べます。</p>
+</section>
+<section>
+<h2>3. 実践コード：Windows電卓を自動操作する</h2>
+<p>UIAの基本を理解するために、Windows標準の「電卓」アプリをVBAから起動し、「1 + 2 =」を自動でクリックするサンプルコードです。Webブラウザの操作も基本原理は同じです。</p>
+<div class="code-readonly">
+<span class="code-line">Sub UIA_Calculator_Automation()</span>
+<span class="code-line">    Dim uia As New CUIAutomation</span>
+<span class="code-line">    Dim root As IUIAutomationElement</span>
+<span class="code-line">    Dim cond As IUIAutomationCondition</span>
+<span class="code-line">    Dim calcWindow As IUIAutomationElement</span>
+<span class="code-line"> </span>
+<span class="code-line">    ' 1. 電卓を起動して少し待つ</span>
+<span class="code-line">    Call Shell("calc.exe", vbNormalFocus)</span>
+<span class="code-line">    Application.Wait Now + TimeValue("00:00:02")</span>
+<span class="code-line"> </span>
+<span class="code-line">    ' 2. デスクトップ全体（ルート要素）を取得</span>
+<span class="code-line">    Set root = uia.GetRootElement</span>
+<span class="code-line"> </span>
+<span class="code-line">    ' 3. 電卓ウィンドウを Name プロパティで検索</span>
+<span class="code-line">    Set cond = uia.CreatePropertyCondition(UIA_NamePropertyId, "電卓")</span>
+<span class="code-line">    Set calcWindow = root.FindFirst(TreeScope_Children, cond)</span>
+<span class="code-line"> </span>
+<span class="code-line">    If calcWindow Is Nothing Then</span>
+<span class="code-line">        MsgBox "電卓が見つかりません", vbExclamation</span>
+<span class="code-line">        Exit Sub</span>
+<span class="code-line">    End If</span>
+<span class="code-line"> </span>
+<span class="code-line">    ' 4. 操作用のローカル関数でボタンを順番にクリック</span>
+<span class="code-line">    ClickButton calcWindow, uia, "num1Button"</span>
+<span class="code-line">    ClickButton calcWindow, uia, "plusButton"</span>
+<span class="code-line">    ClickButton calcWindow, uia, "num2Button"</span>
+<span class="code-line">    ClickButton calcWindow, uia, "equalButton"</span>
+<span class="code-line"> </span>
+<span class="code-line">    MsgBox "UIAによる自動操作が完了しました。", vbInformation</span>
+<span class="code-line">End Sub</span>
+<span class="code-line"></span>
+<span class="code-line">' --- ボタンをクリックするためのヘルパー関数 ---</span>
+<span class="code-line">Private Sub ClickButton(parent As IUIAutomationElement, uia As CUIAutomation, autoId As String)</span>
+<span class="code-line">    Dim cond As IUIAutomationCondition</span>
+<span class="code-line">    Dim btn As IUIAutomationElement</span>
+<span class="code-line">    Dim invPattern As IUIAutomationInvokePattern</span>
+<span class="code-line"> </span>
+<span class="code-line">    ' AutomationIdで要素を検索</span>
+<span class="code-line">    Set cond = uia.CreatePropertyCondition(UIA_AutomationIdPropertyId, autoId)</span>
+<span class="code-line">    Set btn = parent.FindFirst(TreeScope_Subtree, cond)</span>
+<span class="code-line"> </span>
+<span class="code-line">    If Not btn Is Nothing Then</span>
+<span class="code-line">        ' Invokeパターン（クリック動作）を取得して実行</span>
+<span class="code-line">        Set invPattern = btn.GetCurrentPattern(UIA_InvokePatternId)</span>
+<span class="code-line">        If Not invPattern Is Nothing Then</span>
+<span class="code-line">            invPattern.Invoke</span>
+<span class="code-line">        End If</span>
+<span class="code-line">    End If</span>
+<span class="code-line">End Sub</span>
+</div>
+</section>
+<section>
+<h2>4. Webブラウザ（Edge / Chrome）への応用</h2>
+<p>Webブラウザ内のフォームに入力する場合も、<code>UIA_ValuePatternId</code> を取得して <code>SetValue</code> メソッドで文字を流し込み、ボタンを <code>Invoke</code> するだけです。Seleniumのようなバージョン不整合に悩まされることなく、社内システムへの完全な自動入力を実現できます。</p>
+<div class="tip-box">
+<strong>実務でのポイント：</strong> UIAは「画面に描画されている要素」を操作するAPIです。ブラウザのスクロールに隠れている要素は取得できないことがあるため、必要に応じてTabキー（SendKeys）と組み合わせるなどの工夫が実務では効果的です。
+        </div>
+</section>
+<section>
+<h2>5. UIAの実務での落とし穴と対策</h2>
+<p>UIAは強力ですが、以下の点に注意が必要です：</p>
+<ul class="philosophy-list">
+<li><strong>タイミング問題：</strong>画面遷移後にすぐ要素を取得しようとすると <code>Nothing</code> が返る場合があります。<code>Application.Wait</code> や再試行ループを必ず実装してください。</li>
+<li><strong>要素の特定が困難：</strong>Webアプリの場合、AutmationIdがなく Name も動的に変わるケースがあります。PropertyCondition を複数組み合わせた <code>CreateAndCondition</code> で絞り込みましょう。</li>
+<li><strong>管理者権限の壁：</strong>管理者権限で起動しているアプリケーションの要素は、通常権限のExcel VBAからはアクセスできません。同じ権限レベルで実行する必要があります。</li>
+<li><strong>仮想デスクトップ：</strong>Citrixなどの仮想デスクトップ環境では、UIAが正しく動作しないことがあります。その場合はQR Automation Labの手法が代替手段になります。</li>
+</ul>
+</section>
+<section>
+<h2>6. QR Automation Lab vs UIA &horbar; 環境で選ぶ自動入力手法</h2>
+<div class="table-responsive">
+<table class="vba-compare-table">
+<thead>
+<tr>
+<th>比較項目</th>
+<th>QR Automation Lab（本編）</th>
+<th>UIA VBA（この記事）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VBA</td>
+<td>完全不要 ✅</td>
+<td>必須</td>
+</tr>
+<tr>
+<td>ソフトウェア制約</td>
+<td>全てのソフトが禁止でもOK</td>
+<td>VBA実行が許可されている必要あり</td>
+</tr>
+<tr>
+<td>速度</td>
+<td>QR読取1件=1-3秒</td>
+<td>プログラム実行=高速</td>
+</tr>
+<tr>
+<td>仮想デスクトップ</td>
+<td>ハードウェアなので問題なし ✅</td>
+<td>Citrix等で制限あり</td>
+</tr>
+<tr>
+<td>推奨環境</td>
+<td><strong>完全閉域・ソフト全面禁止</strong></td>
+<td><strong>VBA許可・ローカルPC</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>両方の手法を理解しておけば、環境に応じて最適な自動入力手法を選べます。</p>
+</section>
+<section>
+<h2>7. 関連記事</h2>
+<ul class="related-articles">
+<li><a href="../qr/01_qr_barcode_control.html">⚡ QR① バーコードコントロールでQR生成（本編）</a></li>
+<li><a href="../qr/07_qr_full_system.html">⚡ QR⑦ 6つの技術を統合した入力自動化システム（本編）</a></li>
+<li><a href="../unlocked/index.html">🔓 制限解除ラボ トップに戻る</a></li>
+</ul>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>
+

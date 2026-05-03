@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="Power Queryの更新方法、読み込み先の選び方、接続のみクエリの活用、エラー予防策、複数クエリの設計パターンをまとめて解説。" name="description">
+<title>更新と管理 &horbar; 接続・エラー対策・設計パターン｜Excel &times; No VBA Lab</title>
+<link href="https://excel-no-vba-lab.com/powerquery/basic/article_pq_management.html" rel="canonical">
+<meta content="更新と管理 &horbar; 接続・エラー対策・設計パターン｜Excel &times; No VBA Lab" property="og:title">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"更新と管理 \u0026horbar; 接続・エラー対策・設計パターン","description":"Power Queryの更新方法、読み込み先の選び方、接続のみクエリの活用、エラー予防策、複数クエリの設計パターンをまとめて解説。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/basic/article_pq_management.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>更新と管理</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">更新と管理 &horbar; 接続・エラー対策・設計パターン</h1>
+</div>
+<section id="goal"><h2>このページのゴール</h2><p>Power Queryの更新方法、読み込み先の使い分け、エラーの予防・対処法、複数クエリの設計パターンを理解し、長期運用に耐えるクエリを作れるようになることです。</p></section>
+<!-- ==================== 更新 ==================== -->
+<section id="refresh">
+<h2>クエリの更新方法</h2>
+<table class="ref-table">
+<thead><tr><th>方法</th><th>操作</th><th>範囲</th></tr></thead>
+<tbody>
+<tr><td><strong>すべて更新</strong></td><td>データ タブ &rarr; すべて更新（Ctrl+Alt+F5）</td><td>ブック内の全クエリ</td></tr>
+<tr><td><strong>個別更新</strong></td><td>クエリ結果のテーブル上で右クリック &rarr;「更新」</td><td>そのクエリだけ</td></tr>
+<tr><td><strong>バックグラウンド更新</strong></td><td>クエリのプロパティ &rarr;「バックグラウンドで更新する」にチェック</td><td>更新中もExcel操作が可能になる</td></tr>
+<tr><td><strong>ファイルを開いたとき自動更新</strong></td><td>クエリのプロパティ &rarr;「ファイルを開くときにデータを更新する」にチェック</td><td>ブックを開いただけで自動更新</td></tr>
+</tbody>
+</table>
+<div class="step-box">
+<h4>プロパティの開き方</h4>
+<p>データ タブ &rarr; クエリと接続 &rarr; 右パネルでクエリを右クリック &rarr;「プロパティ」</p>
+</div>
+<div class="tip-box">
+<strong>実務のコツ：定期レポートには「開いたとき自動更新」</strong><br>
+          毎朝開くレポートブックなら「ファイルを開くときにデータを更新する」を有効にすると、開くだけで最新データに切り替わります。
+        </div>
+</section>
+<!-- ==================== 読み込み先 ==================== -->
+<section id="load-destination">
+<h2>読み込み先の選び方</h2>
+<table class="ref-table">
+<thead><tr><th>読み込み先</th><th>特徴</th><th>使いどころ</th></tr></thead>
+<tbody>
+<tr><td><strong>テーブル</strong></td><td>シートにExcelテーブルとして出力。最も標準的。</td><td>結果をシートに表示して関数やグラフで活用したいとき</td></tr>
+<tr><td><strong>ピボットテーブル</strong></td><td>ピボットテーブルのデータソースとして直結。</td><td>集計・分析をピボットテーブルで行いたいとき</td></tr>
+<tr><td><strong>接続のみ</strong></td><td>シートにデータを出力しない。クエリの結果はメモリ上に保持される。</td><td>中間加工用クエリ、パラメータクエリ、他のクエリの参照元</td></tr>
+<tr><td><strong>データモデルに追加</strong></td><td>Power Pivotのデータモデルに読み込む。104万行超のデータ、複数テーブルのリレーションが必要な場合。</td><td>大量データの分析、DAX関数を使いたいとき</td></tr>
+</tbody>
+</table>
+<div class="tip-box">
+<strong>設計の原則：中間クエリは「接続のみ」、最終出力だけをテーブルに</strong><br>
+          クエリが5個以上になってくると、すべてをシートに出力するとブックが重くなります。データ加工途中のクエリは「接続のみ」にし、最終結果のクエリだけを「テーブル」や「ピボットテーブル」に出力するのが効率的です。
+        </div>
+</section>
+<!-- ==================== エラー ==================== -->
+<section id="error-handling">
+<h2>よくあるエラーと対処法</h2>
+<table class="ref-table">
+<thead><tr><th>エラー</th><th>原因</th><th>対処法</th></tr></thead>
+<tbody>
+<tr>
+<td><strong>DataSource.Error：ファイルが見つかりません</strong></td>
+<td>参照先ファイルが移動・削除・名前変更された</td>
+<td>ファイルを元の場所に戻す。パスが変わった場合はソースステップのパスを修正。パラメータクエリでパスを管理している場合はパラメータテーブルを更新。</td>
+</tr>
+<tr>
+<td><strong>Expression.Error：列 'XXX' が見つかりません</strong></td>
+<td>元データの列名が変わった、または列が削除された</td>
+<td>ソースデータの列名を元に戻すか、クエリの該当ステップを修正。「他の列の削除」で列名を明示指定している場合は、その列名リストを更新する。</td>
+</tr>
+<tr>
+<td><strong>DataFormat.Error：データの変換中にエラー</strong></td>
+<td>データ型の変換に失敗（テキストを日付に変換できない行がある、など）</td>
+<td>エラー行を確認 &rarr; 型変更前に値の置換でデータを修正するか、型変更後に「エラーの置換」でnullに変換する。</td>
+</tr>
+<tr>
+<td><strong>Formula.Firewall：プライバシーレベルの問題</strong></td>
+<td>異なるデータソース（ローカルファイルとWebなど）を1つのクエリで混在させた</td>
+<td>ファイル &rarr; オプションと設定 &rarr; クエリのオプション &rarr; プライバシー &rarr;「プライバシーレベルの設定を無視する」にチェック。社内利用なら実用上問題なし。</td>
+</tr>
+</tbody>
+</table>
+</section>
+<!-- ==================== 設計パターン ==================== -->
+<section id="design-patterns">
+<h2>複数クエリの設計パターン</h2>
+<h3>ステージングパターン</h3>
+<p>データの取り込みと変換を分離する設計です。</p>
+<table class="ref-table">
+<thead><tr><th>クエリ層</th><th>役割</th><th>読み込み先</th></tr></thead>
+<tbody>
+<tr><td><strong>ステージングクエリ</strong>（stg_売上、stg_マスタ）</td><td>データソースからの取り込みだけ行い、最低限の型変換のみ</td><td>接続のみ</td></tr>
+<tr><td><strong>変換クエリ</strong>（trn_売上加工）</td><td>ステージングクエリを参照し、フィルター・列追加・マージなどの変換を行う</td><td>接続のみ</td></tr>
+<tr><td><strong>出力クエリ</strong>（out_月次レポート）</td><td>変換クエリを参照し、最終的な出力形式に整える</td><td>テーブル or ピボットテーブル</td></tr>
+</tbody>
+</table>
+<div class="tip-box">
+<strong>なぜ分離するか</strong><br>
+          ソースの変更（ファイルパスや列名の変更）が発生した場合、ステージングクエリだけ修正すれば後続の変換・出力クエリには影響しません。クエリ数が10を超えるような大規模な構成では、この設計が保守性を大幅に向上させます。
+        </div>
+<h3>命名規則</h3>
+<table class="ref-table">
+<thead><tr><th>プレフィックス</th><th>意味</th><th>例</th></tr></thead>
+<tbody>
+<tr><td>stg_</td><td>ステージング（取り込み）</td><td>stg_売上CSV</td></tr>
+<tr><td>trn_</td><td>変換（トランスフォーム）</td><td>trn_売上加工</td></tr>
+<tr><td>out_</td><td>出力</td><td>out_月次集計</td></tr>
+<tr><td>prm_</td><td>パラメータ</td><td>prm_対象月</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ==================== クエリの整理 ==================== -->
+<section id="organize">
+<h2>クエリの整理</h2>
+<div class="step-box">
+<h4>グループフォルダで分類する</h4>
+<p>エディターの左パネルでクエリを右クリック &rarr; 「グループに移動」&rarr;「新しいグループ」で、フォルダを作ってクエリを分類できます。「01_ステージング」「02_変換」「03_出力」「99_パラメータ」のようにフォルダ分けすると、見通しがよくなります。</p>
+</div>
+<div class="step-box">
+<h4>クエリの複製と参照</h4>
+<p>クエリを右クリック &rarr;「複製」はクエリ全体のコピーを作ります。「参照」は既存のクエリの最終結果を入力として使う新しいクエリを作ります。ステージングパターンでは「参照」を使って変換クエリを作ります。</p>
+</div>
+</section>
+<section id="summary"><h2>まとめ</h2><p>Power Queryは作って終わりではなく、長期運用するツールです。<strong>更新方法</strong>を理解し、<strong>読み込み先を使い分け</strong>（中間は接続のみ、最終だけテーブル）、<strong>よくあるエラー</strong>の対処法を知り、クエリが増えてきたら<strong>ステージングパターン</strong>で設計を整理する。この4つの管理スキルが、Power Queryを「便利だけど壊れやすいもの」から「信頼できる業務基盤」に変えます。</p></section>
+<nav class="nav-series">
+<strong>パワークエリ 応用編シリーズ</strong>
+<a href="article_powerquery_intro.html">⓪ パワークエリとは</a>
+<a href="../advanced/article_pq_merge_append.html">⑦ テーブルの結合</a>
+<a href="../advanced/article_pq_group_pivot.html">⑧ 集計とピボット</a>
+<a href="../advanced/article_pq_import_patterns.html">⑨ データ取り込みパターン集</a>
+<a href="../advanced/article_pq_parameter_query.html">⑩ パラメータクエリ</a>
+<a class="current" href="article_pq_management.html">⑪ 更新と管理（このページ）</a>
+</nav>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

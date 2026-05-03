@@ -1,0 +1,389 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="7" name="difficulty">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>【関数応用編】不規則なCOBOL帳票の撃破（不要行除外・縦持ち展開）｜Excel &times; No VBA Lab</title>
+<meta content="COBOL帳票の不要ヘッダー行除外・縦持ちデータの横展開をExcel関数だけで実現する応用テクニック。VBA不要・パワークエリ不要。" name="description">
+<meta content="COBOL帳票 不要行 除外 関数, 縦持ち 横展開 Excel, 固定長 不規則 数式, VBA不要 COBOL, Excel 関数 帳票" name="keywords">
+<meta content="【関数応用編】不規則なCOBOL帳票の撃破（不要行除外・縦持ち展開）｜Excel &times; No VBA Lab" property="og:title">
+<meta content="COBOL帳票の不要ヘッダー行除外・縦持ちデータの横展開をExcel関数だけで実現する応用テクニック。VBA不要・パワークエリ不要。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/cobol/formula/02_article_cobol_advanced.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "【関数応用編】不規則なCOBOL帳票の撃破（不要行除外・縦持ち展開）",
+    "description": "COBOL帳票の不要ヘッダー行除外・縦持ちデータの横展開をExcel関数だけで実現する応用テクニック。VBA不要・パワークエリ不要。",
+    "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-no-vba-lab.com/ogp.png"}},
+    "datePublished": "2026-03-18",
+    "dateModified": "2026-03-18"
+  }
+  </script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-no-vba-lab.com/"},
+      {"@type": "ListItem", "position": 2, "name": "COBOL帳票処理", "item": "https://excel-no-vba-lab.com/#cobol"},
+      {"@type": "ListItem", "position": 3, "name": "不規則なCOBOL帳票の撃破"}
+    ]
+  }
+  </script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+  <div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#cobol">COBOLデータ整形</a><span>&gt;</span>
+<strong>関数応用編：不規則な帳票の撃破</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-maniac" style="background-color:#d32f2f;">難易度：&starf;&starf;&starf;&star;&star;</span>
+<span class="badge badge-all">全バージョン対応あり</span>
+<span class="badge badge-maniac">COBOL/マニアック</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">【関数応用編】不規則なCOBOL帳票の撃破（不要行の除外・縦持ちデータの横展開）</h1>
+</div>
+<!-- ========== 目次 ========== -->
+<div class="toc-box">
+<h3>この記事の内容</h3>
+<ol>
+<li><a href="#sec-intro">関数だけで「悪路」を走破する（基礎ロジック編）</a></li>
+<li><a href="#sec-pipeline">実務で絶対にやるべき「3層シート構成」と自動処理フロー</a></li>
+<li><a href="#sec-trial1">【試練1】不要行（ヘッダー等のゴミ）が混ざっている</a></li>
+<li><a href="#sec-trial2">【試練2】1つのデータが「2行」の縦持ちになっている</a></li>
+<li><a href="#sec-freeze">【参考コラム】なぜ作業列で COUNTIF や MAX を使うとフリーズするのか？</a></li>
+</ol>
+</div>
+<!-- ==========================================================
+         導入
+      ========================================================== -->
+<section class="goal-section" id="sec-intro">
+<h2><span class="icon">💡</span> 関数だけで「悪路」を走破する（基礎ロジック編）</h2>
+<p>実務で頻繁に遭遇する「不要なヘッダー行などが混ざっているデータ」や「1レコードが2行に分かれている縦持ちデータ」。厄介に見えますが、実はこれらは数あるCOBOL帳票の中ではまだ<strong>「比較的シンプルな簡単な部類」</strong>です。</p>
+<p>まずはこのページで、<strong>関数だけで「不要行を弾き飛ばし、1レコード1行の綺麗な状態を作る基本ロジックと流れ」</strong>を完璧に理解してください。</p>
+<p>※「上部にある会社名をすべての明細行にコピーして持ってくる処理」や「明細行が2～3行どころではない、完全に不規則な帳票」など、実務特有のさらに凶悪なフォーマットについては、このロジックを応用した <a href="03_article_cobol_expert.html" style="color:#d32f2f; font-weight:bold; text-decoration:underline;">【関数超絶技巧編】ヘッダー紐付けと不規則明細の完全攻略</a> の別リンクで解説しています。</p>
+</section>
+<!-- ==========================================================
+         【0】3層シート構成
+      ========================================================== -->
+<section class="method-section" id="sec-pipeline">
+<h2>【0】実務で絶対にやるべき「3層シート構成」と自動処理フロー</h2>
+<p>実は、不規則なCOBOL帳票を関数で相手にする際、<strong>同じシート内で抽出から切り出し（MIDB）まで全てを書こうとすると、数式がカオスになり一瞬で破綻</strong>します。実務では数式を組む前に、必ず以下の「3層構造（パイプライン）」になるようにExcelファイル（シート構成）を設計します。</p>
+<div class="pipeline-grid">
+<div class="pipeline-card paste">
+<h4>1. 「貼付」シート</h4>
+<p>システムから落としたテキストデータを<strong>右側のB列にただ貼るだけ</strong>の生データシート。</p>
+<p>左側のA列（作業列）にはあらかじめ <code>=IF(条件, ROW(), "")</code> などの<strong>判定フラグ（ROW関数）</strong>を1万行下まで仕込んでおき、右にデータが貼られた瞬間に裏で自動計算させます。</p>
+</div>
+<div class="pipeline-card extract">
+<h4>2. 「抽出」シート</h4>
+<p>別シートから <code>FILTER</code> 関数や <code>INDEX + SMALL</code> などを使い、貼付シートのA列・B列を参照して<strong>「必要な明細行だけ」をワープ（抽出）</strong>させてきます。</p>
+<p>さらに横の列で <code>MIDB</code> を使ってデータをスライスします。</p>
+</div>
+<div class="pipeline-card output">
+<h4>3. 「出力」シート</h4>
+<p>抽出シートで作った「綺麗なデータベース」だけを参照した、最終的な提出・閲覧用シート（またはピボットテーブル）です。</p>
+<p>余計な作業列は一切見せません。</p>
+</div>
+</div>
+<div class="xdemo-note-good">
+<strong>この構造最大のメリット：関数による「完全な自動化」</strong><br>
+          この流れを一度構築してしまえば、翌月からは<strong>「1.貼付シート」のB列を新しいテキストデータで上書きペーストするだけ</strong>で、連番付与&rarr;別シート抽出&rarr;切り出し&rarr;出力が全自動で走り、数秒で業務が完了します。以降の解説は、すべてこの「別シートから抽出する」前提での数式となります。
+        </div>
+</section>
+<!-- ==========================================================
+         【試練1】不要行が混ざっている
+      ========================================================== -->
+<section class="method-section" id="sec-trial1">
+<h2>【試練1】「見出し」や「ページ数」等の不要行が混ざっている</h2>
+<div class="code-readonly" data-lang="テキスト">
+<span class="code-line">=== 2026/03/18 === 売上明細 === PAGE 1 ===</span>
+<span class="code-line">------------------------------------------</span>
+<span class="code-line">1001-50    新宿本店     0050000    &larr;（欲しいのは5桁目にハイフン"-"がある「明細行」だけ）</span>
+<span class="code-line">------------------------------------------</span>
+<span class="code-line">1002-88    渋谷支店     0120000</span>
+<span class="code-line">=== 2026/03/18 === 売上明細 === PAGE 2 ===</span>
+<span class="code-line">...</span>
+</div>
+<p>これを関数で抽出するには、不要行を無視して「明細行」の条件を満たす行だけを上に詰めて取得する必要があります。</p>
+<h3 style="color:#b71c1c;border-bottom:2px solid #ffcdd2;padding-bottom:5px;margin-top:30px;">【攻略手順】全自動で明細行だけを抽出する2ステップ</h3>
+<div class="attack-box">
+<h3 class="attack-title">ステップ1：貼付シートに「判定フラグ（連番）」を作る</h3>
+<p>抽出を始める前に、まずはベースとなる<strong>貼付シート側のA列（作業列）</strong>に、「右の行が明細行かどうか」を判定するフラグを仕込んでおきます。判定条件に合致した明細行だけに「その行の行番号」を付与する数式です。</p>
+<p class="code-label">貼付シート!A2セル（作業列）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(MIDB(B2, 5, 1)="-", ROW(), "")</span>
+</div>
+<p style="margin-top:15px;"><strong>貼付シート側のイメージ</strong>（常にA列が作業列で、B列にコピペする運用）</p>
+<table class="diff-table" style="max-width:650px">
+<tr>
+<th style="width:40px">行</th>
+<th style="width:130px;color:#c62828">A列（作業列）</th>
+<th>B列（貼り付けたデータ）</th>
+</tr>
+<tr>
+<td>1</td>
+<td></td>
+<td style="text-align:left;color:#999">=== 2026/03/18 === 売上明細 === PAGE 1 ===</td>
+</tr>
+<tr>
+<td>2</td>
+<td><span class="diff-ng">2</span></td>
+<td class="text-left"><strong>1001-50</strong>    新宿本店     0050000</td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+<td style="text-align:left;color:#999">------------------------------------------</td>
+</tr>
+<tr>
+<td>4</td>
+<td><span class="diff-ng">4</span></td>
+<td class="text-left"><strong>1002-88</strong>    渋谷支店     0120000</td>
+</tr>
+</table>
+<p style="margin-top:10px;"><code>MIDB</code> 関数を使って「B列の5バイト目がハイフンか」を判定し、もしそうなら <code>ROW()</code> 関数で自分自身の行番号を出力します。</p>
+<p>よくある「<code>COUNTIF</code>」や「<code>MAX($A$1:A1)+1</code>」を使った連番作成のほうが直感的で便利に見えますが、<strong>20万行の大容量データで使うとExcelがフリーズ・激重になる最大の原因</strong>となります。そのため、単独で計算が完結する <code>ROW()</code> をフラグに使うのが大容量データにおける最速の鉄則です。（なぜ急激に重くなるかの詳細な理由は、<a href="#sec-freeze" style="color:#d32f2f;font-weight:bold;text-decoration:underline;">記事末尾の参考コラム</a>をご覧ください）</p>
+</div>
+<div class="attack-box">
+<h3 class="attack-title">ステップ2：抽出シートへ「明細行だけ」をワープさせる</h3>
+<p>フラグが完成したら、次に計算を行う<strong>抽出シート側のA列</strong>へ数式を入れ、先ほど作った連番を頼りに明細行だけを吸い上げます。Excelのバージョンに合わせて以下のどちらかの手法を使います。</p>
+<h4 style="margin:15px 0 5px;color:#1565c0;">解法A：FILTER関数で一発抽出（Excel 2021 / 2024 / Microsoft 365 など）</h4>
+<p>最新の環境なら、ステップ1の作業列すら見に行かず、この数式一つで条件判定から抽出まで（スピルで）完結します。</p>
+<p class="code-label-good">抽出シート!A1セルに入力</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=FILTER(貼付シート!B:B, MIDB(貼付シート!B:B, 5, 1)="-")</span>
+</div>
+<h4 style="margin:20px 0 5px;color:#f57f17;">解法B：フラグ行番号 ＋ INDEX ＋ SMALL（全ver対応・20万行処理の最速解）</h4>
+<p>古いExcelを使わざるを得ない場合や、万単位の超大容量データがある場合は、抽出側の行番号を利用して、ステップ1で付けた貼付シートの「行番号フラグ（A列）」を <code>SMALL</code> 関数で小さい順から探しに行くのが最も安全で高速です。</p>
+<p class="code-label-good">抽出シート!A1セル（抽出先）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(INDEX(貼付シート!B:B, SMALL(貼付シート!A:A, ROW(A1))), "")</span>
+</div>
+<p style="margin-top:10px;"><code>SMALL</code> 関数が「貼付シートのA列の中で、一番小さい行番号、次に小さい行番号&hellip;」と順番に拾ってくるため、空白の行（ゴミ行）が見事にジャンプされ、上に詰まった状態で綺麗なデータとしてワープしてきます。重い累積計算を避けた、レガシー環境での究極の抽出術です。</p>
+</div>
+</section>
+<!-- ==========================================================
+         【試練2】1レコードが2行（縦持ち）
+      ========================================================== -->
+<section class="method-section" id="sec-trial2">
+<h2>【試練2】1つのデータが「2行」の縦持ちになっている</h2>
+<div class="code-readonly" data-lang="テキスト">
+<span class="code-line">店舗ID：1001　店舗名：新宿本店　売上：50,000    &larr;（1件目の1行目）</span>
+<span class="code-line">住所：東京都新宿区〇〇　電話：03-xxxx-xxxx       &larr;（1件目の2行目）</span>
+<span class="code-line">店舗ID：1002　...</span>
+</div>
+<p>横幅（印字桁数）の制限により、COBOL帳票ではしょっちゅう発生する悲劇です。1件のデータが2行に分かれているため、1つの行に横持ちさせて（横列に広げて）からMIDBで切る必要があります。</p>
+<div class="attack-box">
+<h3 class="attack-title">魔法の解決策：WRAPROWS関数（Excel 2024 / Microsoft 365 などの対応環境）</h3>
+<p>縦にずらっと並んだ貼付シート側のデータを、指定した数（今回は「2列」）で強引に折り曲げて表にします。</p>
+<p class="code-label-good">抽出シート!A1セルに入力</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=WRAPROWS(貼付シート!B1:B100, 2)</span>
+</div>
+<p style="margin-top:10px;">これを打つだけで、スピルによって抽出シート側に「左の列に1行目の情報」「右の列に2行目の情報」が綺麗に横並びになります。COBOLの縦持ちデータという悪魔を一瞬で浄化する神関数です。</p>
+</div>
+<div class="attack-box">
+<h3 class="attack-title">基本解法：フラグ行番号 ＋ INDEX ＋ SMALL で横持ちに変換（全バージョン対応）</h3>
+<p>
+  WRAPROWSが無い環境（Excel 2021以前、または更新チャネル・買い切り版・職場PCの管理設定などで未対応の環境）では、試練1と全く同じ「フラグを作って SMALL で拾う」アプローチが最も確実で安全です。
+  今回は2行で1セットなので、A列（1行目データ用）にだけ奇数行を判別するフラグを作ります。
+</p>
+
+<!-- 貼付シート側のテーブル -->
+<div class="table-wrapper">
+  <table class="excel-demo-table" style="max-width:700px;margin:20px 0;">
+    <caption>貼付シート側：A列に1行目フラグ、B列に縦持ちデータ</caption>
+    <tr class="excel-header-row">
+      <th class="excel-row-num"></th>
+      <th class="excel-col-letter">A（1行目フラグ）</th>
+      <th class="excel-col-letter">B（貼り付けたデータ）</th>
+    </tr>
+    <tr>
+      <td class="excel-row-num">1</td>
+      <td class="excel-line1">1</td>
+      <td class="excel-data-cell">店舗ID：1001　店舗名：新宿本店　売上：50,000</td>
+    </tr>
+    <tr>
+      <td class="excel-row-num">2</td>
+      <td class="excel-empty">（空白）</td>
+      <td class="excel-data-cell">住所：東京都新宿区〇〇　電話：03-xxxx-xxxx</td>
+    </tr>
+    <tr>
+      <td class="excel-row-num">3</td>
+      <td class="excel-line1">3</td>
+      <td class="excel-data-cell">店舗ID：1002　店舗名：渋谷支店　売上：120,000</td>
+    </tr>
+    <tr>
+      <td class="excel-row-num">4</td>
+      <td class="excel-empty">（空白）</td>
+      <td class="excel-data-cell">住所：東京都渋谷区〇〇　電話：03-yyyy-yyyy</td>
+    </tr>
+    <tr>
+      <td class="excel-row-num">5</td>
+      <td class="excel-line1">5</td>
+      <td class="excel-data-cell">店舗ID：1003　店舗名：池袋支店　売上：80,000</td>
+    </tr>
+    <tr>
+      <td class="excel-row-num">6</td>
+      <td class="excel-empty">（空白）</td>
+      <td class="excel-data-cell">住所：東京都豊島区〇〇　電話：03-zzzz-zzzz</td>
+    </tr>
+  </table>
+</div>
+
+<div class="excel-demo-note" style="margin-bottom:24px;">
+  <strong>ポイント：</strong><br>
+  A列は奇数行（1行目データ）だけに <code>=IF(MOD(ROW(),2)=1, ROW(), "")</code> でフラグを立てます。<br>
+  これが試練1と同じ「SMALL関数で拾うための目印」になります。
+</div>
+
+<div style="text-align:center;font-weight:bold;color:#1565c0;margin:30px 0;">
+  ↓ SMALLが1行目フラグを順番に拾い、2行目はその「すぐ下の行（+1）」を取得して横並びに
+</div>
+
+<!-- 抽出シート側の結果テーブル -->
+<div class="table-wrapper">
+  <table class="excel-demo-table" style="max-width:750px;margin:20px 0;">
+    <caption>抽出シート側：A列に連番（順位）を作り、SMALL で横並びに取得</caption>
+    <tr class="excel-header-row">
+      <th class="excel-row-num"></th>
+      <th class="excel-col-letter">A（連番）</th>
+      <th class="excel-col-letter">B（1行目データ）</th>
+      <th class="excel-col-letter">C（2行目データ）</th>
+    </tr>
+    <tr>
+      <td class="excel-row-num">1</td>
+      <td class="excel-result" style="text-align:center;font-weight:bold;">1</td>
+      <td class="excel-line1">店舗ID：1001　店舗名：新宿本店　売上：50,000</td>
+      <td class="excel-line2">住所：東京都新宿区〇〇　電話：03-xxxx-xxxx</td>
+    </tr>
+    <tr>
+      <td class="excel-row-num">2</td>
+      <td class="excel-result" style="text-align:center;font-weight:bold;">2</td>
+      <td class="excel-line1">店舗ID：1002　店舗名：渋谷支店　売上：120,000</td>
+      <td class="excel-line2">住所：東京都渋谷区〇〇　電話：03-yyyy-yyyy</td>
+    </tr>
+    <tr>
+      <td class="excel-row-num">3</td>
+      <td class="excel-result" style="text-align:center;font-weight:bold;">3</td>
+      <td class="excel-line1">店舗ID：1003　店舗名：池袋支店　売上：80,000</td>
+      <td class="excel-line2">住所：東京都豊島区〇〇　電話：03-zzzz-zzzz</td>
+    </tr>
+  </table>
+</div>
+
+<p class="code-label-good">抽出シート!B1セル（1行目データ：SMALLの「順位」にA列の連番を使う）</p>
+<div class="code-block" data-lang="excel">
+  <span class="code-line">=INDEX(貼付シート!B:B, SMALL(貼付シート!A:A, $A1))</span>
+</div>
+
+<p class="code-label-good">抽出シート!C1セル（2行目データ：取得した行番号に ＋1 する）</p>
+<div class="code-block" data-lang="excel">
+  <span class="code-line">=INDEX(貼付シート!B:B, SMALL(貼付シート!A:A, $A1) + 1)</span>
+</div>
+<div class="excel-demo-note">
+  <strong>試練1とロジックはほぼ同じです。</strong><br>
+  「A列のフラグから1行目データを拾う」、そして2行目のデータは「拾った行番号に <code>+ 1</code> した行を拾う」という仕組みです。<br>
+  あとはC列以降で <code>MIDB</code> や <code>TRIM</code> を使って、
+  店舗ID・店舗名・売上・電話番号などを切り出せば、
+  COBOL帳票の縦持ちデータを通常のデータベース形式に変換できます。
+  
+  <div style="margin-top: 16px;">
+      <a class="link-card" href="../../functions/old/article_countif_extract.html">
+      <div class="link-card-title">旧ExcelでFILTER関数の代わりに複数抽出する方法 ― データの組み方で高速化</div>
+      <div class="link-card-desc">この「フラグ行番号 ＋ INDEX ＋ SMALL」パターンの詳細な仕組みと、COUNTIF方式・AGGREGATE方式・上行参照方式との速度比較を解説しています。行数が多い場合はこちらの記事を応用して最適な数式の組み方をご確認ください。</div>
+      </a>
+  </div>
+</div>
+</div>
+<!-- INDEX + ROW 算数コラム（別枠） -->
+<div class="xdemo-note-info" style="margin-top:24px;">
+  <strong>💡 別解コラム：計算力で狙撃する INDEX ＋ ROW の算数（全バージョン対応）</strong><br>
+  上記のSMALL方式は「フラグ列を作って拾う」王道の手法ですが、WRAPROWSが無い機能限定環境で、作業列を増やしたくない場合は、「行番号（ROW）」を使った算数で、貼付シートのデータ列（B列）から自分の好きな行だけを規則的に狙い撃ちします。抽出シートのA列（1行目データ用）とB列（2行目データ用）にそれぞれ以下の数式を入れ、下にコピーします。
+
+  <p class="code-label-good" style="margin-top:12px;">抽出シート!A1セル（1行目用）</p>
+  <div class="code-block" data-lang="excel">
+    <span class="code-line">=INDEX(貼付シート!$B:$B, (ROW(A1)-1)*2 + 1)</span>
+  </div>
+
+  <p class="code-label-good">抽出シート!B1セル（2行目用）</p>
+  <div class="code-block" data-lang="excel">
+    <span class="code-line">=INDEX(貼付シート!$B:$B, (ROW(A1)-1)*2 + 2)</span>
+  </div>
+
+  <p style="margin-top:10px;">
+    仕組みは単純な算数です。下にコピーして <code>ROW(A2)</code> になると <code>(2-1)*2+1 = 3行目</code> が貼付シートから取得され、次は <code>5行目</code>、その次は <code>7行目</code>&hellip;と、奇数行・偶数行だけを正確に拾い集めてくれます。作業列が不要なのが利点ですが、「必ず2行1セットで途切れなく並んでいる」ことが前提条件です。
+  </p>
+</div>
+<div class="xdemo-note-warn">
+<strong>この難所さえ抜ければ、あとは「切るだけ」です。</strong><br>
+          上記のアプローチで「きれいな横並び1レコード」のデータさえ作ってしまえば、あとは基本編に戻り、<code>MIDB</code> や <code>TRIM</code> 関数を使って必要な部分をスライスしていくだけでデータベースの完成です。
+        </div>
+</section>
+<!-- ==========================================================
+         【参考コラム】大容量データでのフリーズ原因と対策
+      ========================================================== -->
+<section class="method-section" id="sec-freeze" style="background:#fff3e0;border-top:3px solid #ffb74d;border-radius:0 0 8px 8px;padding:24px;margin-top:40px;">
+<h2 style="color:#e65100;">【参考コラム】なぜ作業列で COUNTIF や MAX を使うとExcelがフリーズ（激重に）するのか？</h2>
+<p>作業列で連番を作る際、ネットの解説記事ではよく以下のような数式が「便利だから」「素直だから」という理由で紹介されます。しかし、これらの数式を数十万行のCOBOLデータに使ってしまうと、<strong>Excelが再計算地獄に陥り完全にフリーズ（あるいは激重・応答なし）</strong>してしまいます。</p>
+<p class="color-red">危険な累積範囲の数式例（大容量データの場合）</p>
+<div class="code-readonly" data-lang="excel">
+<span class="code-line">❌【COUNTIF型】 =IF(条件, COUNTIF($A$1:A1, A1), "")</span>
+<span class="code-line">❌【MAX型】   =IF(条件, MAX($B$1:B1)+1, "")</span>
+</div>
+<h3 style="margin-top:20px;color:#e65100;">なぜ重くなるのか？（Nの2乗の罠）</h3>
+<p>原因は <code>$A$1:A1</code> という「起点を固定して下に伸びていく範囲指定（累積計算）」にあります。</p>
+<table class="diff-table" style="max-width:500px;margin:16px 0">
+<tr><th class="w-35">行位置</th><th style="width:65%">毎回振り返るセル数</th></tr>
+<tr><td class="col-item">1行目</td><td>1個のセルを振り返る</td></tr>
+<tr><td class="col-item">1万行目</td><td><span class="diff-ng">1万個のセルを毎回振り返る</span></td></tr>
+<tr><td class="col-item">10万行目</td><td><span class="diff-ng">10万個のセルを毎回振り返る</span></td></tr>
+<tr><td class="col-item">20万行目</td><td><span class="diff-ng">過去の20万個のセルを毎回すべて振り返って計算し直す</span></td></tr>
+</table>
+<p>このように行が下に行くほど、Excelが振り返って処理すべきセルの数が雪だるま式に倍増し、計算量が「Nの2乗」として莫大に膨れ上がります。これが大容量データでExcelが応答不能になる最大の理由です。</p>
+<h3 style="margin-top:20px;color:#e65100;">実務での正解：単独セルで完結させる</h3>
+<p>そのため何万行もあるCOBOL帳票の実務においては、「過去の膨大なセルを振り返る関数」を絶対に避けなければなりません。この記事のステップ1でご紹介した <code>=ROW()</code> などをフラグに使う手法は、<strong>他を振り返らず、自分自身の行番号という1つの情報だけを出力して計算が完結する（プログラムの世界で言う O(N) で終わる）</strong>ため、20万行あっても一瞬で計算が完了します。大容量データを関数で処理する本質的で必須のテクニックです。</p>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ(Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab — 制限環境こそが最高の教師。</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+

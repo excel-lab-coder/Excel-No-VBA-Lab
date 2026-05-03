@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="Power Queryエディターの5つのエリアの役割と画面構成を解説。どこを見れば何がわかるかを完全把握できる入門記事。" name="description">
+<meta content="パワークエリ, Power Query, Excel パワークエリ, VBA不要, Excel実務" name="keywords">
+<meta content="Power Queryエディターの画面構成｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power Queryエディターの5つのエリアの役割と画面構成を解説。どこを見れば何がわかるかを完全把握できる入門記事。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/basic/article_pq_editor_ui.html" rel="canonical">
+<title>Power Queryエディターの画面構成｜Excel &times; No VBA Lab</title>
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Power Queryエディターの画面構成 \u0026horbar; 5つのエリアを理解する","description":"Power Queryエディターの5つのエリアの役割と画面構成を解説。どこを見れば何がわかるかを完全把握できる入門記事。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/basic/article_pq_editor_ui.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>エディターの画面構成</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">Power Queryエディターの画面構成 &horbar; 5つのエリアを理解する</h1>
+</div>
+<section class="goal-section">
+<h2><span class="icon">💡</span> この記事で解決すること</h2>
+<p>Power Queryエディターを初めて開くと、Excelとは全く違う画面に戸惑います。
+        この記事ではエディターの5つのエリアの役割を解説し、「どこを見れば何がわかるか」を完全に把握します。</p>
+</section>
+<section class="method-section">
+<h3>エディターはどうやって開く？</h3>
+<p>パワークエリでデータを取り込むと自動でエディターが開きます。
+        既存のクエリを編集する場合は、「データ」タブ &rarr;「クエリと接続」サイドパネル &rarr; クエリ名をダブルクリックで開きます。
+        またはテーブル内のセルを選択した状態で「クエリ」タブ &rarr;「編集」でも開けます。</p>
+</section>
+<section class="method-section">
+<h3>5つのエリア</h3>
+<div class="pq-ui-area">
+<h4>① リボン（上部）</h4>
+<p>「ホーム」「変換」「列の追加」「表示」の4つのタブがあります。
+          データの加工操作はほぼすべてここから実行します。
+          <strong>「ホーム」タブ</strong>には列の削除・データ型変更・行のフィルターなど最頻出の操作が集中しています。
+          <strong>「変換」タブ</strong>にはテキスト操作（分割・抽出・トリム等）、数値操作（四則演算・丸め等）、日付操作（年月日の抽出等）があります。
+          <strong>「列の追加」タブ</strong>は既存の列を変えずに新しい列を追加する操作です。条件列・カスタム列・インデックス列などがここにあります。
+          「変換」と「列の追加」には同じ名前の操作（例：「抽出」）がありますが、「変換」は元の列を上書き、「列の追加」は新しい列として追加という違いがあります。</p>
+</div>
+<div class="pq-ui-area">
+<h4>② 数式バー（リボンの直下）</h4>
+<p>現在選択しているステップのM言語コードが表示されます。
+          GUIで操作すると裏側で自動生成されるコードがここに見えます。
+          最初はGUI操作だけで十分ですが、慣れてきたらここを読むことでM言語の理解が進みます。
+          数式バーが表示されていない場合は「表示」タブ &rarr;「数式バー」にチェックを入れてください。</p>
+</div>
+<div class="pq-ui-area">
+<h4>③ データプレビュー（中央の大きなエリア）</h4>
+<p>現在のステップを適用した結果のプレビューが表示されます。
+          <strong>表示されているのは先頭1,000行のプレビュー</strong>であり、実際のデータ全体ではありません。
+          各列ヘッダーの左にはデータ型のアイコン（ABC＝テキスト、123＝整数、📅＝日付など）が表示されます。
+          列ヘッダーを右クリックすると、列に対する操作メニューが表示されます。リボンから操作するのと同じ結果ですが、右クリックのほうが速い場面も多いです。</p>
+</div>
+<div class="pq-ui-area">
+<h4>④ クエリの設定（右側パネル）</h4>
+<p><strong>「プロパティ」</strong>セクションにはクエリ名が表示されます。ここでクエリの名前を変更できます。
+          <strong>「適用したステップ」</strong>セクションが最も重要です。
+          データに対して行ったすべての操作が上から順にステップとして記録されています。
+          任意のステップをクリックすると、そのステップ時点でのプレビューが中央に表示されます。
+          ステップ名の左にある&times;ボタンでステップの削除、ステップをドラッグして順序の変更も可能です（ただし依存関係に注意）。</p>
+</div>
+<div class="pq-ui-area">
+<h4>⑤ クエリ一覧（左側パネル）</h4>
+<p>現在のブックに含まれるすべてのクエリが一覧表示されます。
+          複数のクエリがある場合にここで切り替えます。
+          表示されていない場合は「表示」タブ &rarr;「クエリの設定」にチェックを入れてください。</p>
+</div>
+</section>
+<section class="method-section">
+<h3>「適用したステップ」の操作</h3>
+<div class="pq-step-box">
+<h4>ステップをクリック &rarr; その時点のプレビューを確認</h4>
+<p>任意のステップをクリックすると、そこまでの処理結果がプレビューに表示されます。
+          「この操作の前と後で何が変わったか」をステップを行き来して確認できます。
+          これがExcelのCtrl+Zとは根本的に異なる「非破壊処理」の核心です。</p>
+</div>
+<div class="pq-step-box">
+<h4>ステップの削除（&times;ボタン）</h4>
+<p>ステップ名の左にある&times;ボタンをクリックすると、そのステップだけが削除されます。
+          後続のステップがそのステップに依存している場合はエラーになることがあるため注意してください。
+          基本的には最後のステップから順に削除するのが安全です。</p>
+</div>
+<div class="pq-step-box">
+<h4>ステップの名前変更</h4>
+<p>ステップ名を右クリック &rarr;「名前の変更」で日本語のわかりやすい名前に変更できます。
+          「変更された型」より「データ型を整数と日付に変換」のほうが後から見たときに理解しやすくなります。
+          引き継ぎや長期運用するクエリでは名前変更を習慣にすると効果的です。</p>
+</div>
+<div class="pq-step-box">
+<h4>ステップの挿入</h4>
+<p>途中のステップを選択した状態で新しい操作をすると、その直後にステップが挿入されます。
+          「最初に型変換を忘れた」場合でも、最初のステップに戻ってから操作すれば挿入できます。</p>
+</div>
+<div class="pq-note-warn">
+          ⚠️ ステップの順序変更（ドラッグ）は可能ですが、後のステップが前のステップの結果に依存している場合はエラーになります。
+          順序を変える場合は「変更後にプレビューがエラーにならないか」を必ず確認してください。
+        </div>
+</section>
+<section class="method-section">
+<h3>「変換」タブと「列の追加」タブの違い</h3>
+<p>この2つのタブには「テキストの列」「数値の列」「日付と時刻の列」など同じカテゴリの操作が並んでいます。
+        名前も似ているため混乱しやすいポイントです。</p>
+<p><strong>「変換」タブ</strong>：選択した列を直接書き換えます。元の列は上書きされます。</p>
+<p><strong>「列の追加」タブ</strong>：元の列はそのまま残し、変換結果を新しい列として右端に追加します。</p>
+<p>例えば「氏名」列を大文字に変換したい場合、「変換」タブから実行すると「氏名」列が大文字に上書きされます。
+        「列の追加」タブから実行すると「氏名」列はそのまま残り、右端に「大文字」という新しい列が追加されます。</p>
+<p>元データを残しておきたい場合は「列の追加」、不要な場合は「変換」を使います。
+        迷ったら「列の追加」のほうが安全です。不要になった元の列は後から削除できます。</p>
+</section>
+<section class="tips-section">
+<h3><span class="icon">📝</span> 列ヘッダーの右クリックを活用する</h3>
+<p>列ヘッダーを右クリックすると、その列に対して使える操作がメニュー表示されます。
+        型の変更・値の置換・列の削除・名前の変更・列の分割・列の複製など、よく使う操作はほぼすべて右クリックから実行できます。
+        リボンから探すよりも速いことが多いので、最初から右クリック操作を覚えておくと効率的です。</p>
+</section>
+<section class="method-section">
+<h3>まとめ</h3>
+<p>Power Queryエディターは「リボン」「数式バー」「データプレビュー」「クエリの設定（適用したステップ）」「クエリ一覧」の5つのエリアで構成されています。
+        最も重要なのは右側パネルの「適用したステップ」で、ここがパワークエリの非破壊処理・再現性の核心部分です。
+        ステップをクリックして前後の変化を確認する操作は、今後のすべての作業の基本になります。</p>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

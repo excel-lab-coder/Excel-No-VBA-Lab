@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>QRコードでシステム間データ移行！旧システムから新システムへ読み取るだけで引っ越し完了｜Excel &times; No VBA Lab</title>
+<meta content="旧システムのデータをExcelでQRコード化し、新システムへQRリーダーで読み取るだけで移行。フィールドマッピング・キー操作設計・移行バッチの組み立て・全角対応（記事⑪）への導線まで網羅。" name="description">
+<meta content="QRコード システム移行, データ移行 Excel, 旧システム 新システム, バーコードリーダー, フィールドマッピング, OPI-3601 ALX-3601 L-46X, オプトエレクトロニクス, VBAなし" name="keywords">
+<meta content="QRコードでシステム間データ移行！旧システムから新システムへ読み取るだけで引っ越し完了｜Excel &times; No VBA Lab" property="og:title">
+<meta content="旧システムのデータをExcelでQRコード化し、新システムへQRリーダーで読み取るだけで移行する方法を解説。全角対応のVBA手法も紹介。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/qr/10_qr_system_migration.html" rel="canonical">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<!-- JSON-LD Article -->
+<script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"QRコードでシステム間データ移行！旧システムから新システムへ読み取るだけで引っ越し完了",
+    "description":"旧システムのデータをExcelでQRコード化し、新システムへQRリーダーで読み取るだけで移行する方法を解説。フィールドマッピング・キー操作設計・全角対応まで網羅。",
+    "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
+    "publisher":{"@type":"Organization","name":"Excel × No VBA Lab"},
+    "datePublished":"2026-04-17",
+    "dateModified":"2026-04-18",
+    "mainEntityOfPage":"https://excel-no-vba-lab.com/qr/10_qr_system_migration.html"
+  }
+  </script>
+<script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-no-vba-lab.com/"},
+      {"@type":"ListItem","position":2,"name":"QR Automation Lab","item":"https://excel-no-vba-lab.com/qr/"},
+      {"@type":"ListItem","position":3,"name":"システム間データ移行","item":"https://excel-no-vba-lab.com/qr/10_qr_system_migration.html"}
+    ]
+  }
+  </script>
+<script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"HowTo",
+    "name":"QRコードで旧システムから新システムへデータを移行する方法",
+    "description":"旧システムのデータをExcelでQRプログラムに変換し、新システムの入力画面にQRリーダーで読み取るだけで移行する手順。",
+    "step":[
+      {"@type":"HowToStep","position":1,"name":"旧システムからデータをエクスポートする","text":"CSVやコピーでデータをExcelに取り込む。"},
+      {"@type":"HowToStep","position":2,"name":"新システムの入力画面を操作分析する","text":"Tab・Enter・特殊キーの遷移順序を洗い出す。"},
+      {"@type":"HowToStep","position":3,"name":"フィールドマッピング表を作成する","text":"旧データ項目と新画面フィールドの対応を一覧にする。"},
+      {"@type":"HowToStep","position":4,"name":"QRプログラム数式を組み立てる","text":"データ＋キー操作を結合する数式を作成する。"},
+      {"@type":"HowToStep","position":5,"name":"テスト移行で検証し本番実行する","text":"テスト環境で数件検証後、全件を読み取り移行する。"}
+    ]
+  }
+  </script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../index.html">ホーム</a><span>&gt;</span>
+<a href="../index.html#qr">QR Automation Lab</a><span>&gt;</span>
+<strong>システム間データ移行</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="badge badge-maniac">QR連携/システム移行/フィールドマッピング</span>
+</div>
+<h1 class="article-title">QRコードでシステム間データ移行！<br>旧システムから新システムへ、読み取るだけで引っ越し完了</h1>
+</div>
+<!-- ===== 機種限定告知 ===== -->
+<div class="xdemo-note-danger">
+<strong>🔥 機種限定の解説です</strong><br>
+        本シリーズで動作確認しているのは<strong>オプトエレクトロニクス社の OPI-3601、ALX-3601（互換品）、L-46X</strong> の3機種のみです。他メーカーをご使用の方はメーカーのサポートに直接ご確認ください。
+      </div>
+<!-- ===== 本命は次の記事⑪ ===== -->
+<section class="goal-section">
+<h2><span class="icon">🔑</span> 最初に &horbar; 本記事を読む前に知っておいてほしいこと</h2>
+<div class="xdemo-note-warn">
+<strong>⚠️ 実務でのシステム移行は、ほとんどの場合「全角文字」を含みます</strong><br>
+          顧客名、商品名、住所、備考欄&horbar;&horbar;業務システムのデータには日本語（全角文字）がほぼ必ず含まれます。バーコードコントロール（ActiveX）は<strong>半角文字しか扱えない</strong>ため、現実のシステム移行でそのまま使えるケースは限定的です。
+        </div>
+<p>本記事では、バーコードコントロール＋キーボードエミュレーション方式での「半角データのシステム移行」を解説します。<strong>フィールドマッピング・キー操作設計・Sleepの配置・移行バッチの組み立て</strong>といった設計思想は、全角対応の場合でもそのまま活きる共通技術です。</p>
+<p>しかし正直に言えば、<strong>本シリーズの本命は次の記事⑪</strong>です。</p>
+<div class="xdemo-note-good">
+<strong>💡 記事⑪「VBA標準機能だけで全角QR生成」が本命です</strong><br>
+          記事⑪では、外部ライブラリなし・ネット接続なしで、<strong>VBAの標準機能だけ</strong>で漢字・ひらがなを含むQRコードを生成する方法を解説しています。閉域環境ではライブラリの追加インストールが困難なため、ADODB.Stream＋リード・ソロモン符号によるVBA自力生成が最も現実的な選択肢になります。<br><br>
+          本記事で学ぶ<strong>「操作を分解してQRプログラムに変換する設計技法」</strong>は、記事⑪のVBA生成方式でもそのまま使います。つまり本記事は、記事⑪を最大限に活用するための<strong>設計編</strong>という位置づけです。ぜひ最後まで読んで、記事⑪へ進んでください。
+        </div>
+<h3>本記事と記事⑪の関係</h3>
+<table class="method-choice-table">
+<thead>
+<tr><th>項目</th><th>本記事（⑩）</th><th>記事⑪（本命）</th></tr>
+</thead>
+<tbody>
+<tr><td>QR生成方式</td><td>バーコードコントロール（Access由来のActiveX）</td><td>VBA標準機能のみで自力生成</td></tr>
+<tr><td>全角文字</td><td style="color:#c62828;font-weight:bold">✕ 使えない</td><td style="color:#2e7d32;font-weight:bold">&cir; 使える</td></tr>
+<tr><td>外部ライブラリ</td><td>不要。ただしAccess由来のMicrosoft Barcode Controlが使えるOffice構成と、ActiveX利用が許可された設定が前提</td><td>不要</td></tr>
+<tr><td>閉域環境</td><td>&cir;</td><td style="color:#2e7d32;font-weight:bold">&cir; 最適</td></tr>
+<tr class="recommend"><td>学べること</td><td><strong>設計技法</strong>：画面分析・マッピング・キー操作設計・Sleep配置</td><td><strong>実装技法</strong>：UTF-8変換・RS符号・セル描画・全角QR生成</td></tr>
+<tr><td>実務での出番</td><td>半角のみのコード・数値データの移行</td><td><strong>日本語を含む実データの移行（＝ほとんどの現場）</strong></td></tr>
+</tbody>
+</table>
+<div class="xdemo-note-info">
+<strong>📝 読み方のおすすめ</strong><br>
+          本記事で<strong>移行の設計手法</strong>（画面分析&rarr;マッピング&rarr;数式設計&rarr;テスト）を理解してから、記事⑪で<strong>全角QR生成の実装</strong>に進むと、両方の技術がスムーズに繋がります。設計なしにいきなりVBAコードだけ書いても、実務の移行プロジェクトはうまくいきません。
+        </div>
+</section>
+<!-- ===== ゴール ===== -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> この記事の目的</h2>
+<p>記事⑨では「Excel &rarr; Excel」のデータ転送を扱いました。本記事ではさらに踏み込み、<strong>異なるシステム間</strong>でのデータ移行にQRコードを活用する方法を解説します。</p>
+<p>旧システムのリプレース、部門間のシステム統合、クラウド移行&horbar;&horbar;こうした場面で「旧システムの数千件のデータを新システムに手入力する」という作業が発生しがちです。QRコードなら、<strong>新システムの画面にキーボード入力として直接データを流し込める</strong>ため、インポート機能がなくても移行が可能です。</p>
+<ul>
+<li><strong>QR移行の位置づけ：</strong>API・CSV・RPA等との比較で「いつQRが有効か」を判断する</li>
+<li><strong>画面操作の分析手法：</strong>新システムの入力画面を1キーずつ分解する</li>
+<li><strong>フィールドマッピング：</strong>旧データ項目と新画面フィールドの対応付け</li>
+<li><strong>QRプログラム数式の設計：</strong>データ＋Tab＋Enter＋Sleep＋特殊キーを1つの数式にまとめる</li>
+<li><strong>テスト&rarr;本番移行の進め方：</strong>段階的テストと所要時間の見積もり</li>
+</ul>
+</section>
+<!-- ===== なぜQRか ===== -->
+<section class="method-section">
+<h2>なぜQRコードでシステム移行なのか</h2>
+<table class="format-table">
+<tr><th>移行手段</th><th>前提条件</th><th>メリット</th><th>デメリット</th></tr>
+<tr><td>API連携</td><td>両システムにAPIがある</td><td>高速・自動化可能</td><td>開発コスト大・技術者必要</td></tr>
+<tr><td>CSVインポート</td><td>新システムにインポート機能</td><td>大量データに対応</td><td>機能がないシステムでは不可</td></tr>
+<tr><td>DB直接移行</td><td>DBアクセス権限・スキーマ知識</td><td>最速・大量データ</td><td>リスク大・専門知識必須</td></tr>
+<tr><td>RPA</td><td>RPAツール導入済み</td><td>画面操作を自動化</td><td>ライセンス費用・設定工数</td></tr>
+<tr><td>手入力</td><td>なし</td><td>確実</td><td>膨大な時間・ミス多発</td></tr>
+<tr><td><strong>QRコード移行</strong></td><td>Excel + QRリーダー</td><td>導入ゼロ・画面操作を自動化・閉域OK</td><td>半角制限（記事⑪で解消）・255文字/QR</td></tr>
+</table>
+<p>QRコード移行の最大の利点は、<strong>新システム側に特別な機能や権限が一切不要</strong>なことです。キーボードで入力できる画面さえあれば、QRリーダーがキーボードの代わりにデータを打ち込みます。RPAと同じ発想ですが、ソフトウェアのインストールが不要なため、IT部門の許可なしで即日導入できる場合が多いです。</p>
+</section>
+<!-- ===== 記事⑨との違い ===== -->
+<section class="method-section">
+<h2>記事⑨との違い &horbar; Excel&rarr;Excel と システム&rarr;システム</h2>
+<table class="key-table">
+<thead>
+<tr><th>要素</th><th>記事⑨（Excel&rarr;Excel）</th><th>本記事（システム&rarr;システム）</th></tr>
+</thead>
+<tbody>
+<tr><td>受信側の入力先</td><td>Excelのセル（Tab/Enterで移動）</td><td>業務システムの入力画面（Tab/Enter＋特殊キー操作）</td></tr>
+<tr><td>画面遷移</td><td>なし</td><td>メニュー選択&rarr;画面遷移&rarr;登録&rarr;次画面</td></tr>
+<tr><td>待ち時間</td><td>不要</td><td>画面遷移のSleep（記事⑥）が必要</td></tr>
+<tr><td>特殊キー操作</td><td>Tab・Enterのみ</td><td>F2・Esc・矢印キー・Delete等（記事④⑤）</td></tr>
+<tr><td>フィールド順序</td><td>Excel列順＝データ順</td><td>画面のTab順序と旧データの列順が異なる場合あり</td></tr>
+<tr><td>繰り返し</td><td>QRを順番に読むだけ</td><td>1件ごとに「新規登録&rarr;入力&rarr;保存」のサイクル</td></tr>
+</tbody>
+</table>
+<p>つまり本記事は、記事⑦（全体システム設計）の技法を「移行」という文脈で再構成したものです。記事①〜⑦の全技術を総動員します。</p>
+</section>
+<!-- ===== 全体フロー ===== -->
+<section class="method-section">
+<h2>移行プロジェクトの全体フロー</h2>
+<div class="flow-diagram">
+<span class="flow-step">① データ抽出</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">② 画面分析</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">③ マッピング</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">④ 数式設計</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">⑤ テスト＆本番</span>
+</div>
+<table class="format-table">
+<tr><th>フェーズ</th><th>作業内容</th><th>成果物</th><th>所要時間（目安）</th></tr>
+<tr><td>① データ抽出</td><td>旧システムからデータをExcelに取り込む</td><td>移行元データシート</td><td>1〜2時間</td></tr>
+<tr><td>② 画面分析</td><td>新システムの入力画面のキー操作を洗い出す</td><td>操作フロー表</td><td>1〜2時間</td></tr>
+<tr><td>③ マッピング</td><td>旧データ項目と新画面フィールドを対応付ける</td><td>フィールドマッピング表</td><td>30分〜1時間</td></tr>
+<tr><td>④ 数式設計</td><td>QRプログラム数式を組み立てる</td><td>QR生成シート</td><td>1〜2時間</td></tr>
+<tr><td>⑤ テスト＆本番</td><td>テスト環境で数件検証 &rarr; 全件移行</td><td>移行完了</td><td>件数による</td></tr>
+</table>
+<p>全体で1〜2日あれば、数百件規模の移行が完了します。手入力なら数週間かかるような作業が、設計1日＋実行数時間で終わる計算です。</p>
+</section>
+<!-- ===== フェーズ①：データ抽出 ===== -->
+<section class="tips-section">
+<h2>フェーズ①：旧システムからデータを抽出する</h2>
+<div class="setup-step">
+<div class="setup-step-header">
+<span class="step-number">1</span>
+<span class="step-title">旧データをExcelに取り込む</span>
+<span class="step-time">所要 1〜2時間</span>
+<span class="level-badge level-send">送信側</span>
+</div>
+<table class="format-table">
+<tr><th>抽出方法</th><th>対象システム</th><th>注意点</th></tr>
+<tr><td>CSV/TSVエクスポート</td><td>多くの業務システム</td><td>文字コードに注意（UTF-8推奨）</td></tr>
+<tr><td>帳票&rarr;PDF&rarr;コピー</td><td>帳票印刷のみ可能なシステム</td><td>列がずれやすい、目視確認必須</td></tr>
+<tr><td>画面コピー</td><td>出力機能がないシステム</td><td>1画面分ずつしか取れない</td></tr>
+<tr><td>QRコード逆転送（記事⑨）</td><td>閉域環境の旧システム</td><td>旧側にもExcel＋QR環境が必要</td></tr>
+</table>
+<div class="xdemo-note-info">
+<strong>📝 データ抽出の原則</strong><br>
+            どんな方法でも、最終的にExcelの1シートに「1行＝1レコード、1列＝1フィールド」の形で整理します。この表が移行の起点になります。
+          </div>
+</div>
+</section>
+<!-- ===== フェーズ②：画面分析 ===== -->
+<section class="tips-section">
+<h2>フェーズ②：新システムの入力画面を操作分析する</h2>
+<p>QR移行の成否は、新システムの画面操作をどれだけ正確に分析できるかにかかっています。記事⑦で学んだ<strong>「操作を1キーずつ分解する」</strong>手法を使います。</p>
+<div class="setup-step">
+<div class="setup-step-header">
+<span class="step-number">2</span>
+<span class="step-title">画面操作を1キーずつ書き出す</span>
+<span class="step-ref">記事⑦</span>
+<span class="step-time">所要 1〜2時間</span>
+<span class="level-badge level-design">設計</span>
+</div>
+<p>新システムの「新規登録」画面を開き、1件のデータを手で入力しながら、押したキーをすべて書き出します。</p>
+<table class="key-table">
+<thead>
+<tr><th>操作順</th><th>画面の状態</th><th>押すキー</th><th>QRシンボル</th><th>備考</th></tr>
+</thead>
+<tbody>
+<tr><td class="text-center">1</td><td>メニュー画面</td><td>「2」（新規登録）</td><td>2</td><td>メニュー番号で選択</td></tr>
+<tr><td class="text-center">2</td><td>画面遷移中</td><td>（3秒待機）</td><td>!</td><td>Sleep（記事⑥）</td></tr>
+<tr><td class="text-center">3</td><td>顧客コード欄にカーソル</td><td>コード入力</td><td>(データ)</td><td>半角英数</td></tr>
+<tr><td class="text-center">4</td><td>顧客コード欄</td><td>Tab</td><td>CHAR(9)</td><td>次フィールドへ</td></tr>
+<tr><td class="text-center">5</td><td>顧客名欄（自動表示）</td><td>Tab</td><td>CHAR(9)</td><td>スキップ（自動入力欄）</td></tr>
+<tr><td class="text-center">6</td><td>電話番号欄</td><td>電話番号入力</td><td>(データ)</td><td>半角数字・ハイフン</td></tr>
+<tr><td class="text-center">7</td><td>電話番号欄</td><td>Tab</td><td>CHAR(9)</td><td>&mdash;</td></tr>
+<tr><td class="text-center">8</td><td>区分ドロップダウン</td><td>&darr;キー&times;n回</td><td>^（n回）</td><td>記事④の文字&rarr;キー変換</td></tr>
+<tr><td class="text-center">9</td><td>区分確定</td><td>Tab</td><td>CHAR(9)</td><td>&mdash;</td></tr>
+<tr><td class="text-center">10</td><td>備考欄</td><td>（空でスキップ）</td><td>CHAR(9)</td><td>Tab で通過</td></tr>
+<tr><td class="text-center">11</td><td>登録ボタンにフォーカス</td><td>Enter</td><td>CHAR(13)</td><td>登録実行</td></tr>
+<tr><td class="text-center">12</td><td>確認ダイアログ</td><td>Enter</td><td>CHAR(13)</td><td>「はい」を確定</td></tr>
+<tr><td class="text-center">13</td><td>登録完了&rarr;メニューに戻る</td><td>（3秒待機）</td><td>!</td><td>画面遷移待ち</td></tr>
+</tbody>
+</table>
+</div>
+<h3>分析で見落としやすいポイント</h3>
+<table class="format-table">
+<tr><th>見落としがちな要素</th><th>具体例</th><th>対処法</th></tr>
+<tr><td>自動入力フィールド</td><td>コード入力&rarr;名称自動表示</td><td>Tab で通過（データは入れない）</td></tr>
+<tr><td>確認ダイアログ</td><td>「登録しますか？ はい/いいえ」</td><td>Enter or Tab+Enter を追加</td></tr>
+<tr><td>ドロップダウン選択</td><td>区分・カテゴリ等</td><td>&darr;キー回数 or 頭文字入力（記事④⑤）</td></tr>
+<tr><td>日付欄の書式変換</td><td>自動で「/」が入る欄</td><td>「20260417」のように数字だけ入力</td></tr>
+<tr><td>既存値のクリア</td><td>デフォルト値が入っている欄</td><td>Delete(`) で消してから入力</td></tr>
+<tr><td>画面遷移の待ち時間差</td><td>初回は遅いが2回目以降は速い</td><td>最も遅いケースに合わせてSleep設定</td></tr>
+</table>
+</section>
+<!-- ===== フェーズ③：マッピング ===== -->
+<section class="tips-section">
+<h2>フェーズ③：フィールドマッピング表を作成する</h2>
+<div class="setup-step">
+<div class="setup-step-header">
+<span class="step-number">3</span>
+<span class="step-title">旧データ列と新画面フィールドの対応表を作る</span>
+<span class="step-time">所要 30分〜1時間</span>
+<span class="level-badge level-design">設計</span>
+</div>
+<h3>マッピング表の例（顧客マスタ移行）</h3>
+<table class="key-table">
+<thead>
+<tr><th>旧データ列</th><th>旧項目名</th><th>新システムフィールド</th><th>操作順</th><th>変換処理</th></tr>
+</thead>
+<tbody>
+<tr><td>A列</td><td>顧客コード</td><td>顧客コード欄</td><td>3番目</td><td>そのまま</td></tr>
+<tr><td>&mdash;</td><td>&mdash;</td><td>顧客名欄（自動表示）</td><td>5番目</td><td>Tab で通過</td></tr>
+<tr><td>B列</td><td>電話番号</td><td>電話番号欄</td><td>6番目</td><td>ハイフン除去</td></tr>
+<tr><td>C列</td><td>区分</td><td>区分ドロップダウン</td><td>8番目</td><td>数値&rarr;&darr;キー回数に変換</td></tr>
+<tr><td>D列</td><td>備考</td><td>備考欄</td><td>10番目</td><td>空ならスキップ</td></tr>
+</tbody>
+</table>
+<h3>よくあるマッピングパターン</h3>
+<table class="format-table">
+<tr><th>パターン</th><th>旧データの状態</th><th>新システムでの入力方法</th><th>Excel数式での変換</th></tr>
+<tr><td>そのまま転記</td><td>半角テキスト</td><td>フィールドにそのまま入力</td><td><span class="code-inline">A2</span></td></tr>
+<tr><td>ハイフン除去</td><td>"03-1234-5678"</td><td>"0312345678"</td><td><span class="code-inline">=SUBSTITUTE(B2,"-","")</span></td></tr>
+<tr><td>日付書式変換</td><td>"2026/04/17"</td><td>"20260417"</td><td><span class="code-inline">=TEXT(D2,"YYYYMMDD")</span></td></tr>
+<tr><td>区分&rarr;選択回数</td><td>区分"3"</td><td>&darr;キー3回</td><td><span class="code-inline">=REPT("^",C2)</span></td></tr>
+<tr><td>フラグ&rarr;チェック</td><td>"1"(有効)</td><td>Spaceキー</td><td><span class="code-inline">=IF(E2="1"," ","")</span></td></tr>
+<tr><td>旧にない項目</td><td>&mdash;</td><td>空でTab通過</td><td><span class="code-inline">CHAR(9)</span></td></tr>
+<tr><td>新にない項目</td><td>存在する</td><td>移行しない</td><td>数式から除外</td></tr>
+</table>
+</div>
+</section>
+<!-- ===== フェーズ④：数式設計 ===== -->
+<section class="tips-section">
+<h2>フェーズ④：QRプログラム数式を組み立てる</h2>
+<div class="setup-step">
+<div class="setup-step-header">
+<span class="step-number">4</span>
+<span class="step-title">データ＋キー操作を1つの数式にまとめる</span>
+<span class="step-ref">記事⑦</span>
+<span class="step-time">所要 1〜2時間</span>
+<span class="level-badge level-design">設計</span>
+</div>
+<p>記事⑦の「QRプログラム」の構造をそのまま適用します。1レコード（1件の移行データ）に対して、「メニュー操作&rarr;画面遷移待ち&rarr;データ入力&rarr;登録&rarr;画面遷移待ち」の全操作を1つの文字列にまとめます。</p>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>= "2" & CHAR(13) & "!"
+  & A2 & CHAR(9)
+  & CHAR(9)
+  & SUBSTITUTE(B2,"-","") & CHAR(9)
+  & REPT("^",C2) & CHAR(9)
+  & IF(D2="","",D2) & CHAR(9)
+  & CHAR(13) & CHAR(13)
+  & "!"</code>
+</div>
+<h3>数式の分解</h3>
+<table class="key-table">
+<thead>
+<tr><th>部分</th><th>数式</th><th>動作</th><th>参照</th></tr>
+</thead>
+<tbody>
+<tr><td>メニュー選択</td><td><span class="code-inline">"2" & CHAR(13)</span></td><td>「2」入力 &rarr; Enter で新規登録画面へ</td><td>⑦</td></tr>
+<tr><td>画面遷移待ち</td><td><span class="code-inline">"!"</span></td><td>3秒Sleep</td><td>⑥</td></tr>
+<tr><td>顧客コード</td><td><span class="code-inline">A2 & CHAR(9)</span></td><td>データ入力 &rarr; Tab</td><td>②</td></tr>
+<tr><td>顧客名スキップ</td><td><span class="code-inline">CHAR(9)</span></td><td>自動表示欄を Tab で通過</td><td>②</td></tr>
+<tr><td>電話番号</td><td><span class="code-inline">SUBSTITUTE(B2,"-","") & CHAR(9)</span></td><td>ハイフン除去して入力 &rarr; Tab</td><td>&mdash;</td></tr>
+<tr><td>区分選択</td><td><span class="code-inline">REPT("^",C2) & CHAR(9)</span></td><td>&darr;キーをC2回 &rarr; Tab</td><td>④⑤</td></tr>
+<tr><td>備考</td><td><span class="code-inline">IF(D2="","",D2) & CHAR(9)</span></td><td>備考があれば入力 &rarr; Tab</td><td>&mdash;</td></tr>
+<tr><td>登録実行</td><td><span class="code-inline">CHAR(13) & CHAR(13)</span></td><td>Enter（登録）&rarr; Enter（確認ダイアログ）</td><td>②</td></tr>
+<tr><td>画面遷移待ち</td><td><span class="code-inline">"!"</span></td><td>3秒Sleep で メニューに戻る</td><td>⑥</td></tr>
+</tbody>
+</table>
+<div class="xdemo-note-info">
+<strong>📝 1QR＝1レコードが原則</strong><br>
+            記事⑨では複数レコードを1QRにまとめましたが、システム移行では1件ごとに「登録&rarr;画面遷移&rarr;次の新規登録」というサイクルがあるため、<strong>1QR＝1レコード</strong>が原則です。1件あたりの文字数を <span class="code-inline">=LEN(E2)</span> で確認してください。上記の例は約55文字なので255文字以内に余裕で収まります。
+          </div>
+<div class="xdemo-note-warn">
+<strong>⚠️ 1レコードが255文字を超える場合</strong><br>
+            フィールド数が多い大規模システムでは1件が255文字を超えることがあります。その場合は「前半QR（途中のフィールドまで入力して止まる）」と「後半QR（続きから入力して登録まで）」に分割します。分割ポイントは必ず<strong>Tab直後（フィールドの切れ目）</strong>に設定してください。
+          </div>
+</div>
+</section>
+<!-- ===== フェーズ⑤：テスト＆本番 ===== -->
+<section class="tips-section">
+<h2>フェーズ⑤：テスト移行 &rarr; 本番移行</h2>
+<div class="setup-step">
+<div class="setup-step-header">
+<span class="step-number">5</span>
+<span class="step-title">段階的にテストし、問題なければ全件実行する</span>
+<span class="step-time">所要 1時間〜</span>
+<span class="level-badge level-verify">テスト</span>
+</div>
+<table class="format-table">
+<tr><th>段階</th><th>テスト内容</th><th>確認ポイント</th><th>失敗時の対処</th></tr>
+<tr><td>Step 1</td><td>メニュー&rarr;画面遷移のみ</td><td>Sleepの長さが足りているか</td><td>! を追加してSleep延長</td></tr>
+<tr><td>Step 2</td><td>最初の2〜3フィールドだけ入力</td><td>Tab順序は正しいか、自動入力欄のスキップは正しいか</td><td>Tab/データの順序を修正</td></tr>
+<tr><td>Step 3</td><td>全フィールド入力＋登録まで（1件）</td><td>全フィールドに正しい値が入り、登録されたか</td><td>マッピング or 変換式を修正</td></tr>
+<tr><td>Step 4</td><td>連続3件を実行</td><td>2件目以降もサイクルが正しいか</td><td>末尾のSleepを調整</td></tr>
+<tr><td>Step 5</td><td>10件バッチ</td><td>文字欠けなし、速度安定か</td><td>ディレイ調整（記事③）</td></tr>
+</table>
+<p>Step 5まで問題なければ、新システムのバックアップを取得した上で、QR-001から順番に全件読み取りで本番移行を実行します。10件ごとに新システム側で件数を確認し、全件完了後にサンプル数件を目視照合すれば十分です。</p>
+</div>
+</section>
+<!-- ===== 所要時間 ===== -->
+<section class="method-section">
+<h2>所要時間の見積もり</h2>
+<table class="format-table">
+<tr><th>1件あたりの実行時間</th><th>内訳</th><th>100件</th><th>500件</th><th>1,000件</th></tr>
+<tr><td>約8秒（画面遷移なし）</td><td>読取1s + 入力3s + 登録1s + 待機3s</td><td class="text-center">約13分</td><td class="text-center">約67分</td><td class="text-center">約2.2時間</td></tr>
+<tr><td>約12秒（画面遷移1回）</td><td>読取1s + 遷移3s + 入力3s + 登録1s + 遷移3s + 余裕1s</td><td class="text-center">約20分</td><td class="text-center">約100分</td><td class="text-center">約3.3時間</td></tr>
+<tr><td>約18秒（画面遷移2回+重い処理）</td><td>読取1s + 遷移3s + 入力4s + 確認2s + 登録1s + 処理4s + 遷移3s</td><td class="text-center">約30分</td><td class="text-center">約150分</td><td class="text-center">約5時間</td></tr>
+</table>
+<p>1,000件でも半日あれば完了します。手入力なら1件3分 &times; 1,000件 = 50時間（6日以上）かかる作業です。</p>
+</section>
+<!-- ===== 実践シナリオ ===== -->
+<section class="method-section">
+<h2>実践シナリオ：旧販売管理 &rarr; 新クラウドCRMへの顧客マスタ移行</h2>
+<div class="scenario-box">
+<strong>シナリオ：</strong>オンプレミスの旧販売管理ソフト（CSV出力可能）から、クラウド型CRM（インポート機能なし、Web画面から手入力のみ）へ顧客マスタ350件を移行する。
+        </div>
+<table class="key-table">
+<thead><tr><th>項目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>データ項目</td><td>顧客コード(8) ＋ 電話番号(11) ＋ 担当者コード(4) ＋ 区分(1桁&rarr;DD) ＋ 登録日(8) ＝ 計約32文字 ＋ 操作約25文字 ＝ <strong>約57文字/件</strong></td></tr>
+<tr><td>1件あたり実行時間</td><td>約12秒</td></tr>
+<tr><td>全体所要時間</td><td>350件 &times; 12秒 ＝ 4,200秒 &fallingdotseq; <strong>約70分</strong></td></tr>
+</tbody>
+</table>
+<h3>QR数式</h3>
+<div class="sample-box">
+<pre>= "3" & CHAR(13) & "!"
+  & A2 & CHAR(9)
+  & CHAR(9)
+  & SUBSTITUTE(B2,"-","") & CHAR(9)
+  & C2 & CHAR(9)
+  & REPT("^", D2) & CHAR(9)
+  & TEXT(E2,"YYYYMMDD") & CHAR(9)
+  & CHAR(13) & CHAR(13)
+  & "!"</pre>
+</div>
+<h3>タイムライン（1件の流れ）</h3>
+<table class="format-table">
+<tr><th>時間</th><th>QR内の送信内容</th><th>画面の動き</th></tr>
+<tr><td>0.0s</td><td>"3" &rarr; Enter</td><td>メニューから「3:顧客登録」を選択</td></tr>
+<tr><td>0.1&ndash;3.1s</td><td>! (Sleep 3秒)</td><td>顧客登録画面が開く</td></tr>
+<tr><td>3.1s</td><td>"CUS-0042" &rarr; Tab</td><td>顧客コード入力 &rarr; 次フィールドへ</td></tr>
+<tr><td>3.3s</td><td>Tab</td><td>顧客名（自動表示）をスキップ</td></tr>
+<tr><td>3.4s</td><td>"0312345678" &rarr; Tab</td><td>電話番号入力 &rarr; 次フィールドへ</td></tr>
+<tr><td>3.6s</td><td>"T012" &rarr; Tab</td><td>担当者コード入力 &rarr; 次フィールドへ</td></tr>
+<tr><td>3.8s</td><td>"^^" &rarr; Tab</td><td>&darr;キー2回（区分2を選択）&rarr; 次フィールドへ</td></tr>
+<tr><td>4.0s</td><td>"20260417" &rarr; Tab</td><td>登録日入力 &rarr; 登録ボタンへ</td></tr>
+<tr><td>4.2s</td><td>Enter</td><td>登録ボタン押下</td></tr>
+<tr><td>4.3s</td><td>Enter</td><td>確認ダイアログ「はい」</td></tr>
+<tr><td>4.4&ndash;7.4s</td><td>! (Sleep 3秒)</td><td>登録処理 &rarr; メニュー画面に戻る</td></tr>
+</table>
+<p>1件約7.4秒。350件で約43分。途中確認の時間を入れても70分以内で完了します。</p>
+</section>
+<!-- ===== 移行パターン別ガイド ===== -->
+<section class="method-section">
+<h2>移行パターン別の設計ガイド</h2>
+<table class="format-table">
+<tr><th>移行パターン</th><th>特徴</th><th>設計のポイント</th><th>使う技術</th></tr>
+<tr><td>デスクトップ &rarr; デスクトップ</td><td>Tab順序が安定、動作が速い</td><td>Sleep短め（1〜2秒）、ディレイ低めでOK</td><td>②④⑥</td></tr>
+<tr><td>デスクトップ &rarr; Webシステム</td><td>画面読み込みに時間がかかる</td><td>Sleep長め（3〜5秒）、Tab順序が変わることがある</td><td>②④⑤⑥</td></tr>
+<tr><td>Excel &rarr; 業務システム</td><td>データ加工が容易</td><td>SUBSTITUTE・TEXT等で書式変換してからQR化</td><td>②③⑥⑦</td></tr>
+<tr><td>閉域旧システム &rarr; 閉域新システム</td><td>紙経由の二段階移行</td><td>旧&rarr;Excel（記事⑨）&rarr;QR化&rarr;新システム（本記事）</td><td>⑨＋本記事</td></tr>
+<tr><td>複数旧システム &rarr; 1つの新システム</td><td>データ形式がバラバラ</td><td>旧システムごとに別のマッピング表・数式を作成</td><td>全技術</td></tr>
+</table>
+</section>
+<!-- ===== トラブルシューティング ===== -->
+<section class="tips-section">
+<h2>トラブルシューティング（移行特有の問題）</h2>
+<table class="format-table">
+<tr><th>症状</th><th>原因</th><th>対処法</th></tr>
+<tr><td>2件目以降でフィールドがずれる</td><td>1件目の登録後、メニューに戻りきる前に2件目が始まる</td><td>末尾のSleepを長くする（! を追加）</td></tr>
+<tr><td>ドロップダウンの選択がずれる</td><td>&darr;キー回数の計算ミス、または初期値が「1番目」</td><td>初期状態を確認し、REPT回数を&plusmn;1調整</td></tr>
+<tr><td>日付欄に正しく入力されない</td><td>新システムが「/」を自動挿入する</td><td>TEXT関数の書式を新システムに合わせる</td></tr>
+<tr><td>確認ダイアログが出ない件がある</td><td>データ内容により確認の有無が変わる</td><td>IF関数で条件分岐（Enter追加/省略）</td></tr>
+<tr><td>途中で新システムがタイムアウト</td><td>移行に時間がかかりセッション切れ</td><td>50〜100件ごとに再ログインする運用に変更</td></tr>
+<tr><td>旧データに不正値がありエラーで止まる</td><td>旧システムの入力規則が甘かった</td><td>事前にExcelでバリデーション（IF・ISERROR等）</td></tr>
+<tr><td>全角文字が文字化けする</td><td>バーコードコントロールの半角制限</td><td>記事⑪のVBA標準機能のみ方式で全角QRを生成する</td></tr>
+</table>
+</section>
+<!-- ===== まとめ ===== -->
+<section class="method-section" style="background:#f8f9fa; border-top: 2px solid #ddd;">
+<h2>この記事で学んだこと &horbar; まとめ</h2>
+<table class="format-table">
+<tr><th>項目</th><th>内容</th></tr>
+<tr><td>QR移行の利点</td><td>新システム側にAPI・インポート機能不要。キーボード入力できる画面があれば移行可能</td></tr>
+<tr><td>全体フロー</td><td>データ抽出 &rarr; 画面分析 &rarr; マッピング &rarr; 数式設計 &rarr; テスト＆本番（5フェーズ）</td></tr>
+<tr><td>画面分析の重要性</td><td>新システムの操作を1キーずつ分解し、QRプログラムに変換する</td></tr>
+<tr><td>フィールドマッピング</td><td>旧データ列と新画面フィールドを対応付け、変換処理を定義する</td></tr>
+<tr><td>1QR＝1レコードが原則</td><td>登録&rarr;画面遷移のサイクルがあるため、レコード途中での分割は避ける</td></tr>
+<tr><td>所要時間目安</td><td>1件8〜18秒 &rarr; 1,000件でも半日以内</td></tr>
+<tr><td>全角文字の制約</td><td>バーコードコントロールは半角のみ &rarr; 記事⑪のVBA自力生成で全角対応</td></tr>
+<tr><td>使う全技術</td><td>記事①〜⑦の全技術と⑨の閉域転送手法を総動員</td></tr>
+</table>
+<div class="flow-diagram">
+<span class="flow-step">① QR生成</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">② Tab/Enter</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">③ ディレイ</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">④ キー変換</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">⑤ 実践パターン</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">⑥ Sleep</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">⑦ 全体像</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">⑧ リーダー選定</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">⑨ 閉域転送</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-current">⑩ システム移行（今ここ）</span>
+</div>
+<div class="xdemo-note-good">
+<strong>💡 次はいよいよシリーズの本命です</strong><br>
+          本記事で学んだ<strong>画面分析・マッピング・数式設計</strong>の技法は、次の記事⑪でもそのまま活きます。記事⑪では、バーコードコントロールの「半角しか使えない」という壁を、<strong>VBA標準機能だけで突破</strong>します。外部ライブラリなし・ネット接続なしで、漢字・ひらがなを含むQRコードを生成する方法を解説します。<br><br>
+          閉域環境ではライブラリの追加インストールが困難です。そのため、<strong>ADODB.Stream（UTF-8変換）＋ リード・ソロモン符号（誤り訂正）＋ セル描画</strong>というVBA自力実装が、最も現実的な全角対応手段になります。<br><br>
+          &rarr; <a href="11_qr_vba_generate.html"><strong>記事⑪「VBA標準機能だけで全角QR生成」へ進む</strong></a>
+</div>
+</section>
+<nav class="series-nav">
+<h3>📱 QR Automation Lab &horbar; 全記事一覧</h3>
+<p class="text-sm-gray">
+<span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
+    <span class="color-orange">🟠 応用</span>（④〜⑪）＝ さらに自動化を極める
+  </p>
+<ol>
+<li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでExcel一発入力 &horbar; Tab・Enter埋め込み</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ &horbar; 文字欠けを完全に防ぐ設定</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード &rarr; キー変換テクニック</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware.html">⑧ QRリーダーの選び方と接続方法</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 &horbar; 紙だけでPC間移行</a></li>
+<li class="current"><span class="lv-adv">[応用]</span> <strong>⑩ システム間データ移行（この記事）</strong></li>
+<li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコード生成</a></li>
+</ol>
+</nav>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../script.js"></script>
+
+</body>
+</html>
+
+

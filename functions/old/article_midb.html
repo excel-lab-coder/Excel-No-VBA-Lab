@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>MID / MIDB関数 完全ガイド｜Excel &times; No VBA Lab</title>
+<meta content="ExcelのMID/MIDB関数の違いとバイト単位での文字抽出方法を解説。COBOL固定長データや全角半角混在文字列への活用も紹介。" name="description">
+<meta content="MIDB 関数 Excel, MID バイト 文字抽出, 全角半角 固定長, COBOL MIDB, VBA不要 文字列" name="keywords">
+<meta content="MID / MIDB関数 完全ガイド｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのMID/MIDB関数の違いとバイト単位での文字抽出方法を解説。COBOL固定長データや全角半角混在文字列への活用も紹介。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/old/article_midb.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/old/article_midb.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "MID / MIDB関数 完全ガイド",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "ExcelのMID/MIDB関数の違いとバイト単位での文字抽出方法を解説。COBOL固定長データや全角半角混在文字列への活用も紹介。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-no-vba-lab.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-no-vba-lab.com/functions/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "MID / MIDB関数 完全ガイド",
+      "item": "https://excel-no-vba-lab.com/functions/old/article_midb.html"
+    }
+  ]
+}</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#functions">関数</a><span>&gt;</span>
+<strong>MID / MIDB 関数</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">MID / MIDB 関数 完全ガイド &horbar; 「文字数」と「バイト数」で文字列を自在に抽出する</h1>
+</div>
+<!-- ===== 目次 ===== -->
+<div class="toc-box">
+<h4>📖 目次</h4>
+<ol>
+<li><a href="#diff">MID と MIDB の決定的な違い</a></li>
+<li><a href="#mid-basic">MID関数：文字数で切り出す</a></li>
+<li><a href="#midb-basic">MIDB関数：バイト数で切り出す</a></li>
+<li><a href="#byte-split">全角文字の分断とExcelの挙動</a></li>
+<li><a href="#family">関連関数ファミリー（LEFT/RIGHT/LEN のB付き）</a></li>
+<li><a href="#fixed">実務の核心：固定長データとMIDB</a></li>
+<li><a href="#layout">レイアウト定義書の読み方</a></li>
+<li><a href="#trim">TRIM + MIDB：固定長処理の最強コンビ</a></li>
+<li><a href="#mid-find">MID + FIND：可変位置からの抽出</a></li>
+<li><a href="#patterns">実務パターン集</a></li>
+<li><a href="#vs-new">TEXTBEFORE / TEXTAFTER との比較</a></li>
+<li><a href="#summary">まとめ</a></li>
+</ol>
+</div>
+<!-- ===== 1. 違い ===== -->
+<section class="goal-section" id="diff">
+<h2><span class="section-num">1</span> MID と MIDB の決定的な違い</h2>
+<p>文字列の「途中」から指定した分だけテキストを抜き出す関数です。Excelには文字をカウントする基準が2つあります。</p>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">関数</th>
+<th scope="col">カウント基準</th>
+<th scope="col">半角「A」</th>
+<th scope="col">全角「あ」</th>
+<th scope="col">主な用途</th>
+</tr>
+<tr>
+<td><strong>MID</strong></td>
+<td>文字数</td>
+<td>1</td>
+<td>1</td>
+<td class="good">通常の文字列操作</td>
+</tr>
+<tr>
+<td><strong>MIDB</strong></td>
+<td>バイト数</td>
+<td>1</td>
+<td class="bad">2</td>
+<td class="good">固定長データの処理</td>
+</tr>
+</table></div>
+<p>「123456」のような半角データだけなら結果は同じですが、かなや漢字が混じると結果が大きく変わります。</p>
+</section>
+<!-- ===== 2. MID基本 ===== -->
+<section class="method-section" id="mid-basic">
+<h2><span class="section-num">2</span> MID関数：文字数で切り出す</h2>
+<p>私たちが目で見て「何文字目から何文字」と数える感覚で使えます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MID(文字列, 開始位置, 文字数)</span>
+</div>
+<h3>具体例</h3>
+<p>対象文字列：<code>ABあいう123</code></p>
+<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption>データテーブル</caption>
+<tr><td class="xd-head">文字</td><td>A</td><td>B</td><td class="xd-target">あ</td><td class="xd-target">い</td><td>う</td><td>1</td><td>2</td><td>3</td></tr>
+<tr><td class="xd-head">何文字目</td><td>1</td><td>2</td><td class="xd-target">3</td><td class="xd-target">4</td><td>5</td><td>6</td><td>7</td><td>8</td></tr>
+</table></div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MID("ABあいう123", 3, 2)</span>
+</div>
+<p class="code-comment">結果：<code>あい</code> &horbar; 全角も半角も「1文字」として数えるため、3文字目から2文字で「あい」が返る。</p>
+<div class="xdemo-note">
+<strong>💡 開始位置が文字列の長さを超えた場合</strong><br>
+<code>=MID("ABC", 10, 3)</code> のように開始位置が文字列長を超えると、エラーではなく空文字 <code>""</code> が返ります。文字数が残りより多い場合は残り全部が返ります。
+        </div>
+</section>
+<!-- ===== 3. MIDB基本 ===== -->
+<section class="method-section" id="midb-basic">
+<h2><span class="section-num">3</span> MIDB関数：バイト数で切り出す</h2>
+<p>文字コード（Shift-JIS）における情報サイズ（バイト）を基準に処理します。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MIDB(文字列, 開始バイト位置, バイト数)</span>
+</div>
+<h3>バイト数の数え方</h3>
+<div class="table-wrapper"><table class="byte-table"><caption>データテーブル</caption>
+<tr><th scope="col">文字種別</th><th scope="col">例</th><th scope="col">バイト数</th></tr>
+<tr><td>半角英数・半角カナ・半角スペース</td><td class="half">A, 1, ｱ</td><td class="half">1バイト</td></tr>
+<tr><td>全角ひらがな・漢字・全角英数</td><td class="full">あ, 漢, Ａ</td><td class="full">2バイト</td></tr>
+</table></div>
+<h3>具体例</h3>
+<p>対象文字列：<code>ABあいう123</code></p>
+<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption>データテーブル</caption>
+<tr><td class="xd-head">文字</td><td class="xd-target">A</td><td class="xd-target">B</td><td>あ</td><td>い</td><td>う</td><td>1</td><td>2</td><td>3</td></tr>
+<tr><td class="xd-head">バイト位置</td><td class="xd-target">1</td><td class="xd-target">2</td><td>3-4</td><td>5-6</td><td>7-8</td><td>9</td><td>10</td><td>11</td></tr>
+</table></div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MIDB("ABあいう123", 1, 2)</span>
+</div>
+<p class="code-comment">結果：<code>AB</code> &horbar; 1バイト目から2バイト分。半角「A」「B」はそれぞれ1バイトなので2文字が返る。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MIDB("ABあいう123", 3, 4)</span>
+</div>
+<p class="code-comment">結果：<code>あい</code> &horbar; 3バイト目から4バイト分。全角「あ」(2バイト)＋「い」(2バイト)＝4バイトで「あい」が返る。</p>
+</section>
+<!-- ===== 4. 全角分断 ===== -->
+<section class="method-section" id="byte-split">
+<h2><span class="section-num">4</span> 全角文字の分断とExcelの挙動</h2>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MIDB("ABあいう123", 3, 1)</span>
+</div>
+<p class="code-comment">結果：<code> </code>（半角スペース） &horbar; 「あ」は3-4バイト目の2バイト文字。1バイトだけ抽出すると全角が分断される。</p>
+<div class="xdemo-note-warn">
+          ⚠️ <strong>全角文字を途中で切るとどうなるか</strong><br>
+          「あ」は3バイト目と4バイト目で構成される2バイトの文字です。「3バイト目から1バイトだけ」と指示すると全角文字が分断されてしまいます。Excelはこのような場合、文字化けを防ぐために<strong>自動的に半角スペースに変換</strong>して出力します。固定長データの処理で開始位置やバイト数を間違えると、結果にスペースが紛れ込むことで気づけます。
+        </div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MIDB("ABあいう123", 3, 3)</span>
+</div>
+<p class="code-comment">結果：<code>あ </code>（「あ」＋半角スペース） &horbar; 3バイトのうち「あ」で2バイト消費し、残り1バイトは「い」を分断するため半角スペースに。</p>
+<div class="xdemo-note">
+<strong>💡 バイト数のズレを検知する方法</strong><br>
+          MIDBの結果に意図しない半角スペースが含まれていたら、それは「全角文字の境界をまたいで切っている」サインです。レイアウト定義書の開始位置やバイト数を再確認してください。
+        </div>
+</section>
+<!-- ===== 5. 関連関数ファミリー ===== -->
+<section class="method-section" id="family">
+<h2><span class="section-num">5</span> 関連関数ファミリー（LEFT/RIGHT/LEN のB付き）</h2>
+<p>MID / MIDB と同様に、LEFT / RIGHT / LEN にも「B付き」のバイト版が存在します。固定長データの処理ではこれらをセットで使います。</p>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">文字数ベース</th>
+<th scope="col">バイト数ベース</th>
+<th scope="col">機能</th>
+</tr>
+<tr><td><strong>LEFT</strong></td><td><strong>LEFTB</strong></td><td>先頭からN文字（バイト）を抽出</td></tr>
+<tr><td><strong>RIGHT</strong></td><td><strong>RIGHTB</strong></td><td>末尾からN文字（バイト）を抽出</td></tr>
+<tr><td><strong>MID</strong></td><td><strong>MIDB</strong></td><td>途中のN文字（バイト）を抽出</td></tr>
+<tr><td><strong>LEN</strong></td><td><strong>LENB</strong></td><td>文字数（バイト数）を返す</td></tr>
+</table></div>
+<h3>LENB でバイト数を確認する</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LENB(A1)</span>
+</div>
+<p class="code-comment">A1 のバイト数を返す。固定長データの1レコードが正しいバイト数かどうかの検証に使う。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LEN(A1)</span>
+</div>
+<p class="code-comment">A1 の文字数を返す。LENBとの差で全角文字の数を推定できる。</p>
+<div class="xdemo-note">
+<strong>💡 全角文字の個数を数える公式</strong><br>
+<code>=LENB(A1)-LEN(A1)</code> で全角文字の個数がわかります。全角は2バイト・半角は1バイトなので、バイト数と文字数の差がそのまま全角文字の数になります。
+          <div class="code-block mt-8" data-lang="excel">
+<span class="code-line">=LENB(A1)-LEN(A1)</span>
+</div>
+</div>
+</section>
+<!-- ===== 6. 固定長データ ===== -->
+<section class="method-section" id="fixed">
+<h2><span class="section-num">6</span> 実務の核心：固定長データとMIDB</h2>
+<p>普段Excelの中だけで作業している場合、MIDB関数を使う機会はほとんどありません。文字数でカウントするMIDで十分だからです。</p>
+<p>しかし、<strong>ホストコンピュータ（汎用機・COBOL）や古い業務システムから出力されたデータを処理する際</strong>に、MIDB関数が絶対に必要になります。</p>
+<h3>「固定長ファイル」とは？</h3>
+<p>CSVファイルは「田中,東京,1200」のようにカンマで区切られています。一方、固定長ファイルには区切り文字がありません。代わりに<strong>「1バイト目から6バイト目まではID」「7バイト目から22バイト目までは氏名」のように、情報の入る枠（バイト数）がガチガチに固定</strong>されています。</p>
+<p>全角16バイトの枠に「田中」（4バイト）が入った場合、残り12バイトは自動的にスペースで埋められます。これにより各フィールドの位置が常に一定になり、プログラムで高速に処理できるのです。</p>
+<h3>固定長データの実例</h3>
+<div class="fixed-data">
+123456ﾀﾅｶ ﾀﾛｳ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;000001500000<br>
+789012ﾔﾏﾀﾞ ﾊﾅｺ&nbsp;&nbsp;&nbsp;&nbsp;000000085000<br>
+555555山田　太郎&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;000000300000
+        </div>
+<h3>MIDでは正しく切り出せない理由</h3>
+<p>上のデータで氏名部分には半角カナ（1バイト）や全角漢字（2バイト）が混在しています。MID関数は全角も半角も「1文字」と数えるため、3行目の全角「山田　太郎」と1行目の半角カナ「ﾀﾅｶ ﾀﾛｳ」では同じ文字数でもバイト数が異なります。MIDで「7文字目から16文字」と指定すると、行によって抽出位置がズレて後続の「給与」フィールドが正しく取れません。</p>
+<div class="xdemo-note-red">
+<strong>🔴 固定長データに MID を使ってはいけない</strong><br>
+          固定長データの仕様は「バイト数」で定義されています。「文字数」で切り出す MID を使うと、全角・半角が混在する行で必ず位置がズレます。固定長データには必ず MIDB を使ってください。
+        </div>
+</section>
+<!-- ===== 7. レイアウト定義書 ===== -->
+<section class="method-section" id="layout">
+<h2><span class="section-num">7</span> レイアウト定義書の読み方</h2>
+<p>固定長データには必ず「レイアウト定義書（フィールド仕様書）」が付属します。ここにバイト位置とバイト数が記載されており、これをそのまま MIDB の引数にします。</p>
+<h3>定義書の例</h3>
+<div class="table-wrapper"><table class="layout-table"><caption>データテーブル</caption>
+<tr><th scope="col">項目名</th><th scope="col">開始バイト</th><th scope="col">バイト数</th><th scope="col">型</th><th scope="col">備考</th></tr>
+<tr><td class="lt-field">従業員ID</td><td class="lt-byte">1</td><td class="lt-byte">6</td><td>半角英数</td><td></td></tr>
+<tr><td class="lt-field">氏名</td><td class="lt-byte">7</td><td class="lt-byte">16</td><td>混在</td><td>半角カナまたは全角。不足分はスペース埋め</td></tr>
+<tr><td class="lt-field">給与</td><td class="lt-byte">23</td><td class="lt-byte">12</td><td>半角数字</td><td>右詰めゼロ埋め</td></tr>
+</table></div>
+<h3>定義書どおりに MIDB で切り出す</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MIDB(A2, 1, 6)</span>
+</div>
+<p class="code-comment">従業員ID：1バイト目から6バイト。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TRIM(MIDB(A2, 7, 16))</span>
+</div>
+<p class="code-comment">氏名：7バイト目から16バイト。TRIMで末尾のスペース埋めを除去。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=VALUE(MIDB(A2, 23, 12))</span>
+</div>
+<p class="code-comment">給与：23バイト目から12バイト。VALUEで数値化（"000001500000" &rarr; 1500000）。</p>
+<div class="xdemo-note">
+<strong>💡 定義書の「開始バイト」がそのまま第2引数になる</strong><br>
+          レイアウト定義書を読むときは「開始バイト」と「バイト数」の2列だけ見れば、そのまま MIDB の第2引数・第3引数に転記できます。プログラミングの知識は不要です。
+        </div>
+</section>
+<!-- ===== 8. TRIM+MIDB ===== -->
+<section class="method-section" id="trim">
+<h2><span class="section-num">8</span> TRIM + MIDB：固定長処理の最強コンビ</h2>
+<p>固定長データはフィールドの長さが足りない分をスペースで埋めています。MIDBで切り出した直後の文字列は後ろに大量のスペースがくっついた状態です。</p>
+<span class="code-label">❌ TRIMなし：後ろにスペースが残る</span>
+<div class="code-readonly">
+<span class="code-line">=MIDB(A2, 7, 16)          &rarr; "ﾀﾅｶ ﾀﾛｳ     " （末尾にスペース）</span>
+<span class="code-line"></span>
+<span class="code-line">このままVLOOKUPに使うと「一致しない」エラーに。</span>
+<span class="code-line">"ﾀﾅｶ ﾀﾛｳ     " &ne; "ﾀﾅｶ ﾀﾛｳ"  （別の文字列として扱われる）</span>
+</div>
+<span class="code-label-good">✅ TRIMあり：クリーンな文字列</span>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TRIM(MIDB(A2, 7, 16))</span>
+</div>
+<p class="code-comment">MIDBで正確なバイト位置から切り出し &rarr; TRIMで先頭・末尾のスペースと連続スペースを除去。</p>
+<div class="xdemo-note-warn">
+          ⚠️ <strong>全角スペースは TRIM では消えない</strong><br>
+          Excel の TRIM 関数は半角スペース（CHAR(32)）だけを除去します。全角スペース「　」は残ります。ホスト系データには全角スペースが含まれることも多いため、必要に応じて SUBSTITUTE で除去してください。
+          <div class="code-block mt-8" data-lang="excel">
+<span class="code-line">=TRIM(SUBSTITUTE(MIDB(A2, 7, 16), "　", " "))</span>
+</div>
+<p class="code-comment" style="margin-top:4px;">全角スペースを半角に置換してからTRIMで整理。固定長＋全角スペース混在データの定番パターン。</p>
+</div>
+<h3>数値フィールドの処理：ゼロ埋めの解除</h3>
+<p>固定長データの数値は「000001500000」のように左ゼロ埋めされています。VALUE関数で数値化すれば先頭のゼロが自動的に消えます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=VALUE(MIDB(A2, 23, 12))</span>
+</div>
+<p class="code-comment">結果：<code>1500000</code> &horbar; 文字列"000001500000"が数値 1500000 に変換される。</p>
+<div class="xdemo-note">
+<strong>💡 符号付き数値（末尾が符号）の処理</strong><br>
+          COBOLの固定長データでは負の値が「00150}」のようにゾーン10進で表現されることがあります。末尾の文字が符号を兼ねているパターンです。この場合はVALUEだけでは変換できないため、別途変換ロジックが必要です。
+        </div>
+</section>
+<!-- ===== 9. MID+FIND ===== -->
+<section class="method-section" id="mid-find">
+<h2><span class="section-num">9</span> MID + FIND：可変位置からの抽出</h2>
+<p>MID関数の開始位置を FIND（または SEARCH）で動的に決定することで、区切り文字がある文字列から特定の部分を抽出できます。</p>
+<h3>メールアドレスからドメインを抽出</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MID(A1, FIND("@", A1)+1, LEN(A1))</span>
+</div>
+<p class="code-comment">「@」の次の文字から末尾まで。文字数にLEN(A1)を指定すれば、残り全部を確実に取得できる（多すぎても問題ない）。</p>
+<h3>ファイル名から拡張子を除去</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LEFT(A1, FIND(".", A1)-1)</span>
+</div>
+<p class="code-comment">最初の「.」の直前まで。MIDではなくLEFTを使うパターンだが、FIND で位置を動的に決める点は同じ。</p>
+<h3>2番目の区切り文字以降を抽出</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MID(A1, FIND("-", A1, FIND("-", A1)+1)+1, LEN(A1))</span>
+</div>
+<p class="code-comment">FINDを2回ネストして「2番目のハイフン」の位置を特定。例："ABC-DEF-GHI" &rarr; "GHI"</p>
+<div class="xdemo-note-good">
+<strong>✅ TEXTAFTER / TEXTBEFORE が使えるなら</strong><br>
+          上記のような MID+FIND の組み合わせは、TEXTAFTER / TEXTBEFORE 関数でもっと簡潔に書けます。詳しくは<a href="#vs-new">セクション11</a>で比較しています。
+        </div>
+</section>
+<!-- ===== 10. 実務パターン集 ===== -->
+<section class="method-section" id="patterns">
+<h2><span class="section-num">10</span> 実務パターン集</h2>
+<div class="scenario-box">
+<h4>パターン① 社員番号から部署コード・入社年・連番を分離</h4>
+<p>社員番号 <code>SL20230015</code> が「部署(2桁)＋入社年(4桁)＋連番(4桁)」の構成。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MID(A1, 1, 2)</span>
+</div>
+<p class="code-comment">部署コード &rarr; "SL"</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MID(A1, 3, 4)</span>
+</div>
+<p class="code-comment">入社年 &rarr; "2023"</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=VALUE(MID(A1, 7, 4))</span>
+</div>
+<p class="code-comment">連番 &rarr; 15（VALUE で数値化）</p>
+</div>
+<div class="scenario-box">
+<h4>パターン② 固定長レコードから全フィールドを一括切り出し</h4>
+<p>レイアウト定義書に基づいて MIDB + TRIM / VALUE でフィールドを分離。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TRIM(MIDB($A2, 1, 6))</span>
+</div>
+<p class="code-comment">従業員ID（1〜6バイト）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TRIM(SUBSTITUTE(MIDB($A2, 7, 16), "　", " "))</span>
+</div>
+<p class="code-comment">氏名（7〜22バイト）。全角スペースも半角に統一してからTRIM。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=VALUE(MIDB($A2, 23, 12))</span>
+</div>
+<p class="code-comment">給与（23〜34バイト）。ゼロ埋め文字列を数値に変換。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン③ 文字列を1文字ずつ分解（MID + ROW）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MID($A$1, ROW(A1), 1)</span>
+</div>
+<p>これを下方向にコピーすると、A1の文字列が1文字ずつ縦に展開される。文字種の判定やカウントに便利。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン④ 日付文字列の分離（YYYYMMDD &rarr; YYYY/MM/DD）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MID(A1,1,4)&"/"&MID(A1,5,2)&"/"&MID(A1,7,2)</span>
+</div>
+<p class="code-comment">"20260408" &rarr; "2026/04/08"。日付として計算に使うならさらにDATEVALUEで変換。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑤ LENB で固定長レコードのバイト数を検証</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(LENB(A2)=34, "OK", "NG: "&LENB(A2)&"バイト")</span>
+</div>
+<p>レコードが定義書どおり34バイトかどうかをチェック。バイト数がズレていればデータ不備。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑥ 半角/全角が混在するデータの桁揃え確認</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LENB(A1)-LEN(A1)</span>
+</div>
+<p>全角文字の個数を返す。「半角カナで統一されるべきフィールドに全角が混入していないか」の検証に使う。結果が0なら全て半角。</p>
+</div>
+</section>
+<!-- ===== 11. TEXTBEFORE/TEXTAFTER ===== -->
+<section class="method-section" id="vs-new">
+<h2><span class="section-num">11</span> TEXTBEFORE / TEXTAFTER との比較</h2>
+<p>区切り文字で文字列を分割する用途では、MID+FIND の組み合わせよりも TEXTBEFORE / TEXTAFTER のほうが圧倒的に簡潔です。</p>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">やりたいこと</th>
+<th scope="col">MID + FIND</th>
+<th scope="col">TEXTBEFORE / TEXTAFTER</th>
+</tr>
+<tr>
+<td>「@」より後ろ</td>
+<td><code>=MID(A1,FIND("@",A1)+1,LEN(A1))</code></td>
+<td class="good"><code>=TEXTAFTER(A1,"@")</code></td>
+</tr>
+<tr>
+<td>「@」より前</td>
+<td><code>=LEFT(A1,FIND("@",A1)-1)</code></td>
+<td class="good"><code>=TEXTBEFORE(A1,"@")</code></td>
+</tr>
+<tr>
+<td>2番目の「-」より後ろ</td>
+<td><code>=MID(A1,FIND("-",A1,FIND("-",A1)+1)+1,LEN(A1))</code></td>
+<td class="good"><code>=TEXTAFTER(A1,"-",2)</code></td>
+</tr>
+</table></div>
+<div class="xdemo-note">
+<strong>💡 MID は不要にならない</strong><br>
+          TEXTBEFORE / TEXTAFTER は「区切り文字ベース」の分割に最適です。一方、MID は「固定位置・固定文字数」での切り出しに使います。社員番号の分離や固定フォーマットの解析では依然として MID が主役です。MIDB については固定長データ処理の唯一の手段であり、代替関数は存在しません。
+        </div>
+</section>
+<!-- ===== 12. まとめ ===== -->
+<section class="goal-section" id="summary">
+<h2><span class="section-num">12</span> まとめ</h2>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr><th scope="col">場面</th><th scope="col">最適な関数</th></tr>
+<tr><td>固定フォーマット（半角のみ）の切り出し</td><td class="good">MID</td></tr>
+<tr><td>区切り文字での分割</td><td class="good">MID + FIND（または TEXTAFTER/TEXTBEFORE）</td></tr>
+<tr><td>固定長データ（COBOL・ホスト系）の処理</td><td class="good">MIDB + TRIM（＋SUBSTITUTE＋VALUE）</td></tr>
+<tr><td>バイト数の検証</td><td class="good">LENB</td></tr>
+<tr><td>全角文字の個数カウント</td><td class="good">LENB - LEN</td></tr>
+</table></div>
+<div class="xdemo-note-good">
+<strong>✅ 覚えておくべきポイント</strong><br>
+          ① <strong>MID は文字数、MIDB はバイト数</strong>。半角だけなら同じ結果だが、全角混在で差が出る。<br>
+          ② <strong>固定長データには必ず MIDB</strong>。MID を使うとバイト位置がズレて正しく切り出せない。<br>
+          ③ <strong>MIDB + TRIM は固定長処理の最強コンビ</strong>。さらに全角スペースがあれば SUBSTITUTE を追加。<br>
+          ④ <strong>LENB でバイト数を検証</strong>。レコード長のチェックや全角文字の混入検知に使える。<br>
+          ⑤ MIDBの結果に意図しないスペースが出たら、<strong>全角文字の境界をまたいで切っているサイン</strong>。
+        </div>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../latest/article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
+<li><a href="../latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+<li><a href="../latest/article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
+<li><a href="../latest/article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+

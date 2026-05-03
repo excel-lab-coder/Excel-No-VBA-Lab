@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="5" name="difficulty">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>【参考資料】パワークエリでCOBOL帳票を処理する全テクニック｜Excel &times; No VBA Lab</title>
+<meta content="パワークエリの標準機能だけでCOBOL帳票を処理する全テクニックを網羅した参考資料。不要行除去・固定長切り出し・縦持ち展開を解説。" name="description">
+<meta content="パワークエリ COBOL 全テクニック, Power Query 固定長 切り出し, COBOL PQ 参考資料, VBA不要 パワークエリ 帳票" name="keywords">
+<meta content="【参考資料】パワークエリでCOBOL帳票を処理する全テクニック｜Excel &times; No VBA Lab" property="og:title">
+<meta content="パワークエリの標準機能だけでCOBOL帳票を処理する全テクニックを網羅した参考資料。不要行除去・固定長切り出し・縦持ち展開を解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/cobol/pq/02_article_cobol_pq3.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "【参考資料】パワークエリでCOBOL帳票を処理する全テクニック",
+    "description": "パワークエリの標準機能だけでCOBOL帳票を処理する全テクニックを網羅した参考資料。不要行除去・固定長切り出し・縦持ち展開を解説。",
+    "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-no-vba-lab.com/ogp.png"}},
+    "datePublished": "2026-03-20",
+    "dateModified": "2026-03-20"
+  }
+  </script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-no-vba-lab.com/"},
+      {"@type": "ListItem", "position": 2, "name": "COBOL帳票処理", "item": "https://excel-no-vba-lab.com/#cobol"},
+      {"@type": "ListItem", "position": 3, "name": "パワークエリ全テクニック"}
+    ]
+  }
+  </script>
+
+<style>
+/* ===== Power Query 共通 ===== */
+.pq-step-box {
+  background: #f5fcfd;
+  border: 1px solid #b2ebf2;
+  border-left: 5px solid #00acc1;
+  padding: 18px 22px;
+  margin: 18px 0;
+  border-radius: 6px;
+}
+.pq-step-box .pq-step-title {
+  font-size: 1.05em;
+  color: #00838f;
+  margin: 0 0 10px;
+  font-weight: 700;
+  border-bottom: 1px dashed #b2ebf2;
+  padding-bottom: 6px;
+}
+.pq-step-box-red {
+  background: #fff5f5;
+  border: 1px solid #ffcdd2;
+  border-left: 5px solid #ef5350;
+  padding: 18px 22px;
+  margin: 18px 0;
+  border-radius: 6px;
+}
+.pq-step-box-red .pq-step-title-red {
+  font-size: 1.05em;
+  color: #c62828;
+  margin: 0 0 10px;
+  font-weight: 700;
+  border-bottom: 1px dashed #ffcdd2;
+  padding-bottom: 6px;
+}
+
+.pipeline-box {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 8px; background: #f0f4f8; border: 2px solid #b0bec5;
+  border-radius: 8px; padding: 16px 20px; margin: 18px 0 24px;
+}
+.pipeline-box .step {
+  background: #fff; border: 1px solid #90a4ae; color: #37474f;
+  padding: 6px 14px; border-radius: 999px; font-weight: 700; font-size: 0.88em;
+}
+.pipeline-box .step small { display: block; font-size: 0.78em; color: #607d8b; font-weight: 400; }
+.pipeline-box .arrow { color: #607d8b; font-weight: 900; font-size: 1.1em; }
+
+/* M言語コードブロック（シンタックスハイライト） */
+.code-block-large {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 16px 20px;
+  border-radius: 6px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.86rem;
+  line-height: 1.65;
+  margin: 14px 0 22px;
+  overflow-x: auto;
+  white-space: pre;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.code-block-large .cm-comment { color: #6a9955; font-style: italic; }
+.code-block-large .cm-keyword { color: #c586c0; font-weight: 700; }
+.code-block-large .cm-type { color: #4ec9b0; }
+.code-block-large .cm-func { color: #dcdcaa; }
+.code-block-large .cm-number { color: #b5cea8; }
+.code-block-large .cm-string { color: #ce9178; }
+.code-block-large .cm-param { color: #9cdcfe; }
+.code-block-large .cm-op { color: #d4d4d4; }
+.code-block-large .text-yellow { color: #ffe082; }
+.code-block-large .text-blue-light { color: #81d4fa; }
+.code-block-large .color-808080 { color: #808080; }
+
+.demo-result {
+  background: #f1f8e9;
+  border: 1px solid #c5e1a5;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-family: Consolas, monospace;
+  font-size: 0.88em;
+  line-height: 1.8;
+}
+.demo-result .label { color: #558b2f; font-weight: 700; display: block; margin-bottom: 6px; }
+.demo-result .value { color: #1b5e20; font-weight: 700; }
+.demo-result code { background: #fff; padding: 1px 6px; border-radius: 3px; }
+
+.api-ref {
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-left: 4px solid #607d8b;
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 0.88em;
+  line-height: 1.85;
+}
+.api-ref code { background: #e8eaf6; padding: 1px 6px; border-radius: 3px; font-size: 0.95em; }
+
+.technique-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin: 18px 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.technique-card h3 {
+  color: #00838f;
+  margin: 0 0 12px;
+  font-size: 1.02em;
+  border-bottom: 2px solid #e0f7fa;
+  padding-bottom: 6px;
+}
+
+.limit-box {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-left: 5px solid #ff9800;
+  border-radius: 6px;
+  padding: 18px 22px;
+  margin: 18px 0;
+}
+.limit-box h3 {
+  color: #e65100;
+  margin: 0 0 10px;
+  font-size: 1.02em;
+}
+.limit-box p { margin: 8px 0; font-size: 0.92em; line-height: 1.7; }
+
+.section-divider {
+  border: none;
+  border-top: 3px dashed #cfd8dc;
+  margin: 40px 0;
+}
+
+/* ヘルパー表 */
+.helper-display-table {
+  width: 100%; border-collapse: collapse; margin: 14px 0 20px; border: 1px solid #cfd8dc; background: #fff; font-size: 0.88rem;
+}
+.helper-display-table td, .helper-display-table th {
+  border: 1px solid #cfd8dc; padding: 7px 10px; vertical-align: middle;
+}
+.helper-display-table .helper-left {
+  background: #fffde7; font-weight: 700; text-align: center; color: #6d4c41;
+}
+.helper-display-table .data-hit {
+  background: #e3f2fd; color: #0d47a1; font-weight: 600; text-align: center;
+}
+</style>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+  <div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#cobol">COBOLデータ整形</a><span>&gt;</span>
+<a href="#">パワークエリ編</a><span>&gt;</span>
+<strong>参考資料：自作関数なしでできること＋MIDB自作関数</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Excel 2016以降</span>
+<span class="badge badge-maniac">パワークエリ</span>
+<span class="badge badge-maniac">M言語</span>
+<span class="badge badge-maniac">COBOL/マニアック</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">【参考資料】パワークエリでCOBOL帳票を処理する全テクニック<br>
+<small style="font-size:0.5em;color:#607d8b;">&horbar; 自作関数なしでどこまでできるか ＋ MIDB自作関数の実装 &horbar;</small></h1>
+</div>
+<!-- ======================== 導入 ======================== -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> この資料の目的</h2>
+<p><a href="01_article_cobol_pq.html">パワークエリ編</a>では「MIDBの壁」を最大の問題として紹介しました。しかし実際には、<strong>帳票のデータ構造次第ではパワークエリの標準機能だけで切り出しまで完結するケースが多くあります</strong>。</p>
+<p>この資料では、まず<strong>前半で「自作関数なしでどこまでできるか」を5つのパターンに分けて整理</strong>し、後半で<strong>「どうしても自作関数が必要なケース」の具体的な実装</strong>を示します。自分の帳票がどちらに該当するかをこのページで判定してください。</p>
+<div class="xdemo-note-danger">
+<strong>⚠ 前提として：Power Query は固定長テキストの分解を想定していません</strong><br>
+          Power Query（M言語）は CSV やテーブル形式のデータを取り込んで整形することを前提に設計されています。「バイト位置で文字列を切り出す」という操作は設計思想の外にあり、Excel の MIDB / LENB に相当する標準関数が存在しません。そのため COBOL 帳票のような固定長テキストを扱うには、データの特徴に応じた工夫が必要です。このページではその工夫を体系的にまとめています。
+        </div>
+<div class="xdemo-note-warn">
+<strong>💬 判定の結論を先に言うと：</strong><br>
+          「自作関数が必要かどうか」は、<strong>帳票の中に"半角と全角が混在するフィールド群を区切り文字なしでバイト位置だけで切り分ける必要があるか"</strong>で決まります。それ以外の処理（不要行除去、フィルダウン、2行&rarr;1行変換、目印ベースの切り出しなど）はすべて標準機能だけで対応できます。
+        </div>
+<div class="xdemo-note-good">
+<strong>💡 迷ったら fx_MIDB（自作関数）を最初に検討してください：</strong><br>
+          以下のパターンA〜Eは「自作関数なしでどこまでできるか」を知るためのテクニック集です。しかし COBOL 帳票の多くは全角・半角混在で区切り文字もないため、結局 fx_MIDB（自作関数）が必要になるケースが大半です。確実性・汎用性の観点から、<strong>まず fx_MIDB（自作関数）の導入を検討し、標準機能だけで済むかどうかは判定表で確認する</strong>という順序をおすすめします。
+        </div>
+<div class="combo-box">
+<h3>💡 前半と後半は「別物」ではありません &horbar; 組み合わせて使うのが実務の定番</h3>
+<p>このページでは便宜上「自作関数なしでできること（前半）」と「自作関数が必要なケース（後半）」に分けていますが、<strong>実際の処理では両方を組み合わせるのが普通</strong>です。</p>
+<p>たとえば、fx_MIDB（自作関数）でバイト位置の切り出しを行った後に、前半で紹介する <code>if Text.Middle(...)</code> で行種を判定してフィルタリングしたり、フィルダウンで親情報を埋めたり、インデックス＋行ずらしで2行を1行にまとめたりします。</p>
+<p><strong>前半のテクニックは「fx_MIDB（自作関数）の前処理・後処理」としても活躍します。</strong>自作関数なしで完結するかの判定材料であると同時に、自作関数と一緒に使うパーツでもあると理解してください。</p>
+</div>
+</section>
+<!-- ================================================================
+           ★★★ 前半：自作関数なしでできること ★★★
+      ================================================================ -->
+<section class="method-section">
+<h2 style="color: #00838f; border-bottom: 3px solid #00acc1; padding-bottom: 8px;">前半：自作関数なし（標準機能だけ）でできること</h2>
+<p>以下の5パターンは、M言語のカスタム関数を一切書かずに、パワークエリのGUI操作と標準関数だけで処理できます。また、fx_MIDB（自作関数）によるメインの切り出し処理と組み合わせて前処理・後処理としても使えます。</p>
+</section>
+<!-- ======== パターンA ======== -->
+<section class="method-section">
+<h2><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンA</span> 半角のみの固定長データ &rarr; Text.Middle で直接切り出し</h2>
+<p>帳票の全フィールドが半角英数字だけで構成されている場合は、<strong>バイト位置 ＝ 文字位置</strong>になります。パワークエリ標準の <code>Text.Middle</code> がそのままExcelの <code>MIDB</code> と同じ感覚で使えます。</p>
+<div class="code-block-large"><span class="cm-comment">// 帳票例（全フィールド半角・1行50バイト）</span>
+<span class="text-blue-light">1234567</span><span style="color:#ce9178">EXCEL CORP           </span><span style="color:#b5cea8">0000150000</span><span class="text-yellow">20260318</span>
+<span class="color-808080">&boxv;1-7  &boxv;8-27(20文字)      &boxv;28-37(10桁)&boxv;38-45(8桁)&boxv;</span></div>
+<div class="technique-card">
+<h3>カスタム列の式（Text.Middle は0始まり）</h3>
+<div class="code-block">
+<span class="code-line">// 顧客番号（バイト1～7 &rarr; 0始まりで位置0、長さ7）</span>
+<span class="code-line">Text.Middle([Column1], 0, 7)</span>
+</div>
+<div class="code-block">
+<span class="code-line">// 会社名（バイト8～27 &rarr; 0始まりで位置7、長さ20）</span>
+<span class="code-line">Text.Trim( Text.Middle([Column1], 7, 20) )</span>
+</div>
+<div class="code-block">
+<span class="code-line">// 売上金額（バイト28～37 &rarr; 0始まりで位置27、長さ10）</span>
+<span class="code-line">Number.FromText( Text.Middle([Column1], 27, 10) )</span>
+</div>
+<p style="margin-top:12px;">あるいは、GUI操作だけで完結する方法もあります。[ホーム] &rarr; [列の分割] &rarr; [位置] を選び、<code>7,27,37</code> と入力すれば、文字位置7・27・37の手前でそれぞれ分割されます。</p>
+</div>
+<div class="xdemo-note-good">
+<strong>💡 Text.Middle の引数はMIDBと違い「0始まり」です：</strong><br>
+          ExcelのMIDB(A1, 8, 20) に相当するのは Text.Middle([Column1], <strong>7</strong>, 20) です。開始位置を1引くだけ。半角だけのデータならこの換算だけで使えます。
+        </div>
+</section>
+<!-- ======== パターンB ======== -->
+<section class="method-section">
+<h2><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンB</span> 全角文字混在でも「文字数」が固定 &rarr; Text.Middle で対応可能</h2>
+<p>見落としがちですが重要なパターンです。全角文字が含まれていても、<strong>各フィールドの「文字数」（バイト数ではなく）が固定であれば</strong>、<code>Text.Middle</code>（文字数ベース）で正しく切り出せます。</p>
+<p>COBOLのデータ定義で言えば、<strong>日本語項目が <code>PIC N(10)</code> のように「文字数」で定義されている帳票</strong>がこれに該当します。</p>
+<div class="code-block-large"><span class="cm-comment">// 帳票例：全フィールドが「文字数」で一定</span>
+<span class="text-blue-light">1001</span><span style="color:#ce9178">新宿本店　　</span><span style="color:#b5cea8">0050000</span><span class="text-yellow">山田太郎　</span>
+<span class="color-808080">&boxv;4文字&boxv;6文字(全角)&boxv;7文字&boxv;5文字(全角)&boxv;</span>
+<span class="cm-comment">// ※バイト数では 4+12+7+10＝33だが、文字数では 4+6+7+5＝22文字</span></div>
+<div class="technique-card">
+<h3>Text.Middle で文字数ベースの切り出し</h3>
+<div class="code-block">
+<span class="code-line">Text.Middle([Column1], 0, 4)              // 店舗ID</span>
+<span class="code-line">Text.Trim( Text.Middle([Column1], 4, 6) )  // 店舗名</span>
+<span class="code-line">Number.FromText( Text.Middle([Column1], 10, 7) ) // 売上金額</span>
+</div>
+</div>
+<div class="xdemo-note-good">
+<strong>💡 「バイト数」ではなく「文字数」で考えるのがコツ：</strong><br>
+          各フィールドが「全角だけ」か「半角だけ」で構成されているなら、文字数への換算は簡単です。全角フィールドは「バイト数&divide;2＝文字数」、半角フィールドは「バイト数＝文字数」。この換算をすれば Text.Middle の開始位置になります。
+        </div>
+<div class="xdemo-note-warn">
+<strong>⚠ このパターンが成立する条件：</strong><br>
+          各フィールドの中身が<strong>「全角のみ」または「半角のみ」のどちらか一方</strong>であること。<strong>1つのフィールドの中で半角と全角が混在する</strong>場合は（例：「ABC新宿店」）、同じバイト数でも文字数が変動するため使えません。
+        </div>
+<!-- ======== Text.Middle で行種判定フラグ ======== -->
+<div class="technique-card" style="margin-top: 25px;">
+<h3>応用：Text.Middle で行種を判定してフラグ列を作る</h3>
+<p>COBOL帳票には「ヘッダー行」「明細行」「合計行」など複数の行種が混在しています。Text.Middle は切り出しだけでなく、<strong>先頭の数文字を取得して行種を判定するフラグ列の作成</strong>にも頻繁に使います。これは全角・半角に関係なく使えるテクニックです。</p>
+<div class="code-block-large"><span class="cm-comment">// 帳票例：先頭2文字で行種が決まる</span>
+<span class="color-808080">HD</span><span class="text-yellow">20260315  第３営業部　月次売上報告書</span> <span style="color:#666">&larr; ヘッダー行</span>
+<span class="color-808080">DT</span><span class="text-blue-light">1001新宿本店　　山田太郎　0050000</span> <span style="color:#666">&larr; 明細行</span>
+<span class="color-808080">DT</span><span class="text-blue-light">1002渋谷支店　　佐藤花子　0120000</span> <span style="color:#666">&larr; 明細行</span>
+<span class="color-808080">TL</span><span style="color:#b5cea8">合計                    0170000</span> <span style="color:#666">&larr; 合計行</span></div>
+<div class="code-block">
+<span class="code-line">// カスタム列「行種」を追加</span>
+<span class="code-line">if Text.Middle([Column1], 0, 2) = "HD" then "ヘッダー"</span>
+<span class="code-line">else if Text.Middle([Column1], 0, 2) = "DT" then "明細"</span>
+<span class="code-line">else if Text.Middle([Column1], 0, 2) = "TL" then "合計"</span>
+<span class="code-line">else "不明"</span>
+</div>
+<p style="margin-top:12px;">フラグ列を作った後は、フィルターで「明細」だけを残し、パターンAやパターンBの切り出し、あるいはfx_MIDB（自作関数）でフィールド分割するのが定石です。<code>Text.StartsWith</code> でも同様の判定ができます。</p>
+<div class="code-block">
+<span class="code-line">// Text.StartsWith を使う場合（より簡潔）</span>
+<span class="code-line">if Text.StartsWith([Column1], "DT") then "明細" else "その他"</span>
+</div>
+</div>
+<!-- ======== Text.Middle の if 判定応用 ======== -->
+<div class="technique-card" style="margin-top: 25px;">
+<h3>応用：if Text.Middle(...) で特定位置の文字を判定して処理を分岐する</h3>
+<p>Text.Middle で取り出した文字列を <code>if</code> で判定し、行ごとに異なる処理を適用するのは M言語の基本テクニックです。行種判定だけでなく、<strong>特定の位置にある文字が何かによって切り出し方を変える</strong>こともできます。</p>
+<div class="code-block-large"><span class="cm-comment">// 例1：7文字目から1文字取得し、ハイフンかどうかで分岐</span>
+<span class="cm-keyword">if</span> <span class="cm-func">Text.Middle</span>([Column1], <span class="cm-number">7</span>, <span class="cm-number">1</span>) <span class="cm-op">=</span> <span class="cm-string">"-"</span> <span class="cm-keyword">then</span> <span class="cm-string">"郵便番号あり"</span>
+<span class="cm-keyword">else</span> <span class="cm-string">"郵便番号なし"</span></div>
+<div class="code-block-large"><span class="cm-comment">// 例2：特定位置の文字によって切り出し範囲を変える</span>
+<span class="cm-keyword">if</span> <span class="cm-func">Text.Middle</span>([Column1], <span class="cm-number">0</span>, <span class="cm-number">1</span>) <span class="cm-op">=</span> <span class="cm-string">"*"</span> <span class="cm-keyword">then</span>
+<span class="cm-func">Text.Middle</span>([Column1], <span class="cm-number">1</span>, <span class="cm-number">20</span>)   <span class="cm-comment">// 先頭が * なら1文字ずらして取得</span>
+<span class="cm-keyword">else</span>
+<span class="cm-func">Text.Middle</span>([Column1], <span class="cm-number">0</span>, <span class="cm-number">20</span>)   <span class="cm-comment">// 通常はそのまま取得</span></div>
+<div class="code-block-large"><span class="cm-comment">// 例3：fx_MIDB（自作関数）で切り出した結果に対して判定する</span>
+<span class="cm-comment">// &rarr; 前半のテクニックと後半の自作関数を組み合わせる実例</span>
+<span class="cm-keyword">let</span>
+    区分 <span class="cm-op">=</span> <span class="cm-func">Text.Middle</span>([Column1], <span class="cm-number">0</span>, <span class="cm-number">2</span>),
+    本体 <span class="cm-op">=</span> <span class="cm-keyword">if</span> 区分 <span class="cm-op">=</span> <span class="cm-string">"DT"</span> <span class="cm-keyword">then</span>
+<span class="cm-keyword">let</span>
+            bin <span class="cm-op">=</span> <span class="cm-func">Text.ToBinary</span>([Column1], <span class="cm-number">932</span>),
+            店舗名 <span class="cm-op">=</span> <span class="cm-func">Text.Trim</span>(<span class="cm-func">Text.FromBinary</span>(<span class="cm-func">Binary.Range</span>(bin, <span class="cm-number">2</span>, <span class="cm-number">14</span>), <span class="cm-number">932</span>)),
+            売上   <span class="cm-op">=</span> <span class="cm-func">Text.FromBinary</span>(<span class="cm-func">Binary.Range</span>(bin, <span class="cm-number">16</span>, <span class="cm-number">10</span>), <span class="cm-number">932</span>)
+        <span class="cm-keyword">in</span>
+            [店舗名=店舗名, 売上=売上]
+    <span class="cm-keyword">else</span> <span class="cm-keyword">null</span>
+<span class="cm-keyword">in</span>
+    本体</div>
+<p>このように <strong><code>if Text.Middle(...) = "何か" then ...</code></strong> のパターンは、行種判定から条件付き切り出しまで幅広く使えます。fx_MIDB（自作関数）との組み合わせでも「先にText.Middleで行種を判定 &rarr; 明細行だけfx_MIDBで分解」という流れが定番です。</p>
+</div>
+<div class="xdemo-note">
+<strong>📌 この行種判定は後続のすべてのパターン（C・D・E および fx_MIDB（自作関数））の前処理として使えます。</strong>先にフラグ列で行種を分類し、フィルターで必要な行だけを残してから切り出し処理を行うのが効率的です。
+        </div>
+</section>
+<!-- ======== パターンC ======== -->
+<section class="method-section">
+<h2><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンC</span> 不要行の除去・フィルダウン &rarr; 標準機能で一瞬</h2>
+<p>ヘッダー行・罫線行・ページ区切り行の除去、および親情報の空白埋め（フィルダウン）は、<strong>全角混在であっても標準機能だけで完璧に処理</strong>できます。fx_MIDB（自作関数）でフィールド分解する前の前処理として、またfx_MIDB（自作関数）で切り出した後の仕上げとしても使います。</p>
+<div class="pq-step-box">
+<h3 class="pq-step-title">不要行の除去</h3>
+<p>列ヘッダーの [▼] フィルターで不要パターンのチェックを外すだけです。M言語で書く場合も標準関数のみです。</p>
+<div class="code-block">
+<span class="code-line">Table.SelectRows(前のステップ, each</span>
+<span class="code-line">    not Text.StartsWith([Column1], "===") and</span>
+<span class="code-line">    not Text.StartsWith([Column1], "---") and</span>
+<span class="code-line">    Text.Trim([Column1]) &lt;&gt; ""</span>
+<span class="code-line">)</span>
+</div>
+</div>
+<div class="pq-step-box">
+<h3 class="pq-step-title">フィルダウン（親情報の空白埋め）</h3>
+<p>関数版（超絶技巧編）で最も難易度が高かった処理が<strong>3クリック</strong>で完了します。</p>
+<p>① ヘッダー行の値が入っている列を選択 &rarr; ② [変換] &rarr; [フィル] &rarr; [下方向]</p>
+</div>
+<div class="xdemo-note">
+<strong>📌</strong> パターンBの行種判定フラグと組み合わせると効果的です。フラグ列で「明細」以外を除外し、フィルダウンで親情報を埋める &horbar; という流れが定番です。
+        </div>
+</section>
+<!-- ======== パターンD ======== -->
+<section class="method-section">
+<h2><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンD</span> 2行にまたがるデータを1行に結合 &rarr; インデックス＋行ずらし</h2>
+<p>COBOL帳票では印字桁数の制限から、1件のデータが2行以上に分かれることがよくあります。パワークエリではインデックス列を使った「行ずらし結合」で<strong>自作関数なしに標準操作だけで対応</strong>できます。1行にまとめた後で fx_MIDB（自作関数）によるフィールド分解を行う流れです。</p>
+<div class="code-block-large"><span class="cm-comment">// 帳票例（1件＝2行構成）</span>
+<span class="text-yellow">店舗ID：1001　店舗名：新宿本店　売上：50,000</span> <span style="color:#666">&larr; 1件目の1行目</span>
+<span style="color:#c586c0">住所：東京都新宿区〇〇　電話：03-xxxx-xxxx</span> <span style="color:#666">&larr; 1件目の2行目</span>
+<span class="text-yellow">店舗ID：1002　店舗名：渋谷支店　売上：120,000</span> <span style="color:#666">&larr; 2件目の1行目</span>
+<span style="color:#c586c0">住所：東京都渋谷区&xutri;&xutri;　電話：03-yyyy-yyyy</span> <span style="color:#666">&larr; 2件目の2行目</span></div>
+<div class="technique-card">
+<h3>手法①：インデックス列 ＋ カスタム列で1行下を参照</h3>
+<p><strong>Step 1：</strong>[列の追加] &rarr; [インデックス列] &rarr; [0から] で連番を振る。</p>
+<p><strong>Step 2：</strong>[列の追加] &rarr; [カスタム列] で以下の式を入力。</p>
+<div class="code-block">
+<span class="code-line">追加されたインデックス[Column1]{[インデックス]+1}</span>
+</div>
+<p>この式は「1行下のデータ」を横に展開します。</p>
+<p><strong>Step 3：</strong>インデックスの2の剰余が0の行だけをフィルターで残す。または1行目特有のキーワードでフィルター。</p>
+</div>
+<div class="xdemo-wrap" style="margin-top:15px;">
+<span class="xdemo-step-label">イメージ：インデックス+行ずらしの結果</span>
+<table class="xdemo-table">
+<tr><td class="xd-col">Index</td><td class="xd-col">Column1（元データ）</td><td class="xd-col">2行目（カスタム列）</td></tr>
+<tr><td class="xd-hit">0</td><td class="xd-data">店舗ID：1001　店舗名：新宿本店&hellip;</td><td class="xd-result">住所：東京都新宿区〇〇&hellip;</td></tr>
+<tr><td class="xd-data" style="text-align:center;color:#999;">1</td><td class="xd-data" style="color:#999;">住所：東京都新宿区〇〇&hellip;</td><td class="xd-data" style="color:#999;">店舗ID：1002&hellip;（不要）</td></tr>
+<tr><td class="xd-hit">2</td><td class="xd-data">店舗ID：1002　店舗名：渋谷支店&hellip;</td><td class="xd-result">住所：東京都渋谷区&xutri;&xutri;&hellip;</td></tr>
+<tr><td class="xd-data" style="text-align:center;color:#999;">3</td><td class="xd-data" style="color:#999;">住所：東京都渋谷区&xutri;&xutri;&hellip;</td><td class="xd-data" style="color:#999;">（不要）</td></tr>
+</table>
+</div>
+<div class="technique-card" style="margin-top:20px;">
+<h3>手法②：インデックス列 ＋ 自己結合（マージ）</h3>
+<div class="code-block">
+<span class="code-line">// Step 1：インデックス列「通し番号」を追加（0始まり）</span>
+<span class="code-line">= Table.AddIndexColumn(前のステップ, "通し番号", 0, 1, Int64.Type)</span>
+</div>
+<div class="code-block">
+<span class="code-line">// Step 2：「通し番号+1」のカスタム列を追加</span>
+<span class="code-line">= Table.AddColumn(前のステップ, "結合キー", each [通し番号] + 1)</span>
+</div>
+<div class="code-block">
+<span class="code-line">// Step 3：自己結合（マージ）</span>
+<span class="code-line">= Table.NestedJoin(前のステップ, {"結合キー"}, 前のステップ, {"通し番号"}, "次の行", JoinKind.LeftOuter)</span>
+</div>
+<div class="code-block">
+<span class="code-line">// Step 4：結合結果を展開</span>
+<span class="code-line">= Table.ExpandTableColumn(前のステップ, "次の行", {"Column1"}, {"2行目データ"})</span>
+</div>
+</div>
+<div class="xdemo-note-good">
+<strong>💡 3行で1件の場合：</strong><br>
+<code>{[インデックス]+1}</code> と <code>{[インデックス]+2}</code> の2つのカスタム列を追加し、3の剰余が0の行だけを残します。各行の行種が先頭文字等で判別できる場合は、剰余でなく行種でフィルターするほうが安全です。
+        </div>
+<div class="limit-box">
+<h3>⚠ インデックス＋行ずらしの限界：「N行固定」が絶対条件</h3>
+<p>この手法は<strong>「1件あたりの行数が完全に固定されている」ことが大前提</strong>です。</p>
+<p><strong>崩壊パターン①：不要行が途中に混入する</strong></p>
+<p>ページ区切りのヘッダーや罫線が挟まるとインデックスがずれ、その先の全データの組み合わせが崩壊します。<strong>行ずらしの前に不要行をフィルターで完全に除去</strong>する必要があります（パターンCとの組み合わせ）。</p>
+<p><strong>崩壊パターン②：伝票ごとに明細行数がバラバラ</strong></p>
+<p>インデックスの算数では対応不可。<strong>パイプライン方式（フラグ＋フィルダウン＋抽出）</strong>が正しいアプローチです。</p>
+<p><strong>崩壊パターン③：1明細あたりの行数自体が不定</strong></p>
+<p>「商品Aは2行、商品Bは3行」のようなケースではインデックス＋行ずらしは完全に通用しません。行種判定＋条件付きグループ化が必要で、難易度が大幅に上がります。</p>
+</div>
+<div class="xdemo-note-danger">
+<strong>⚠ 行ずらしを使う前のチェックリスト</strong><br>
+          ✅ 1件あたりの行数は完全に固定か？<br>
+          ✅ ページ区切り等のゴミ行は事前に除去したか？<br>
+          ✅ 帳票全体を通して行の並び順は常に一定のサイクルか？<br>
+          1つでもNoなら、<strong>パターンCのフィルター＋フィルダウンを使ってください</strong>。
+        </div>
+</section>
+<!-- ======== パターンE ======== -->
+<section class="method-section">
+<h2><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンE</span> 「目印」を頼りに可変長フィールドを切り出す</h2>
+<p>ここまでのパターンA～Dは「フィールドの開始位置と長さが完全に固定」であることを前提としていました。しかし実務では、<strong>帳票のバイト枠は確保されているのに、中身の有効データの長さが行ごとに違う</strong>ケースが頻繁に発生します。</p>
+<p>典型例は「氏名」「住所」のような自然言語フィールドです。COBOLのPICTURE句で30バイトの枠が確保されていても、「山田太郎」なら8バイト、「アレクサンドル・ペトロフ」なら20バイト以上と、<strong>実際に入っているデータの長さは毎行異なります</strong>。レイアウト定義書がない場合、隣のフィールドとの境界がスペースだけでは判別困難です。</p>
+<div class="code-block-large"><span class="cm-comment">// 実務でよく遭遇する帳票例</span>
+<span class="text-yellow">山田太郎　　　　　</span><span class="text-blue-light">123-4567</span><span style="color:#ce9178">東京都新宿区西新宿１丁目　　　　　　　　</span>
+<span class="text-yellow">アレクサンドルﾍﾟﾄﾛﾌ</span><span class="text-blue-light">987-6543</span><span style="color:#ce9178">北海道札幌市中央区北１条西２丁目３番４号</span>
+<span class="color-808080">&boxv;&larr; 氏名(20B) &rarr;&boxv;&larr;郵便番号&rarr;&boxv;&larr; 住所(40B)                       &rarr;&boxv;</span></div>
+<h3 style="color: #00838f; border-bottom: 2px solid #b2ebf2; padding-bottom: 5px; margin-top: 25px;">ケース①：レイアウト定義書がある場合 &rarr; fx_MIDB（自作関数）+ Text.Trim で確実</h3>
+<p>レイアウト定義書が手元にあれば、「氏名は1バイト目から20バイト」「郵便番号は21バイト目から8バイト」「住所は29バイト目から40バイト」のようにバイト位置が確定しています。素直にfx_MIDB（自作関数）で切り出して Text.Trim で後ろのスペースを除去すれば、有効データだけが残ります。</p>
+<div class="code-block">
+<span class="code-line">Text.Trim( fx_MIDB([Column1], 1, 20) )   // &rarr; "山田太郎"</span>
+<span class="code-line">Text.Trim( fx_MIDB([Column1], 21, 8) )    // &rarr; "123-4567"</span>
+<span class="code-line">Text.Trim( fx_MIDB([Column1], 29, 40) )   // &rarr; "東京都新宿区西新宿１丁目"</span>
+</div>
+<div class="xdemo-note-good">
+<strong>💡 レイアウト定義書があるなら問題は発生しません。</strong><br>
+          「中身のデータ長が毎行違う」ことと「フィールドのバイト枠が固定」であることは矛盾しません。枠が固定なので fx_MIDB（自作関数）+ Text.Trim で必ず正しく取り出せます。
+        </div>
+<h3 style="color: #00838f; border-bottom: 2px solid #b2ebf2; padding-bottom: 5px; margin-top: 30px;">ケース②：レイアウト定義書がない &rarr; データ中の「目印」で切り出す</h3>
+<p>バイト位置がわからなければfx_MIDB（自作関数）は使えません。この場合は、データの中にある記号やパターンを「目印」として頼りに切り出します。パワークエリには目印ベースの切り出しに使える標準関数が揃っています。</p>
+<div class="technique-card">
+<h3>目印ベースで使える標準関数</h3>
+<div class="code-block">
+<span class="code-line">Text.PositionOf([Column1], "-")              // 最初の「-」の位置（0始まり）</span>
+<span class="code-line">Text.BeforeDelimiter([Column1], "-")          // 最初の「-」の前のテキスト</span>
+<span class="code-line">Text.AfterDelimiter([Column1], "-")           // 最初の「-」の後のテキスト</span>
+<span class="code-line">Text.AfterDelimiter([Column1], "-", 1)        // 2番目の「-」の後のテキスト</span>
+<span class="code-line">Text.Middle([Column1], 位置, 長さ)             // 位置起点の切り出し</span>
+<span class="code-line">Text.Middle([Column1], 位置)                   // 位置以降を末尾まで全部取得</span>
+</div>
+</div>
+<div class="pq-step-box">
+<h3 class="pq-step-title">実例：郵便番号のハイフンを目印に氏名・郵便番号・住所を切り出す</h3>
+<p><strong>考え方：</strong>郵便番号には必ず「-」（ハイフン）が含まれます。このハイフンを起点に、その前3文字＋ハイフン＋後4文字が郵便番号。ハイフンより前の部分から郵便番号の先頭3文字を除いたものが氏名。ハイフンより後の郵便番号を除いた残りが住所です。</p>
+<div class="code-block-large"><span class="cm-comment">// カスタム列でレコードを返す方式</span>
+<span class="cm-keyword">let</span>
+    hp <span class="cm-op">=</span> <span class="cm-func">Text.PositionOf</span>([Column1], <span class="cm-string">"-"</span>),
+    <span class="cm-comment">// 氏名：先頭から郵便番号の直前まで</span>
+    氏名   <span class="cm-op">=</span> <span class="cm-func">Text.Trim</span>(<span class="cm-func">Text.Start</span>([Column1], hp <span class="cm-op">-</span> <span class="cm-number">3</span>)),
+    <span class="cm-comment">// 郵便番号：ハイフン前3文字 + ハイフン + ハイフン後4文字 = 8文字</span>
+    郵便番号 <span class="cm-op">=</span> <span class="cm-func">Text.Middle</span>([Column1], hp <span class="cm-op">-</span> <span class="cm-number">3</span>, <span class="cm-number">8</span>),
+    <span class="cm-comment">// 住所：郵便番号の終了位置以降を全部取得</span>
+    住所   <span class="cm-op">=</span> <span class="cm-func">Text.Trim</span>(<span class="cm-func">Text.Middle</span>([Column1], hp <span class="cm-op">+</span> <span class="cm-number">5</span>))
+<span class="cm-keyword">in</span>
+    [氏名=氏名, 郵便番号=郵便番号, 住所=住所]</div>
+<div class="xdemo-note-good">
+<strong>💡 この手法のポイント：</strong><br>
+            バイト位置を一切使っていません。「-」の文字位置を起点に相対的に切り出すため、<strong>全角・半角が混在していても正しく動作</strong>します。Text.PositionOf は「文字数」で位置を返し、Text.Middle も「文字数」で切り出すため、バイト数の不一致問題が発生しません。<strong>目印さえあればfx_MIDB（自作関数）は不要</strong>です。
+          </div>
+</div>
+<div class="xdemo-note-warn" style="margin-top:15px;">
+<strong>💬 住所の「後ろ」にも目印がある場合：</strong><br>
+          住所の後ろに電話番号があり、その電話番号にもハイフンが含まれるような場合は、<code>Text.PositionOf</code> の第3引数で「最後に出現するハイフン」を探したり、<code>Text.AfterDelimiter</code> の出現回数指定を使って対処できます。複数の目印がある場合は、<strong>最も確実に位置が特定できる目印を起点に選ぶ</strong>のがコツです。
+        </div>
+<!-- ======== 目印ベースの重大リスク ======== -->
+<div class="limit-box">
+<h3>⚠ 目印ベース切り出しの重大なリスク：目印文字がデータ中に出現する</h3>
+<p>目印として使ったハイフン <code>-</code> が、<strong>氏名や住所の中にも出現する場合、全フィールドが誤分割されます</strong>。</p>
+<div class="code-block-large"><span class="cm-comment">// 誤分割が起きる例</span>
+<span style="color:#ff8a80">井ノ上-太郎　　　　</span><span class="text-blue-light">123-4567</span><span style="color:#ce9178">東京都新宿区西新宿１丁目</span>
+<span class="color-808080">       &uarr; ここが最初のハイフン &rarr; Text.PositionOf は氏名中のハイフンを返す！</span></div>
+<p><code>Text.PositionOf([Column1], "-")</code> は<strong>最初に見つかったハイフンの位置</strong>を返します。氏名中にハイフンがある行では、郵便番号のハイフンではなく氏名中のハイフンが検出されてしまい、氏名・郵便番号・住所のすべてが誤った位置で分割されます。</p>
+<p>同様に、住所に「北1条西2-3」のようにハイフンが含まれるケースでは、2番目以降のハイフンとの区別が困難になります。</p>
+<p><strong>対策①：</strong><code>Text.PositionOf</code> の検索開始位置を指定して「N文字目以降の最初のハイフン」を探す。ただし氏名の長さが行ごとに異なるため、適切な開始位置の指定が難しい場合があります。</p>
+<p><strong>対策②：</strong>M言語には正規表現がないため、「数字3桁＋ハイフン＋数字4桁」のパターンマッチングは標準関数の組み合わせで擬似的に実装する必要があり、複雑になります。</p>
+<p><strong>対策③（最も確実）：</strong>レイアウト定義書を入手して <strong>fx_MIDB（自作関数）でバイト位置指定する</strong>。目印ベースはあくまで「定義書がない場合の応急処置」です。</p>
+</div>
+</section>
+<!-- ======== 判定表 ======== -->
+<section class="method-section">
+<h2>判定表：自分の帳票はどのパターンか？</h2>
+<table class="format-table">
+<thead>
+<tr>
+<th style="width:33%;">帳票の特徴</th>
+<th style="width:27%;">使える手法</th>
+<th style="width:13%;">自作関数</th>
+<th style="width:12%;">パターン</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全フィールドが半角のみ</td>
+<td>Text.Middle / 列の分割（位置）</td>
+<td class="judge-ok">不要</td>
+<td>A</td>
+</tr>
+<tr>
+<td>全角あり。各フィールドは全角のみ or 半角のみ（フィールド内混在なし）</td>
+<td>Text.Middle（文字数換算）/ if判定</td>
+<td class="judge-ok">不要</td>
+<td>B</td>
+</tr>
+<tr>
+<td>不要行の除去 / フィルダウン</td>
+<td>フィルター / フィル下方向</td>
+<td class="judge-ok">不要</td>
+<td>C</td>
+</tr>
+<tr>
+<td>N行固定で1件のデータを1行にまとめたい</td>
+<td>インデックス＋行ずらし</td>
+<td class="judge-ok">不要</td>
+<td>D</td>
+</tr>
+<tr>
+<td>レイアウト定義書はないが、ハイフンや記号など目印がデータ中にある</td>
+<td>Text.PositionOf + Text.Middle 等</td>
+<td class="judge-ok">不要</td>
+<td>E</td>
+</tr>
+<tr>
+<td><strong>全角あり。1フィールド内で半角/全角混在、区切り文字なし。レイアウト定義書のバイト位置で切り分ける</strong></td>
+<td><strong>fx_MIDB（自作関数）</strong></td>
+<td class="judge-ng">必要</td>
+<td><strong>後半</strong></td>
+</tr>
+<tr>
+<td style="color:#6a1b9a;">レイアウト定義書もなく、目印もない（全角文字が区切りなく連続）</td>
+<td style="color:#6a1b9a;">関数的手法では原理的に対応不可。定義書の入手が必須</td>
+<td class="judge-impossible">&horbar;</td>
+<td style="color:#6a1b9a;">対応不可</td>
+</tr>
+</tbody>
+</table>
+<div class="xdemo-note-warn">
+<strong>💬 迷ったときの確認ポイント：</strong><br>
+          ① データ中にハイフン・カンマ・スペース等の目印がないか？ &rarr; あればパターンE<br>
+          ② 各フィールドは「全角だけ」「半角だけ」のどちらか？ &rarr; そうならパターンB<br>
+          ③ レイアウト定義書のバイト位置がわかるか？ &rarr; わかればfx_MIDB（自作関数）<br>
+          ④ 上のどれにも当てはまらない &rarr; まずレイアウト定義書の入手を最優先に
+        </div>
+<div class="xdemo-note">
+<strong>📌 パターンB〜Dは fx_MIDB（自作関数）との併用が前提になることも多いです。</strong>判定表は「自作関数なしで完結するか」の判定用ですが、実務では fx_MIDB（自作関数）でメインのフィールド分解を行い、行種判定（B）&rarr; 不要行除去・フィルダウン（C）&rarr; 行ずらし結合（D）を前後処理として組み合わせるのが一般的な流れです。
+        </div>
+</section>
+<!-- ================================================================
+           ★★★ 後半：自作関数が必要なケース ★★★
+      ================================================================ -->
+<hr class="section-divider">
+<section class="method-section">
+<h2 style="color: #b71c1c; border-bottom: 3px solid #d32f2f; padding-bottom: 8px;">後半：自作関数が必要なケース &horbar; M言語でMIDB相当を作る</h2>
+<p>前半の判定表で「自作関数が必要」に該当した場合、ここから先の手法を使います。核心技術は <strong>Text.ToBinary + Binary.Range + Text.FromBinary</strong> の3段階変換です。前半のパターンB〜Dで紹介した行種判定・不要行除去・行ずらし等と組み合わせて使ってください。</p>
+</section>
+<!-- ======== 核心技術 ======== -->
+<section class="method-section">
+<h2>核心技術：バイナリ経由のバイト位置切り出し</h2>
+<p>M言語で文字列をShift_JIS（コードページ932）のバイナリに変換すると、半角＝1バイト・全角＝2バイトの世界になります。このバイナリをバイト位置で切り出して文字列に戻せば、ExcelのMIDBと完全に同じ結果が得られます。</p>
+<div class="pipeline-box">
+<span class="step">文字列（text）</span>
+<span class="arrow">&rarr;</span>
+<span class="step">Text.ToBinary<br><small>Shift_JIS バイナリに変換</small></span>
+<span class="arrow">&rarr;</span>
+<span class="step">Binary.Range<br><small>バイト位置で切り出し</small></span>
+<span class="arrow">&rarr;</span>
+<span class="step">Text.FromBinary<br><small>文字列に復元</small></span>
+</div>
+<div class="api-ref">
+<strong>使用する主要関数：</strong><br>
+<code>Text.ToBinary(text, 932)</code> &horbar; 文字列をShift_JISバイナリに変換<br>
+<code>Binary.Length(binary)</code> &horbar; バイナリのバイト数を返す（LENB相当）<br>
+<code>Binary.Range(binary, offset, count)</code> &horbar; バイト位置で切り出し（<strong>0始まり</strong>）<br>
+<code>Text.FromBinary(binary, 932)</code> &horbar; バイナリをShift_JISとして文字列に復元
+        </div>
+<div class="xdemo-note">
+<strong>📌 バイト数の確認が必要な場合：</strong><br>
+<code>Binary.Length( Text.ToBinary("テスト文字列", 932) )</code> で Shift_JIS 基準のバイト数（LENB相当）を取得できます。独立した自作関数にする必要はなく、必要な箇所でこの式をインラインで使えば十分です。
+        </div>
+</section>
+<!-- ======== fx_MIDB（自作関数） ======== -->
+<section class="method-section">
+<h2>fx_MIDB（自作関数）&horbar; バイト位置で切り出す（本丸）</h2>
+<p>このページで紹介する自作関数はこの <strong>fx_MIDB（自作関数）1つだけ</strong>です。ExcelのMIDBと同じ「1始まり」のバイト位置指定で、全角・半角混在の文字列からバイト単位で正確に切り出します。</p>
+<div class="code-block-large"><span class="cm-comment">// fx_MIDB（自作関数）&horbar; ExcelのMIDB相当（Shift_JIS基準・1始まり）</span>
+(<span class="cm-param">targetText</span> <span class="cm-keyword">as</span> <span class="cm-type">text</span>, <span class="cm-param">startByte</span> <span class="cm-keyword">as</span> <span class="cm-type">number</span>, <span class="cm-param">numBytes</span> <span class="cm-keyword">as</span> <span class="cm-type">number</span>) <span class="cm-keyword">as</span> <span class="cm-type">text</span> <span class="cm-op">=&gt;</span>
+<span class="cm-keyword">let</span>
+    bin <span class="cm-op">=</span> <span class="cm-func">Text.ToBinary</span>(<span class="cm-param">targetText</span>, <span class="cm-number">932</span>),
+    sliced <span class="cm-op">=</span> <span class="cm-func">Binary.Range</span>(bin, <span class="cm-param">startByte</span> <span class="cm-op">-</span> <span class="cm-number">1</span>, <span class="cm-param">numBytes</span>),
+    result <span class="cm-op">=</span> <span class="cm-func">Text.FromBinary</span>(sliced, <span class="cm-number">932</span>)
+<span class="cm-keyword">in</span>
+    result</div>
+<div class="demo-result">
+<span class="label">検証：</span>
+<code>fx_MIDB("AB新宿本店CD", 1, 2)</code> &rarr; <span class="value">"AB"</span>　/　
+          <code>fx_MIDB("AB新宿本店CD", 3, 8)</code> &rarr; <span class="value">"新宿本店"</span>　/　
+          <code>fx_MIDB("AB新宿本店CD", 11, 2)</code> &rarr; <span class="value">"CD"</span>
+</div>
+<div class="xdemo-note-danger">
+<strong>⚠ Binary.Range は0始まり、fx_MIDB（自作関数）は1始まり。</strong>ExcelのMIDB(A1, 5, 2) と fx_MIDB([Col], 5, 2) は同じ結果です。レイアウト定義書のバイト位置をそのまま使えます。
+        </div>
+<div class="xdemo-note-good">
+<strong>💡 LEFTB / RIGHTB が必要な場合：</strong><br>
+          先頭からNバイト取得は <code>fx_MIDB([Col], 1, N)</code>、末尾からNバイト取得は <code>fx_MIDB([Col], fx_LENB相当 - N + 1, N)</code> で代用できます。バイト長は <code>Binary.Length(Text.ToBinary([Col], 932))</code> で取得してください。独立した関数を増やすよりも、fx_MIDB（自作関数）1つで統一するほうがシンプルです。
+        </div>
+</section>
+<!-- ======== fx_MIDB_Safe ======== -->
+<section class="method-section">
+<h2>fx_MIDB_Safe（自作関数）&horbar; エラー処理付き安全版</h2>
+<p>元データに null や短い行（ヘッダー行、空行など）が混在する場合にエラーを回避する安全版です。必要に応じて fx_MIDB（自作関数）の代わりに使用してください。</p>
+<div class="code-block-large"><span class="cm-comment">// fx_MIDB_Safe（自作関数）&horbar; null・範囲外でもエラーにならない安全版</span>
+(<span class="cm-param">targetText</span> <span class="cm-keyword">as</span> <span class="cm-type">nullable text</span>, <span class="cm-param">startByte</span> <span class="cm-keyword">as</span> <span class="cm-type">number</span>, <span class="cm-param">numBytes</span> <span class="cm-keyword">as</span> <span class="cm-type">number</span>) <span class="cm-keyword">as</span> <span class="cm-type">nullable text</span> <span class="cm-op">=&gt;</span>
+<span class="cm-keyword">let</span>
+    safeText <span class="cm-op">=</span> <span class="cm-keyword">if</span> <span class="cm-param">targetText</span> <span class="cm-op">=</span> <span class="cm-keyword">null</span> <span class="cm-keyword">or</span> <span class="cm-param">targetText</span> <span class="cm-op">=</span> <span class="cm-string">""</span> <span class="cm-keyword">then</span> <span class="cm-keyword">null</span>
+<span class="cm-keyword">else</span>
+<span class="cm-keyword">let</span>
+            bin <span class="cm-op">=</span> <span class="cm-func">Text.ToBinary</span>(<span class="cm-param">targetText</span>, <span class="cm-number">932</span>),
+            totalLen <span class="cm-op">=</span> <span class="cm-func">Binary.Length</span>(bin),
+            adjStart <span class="cm-op">=</span> <span class="cm-param">startByte</span> <span class="cm-op">-</span> <span class="cm-number">1</span>,
+            adjCount <span class="cm-op">=</span> <span class="cm-func">Number.Min</span>({<span class="cm-param">numBytes</span>, totalLen <span class="cm-op">-</span> adjStart}),
+            result <span class="cm-op">=</span> <span class="cm-keyword">if</span> adjStart <span class="cm-op">&gt;=</span> totalLen <span class="cm-keyword">or</span> adjCount <span class="cm-op">&lt;=</span> <span class="cm-number">0</span> <span class="cm-keyword">then</span> <span class="cm-string">""</span>
+<span class="cm-keyword">else</span> <span class="cm-func">Text.FromBinary</span>(<span class="cm-func">Binary.Range</span>(bin, adjStart, adjCount), <span class="cm-number">932</span>)
+        <span class="cm-keyword">in</span>
+            result
+<span class="cm-keyword">in</span>
+    safeText</div>
+</section>
+<!-- ======== パフォーマンス ======== -->
+<section class="method-section">
+<h2>⚡ パフォーマンス改善：一括バイナリ変換パターン</h2>
+<p>fx_MIDB（自作関数）を1行あたり複数回呼ぶと、毎回 <code>Text.ToBinary</code> が実行されてパフォーマンスが低下します。カスタム列でレコード型を返せば、バイナリ変換は1行1回で済みます。</p>
+<div class="code-block-large"><span class="cm-comment">// カスタム列でレコードを返し、後で展開する方式</span>
+<span class="cm-keyword">let</span>
+    bin <span class="cm-op">=</span> <span class="cm-func">Text.ToBinary</span>([Column1], <span class="cm-number">932</span>),
+    店舗ID   <span class="cm-op">=</span> <span class="cm-func">Text.FromBinary</span>(<span class="cm-func">Binary.Range</span>(bin, <span class="cm-number">0</span>, <span class="cm-number">4</span>), <span class="cm-number">932</span>),
+    店舗名   <span class="cm-op">=</span> <span class="cm-func">Text.Trim</span>(<span class="cm-func">Text.FromBinary</span>(<span class="cm-func">Binary.Range</span>(bin, <span class="cm-number">5</span>, <span class="cm-number">14</span>), <span class="cm-number">932</span>)),
+    売上金額 <span class="cm-op">=</span> <span class="cm-func">Number.FromText</span>(<span class="cm-func">Text.FromBinary</span>(<span class="cm-func">Binary.Range</span>(bin, <span class="cm-number">20</span>, <span class="cm-number">7</span>), <span class="cm-number">932</span>)),
+    担当者名 <span class="cm-op">=</span> <span class="cm-func">Text.Trim</span>(<span class="cm-func">Text.FromBinary</span>(<span class="cm-func">Binary.Range</span>(bin, <span class="cm-number">28</span>, <span class="cm-number">8</span>), <span class="cm-number">932</span>))
+<span class="cm-keyword">in</span>
+    [店舗ID=店舗ID, 店舗名=店舗名, 売上金額=売上金額, 担当者名=担当者名]</div>
+<p>レコード型の列が追加されるので、展開ボタン（&hArr;）で各列に展開します。<code>Text.ToBinary</code> が行あたり1回になり、最大4倍高速です。</p>
+<div class="xdemo-note">
+<strong>📌 目安：</strong>数千行&hellip;意識不要。数万行&hellip;先にフィルターで不要行除去。5万行以上&hellip;一括変換推奨。
+        </div>
+</section>
+<!-- ======== カスタム関数の登録手順 ======== -->
+<section class="method-section">
+<h2>カスタム関数の登録手順</h2>
+<div class="pq-step-box-red">
+<h3 class="pq-step-title-red">手順</h3>
+<p><strong>①</strong> [データ] &rarr; [データの取得] &rarr; [その他のデータソースから] &rarr; [空のクエリ]</p>
+<p><strong>②</strong> [ホーム] &rarr; [詳細エディター] &rarr; 内容をすべて削除してコードを貼り付け &rarr; [完了]</p>
+<p><strong>③</strong> 右側「クエリの設定」でクエリ名を <code>fx_MIDB</code> 等に変更</p>
+<p><strong>④</strong> テスト値で動作確認。確認後の呼び出しクエリは削除OK</p>
+</div>
+</section>
+<!-- ======== エンコーディング ======== -->
+<section class="method-section">
+<h2>エンコーディングとコードページ</h2>
+<table class="compare-table">
+<thead><tr><th>エンコーディング</th><th>コードページ</th><th>全角1文字</th><th>備考</th></tr></thead>
+<tbody>
+<tr><td class="label-col">Shift_JIS</td><td><code>932</code></td><td>2バイト</td><td>日本のCOBOL帳票の大多数。本資料の前提。</td></tr>
+<tr><td class="label-col">UTF-8</td><td><code>65001</code></td><td>3バイト</td><td>最近のシステムで増加中。3バイト計算になるため注意。</td></tr>
+<tr><td class="label-col">EUC-JP</td><td><code>20932</code></td><td>2バイト</td><td>UNIX系COBOL帳票で稀に使用。</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ======== トラブルシューティング ======== -->
+<section class="method-section">
+<h2>🔧 よくあるトラブル</h2>
+<div class="pq-step-box-red">
+<h3 class="pq-step-title-red">文字化けする</h3>
+<p>全角文字の途中を切り出しています。全角項目は偶数バイト位置から偶数バイト数で切り出してください。</p>
+</div>
+<div class="pq-step-box-red">
+<h3 class="pq-step-title-red">Expression.Error（範囲外）</h3>
+<p>明細行より短い行にMIDB分解が適用されています。先にフィルターで不要行除去、またはfx_MIDB_Safe（自作関数）を使用。</p>
+</div>
+<div class="pq-step-box-red">
+<h3 class="pq-step-title-red">半角カタカナがおかしい</h3>
+<p>Shift_JISでは1バイト、UTF-8では3バイト。エンコーディングとコードページの不一致が原因。</p>
+</div>
+</section>
+<!-- ======== 対応表 ======== -->
+<section class="method-section">
+<h2>Excel関数 &harr; パワークエリ 対応表</h2>
+<table class="format-table">
+<thead><tr><th>処理</th><th>Excel関数</th><th>パワークエリ</th></tr></thead>
+<tbody>
+<tr><td class="label-col">バイト位置切り出し</td><td><code>MIDB(A1,6,14)</code></td><td>fx_MIDB（自作関数）([Col],6,14)</td></tr>
+<tr><td class="label-col">文字位置切り出し</td><td><code>MID(A1,6,14)</code></td><td>Text.Middle([Col],5,14)【標準】</td></tr>
+<tr><td class="label-col">目印ベース切り出し</td><td><code>MID+FIND</code></td><td>Text.PositionOf + Text.Middle【標準】</td></tr>
+<tr><td class="label-col">行種判定フラグ</td><td><code>IF(LEFT(...),...)</code></td><td>if Text.Middle(...) = ... then ...【標準】</td></tr>
+<tr><td class="label-col">前後スペース除去</td><td><code>TRIM(...)</code></td><td>Text.Trim(...)【標準】</td></tr>
+<tr><td class="label-col">数値変換</td><td><code>VALUE(...)</code></td><td>Number.FromText(...)【標準】</td></tr>
+<tr><td class="label-col">先頭一致判定</td><td><code>IF(LEFTB(...),...)</code></td><td>Text.StartsWith(...)でフィルター【標準】</td></tr>
+<tr><td class="label-col">フィルダウン</td><td><code>IF(条件,新値,直上参照)</code></td><td>[変換]&rarr;[フィル]&rarr;[下方向]【標準】</td></tr>
+<tr><td class="label-col">不要行の除去</td><td><code>FILTER / INDEX+SMALL</code></td><td>フィルター▼クリック【標準】</td></tr>
+<tr><td class="label-col">2行&rarr;1行結合</td><td><code>INDEX+ROW算数</code></td><td>インデックス+行ずらし【標準】</td></tr>
+<tr><td class="label-col">複数ファイル結合</td><td>不可能</td><td>[フォルダーから]取得【標準・PQ独自】</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ======================== まとめ ======================== -->
+<section class="tips-section" style="background:#fcfcfc;">
+<h2>🎯 まとめ</h2>
+<p>パワークエリでCOBOL帳票を処理する際、<strong>自作関数が必要になるのは「半角と全角が混在するフィールドを区切り文字なしでバイト位置だけで切り分ける」ケースだけ</strong>です。それ以外の処理 &horbar; 半角のみデータの切り出し、文字数ベースの切り出し、行種判定フラグ、目印ベースの相対切り出し、不要行除去、フィルダウン、2行&rarr;1行結合、複数ファイル結合 &horbar; はすべて標準機能で対応できます。</p>
+<p>ただし、Power Query はそもそも固定長テキストの分解を想定した設計ではないため、COBOL帳票の処理には工夫が必要です。そして<strong>前半のテクニックと後半の fx_MIDB（自作関数）は別物ではなく、組み合わせて使うのが実務の基本</strong>です。行種判定（パターンB）で明細行だけに絞り、不要行除去（パターンC）でゴミ行を消し、fx_MIDB（自作関数）でフィールド分解する &horbar; この一連の流れが COBOL 帳票処理のパワークエリにおける定番パイプラインです。</p>
+<div class="pq-step-box" style="border-left-color: #66bb6a;">
+<h3 class="pq-step-title" style="color: #2e7d32; border-bottom-color: #c8e6c9;">自作関数なしでできること ＆ fx_MIDB と組み合わせて使えること（前半）</h3>
+<p><strong>パターンA</strong> &horbar; 半角のみ &rarr; Text.Middle / 列の分割（位置）</p>
+<p><strong>パターンB</strong> &horbar; 全角あり・フィールド内混在なし &rarr; Text.Middle（文字数換算）＋ if判定で行種フラグ</p>
+<p><strong>パターンC</strong> &horbar; 不要行除去・フィルダウン &rarr; フィルター / フィル下方向</p>
+<p><strong>パターンD</strong> &horbar; N行固定の縦持ち結合 &rarr; インデックス＋行ずらし ※行数固定が条件</p>
+<p><strong>パターンE</strong> &horbar; 目印（記号）がデータ中にある &rarr; Text.PositionOf + Text.Middle で相対切り出し</p>
+</div>
+<div class="pq-step-box-red">
+<h3 class="pq-step-title-red">自作関数が必要なケース（後半）</h3>
+<p><strong>1フィールド内で半角と全角が混在</strong>し、<strong>区切り文字がない</strong> &rarr; fx_MIDB（自作関数）（Text.ToBinary + Binary.Range + Text.FromBinary）</p>
+<p>一度作れば使い回し可能。一括バイナリ変換パターンで高速化も可能。前半のパターンB〜Dと組み合わせて前処理・後処理に活用。</p>
+</div>
+<div class="xdemo-note" style="margin-top: 15px;">
+<strong>📌 シリーズリンク：</strong><br>
+<strong><a href="../formula/01_article_cobol_basic.html">【完全版】MIDB切り出し・浄化・型変換</a></strong> &hellip; 固定長データの基本的な切り出しと型変換。<br>
+<strong><a href="../formula/02_article_cobol_advanced.html">【応用編】不要行の除外と横展開</a></strong> &hellip; ROWフラグによる行フィルタリング。<br>
+<strong><a href="../formula/03_article_cobol_expert.html">【超絶技巧編】ヘッダー紐付け・フィルダウン</a></strong> &hellip; 親情報のフィルダウンとMIDB分解パイプライン。<br>
+<strong><a href="../formula/04_article_cobol_irregular.html">【不規則明細・完結編】行数バラバラの正規化</a></strong> &hellip; 不規則明細とマルチラインレコード。<br>
+<strong><a href="01_article_cobol_pq.html">【パワークエリ編】不要行除去と一括結合</a></strong> &hellip; MIDBの壁と越えた後の優位性。関数との使い分け。<br>
+<strong><a href="02_article_cobol_pq3.html">【参考資料】パワークエリ全テクニック（本ページ）</a></strong> &hellip; 自作関数なしでできること＋MIDB自作関数の実装。
+        </div>
+</section>
+<!-- ================================================================
+           ★★★ 参考情報 ★★★
+      ================================================================ -->
+<section class="method-section">
+<h2 style="color: #616161; border-bottom: 2px solid #bdbdbd; padding-bottom: 8px;">参考情報</h2>
+<div class="ref-box">
+<h3>参考：区切り文字がある場合 &rarr; 列の分割（区切り記号）で全角混在でもそのまま分割可能</h3>
+<p>フィールド間にカンマ、タブ、スペース連続、パイプ（|）などの区切り文字がある場合は、パワークエリの「列の分割（区切り記号）」だけで全角混在でも処理できます。バイト位置の計算自体が不要になるためです。</p>
+<div class="code-block-large"><span class="cm-comment">// 区切り文字がある場合の例（タブ区切り・全角混在）</span>
+<span class="text-blue-light">1001</span> <span style="color:#ce9178">新宿本店</span> <span style="color:#b5cea8">0050000</span> <span class="text-yellow">山田太郎</span>
+<span class="text-blue-light">1002</span> <span style="color:#ce9178">渋谷支店</span> <span style="color:#b5cea8">0120000</span> <span class="text-yellow">佐藤花子</span></div>
+<p><strong>GUI操作：</strong>[ホーム] &rarr; [列の分割] &rarr; [区切り記号による分割] &rarr; 区切り記号を選択（タブ / カンマ / スペース等）。スペース区切りの場合は「連続する区切り記号を1つとして扱う」オプションにチェックを入れると、複数スペースをまとめて処理できます。</p>
+<div class="xdemo-note-warn">
+<strong>⚠ ただしCOBOL帳票では稀なケースです：</strong><br>
+            COBOL帳票の出力は基本的に固定長でフィールドを隙間なく詰めるのが標準です。タブやカンマやパイプで区切って出力されるケースはかなり稀であり、該当するのはホスト側でCSV/TSV形式に変換された後のデータや、中間処理で区切り文字を付与して出力し直されたデータに限られます。COBOL帳票の「生データ」としてはまず見かけないため、本編のパターンには含めていません。
+          </div>
+</div>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ(Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab — 制限環境こそが最高の教師。</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

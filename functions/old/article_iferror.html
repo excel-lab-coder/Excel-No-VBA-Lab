@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>IFERROR vs IFNA の使い分け（2007～）｜Excel &times; No VBA Lab</title>
+<meta content="ExcelのIFERROR関数とIFNA関数の使い分けを解説。#N/Aだけ消してVLOOKUP・XLOOKUPのエラーを適切にハンドリング。VBA不要。" name="description">
+<meta content="IFERROR IFNA 違い, VLOOKUP エラー処理, N/A 非表示 Excel, VBA不要 エラー, Excel 関数 エラー" name="keywords">
+<meta content="IFERROR vs IFNA の使い分け（2007～）｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのIFERROR関数とIFNA関数の使い分けを解説。#N/Aだけ消してVLOOKUP・XLOOKUPのエラーを適切にハンドリング。VBA不要。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/old/article_iferror.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/old/article_iferror.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "IFERROR vs IFNA の使い分け（2007～）",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "ExcelのIFERROR関数とIFNA関数の使い分けを解説。#N/Aだけ消してVLOOKUP・XLOOKUPのエラーを適切にハンドリング。VBA不要。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-no-vba-lab.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-no-vba-lab.com/functions/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "IFERROR vs IFNA の使い分け（2007～）",
+      "item": "https://excel-no-vba-lab.com/functions/old/article_iferror.html"
+    }
+  ]
+}</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#functions">関数</a><span>&gt;</span><strong>IFERROR vs IFNA</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-2007">2007～</span></div>
+<h1 class="article-title">IFERROR vs IFNA 完全ガイド：安全なエラー処理と危険な罠</h1>
+</div>
+<!-- ===== 目次 ===== -->
+<div class="toc-box">
+<h4>📖 目次</h4>
+<ol>
+<li><a href="#goal">やりたいこと</a></li>
+<li><a href="#conclusion">結論：使い分けの原則</a></li>
+<li><a href="#errors">Excelのエラー全7種とキャッチ範囲</a></li>
+<li><a href="#syntax">構文と動作の違い</a></li>
+<li><a href="#trap">IFERRORの危険な罠（実例）</a></li>
+<li><a href="#xlookup">XLOOKUPなら IFNA すら不要？</a></li>
+<li><a href="#patterns">実務パターン集</a></li>
+<li><a href="#perf">パフォーマンス特性</a></li>
+<li><a href="#legacy">旧バージョンでの代替法</a></li>
+<li><a href="#summary">まとめ</a></li>
+</ol>
+</div>
+<!-- ===== 1. やりたいこと ===== -->
+<section class="goal-section" id="goal">
+<h2><span class="section-num">1</span> やりたいこと</h2>
+<p>VLOOKUPやXLOOKUPで見つからなかった時の #N/A エラーを消したい。でも他のエラー（数式ミスなど）は見逃したくない。</p>
+</section>
+<!-- ===== 2. 結論 ===== -->
+<section class="method-section" id="conclusion">
+<h2><span class="section-num">2</span> 結論：使い分けの原則</h2>
+<span class="code-label-good">✅ 検索関数（VLOOKUP / XLOOKUP / MATCH 等）のエラー処理</span>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFNA(VLOOKUP(A2, マスタ!A:B, 2, FALSE), "未登録")</span>
+</div>
+<p class="code-comment">#N/A だけをキャッチ。#REF! や #VALUE! などの数式ミスはそのまま表示されるため、バグに気づける。</p>
+<span class="code-label-good">✅ 除算やその他の計算のエラー処理</span>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(A1/B1, 0)</span>
+</div>
+<p class="code-comment">すべてのエラー（#DIV/0!, #VALUE! 等）をキャッチ。除算のゼロ割りなど「発生が想定される」エラーに使う。</p>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">関数</th>
+<th scope="col">キャッチするエラー</th>
+<th scope="col">主な用途</th>
+<th scope="col">バグ発見能力</th>
+</tr>
+<tr>
+<td><strong>IFNA</strong></td>
+<td class="good">#N/A のみ</td>
+<td>検索関数の「見つからない」処理</td>
+<td class="good">高い（他のエラーが見える）</td>
+</tr>
+<tr>
+<td><strong>IFERROR</strong></td>
+<td class="bad">すべてのエラー</td>
+<td>除算、型変換など広範なエラー処理</td>
+<td class="bad">低い（全エラーを握りつぶす）</td>
+</tr>
+</table></div>
+</section>
+<!-- ===== 3. エラー全7種 ===== -->
+<section class="method-section" id="errors">
+<h2><span class="section-num">3</span> Excelのエラー全7種とキャッチ範囲</h2>
+<p>IFERROR と IFNA の違いを正確に理解するには、Excelのエラーの種類を知っておく必要があります。</p>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">エラー</th>
+<th scope="col">意味</th>
+<th scope="col">よくある原因</th>
+<th scope="col">IFNA</th>
+<th scope="col">IFERROR</th>
+</tr>
+<tr>
+<td><strong>#N/A</strong></td>
+<td>値が見つからない</td>
+<td>VLOOKUP / MATCH で一致なし</td>
+<td class="catch">キャッチ</td>
+<td class="catch">キャッチ</td>
+</tr>
+<tr>
+<td><strong>#VALUE!</strong></td>
+<td>引数の型が不正</td>
+<td>数値を期待する場所に文字列</td>
+<td class="pass">スルー</td>
+<td class="catch">キャッチ</td>
+</tr>
+<tr>
+<td><strong>#REF!</strong></td>
+<td>無効な参照</td>
+<td>参照先の行・列が削除された</td>
+<td class="pass">スルー</td>
+<td class="catch">キャッチ</td>
+</tr>
+<tr>
+<td><strong>#DIV/0!</strong></td>
+<td>ゼロ除算</td>
+<td>分母がゼロまたは空白</td>
+<td class="pass">スルー</td>
+<td class="catch">キャッチ</td>
+</tr>
+<tr>
+<td><strong>#NAME?</strong></td>
+<td>関数名やラベルが不正</td>
+<td>関数名のスペルミス</td>
+<td class="pass">スルー</td>
+<td class="catch">キャッチ</td>
+</tr>
+<tr>
+<td><strong>#NUM!</strong></td>
+<td>数値が不正</td>
+<td>SQRT(-1)、IRR が収束しない</td>
+<td class="pass">スルー</td>
+<td class="catch">キャッチ</td>
+</tr>
+<tr>
+<td><strong>#NULL!</strong></td>
+<td>範囲の交差がない</td>
+<td>スペースによる交差演算子ミス</td>
+<td class="pass">スルー</td>
+<td class="catch">キャッチ</td>
+</tr>
+</table></div>
+<div class="xdemo-note">
+<strong>💡 IFNAは「#N/A だけ」を精密にキャッチする</strong><br>
+        上の表でわかるとおり、IFNA がキャッチするのは #N/A の1種類だけです。これが検索関数のエラー処理において強みになります。検索関数で「正当に」発生するエラーは #N/A（一致なし）だけであり、それ以外のエラーが出たら数式に不具合がある証拠だからです。
+      </div>
+</section>
+<!-- ===== 4. 構文と動作 ===== -->
+<section class="method-section" id="syntax">
+<h2><span class="section-num">4</span> 構文と動作の違い</h2>
+<h3>IFERROR の構文（Excel 2007～）</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(値, エラーの場合の値)</span>
+</div>
+<p class="code-comment">「値」を評価し、何らかのエラー（7種すべて）なら第2引数を返す。エラーでなければ「値」をそのまま返す。</p>
+<h3>IFNA の構文（Excel 2013～）</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFNA(値, #N/Aの場合の値)</span>
+</div>
+<p class="code-comment">「値」を評価し、#N/A エラーのときだけ第2引数を返す。#N/A 以外のエラーはそのまま表示される。</p>
+<div class="xdemo-note">
+<strong>💡 どちらも「値」を1回だけ評価する</strong><br>
+        IFERROR も IFNA も、第1引数の数式は<strong>1回だけ</strong>評価されます。エラーでなかった場合、第2引数は評価されません（遅延評価）。これは旧来の <code>IF(ISERROR(...))</code> パターンで数式を2回書く必要があったのと比べて、大きな改善です。
+      </div>
+</section>
+<!-- ===== 5. IFERRORの罠 ===== -->
+<section class="method-section" id="trap">
+<h2><span class="section-num">5</span> IFERRORの危険な罠（実例）</h2>
+<h3>シナリオ：マスタの参照範囲を誰かが壊した</h3>
+<p>VLOOKUP でマスタから商品名を引いている数式で、マスタシートのB列が誤って削除され、参照先が <code>#REF!</code> になったケースを考えます。</p>
+<span class="code-label">❌ IFERRORの場合：バグに気づけない</span>
+<div class="code-readonly">
+<span class="code-line">=IFERROR(VLOOKUP(A2, マスタ!A:B, 2, FALSE), "未登録")</span>
+<span class="code-line"></span>
+<span class="code-line">&rarr; マスタのB列が削除されて #REF! が発生</span>
+<span class="code-line">&rarr; IFERRORが #REF! もキャッチして「未登録」と表示</span>
+<span class="code-line">&rarr; 全行が「未登録」になるが、見た目上「該当なし」と区別がつかない</span>
+<span class="code-line">&rarr; バグに気づかないまま誤ったデータで作業が進む</span>
+</div>
+<span class="code-label-good">✅ IFNAの場合：バグが即座に見える</span>
+<div class="code-readonly">
+<span class="code-line">=IFNA(VLOOKUP(A2, マスタ!A:B, 2, FALSE), "未登録")</span>
+<span class="code-line"></span>
+<span class="code-line">&rarr; マスタのB列が削除されて #REF! が発生</span>
+<span class="code-line">&rarr; IFNAは #REF! をスルー &rarr; セルに #REF! がそのまま表示される</span>
+<span class="code-line">&rarr; 「何かおかしい」と即座に気づける</span>
+<span class="code-line">&rarr; 原因を調査して修正できる</span>
+</div>
+<div class="xdemo-note-red">
+<strong>🔴 これが IFERROR の最大の危険性</strong><br>
+        IFERROR は「想定外のエラー」も「想定内のエラー（#N/A）」も同じ処理をしてしまいます。数式のバグや参照の破壊が発生しても、エラーが表面に出てこないため発見が遅れます。検索関数には IFERROR ではなく <strong>IFNA</strong> を使うことで、「見つからなかった」と「数式が壊れている」を明確に区別できます。
+      </div>
+</section>
+<!-- ===== 6. XLOOKUPなら不要？ ===== -->
+<section class="method-section" id="xlookup">
+<h2><span class="section-num">6</span> XLOOKUPなら IFNA すら不要？</h2>
+<p>XLOOKUP には第4引数「見つからない場合の値」が組み込まれています。これを使えば、そもそも IFNA でラップする必要がなくなります。</p>
+<span class="code-label">❌ 従来の方法：IFNA でラップ</span>
+<div class="code-readonly">
+<span class="code-line">=IFNA(VLOOKUP(A2, マスタ!A:B, 2, FALSE), "未登録")</span>
+</div>
+<span class="code-label-good">✅ XLOOKUPなら第4引数で完結</span>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=XLOOKUP(A2, マスタ!A:A, マスタ!B:B, "未登録")</span>
+</div>
+<p class="code-comment">第4引数 <code>"未登録"</code> が IFNA と同じ役割を果たします。#N/A のときだけこの値が返り、#REF! などの数式エラーはそのまま表示されます。</p>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">方式</th>
+<th scope="col">数式の短さ</th>
+<th scope="col">バグ発見能力</th>
+<th scope="col">対応バージョン</th>
+</tr>
+<tr>
+<td>IFERROR + VLOOKUP</td>
+<td class="neutral">やや長い</td>
+<td class="bad">低い</td>
+<td>2007～</td>
+</tr>
+<tr>
+<td>IFNA + VLOOKUP</td>
+<td class="neutral">やや長い</td>
+<td class="good">高い</td>
+<td>2013～</td>
+</tr>
+<tr>
+<td>XLOOKUP（第4引数）</td>
+<td class="good">最も短い</td>
+<td class="good">高い</td>
+<td>365 / 2021～</td>
+</tr>
+</table></div>
+<div class="xdemo-note-good">
+<strong>✅ XLOOKUPが使える環境なら、IFNA は不要</strong><br>
+        XLOOKUPの第4引数は内部的に IFNA と同じ動作（#N/A のみキャッチ）をします。数式がシンプルになり、ネストも浅くなるため、可読性・保守性の両面で優れています。<br>
+&rarr; XLOOKUP基本編の詳細はこちら
+</div>
+</section>
+<!-- ===== 7. 実務パターン集 ===== -->
+<section class="method-section" id="patterns">
+<h2><span class="section-num">7</span> 実務パターン集</h2>
+<div class="scenario-box">
+<h4>パターン① VLOOKUP の「未登録」処理 &rarr; IFNA</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFNA(VLOOKUP(A2, マスタ!A:C, 2, FALSE), "未登録")</span>
+</div>
+<p>検索関数の基本パターン。#N/A だけキャッチし、数式ミスのエラーは見逃さない。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン② ゼロ割りの回避 &rarr; IFERROR</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(A2/B2, 0)</span>
+</div>
+<p>B2がゼロや空白のときの #DIV/0! を回避。除算エラーには IFERROR が適切です。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン③ フォールバック検索（正規&rarr;旧マスタ）&rarr; IFNA のネスト</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFNA(VLOOKUP(A2, 正規!A:B, 2, FALSE), IFNA(VLOOKUP(A2, 旧!A:B, 2, FALSE), "該当なし"))</span>
+</div>
+<p>正規マスタで見つからなければ旧マスタを検索し、それでも見つからなければ「該当なし」。IFNAをネストすることで、各段階の #REF! や #VALUE! はスルーされバグに気づけます。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン④ LET + IFNA で可読性を向上</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">    結果, VLOOKUP(A2, マスタ!A:D, 2, FALSE),</span>
+<span class="code-line">    単価, VLOOKUP(A2, マスタ!A:D, 3, FALSE),</span>
+<span class="code-line">    IFNA(結果 & "（" & TEXT(単価,"#,##0") & "円）", "未登録")</span>
+<span class="code-line">  )</span>
+</div>
+<p>LETで変数化した結果をまとめて IFNA でラップ。VLOOKUPのいずれかが #N/A なら「未登録」に。数式の不具合による他のエラーはそのまま表示されます。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑤ IFERROR が適切な場面：文字列&rarr;数値変換</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(VALUE(A2), 0)</span>
+</div>
+<p>ユーザー入力の文字列を数値に変換する際、変換できない文字列は #VALUE! になります。ここでは #VALUE! をキャッチしたいので IFERROR が正解です。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑥ IFERROR が適切な場面：INDEX+MATCH の範囲外アクセス</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(INDEX(C:C, MATCH("商品A", D:D, 0) + 1), "次の行なし")</span>
+</div>
+<p>MATCH結果に +1 した行番号が範囲外になると #REF! が発生する可能性があります。この場合は #N/A 以外のエラーもキャッチしたいので IFERROR が適切です。</p>
+</div>
+</section>
+<!-- ===== 8. パフォーマンス ===== -->
+<section class="method-section" id="perf">
+<h2><span class="section-num">8</span> パフォーマンス特性</h2>
+<p>IFERROR / IFNA はどちらも、第1引数がエラーでなかった場合は<strong>第2引数を評価しない</strong>（遅延評価）という重要な性質を持っています。</p>
+<div class="xdemo-note">
+<strong>💡 正常時のコスト＝ゼロ</strong><br>
+        たとえば <code>=IFNA(VLOOKUP(...), VLOOKUP(旧マスタ...))</code> と書いた場合、正規マスタで見つかれば旧マスタの VLOOKUP は一切実行されません。これは IF 関数の短絡評価と同じ仕組みです。そのため、フォールバック検索のような構成でもパフォーマンス上の問題は起きにくいです。
+      </div>
+<div class="xdemo-note-warn">
+<strong>⚠️ ただし第1引数は常に評価される</strong><br>
+<code>=IFERROR(重い計算, 0)</code> と書いた場合、「重い計算」は毎回実行されます。エラーかどうかに関わらず、第1引数のコストは常にかかります。「エラーの場合だけ計算を省略したい」という用途には使えません。
+      </div>
+</section>
+<!-- ===== 9. 旧バージョン ===== -->
+<section class="legacy-section" id="legacy">
+<h2><span class="section-num">9</span> 旧バージョンでの代替法</h2>
+<h3>Excel 2003 以前：IF + ISERROR</h3>
+<p>IFERROR が存在しない Excel 2003 以前では、以下の構文で同じことを実現していました。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(ISERROR(VLOOKUP(A2, マスタ!A:B, 2, FALSE)), "未登録", VLOOKUP(A2, マスタ!A:B, 2, FALSE))</span>
+</div>
+<p class="code-comment">致命的な欠点：VLOOKUPを<strong>2回書く（2回計算する）</strong>必要がある。10万行のマスタならVLOOKUPの実行回数が2倍に。</p>
+<h3>Excel 2007〜2010：IFERROR はあるが IFNA がない</h3>
+<p>IFNA は Excel 2013 から追加された関数です。2007〜2010 では IFERROR しか使えないため、#N/A だけをキャッチしたい場合は次のように書く必要がありました。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(ISNA(VLOOKUP(A2, マスタ!A:B, 2, FALSE)), "未登録", VLOOKUP(A2, マスタ!A:B, 2, FALSE))</span>
+</div>
+<p class="code-comment">ISNA で #N/A だけを判定するが、VLOOKUPが2回走る欠点は同じ。LET 関数もないため回避策がない。</p>
+<div class="xdemo-note">
+<strong>💡 2013以降なら IFNA が使える</strong><br>
+        Excel 2013 以降の環境であれば IFNA が利用可能です。VLOOKUPの記述が1回で済み、#N/A だけをキャッチできるため、旧来の IF+ISNA パターンの完全な上位互換です。
+      </div>
+</section>
+<!-- ===== 10. まとめ ===== -->
+<section class="goal-section" id="summary">
+<h2><span class="section-num">10</span> まとめ</h2>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">場面</th>
+<th scope="col">最適な手法</th>
+<th scope="col">理由</th>
+</tr>
+<tr>
+<td>VLOOKUP / MATCH の「見つからない」処理</td>
+<td class="good">IFNA</td>
+<td>#N/A だけキャッチ。数式バグはそのまま表示</td>
+</tr>
+<tr>
+<td>XLOOKUP の「見つからない」処理</td>
+<td class="good">第4引数を使う（IFNA不要）</td>
+<td>数式がシンプル。内部的に IFNA と同等の動作</td>
+</tr>
+<tr>
+<td>除算（ゼロ割り回避）</td>
+<td class="good">IFERROR</td>
+<td>#DIV/0! をキャッチ。想定されるエラー種が #N/A 以外</td>
+</tr>
+<tr>
+<td>文字列&rarr;数値変換の失敗処理</td>
+<td class="good">IFERROR</td>
+<td>#VALUE! をキャッチしたい場面</td>
+</tr>
+<tr>
+<td>INDEX+MATCH の行オフセット</td>
+<td class="good">IFERROR</td>
+<td>範囲外で #REF! が出る可能性。#N/A 以外もキャッチが必要</td>
+</tr>
+<tr>
+<td>フォールバック検索（正規&rarr;旧マスタ）</td>
+<td class="good">IFNA のネスト</td>
+<td>各段階で #N/A だけをキャッチし、次の検索に進む</td>
+</tr>
+</table></div>
+<div class="xdemo-note-good">
+<strong>✅ 覚えておくべき原則</strong><br>
+        ① <strong>検索関数には IFNA</strong>、<strong>計算処理には IFERROR</strong> &boxh;&boxh; これが基本の使い分け。<br>
+        ② IFERROR は「全エラーを握りつぶす」のでバグを隠す危険がある。安易な使用は避ける。<br>
+        ③ XLOOKUPが使える環境なら、第4引数で IFNA 自体を省略できる。<br>
+        ④ IFERROR / IFNA は遅延評価。第1引数が正常なら第2引数は実行されない。
+      </div>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../latest/article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
+<li><a href="../latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+<li><a href="../latest/article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
+<li><a href="../latest/article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+

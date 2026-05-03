@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>【保存版】ユーザー定義の表示形式＆TEXT関数 逆引き一覧｜Excel &times; No VBA Lab</title>
+<meta content="Excelのユーザー定義表示形式とTEXT関数の書式コードを逆引き一覧で解説。日付・時刻・数値・文字の表示カスタマイズに役立つ保存版。" name="description">
+<meta content="ユーザー定義 表示形式, TEXT 関数 書式, Excel 表示形式 コード一覧, 日付 数値 書式, VBA不要" name="keywords">
+<meta content="【保存版】ユーザー定義の表示形式＆TEXT関数 逆引き一覧｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Excelのユーザー定義表示形式とTEXT関数の書式コードを逆引き一覧で解説。日付・時刻・数値・文字の表示カスタマイズに役立つ保存版。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/others/misc/article_format.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    /* ===== 固有スタイル ===== */
+    .format-table th:nth-child(1) { width: 35%; }
+    .format-table th:nth-child(2) { width: 30%; }
+    .format-table th:nth-child(3) { width: 35%; }
+  </style>
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"✨ 【保存版】ユーザー定義の表示形式 ＆ TEXT関数で使える書式コード逆引き一覧","description":"Excelのユーザー定義表示形式とTEXT関数の書式コードを逆引き一覧で解説。日付・時刻・数値・文字の表示カスタマイズに役立つ保存版。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/others/misc/article_format.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span>
+<a href="../../index.html#others">小技</a><span>&gt;</span>
+<strong>ユーザー定義の表示形式＆TEXT関数 一覧</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">✨ 【保存版】ユーザー定義の表示形式 ＆ TEXT関数で使える書式コード逆引き一覧</h1>
+</div>
+<!-- =========================================================
+         導入：書式設定とTEXT関数の違い
+      ========================================================= -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> ユーザー定義（見た目）と TEXT関数（データ化）は同じ言葉で動く</h2>
+<p>Excelにおける「表示形式のコード（<code>#,##0</code> や <code>yyyy/mm/dd</code> など）」は、実は以下の2つの機能で**全く同じ記法**として使い回すことができます。</p>
+<div class="step-box" style="display:flex; gap: 20px; background: transparent; border: none; padding: 0;">
+<div style="flex: 1; background:#f5f8ff; border: 1px solid #c5cae9; padding: 15px; border-radius: 6px;">
+<h4 style="margin-top:0; color:#1565c0;">① セルの書式設定（Ctrl+1）</h4>
+<p style="font-size: 0.9em;">セルを右クリック &rarr; [セルの書式設定] &rarr; [ユーザー定義] にコードを入力。<br>
+<strong>データの中身（数値や日付）はそのまま</strong>で、画面上の「見た目だけ」をお化粧して変える方法。</p>
+</div>
+<div style="flex: 1; background:#fff8e1; border: 1px solid #ffe082; padding: 15px; border-radius: 6px;">
+<h4 style="margin-top:0; color:#f57f17;">② TEXT関数でデータ化</h4>
+<p style="font-size: 0.9em;"><code>=TEXT(A1, "yyyy/mm/dd")</code> のように関数内にコードを指定。<br>
+            見た目ではなく、<strong>中身を完全に「指定した形式の文字列データ」に変換</strong>してしまう方法。文字結合（&）や書き出し時に必須。</p>
+</div>
+</div>
+<p style="margin-top:20px;">この法則さえ覚えておけば、以下のほぼ全ての書式を「書式設定」と「TEXT関数」の両方で自由自在に操ることができます。<br>
+        実務で頻出する神書式をシチュエーション別に一挙公開します。</p>
+</section>
+<!-- =========================================================
+         【1】数値・金額の表示形式
+      ========================================================= -->
+<section class="method-section">
+<h2>【1】数値・金額を一瞬で整える書式コード</h2>
+<table class="format-table">
+<tr>
+<th>やりたいこと</th>
+<th>書式記号コード</th>
+<th>TEXT関数での書き方（実践例）</th>
+</tr>
+<tr>
+<td>桁区切りのカンマを入れる</td>
+<td><span class="font-105">#,##0</span></td>
+<td><code>=TEXT(A1, "#,##0")</code><br><span class="color-666-small">👉 1500000 が "1,500,000" になる</span></td>
+</tr>
+<tr>
+<td>後ろに特定の文字（円、個など）を付ける</td>
+<td><span class="font-105">#,##0"円"</span></td>
+<td><code>=TEXT(A1, "#,##0""円""")</code> または<br><code>=TEXT(A1, "#,##0") & "円"</code><br><span class="color-666-small">👉 "1,200円"になる（※&で繋ぐのが簡単です）</span></td>
+</tr>
+<tr>
+<td>常に指定桁数にする（ゼロ埋め）<br><span style="font-size: 0.8em;">※社員番号や口座番号の結合で必須</span></td>
+<td><span class="font-105">0000000</span></td>
+<td><code>="社員ID：" & TEXT(A1, "0000000")</code><br><span class="color-666-small">👉 "社員ID：0015024" になる</span></td>
+</tr>
+<tr>
+<td>小数点第1位まで絶対表示する</td>
+<td><span class="font-105">0.0</span></td>
+<td><code>=TEXT(A1, "0.0")</code><br><span class="color-666-small">👉 15 が "15.0" になる</span></td>
+</tr>
+<tr>
+<td>千円単位で表示する（下3桁を省略）</td>
+<td><span class="font-105">#,##0,</span></td>
+<td><code>=TEXT(A1, "#,##0,") & "千円"</code><br><span class="color-666-small">👉 1500000 が "1,500千円" になる</span></td>
+</tr>
+<tr>
+<td>百万円単位で表示する（下6桁を省略）</td>
+<td><span class="font-105">#,##0,,</span></td>
+<td><code>=TEXT(A1, "#,##0,,") & "百万円"</code><br><span class="color-666-small">👉 15000000 が "15百万円" になる</span></td>
+</tr>
+</table>
+</section>
+<!-- =========================================================
+         【2】日付・曜日の表示形式
+      ========================================================= -->
+<section class="method-section">
+<h2>【2】日付・時刻・曜日を自在に操る神コード</h2>
+<table class="format-table">
+<tr>
+<th>やりたいこと</th>
+<th>書式記号コード</th>
+<th>TEXT関数での書き方（実践例）</th>
+</tr>
+<tr>
+<td>西暦でゼロ埋めスラッシュ（一番標準）</td>
+<td><span class="font-105">yyyy/mm/dd</span></td>
+<td><code>=TEXT(A1, "yyyy/mm/dd")</code><br><span class="color-666-small">👉 "2026/03/05"</span></td>
+</tr>
+<tr>
+<td>年を省略し、ゼロ埋めもしない</td>
+<td><span class="font-105">m/d</span></td>
+<td><code>=TEXT(A1, "m/d")</code><br><span class="color-666-small">👉 "3/5"</span></td>
+</tr>
+<tr>
+<td>和暦（令和〇年〇月〇日）で表示する</td>
+<td><span class="font-105">ggge"年"m"月"d"日"</span></td>
+<td><code>=TEXT(A1, "ggge""年""m""月""d""日""")</code><br><span class="color-666-small">👉 "令和8年3月18日"</span></td>
+</tr>
+<tr>
+<td>和暦の頭文字アルファベット（R, H, S等）</td>
+<td><span class="font-105">g</span></td>
+<td><code>=TEXT(A1, "g") & TEXT(A1, "e") & "年度"</code><br><span class="color-666-small">👉 "R8年度" （年号の計算に超便利です）</span></td>
+</tr>
+<tr>
+<td>曜日を1文字で出す（月, 火, 水&hellip;）</td>
+<td><span class="font-105">aaa</span></td>
+<td><code>=TEXT(A1, "aaa")</code><br><span class="color-666-small">👉 "水"</span></td>
+</tr>
+<tr>
+<td>曜日をフルで出す（水曜日&hellip;）</td>
+<td><span class="font-105">aaaa</span></td>
+<td><code>=TEXT(A1, "aaaa")</code><br><span class="color-666-small">👉 "水曜日"</span></td>
+</tr>
+<tr>
+<td>日付と曜日をカッコ付きでまとめる<br><span style="font-size: 0.8em;">※文章中の埋め込みで一番よく使います</span></td>
+<td><span class="font-105">yyyy/mm/dd (aaa)</span></td>
+<td><code>="作業日は " & TEXT(A1, "yyyy/mm/dd (aaa)") & " です"</code><br><span class="color-666-small">👉 "作業日は 2026/03/18 (水) です"</span></td>
+</tr>
+<tr>
+<td>時間・分・秒を表示する</td>
+<td><span class="font-105">h:mm:ss</span></td>
+<td><code>=TEXT(A1, "h:mm:ss")</code><br><span class="color-666-small">👉 "9:05:00"</span></td>
+</tr>
+<tr>
+<td>24時間を超える時間を集計する</td>
+<td><span class="font-105">[h]:mm</span></td>
+<td><code>="総労働時間は " & TEXT(A1, "[h]:mm")</code><br><span class="color-666-small">👉 "総労働時間は 25:30"（[h]がないと1:30にリセットされる）</span></td>
+</tr>
+</table>
+<div class="code-block" data-lang="excel" style="margin-top: 20px;">
+<span class="code-line">👨&zwj;💻 実務で頻出する TEXT関数による「日付の文字化」</span>
+<span class="code-line">="本日の作業日は " & TEXT(TODAY(), "yyyy/mm/dd (aaa)") & " です"</span>
+<span class="code-line">👉 "本日の作業日は 2026/03/18 (水) です"</span>
+</div>
+<div class="xdemo-note-good" style="margin-top: 15px;">
+<h4 style="margin: 0 0 5px 0; color: #388e3c;"><span class="icon">💡</span> プロの小技：TEXT関数で「IF文の条件判定」を劇的にラクにする</h4>
+<p style="margin: 0;">セルA1に生年月日（シリアル値）が入っている場合、IF文で「平成生まれかどうか」を判定しようとすると、通常は <code>DATE</code> 関数などを使って基準となる日付と大小比較しなければならず非常に面倒です。<br>
+          しかし、TEXT関数を使ってシリアル値を「和暦の頭文字（g）」だけの文字データに抽出すれば、以下のように<strong>たったこれだけの数式で一発判定</strong>できます。</p>
+<div class="code-block" data-lang="excel" style="margin-top: 10px;">
+<span class="code-line">=IF(TEXT(A1, "g")="H", "平成生まれ", "その他")</span>
+</div>
+<p style="margin: 5px 0 0 0;">これは「シリアル値という扱いづらい数値を、扱いやすく自由な文字データに変換する」というTEXT関数直結の最強の活用法です。（もちろん"S"なら昭和、"R"なら令和といった判定も自由自在です）</p>
+</div>
+</section>
+<!-- =========================================================
+         【3】文字列・その他の裏ワザ表示形式
+      ========================================================= -->
+<section class="tips-section">
+<h2>【3】文字列の操作と「完全に消す」裏ワザコード</h2>
+<table class="format-table">
+<tr>
+<th>やりたいこと</th>
+<th>書式記号コード</th>
+<th>TEXT関数での書き方（実践例）</th>
+</tr>
+<tr>
+<td>文字の後ろに自動で「様」や「御中」を付ける<br><span style="font-size: 0.8em; color: gray;">※これらは主に「書式設定」専用のテクニック</span></td>
+<td><span class="font-105">@" 様"</span></td>
+<td>TEXT関数ではなく<br><code>= A1 & " 様"</code> で文字結合<br><span class="color-666-small">👉 "田中 様"</span></td>
+</tr>
+<tr>
+<td><strong>【超裏ワザ】セルの中身を完全に非表示にする</strong><br>※VLOOKUPのキー列、パスワード入力欄などに</td>
+<td><span class="font-105">;;;</span></td>
+<td>※「セルの書式設定」に <code>;;;</code> を入力<br>👉 <strong>（画面上から完全に消えて見えなくなる）</strong></td>
+</tr>
+</table>
+<div class="xdemo-note-warn">
+          ⚠️ <strong>「;;;」の仕組み</strong><br>
+          エクセルの表示形式は基本的に <code>プラスの書式 ; マイナスの書式 ; ゼロの書式 ; 文字列の書式</code> という4つのブロックをセミコロンで区切って定義します。<br>
+          つまり、<code>;;;</code> とだけ書くと「全てにおいて表示する書式が存在しない」ことになり、データは存在するのに画面からは完全に消滅する魔法のような状態になります。
+        </div>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

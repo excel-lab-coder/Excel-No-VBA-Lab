@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="4" name="difficulty">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>【パワークエリ編】COBOL帳票データの不要行除去と一括結合｜Excel &times; No VBA Lab</title>
+<meta content="Power QueryでCOBOL帳票データの不要行を除去して一括結合する方法をGUI操作中心に解説。VBA不要・Excel 2019以降対応。" name="description">
+<meta content="パワークエリ COBOL帳票, Power Query 不要行 除去, 固定長データ パワークエリ, COBOL PQ 結合, VBA不要 帳票" name="keywords">
+<meta content="【パワークエリ編】COBOL帳票データの不要行除去と一括結合｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power QueryでCOBOL帳票データの不要行を除去して一括結合する方法をGUI操作中心に解説。VBA不要・Excel 2019以降対応。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/cobol/pq/01_article_cobol_pq.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "【パワークエリ編】COBOL帳票データの不要行除去と一括結合",
+    "description": "Power QueryでCOBOL帳票データの不要行を除去して一括結合する方法をGUI操作中心に解説。VBA不要・Excel 2019以降対応。",
+    "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-no-vba-lab.com/ogp.png"}},
+    "datePublished": "2026-03-18",
+    "dateModified": "2026-03-18"
+  }
+  </script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-no-vba-lab.com/"},
+      {"@type": "ListItem", "position": 2, "name": "COBOL帳票処理", "item": "https://excel-no-vba-lab.com/#cobol"},
+      {"@type": "ListItem", "position": 3, "name": "パワークエリ編"}
+    ]
+  }
+  </script>
+
+<style>
+/* ===== Power Query 記事共通スタイル ===== */
+.pq-step-box {
+  background: #f5fcfd;
+  border: 1px solid #b2ebf2;
+  border-left: 5px solid #00acc1;
+  padding: 18px 22px;
+  margin: 18px 0;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+.pq-step-box .pq-step-title {
+  font-size: 1.05em;
+  color: #00838f;
+  margin: 0 0 10px;
+  font-weight: 700;
+  border-bottom: 1px dashed #b2ebf2;
+  padding-bottom: 6px;
+}
+.pq-step-box-good { border-left-color: #66bb6a; background: #f1f8e9; border-color: #c5e1a5; }
+.pq-step-box-good .pq-step-title { color: #2e7d32; border-bottom-color: #c8e6c9; }
+.pq-step-box-bad { border-left-color: #ef5350; background: #ffebee; border-color: #ef9a9a; }
+.pq-step-box-bad .pq-step-title { color: #c62828; border-bottom-color: #ffcdd2; }
+
+/* パイプライン図 */
+.pipeline-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #f0f4f8;
+  border: 2px solid #b0bec5;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 18px 0 24px;
+}
+.pipeline-box .step {
+  background: #fff;
+  border: 1px solid #90a4ae;
+  color: #37474f;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.88em;
+}
+.pipeline-box .arrow {
+  color: #607d8b;
+  font-weight: 900;
+  font-size: 1.1em;
+}
+
+/* 帳票サンプル用ターミナル風コードブロック */
+.code-block-large {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 16px 20px;
+  border-radius: 6px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin: 14px 0 22px;
+  overflow-x: auto;
+  white-space: pre;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.code-block-large .text-yellow { color: #ffe082; }
+.code-block-large .text-blue-light { color: #81d4fa; }
+.code-block-large .color-808080 { color: #808080; }
+</style>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+  <div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#cobol">COBOLデータ整形</a><span>&gt;</span>
+<strong>パワークエリ編</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Excel 2016以降</span>
+<span class="badge badge-maniac">パワークエリ</span>
+<span class="badge badge-maniac">COBOL/マニアック</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">【パワークエリ編】COBOL帳票データの不要行除去と一括結合</h1>
+</div>
+<!-- ======================== 導入 ======================== -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> パワークエリが得意なこと・苦手なこと</h2>
+<p>本シリーズの<a href="../formula/01_article_cobol_basic.html">完全版</a>から<a href="../formula/04_article_cobol_irregular.html">不規則明細編</a>までは、Excel関数（MIDB・INDEX・SMALL等）を使ったパイプライン方式でCOBOL帳票を正規化してきました。</p>
+<p>「同じことをパワークエリでやればもっと簡単では？」と思う方もいるかもしれません。実際、パワークエリには関数では難しい強力な機能があります。しかし一方で、<strong>COBOL帳票の処理においてパワークエリには1つだけ決定的な壁</strong>が存在します。</p>
+<p>この記事では、その壁の正体と越え方、そしてパワークエリが本当に威力を発揮する場面を整理します。</p>
+<div class="xdemo-note-warn">
+<strong>💬 この記事の結論を先に言うと：</strong><br>
+          パワークエリにはMIDBに相当する関数がなく、これが最大の壁になります。ただし、自作関数で一度この壁を越えてしまえば、不要行の除去・ヘッダー紐付け・ファイル結合まで含めた全工程を関数パイプラインより<strong>はるかに簡潔に</strong>処理できます。
+        </div>
+</section>
+<!-- ======================== MIDBの壁 ======================== -->
+<section class="method-section">
+<h2>⚠ 最初にして最大の壁：パワークエリにMIDBがない</h2>
+<p>COBOL帳票の整形で最も重要な処理は「固定長データからバイト位置を指定して切り出す」ことです。Excel関数ではMIDBがこの役割を担いますが、パワークエリ（M言語）には<strong>バイト単位で文字列を切り出す関数が標準では存在しません</strong>。</p>
+<p>M言語の Text.Middle は文字数ベースであり、「半角＝1バイト、全角＝2バイト」というCOBOL帳票の固定長ルールに対応していません。全角文字が含まれている帳票では、切り出し位置がずれてしまいます。</p>
+<div class="xdemo-note-danger">
+<strong>⚠ なぜこれが「壁」なのか：</strong><br>
+          COBOL帳票の整形は、突き詰めると「どこからどこまでがどの項目か」をバイト位置で特定する作業です。この根幹の処理ができないということは、帳票を取り込んでも項目に分解できないことを意味します。パワークエリの他の機能がいくら優秀でも、ここが詰まるとすべてが止まります。
+        </div>
+</section>
+<!-- ======================== 壁の越え方 ======================== -->
+<section class="method-section">
+<h2>壁の越え方：M言語でMIDB相当の自作関数を作る</h2>
+<p>この壁は、M言語でバイト数を計算するカスタム関数を自作することで越えられます。1文字ずつバイト数を判定して位置を特定するロジックを一度書いてしまえば、以降はExcelのMIDBと同じ感覚で使えるようになります。</p>
+<div class="code-block">
+<span class="code-line">// M言語：MIDB相当の自作関数（イメージ）</span>
+<span class="code-line">(text as text, startByte as number, numBytes as number) as text =&gt;</span>
+<span class="code-line">let</span>
+<span class="code-line">    // 各文字のバイト数を判定（ASCII範囲なら1、それ以外は2）</span>
+<span class="code-line">    // startByteの位置から numBytes分の文字列を切り出す</span>
+<span class="code-line">    // ... （実装は帳票のエンコーディングに応じて調整）</span>
+<span class="code-line">in</span>
+<span class="code-line">    result</span>
+</div>
+<div class="xdemo-note-warn">
+<strong>💬 自作関数のハードル：</strong><br>
+          ・M言語自体がExcel関数やVBAと比べて情報が少なく、学習コストが高い。<br>
+          ・バイト数の計算にはエンコーディング（Shift_JIS等）の知識が必要になる。<br>
+          ・パワークエリの「ノーコード・ローコード」という利点は、この部分では失われる。<br><br>
+          ただし、<strong>この関数は一度作れば使い回しが効きます</strong>。最初の1回だけコードを書く必要がありますが、以降の帳票処理ではその関数を呼び出すだけで済みます。
+        </div>
+</section>
+<!-- ======================== 壁を越えた後の世界 ======================== -->
+<section class="method-section">
+<h2>💡 壁を越えた後：関数パイプラインより簡潔に処理できる</h2>
+<p>MIDB相当の自作関数を一度用意してしまえば、パワークエリはCOBOL帳票の整形において<strong>関数パイプラインよりもはるかに簡潔で効率的な手段</strong>になります。その理由を具体的に見ていきます。</p>
+<div class="pq-step-box">
+<h3 class="pq-step-title">1. 不要行の除去が一瞬で終わる</h3>
+<p>関数パイプラインでは、各行にフラグを立てて明細行を判定し、抽出シートで取り出す &horbar; という複数ステップが必要でした。パワークエリなら、<strong>列のフィルター（▼）で不要行のパターンを除外するだけ</strong>です。「===」で始まる行、「---」で始まる行、空白行&hellip;チェックを外すだけで、何万行のゴミ行も一瞬で消えます。</p>
+<div class="code-block-large">
+<span class="color-808080">=== 2026/03/18 === 売上明細レポート === PAGE 1 ===</span>
+<span class="color-808080">----------------------------------------------------</span>
+<span class="color-808080"> 店舗ID  店舗名         売上金額    担当者</span>
+<span class="color-808080">----------------------------------------------------</span>
+<span class="text-yellow"> 1001    新宿本店        0050000    山田</span>
+<span class="text-yellow"> 1002    渋谷支店        0120000    佐藤</span>
+<span class="color-808080">====================================================</span>
+<span class="color-808080">=== 2026/03/18 === 売上明細レポート === PAGE 2 ===</span>
+<span class="color-808080">----------------------------------------------------</span>
+<span class="color-808080"> 店舗ID  店舗名         売上金額    担当者</span>
+<span class="color-808080">----------------------------------------------------</span>
+<span class="text-yellow"> 1003    池袋支店        0080000    鈴木</span></div>
+<p style="margin-top: 15px;">関数版では「貼付シートにフラグ列を作る &rarr; 抽出シートでSMALL＋INDEXで明細行だけを取り出す」という工程が必要でしたが、パワークエリではフィルター操作だけで同じ結果が得られます。</p>
+</div>
+<div class="pq-step-box">
+<h3 class="pq-step-title">2. ヘッダー紐付け（フィルダウン）が標準機能で完結する</h3>
+<p>関数パイプラインで最も難易度が高かった「親情報のフィルダウン」も、パワークエリなら<strong>標準の「フィル」&rarr;「下方向」機能で一発</strong>です。</p>
+<p>ヘッダー行の値が入っている列を選択し、[変換] &rarr; [フィル] &rarr; [下方向] を押すだけで、空白セルに直上の値が自動的に埋まります。関数版で <code>=IF(MIDB(B2,1,2)="■", B2, C1)</code> と書いていた処理が、クリック操作だけで完了します。</p>
+</div>
+<div class="pq-step-box">
+<h3 class="pq-step-title">3. MIDB分解がカスタム列の追加だけで済む</h3>
+<p>自作したMIDB関数をパワークエリの「カスタム列の追加」で呼び出せば、バイト位置指定の切り出しも1ステップで完了します。しかも、関数版のように「貼付シート」と「抽出シート」を分ける必要がなく、<strong>1つのクエリの中で不要行除去 &rarr; フィルダウン &rarr; MIDB分解 &rarr; 型変換までを一気通貫で処理</strong>できます。</p>
+</div>
+<div class="pq-step-box">
+<h3 class="pq-step-title">4. 複数ファイルのフォルダ一括結合が可能</h3>
+<p>これは関数では絶対にできないパワークエリ独自の強みです。[データ] &rarr; [データの取得] &rarr; [フォルダーから] でフォルダを指定すると、<strong>何十個・何百個のテキストファイルが縦に結合された状態で取り込まれます</strong>。</p>
+<p>上記の不要行除去・フィルダウン・MIDB分解をクエリに設定しておけば、<strong>来月新しいファイルをフォルダに入れて「更新」ボタンを押すだけで、すべての整形処理が全自動で完了</strong>します。</p>
+</div>
+<div class="xdemo-note-good">
+<strong>💡 関数パイプラインとの比較：</strong><br>
+          関数版では「貼付シート（フラグ＋フィルダウン）&rarr; 抽出シート（SMALL＋INDEX）&rarr; 分解列（MIDB）」と複数シートに数式を配置する設計が必要でした。パワークエリなら、<strong>1つのクエリ内で上から順にステップを積むだけ</strong>で同じ結果が得られます。シート設計の手間がなくなり、処理の流れも視覚的に追いやすくなります。
+        </div>
+<h3 style="color: #00838f; margin-top: 25px;">パワークエリ版のパイプライン</h3>
+<div class="pipeline-box">
+<span class="step">フォルダから一括取込</span>
+<span class="arrow">&rarr;</span>
+<span class="step">フィルターで不要行除去</span>
+<span class="arrow">&rarr;</span>
+<span class="step">フィル下方向（フィルダウン）</span>
+<span class="arrow">&rarr;</span>
+<span class="step">自作MIDBで列分解</span>
+<span class="arrow">&rarr;</span>
+<span class="step">型変換・整形</span>
+</div>
+<p>関数版のパイプラインと比べると、フラグ列の設計や抽出シートの構築が不要になり、全体の工程がシンプルになっていることがわかります。さらにフォルダ一括取込により、複数ファイルの処理も同じクエリ内で完結します。</p>
+</section>
+<!-- ======================== ただしハードルは高い ======================== -->
+<section class="method-section">
+<h2>⚠ ただし「最初の壁」を越えるハードルは高い</h2>
+<p>ここまでの説明で、壁を越えた後のパワークエリの優位性は明らかです。しかし、正直に言えば<strong>その最初の壁を越えること自体が簡単ではありません</strong>。</p>
+<p>M言語でMIDB相当の関数を自作するには、M言語の文法、文字列操作関数、エンコーディングの仕組みについての理解が必要です。Excel関数やVBAの経験がある人でも、M言語は記法が独特で情報も少ないため、最初は戸惑うことが多いでしょう。</p>
+<p>また、自作関数の処理速度は標準関数より遅くなる傾向があり、数十万行の帳票ではパフォーマンスに注意が必要です。</p>
+<div class="xdemo-note-warn">
+<strong>💬 現実的な判断基準：</strong><br>
+          ・<strong>単発の帳票処理</strong>（1回きり、または年に数回） &rarr; 関数パイプラインの方が手早い。自作関数を作るコストに見合わない。<br>
+          ・<strong>定期的な帳票処理</strong>（毎月・毎週、複数ファイル） &rarr; パワークエリの自動化の恩恵が大きい。自作関数を一度作る投資に十分見合う。<br>
+          ・<strong>M言語に不慣れ</strong> &rarr; まず関数パイプラインで処理を確立し、余裕があればパワークエリへの移行を検討する。
+        </div>
+</section>
+<!-- ======================== まとめ ======================== -->
+<section class="tips-section" style="background:#fcfcfc;">
+<h2>🎯 結論：関数とパワークエリの使い分け</h2>
+<p>パワークエリにはMIDBに相当するバイト単位の切り出し関数がなく、これがCOBOL帳票処理における最大の壁です。しかし、M言語で自作関数を一度作ってしまえば、不要行除去・フィルダウン・MIDB分解・複数ファイル結合までを1つのクエリ内で完結でき、<strong>関数パイプラインよりはるかに簡潔な処理が可能</strong>になります。</p>
+<p>最初の壁を越えるコストをかけるかどうかは、処理の頻度と規模で判断してください。定期的に大量の帳票を処理する業務であれば、パワークエリへの移行は十分に元が取れます。単発の処理であれば、本シリーズの関数パイプラインで対応するのが現実的です。</p>
+<div class="pq-step-box" style="border-left-color: #66bb6a;">
+<h3 class="pq-step-title" style="color: #2e7d32; border-bottom-color: #c8e6c9;">パワークエリが有利な場面</h3>
+<p><strong>定期的・反復的な帳票処理</strong> &horbar; 「更新」ボタンで全自動化できる。</p>
+<p><strong>複数ファイルの一括結合</strong> &horbar; フォルダ指定だけで数百ファイルを統合。関数では不可能。</p>
+<p><strong>不要行の除去</strong> &horbar; フィルター操作だけで完了。フラグ列の設計が不要。</p>
+<p><strong>フィルダウン</strong> &horbar; 標準機能でクリック一発。数式を書く必要がない。</p>
+</div>
+<div class="pq-step-box" style="border-left-color: #ef5350;">
+<h3 class="pq-step-title" style="color: #c62828; border-bottom-color: #ffcdd2;">関数パイプラインが有利な場面</h3>
+<p><strong>単発・少頻度の帳票処理</strong> &horbar; 自作関数を作るコストをかけずにすぐ処理できる。</p>
+<p><strong>MIDBをそのまま使える安心感</strong> &horbar; バイト位置の切り出しが標準関数で確実に動く。</p>
+<p><strong>M言語の学習コストを避けたい場合</strong> &horbar; Excel関数の知識だけで完結する。</p>
+</div>
+<div class="xdemo-note-good" style="margin-top: 20px;">
+<strong>💡 どちらから始めるべきか：</strong><br>
+          M言語に慣れていない方は、まず本シリーズの関数パイプライン（<a href="#">完全版</a>～不規則明細編）で処理の考え方を身につけることをお勧めします。パイプラインの設計思想（フラグ &rarr; フィルダウン &rarr; 抽出 &rarr; 分解）は、パワークエリに移行しても全く同じ考え方が使えます。関数で処理の流れを理解してからパワークエリに移行すると、何をどの順序で処理すべきかが明確なため、M言語の習得もスムーズになります。
+        </div>
+<div class="xdemo-note" style="margin-top: 15px;">
+<strong>📌 シリーズリンク：</strong><br>
+<strong><a href="../formula/01_article_cobol_basic.html">【完全版】MIDB切り出し・浄化・型変換</a></strong> &hellip; 固定長データの基本的な切り出しと型変換。<br>
+<strong><a href="../formula/02_article_cobol_advanced.html">【応用編】不要行の除外と横展開</a></strong> &hellip; ROWフラグによる行フィルタリング。<br>
+<strong><a href="../formula/03_article_cobol_expert.html">【超絶技巧編】ヘッダー紐付け・フィルダウン</a></strong> &hellip; 親情報のフィルダウンとMIDB分解パイプライン。<br>
+<strong><a href="../formula/04_article_cobol_irregular.html">【不規則明細・完結編】行数バラバラの正規化</a></strong> &hellip; 不規則明細とマルチラインレコード。<br>
+<strong><a href="01_article_cobol_pq.html">【パワークエリ編】不要行除去と一括結合（本ページ）</a></strong> &hellip; MIDBの壁と越えた後の優位性。関数との使い分け。
+        </div>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ(Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab — 制限環境こそが最高の教師。</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

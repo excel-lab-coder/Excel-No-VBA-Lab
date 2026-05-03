@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="Power Queryでデータを取り込んだ直後に行う5つの定番操作（ヘッダー昇格・列の削除・列名変更・データ型変換・不要行の削除）を、ストーリー形式で丁寧に解説します。" name="description">
+<meta content="パワークエリ, Power Query, Excel パワークエリ, VBA不要, Excel実務" name="keywords">
+<meta content="取り込んだ直後にやる5つの定番操作｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power Queryでデータを取り込んだ直後に行う5つの定番操作（ヘッダー昇格・列の削除・列名変更・データ型変換・不要行の削除）を、ストーリー形式で丁寧に解説します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/basic/article_pq_first_steps.html" rel="canonical">
+<title>取り込んだ直後にやる5つの定番操作｜Excel &times; No VBA Lab</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"取り込んだ直後にやる5つの定番操作","description":"Power Queryでデータを取り込んだ直後に行う5つの定番操作（ヘッダー昇格・列の削除・列名変更・データ型変換・不要行の削除）を、ストーリー形式で丁寧に解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/basic/article_pq_first_steps.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>取り込み直後の5操作</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">取り込んだ直後にやる5つの定番操作</h1>
+</div>
+<!-- ============================== -->
+<section id="goal">
+<h2>このページのゴール</h2>
+<p>CSVやExcelファイルをPower Queryに取り込んだ直後に、毎回ほぼ必ず行う5つの操作を身につけます。この「取り込み直後ルーティン」を覚えるだけで、Power Queryの作業全体がスムーズになります。</p>
+</section>
+<!-- ============================== -->
+<section id="overview">
+<h2>5つの操作の全体像</h2>
+<div class="flow-box">
+<strong>① ヘッダー昇格</strong> <span>&rarr;</span>
+<strong>② 不要列の削除</strong> <span>&rarr;</span>
+<strong>③ 列名の変更</strong> <span>&rarr;</span>
+<strong>④ データ型の設定</strong> <span>&rarr;</span>
+<strong>⑤ 不要行の削除</strong>
+</div>
+<p>この順番には理由があります。ヘッダーが正しくないと列名で操作できないため最初に直し、列を減らしてから名前を変え、型を設定し、最後にデータ行を整理します。一つずつ見ていきましょう。</p>
+</section>
+<!-- ============================== -->
+<section id="sample-data">
+<h2>サンプルデータ &horbar; こんなデータを想定します</h2>
+<p>たとえば社内システムからエクスポートしたCSVを取り込んだら、こんな状態だったとします。</p>
+<table class="ba-table">
+<thead><tr><th>Column1</th><th>Column2</th><th>Column3</th><th>Column4</th><th>Column5</th><th>Column6</th></tr></thead>
+<tbody>
+<tr><td>出力日：2026/03/20</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td></tr>
+<tr><td>社員番号</td><td>氏名</td><td>部署コード</td><td>部署名</td><td>入社日</td><td>基本給</td></tr>
+<tr><td>001</td><td>　田中 太郎　</td><td>A10</td><td>営業部</td><td>2020/04/01</td><td>280000</td></tr>
+<tr><td>002</td><td>佐藤　花子</td><td>B20</td><td>経理部</td><td>2018/07/15</td><td>310000</td></tr>
+</tbody>
+</table>
+<p>問題点は明らかです。1行目に「出力日」の余計な行があり、ヘッダーがColumn1〜Column6のまま、列名が2行目にある、社員番号が先頭ゼロ付きのコード、氏名に余計な空白が含まれている&hellip;。これをきれいに整えていきます。</p>
+</section>
+<!-- ============================== -->
+<section id="step1">
+<h2>ステップ① 1行目をヘッダーにする（ヘッダー昇格）</h2>
+<p>取り込んだデータのヘッダーがColumn1, Column2&hellip;になっている場合、本来のヘッダー行をヘッダーとして昇格させる必要があります。しかし今回のサンプルのように1行目に余計なデータがある場合は、まずその行を削除する必要があります。</p>
+<div class="step-box">
+<h4>操作手順（不要な先頭行がある場合）</h4>
+<p>1. <strong>ホーム タブ &rarr; 行の削除 &rarr; 上位の行の削除</strong> をクリックします。<br>
+          2. 「行数」に <strong>1</strong> を入力して「OK」をクリックします。これで「出力日：&hellip;」の行が消えます。<br>
+          3. 次に <strong>ホーム タブ &rarr; 「1行目をヘッダーとして使用」</strong> をクリックします。<br>
+          4. Column1〜Column6 が「社員番号」「氏名」&hellip;に変わります。</p>
+</div>
+<p>もし最初から1行目に正しいヘッダーがある場合は、手順3だけでOKです。Power Queryは取り込み時にヘッダーを自動認識することも多いですが、うまくいかない場合はこの操作を使います。</p>
+<div class="tip-box">
+<strong>逆操作：ヘッダーを1行目に戻す</strong><br>
+          間違えてヘッダー昇格してしまった場合や、データ加工のためにヘッダーを一旦データ行に戻したい場合は、<strong>変換タブ &rarr; 「ヘッダーを1行目として使用」</strong>で元に戻せます。
+        </div>
+</section>
+<!-- ============================== -->
+<section id="step2">
+<h2>ステップ② 不要な列を削除する</h2>
+<p>たとえば「部署コード」は分析に使わないので削除したい、というケースです。列の削除には2つの方法があり、どちらを選ぶかで将来の保守性が大きく変わります。</p>
+<h3>方法A：「列の削除」&horbar; 指定した列を消す</h3>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. 削除したい列のヘッダーをクリックして選択します（複数列は Ctrl+クリック）。<br>
+          2. <strong>ホーム タブ &rarr; 列の削除 &rarr; 列の削除</strong> をクリックします。<br>
+          3. 選択した列が消えます。</p>
+</div>
+<h3>方法B：「他の列の削除」&horbar; 残したい列以外すべて消す</h3>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. <strong>残したい</strong>列のヘッダーをクリックして選択します（複数列は Ctrl+クリック）。<br>
+          2. <strong>ホーム タブ &rarr; 列の削除 &rarr; 他の列の削除</strong> をクリックします。<br>
+          3. 選択した列だけが残り、それ以外がすべて消えます。</p>
+</div>
+<div class="tip-box">
+<strong>実務では「他の列の削除」を強くおすすめ</strong><br>
+          元データに将来新しい列が追加されても、「他の列の削除」なら<strong>必要な列だけを明示的に指定している</strong>ため、新しい列が勝手に紛れ込みません。「列の削除」だと、知らないうちに不要な列がクエリに残り続けるリスクがあります。Power Queryの長期運用では、「残すものを指定する」思考が鉄則です。
+        </div>
+<h3>Before / After</h3>
+<div class="before-after">
+<div>
+<p><strong>Before（6列）</strong></p>
+<table>
+<thead><tr><th>社員番号</th><th>氏名</th><th>部署コード</th><th>部署名</th><th>入社日</th><th>基本給</th></tr></thead>
+<tbody><tr><td>001</td><td>田中 太郎</td><td>A10</td><td>営業部</td><td>2020/04/01</td><td>280000</td></tr></tbody>
+</table>
+</div>
+<div>
+<p><strong>After（4列 &horbar; 部署コード・部署名を除外）</strong></p>
+<table>
+<thead><tr><th>社員番号</th><th>氏名</th><th>入社日</th><th>基本給</th></tr></thead>
+<tbody><tr><td>001</td><td>田中 太郎</td><td>2020/04/01</td><td>280000</td></tr></tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- ============================== -->
+<section id="step3">
+<h2>ステップ③ 列名を変更する</h2>
+<p>システム出力のデータは「EMP_NO」のような英語の列名や、長すぎる列名になっていることがあります。Power Queryでの作業効率と、最終出力の見やすさのために、わかりやすい列名に変更しましょう。</p>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. 列のヘッダーを<strong>ダブルクリック</strong>します。<br>
+          2. 編集モードになるので、新しい列名を入力します。<br>
+          3. Enterキーで確定します。<br>
+          ※右クリック &rarr;「名前の変更」でも同じことができます。</p>
+</div>
+<div class="warning-box">
+<strong>列名変更は1つのステップにまとめるのがベスト</strong><br>
+          列名を1つずつ変更すると、変更のたびに新しいステップが追加されます。複数列の名前を変えたい場合は、<strong>最初の列名を変更した直後に（他の操作を挟まずに）続けて残りの列名も変更</strong>すると、Power Queryが自動的に1つのステップにまとめてくれます。ステップが増えすぎるのを防げます。
+        </div>
+</section>
+<!-- ============================== -->
+<section id="step4">
+<h2>ステップ④ データ型を正しく設定する</h2>
+<p>Power Queryは取り込み時にデータ型を自動推定しますが、これが正しくないことがよくあります。特に「日付がテキストになっている」「先頭ゼロの社員番号が数値として認識されてゼロが消える」は頻出トラブルです。</p>
+<h3>データ型を変更する4つの方法</h3>
+<table class="icon-table">
+<thead><tr><th>方法</th><th>操作</th><th>特徴</th></tr></thead>
+<tbody>
+<tr>
+<td><strong>A. アイコンクリック</strong></td>
+<td>列ヘッダー左のデータ型アイコン（ABCや123）をクリック &rarr; 表示されるリストから型を選択</td>
+<td>最も手軽。1列ずつ変更するときに便利。</td>
+</tr>
+<tr>
+<td><strong>B. ホームタブ</strong></td>
+<td>列を選択 &rarr; ホーム タブ &rarr;「データ型」ドロップダウンから選択</td>
+<td>複数列を選択してまとめて変更したいときに。</td>
+</tr>
+<tr>
+<td><strong>C. 右クリック</strong></td>
+<td>列ヘッダーを右クリック &rarr;「型の変更」&rarr; 型を選択</td>
+<td>マウスを動かす距離が少ない。</td>
+</tr>
+<tr>
+<td><strong>D. 自動検出</strong></td>
+<td>変換タブ &rarr;「データ型の検出」</td>
+<td>全列を一括で自動推定。ただし結果を必ず確認すること。</td>
+</tr>
+</tbody>
+</table>
+<h3>「ステップを置き換えますか？」ダイアログの対処</h3>
+<p>型変更をすると「現在のステップを変更しますか、それとも新しいステップを追加しますか？」というダイアログが出ることがあります。これは直前にも型変更ステップがある場合に表示されます。</p>
+<p><strong>「現在のステップを置換」</strong>を選ぶと、直前の型変更と今回の型変更が1つのステップにまとまります。<strong>「新しいステップの挿入」</strong>を選ぶと、別々のステップとして残ります。通常は<strong>「現在のステップを置換」</strong>を選んで、型変更を1ステップにまとめるのがすっきりします。</p>
+<h3>先頭ゼロ付きコードを守る</h3>
+<p>「001」「002」のような社員番号やJANコードは、整数型にすると「1」「2」になってゼロが消えます。こうしたコード列は<strong>必ずテキスト型（ABC）を指定</strong>してください。自動検出で数値にされていないか、取り込み直後に確認することが重要です。</p>
+<div class="warning-box">
+<strong>日付のロケール問題</strong><br>
+          「03/04/2026」は日本では3月4日ですが、アメリカ形式では4月3日と解釈されます。型変更で「日付」を選んでもうまくいかない場合は、<strong>型アイコンをクリック &rarr;「ロケールを使用&hellip;」&rarr; 日本語（日本）を選択</strong>してください。
+        </div>
+</section>
+<!-- ============================== -->
+<section id="step5">
+<h2>ステップ⑤ 不要な行を削除する</h2>
+<p>先頭の説明行（ステップ①で対処済み）以外にも、末尾の合計行や、途中の空白行・エラー行を取り除く必要があることがあります。</p>
+<h3>末尾の合計行を削除する</h3>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. <strong>ホーム タブ &rarr; 行の削除 &rarr; 下位の行の削除</strong> をクリックします。<br>
+          2. 「行数」に削除したい行数（合計行が1行なら「1」）を入力して「OK」。</p>
+</div>
+<h3>エラー行を削除する</h3>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. エラーのある列のヘッダーをクリックして選択します。<br>
+          2. <strong>ホーム タブ &rarr; 行の削除 &rarr; エラーの削除</strong> をクリックします。<br>
+          3. その列にエラーが含まれる行がすべて削除されます。</p>
+</div>
+<h3>null・空白行を削除する</h3>
+<div class="step-box">
+<h4>操作手順（フィルターを使う方法）</h4>
+<p>1. 基準となる列（社員番号など、必ず値があるべき列）のヘッダーのドロップダウン矢印をクリックします。<br>
+          2. フィルターの一覧で <strong>「null」のチェックを外す</strong>、または<strong>「空の削除」</strong>をクリックします。<br>
+          3. nullや空白の行が非表示になります。</p>
+</div>
+<div class="tip-box">
+<strong>「null」と「空白（空文字列）」は別物</strong><br>
+          Power Queryでは、セルに何も入っていない状態（null）と、長さゼロの文字列（""、空文字列）は区別されます。フィルターで null を外しても空文字列は残ります。両方削除したい場合は、<strong>まず値の置換で "" を null に変換してから</strong>フィルターする方法が確実です。
+        </div>
+</section>
+<!-- ============================== -->
+<section id="practice">
+<h2>実践例 &horbar; 5つをつなげてやってみる</h2>
+<p>サンプルデータに5つの操作を順番に適用した結果がこちらです。</p>
+<div class="before-after">
+<div>
+<p><strong>Before（取り込み直後）</strong></p>
+<table>
+<thead><tr><th>Column1</th><th>Column2</th><th>Column3</th><th>Column4</th><th>Column5</th><th>Column6</th></tr></thead>
+<tbody>
+<tr><td>出力日：2026/03/20</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td></tr>
+<tr><td>社員番号</td><td>氏名</td><td>部署コード</td><td>部署名</td><td>入社日</td><td>基本給</td></tr>
+<tr><td>001</td><td>　田中 太郎　</td><td>A10</td><td>営業部</td><td>2020/04/01</td><td>280000</td></tr>
+<tr><td>002</td><td>佐藤　花子</td><td>B20</td><td>経理部</td><td>2018/07/15</td><td>310000</td></tr>
+</tbody>
+</table>
+</div>
+<div>
+<p><strong>After（5操作完了後）</strong></p>
+<table>
+<thead><tr><th>社員番号(テキスト)</th><th>氏名(テキスト)</th><th>入社日(日付)</th><th>基本給(整数)</th></tr></thead>
+<tbody>
+<tr><td>001</td><td>　田中 太郎　</td><td>2020/04/01</td><td>280000</td></tr>
+<tr><td>002</td><td>佐藤　花子</td><td>2018/07/15</td><td>310000</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>適用したステップ一覧は次のようになっています：ソース &rarr; 上位の行の削除 &rarr; 1行目をヘッダーとして使用 &rarr; 他の列の削除 &rarr; 名前の変更 &rarr; 変更された型。計6ステップで、データが使える状態に整いました。なお氏名の余計な空白（全角スペース等）は、次のページ「テキスト列を整形する」で処理します。</p>
+</section>
+<!-- ============================== -->
+<section id="summary">
+<h2>まとめ</h2>
+<p>データを取り込んだ直後に行う5つの操作は、Power Queryでの作業の「準備運動」です。ここをきちんと行うかどうかで、後続の変換作業の効率がまったく変わります。特に覚えておいてほしいのは、<strong>列の削除は「他の列の削除」を使う</strong>こと、<strong>先頭ゼロのあるコード列は必ずテキスト型にする</strong>こと、<strong>型変更のステップは1つにまとめる</strong>ことの3点です。この5操作をルーティンとして体に覚え込ませたら、次のステップ「テキスト列の整形」に進みましょう。</p>
+</section>
+<!-- ============================== -->
+<nav class="nav-series">
+<strong>パワークエリ GUIマスターシリーズ</strong>
+<a href="article_powerquery_intro.html">⓪ パワークエリとは</a>
+<a href="article_pq_editor_ui.html">① エディターの画面構成と「適用したステップ」</a>
+<a class="current" href="article_pq_first_steps.html">② 取り込んだ直後にやる5つの定番操作（このページ）</a>
+<a href="../advanced/article_pq_text_operations.html">③ テキスト列を整形する</a>
+<a href="../advanced/article_pq_row_operations.html">④ 行を操る &horbar; フィルター・並べ替え・重複削除・フィル</a>
+<a href="../advanced/article_pq_add_columns.html">⑤ 新しい列を作る &horbar; 条件列・インデックス・カスタム列</a>
+<a href="../advanced/article_pq_number_date.html">⑥ 数値と日付を扱う</a>
+</nav>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+

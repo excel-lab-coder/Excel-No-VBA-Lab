@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="Power Queryのデータ取り込みパターン（CSV・Excelブック・PDF・Webページ・フォルダ一括）をGUI操作で丁寧に解説。文字化け対策やフォルダ結合の仕組みも詳説。" name="description">
+<meta content="パワークエリ, Power Query, Excel パワークエリ, VBA不要, Excel実務" name="keywords">
+<meta content="データ取り込みパターン集 &horbar; CSV・Excel・PDF・Web・フォルダ｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power Queryのデータ取り込みパターン（CSV・Excelブック・PDF・Webページ・フォルダ一括）をGUI操作で丁寧に解説。文字化け対策やフォルダ結合の仕組みも詳説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/advanced/article_pq_import_patterns.html" rel="canonical">
+<title>データ取り込みパターン集 &horbar; CSV・Excel・PDF・Web・フォルダ｜Excel &times; No VBA Lab</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"データ取り込みパターン集 \u0026horbar; CSV・Excel・PDF・Web・フォルダ","description":"Power Queryのデータ取り込みパターン（CSV・Excelブック・PDF・Webページ・フォルダ一括）をGUI操作で丁寧に解説。文字化け対策やフォルダ結合の仕組みも詳説。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/advanced/article_pq_import_patterns.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>データ取り込みパターン集</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">データ取り込みパターン集 &horbar; CSV・Excel・PDF・Web・フォルダ</h1>
+</div>
+<section id="goal"><h2>このページのゴール</h2><p>Power Queryで頻出するデータソース5種類について、GUIの手順と注意点を網羅し、「何を取り込むときにどのメニューを選べばよいか」を迷わなくなることです。</p></section>
+<!-- ==================== CSV ==================== -->
+<section id="csv">
+<h2>CSVファイルの取り込み</h2>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. <strong>データ タブ &rarr; データの取得 &rarr; ファイルから &rarr; テキストまたはCSVから</strong><br>
+          2. ファイルを選択して「インポート」<br>
+          3. プレビュー画面が表示されます。ここで3つの設定を確認します：<br>
+          ・<strong>元のファイル</strong>：文字コード（65001: Unicode (UTF-8)、932: 日本語 (Shift_JIS) など）<br>
+          ・<strong>区切り記号</strong>：コンマ、タブ、セミコロンなど<br>
+          ・<strong>データ型の検出</strong>：最初の200行に基づく／ドキュメント全体に基づく<br>
+          4. プレビューが正しければ「データの変換」でエディターへ（または「読み込み」で直接出力）。</p>
+</div>
+<h3>文字化けが起きたら</h3>
+<p>日本のシステムで出力されたCSVはShift_JIS（コードページ932）であることが多いですが、Power Queryのデフォルト検出がUTF-8と誤判定することがあります。プレビューで文字化けしている場合は、「元のファイル」ドロップダウンから<strong>「932: Japanese (Shift_JIS)」</strong>を選択してください。</p>
+<div class="tip-box">
+<strong>UTF-8 BOM付きならトラブルが少ない</strong><br>
+          CSVを自分で作成・エクスポートする場合は、UTF-8（BOM付き）で保存するとPower Queryが正しく自動判別します。Excel側で「CSV UTF-8（コンマ区切り）」形式で保存すればBOM付きUTF-8になります。
+        </div>
+</section>
+<!-- ==================== Excel ==================== -->
+<section id="excel">
+<h2>Excelファイル（別ブック）からの取り込み</h2>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. <strong>データ タブ &rarr; データの取得 &rarr; ファイルから &rarr; Excelブックから</strong><br>
+          2. ファイルを選択して「インポート」<br>
+          3. ナビゲーターが表示されます。左側にシート名やテーブル名の一覧が出ます。<br>
+          4. 取り込みたいシートまたはテーブルを選択し、「データの変換」をクリック。</p>
+</div>
+<h3>シート名とテーブル名の違い</h3>
+<p>ナビゲーターには「Sheet1」のようなシート名と、「テーブル1」のようなテーブル名が両方表示されることがあります。<strong>テーブル名を選ぶ方が安全</strong>です。シート名を選ぶとシート上のすべてのデータ（空白セルや余計な行を含む）が取り込まれますが、テーブル名を選べばテーブルの範囲だけが正確に取り込まれます。元ブックでデータをテーブル化しておくことを強くおすすめします。</p>
+<div class="warning-box">
+<strong>ファイルパスが変わるとエラーになる</strong><br>
+          取り込み元ファイルを別フォルダに移動したり名前を変更したりすると、更新時にエラーが出ます。ファイルの配置場所を固定するか、パラメータクエリ（⑩で解説）でパスを動的に管理してください。
+        </div>
+</section>
+<!-- ==================== 同一ブック ==================== -->
+<section id="current-workbook">
+<h2>同一ブック内のテーブルを取り込む</h2>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. シート上のデータを<strong>テーブル化</strong>しておきます（Ctrl+T）。テーブル名をわかりやすい名前に変更します。<br>
+          2. <strong>データ タブ &rarr; テーブルまたは範囲から</strong> をクリックします。<br>
+          3. テーブルの範囲が自動選択され、エディターが開きます。</p>
+</div>
+<p>パラメータクエリの土台として使う「Excel.CurrentWorkbook()」は、ブック内のすべてのテーブルと名前付き範囲を取得するM関数です。詳しくは⑩パラメータクエリで解説します。</p>
+</section>
+<!-- ==================== PDF ==================== -->
+<section id="pdf">
+<h2>PDFの表を取り込む</h2>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. <strong>データ タブ &rarr; データの取得 &rarr; ファイルから &rarr; PDFから</strong><br>
+          2. ファイルを選択して「インポート」<br>
+          3. ナビゲーターにページ番号とテーブル番号が表示されます。テーブルを選択してプレビューを確認。<br>
+          4. 「データの変換」でエディターへ。</p>
+</div>
+<h3>読めるPDFと読めないPDF</h3>
+<table class="ref-table">
+<thead><tr><th>タイプ</th><th>取り込み可否</th><th>見分け方</th></tr></thead>
+<tbody>
+<tr><td><strong>テキストベースのPDF</strong>（WordやExcelから出力）</td><td>取り込み可能</td><td>PDF上のテキストをコピー＆ペーストできる</td></tr>
+<tr><td><strong>画像ベースのPDF</strong>（スキャンしたもの）</td><td>取り込み不可</td><td>テキストを選択・コピーできない</td></tr>
+</tbody>
+</table>
+<div class="warning-box">
+<strong>PDF取り込みはExcel 2019以降</strong><br>
+          PDFコネクターはExcel 2019 / 2021 / 2024 / Microsoft 365で利用可能です。Excel 2016では使えません。また、複雑なレイアウトのPDFは表の認識精度が低いため、エディターで「ヘッダー昇格」「列の削除」「不要行の除去」の後処理が必要になることが多いです。
+        </div>
+</section>
+<!-- ==================== Web ==================== -->
+<section id="web">
+<h2>Webページからテーブルを取得する</h2>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. <strong>データ タブ &rarr; データの取得 &rarr; その他のデータソースから &rarr; Webから</strong><br>
+          2. URLを入力して「OK」<br>
+          3. ナビゲーターにページ内の&lt;table&gt;要素が一覧表示されます。<br>
+          4. 目的のテーブルを選択し「データの変換」でエディターへ。</p>
+</div>
+<div class="warning-box">
+<strong>Webスクレイピングの注意</strong><br>
+          Webサイトの構造が変わるとクエリが壊れます。またサイトの利用規約でスクレイピングが禁止されている場合があります。業務で使う場合は、対象サイトの規約を確認してください。動的に生成されるページ（JavaScriptで描画される表など）は取得できないことがあります。
+        </div>
+</section>
+<!-- ==================== フォルダ ==================== -->
+<section id="folder">
+<h2>フォルダから一括取り込み &horbar; 複数ファイルをまとめて結合</h2>
+<p>月別CSVや支店別Excelなど、同じ構造のファイルが複数ある場合に威力を発揮します。</p>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. <strong>データ タブ &rarr; データの取得 &rarr; ファイルから &rarr; フォルダーから</strong><br>
+          2. フォルダを指定して「OK」<br>
+          3. ファイル一覧が表示されます。「<strong>結合 &rarr; 結合および変換</strong>」をクリック。<br>
+          4. サンプルファイルの設定ダイアログが表示されます。対象のシート（またはCSV設定）を選択して「OK」。<br>
+          5. Power Queryがすべてのファイルを読み込み、縦に結合してエディターに表示します。自動的に「Source.Name」列（元のファイル名）が追加されます。</p>
+</div>
+<h3>仕組みを理解する &horbar; 「サンプルファイルの変換」クエリ</h3>
+<p>フォルダ取り込みを行うと、左パネルにいくつかの補助クエリが自動生成されます。最も重要なのは<strong>「サンプルファイルの変換」</strong>というクエリです。これは「各ファイルに対して個別に行う変換」を定義する場所です。たとえば「先頭行の削除」「ヘッダー昇格」などをここで設定すると、全ファイルに自動適用されます。</p>
+<div class="tip-box">
+<strong>ファイルが増えても「更新」だけで対応</strong><br>
+          フォルダに新しいファイルを追加した後、Excelで「データ &rarr; すべて更新」するだけで、新しいファイルが自動的に取り込まれます。月次データの蓄積に最適です。
+        </div>
+<div class="warning-box">
+<strong>ファイル構造が統一されていることが前提</strong><br>
+          フォルダ内のファイルは、列名・列順・データ型が統一されている必要があります。1つのファイルだけ列名が違うと、null列が増えたりエラーになったりします。
+        </div>
+</section>
+<!-- ==================== 対応表 ==================== -->
+<section id="source-table">
+<h2>データソース別まとめ</h2>
+<table class="ref-table">
+<thead><tr><th>ソース</th><th>メニュー</th><th>主な注意点</th><th>Excel 2016対応</th></tr></thead>
+<tbody>
+<tr><td>CSV / テキスト</td><td>ファイルから &rarr; テキストまたはCSVから</td><td>文字コード指定（Shift_JIS / UTF-8）</td><td>対応</td></tr>
+<tr><td>Excelブック</td><td>ファイルから &rarr; Excelブックから</td><td>テーブル名で取り込むのが安全</td><td>対応</td></tr>
+<tr><td>同一ブック</td><td>テーブルまたは範囲から</td><td>テーブル化が前提</td><td>対応</td></tr>
+<tr><td>PDF</td><td>ファイルから &rarr; PDFから</td><td>テキストベースのみ。画像PDFは不可</td><td>非対応（2019以降）</td></tr>
+<tr><td>Webページ</td><td>その他のデータソースから &rarr; Webから</td><td>HTML table要素のみ。動的ページは困難</td><td>対応</td></tr>
+<tr><td>フォルダ</td><td>ファイルから &rarr; フォルダーから</td><td>同一構造のファイルが前提</td><td>対応</td></tr>
+</tbody>
+</table>
+</section>
+<section id="summary"><h2>まとめ</h2><p>データ取り込みは Power Query の出発点です。CSVの文字化けは「文字コードの指定」、Excelブックは「テーブル名で取り込む」、PDFは「テキストベースのみ可能」、フォルダは「サンプルファイルの変換で共通処理を定義」&horbar; この4つの原則を覚えておけば、取り込みで困ることはほぼなくなります。</p></section>
+<nav class="nav-series">
+<strong>パワークエリ 応用編シリーズ</strong>
+<a href="../basic/article_powerquery_intro.html">⓪ パワークエリとは</a>
+<a href="article_pq_merge_append.html">⑦ テーブルの結合</a>
+<a href="article_pq_group_pivot.html">⑧ 集計とピボット</a>
+<a class="current" href="article_pq_import_patterns.html">⑨ データ取り込みパターン集（このページ）</a>
+<a href="article_pq_parameter_query.html">⑩ パラメータクエリ</a>
+<a href="../basic/article_pq_management.html">⑪ 更新と管理</a>
+</nav>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

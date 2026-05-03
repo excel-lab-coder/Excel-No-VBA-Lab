@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>④ キー変換テクニック｜QR Automation Lab｜Excel &times; No VBA Lab</title>
+<meta content="QRリーダーのキー変換（リマップ）機能で、CHAR関数では不可能なテンキーEnter・ファンクションキー・矢印キーをQRコードから送信する方法を詳しく解説。" name="description">
+<meta content="QRコード,キー変換,リマップ,テンキーEnter,ファンクションキー,F2,NUM Enter,QRリーダー,VBA不要" name="keywords">
+<link href="https://excel-no-vba-lab.com/qr/04_qr_key_conversion.html" rel="canonical">
+<meta content="article" property="og:type">
+<meta content="④ キー変換テクニック &horbar; テンキーEnter・FキーをQRから送る｜QR Automation Lab" property="og:title">
+<meta content="リーダーのキー変換機能でASCIIの壁を突破。テンキーEnter・F2・矢印キーをQRから送信する方法。" property="og:description">
+<meta content="https://excel-no-vba-lab.com/qr/04_qr_key_conversion.html" property="og:url">
+<meta content="https://excel-no-vba-lab.com/image/hero_ogp.png" property="og:image">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="summary_large_image" name="twitter:card">
+<meta content="④ キー変換テクニック｜QR Automation Lab" name="twitter:title">
+<meta content="テンキーEnter・ファンクションキーをQRから送信。リーダーのキー変換機能を完全解説。" name="twitter:description">
+<meta content="https://excel-no-vba-lab.com/image/hero_ogp.png" name="twitter:image">
+<meta content="index, follow" name="robots">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Article",
+  "headline":"④ QRコード → キー変換テクニック ― テンキーEnter・ファンクションキーをQRから送る",
+  "description":"QRリーダーのキー変換機能でCHAR関数では不可能なテンキーEnter・ファンクションキー・矢印キーをQRから送信する方法。",
+  "image":"https://excel-no-vba-lab.com/ogp.png",
+  "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
+  "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-no-vba-lab.com/ogp.png"}},
+  "datePublished":"2026-04-18",
+  "dateModified":"2026-04-18",
+  "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/qr/04_qr_key_conversion.html"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://excel-no-vba-lab.com/"},
+    {"@type":"ListItem","position":2,"name":"QR Automation Lab","item":"https://excel-no-vba-lab.com/qr/"},
+    {"@type":"ListItem","position":3,"name":"④ キー変換テクニック"}
+  ]
+}
+</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../index.html">ホーム</a><span>&gt;</span>
+<a href="../index.html#qr">QR Automation Lab</a><span>&gt;</span>
+<strong>④ キー変換テクニック</strong>
+</div>
+<!-- ===== メインコンテンツ ===== -->
+<article class="article-body">
+<!-- ===== 記事ヘッダー ===== -->
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="badge badge-maniac">QR Automation Lab ④ ／ 応用</span>
+</div>
+<h1 class="article-title">QRコード &rarr; キー変換テクニック<br><small>&horbar; テンキーEnter・ファンクションキーをQRから送信する</small></h1>
+<p style="color:#666;font-size:.88rem;">最終更新: 2026-04-18 ｜ 読了目安: 12分 ｜ 前提: <a href="01_qr_barcode_control.html">①</a> <a href="02_qr_tab_enter.html">②</a> <a href="03_qr_character_delay.html">③</a></p>
+</div>
+<!-- ========================================== -->
+<!-- ゴール -->
+<!-- ========================================== -->
+<section class="goal-section">
+<h2><span class="icon">🎯</span> この記事のゴール</h2>
+<p>
+    ②で突き当たった<strong>「テンキーEnterが送れない」「ファンクションキーが送れない」</strong>という限界。
+    CHAR関数はASCII（0〜127）の範囲しか扱えないため、通常はQRリーダーからテンキーEnter（NUM Enter）や、PrintScreen、Pauseキー、PageDown、PageUpといった<strong>非ASCIIの特殊キーは原理的に出力できません</strong>。これがこれまでの自動化における最大の「壁」でした。
+  </p>
+<p>
+    しかし、この記事ではQRリーダーが持つ<strong>「キー変換（リマップ）」機能</strong>を利用して、この壁を完全に突破します。
+  </p>
+<div class="xdemo-note-good">
+<strong>🔥 究極の自動化の実現:</strong>
+    特定の文字（例：`~` や `|`）を、リーダー側でNUM EnterやPrintScreenなどの「出力不可能な特殊キー」に変換するよう設定します。これにより、<strong>PC上のあらゆる画面遷移、ショートカットの発動、画面キャプチャなど、キーボードで行う「ほとんどの操作」がQRコード1つで実現可能</strong>になります。VBAやRPAすら不要になる、真の完全自動化への道が開かれます。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- 問題の整理 -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>🚧 CHAR関数の限界 &horbar; 送れないキー一覧</h2>
+<p>まず、CHAR関数（ASCII）で送れるキーと送れないキーを整理します。</p>
+<table class="compare-table">
+<thead>
+<tr><th>キー</th><th>CHAR関数で送れる？</th><th>現場で必要になるシーン</th></tr>
+</thead>
+<tbody>
+<tr><td class="text-left">Tab</td><td><span class="circle">&cir;</span> CHAR(9)</td><td>セル横移動</td></tr>
+<tr><td class="text-left">メインEnter（CR/LF）</td><td><span class="circle">&cir;</span> CHAR(13)/CHAR(10)</td><td>セル改行</td></tr>
+<tr><td class="text-left">ESC</td><td><span class="circle">&cir;</span> CHAR(27)</td><td>編集キャンセル</td></tr>
+<tr><td class="text-left">Ctrl+S, Ctrl+C 等</td><td><span class="circle">&cir;</span> CHAR(1)〜(26)</td><td>保存・コピーなど</td></tr>
+<tr class="bg-red-light"><td class="text-left"><strong>テンキーEnter</strong></td><td><span class="cross">✕</span></td><td><strong>業務システムの入力確定（これが最多）</strong></td></tr>
+<tr class="bg-red-light"><td class="text-left"><strong>F1〜F12</strong></td><td><span class="cross">✕</span></td><td>F2=セル編集、F5=ジャンプ、業務システムのファンクション操作</td></tr>
+<tr class="bg-red-light"><td class="text-left"><strong>矢印キー（&uarr;&darr;&larr;&rarr;）</strong></td><td><span class="cross">✕</span></td><td>カーソル微調整、ドロップダウン選択</td></tr>
+<tr class="bg-red-light"><td class="text-left"><strong>Home / End / Page Up / Page Down</strong></td><td><span class="cross">✕</span></td><td>画面スクロール、先頭/末尾ジャンプ</td></tr>
+<tr class="bg-red-light"><td class="text-left"><strong>PrintScreen</strong></td><td><span class="cross">✕</span></td><td>画面キャプチャ</td></tr>
+<tr class="bg-red-light"><td class="text-left"><strong>Delete</strong></td><td><span class="cross">✕</span></td><td>セル内容削除（CHAR(127)=DELとは異なる場合がある）</td></tr>
+</tbody>
+</table>
+<div class="xdemo-note-danger">
+<strong>🔥 特にテンキーEnter:</strong> 業務システム（基幹系・POS・医療システムなど）では「テンキーEnterでしか確定できない」ものが非常に多く、QR自動入力で最も頻繁にぶつかる壁です。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- キー変換の原理 -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>🔄 キー変換とは &horbar; 原理</h2>
+<p>
+    キー変換（Key Remapping / Character Replacement）は、QRリーダーが持つ機能で、<strong>「QRデータ内の特定の文字を読み取ったとき、それを別のキーに変換してPCに送信する」</strong>というものです。
+  </p>
+<!-- ===== 変換フロー図 ===== -->
+<div class="convert-diagram">
+<h4>変換なしの場合（通常動作）</h4>
+<div class="cd-row">
+<span class="cd-box cd-qr">QRデータ「ABC~123」</span>
+<span class="cd-arrow">&rarr;</span>
+<span class="cd-box cd-reader">リーダーがそのまま送信</span>
+<span class="cd-arrow">&rarr;</span>
+<span class="cd-box cd-output">PCに「ABC~123」と入力される</span>
+</div>
+</div>
+<div class="convert-diagram">
+<h4>キー変換を設定した場合（ ~ &rarr; テンキーEnter に変換）</h4>
+<div class="cd-row">
+<span class="cd-box cd-qr">QRデータ「ABC~123」</span>
+<span class="cd-arrow">&rarr;</span>
+<span class="cd-box cd-reader">リーダーが ~ を検知</span>
+<span class="cd-arrow">&rarr;</span>
+<span class="cd-box cd-trigger">~ を テンキーEnter に変換</span>
+<span class="cd-arrow">&rarr;</span>
+<span class="cd-box cd-output">PCに「ABC[NUM Enter]123」と送信</span>
+</div>
+</div>
+<p>
+    つまり、QRデータ内に<strong>「トリガー文字」</strong>（例：<span class="code-inline">~</span>）を仕込んでおき、リーダーの設定で「<span class="code-inline">~</span> を読み取ったらテンキーEnterに変換して送信せよ」と指示するだけです。
+    CHAR関数で <span class="code-inline">~</span> を入れるのは簡単（<span class="code-inline">CHAR(126)</span>）なので、これで<strong>ASCIIの壁を完全に突破</strong>できます。
+  </p>
+<div class="xdemo-note-good">
+<strong>✅ ポイント:</strong> 変換処理はすべて<strong>リーダー内部</strong>で行われます。Excel側・PC側に特別な設定は不要です。リーダーの設定を変えるだけ。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- トリガー文字の選び方 -->
+<!-- ========================================== -->
+<section class="tips-section">
+<h2>🏷️ トリガー文字の選び方</h2>
+<p>
+    キー変換のために「データとして使わない文字」をトリガーとして予約する必要があります。
+    業務データに登場しにくい記号を選ぶのがコツです。
+  </p>
+<table class="format-table">
+<tr><th>トリガー候補</th><th>CHAR関数</th><th>おすすめ度</th><th>理由</th></tr>
+<tr>
+<td class="text-center"><span class="code-inline">~</span>（チルダ）</td>
+<td class="text-center">CHAR(126)</td>
+<td class="text-center"><span class="circle">◎</span></td>
+<td>業務データにほぼ登場しない。最も使いやすい</td>
+</tr>
+<tr>
+<td class="text-center"><span class="code-inline">^</span>（キャレット）</td>
+<td class="text-center">CHAR(94)</td>
+<td class="text-center"><span class="circle">◎</span></td>
+<td>業務データにほぼ登場しない</td>
+</tr>
+<tr>
+<td class="text-center"><span class="code-inline">|</span>（パイプ）</td>
+<td class="text-center">CHAR(124)</td>
+<td class="text-center"><span class="circle">&cir;</span></td>
+<td>PrintScreenなど特殊操作に向く</td>
+</tr>
+<tr>
+<td class="text-center"><span class="code-inline">`</span>（バッククォート）</td>
+<td class="text-center">CHAR(96)</td>
+<td class="text-center"><span class="circle">&cir;</span></td>
+<td>使いやすいが一部プログラミング系で使う</td>
+</tr>
+<tr>
+<td class="text-center"><span class="code-inline">{</span> <span class="code-inline">}</span></td>
+<td class="text-center">CHAR(123) / CHAR(125)</td>
+<td class="text-center"><span class="circle">&cir;</span></td>
+<td>ペアで使えるのでプレフィックス方式に向く</td>
+</tr>
+<tr>
+<td class="text-center"><span class="code-inline">\</span>（バックスラッシュ）</td>
+<td class="text-center">CHAR(92)</td>
+<td class="text-center"><span class="cross">&xutri;</span></td>
+<td>ファイルパスで使うため衝突リスクあり</td>
+</tr>
+</table>
+<div class="xdemo-note-good">
+<strong>✅ おすすめ:</strong> まずは <span class="code-inline">~</span>（チルダ）をテンキーEnter用のトリガーに、<span class="code-inline">^</span>（キャレット）をファンクションキー用のトリガーに使うのが定番です。
+  </div>
+<div class="xdemo-note-warn">
+<strong>⚠️ 注意:</strong> トリガー文字はデータとしては使えなくなります（リーダーが変換してしまうため）。業務データに含まれない文字を選んでください。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- 変換設定例 -->
+<!-- ========================================== -->
+<!-- ========================================== -->
+<!-- メーカー別設定方法 -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>🔧 設定方法 &horbar; メーカー別ガイド</h2>
+<div class="maker-card">
+<span class="maker-name">共通の概念</span>
+<h4>キー変換設定の基本ステップ</h4>
+<table class="format-table">
+<tr><th style="width:10%">手順</th><th>操作</th></tr>
+<tr><td class="text-center">1</td><td>メーカーの設定マニュアルで<strong>「Key Remapping」「Character Replacement」「ASCII to Key」</strong>のセクションを探す</td></tr>
+<tr><td class="text-center">2</td><td>「トリガー文字（元の文字）」を指定する（例：<span class="code-inline">~</span> = 0x7E）</td></tr>
+<tr><td class="text-center">3</td><td>「変換先キー」を指定する（例：Numpad Enter = 0x58）</td></tr>
+<tr><td class="text-center">4</td><td>設定用バーコードを読み取る or 専用ソフトで保存する</td></tr>
+<tr><td class="text-center">5</td><td>テスト用QRをスキャンして変換が正しく動作するか確認</td></tr>
+</table>
+</div>
+<div class="maker-card">
+<span class="maker-name">Honeywell（ハネウェル）</span>
+<h4>Data Editing &rarr; Keystroke Mapping</h4>
+<p>設定マニュアルの「Data Editing」チャプター &rarr;「Keystroke Mapping」セクションで設定します。「Source Character」にトリガー文字のASCIIコード、「Destination Key」に変換先のキーコードを指定する形式です。EZConfig-Scanning（PC用ソフト）のGUIからも設定可能です。</p>
+</div>
+<div class="maker-card">
+<span class="maker-name">Zebra（ゼブラ）/ Symbol</span>
+<h4>Advanced Data Formatting（ADF）</h4>
+<p>ZebraのADF機能を使います。「When character is [0x7E]」&rarr;「Send key [Numpad Enter]」のようなルールを設定します。123Scan ユーティリティからGUIで直感的に設定できます。ADF は非常に高機能で、条件分岐や複数ルールの組み合わせも可能です。</p>
+</div>
+<div class="maker-card">
+<span class="maker-name">Opticon（オプティコン）</span>
+<h4>Character Replacement / Key Function Code</h4>
+<p>Opticonは「Key Function Code」テーブルを持っており、設定用バーコードで「置換元文字」と「置換先キー」を指定します。Universal Menu Book の「Function Code Mapping」セクションを参照してください。</p>
+</div>
+<div class="maker-card">
+<span class="maker-name">Keyence（キーエンス）</span>
+<h4>AutoID Network Navigator &rarr; キーコード変換</h4>
+<p>専用ソフト「AutoID Network Navigator」の「キーコード変換」タブで、GUIのドロップダウンからトリガー文字と変換先キーを選択するだけで設定できます。日本語UIなので最もわかりやすいです。</p>
+</div>
+<div class="maker-card">
+<span class="maker-name">Denso Wave（デンソーウェーブ）</span>
+<h4>QBdirect &rarr; キー変換</h4>
+<p>専用ソフト「QBdirect」の「キー変換」機能で設定します。変換元と変換先をドロップダウンで選択する形式です。</p>
+</div>
+<div class="xdemo-note-danger">
+<strong>🔥 安価なリーダーの場合:</strong> ノーブランドの数千円のリーダーでは、キー変換機能が<strong>搭載されていない機種が大半</strong>です。テンキーEnterが必要な業務では、キー変換対応のメーカー品リーダーの購入が必須です。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- テスト方法 -->
+<!-- ========================================== -->
+<section class="tips-section">
+<h2>🧪 テスト方法</h2>
+<h3>テンキーEnter変換のテスト</h3>
+<table class="format-table">
+<tr><th style="width:10%">手順</th><th>操作</th></tr>
+<tr><td class="text-center">1</td><td>リーダーに「<span class="code-inline">~</span> &rarr; テンキーEnter」のキー変換を設定する</td></tr>
+<tr><td class="text-center">2</td><td>テスト用QRデータを作成：<span class="code-inline">="TEST"&CHAR(126)</span></td></tr>
+<tr><td class="text-center">3</td><td>メモ帳を開き、スキャンする。「TEST」と入力されて改行すればメインEnterとして動作中</td></tr>
+<tr><td class="text-center">4</td><td>業務システムを開き、入力欄にカーソルを置いてスキャンする</td></tr>
+<tr><td class="text-center">5</td><td>業務システムで<strong>入力が確定される</strong>ことを確認。メインEnterでは確定しなかったのにスキャンで確定すれば、テンキーEnter変換が成功</td></tr>
+</table>
+<div class="xdemo-note-good">
+<strong>✅ テストのコツ:</strong> まずメモ帳で「文字が入力され改行される」ことを確認し、次に実際の業務システムで「確定されるか」を確認する。2段階でテストすると問題の切り分けが容易です。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- 複数変換の組み合わせ -->
+<!-- ========================================== -->
+<!-- ========================================== -->
+<!-- 注意点 -->
+<!-- ========================================== -->
+<section class="tips-section">
+<h2>⚡ 注意点</h2>
+<div class="xdemo-note-warn">
+<strong>① トリガー文字はデータに使えなくなる:</strong> 例えば <span class="code-inline">~</span> をテンキーEnterに変換すると、QRデータ内に「~」という文字そのものを入力することはできなくなります。業務データに ~ を使わないか事前に確認してください。
+  </div>
+<div class="xdemo-note-warn">
+<strong>② リーダーの変換上限:</strong> 同時に設定できる変換ルールの数はメーカー・機種によって異なります（一般的に3〜10個程度）。必要最小限の変換に絞りましょう。
+  </div>
+<div class="xdemo-note-warn">
+<strong>③ 共有リーダーの場合:</strong> 1台のリーダーを複数の用途で共有する場合、設定されたキー変換がすべてのQR読み取りに影響します。用途別にリーダーを分けるか、プロファイル切替機能がある機種を使ってください。
+  </div>
+<div class="xdemo-note-danger">
+<strong>④ キャラクター間ディレイとの併用:</strong> キー変換を使う場合も、③で設定したキャラクター間ディレイは<strong>必ず維持してください</strong>。変換後のキー送信にもディレイは適用されるので、文字欠け防止は引き続き有効です。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- まとめ -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>📝 この記事で学んだこと</h2>
+<table class="format-table">
+<tr><th>項目</th><th>内容</th></tr>
+<tr><td>CHAR関数の限界</td><td>テンキーEnter・ファンクションキー・矢印キーなど非ASCIIキーは生成不可</td></tr>
+<tr><td>解決策</td><td>QRリーダーの<strong>キー変換（リマップ）</strong>機能を使う</td></tr>
+<tr><td>原理</td><td>QRデータ内のトリガー文字をリーダーが検知 &rarr; 別のキーに変換してPCに送信</td></tr>
+<tr><td>トリガー文字</td><td><span class="code-inline">~</span> CHAR(126)、<span class="code-inline">^</span> CHAR(94) がおすすめ</td></tr>
+<tr><td>最頻出の変換</td><td><span class="code-inline">~</span> &rarr; テンキーEnter（業務システム確定用）</td></tr>
+<tr><td>設定方法</td><td>メーカーのマニュアルから設定用バーコード or 専用ソフト</td></tr>
+<tr><td>注意点</td><td>トリガー文字はデータに使えなくなる / ディレイとの併用必須 / 変換数上限あり</td></tr>
+</table>
+</section>
+<!-- ========================================== -->
+<!-- 次へのナビ -->
+<!-- ========================================== -->
+<section class="method-section" style="background:#f0f4c3;border:2px solid #827717;border-radius:10px;padding:24px;">
+<h2 style="color:#33691e;margin-top:0;">🔜 次に読む記事</h2>
+<table class="key-table" style="background:#fff;">
+<tr><th>あなたの状況</th><th>次に読むべき記事</th></tr>
+<tr>
+<td>キー変換を業務シナリオで使いたい</td>
+<td><a href="05_qr_key_practice.html"><strong>⑤ キー変換の実践シナリオ</strong></a></td>
+</tr>
+<tr>
+<td>帳票出力待ち・画面遷移待ちなど秒単位の停止が必要</td>
+<td><a href="06_qr_sleep.html"><strong>⑥ Sleep（一時停止）で処理完了を待つ</strong></a></td>
+</tr>
+<tr>
+<td>全テクニックを組み合わせた完成形を見たい</td>
+<td><a href="07_qr_full_system.html"><strong>⑦ フルシステム統合 &horbar; 22手作業を8秒に</strong></a></td>
+</tr>
+</table>
+</section>
+<!-- ========================================== -->
+<!-- シリーズナビ -->
+<!-- ========================================== -->
+<nav class="series-nav">
+<h3>📱 QR Automation Lab &horbar; 全記事一覧</h3>
+<p class="text-sm-gray">
+<span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
+    <span class="color-orange">🟠 応用</span>（④〜⑪）＝ さらに自動化を極める
+  </p>
+<ol>
+<li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでExcel一発入力 &horbar; Tab・Enter埋め込み</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ &horbar; 文字欠けを完全に防ぐ設定</a></li>
+<li class="current"><span class="lv-adv">[応用]</span> <strong>④ QRコード &rarr; キー変換テクニック（この記事）</strong></li>
+<li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware.html">⑧ QRリーダーの選び方と接続方法</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 &horbar; 紙だけでPC間移行</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコード生成</a></li>
+</ol>
+</nav>
+</article>
+</main>
+<!-- ===== フッター ===== -->
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../script.js"></script>
+
+</body>
+</html>
+

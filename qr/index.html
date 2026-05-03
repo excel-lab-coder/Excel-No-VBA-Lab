@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Automation Lab総合ガイド｜VBAなしで入力自動化・閉域データ連携を実現｜Excel × No VBA Lab</title>
+<meta name="description" content="「入力作業を自動化したいが設定が難しい」をQR自動化の体系学習で解決。設定手順に加え、失敗しやすいポイント、エラー時の直し方、運用で詰まりやすい場面まで整理し、QRリーダー運用環境・VBA不要でも実務でそのまま使える形で解説します。導入時の注意点まで短時間で把握できます。">
+<meta name="theme-color" content="#1a3d5c">
+<link rel="canonical" href="https://excel-no-vba-lab.com/qr/">
+<meta property="og:title" content="QR Automation Lab総合ガイド｜VBAなしで入力自動化・閉域データ連携を実現｜Excel × No VBA Lab">
+<meta property="og:description" content="VBAもRPAも使えない、でも入力作業は減らしたい。QR Automation Labは、QRリーダー設定とExcel設計で入力自動化と閉域環境のデータ転送を実現する総合ページです。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://excel-no-vba-lab.com/qr/">
+<meta property="og:site_name" content="Excel × No VBA Lab">
+<meta property="og:image" content="https://excel-no-vba-lab.com/image/hero_ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="QR Automation Lab総合ガイド｜VBAなしで入力自動化・閉域データ連携を実現｜Excel × No VBA Lab">
+<meta name="twitter:description" content="VBAもRPAも使えない、でも入力作業は減らしたい。QR Automation Labは、QRリーダー設定とExcel設計で入力自動化と閉域環境のデータ転送を実現する総合ページです。">
+<meta name="twitter:image" content="https://excel-no-vba-lab.com/image/hero_ogp.png">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../common.css">
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../article.css">
+<script>
+  window.ExcelLab = window.ExcelLab || {};
+  window.ExcelLab.rareTech = {
+    "cobol_irregular": { rarity: 1000 },
+    "cobol_expert": { rarity: 1000 },
+    "qr_hardware": { rarity: 1000 },
+    "qr_series": { rarity: 1000 },
+    "cobol_pq_midb": { rarity: 300 },
+    "print_area": { rarity: 300 },
+    "zip_reverse": { rarity: 300 },
+    "shape_circle": { rarity: 200 },
+    "filter_alt": { rarity: 200 },
+    "m_language": { rarity: 200 },
+    "cobol_advanced": { rarity: 200 },
+    "speed_formula": { rarity: 200 },
+    "speed_lookup": { rarity: 200 },
+    "pq_parameter": { rarity: 200 },
+    "volatile": { rarity: 100 },
+    "label_scrap": { rarity: 100 },
+    "qr_generate": { rarity: 100 },
+    "choosecols": { rarity: 50 }
+  };
+  window.RARETECH_CONFIG = window.ExcelLab.rareTech;
+</script>
+<script type="application/ld+json">
+{
+    "@context":  "https://schema.org",
+    "@type":  "CollectionPage",
+    "name":  "QR Automation Lab",
+    "description":  "VBAもRPAも使えない、でも入力作業は減らしたい。QR Automation Labは、QRリーダー設定とExcel設計で入力自動化と閉域環境のデータ転送を実現する総合ページです。",
+    "url":  "https://excel-no-vba-lab.com/qr/",
+    "inLanguage":  "ja",
+    "isPartOf":  {
+                     "@type":  "WebSite",
+                     "name":  "Excel × No VBA Lab",
+                     "url":  "https://excel-no-vba-lab.com/"
+                 },
+    "hasPart":  [
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "記事① バーコードコントロールでQR生成",
+                        "url":  "https://excel-no-vba-lab.com/qr/01_qr_barcode_control.html",
+                        "position":  1
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "記事② Tab/Enter制御",
+                        "url":  "https://excel-no-vba-lab.com/qr/02_qr_tab_enter.html",
+                        "position":  2
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "記事⑤ キー変換実践",
+                        "url":  "https://excel-no-vba-lab.com/qr/05_qr_key_practice.html",
+                        "position":  3
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "記事⑦ 入力自動化システム",
+                        "url":  "https://excel-no-vba-lab.com/qr/07_qr_full_system.html",
+                        "position":  4
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "記事⑨ 閉域環境データ転送",
+                        "url":  "https://excel-no-vba-lab.com/qr/09_qr_closed_transfer.html",
+                        "position":  5
+                    }
+                ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context":  "https://schema.org",
+    "@type":  "BreadcrumbList",
+    "itemListElement":  [
+                            {
+                                "@type":  "ListItem",
+                                "position":  1,
+                                "name":  "ホーム",
+                                "item":  "https://excel-no-vba-lab.com/"
+                            },
+                            {
+                                "@type":  "ListItem",
+                                "position":  2,
+                                "name":  "QR Automation Lab",
+                                "item":  "https://excel-no-vba-lab.com/qr/"
+                            }
+                        ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context":  "https://schema.org",
+    "@type":  "FAQPage",
+    "mainEntity":  [
+                       {
+                           "@type":  "Question",
+                           "name":  "本当にVBAなしで自動化できますか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "はい。QRリーダー設定とExcelフォーム設計の組み合わせで、入力フロー自動化は十分可能です。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "どのQRリーダーでも使えますか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "設定項目（接尾キー、ディレイ、文字変換）の有無が重要です。カテゴリ内の選定記事を参照してください。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "閉域環境での運用は安全ですか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "転送ルールとデータ形式を固定すれば、安全性と再現性を両立できます。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "日本語や全角データも扱えますか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "可能です。文字コードと桁数設計を合わせることで、全角を含む業務データにも対応できます。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "導入時の最初の一歩は？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "記事①〜③で入力系の基本設定を固め、次に記事⑧以降で転送運用へ進むのが最短です。"
+                                              }
+                       }
+                   ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">QR Automation Lab</span><span class="sub-main">カテゴリ総合ランディングページ</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+  <nav aria-label="パンくずリスト">
+    <div class="breadcrumb">
+      <a href="../index.html">ホーム</a><span>&gt;</span><strong>QR Automation Lab</strong>
+    </div>
+  </nav>
+
+  <section class="method-section">
+    <h1>QR Automation Lab 総合ガイド</h1>
+    <p class="article-summary">ハードウェアとExcel設計を組み合わせて、VBA禁止環境でも入力自動化を成立させる実践カテゴリです。</p>
+  </section>
+
+  <section class="method-section">
+    <h2><span class="icon">🧩</span> 読者の課題</h2>
+    <ul class="philosophy-list">
+      <li>VBA・RPA禁止で入力自動化の手段がない。</li>
+      <li>システム間の手入力転記でミスが多い。</li>
+      <li>閉域環境で安全にデータを渡せない。</li>
+      <li>QRリーダー設定が現場ごとにバラバラ。</li>
+    </ul>
+  </section>
+
+  <section class="method-section">
+    <h2><span class="icon">✅</span> このカテゴリで解決できること</h2>
+    <ul class="philosophy-list">
+      <li>QRリーダー設定で Tab/Enter/待機を制御。</li>
+      <li>Excel側の列設計で一括入力フローを標準化。</li>
+      <li>閉域環境向けのQRデータ転送方式を整備。</li>
+      <li>ハード選定と運用ルールを含めた実装指針を提示。</li>
+    </ul>
+  </section>
+
+
+  <div class="category-hero hero-overlay hero-qr">
+    <picture>
+      <source srcset="../image/hero_qr.avif" type="image/avif">
+      <source srcset="../image/hero_qr.webp" type="image/webp">
+      <img alt="QR Automation Lab ハードウェア連携" decoding="async" height="576" loading="lazy" src="../image/hero_qr.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Hardware Automation</div>
+      <div class="hero-copy-title">QR Automation Lab</div>
+      <div class="hero-copy-sub">ソフトが使えないなら、ハード側から自動化する。</div>
+    </div>
+  </div>
+
+  <div class="category-header">
+    <h2>⚡ QR Automation Lab — ソフト禁止環境をハードウェアで突破する</h2>
+    <p>
+      VBA・マクロ・RPA・PowerShellすべてが禁止された環境でも、
+      <strong>QRリーダー本体の設定を書き換える</strong>だけで入力を自動化。
+      さらに閉域環境へのデータ転送、システム間移行、全角QR生成まで。
+      <strong>ソフト側ではなくハードウェア側から攻める</strong>、他に類を見ないアプローチです。
+    </p>
+
+    <div class="category-hero hero-concept-wall mx-auto max-width-800 my-20">
+      <picture>
+        <source srcset="../image/concept_breaking_wall.avif" type="image/avif">
+        <source srcset="../image/concept_breaking_wall.webp" type="image/webp">
+        <img alt="ソフトの壁をハードで突破するコンセプト" decoding="async" height="576" loading="lazy" src="../image/concept_breaking_wall.png" width="1024">
+      </picture>
+    </div>
+  </div>
+
+  <div class="level-legend">
+    <div class="legend-row-levels">
+      <span class="level-legend-item"><span class="lv-dot lv-dot-1"></span>Lv.1 入門</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-2"></span>Lv.2 やさしい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-3"></span>Lv.3 ふつう</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-4"></span>Lv.4 やや難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-5"></span>Lv.5 難しい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-6"></span>Lv.6 かなり難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-7"></span>Lv.7 上級</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-8"></span>Lv.8 超絶技巧</span>
+    </div>
+
+    <div class="legend-row-tags">
+      <span class="legend-tag-desc"><span class="tag-impact">🔥 即戦力</span><span class="tag-desc-text">実務効果が大きい</span></span>
+      <span class="legend-tag-desc"><span class="tag-rare">💎 レアテク</span><span class="tag-desc-text">知る人ぞ知る</span></span>
+    </div>
+  </div>
+
+  <h3 class="subcategory-heading">📱 セクション1：入力自動化シリーズ（全7記事）</h3>
+
+  <ul class="article-list" id="list-qr-input">
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="qr_generate"></span></span>
+      </div>
+      <a class="article-link" href="../qr/01_qr_barcode_control.html">① Access搭載環境向けQRコード生成 — バーコードコントロールの使い方と2つの厳しい限界</a>
+      <p class="article-summary">Access由来のバーコードコントロールをExcelから配置し、LinkedCellでセル連動するQRコードを生成。ExcelのみのPCでは使えない点、半角255文字・全角不可の限界も解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../qr/02_qr_tab_enter.html">② QRコード1回で複数セルに自動入力 — Tab・Enterの埋め込み実践ガイド</a>
+      <p class="article-summary">CHAR(9)でTab、CHAR(13)でEnterを埋め込み、1回の読み取りで複数セルにデータを振り分けます。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../qr/03_qr_character_delay.html">③ QRリーダーの読み取りが速すぎて文字が欠ける — キャラクター間ディレイで解決</a>
+      <p class="article-summary">文字欠け・セルずれを、キャラクター間ディレイの設定で解決します。推奨値はまず20msから。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-5">
+        <span class="level-label">Lv.5 難しい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare">💎 レアテク</span></span>
+      </div>
+      <a class="article-link" href="../qr/04_qr_key_conversion.html">④ QRコードの中の1文字がキーボード操作に変わる — 文字→キー変換の仕組み</a>
+      <p class="article-summary">「#」をF2に、「$」をEscに変換。QRリーダーを命令実行エンジンに変える概念の転換点です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../qr/05_qr_key_practice.html">⑤ QRコード1回で業務システムを操作する — 変換ルール実践編</a>
+      <p class="article-summary">在庫管理・イベント受付・既存データの部分更新など、実務シナリオでQRプログラムを設計します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../qr/06_qr_sleep.html">⑥ QRコードの中に「待ち時間」を作る — スリープで画面遷移を待つ</a>
+      <p class="article-summary">業務システムの画面遷移やWebフォームの応答を待ってから次の操作を実行します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-7">
+        <span class="level-label">Lv.7 上級</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="qr_series"></span></span>
+      </div>
+      <a class="article-link" href="../qr/07_qr_full_system.html">⑦ QRコード1回で業務システムの全操作を完結させる — 6つの技術を統合した入力自動化システム</a>
+      <p class="article-summary">メニュー選択→画面遷移→検索→待機→データ入力→登録。手作業をQR読み取り1回に圧縮します。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">🔒 セクション2：データ転送・移行シリーズ（全4記事）</h3>
+
+  <ul class="article-list" id="list-qr-transfer">
+    <li class="article-item">
+      <div class="level-bar lv-5">
+        <span class="level-label">Lv.5 難しい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="qr_hardware"></span></span>
+      </div>
+      <a class="article-link" href="../qr/08_qr_hardware.html">⑧ QRリーダーの選び方と接続方法</a>
+      <p class="article-summary">筆者が検証した機種を中心に、選び方・USB-HID接続・設定方法まで解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../qr/09_qr_closed_transfer.html">⑨ QRコードで閉域環境のデータ転送 — ネットワーク不要・紙だけでExcelデータを別PCに移す</a>
+      <p class="article-summary">USBメモリ禁止・ネット接続不可でも、紙のQRコードだけでデータ転送する方法を解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-7">
+        <span class="level-label">Lv.7 上級</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../qr/10_qr_system_migration.html">⑩ QRコードでシステム間データ移行 — 旧システムから新システムへ読み取るだけで引っ越し完了</a>
+      <p class="article-summary">APIもCSVインポートもない新システムに、QRリーダーでデータを流し込む移行手法です。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-8">
+        <span class="level-label">Lv.8 超絶技巧</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare">💎 レアテク</span></span>
+      </div>
+      <a class="article-link" href="../qr/11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコードを生成 — バーコードコントロール不要・UTF-8対応</a>
+      <p class="article-summary">外部ライブラリ不要。ADODB.Stream＋ガロア体演算＋セル描画でQRコードを自力生成します。</p>
+    </li>
+  </ul>
+
+  <section class="method-section method-section-spaced">
+    <h2><span class="icon">🛣️</span> 推奨学習ルート</h2>
+    <ul class="article-list">
+      <li><a class="article-link" href="./01_qr_barcode_control.html">1. 記事① バーコードコントロールでQR生成</a><p class="article-summary">Access由来コントロールが使える環境向けの導入。</p></li>
+      <li><a class="article-link" href="./02_qr_tab_enter.html">2. 記事② Tab/Enter制御</a><p class="article-summary">入力オペレーションの核を作る。</p></li>
+      <li><a class="article-link" href="./05_qr_key_practice.html">3. 記事⑤ キー変換実践</a><p class="article-summary">現場配備前の実戦調整。</p></li>
+      <li><a class="article-link" href="./07_qr_full_system.html">4. 記事⑦ 入力自動化システム</a><p class="article-summary">入力自動化シリーズ完結。</p></li>
+      <li><a class="article-link" href="./09_qr_closed_transfer.html">5. 記事⑨ 閉域環境データ転送</a><p class="article-summary">転送シリーズの要点。</p></li>
+    </ul>
+  </section>
+
+  <section class="method-section method-section-spaced">
+    <h2><span class="icon">❓</span> FAQ</h2>
+    <ul class="article-list">
+      <li class="article-item"><p class="article-link">Q. 本当にVBAなしで自動化できますか？</p><p class="article-summary">A. はい。QRリーダー設定とExcelフォーム設計の組み合わせで、入力フロー自動化は十分可能です。</p></li>
+      <li class="article-item"><p class="article-link">Q. どのQRリーダーでも使えますか？</p><p class="article-summary">A. 設定項目（接尾キー、ディレイ、文字変換）の有無が重要です。カテゴリ内の選定記事を参照してください。</p></li>
+      <li class="article-item"><p class="article-link">Q. 閉域環境での運用は安全ですか？</p><p class="article-summary">A. 転送ルールとデータ形式を固定すれば、安全性と再現性を両立できます。</p></li>
+      <li class="article-item"><p class="article-link">Q. 日本語や全角データも扱えますか？</p><p class="article-summary">A. 可能です。文字コードと桁数設計を合わせることで、全角を含む業務データにも対応できます。</p></li>
+      <li class="article-item"><p class="article-link">Q. 導入時の最初の一歩は？</p><p class="article-summary">A. 記事①〜③で入力系の基本設定を固め、次に記事⑧以降で転送運用へ進むのが最短です。</p></li>
+    </ul>
+  </section>
+
+  <section class="method-section method-section-spaced">
+    <h2><span class="icon">🔗</span> 関連カテゴリへ</h2>
+    <ul class="article-list">
+      <li class="article-item"><a class="article-link" href="../functions/">📐 関数テクニック総合</a><p class="article-summary">検索・抽出・整形を関数で体系化。</p></li>
+      <li class="article-item"><a class="article-link" href="../powerquery/">🔄 パワークエリ総合</a><p class="article-summary">取り込みから更新運用までを一気通貫。</p></li>
+      <li class="article-item"><a class="article-link" href="../cobol/">🏭 COBOL帳票処理総合</a><p class="article-summary">固定長・不規則帳票をExcelで実務化。</p></li>
+      <li class="article-item"><a class="article-link" href="../others/">🧰 現場実務ラボ総合</a><p class="article-summary">速度・印刷・UI改善の実戦ノウハウ。</p></li>
+      <li class="article-item"><a class="article-link" href="../unlocked/">🔓 制限解除ラボ総合</a><p class="article-summary">VBA可環境で最後の5%を補完。</p></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ（Google Forms）</a>
+  </div>
+  <p>&copy; Excel &times; No VBA Lab &horbar; コンテンツは随時追加中です</p>
+  <p><a href="../index.html">🏠 ホームへ戻る</a></p>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>

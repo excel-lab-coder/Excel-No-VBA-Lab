@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>パワークエリとは【補足編】｜Excel &times; No VBA Lab</title>
+<meta content="パワークエリの補足編。読み込み先の選択肢・パラメータクエリ・SharePoint連携などの発展的内容をVBA不要で解説。" name="description">
+<meta content="パワークエリ 補足, Power Query 読み込み先, パラメータクエリ, SharePoint 連携 PQ, VBA不要" name="keywords">
+<meta content="パワークエリとは【補足編】｜Excel &times; No VBA Lab" property="og:title">
+<meta content="パワークエリの補足編。読み込み先の選択肢・パラメータクエリ・SharePoint連携などの発展的内容をVBA不要で解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/basic/article_powerquery_intro_deep.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"パワークエリとは【補足編】\u0026horbar; データモデル・パラメータクエリ・クラウド連携・知られていない理由","description":"パワークエリの補足編。読み込み先の選択肢・パラメータクエリ・SharePoint連携などの発展的内容をVBA不要で解説。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/basic/article_powerquery_intro_deep.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><a href="article_powerquery_intro.html">パワークエリとは</a><span>&gt;</span><strong>補足編</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">パワークエリとは【補足編】&horbar; データモデル・パラメータクエリ・クラウド連携・知られていない理由</h1>
+</div>
+<a class="prev-page-link" href="article_powerquery_intro.html">&larr; <span>パワークエリとは（本編）</span> を先に読む &horbar; 基本の全体像・VBA/関数との比較・メリット/デメリット</a>
+<div class="series-nav"><h4>📚 パワークエリシリーズ</h4><ul>
+<li><a href="article_powerquery_intro.html">① パワークエリとは（本編）</a></li>
+<li class="current">① 補足編（このページ）</li>
+<li><a href="article_pq_editor_ui.html">② 基本編</a> &horbar; 取得&rarr;変換&rarr;読込の3ステップ</li>
+<li><a href="../advanced/article_pq_merge_append.html">③ 応用編</a> &horbar; 結合・追加・ピボット解除・フォルダ一括取込</li>
+<li><a href="../advanced/article_pq_m_language.html">④ M言語入門</a> &horbar; GUIの限界を超えるカスタム処理</li>
+</ul></div>
+<section class="goal-section">
+<h2><span class="icon">💡</span> この記事の位置づけ</h2>
+<p>本編では日常業務で必要な核心部分を解説しました。
+        この補足編では、読み込み先の選択肢（接続のみ/データモデル）、セルの値でクエリを動的制御するパラメータクエリ、
+        SharePoint・Googleスプレッドシート連携、そしてパワークエリがなぜ知られていないのかの構造的理由まで、一歩踏み込んだ内容を扱います。</p>
+</section>
+<!-- ===== 読み込み先 ===== -->
+<section class="method-section">
+<h3>読み込み先の4つの選択肢</h3>
+<p>「閉じて読み込む」の横にある▼から「閉じて次に読み込む&hellip;」を選ぶと、読み込み先を選択できます。</p>
+<div style="overflow-x:auto;">
+<table class="pq-load-table">
+<thead><tr><th>読み込み先</th><th>シートに展開</th><th>ファイルサイズ</th><th>104万行超</th><th>主な用途</th></tr></thead>
+<tbody>
+<tr><td class="load-name">テーブル（既定）</td><td>される</td><td>増える</td><td>不可</td><td class="text-left">加工結果をシート上で直接使いたい場合（最も一般的）</td></tr>
+<tr><td class="load-name">ピボットテーブル</td><td>ピボットのみ</td><td>やや増</td><td>DM併用で可</td><td class="text-left">集計結果だけ見たい場合</td></tr>
+<tr><td class="load-name">接続の作成のみ</td><td>されない</td><td>増えない</td><td>DM併用で可</td><td class="text-left">中間テーブル・裏方用クエリ。複数クエリの結合設計時に必須</td></tr>
+<tr><td class="load-name">＋ データモデルに追加</td><td>されない</td><td>圧縮格納</td><td><strong>可能</strong></td><td class="text-left">大量データ分析・Power Pivot活用・複数テーブルのリレーション</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>「接続のみ」</strong>は、中間処理用のクエリ（マスタテーブルや加工途中のクエリ）をシートに出さずに保持するためのものです。
+        複数クエリを組み合わせる設計ではほぼ必須の選択肢であり、シートが増えずファイルも軽くなります。</p>
+</section>
+<!-- ===== データモデル ===== -->
+<section class="method-section">
+<h3>データモデル &horbar; Excelの中に隠れたもう1つのデータベース</h3>
+<p>「このデータをデータモデルに追加する」にチェックを入れると、データがExcel内部の<strong>列指向圧縮データベース</strong>に格納されます。
+        これが<strong>Power Pivot（パワーピボット）</strong>の世界への入口です。</p>
+<h4>データモデルのメリット</h4>
+<p><strong>104万行の壁を超えられる。</strong>
+        データモデルはワークシートの行数制限に縛られず、PCメモリ次第で数百万行以上を保持可能です（理論上約20億行）。
+        「接続のみ」＋「データモデルに追加」で読み込み、「挿入」&rarr;「ピボットテーブル」&rarr;「データモデルから」で集計できます。</p>
+<p><strong>複数テーブルのリレーションシップが組める。</strong>
+        「売上明細テーブル」と「商品マスタテーブル」をリレーションで紐づけると、1つのピボットで横断的に集計可能です。</p>
+<p><strong>DAX関数が使える。</strong>
+        前年比・累計などの高度な時系列分析がExcel上で可能になります。Power BIに移行する際もDAXの知識がそのまま活きます。</p>
+<p><strong>ファイルサイズが小さくなる。</strong>
+        列指向圧縮により、シート展開より格段に小さくなります。45MBが3MBになった事例もあります。</p>
+<h4>データモデルの注意点</h4>
+<p>データモデル内のデータは読み取り専用で直接編集できません。変更はパワークエリ側で行います。
+        通常のExcel関数（VLOOKUP、SUMIFS等）では直接参照できず、DAX関数やCUBE関数が必要です。
+        データモデル・リレーション・DAXはパワークエリとは別の学習領域なので段階的に進むのがおすすめです。</p>
+<div class="pq-note-good">
+          ✅ <strong>大量データ分析の黄金ルート</strong>：パワークエリで取得・変換 &rarr; 接続のみ＋データモデル &rarr; リレーション設定 &rarr; データモデルからピボット &rarr; DAXメジャー。
+        </div>
+</section>
+<!-- ===== パラメータクエリ ===== -->
+<section class="method-section">
+<h3>セルの値でクエリを動的に変える「パラメータクエリ」</h3>
+<p><strong>「条件を変えるたびにエディターを開かなきゃいけないんでしょ？」</strong>&horbar;&horbar;これは明確な誤解です。
+        パラメータクエリを使えば、シート上のセルに入力した値をフィルター条件・ファイルパス・検索値として渡し、
+        エディターを開かずに「更新」だけで結果を切り替えられます。</p>
+<div class="pq-param-flow">
+<div class="pq-param-step"><span class="ps-title">① セルに条件入力</span><span class="ps-desc">例：A1に「東京」</span></div>
+<span class="pq-param-arrow">&rarr;</span>
+<div class="pq-param-step"><span class="ps-title">② テーブル化＆取得</span><span class="ps-desc">セルをテーブル化して<br>PQで読み込む</span></div>
+<span class="pq-param-arrow">&rarr;</span>
+<div class="pq-param-step"><span class="ps-title">③ ドリルダウン</span><span class="ps-desc">テーブルから単一値に<br>変換して変数化</span></div>
+<span class="pq-param-arrow">&rarr;</span>
+<div class="pq-param-step"><span class="ps-title">④ メインクエリで参照</span><span class="ps-desc">フィルター条件に<br>パラメータを指定</span></div>
+<span class="pq-param-arrow">&rarr;</span>
+<div class="pq-param-step" style="background:#e8f5e9;border-color:#43a047;"><span class="color-2e7d32">⑤ セル変更＆更新</span><span class="ps-desc">「大阪」に変えて更新<br>&rarr; 結果が切り替わる</span></div>
+</div>
+<h4>仕組みの核心：Excel.CurrentWorkbook()</h4>
+<p>M言語の <code>Excel.CurrentWorkbook()</code> 関数で、現在のブック内のテーブル値をパワークエリ側で読み取ります。
+        ドリルダウンで変数化し、メインクエリのフィルター条件に埋め込むだけです。</p>
+<div class="m-code-block">
+<span class="m-comment">// パラメータ用クエリ（セルの値を取得）</span><br>
+<span class="m-keyword">let</span><br>
+          &nbsp;&nbsp;Source = <span class="m-func">Excel.CurrentWorkbook</span>(){[Name=<span class="m-string">"条件テーブル"</span>]}[Content],<br>
+          &nbsp;&nbsp;値 = Source{0}[条件値]<br>
+<span class="m-keyword">in</span><br>
+          &nbsp;&nbsp;値<br><br>
+<span class="m-comment">// メインクエリ（パラメータでフィルタリング）</span><br>
+<span class="m-keyword">let</span><br>
+          &nbsp;&nbsp;Source = <span class="m-func">Excel.CurrentWorkbook</span>(){[Name=<span class="m-string">"売上データ"</span>]}[Content],<br>
+          &nbsp;&nbsp;Filtered = <span class="m-func">Table.SelectRows</span>(Source, each [地域] = <span class="m-string">パラメータクエリ</span>)<br>
+<span class="m-keyword">in</span><br>
+          &nbsp;&nbsp;Filtered
+        </div>
+<div class="pq-note-danger">
+          ⚠️ <strong>パワークエリの限界を勝手に決めてしまうのが最大のリスクです。</strong>
+          GUI操作だけで完結するものと早合点し「動的に条件を変えられない＝使えない」と結論づける人が多くいます。
+          パラメータクエリとドリルダウンを組み合わせれば、検索値の動的変更・ファイルパスの可変指定・日付範囲の動的切り替えなど、かなり柔軟な仕組みが構築可能です。
+        </div>
+</section>
+<!-- ===== クラウド連携（補足的に） ===== -->
+<section class="method-section">
+<h3>補足：クラウド連携 &horbar; SharePoint・Googleスプレッドシートとの接続</h3>
+<p>このサイトは制限環境でのExcel活用がテーマですが、職場環境によってはクラウド連携が強力な武器になるため、補足として紹介します。</p>
+<div style="overflow-x:auto;">
+<table class="pq-ds-table">
+<thead><tr><th>カテゴリ</th><th>データソース</th><th>活用例</th></tr></thead>
+<tbody>
+<tr><td class="ds-cat">ファイル</td><td>Excel / CSV / PDF / JSON / XML</td><td>日常業務の取り込み全般</td></tr>
+<tr><td class="ds-cat">フォルダ</td><td>ローカル / ネットワーク共有</td><td>月別ファイルの一括結合</td></tr>
+<tr><td class="ds-cat">Microsoft 365</td><td>SharePoint Onlineリスト / SharePointフォルダ / OneDrive</td><td>SharePoint上のマスタリストを自動同期。チーム共有フォルダの全ファイルを一括取込</td></tr>
+<tr><td class="ds-cat">データベース</td><td>SQL Server / Azure SQL / Access / Oracle / MySQL / PostgreSQL</td><td>業務DBから直接集計</td></tr>
+<tr><td class="ds-cat">Web</td><td>Webページ（HTMLテーブル）/ REST API / OData</td><td>公開統計データの自動取得</td></tr>
+<tr><td class="ds-cat">Google系</td><td>Googleスプレッドシート（Web URL経由）</td><td>Google Workspace環境のデータをExcelに自動取込</td></tr>
+</tbody>
+</table>
+</div>
+<h4>SharePoint連携</h4>
+<p>Microsoft 365環境であれば、「SharePoint Onlineリストから」でSharePointリストのデータを直接取込、
+        「SharePointフォルダーから」でドキュメントライブラリ内のファイルをフォルダ一括取得と同じ要領で結合できます。
+        チームメンバーがSharePointにファイルを置くだけで、集約側Excelは「更新」1つで最新データを反映できます。</p>
+<h4>Googleスプレッドシート連携</h4>
+<p>Googleスプレッドシートの「ウェブに公開」機能でCSV形式のURLを発行し、パワークエリの「Webから」で接続すれば、
+        Google Workspace環境のデータもExcelに直接取り込めます。</p>
+<div class="pq-note">
+          💡 <strong>この接続力はVBAや関数では真似できません。</strong>
+          VBAでSharePoint APIを叩くには数十〜百行のHTTPリクエストコードが必要ですが、パワークエリならURLを入力して認証するだけです。
+          職場環境がMicrosoft 365でもGoogle Workspaceでも、パワークエリはデータの「橋渡し」として機能します。
+        </div>
+</section>
+<!-- ===== 知られていない理由 ===== -->
+<section class="method-section">
+<h3>なぜパワークエリは「存在すら知られていない」のか</h3>
+<h4>資料が圧倒的に少ない</h4>
+<p>Amazonで「Excel VBA」は数百冊ヒットしますが「パワークエリ」の専門書は約10冊前後。
+        VBAは1994年から30年以上の歴史がある一方、パワークエリの本格普及は2020年代からで、情報蓄積期間がVBAの10分の1しかありません。
+        ユーザー数も「認識しているのが20〜30人に1人、活用しているのは100人に1人」程度で、出版社にとって商業リスクが高い。
+        GUI操作は大量スクリーンショットが必要で書籍と相性が悪く、結果としてYouTubeに情報が集中し書籍は増えにくい構造です。
+        M言語はMicrosoft独自の関数型言語のため既存の解説者が参入しにくく、日本語資料は特に希少です。</p>
+<h4>構造的に発見されない</h4>
+<p><strong>「データ」タブを開く人がそもそもいない。</strong>
+        ほとんどのユーザーが使うのは「ホーム」「挿入」「数式」。存在を知らなければ検索もしません。</p>
+<p><strong>名前が何者か想像できない。</strong>
+        日本語版Excelでは「データの取得と変換」というメニュー名で「Power Query」の文字が画面にほぼ出ません。</p>
+<p><strong>研修・資格試験のカリキュラムに入っていない。</strong>
+        MOS等は関数・ピボット・VBAが中心です。</p>
+<p><strong>手作業に慣れすぎて「困っていない」。</strong>
+        パワークエリなら1分で終わる作業に30分かけていても、知らなければ「普通」です。</p>
+<p><strong>「自動化＝マクロ」の思い込み。</strong>
+        パワークエリはVBAとは全く別のアプローチですが「マクロじゃないなら自動化ではない」という先入観で選択肢に上がりません。</p>
+<p><strong>「データ整形」自体が評価されにくい。</strong>
+        完璧に整形されたデータは「最初からこの形だったんでしょ？」と思われ、労力が見えません。</p>
+<p><strong>Microsoftの啓蒙が後手に回った。</strong>
+        Power BIには大きなマーケティング投資がされましたが、ExcelのPower Queryは控えめでした。
+        エディターのUIもExcelと全く異なり、初回ガイドもありません。</p>
+<div class="pq-note-warn">
+          ⚠️ <strong>機能が劣っているから知られていないわけではありません。</strong>
+          既に活用している人からは「Power Query無しの業務はもはや考えられない」という声が多く、
+          知っている人と知らない人の間に巨大な業務効率格差が生まれています。
+          この認知の壁を超えた人だけが恩恵を受けている現状は、いま学び始めれば周囲と大きな差をつけられるチャンスでもあります。
+        </div>
+</section>
+<!-- ===== 学び方 ===== -->
+<section class="tips-section">
+<h3><span class="icon">📝</span> 資料が少ない中でどう学ぶのがベストか</h3>
+<p>正直に書くと、このサイトの筆者自身もパワークエリの学習には苦労しました。
+        GUI操作の入門レベルまでは比較的スムーズに進みましたが、パラメータクエリやM言語の領域に踏み込んだ途端、参照できる日本語資料が激減しました。
+        「Excel.CurrentWorkbook()でセルの値を取得する」「ドリルダウンで変数化する」といったパラメータクエリの仕組みは、
+        書籍でもWebでも断片的な情報しか見つからず、複数の英語記事とMicrosoft Learnの公式リファレンスを突き合わせて、
+        試行錯誤しながら理解を組み立てていくしかありませんでした。
+        M言語の条件分岐やList/Record/Table型の操作についても同様で、
+        VBAや関数のように「困ったら検索すればすぐ答えが出る」という状況にはほど遠いのが現実です。</p>
+<p>それでも学ぶ価値があると断言できるのは、一度仕組みを理解してしまえば、
+        毎月のデータ取り込み作業が「更新」1クリックに変わり、その時間短縮効果が永続するからです。
+        以下は、苦労した経験を踏まえたおすすめの学習ルートです。</p>
+<h4>書籍 &horbar; 少数だが良書あり</h4>
+<p>「できるYouTuber式 Excel パワークエリ 現場の教科書」「Excelパワークエリ データ収集・整形を自由自在にする本」「データ収集・整形の自動化がしっかりわかる Excel パワークエリの教科書」が定番です。
+        GUI操作の入門〜初級レベルは書籍でカバーできますが、パラメータクエリやM言語の踏み込んだ解説は書籍だけでは不足する場面が出てきます。</p>
+<h4>YouTube &horbar; GUI操作との相性が抜群</h4>
+<p>マウス操作の手順を見せる形式はYouTubeとの相性が非常に良く、日本語の解説チャンネルも充実してきています。
+        入門〜初級段階ではYouTubeが最も効率的な学習手段です。</p>
+<h4>Microsoft Learn（公式ドキュメント） &horbar; M言語の最終防衛ライン</h4>
+<p>M言語リファレンスとして最も網羅的な情報源です。GUIだけでは解決できない問題に当たったときに参照すると効果的ですが、
+        説明が簡潔すぎて初学者には厳しい部分もあります。英語版のほうが情報量が多いため、可能であれば英語版も併用することをおすすめします。</p>
+<h4>実務で使いながら覚える &horbar; これが最速</h4>
+<p>今やっている「CSV取り込み」「ファイル結合」をパワークエリでやり直してみるだけで威力を実感できます。
+        実務の課題を起点にすると、必要なM言語の構文もピンポイントで調べる動機が生まれるため、抽象的な文法学習より定着が早いです。</p>
+<div class="pq-note-warn">
+          ⚠️ <strong>筆者の実感として</strong>、パラメータクエリとM言語の日本語資料の少なさは2026年現在もほとんど改善されていません。
+          しかしだからこそ、このサイトのパワークエリシリーズでは実務で実際にぶつかるポイントを重点的に解説しています。
+          「書籍やYouTubeで入門 &rarr; 実務で試す &rarr; 詰まったらMicrosoft Learnと英語圏の記事で補完」が、現時点で最も現実的な学習ルートです。
+        </div>
+</section>
+<!-- シリーズナビ（下部） -->
+<div class="series-nav" style="margin-top:40px;">
+<h4>📚 パワークエリシリーズ &horbar; 次のステップへ</h4>
+<ul>
+<li><a href="article_powerquery_intro.html">① パワークエリとは（本編）</a></li>
+<li class="current">① 補足編（このページ）</li>
+<li><a href="article_pq_editor_ui.html">② 基本編</a> &horbar; 取得&rarr;変換&rarr;読込の3ステップを実際にやってみる</li>
+<li><a href="../advanced/article_pq_merge_append.html">③ 応用編</a> &horbar; マージ・追加・ピボット解除・フォルダ一括取込</li>
+<li><a href="../advanced/article_pq_m_language.html">④ M言語入門</a> &horbar; let...in 構文・よく使うM関数・カスタム列</li>
+</ul>
+</div>
+<section class="related-articles-section" style="margin-top:30px;border-top:2px dashed #ccc;padding-top:20px;">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_powerquery_intro.html">パワークエリとは（本編）&horbar; VBA・関数との決定的な違い</a></li>
+<li><a href="article_pq_editor_ui.html">パワークエリ基本編 &horbar; 取得&rarr;変換&rarr;読込の3ステップ</a></li>
+<li><span>パワークエリ応用編 &horbar; 結合・追加・ピボット解除（準備中）</span></li>
+<li><span>M言語入門 &horbar; GUIの限界を超えるカスタム処理（準備中）</span></li>
+<li>XLOOKUP基本編 &horbar; 構文と動作を完全理解</li>
+<li><a href="../../functions/latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+</ul>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

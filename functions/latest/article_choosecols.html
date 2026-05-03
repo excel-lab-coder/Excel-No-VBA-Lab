@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>CHOOSECOLS関数（対応環境向け）&horbar; 離れた列を自在に抽出｜Excel &times; No VBA Lab</title>
+<meta content="ExcelのCHOOSECOLS関数（Excel 2024 / Microsoft 365などの対応環境）で離れた列を自在に抽出・スピル展開する方法をVBA不要で解説。実務での列選択パターンを紹介。" name="description">
+<meta content="CHOOSECOLS 関数, Excel 2024, Microsoft 365, 列抽出, スピル 列選択, VBA不要, Excel 関数 最新" name="keywords">
+<meta content="CHOOSECOLS関数（対応環境向け）&horbar; 離れた列を自在に抽出｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのCHOOSECOLS関数（Excel 2024 / Microsoft 365などの対応環境）で離れた列を自在に抽出・スピル展開する方法をVBA不要で解説。実務での列選択パターンを紹介。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/latest/article_choosecols.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name"><meta content="https://excel-no-vba-lab.com/functions/latest/article_choosecols.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "CHOOSECOLS関数（対応環境向け）― 離れた列を自在に抽出",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "ExcelのCHOOSECOLS関数（Excel 2024 / Microsoft 365などの対応環境）で離れた列を自在に抽出・スピル展開する方法をVBA不要で解説。実務での列選択パターンを紹介。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-no-vba-lab.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-no-vba-lab.com/functions/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "CHOOSECOLS関数（対応環境向け）― 離れた列を自在に抽出",
+      "item": "https://excel-no-vba-lab.com/functions/latest/article_choosecols.html"
+    }
+  ]
+}</script>
+
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#functions">関数</a><span>&gt;</span>
+<strong>CHOOSECOLS</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-365">2024/365</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">CHOOSECOLS &horbar; 離れた列を自在に抽出・並び替え・絞り込み</h1>
+</div>
+<!-- =========================================================
+         基本構文
+      ========================================================= -->
+<section class="goal-section">
+<h2><span class="icon">📌</span> 基本構文</h2>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=CHOOSECOLS(配列, 列番号1, [列番号2], ...)</span>
+</div>
+<p>指定した配列（テーブルや範囲）から、<strong>必要な列番号だけを選んでスピル展開</strong>する関数です。<br>
+          列の順序を自由に組み替えることもでき、マイナス値を使えば「右から&cir;番目」の指定も可能です。</p>
+<div class="xdemo-note-good">
+          ✅ <strong>どんな場面で使う？</strong><br>
+          多列テーブルから「特定列だけ表示したい」「FILTER/XLOOKUP結果の列を絞りたい」「列順を組み替えたい」「右端から取りたい」すべてに対応できます。
+          FILTER・XLOOKUP・SORT・UNIQUE・VSTACKと組み合わせるとさらに強力になります。
+        </div>
+</section>
+<!-- =========================================================
+         【1】基本：特定列だけ抽出
+      ========================================================= -->
+<section class="method-section">
+<h3>【1】基本：離れた列を指定して抽出</h3>
+<p>10列あるテーブルから「ID（1列目）」「商品名（3列目）」「価格（5列目）」だけを別の場所に展開する例です。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=CHOOSECOLS(A2:E100, 1, 3, 5)</span>
+</div>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">動作イメージ</div>
+<div class="xdemo-layout">
+<div class="xdemo-block">
+<div class="xdemo-block-title">① 元テーブル（A〜E列）</div>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col">A (1)</td>
+<td class="xd-col">B (2)</td>
+<td class="xd-col">C (3)</td>
+<td class="xd-col">D (4)</td>
+<td class="xd-col">E (5)</td>
+</tr>
+<tr>
+<td class="xd-row">1</td>
+<td class="xd-head">ID</td>
+<td class="xd-head">担当者</td>
+<td class="xd-head">商品名</td>
+<td class="xd-head">カテゴリ</td>
+<td class="xd-head">価格</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="font-bold">1001</td>
+<td class="xd-master">田中</td>
+<td class="font-bold">PC</td>
+<td class="xd-master">家電</td>
+<td class="font-bold">150,000</td>
+</tr>
+<tr>
+<td class="xd-row">3</td>
+<td class="font-bold">1002</td>
+<td class="xd-master">鈴木</td>
+<td class="font-bold">マウス</td>
+<td class="xd-master">周辺機器</td>
+<td class="font-bold">3,000</td>
+</tr>
+<tr>
+<td class="xd-row">4</td>
+<td class="font-bold">1003</td>
+<td class="xd-master">佐藤</td>
+<td class="font-bold">デスク</td>
+<td class="xd-master">家具</td>
+<td class="font-bold">25,000</td>
+</tr>
+</table></div>
+<div class="text-center">橙色の列（1・3・5列目）だけ抽出</div>
+</div>
+<div class="xdemo-arrow">&rarr;</div>
+<div class="xdemo-block">
+<div class="xdemo-block-title">② G2 に 1本だけ入力 &rarr; スピル</div>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col">G</td>
+<td class="xd-col">H</td>
+<td class="xd-col">I</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="xd-spill-origin">1001</td>
+<td class="xd-spill">PC</td>
+<td class="xd-spill">150,000</td>
+</tr>
+<tr>
+<td class="xd-row">3</td>
+<td class="xd-spill">1002</td>
+<td class="xd-spill">マウス</td>
+<td class="xd-spill">3,000</td>
+</tr>
+<tr>
+<td class="xd-row">4</td>
+<td class="xd-spill">1003</td>
+<td class="xd-spill">デスク</td>
+<td class="xd-spill">25,000</td>
+</tr>
+</table></div>
+<div class="text-center">✅ 数式G2の1本で3列が自動展開</div>
+</div>
+</div>
+</div>
+<h4>マイナス指定：右から&cir;番目の列を取得</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=CHOOSECOLS(A2:Z100, 1, -1)　&larr; 1列目と最右列（最新月）</span>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=CHOOSECOLS(A2:Z100, 1, -3, -2, -1)　&larr; 1列目＋右端3列（直近3ヶ月）</span>
+</div>
+<div class="xdemo-note">
+          💡 月次売上が右方向に追加されていく表で、<strong>列数が増えても数式の修正不要</strong>。常に最新月を自動取得できます。
+        </div>
+<h4>列の順番を入れ替える</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=CHOOSECOLS(A2:D100, 3, 1, 4, 2)　&larr; C&rarr;A&rarr;D&rarr;Bの順に組み替え</span>
+</div>
+<div class="xdemo-note">
+          💡 外部システムへの貼り付けや CSV 出力時に、先方のフォーマットに合った列順に変換できます。
+          元データを変更する必要がありません。
+        </div>
+</section>
+<!-- =========================================================
+         【2】旧バージョン代替
+      ========================================================= -->
+<section class="legacy-section">
+<h3>【2】旧バージョンでの代替法（〜2019）</h3>
+<p>CHOOSECOLSが使えない環境では、INDEX関数で各列を個別に取り出します。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">G2: =INDEX($A$2:$E$100, ROW(A1), 1)　&larr; 1列目</span>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">H2: =INDEX($A$2:$E$100, ROW(A1), 3)　&larr; 3列目</span>
+</div>
+<div class="xdemo-note-warn">
+          ⚠️ CHOOKECOLSと違い、列ごとに数式を1本ずつ書く必要があり、行方向にもコピーが必要です。
+          メンテナンス性・速度ともに劣ります。
+        </div>
+</section>
+<!-- =========================================================
+         【3】実務応用パターン
+      ========================================================= -->
+<section class="tips-section">
+<h3>【3】実務で使う応用パターン集</h3>
+<!-- パターン1 -->
+<h4>🔥 パターン1：FILTER &times; CHOOSECOLS &horbar; 条件抽出＋列絞り</h4>
+<p>FILTERで条件に合う行を抽出した後、CHOOSECOLSで必要な列だけを表示します。
+          「26列ある表から営業部だけ抽出して4列だけ見たい」といった実務でよくある状況を1本の数式で解決できます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=CHOOSECOLS(FILTER(A2:Z1000, J2:J1000="営業部"), 1, 3, 5, 26)</span>
+</div>
+<p class="code-comment">① FILTERで営業部だけ抽出（全26列）&rarr; ② CHOOSECOLSで1・3・5・26列目だけ表示</p>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">動作イメージ</div>
+<div class="xdemo-layout">
+<div class="xdemo-block">
+<div class="xdemo-block-title">① FILTER後（26列まだある）</div>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.75em;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col">1</td>
+<td class="xd-col">2</td>
+<td class="xd-col">3</td>
+<td class="xd-col">4</td>
+<td class="xd-col">5</td>
+<td class="xd-col">&hellip;</td>
+<td class="xd-col">26</td>
+</tr>
+<tr>
+<td class="xd-target">ID</td>
+<td class="xd-master">氏名</td>
+<td class="xd-target">部署</td>
+<td class="xd-master">役職</td>
+<td class="xd-target">商品</td>
+<td class="xd-data">&hellip;</td>
+<td class="xd-target">売上</td>
+</tr>
+<tr>
+<td class="xd-target">1001</td>
+<td class="xd-master">田中</td>
+<td class="xd-target">営業部</td>
+<td class="xd-master">課長</td>
+<td class="xd-target">PC</td>
+<td class="xd-data">&hellip;</td>
+<td class="xd-target">500万</td>
+</tr>
+<tr>
+<td class="xd-target">1003</td>
+<td class="xd-master">佐藤</td>
+<td class="xd-target">営業部</td>
+<td class="xd-master">主任</td>
+<td class="xd-target">サーバ</td>
+<td class="xd-data">&hellip;</td>
+<td class="xd-target">300万</td>
+</tr>
+</table></div>
+</div>
+<div class="xdemo-arrow">&rarr;</div>
+<div class="xdemo-block">
+<div class="xdemo-block-title">② CHOOSECOLSで列絞り</div>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.75em;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col">ID</td>
+<td class="xd-col">部署</td>
+<td class="xd-col">商品</td>
+<td class="xd-col">売上</td>
+</tr>
+<tr>
+<td class="xd-spill-origin">1001</td>
+<td class="xd-spill">営業部</td>
+<td class="xd-spill">PC</td>
+<td class="xd-spill">500万</td>
+</tr>
+<tr>
+<td class="xd-spill">1003</td>
+<td class="xd-spill">営業部</td>
+<td class="xd-spill">サーバ</td>
+<td class="xd-spill">300万</td>
+</tr>
+</table></div>
+<div class="text-center">✅ すっきりした帳票が数式1本で完成</div>
+</div>
+</div>
+</div>
+<!-- パターン2 -->
+<h4>🔥 パターン2：XLOOKUP &times; CHOOSECOLS &horbar; 検索結果から必要列だけ</h4>
+<p>XLOOKUPの戻り範囲を広く取り、CHOOSECOLSで必要な列だけ絞ります。
+          VLOOKUPを何本も書いていた処理が1本に集約されます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=CHOOSECOLS(XLOOKUP(H2, A2:A1000, B2:F1000), 1, 2, 4)</span>
+</div>
+<p class="code-comment">XLOOKUPでB〜F列（5列）を返す &rarr; CHOOSECOLSで1列目(氏名)・2列目(部署)・4列目(メール)だけ表示</p>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">動作イメージ</div>
+<div class="xdemo-layout">
+<div class="xdemo-block">
+<div class="xdemo-block-title">① 社員マスタ（A〜F列）</div>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.78em;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col">A</td>
+<td class="xd-col">B(1)</td>
+<td class="xd-col">C(2)</td>
+<td class="xd-col">D(3)</td>
+<td class="xd-col">E(4)</td>
+<td class="xd-col">F(5)</td>
+</tr>
+<tr>
+<td class="xd-head">社員ID</td>
+<td class="xd-head">氏名</td>
+<td class="xd-head">部署</td>
+<td class="xd-head">役職</td>
+<td class="xd-head">メール</td>
+<td class="xd-head">電話</td>
+</tr>
+<tr>
+<td class="xd-master">1001</td>
+<td class="xd-target">田中太郎</td>
+<td class="xd-target">営業部</td>
+<td class="xd-master">課長</td>
+<td class="xd-target">tanaka@&hellip;</td>
+<td class="xd-master">03-x</td>
+</tr>
+</table></div>
+</div>
+<div class="xdemo-arrow">&rarr;</div>
+<div class="xdemo-block">
+<div class="xdemo-block-title">② 結果（1本）</div>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.78em;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col">氏名</td>
+<td class="xd-col">部署</td>
+<td class="xd-col">メール</td>
+</tr>
+<tr>
+<td class="xd-spill-origin">田中太郎</td>
+<td class="xd-spill">営業部</td>
+<td class="xd-spill">tanaka@&hellip;</td>
+</tr>
+</table></div>
+<div class="text-center">✅ VLOOKUP&times;3本 &rarr; 数式1本</div>
+</div>
+</div>
+</div>
+<div class="xdemo-note-warn">
+          ⚠️ CHOOSECOLSの列番号は<strong>XLOOKUPが返した結果の中での列番号</strong>（B〜Fの1番目・2番目&hellip;）です。
+          元シートのA〜Z列番号ではありません。
+        </div>
+<!-- パターン3 -->
+<h4>パターン3：SORT &times; CHOOSECOLS &horbar; ソート結果から列を絞る</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=CHOOSECOLS(SORT(A2:E100, 5, -1), 1, 3, 5)</span>
+</div>
+<p class="code-comment">5列目（価格）降順でソート &rarr; 1・3・5列目だけ表示</p>
+<!-- パターン4 -->
+<h4>パターン4：UNIQUE &times; CHOOSECOLS &horbar; 重複除去後に必要列だけ</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=CHOOSECOLS(UNIQUE(A2:E100), 2, 4)</span>
+</div>
+<p class="code-comment">重複除去済みデータの2・4列目だけ残す。マスタ一覧の作成に便利。</p>
+<!-- パターン5 -->
+<h4>🔥 パターン5：VSTACK &times; CHOOSECOLS &horbar; 複数シート縦結合＋列絞り</h4>
+<p>月別・拠点別シートを縦結合して、必要な列だけを統合レポートとして出力します。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=CHOOSECOLS(VSTACK(Sheet1!A2:F100, Sheet2!A2:F100, Sheet3!A2:F100), 1, 3, 6)</span>
+</div>
+<p class="code-comment">3シートを縦結合（全6列）&rarr; 1列目(ID)・3列目(商品名)・6列目(売上)だけ表示</p>
+<div class="xdemo-note-warn">
+          ⚠️ VSTACKで結合する各シートは<strong>列の構成・順番が同じ</strong>である必要があります。
+        </div>
+<!-- パターン6 -->
+<h4>🔥 パターン6：LET + VSTACK + FILTER + CHOOSECOLS &horbar; 全工程を1数式に</h4>
+<p>「複数シート統合 &rarr; 条件絞り &rarr; 列選択」を LET で段階的に処理し、可読性を上げます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(
+            統合, VSTACK(Q1!A2:H500, Q2!A2:H500, Q3!A2:H500, Q4!A2:H500),
+            抽出, FILTER(統合, CHOOSECOLS(統合, 4)="家電"),
+            CHOOSECOLS(抽出, 1, 3, 4, 8)
+            )</span>
+</div>
+<p class="code-comment">
+          ① 4シートを縦結合 &rarr; ② カテゴリ列（4列目）が「家電」の行だけ抽出 &rarr; ③ 必要な4列だけ出力
+        </p>
+<div class="xdemo-note-good">
+          ✅ FILTERの条件に <code>CHOOSECOLS(統合, 4)</code> を使えば、VSTACKした配列の特定列をそのまま条件列として参照できます。
+        </div>
+<!-- パターン7 -->
+<h4>🔥 パターン7：FILTER &times; SORT &times; CHOOSECOLS &horbar; 三段ネストで帳票を1本生成</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=CHOOSECOLS(SORT(FILTER(A2:H1000, C2:C1000="営業部"), 8, -1), 1, 2, 5, 8)</span>
+</div>
+<p class="code-comment">① 営業部だけ絞る &rarr; ② 売上降順でソート &rarr; ③ 4列だけ表示</p>
+<!-- パターン8 -->
+<h4>パターン8：列順の組み替え &horbar; 外部システム向けフォーマット変換</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=CHOOSECOLS(A2:D100, 3, 2, 4, 1)</span>
+</div>
+<p class="code-comment">C&rarr;B&rarr;D&rarr;A の順に並び替えて出力。外部システムの取込フォーマットに合わせる。</p>
+<!-- パターン9 -->
+<h4>パターン9：バイナリ検索 &times; CHOOSECOLS &horbar; XLOOKUPの高速化と連携（作業シート活用）</h4>
+<p>作業シートに SORTBY でソート済みデータを出力しておき、XLOOKUP がバイナリ検索でそれを参照。
+          さらに CHOOSECOLS で必要な列だけ絞ります。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">/* 作業シートA1（1回だけ）*/
+            =SORTBY(マスタ!A2:C500000, マスタ!A2:A500000, 1)</span>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">/* 検索シートで使う */
+            =XLOOKUP(A2, 作業!A1#, CHOOSECOLS(作業!A1#, 2, 3), "未登録", 0, 2)</span>
+</div>
+<div class="xdemo-note-good">
+          ✅ SORTBYの計算は作業シートの更新1回だけ。XLOOKUPはバイナリ検索で高速に参照。
+          CHOOSECOLSでスピル範囲の2・3列目だけを返します。
+          &rarr; <a href="article_xlookup_advanced.html">XLOOKUPバイナリ検索の詳細はこちら</a>
+</div>
+</section>
+<!-- =========================================================
+         【4】注意点
+      ========================================================= -->
+<section class="tips-section">
+<h3>【4】注意点：HSTACK と混同しない</h3>
+<p>「2つのテーブルを横に並べる HSTACK と CHOOSECOLSを組み合わせる」パターンは<strong>実務では推奨しません</strong>。<br>
+          HSTACKはキー照合なしで機械的に横結合するため、行の並び順が違うと<strong>データがズレます</strong>。</p>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">⚠️ HSTACK でデータがズレる例</div>
+<div class="xdemo-layout">
+<div class="xdemo-block">
+<div class="xdemo-block-title">左テーブル（ID順）</div>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col">ID</td>
+<td class="xd-col">氏名</td>
+</tr>
+<tr>
+<td class="xd-master">1001</td>
+<td class="xd-master">田中</td>
+</tr>
+<tr>
+<td class="xd-master">1002</td>
+<td class="xd-master">鈴木</td>
+</tr>
+</table></div>
+</div>
+<div class="xdemo-block" style="padding-top:30px;font-size:1.4em;color:#bbb;">＋</div>
+<div class="xdemo-block">
+<div class="xdemo-block-title">右テーブル（別の順）</div>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col">ID</td>
+<td class="xd-col">評価</td>
+</tr>
+<tr>
+<td class="xd-master" style="color:#c00;">1002</td>
+<td class="xd-master">B</td>
+</tr>
+<tr>
+<td class="xd-master" style="color:#c00;">1001</td>
+<td class="xd-master">A</td>
+</tr>
+</table></div>
+</div>
+<div class="xdemo-arrow">&rarr;</div>
+<div class="xdemo-block">
+<div class="xdemo-block-title">HSTACK結果（ズレている）</div>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col">ID</td>
+<td class="xd-col">氏名</td>
+<td class="xd-col">評価</td>
+</tr>
+<tr>
+<td class="xd-master">1001</td>
+<td class="xd-master">田中</td>
+<td class="xd-master" style="background:#ffebee;color:#c00;font-weight:bold;">B &cross;</td>
+</tr>
+<tr>
+<td class="xd-master">1002</td>
+<td class="xd-master">鈴木</td>
+<td class="xd-master" style="background:#ffebee;color:#c00;font-weight:bold;">A &cross;</td>
+</tr>
+</table></div>
+</div>
+</div>
+</div>
+<div class="xdemo-note-good">
+          ✅ テーブル結合は <strong>XLOOKUP でキー照合</strong>してから CHOOSECOLS で列を絞るのが安全です（パターン2参照）。
+        </div>
+</section>
+<!-- =========================================================
+         【5】早見表
+      ========================================================= -->
+<section class="tips-section">
+<h3>【5】組み合わせパターン早見表</h3>
+<div class="table-wrapper"><table class="pattern-table"><caption>データテーブル</caption>
+<thead>
+<tr>
+<th scope="col">組み合わせ</th>
+<th scope="col">できること</th>
+<th scope="col">実務シーン</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FILTER &times; CHOOSECOLS</td>
+<td>条件抽出＋列絞り</td>
+<td>部署別データの帳票</td>
+</tr>
+<tr>
+<td>XLOOKUP &times; CHOOSECOLS</td>
+<td>検索結果から必要列だけ</td>
+<td>入力フォーム・検索画面</td>
+</tr>
+<tr>
+<td>SORT &times; CHOOSECOLS</td>
+<td>ソート結果＋列絞り</td>
+<td>ランキング表</td>
+</tr>
+<tr>
+<td>UNIQUE &times; CHOOSECOLS</td>
+<td>重複除去＋列絞り</td>
+<td>マスタ一覧の作成</td>
+</tr>
+<tr>
+<td>VSTACK &times; CHOOSECOLS</td>
+<td>縦結合＋列絞り</td>
+<td>月別・拠点別シートの統合</td>
+</tr>
+<tr>
+<td>VSTACK &times; FILTER &times; CHOOSECOLS</td>
+<td>縦結合＋条件絞り＋列選択</td>
+<td>年間サマリレポート</td>
+</tr>
+<tr>
+<td>FILTER &times; SORT &times; CHOOSECOLS</td>
+<td>絞り＋並替＋列選択</td>
+<td>ダッシュボード帳票</td>
+</tr>
+<tr>
+<td>CHOOSECOLS（マイナス指定）</td>
+<td>右端から逆引き</td>
+<td>最新月の自動取得</td>
+</tr>
+<tr>
+<td>CHOOSECOLS で列順変更</td>
+<td>列の並び替え</td>
+<td>外部システム向けデータ整形</td>
+</tr>
+<tr>
+<td>作業シートSORT + バイナリXLOOKUP + CHOOSECOLS</td>
+<td>大量データ高速検索＋列絞り</td>
+<td>50万行規模のマスタ検索</td>
+</tr>
+</tbody>
+</table></div>
+<div class="xdemo-note" style="margin-top:14px;">
+          💡 <strong>ネストの設計のコツ：</strong>内側から外側に向かって<br>
+          「① 統合（VSTACK）&rarr; ② 絞る（FILTER）&rarr; ③ 並べる（SORT）&rarr; ④ 列を選ぶ（CHOOSECOLS）」<br>
+          の順を意識すると可読性が上がります。複雑な場合は LET 関数で中間変数を使うとさらに見通しが良くなります。
+        </div>
+<div class="xdemo-note-warn" style="margin-top:10px;">
+          ⚠️ <strong>パフォーマンスと高速化のコツ：</strong><br>
+          VSTACK で大量データを結合した上に FILTER・SORT・CHOOSECOLS を幾重にもネストすると、再計算が重くなることがあります。<br>
+          体感で遅い場合は以下の<strong>アクセス回数・計算回数を減らす</strong>アプローチが有効です：
+          <ul style="margin:6px 0 0; padding-left:1.5em; line-height:1.7;">
+<li><strong>LET関数で計算をまとめる：</strong> 同じ範囲の集計や結合をLET内で1度だけ計算させ、メモリ上で使い回す。</li>
+<li><strong>作業シートに展開する：</strong> 重い処理（VSTACKでの全シート結合など）は別シートに一度スピルで出力しておき、最終的な帳票からそのスピル範囲を参照する。</li>
+<li><strong>スピルで1本の数式にまとめる：</strong>
+              XLOOKUPなどでVSTACKした範囲を検索する際、オートフィルで下に何千行もコピーするとVSTACKの重い結合処理が「行数分」毎回走ってしまいます。検索値を配列で指定してスピルさせれば、VSTACKの処理は<strong>1回だけ</strong>で終わるため劇的に軽くなります。</li>
+</ul>
+</div>
+</section>
+<!-- 関連記事 -->
+<section class="related-articles-section" style="margin-top:30px;border-top:2px dashed #ccc;padding-top:20px;">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li>CHOOSEROWS &horbar; 特定の行を自在に抽出・TOP N・期首/期末比較</li>
+<li><a href="article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+<li><a href="article_xlookup_advanced.html">XLOOKUP 応用編 &horbar; バイナリ検索・SORT/SORTBYとの組み合わせ</a></li>
+<li><a href="article_sort.html">SORT / SORTBY &horbar; 動的並び替え</a></li>
+<li><a href="article_unique.html">UNIQUE &horbar; 重複排除リストを動的生成</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+

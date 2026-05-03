@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Excelが遅い本当の原因 &horbar; メモリスワップと数式設計の関係｜Excel &times; No VBA Lab</title>
+<link href="https://excel-no-vba-lab.com/others/speed/article_memory_swap.html" rel="canonical">
+<meta content="Excelが遅い本当の原因 &horbar; メモリスワップと数式設計の関係｜Excel &times; No VBA Lab" property="og:title">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<meta content="VLOOKUPをINDEX+MATCHに変えても遅いまま？Excelの遅延の本当の原因はメモリスワップにある。RAM・SSD・HDDの速度差、32ビットExcelのメモリ制限、スワップ環境で効く数式設計を徹底解説。" name="description">
+<meta content="Excel,遅い,原因,メモリ,スワップ,VLOOKUP,INDEX MATCH,32ビット,64ビット,高速化,SSD,HDD,RAM,数式設計,パフォーマンス" name="keywords">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<style>
+    /* ===== ページ固有スタイル ===== */
+
+    .code-block,.code-block-nocopy{background:#1e1e1e;color:#d4d4d4;padding:18px 20px;border-radius:8px;font-family:"Cascadia Code","Consolas",monospace;font-size:.85rem;line-height:1.7;overflow-x:auto;margin:16px 0;white-space:pre-wrap;position:relative}
+    .code-desc{font-size:.82rem;color:#555;margin:-8px 0 16px;padding-left:4px}
+    .source-note{font-size:.8rem;color:#666;margin:8px 0 16px}
+    .source-note a{color:#0078d4}
+
+    .related-articles{margin-top:40px;padding-top:20px;border-top:1px solid #e0e0e0}
+    .related-articles h3{font-size:1rem;margin-bottom:10px}
+    .related-articles ul{list-style:none;padding:0}
+    .related-articles li{padding:4px 0}
+    .related-articles a{color:#0078d4;text-decoration:none;font-size:.88rem}
+    .related-articles a:hover{text-decoration:underline}
+  </style>
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Excelが遅い本当の原因 \u0026horbar; メモリスワップと数式設計の関係","description":"VLOOKUPをINDEX+MATCHに変えても遅いまま？Excelの遅延の本当の原因はメモリスワップにある。RAM・SSD・HDDの速度差、32ビットExcelのメモリ制限、スワップ環境で効く数式設計を徹底解説。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/others/speed/article_memory_swap.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span><a href="../../index.html#others">計算速度</a><span>&gt;</span><strong>メモリスワップと数式設計</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">Excelが遅い本当の原因 &horbar; メモリスワップと数式設計の関係</h1>
+</div>
+<!-- ============================================================ -->
+<!-- 信頼性に関する注記 -->
+<!-- ============================================================ -->
+<div class="xdemo-note-danger">
+<p><strong>本稿の信頼性について</strong></p>
+<p>本稿は、低スペック環境での実務経験、Microsoft公式ドキュメント、Excel MVPの検証記事、コミュニティの議論を基に構成しています。ある程度の実機テストを行ったうえで作成していますが、すべてのパターンを網羅的に検証したわけではありません。本稿の内容は「なぜ遅くなるのか」「どう設計すれば改善できるのか」の<strong>考え方</strong>を説明するものであり、環境やバージョン、データ構成によって結果が異なる場合があります。</p>
+<p>読者ご自身の環境で実際に計測し、結果を確かめたうえで適用されることを推奨します。もし本稿と異なる結果が得られた場合は、そちらが正しい可能性があります。</p>
+</div>
+<!-- ============================================================ -->
+<!-- 1. 導入 -->
+<!-- ============================================================ -->
+<h2>1. 「関数を変えても遅いまま」の正体</h2>
+<p>Excelの高速化というと、「VLOOKUPをINDEX+MATCHに変えろ」「SUMPRODUCTをCOUNTIFSに変えろ」といったアドバイスをよく見かけます。しかし、これらの関数を置き換えても体感速度がまったく変わらないケースが少なくありません。</p>
+<p>原因はシンプルです。Excelが遅い最大の理由は、関数の処理速度ではなく、<strong>メモリ不足によるスワップ（ページング）</strong>にあるからです。メモリに乗り切らないデータがディスクに退避され、再計算のたびにディスクから読み直す処理が発生すると、関数の速度差など誤差に埋もれるほどの遅延が起きます。</p>
+<p>本稿では、この「スワップ」を軸に、Excelが遅くなるメカニズムと、数式設計レベルでの対策の考え方を解説します。</p>
+<!-- ============================================================ -->
+<!-- 2. 記憶媒体の速度差 -->
+<!-- ============================================================ -->
+<h2>2. RAM・SSD・HDDの速度差 &horbar; 200倍の壁</h2>
+<p>まず、Excelの計算がどこで行われるかを理解する必要があります。通常、セルのデータや数式はRAM（メインメモリ）に展開され、CPUが処理します。RAMは極めて高速ですが、容量に限りがあります。</p>
+<p>物理メモリが不足すると、Windowsは使用頻度の低いデータをディスク上の「ページファイル」に退避します。これがスワップです。再びそのデータが必要になると、ディスクからRAMに読み戻す「ページイン」が発生します。この読み戻しの速度がボトルネックになります。</p>
+<div style="overflow-x:auto;margin:18px 0">
+<table class="format-table">
+<caption>記憶媒体の速度比較（目安）</caption>
+<thead>
+<tr><th>媒体</th><th>読み書き速度</th><th>RAMとの速度比</th></tr>
+</thead>
+<tbody>
+<tr><td>RAM（DDR4）</td><td>20,000〜60,000 MB/s</td><td>1倍（基準）</td></tr>
+<tr><td>NVMe SSD</td><td>3,000〜7,000 MB/s</td><td>約 1/10</td></tr>
+<tr><td>SATA SSD</td><td>400〜550 MB/s</td><td>約 1/50〜1/100</td></tr>
+<tr><td>HDD（7200rpm）</td><td>80〜160 MB/s</td><td>約 1/200〜1/500</td></tr>
+</tbody>
+</table>
+</div>
+<p>HDDにスワップが発生した場合、RAMと比べて200倍以上遅くなります。0.1秒で終わるはずの再計算が20秒以上かかり、実質フリーズに見えることになります。SSDであればスワップ時の影響は大幅に軽減されますが、それでもRAMの10分の1〜100分の1の速度であり、根本的な解決にはなりません。</p>
+<!-- ============================================================ -->
+<!-- 3. 32ビットExcelのメモリ制限 -->
+<!-- ============================================================ -->
+<h2>3. 32ビットExcelのメモリ制限と「4GBのPC」の現実</h2>
+<p>32ビット版Excelは、Excel 2013以降のLAA（Large Address Aware）対応により、64ビットWindows上で最大4GBの仮想メモリを使用できます。それ以前のバージョンでは上限は2GBでした。</p>
+<p>しかし、「使用できる」と「実際に使える」は異なります。物理メモリが4GBのPCでは、Windows 10自体が約1.5〜2GBを消費し、ウイルス対策ソフト・常駐サービス・社内管理ツールなどが0.5〜1GB使います。合計で約2.5〜3GBが占有され、Excelに残るのは1〜1.5GB程度。最悪の場合、1GB未満になることもあります。</p>
+<p>32ビットExcelが4GBまでアドレス可能であっても、物理メモリが1GBしか空いていなければ、残り3GBはすべてディスクへのスワップになります。数万行のブックに複数の検索関数が入っていれば、1セル変更するたびにスワップが走り、数秒〜数十秒の遅延が発生します。</p>
+<p>つまり「4GBのPCで32ビットExcelを使う」という構成は、構造的にスワップが避けられないのです。</p>
+<!-- ============================================================ -->
+<!-- 4. VLOOKUP vs INDEX+MATCH -->
+<!-- ============================================================ -->
+<h2>4. VLOOKUP vs INDEX+MATCH &horbar; 速度ではなくメモリ消費の差</h2>
+<p>「VLOOKUPよりINDEX+MATCHが速い」という話はよく見かけますが、通常のメモリ環境ではその差はごくわずかです。しかし、スワップが発生する環境では話が変わります。両者はメモリに展開するセル数が大きく異なる可能性があるからです。</p>
+<h3>4-1. メモリ展開セル数の比較</h3>
+<p>VLOOKUPは検索列から結果列まで、指定した範囲の<strong>全列</strong>をメモリに展開する必要があります。一方、INDEX+MATCHは検索列と結果列の<strong>2列だけ</strong>で済みます。</p>
+<p>例：B列で検索し、F列の値を返す場合（5,000行）</p>
+<div class="code-block">=VLOOKUP(A1, B1:F5000, 5, FALSE)</div>
+<p class="code-desc">&rarr; B〜F列の5列 &times; 5,000行 = <strong>25,000セル</strong>を参照範囲に含む</p>
+<div class="code-block">=INDEX(F1:F5000, MATCH(A1, B1:B5000, 0))</div>
+<p class="code-desc">&rarr; B列 + F列の2列 &times; 5,000行 = <strong>10,000セル</strong>のみ参照</p>
+<div style="overflow-x:auto;margin:18px 0">
+<table class="format-table">
+<caption>テーブル列数別 参照セル数の比較（5,000行）</caption>
+<thead>
+<tr><th>テーブル列数</th><th>VLOOKUP 参照セル数</th><th>INDEX+MATCH 参照セル数</th><th>比率</th></tr>
+</thead>
+<tbody>
+<tr><td>5列</td><td>25,000</td><td>10,000</td><td>2.5倍</td></tr>
+<tr><td>10列</td><td>50,000</td><td>10,000</td><td>5倍</td></tr>
+<tr><td>20列</td><td>100,000</td><td>10,000</td><td>10倍</td></tr>
+</tbody>
+</table>
+</div>
+<div style="overflow-x:auto;margin:18px 0">
+<table class="format-table">
+<caption>大規模テーブルでの比較（30,000行 &times; 20列）</caption>
+<thead>
+<tr><th>関数</th><th>参照セル数</th><th>概算メモリ（1セル16バイト想定）</th></tr>
+</thead>
+<tbody>
+<tr><td>VLOOKUP</td><td>600,000</td><td>約9.2 MB</td></tr>
+<tr><td>INDEX+MATCH</td><td>60,000</td><td>約0.9 MB</td></tr>
+</tbody>
+</table>
+</div>
+<p>メモリに余裕がある環境（64ビットExcel・16GB RAM）では、この差は体感に影響しません。しかし、4GBメモリの32ビットExcelでExcelに残るRAMが1GB以下の状態では、VLOOKUPの広い参照範囲がメモリ消費を増大させ、スワップの引き金になりやすいと考えられます。</p>
+<div class="xdemo-note-danger">
+<p><strong>⚠ 注意</strong>：Excelが参照範囲内の全セルを同時にメモリに展開するか、必要な列だけを読むかは内部実装に依存し、Microsoftは詳細を公開していません。上記は「参照範囲が広いほどメモリ消費が増える傾向がある」という考え方として理解してください。</p>
+</div>
+<h3>4-2. XLOOKUPのメモリ消費</h3>
+<p>Microsoft 365 / Excel 2021以降で使用できるXLOOKUPは、検索列と結果列を個別に指定するため、INDEX+MATCHと同様に2列分の参照で済みます。メモリ効率の観点ではVLOOKUPよりXLOOKUPが優れていると考えられます。</p>
+<div class="code-block">=XLOOKUP(A1, B1:B5000, F1:F5000)</div>
+<p class="code-desc">&rarr; B列 + F列の2列 &times; 5,000行 = <strong>10,000セル</strong>（INDEX+MATCHと同等）</p>
+<!-- ============================================================ -->
+<!-- 5. 内部キャッシュ -->
+<!-- ============================================================ -->
+<h2>5. Excelの内部キャッシュ &horbar; 同一範囲の使い回し</h2>
+<h3>5-1. キャッシュの仕組み</h3>
+<p>Excel 2016以降（Office更新プログラムが適用されている環境、具体的にはOffice 365〔現Microsoft 365〕version 1809 / 2018年9月以降のビルド）では、VLOOKUP / HLOOKUP / MATCHが同一テーブル範囲を完全一致検索する際、最初の検索で内部キャッシュインデックスを構築し、以降の数式で再利用します。Excel 2021 / 2024 および Microsoft 365 では基本的にこの機能が含まれています。</p>
+<p>Microsoftの公式テストでは、5列の同一テーブルに対するVLOOKUP 100行がExcel 2010で37秒 &rarr; Excel 2016で12秒に短縮されたと報告されています。</p>
+<p>同様に、SUMIFS / COUNTIFS / AVERAGEIFS等も、Office 365（現Microsoft 365）version 2005（2020年6月）以降で内部キャッシュが導入され、100万セルからの1,200件のSUMIFS集計がExcel 2010の20秒 &rarr; 8秒に改善されています。</p>
+<p class="source-note">出典：<a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/excel-performance/excel-performance-and-limit-improvements" rel="noopener" target="_blank">Excel performance and limit improvements - Microsoft Learn</a></p>
+<p>このキャッシュは<strong>名前の定義の有無に関係なく</strong>、セルに直接記述した参照でも機能します。条件は「すべての数式が完全に同一の範囲を参照していること」です。</p>
+<h3>5-2. キャッシュが効かなくなるケース</h3>
+<p>相対参照で数式をコピーすると、行がずれた時点で参照範囲が変わり、キャッシュが効かなくなります。</p>
+<div class="code-block-nocopy">セルB1: =VLOOKUP(A1, D1:H5000, 5, FALSE)   &rarr; D1:H5000
+セルB2: =VLOOKUP(A2, D2:H5001, 5, FALSE)   &rarr; D2:H5001（ずれた）
+&rarr; 範囲が異なるためキャッシュが効かない</div>
+<p>絶対参照で固定すれば、すべてのセルが同一の範囲を参照し、キャッシュが有効になります。</p>
+<div class="code-block">=VLOOKUP(A1, $D$1:$H$5000, 5, FALSE)</div>
+<p class="code-desc">&rarr; どのセルにコピーしても参照先は常に D1:H5000 &rarr; キャッシュ有効</p>
+<p>なお、<code>$D$1:$H$5000</code> と <code>D1:H5000</code> は「ドルマーク自体」が違うのではなく、コピー先で<strong>実際に指すアドレスが一致するかどうか</strong>が判定基準です。すべてのセルが結果的に同じ範囲を指していればキャッシュは効きます。ただし、実務上は絶対参照で統一するのが確実です。</p>
+<div class="xdemo-note-info">
+<p><strong>💡 名前の定義のメリットは保守性</strong></p>
+<p>名前の定義を使っても、計算速度やメモリ効率が向上するわけではありません。名前の定義の利点は可読性と保守性にあります。範囲の変更が一箇所で済み、数式の参照範囲不一致（＝キャッシュ無効化）を防止できるため、間接的にパフォーマンス維持に寄与します。ただし、名前の定義にOFFSETなどの揮発性関数を含めると毎回再評価されるため、逆効果になる場合があります。</p>
+</div>
+<!-- ============================================================ -->
+<!-- 6. スワップ環境での数式設計 -->
+<!-- ============================================================ -->
+<h2>6. スワップ環境で効く数式設計の考え方</h2>
+<p>ハードウェアの増強が最も効果的な対策ですが、企業のPCは情報システム部門が一括管理し、簡単にはメモリ増設やSSD換装ができないのが現実です。ここでは、数式設計レベルでスワップの影響を軽減するための考え方を整理します。</p>
+<h3>6-1. 参照範囲の最小化 &horbar; 列全体参照の実態</h3>
+<p>列全体参照（例：<code>B:B</code>）について、「104万行をメモリに展開するから遅い」という説明をよく見かけますが、これは正確ではありません。</p>
+<p>Excel MVP の Charles Williams 氏（FastExcel）による実測テストでは、<strong>SUM、VLOOKUP、MATCH、COUNTIFなどの主要関数は、列全体参照であってもUsedRange（使用範囲）の最終行までしか評価しない</strong>ことが確認されています。つまり、データが5,000行ならSUM(A:A)は5,000行分しか計算しません。</p>
+<p>ただし、以下のケースでは列全体参照が問題になります。</p>
+<div class="code-block-nocopy">列全体参照が問題にならないケース（UsedRangeが適切な場合）：
+  =SUM(A:A)                     &rarr; UsedRangeの最終行まで（例：5,000行分）
+  =VLOOKUP(x, A:E, 5, FALSE)   &rarr; 同上
+  =COUNTIF(A:A, "東京")          &rarr; 同上
+
+列全体参照が問題になるケース：
+  =SUMPRODUCT(A:A)              &rarr; 全104万行を強制評価（非常に遅い）
+  {=IF(A:A=1,1,0)}              &rarr; 配列数式は全行を評価
+  UsedRangeが肥大化している場合  &rarr; 書式設定や末尾のゴミデータで
+    UsedRangeが50万行に拡張されていると、SUM等も50万行を評価</div>
+<p class="source-note">出典：<a href="https://fastexcel.wordpress.com/2015/12/12/excel-full-column-references-and-used-range-good-idea-or-bad-idea/" rel="noopener" target="_blank">Excel Full Column References and Used Range: Good Idea or Bad Idea? - FastExcel</a></p>
+<p>したがって、列全体参照が直ちに遅くなるわけではありませんが、以下の理由から<strong>実データ範囲に絞る方が安全</strong>です。</p>
+<div class="code-block-nocopy">推奨：範囲を明示する理由
+
+1. UsedRangeの肥大化リスクを排除
+   &rarr; 誰かが最終行に書式を設定しただけで全体が遅くなる
+
+2. SUMPRODUCT・配列数式との混在を防止
+   &rarr; 他の人が配列数式に書き換えた瞬間に遅くなる
+
+3. メモリ使用量の予測が容易
+   &rarr; 範囲が明示されていれば、メモリ消費を事前に見積もれる
+
+4. 参照範囲の一致によるキャッシュ効果
+   &rarr; 列全体参照同士ならキャッシュが効くが、
+     他の数式で $A$1:$A$5000 と書かれていると不一致になる</div>
+<h3>6-2. IF空白判定による処理スキップ</h3>
+<p>作業列にコピーした数式で、データが空白の行では重い計算を実行しないようIF文で制御できます。</p>
+<div class="code-block">=IF(A1="", "", VLOOKUP(A1, $D$1:$H$5000, 5, FALSE))</div>
+<p>Excelのセルコピー数式では、IF関数は条件を満たした時点で残りの引数を評価しません（短絡評価）。A1が空白なら、VLOOKUPはまったく実行されず、空文字が即座に返されます。</p>
+<p>1万行のうちデータが5,000行しかなければ、VLOOKUPの実行回数は5,000回に半減します。スワップ環境では、各VLOOKUPがページインを引き起こす可能性があるため、呼び出し回数の削減が直接的な速度改善になると考えられます。</p>
+<h3>6-3. 作業列の配置と参照パターン</h3>
+<p>コンピュータサイエンスの一般的な考え方として、メモリ上で近接するデータへのアクセスはキャッシュヒット率が高く、遠く離れたデータへのアクセスはキャッシュミスが増えるとされています（「参照の局所性」）。この原理に基づけば、作業列を元データの近くに配置し、参照が列方向に大きく飛ばない設計の方がメモリアクセス効率が良い可能性があります。</p>
+<div class="code-block-nocopy">一般的な考え方：
+
+参照が近い設計: A列のデータ &rarr; B列で検索 &rarr; C列で結果表示
+参照が遠い設計: A列のデータ &rarr; Z列で検索 &rarr; AH列で結果表示</div>
+<div class="xdemo-note-danger">
+<p><strong>⚠ 注意</strong>：ただし、Excelの内部メモリ構造はスパース格納（必要なセルのみ保持する方式）を使用しており、C言語のような連続メモリ配列とは異なります。隣接列が必ず同じメモリページに載るかどうかはMicrosoftが公開しておらず、実証されたものではありません。上記は「一般的にはこのように考えられる」という参考情報です。</p>
+<p>確実に言えるのは、Microsoft公式ドキュメントに記載がある「<strong>同じシート内の参照は他シートへの参照より高速</strong>」という点です。作業列はできる限り同じシート内に配置し、別シートへの参照を最小限にすることが推奨されています。</p>
+</div>
+<h3>6-4. 参照範囲の統一（キャッシュ最大活用）</h3>
+<p>セクション5で述べた通り、Excel 2016以降は同一範囲参照でキャッシュが効きます。すべての検索式で参照範囲を完全一致させることで、キャッシュインデックスが再利用され、検索効率が向上します。</p>
+<div class="code-block-nocopy">悪い例（範囲が不一致）:
+  B1: =VLOOKUP(A1, $D$1:$H$5000, 3, FALSE)
+  C1: =VLOOKUP(A1, $D$1:$H$5001, 5, FALSE)  &larr; 5001行で不一致
+
+良い例（範囲が一致）:
+  B1: =VLOOKUP(A1, $D$1:$H$5000, 3, FALSE)
+  C1: =VLOOKUP(A1, $D$1:$H$5000, 5, FALSE)  &larr; 同一範囲</div>
+<!-- ============================================================ -->
+<!-- 7. 揮発性関数 -->
+<!-- ============================================================ -->
+<h2>7. 揮発性関数がスワップを誘発する理由</h2>
+<p>INDIRECT、OFFSET、NOW、TODAY、RANDなどの揮発性関数は、セルの依存関係に関係なく、ブック全体の再計算を毎回トリガーします。通常の数式は変更があったセルとその依存セルだけ再計算する「スマート再計算」が働きますが、揮発性関数が1つでもあると、この最適化が無効になります。</p>
+<p>メモリに余裕がある環境では全体再計算のコストは許容範囲ですが、スワップ環境では致命的です。再計算のたびにブック全体のセルを読み込むため、ページイン回数が増大すると考えられます。</p>
+<div class="code-block-nocopy">揮発性を含む例:
+  =SUMPRODUCT((INDIRECT("A1:A"&ROW())="東京")*1)
+  &rarr; 入力のたびにブック全体が再計算
+
+非揮発性の代替:
+  =COUNTIF($A$1:$A$5000, "東京")
+  &rarr; 依存セルの変更時のみ再計算</div>
+<!-- ============================================================ -->
+<!-- 8. スピル数式との速度比較 -->
+<!-- ============================================================ -->
+<h2>8. スピル数式とセルコピー &horbar; スワップ環境での違い</h2>
+<h3>8-1. フル再計算時の速度比較</h3>
+<p>Microsoft 365 / Excel 2021以降で利用できるスピル（動的配列）数式は、1つのセルに入力した数式が自動的に複数行に展開されます。計算エンジンは数式を1回だけ解析し、全行の結果を一括で生成します。</p>
+<div style="overflow-x:auto;margin:18px 0">
+<table class="format-table">
+<caption>スピル vs セルコピー &horbar; 処理コスト概念比較（1万行）</caption>
+<thead>
+<tr><th>項目</th><th>スピル</th><th>セルコピー</th></tr>
+</thead>
+<tbody>
+<tr><td>数式解析回数</td><td>1回</td><td>10,000回</td></tr>
+<tr><td>アドレス解決回数</td><td>1回</td><td>10,000回</td></tr>
+<tr><td>関数呼び出しオーバーヘッド</td><td>1回分</td><td>10,000回分</td></tr>
+<tr><td>ファイルサイズ（数式XML）</td><td>1セル分</td><td>10,000セル分</td></tr>
+<tr><td>フル再計算速度</td><td>速い</td><td>遅い</td></tr>
+</tbody>
+</table>
+</div>
+<p>ブックを開いた直後や Ctrl+Alt+F9 による強制再計算では、スピルが圧倒的に速くなります。</p>
+<h3>8-2. セル単位変更時の再計算</h3>
+<p>しかし、1セルを変更した場合の挙動は異なります。セルコピーでは、Excelのスマート再計算により、変更があったセルとその依存セルだけが再計算されます。一方、スピルは配列全体を再生成するため、1万行すべてが再計算されます。</p>
+<p>さらに、スピルは計算結果をセルに「展開」する際に、配列サイズの確定・メモリ確保・セルへの書き込みというステップが毎回発生します。この展開コスト自体がオーバーヘッドとなります。</p>
+<h3>8-3. IF空白判定の効き方の違い</h3>
+<p>セルコピーのIF文は短絡評価が効き、空白行では重い処理がスキップされます。1万行中5,000行が空白なら、重い計算は5,000回だけです。</p>
+<p>スピルの場合、配列全体を一括で処理するため、IF文の中であっても全行分の配列処理が内部で発生する可能性があります。空白行のスキップ効率はセルコピーより劣る場合があります。</p>
+<h3>8-4. スピルの範囲制御による最適化（理屈上の最速構成）</h3>
+<p>スピルのデメリット（全行展開・全行再計算）を解消する方法として、最終行を1セルで算出し、INDEX:INDEX構文でスピルの入力範囲を実データ行数に限定する手法があります。</p>
+<h4>ステップ①：最終行の算出（1セルだけ）</h4>
+<div class="code-block">=COUNTA(A2:A10000)</div>
+<p class="code-desc">&rarr; Z1セルに配置。ヘッダーを除いたデータ行数を返す（例：5,000）</p>
+<h4>ステップ②：INDEX:INDEX構文で実データ範囲だけを参照してスピル</h4>
+<div class="code-block">=VLOOKUP(INDEX(A2:A10000,1):INDEX(A2:A10000,Z1), $D$1:$H$5000, 2, FALSE)</div>
+<p class="code-desc">&rarr; B2セルに配置。INDEX:INDEX構文により参照範囲がA2:A5001（5,000行分）に動的に限定される。この範囲がそのままスピルの展開行数になるため、5,000行分だけ処理・展開される。</p>
+<div class="code-block">=VLOOKUP(INDEX(A2:A10000,1):INDEX(A2:A10000,Z1), $D$1:$H$5000, 5, FALSE)</div>
+<p class="code-desc">&rarr; C2セルに配置。同じINDEX:INDEX範囲で別の列番号を返す。</p>
+<div class="code-block">=INDEX($H$1:$H$5000, MATCH(INDEX(A2:A10000,1):INDEX(A2:A10000,Z1), $D$1:$D$5000, 0))</div>
+<p class="code-desc">&rarr; INDEX+MATCH版。検索列と結果列の2列のみ参照。</p>
+<h4>INDEX:INDEX構文のポイント</h4>
+<div class="code-block-nocopy">INDEX(A2:A10000, 1)   &rarr; A2（範囲の先頭セル）
+INDEX(A2:A10000, Z1)  &rarr; A5001（Z1=5000番目のセル）
+
+この2つをコロンでつなぐと：
+A2:A5001 という「セル範囲参照」が生成される
+
+重要：
+・INDIRECTのような揮発性関数ではない
+・Excelの参照解決の段階で5,000行の範囲として認識される
+・1万行を読み込んでから切り出すのではなく、
+  最初から5,000行分だけが参照対象になる</div>
+<div class="xdemo-note-info">
+<p><strong>💡 なぜINDIRECTやOFFSETではなくINDEX:INDEXか</strong></p>
+<p>INDIRECT("A2:A" & Z1+1) や OFFSET(A2,0,0,Z1,1) でも同じ動的範囲を作れますが、どちらも揮発性関数です。揮発性関数はブック内のどのセルが変更されても毎回ブック全体の再計算をトリガーするため、スワップ環境では本末転倒になります。INDEX:INDEX構文は非揮発性で、Z1の値（＝データ行数）が変わった時だけ再計算されます。</p>
+</div>
+<h4>なぜこの構成が理屈上の最速か</h4>
+<div class="code-block-nocopy">処理コスト比較（1万行のうち実データ5,000行）：
+
+パターンA: セルコピー + IF空白判定
+  数式解析      : 10,000回
+  IF判定        : 10,000回（うち5,000回は空白&rarr;即スキップ）
+  VLOOKUP実行   : 5,000回
+  スマート再計算 : 変更セルのみ再計算（編集時は有利）
+
+パターンB: スピルそのまま（1万行全展開）
+  数式解析      : 1回
+  VLOOKUP実行   : 10,000行分（空白行含む）
+  セル展開      : 10,000セル分
+
+パターンC: スピル + INDEX:INDEX最終行制御
+  COUNTA計算    : 1回（Z1で1度だけ）
+  INDEX:INDEX   : 各列で1回（5,000行の範囲参照を生成）
+  数式解析      : 1回
+  VLOOKUP実行   : 5,000行分（実データのみ）
+  セル展開      : 5,000セル分</div>
+<p>パターンCの核心は3つあります。</p>
+<p>第一に、<strong>Z1の最終行算出が1回で済み、それを全スピル列で使い回せる</strong>点です。B列・C列・E列と10列のスピルがあっても、最終行の判定はZ1の1セルだけです。セルコピーのIF空白判定が10列 &times; 10,000行 = 100,000回必要なのに対し、パターンCではCOUNTA 1回 + INDEX:INDEX 10回で済みます。</p>
+<p>第二に、<strong>INDEX:INDEX構文は非揮発性である</strong>ため、Z1の値が変わらない限り再計算が発生しません。INDIRECTやOFFSETで同じことをすると、1セル変更のたびにブック全体が再計算されます。</p>
+<p>第三に、<strong>参照範囲が最初から5,000行に限定される</strong>ため、メモリ展開も5,000セル分で済みます。スワップ環境ではこの差がページイン回数の削減に直結すると考えられます。</p>
+<p>唯一のデメリットは、1セルの変更時にスピル配列全体（5,000行）が再計算される点です。セルコピーのスマート再計算（変更セルとその依存だけ再計算）と比べると、編集中の応答はセルコピーが有利になるケースがあります。しかしフル再計算（ブックを開いた直後・Ctrl+Alt+F9）ではパターンCが最速になると考えられます。</p>
+<div class="xdemo-note-danger">
+<p><strong>⚠ 注意</strong>：INDEX:INDEX構文でExcelが内部的に範囲をどの段階で確定しているか（参照解決時かセル読み込み時か）はMicrosoftが公開していません。「最初から5,000行分だけ読む」は動作から推測される挙動であり、ある程度のテストに基づいていますが、全てが正確とは限りません。実機テストを推奨します。</p>
+</div>
+<h4>補足：TAKE関数を使う書き方（Microsoft 365 / Excel 2024以降）</h4>
+<div class="code-block">=VLOOKUP(TAKE(A2:A10000, Z1), $D$1:$H$5000, 2, FALSE)</div>
+<p class="code-desc">&rarr; TAKE関数は配列の先頭からZ1行分を切り出す。書き方は簡潔だが、内部でA2:A10000を全行読み込んでから切り出している可能性があり、INDEX:INDEX構文よりメモリ効率が劣る場合がある。TAKE関数が使える環境でも、INDEX:INDEX構文を推奨します。</p>
+<!-- ============================================================ -->
+<!-- 9. バージョン改善 -->
+<!-- ============================================================ -->
+<h2>9. Excelバージョンによる計算エンジンの改善</h2>
+<p>同じPCでもExcelのバージョンが新しくなると、計算速度が劇的に向上する場合があります。これは関数単体の改善だけでなく、メモリ管理やキャッシュ機構の改善によるものです。</p>
+<div style="overflow-x:auto;margin:18px 0">
+<table class="format-table">
+<caption>Microsoft公式テストデータ（出典：Microsoft Learn）</caption>
+<thead>
+<tr><th>改善項目</th><th>旧バージョン</th><th>新バージョン</th><th>改善率</th></tr>
+</thead>
+<tbody>
+<tr><td>VLOOKUPキャッシュ</td><td>37秒（Excel 2010）</td><td>12秒（Excel 2016以降）</td><td>約3倍</td></tr>
+<tr><td>SUMIFS / COUNTIFS高速化</td><td>20秒（Excel 2010）</td><td>8秒（Microsoft 365 2020年6月以降）</td><td>約2.5倍</td></tr>
+<tr><td>構造化参照最適化</td><td>1.9秒（Excel 2013）</td><td>約2ミリ秒（Excel 2016）</td><td>約1,000倍</td></tr>
+<tr><td>行の並べ替え（22,000行）</td><td>39秒（Excel 2013）</td><td>2秒（Excel 2016）</td><td>約20倍</td></tr>
+<tr><td>LAA対応（32ビット仮想メモリ上限）</td><td>2 GB（Excel 2010以前）</td><td>4 GB（Excel 2013以降）</td><td>2倍</td></tr>
+</tbody>
+</table>
+</div>
+<p class="source-note">出典：<a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/excel-performance/excel-performance-and-limit-improvements" rel="noopener" target="_blank">Excel performance and limit improvements - Microsoft Learn</a></p>
+<p>特に注目すべきは、32ビットExcelのLAA対応（Excel 2013以降）です。仮想メモリ上限が2GBから4GBに拡大されたことで、スワップの発生頻度が大幅に低下した可能性があります。古いExcelで「フリーズするほど遅い」状態が、バージョン更新だけで改善されるケースの相当部分は、このメモリ上限の変更で説明がつきます。</p>
+<p>正確な対応ビルドはOfficeの更新チャネルにより異なる場合があります。上表のバージョンは目安としてお読みください。</p>
+<!-- ============================================================ -->
+<!-- 10. 高速化の優先順位 -->
+<!-- ============================================================ -->
+<h2>10. 高速化の優先順位 &horbar; 何から手をつけるべきか</h2>
+<p>Excelの高速化は、効果の大きい順に取り組むべきです。関数の置き換えは最も効果が小さく、ハードウェア環境の改善が最も効果的です。</p>
+<div style="overflow-x:auto;margin:18px 0">
+<table class="format-table">
+<caption>高速化対策の優先順位</caption>
+<thead>
+<tr><th>優先度</th><th>対策</th><th>効果</th><th>実施難易度</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>物理メモリ増設（4GB &rarr; 8GB以上）</td><td>&starf;&starf;&starf;&starf;&starf;</td><td>中（情シスの承認が必要）</td></tr>
+<tr><td>2</td><td>HDD &rarr; SSD換装</td><td>&starf;&starf;&starf;&starf;</td><td>中</td></tr>
+<tr><td>3</td><td>64ビットExcelへの移行</td><td>&starf;&starf;&starf;&starf;</td><td>高（互換性検証が必要）</td></tr>
+<tr><td>4</td><td>Excelバージョン更新</td><td>&starf;&starf;&starf;</td><td>高（ライセンス・検証）</td></tr>
+<tr><td>5</td><td>揮発性関数の排除</td><td>&starf;&starf;&starf;</td><td>低（数式変更のみ）</td></tr>
+<tr><td>6</td><td>参照範囲の明示化・絶対参照統一</td><td>&starf;&starf;</td><td>低</td></tr>
+<tr><td>7</td><td>IF空白判定・作業列を同シートに配置</td><td>&starf;&starf;</td><td>低</td></tr>
+<tr><td>8</td><td>関数選択の変更（VLOOKUP &rarr; INDEX+MATCH等）</td><td>&starf;</td><td>低</td></tr>
+</tbody>
+</table>
+</div>
+<p>優先度1〜4はハードウェア・環境の問題であり、実施できればExcelの遅さは根本的に解消されます。しかし、多くの現場ではこれらを実施する権限がありません。その場合は優先度5〜8の数式設計で対処することになりますが、効果の上限はハードウェア改善に遠く及びません。</p>
+<p>逆に言えば、数式の工夫だけで体感できるほど速くなったなら、それはスワップが発生するほどメモリが逼迫した環境にいる証拠です。</p>
+<!-- ============================================================ -->
+<!-- 11. PC選定ガイド -->
+<!-- ============================================================ -->
+<h2>11. Excelで数万行を扱うためのPC選定ガイド</h2>
+<p>IT部門がなくPC選定を自分で行う中小企業の担当者、あるいはIT部門に要望を出す際の根拠として、以下の目安を示します。</p>
+<div style="overflow-x:auto;margin:18px 0">
+<table class="format-table">
+<caption>Excel業務向けPC推奨スペック</caption>
+<thead>
+<tr><th>項目</th><th>最低ライン</th><th>推奨</th><th>理由</th></tr>
+</thead>
+<tbody>
+<tr><td>RAM</td><td>8 GB</td><td>16 GB</td><td>Windows + Excel + 常駐ソフトで4〜6GB消費。残りでExcelがスワップなく動作するために必要。</td></tr>
+<tr><td>ストレージ</td><td>SATA SSD</td><td>NVMe SSD</td><td>万が一スワップが発生してもHDDの20〜30倍の速度で被害を最小化。</td></tr>
+<tr><td>Excel</td><td>32ビット LAA対応</td><td>64ビット</td><td>64ビットはメモリ制限が実質なくなり、大規模ブックも安定。</td></tr>
+<tr><td>CPU</td><td>Core i3 / Ryzen 3</td><td>Core i5 / Ryzen 5 以上</td><td>Excelの再計算はマルチスレッド対応。コア数が多いほど再計算が速い。</td></tr>
+</tbody>
+</table>
+</div>
+<p>Excelで数万行&times;数十列の重い数式を扱う場合、最も費用対効果が高い投資はメモリの増設です。4GB &rarr; 8GBの増設は数千円で可能な場合が多く、体感速度が劇的に改善します。</p>
+<!-- ============================================================ -->
+<!-- 12. 32ビットと64ビット -->
+<!-- ============================================================ -->
+<h2>12. 補足：32ビットと64ビットで数式の設計思想が逆転する</h2>
+<p>32ビットExcel（メモリ制約あり）と64ビットExcel（メモリ制約なし）では、高速化のための数式設計方針が異なります。</p>
+<p>32ビット環境では、メモリが限られるためスワップ回避が最優先です。参照範囲を絞り、作業列を最小限にし、不要な列を削除してメモリ使用量を抑える設計が有効です。</p>
+<p>64ビット環境では、メモリに余裕があるため、作業列を増やして計算を中間ステップに分割し、各ステップの計算負荷を軽減する設計が有効です。スピル処理で一括計算したり、広めの参照範囲を取ってもスワップが発生しないため、メモリを「贅沢に使う」設計が速くなります。</p>
+<p>この「設計思想の逆転」は、32ビットと64ビットの両環境で数万行を扱った経験がなければ気づきにくい視点です。日本語ではほぼ扱われていない情報であることを付記しておきます。</p>
+<div class="xdemo-note-danger">
+<p><strong>⚠ 注意</strong>：32ビットと64ビットの設計差については、考え方としての説明であり、両環境での網羅的なベンチマークテストは実施していません。実際の効果はデータの規模・数式の複雑さ・PC構成により異なります。</p>
+</div>
+<!-- ============================================================ -->
+<!-- 13. まとめ -->
+<!-- ============================================================ -->
+<h2>13. まとめ</h2>
+<p>Excelの遅さは、多くの場合、関数の選択ではなくメモリスワップが原因です。高スペックPCでは見えにくいこの問題は、4GBメモリ・HDD・32ビットExcelという事務用PCの典型的な構成で顕在化します。</p>
+<p>対策の優先順位は、ハードウェア改善（メモリ増設 &rarr; SSD &rarr; 64ビット移行）が最も効果的であり、それが難しい場合に限り、数式設計の工夫（参照範囲の明示化、IF空白判定、作業列を同シートに配置、揮発性関数の排除、参照範囲の統一）で軽減を図ります。</p>
+<p>スピル数式を使う場合は、INDEX:INDEX構文で参照範囲を実データ行数に限定することで、スピルの利点（数式解析1回）を最大化しつつ、展開コストを最小化できます。最終行の算出は1セルで済み、複数のスピル列で使い回せるため、列数が増えるほど効率が高まります。</p>
+<p>VLOOKUPをINDEX+MATCHに変える前に、まずタスクマネージャーでメモリ使用率を確認してください。90%を超えていたら、数式の変更よりメモリの増設が先です。</p>
+<!-- ============================================================ -->
+<!-- 信頼性に関する最終注記 -->
+<!-- ============================================================ -->
+<div class="xdemo-note-danger">
+<p><strong>本稿の信頼性について（再掲）</strong></p>
+<p>本稿は実務経験とMicrosoft公式ドキュメントを基に、<strong>考え方と対策の方向性</strong>を示したものです。ある程度のテストを実施したうえで作成していますが、全てのパターンを網羅的に検証したわけではなく、すべてが正しいとは限りません。特にExcelの内部計算エンジンの動作はMicrosoftが詳細を公開していないため、推測に基づく部分があります。読者ご自身の環境で結果を確認し、本稿と異なる結果が得られた場合は、そちらを優先してください。</p>
+</div>
+<!-- ============================================================ -->
+<!-- 関連記事 -->
+<!-- ============================================================ -->
+<div class="related-articles">
+<h3>関連記事</h3>
+<ul>
+<li><a href="article_01_lookup_speed.html">検索関数の速度とメモリ効率（Lv.5）</a></li>
+<li><a href="article_02_formula_techniques.html">数式の速度UPテクニック集（Lv.6）</a></li>
+<li><a href="../../functions/old/article_volatile.html">揮発性関数一覧と回避策</a></li>
+</ul>
+</div>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+

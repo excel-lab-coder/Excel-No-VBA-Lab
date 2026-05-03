@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Excel シール残骸を活用 &horbar; 開始位置を指定して途中から印刷する方法｜Excel &times; No VBA Lab</title>
+<meta content="Excelのラベルシールで「使いかけの残骸」を無駄に活用する方法。開始面番号をセルに入力するだけで途中から印刷できます。VBA不要。" name="description">
+<meta content="Excel ラベル 残骸, 途中から印刷, シール 開始位置 指定, Excel 印刷 篇数, VLOOKUP 印刷, Print_Area 動的, VBA不要" name="keywords">
+<meta content="Excel シール残骸を活用 &horbar; 開始位置指定で途中から印刷" property="og:title">
+<meta content="Excel関数だけでァベル残骸の空き面から印刷開始。開始面番号を変えるだけで動作する実務テクニック。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/others/print/article_label_scrap.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<style>
+    .formula-box .tag{position:absolute;top:8px;right:12px;font-size:.65rem;background:#0078d4;color:#fff;padding:2px 10px;border-radius:4px}
+
+    .excel-wrap{border:1px solid #d0d0d0;border-radius:8px;overflow:hidden;margin:24px 0;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .excel-ribbon{background:linear-gradient(180deg,#217346 0%,#185c37 100%);padding:6px 16px;display:flex;align-items:center;gap:10px}
+    .excel-ribbon span{color:#fff;font-size:.75rem;opacity:.85}
+    .excel-ribbon .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .excel-ribbon .dot.r{background:#ff605c}.excel-ribbon .dot.y{background:#ffbd44}.excel-ribbon .dot.g{background:#00ca4e}
+    .sheet-tabs{display:flex;background:#e8e8e8;border-top:1px solid #c8c8c8}
+    .sheet-tab{padding:6px 18px;font-size:.78rem;cursor:pointer;border-right:1px solid #c8c8c8;background:#e8e8e8;transition:.15s}
+    .sheet-tab:hover{background:#f5f5f5}
+    .sheet-tab.active{background:#fff;font-weight:700;border-bottom:2px solid #217346}
+    .sheet-body{padding:0;background:#fff}
+    .sheet-panel{display:none;padding:20px}
+    .sheet-panel.active{display:block}
+
+    .excel-grid{width:100%;border-collapse:collapse;font-size:.78rem}
+    .excel-grid th,.excel-grid td{border:1px solid #c8c8c8;padding:4px 8px;text-align:center;min-width:56px}
+    .excel-grid th{background:#f0f0f0;font-weight:600;color:#333}
+    .excel-grid .row-num{background:#f0f0f0;font-weight:600;color:#555;width:36px}
+    .excel-grid .formula-cell{background:#fffbe6;font-family:monospace;font-size:.72rem;text-align:left}
+
+    .a4-row{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;margin:20px 0}
+    .a4-paper{width:260px;min-height:370px;border:2px solid #888;border-radius:4px;background:#fff;padding:16px 12px;box-shadow:2px 4px 12px rgba(0,0,0,.1);display:flex;flex-direction:column;position:relative}
+    .a4-paper .a4-title{font-size:.7rem;font-weight:700;text-align:center;margin-bottom:10px;color:#333}
+    .a4-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(5,1fr);gap:6px;flex:1}
+    .label-face{border:1.5px dashed #aaa;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.68rem;padding:6px 4px;text-align:center;line-height:1.3;min-height:46px}
+    .label-face.filled{background:#e6f4ea;border-color:#34a853;color:#1a7431;font-weight:600}
+    .label-face.empty{background:#f5f5f5;border-color:#ccc;color:#999}
+    .label-face.used{background:#fff3e0;border-color:#ff9800;color:#e65100;font-weight:600}
+    .label-face.skip{background:#ffebee;border-color:#ef5350;color:#c62828}
+    .a4-paper .a4-badge{position:absolute;top:-12px;right:-8px;background:#0078d4;color:#fff;font-size:.6rem;padding:2px 10px;border-radius:10px;font-weight:700}
+    .a4-paper .a4-badge.warn{background:#ff9800}
+
+    .step-list{counter-reset:step;margin:16px 0}
+    .step-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start}
+    .step-num{flex-shrink:0;width:32px;height:32px;background:#217346;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem}
+    .step-text{flex:1;font-size:.88rem;line-height:1.6}
+
+    .format-table .em{background:#e6f4ea;font-weight:600}
+
+    .concept-box{display:flex;gap:20px;align-items:flex-start;background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;flex-wrap:wrap}
+    .concept-box .cb-left{flex:1;min-width:240px}
+    .concept-box .cb-right{flex:1;min-width:240px}
+  </style>
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Excel シール残骸を活用 &horbar; 開始位置を指定して途中から印刷する方法｜Excel &times; No VBA Lab</title>
+<meta content="「印刷設定を毎回手作業で繰り返している」を。Excel シール残骸を活用 - 開始位置を指定… を、失敗しやすいポイントと代替策まで実務目線でまとめます。 すぐ試せる構成です。 VBA不要で再現できます。" name="description">
+<meta content="Excel ラベル 残骸, 途中から印刷, シール 開始位置 指定, Excel 印刷 篇数, VLOOKUP 印刷, Print_Area 動的, VBA不要" name="keywords">
+<meta content="Excel シール残骸を活用 &horbar; 開始位置指定で途中から印刷" property="og:title">
+<meta content="Excel関数だけでァベル残骸の空き面から印刷開始。開始面番号を変えるだけで動作する実務テクニック。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/others/print/article_label_scrap.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<style>
+    .formula-box .tag{position:absolute;top:8px;right:12px;font-size:.65rem;background:#0078d4;color:#fff;padding:2px 10px;border-radius:4px}
+
+    .excel-wrap{border:1px solid #d0d0d0;border-radius:8px;overflow:hidden;margin:24px 0;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .excel-ribbon{background:linear-gradient(180deg,#217346 0%,#185c37 100%);padding:6px 16px;display:flex;align-items:center;gap:10px}
+    .excel-ribbon span{color:#fff;font-size:.75rem;opacity:.85}
+    .excel-ribbon .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .excel-ribbon .dot.r{background:#ff605c}.excel-ribbon .dot.y{background:#ffbd44}.excel-ribbon .dot.g{background:#00ca4e}
+    .sheet-tabs{display:flex;background:#e8e8e8;border-top:1px solid #c8c8c8}
+    .sheet-tab{padding:6px 18px;font-size:.78rem;cursor:pointer;border-right:1px solid #c8c8c8;background:#e8e8e8;transition:.15s}
+    .sheet-tab:hover{background:#f5f5f5}
+    .sheet-tab.active{background:#fff;font-weight:700;border-bottom:2px solid #217346}
+    .sheet-body{padding:0;background:#fff}
+    .sheet-panel{display:none;padding:20px}
+    .sheet-panel.active{display:block}
+
+    .excel-grid{width:100%;border-collapse:collapse;font-size:.78rem}
+    .excel-grid th,.excel-grid td{border:1px solid #c8c8c8;padding:4px 8px;text-align:center;min-width:56px}
+    .excel-grid th{background:#f0f0f0;font-weight:600;color:#333}
+    .excel-grid .row-num{background:#f0f0f0;font-weight:600;color:#555;width:36px}
+    .excel-grid .formula-cell{background:#fffbe6;font-family:monospace;font-size:.72rem;text-align:left}
+
+    .a4-row{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;margin:20px 0}
+    .a4-paper{width:260px;min-height:370px;border:2px solid #888;border-radius:4px;background:#fff;padding:16px 12px;box-shadow:2px 4px 12px rgba(0,0,0,.1);display:flex;flex-direction:column;position:relative}
+    .a4-paper .a4-title{font-size:.7rem;font-weight:700;text-align:center;margin-bottom:10px;color:#333}
+    .a4-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(5,1fr);gap:6px;flex:1}
+    .label-face{border:1.5px dashed #aaa;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.68rem;padding:6px 4px;text-align:center;line-height:1.3;min-height:46px}
+    .label-face.filled{background:#e6f4ea;border-color:#34a853;color:#1a7431;font-weight:600}
+    .label-face.empty{background:#f5f5f5;border-color:#ccc;color:#999}
+    .label-face.used{background:#fff3e0;border-color:#ff9800;color:#e65100;font-weight:600}
+    .label-face.skip{background:#ffebee;border-color:#ef5350;color:#c62828}
+    .a4-paper .a4-badge{position:absolute;top:-12px;right:-8px;background:#0078d4;color:#fff;font-size:.6rem;padding:2px 10px;border-radius:10px;font-weight:700}
+    .a4-paper .a4-badge.warn{background:#ff9800}
+
+    .step-list{counter-reset:step;margin:16px 0}
+    .step-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start}
+    .step-num{flex-shrink:0;width:32px;height:32px;background:#217346;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem}
+    .step-text{flex:1;font-size:.88rem;line-height:1.6}
+
+    .format-table .em{background:#e6f4ea;font-weight:600}
+
+    .concept-box{display:flex;gap:20px;align-items:flex-start;background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;flex-wrap:wrap}
+    .concept-box .cb-left{flex:1;min-width:240px}
+    .concept-box .cb-right{flex:1;min-width:240px}
+  </style>
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Excel シール残骸を活用 \u0026horbar; 開始位置を指定して途中から印刷する方法","description":"Excelのラベルシールで「使いかけの残骸」を無駄に活用する方法。開始面番号をセルに入力するだけで途中から印刷できます。VBA不要。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/others/print/article_label_scrap.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span><a href="../../index.html#others">小技</a><span>&gt;</span><strong>シール残骸の活用</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-all">全バージョン</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">Excel シール残骸を活用 &horbar; 開始位置を指定して途中から印刷する方法</h1>
+</div>
+<div class="toc">
+<p><strong>目次</strong></p>
+<ul>
+<li><a href="#p1">1. 「シール残骸」とは何か？</a></li>
+<li><a href="#p2">2. この記事でできること</a></li>
+<li><a href="#p3">3. 仕組みの概要 &horbar; 2つのパラメータ</a></li>
+<li><a href="#p4">4. シート構成</a></li>
+<li><a href="#p5">5. 面番号の計算式 &horbar; 開始位置オフセット</a></li>
+<li><a href="#p6">6. ラベルシートの数式（具体例）</a></li>
+<li><a href="#p7">7. Print_Area の動的数式</a></li>
+<li><a href="#p8">8. 操作手順（ステップバイステップ）</a></li>
+<li><a href="#p9">9. ビジュアル解説 &horbar; 開始位置による印刷結果の違い</a></li>
+<li><a href="#p10">10. シナリオ別の設定例</a></li>
+<li><a href="#p11">11. 注意点とよくある質問</a></li>
+<li><a href="#p12">12. まとめ</a></li>
+</ul>
+</div>
+<!-- ===== p1 ===== -->
+<h2 id="p1">1. 「シール残骸」とは何か？</h2>
+<p>10面ラベルシールで8件だけ印刷すると、シール1枚目の9番目と10番目が空きのまま残ります。この「使いかけのシール」が残骸です。通常はこのシールを捨てるか、次回の先頭に手書きすることになりますが、この方法では次回印刷時に「残骸シールの空き面から印刷を開始する」ことで無駄をなくします。</p>
+<!-- ===== p2 ===== -->
+<h2 id="p2">2. この記事でできること</h2>
+<p>10面ラベルシールにおいて、残骸（使いかけシール）の空き面の開始位置を指定し、そこから新しいデータを詰めて印刷します。前回の印刷で面①〜⑧まで使った場合、今回は面⑨から印刷を開始し、残りのデータは2枚目以降に続きます。開始位置はセルに数値を入力するだけで切り替えられます。</p>
+<!-- ===== p3 ===== -->
+<h2 id="p3">3. 仕組みの概要 &horbar; 2つのパラメータ</h2>
+<div class="concept-box">
+<div class="cb-left">
+<p><strong>この方法で使うパラメータは2つだけです。</strong></p>
+<table class="format-table">
+<tr><th>パラメータ</th><th>説明</th></tr>
+<tr><td><strong>Y1 セル</strong><br>開始面番号</td><td>残骸シールの何番目の面から印刷を始めるか。1〜10の数値。前回8面使ったなら <strong>9</strong> を入力。</td></tr>
+<tr><td><strong>Y2 セル</strong><br>データ件数<br>（自動計算）</td><td>宛先リストのデータ件数を COUNTA で自動算出。手入力不要。</td></tr>
+</table>
+</div>
+<div class="cb-right">
+<p><strong>内部の計算：</strong></p>
+<p>開始面番号が1以外のとき、1枚目のシールの面①〜面(Y1-1)を空白にします。データは面Y1から順に配置され、10面を超えたら2枚目に続きます。Print_Area は最終データの面を含むページ（50行単位）まで自動拡張されます。</p>
+</div>
+</div>
+<!-- ===== p4 ===== -->
+<h2 id="p4">4. シート構成</h2>
+<div class="excel-wrap">
+<div class="excel-ribbon">
+<span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+<span>ラベル印刷_残骸対応.xlsx</span>
+</div>
+<div class="sheet-tabs" data-group="leftover-sheets">
+<div class="sheet-tab active" onclick="switchSheet('leftover-sheets','lo-label')">ラベル</div>
+<div class="sheet-tab" onclick="switchSheet('leftover-sheets','lo-list')">宛先リスト</div>
+<div class="sheet-tab" onclick="switchSheet('leftover-sheets','lo-setting')">設定</div>
+</div>
+<div class="sheet-body">
+<!-- ラベル -->
+<div class="sheet-panel active" id="lo-label">
+<p style="font-size:.82rem;color:#555;margin-bottom:10px">▼ ラベルシート（通常版と同じ6列レイアウト、ただし面番号の計算にオフセットが加わる）</p>
+<table class="excel-grid">
+<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr>
+<tr><td class="row-num">1</td>
+<td class="formula-cell" colspan="3">面①：開始面&le;1 &rarr; データ1件目 / 開始面&gt;1 &rarr; 空白</td>
+<td class="formula-cell" colspan="3">面②：開始面&le;2 &rarr; データ / 開始面&gt;2 &rarr; 空白</td>
+</tr>
+<tr><td class="row-num">2-5</td>
+<td colspan="3" style="color:#aaa;font-size:.7rem">（住所〜氏名）</td>
+<td colspan="3" style="color:#aaa;font-size:.7rem">（住所〜氏名）</td>
+</tr>
+<tr><td class="row-num">6-10</td>
+<td class="formula-cell" colspan="3">面③</td>
+<td class="formula-cell" colspan="3">面④</td>
+</tr>
+<tr><td class="row-num">&hellip;</td><td colspan="6" style="text-align:center;color:#aaa">（以降 5行単位で面⑤〜⑩、2ページ目以降も同様）</td></tr>
+</table>
+<div class="xdemo-note-info">
+<strong>ポイント：</strong>面番号がY1（開始面番号）より小さい面は空白を表示します。Y1以降の面にデータを順番に配置します。
+            </div>
+</div>
+<!-- 宛先リスト -->
+<div class="sheet-panel" id="lo-list">
+<p style="font-size:.82rem;color:#555;margin-bottom:10px">▼ 宛先リスト（通常版と同じ構成）</p>
+<table class="excel-grid">
+<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr>
+<tr><td class="row-num">1</td><td>No</td><td>氏名</td><td>郵便番号</td><td>住所1</td><td>住所2</td><td>会社名・部署</td></tr>
+<tr><td class="row-num">2</td><td>1</td><td>山田太郎</td><td>100-0001</td><td>東京都千代田区&hellip;</td><td>&xcirc;&xcirc;ビル3F</td><td>株式会社ABC 営業部</td></tr>
+<tr><td class="row-num">&hellip;</td><td colspan="6" style="text-align:center;color:#aaa">（データを追加）</td></tr>
+</table>
+</div>
+<!-- 設定 -->
+<div class="sheet-panel" id="lo-setting">
+<p style="font-size:.82rem;color:#555;margin-bottom:10px">▼ 設定シート（パラメータ管理）</p>
+<table class="excel-grid">
+<tr><th></th><th>A</th><th>B</th><th>C</th></tr>
+<tr><td class="row-num">1</td><td class="font-bold-700">項目</td><td class="font-bold-700">値</td><td class="font-bold-700">説明</td></tr>
+<tr><td class="row-num">2</td><td>開始面番号</td><td style="background:#fff3e0;font-weight:700;font-size:1.1rem">9</td><td>残骸の空き面の位置（1〜10）</td></tr>
+<tr><td class="row-num">3</td><td>データ件数</td><td style="font-family:monospace;font-size:.72rem">=COUNTA(宛先リスト!B:B)-1</td><td>自動計算（手入力不要）</td></tr>
+<tr><td class="row-num">4</td><td>必要面数</td><td style="font-family:monospace;font-size:.72rem">=B2-1+B3</td><td>スキップ面＋データ件数</td></tr>
+<tr><td class="row-num">5</td><td>印刷枚数</td><td style="font-family:monospace;font-size:.72rem">=CEILING(B4/10,1)</td><td>必要なA4シール枚数</td></tr>
+</table>
+<div class="xdemo-note-info">
+<strong>操作は B2 セル（開始面番号）を変えるだけです。</strong>残りは自動計算されます。
+            </div>
+</div>
+</div>
+</div>
+<!-- ===== p5 ===== -->
+<h2 id="p5">5. 面番号の計算式 &horbar; 開始位置オフセット</h2>
+<p>通常のラベル印刷では、各面に「何番目のデータを表示するか」を面番号から直接計算しました。残骸対応版では、面番号から開始面番号を引いてデータ番号を求めます。</p>
+<div class="formula-box">
+<span class="tag">面番号 &rarr; データ番号 の変換</span>
+面番号 = (INT((ROW()-1)/5)) * 2 + 列オフセット
+  ※ 左面：列オフセット = 1、右面：列オフセット = 2
+
+データ番号 = 面番号 - (開始面番号 - 1)
+  ※ データ番号 &le; 0 の面は空白にする（前回使用済み面）
+  ※ データ番号 &gt; データ件数 の面も空白にする（データ切れ）
+      </div>
+<p>たとえば開始面番号=9の場合、面①〜⑧のデータ番号は -7〜0 なので空白。面⑨のデータ番号＝1で1件目のデータ、面⑩のデータ番号＝2で2件目が入ります。面⑪（2枚目の1面目）からは3件目以降が続きます。</p>
+<!-- ===== p6 ===== -->
+<h2 id="p6">6. ラベルシートの数式（具体例）</h2>
+<p>設定シートの B2 セルを名前「開始面」として定義しておくと数式が読みやすくなります（名前の管理で 名前：開始面、参照範囲：=設定!$B$2）。</p>
+<h3>6-1. A1セル（左面・郵便番号行）</h3>
+<div class="formula-box">
+<span class="tag">A1：左面の郵便番号</span>
+=IF(
+  (INT((ROW()-1)/5))*2+1 &lt; 開始面,
+  "",
+  IFERROR(
+    "〒" & VLOOKUP(
+      (INT((ROW()-1)/5))*2+1 - (開始面-1),
+      宛先リスト!$A:$F,
+      3, FALSE
+    ),
+    ""
+  )
+)
+      </div>
+<p>最初のIFで「この面が開始面より前（＝前回使用済み）なら空白」と判定します。開始面以降の面は通常通りVLOOKUPでデータを取得しますが、検索値から (開始面-1) を引くことで、データ番号がズレなくなります。</p>
+<h3>6-2. D1セル（右面・郵便番号行）</h3>
+<div class="formula-box">
+<span class="tag">D1：右面の郵便番号</span>
+=IF(
+  (INT((ROW()-1)/5))*2+2 &lt; 開始面,
+  "",
+  IFERROR(
+    "〒" & VLOOKUP(
+      (INT((ROW()-1)/5))*2+2 - (開始面-1),
+      宛先リスト!$A:$F,
+      3, FALSE
+    ),
+    ""
+  )
+)
+      </div>
+<h3>6-3. 氏名行（A5：左面の例）</h3>
+<div class="formula-box">
+<span class="tag">A5：左面の氏名</span>
+=IF(
+  (INT((ROW()-1)/5))*2+1 &lt; 開始面,
+  "",
+  IFERROR(
+    VLOOKUP(
+      (INT((ROW()-1)/5))*2+1 - (開始面-1),
+      宛先リスト!$A:$F,
+      2, FALSE
+    ) & "  様",
+    ""
+  )
+)
+      </div>
+<h3>6-4. 数式のコピー方法</h3>
+<p>左面（A1:C5）と右面（D1:F5）の数式を作成したら A1:F5 を選択し、50行目まで一括コピーします。開始面を名前定義にしているので絶対参照の問題はありません。2枚目以降（51行目〜）も同様にコピーを続けてください。</p>
+<!-- ===== p7 ===== -->
+<h2 id="p7">7. Print_Area の動的数式</h2>
+<p>データ件数に開始面オフセットを加算し、CEILING で50行単位に切り上げます。</p>
+<h3>XLOOKUP 版</h3>
+<div class="formula-box">
+<span class="tag">Print_Area 数式</span>
+=ラベル!$A$1:INDEX(
+  ラベル!$A:$F,
+  CEILING(
+    (設定!$B$4) * 5 / 2,
+    50
+  ),
+  6
+)
+
+※ 設定!B4 = 必要面数 = (開始面-1) + データ件数
+※ 必要面数&times;5/2 で最終行を計算（左右2列なので&divide;2、1面5行なので&times;5）
+      </div>
+<p>より正確に XLOOKUP で最終行を求める版：</p>
+<div class="formula-box">
+<span class="tag">Print_Area 数式（精密版）</span>
+=ラベル!$A$1:INDEX(
+  ラベル!$A:$F,
+  CEILING(
+    XLOOKUP(TRUE, INDEX(ラベル!$A:$A&lt;&gt;"",0),
+      ROW(ラベル!$A:$A), ,0,-1),
+    50
+  ),
+  6
+)
+      </div>
+<div class="xdemo-note-warn">
+<strong>⚠ 落とし穴：</strong>開始面が1のとき（残骸なし＝通常印刷）もこの数式はそのまま動作します。特別な分岐は不要です。「印刷範囲の設定」ボタンは押さないでください。
+      </div>
+<!-- ===== p8 ===== -->
+<h2 id="p8">8. 操作手順（ステップバイステップ）</h2>
+<div class="step-list">
+<div class="step-item">
+<div class="step-num">1</div>
+<div class="step-text">前回の印刷結果を確認します。シール1枚目で面①〜⑧まで使ったなら、空いているのは面⑨から。</div>
+</div>
+<div class="step-item">
+<div class="step-num">2</div>
+<div class="step-text">「設定」シートの B2 セル（開始面番号）に <strong>9</strong> を入力します。</div>
+</div>
+<div class="step-item">
+<div class="step-num">3</div>
+<div class="step-text">「宛先リスト」シートに今回印刷したいデータを入力します。</div>
+</div>
+<div class="step-item">
+<div class="step-num">4</div>
+<div class="step-text">「ラベル」シートに切り替え、面⑨〜⑩に1〜2件目のデータが表示され、面①〜⑧が空白になっていることを確認します。</div>
+</div>
+<div class="step-item">
+<div class="step-num">5</div>
+<div class="step-text"><kbd>Ctrl</kbd>+<kbd>P</kbd> で印刷プレビューを開きます。1枚目は面⑨⑩だけにデータが入り、面①〜⑧が空白（前回使用済み部分に重ならない）ことを確認します。</div>
+</div>
+<div class="step-item">
+<div class="step-num">6</div>
+<div class="step-text">使いかけのシール（残骸）をプリンターにセットして印刷します。面①〜⑧には何も印刷されず、面⑨⑩から新しいデータが印字されます。</div>
+</div>
+<div class="step-item">
+<div class="step-num">7</div>
+<div class="step-text">2枚目以降は新しいシールに通常通り印刷されます（面①から順に配置）。</div>
+</div>
+<div class="step-item">
+<div class="step-num">8</div>
+<div class="step-text">次回使用時は、今回最後に使った面の次の番号を B2 にメモしておきます。</div>
+</div>
+</div>
+<!-- ===== p9 ===== -->
+<h2 id="p9">9. ビジュアル解説 &horbar; 開始位置による印刷結果の違い</h2>
+<h3>ケースA：開始面=1（残骸なし、通常印刷）</h3>
+<p>データ12件の場合：</p>
+<div class="a4-row">
+<div class="a4-paper">
+<span class="a4-badge">1枚目</span>
+<div class="a4-title">全面使用（10件）</div>
+<div class="a4-grid">
+<div class="label-face filled">① データ1</div>
+<div class="label-face filled">② データ2</div>
+<div class="label-face filled">③ データ3</div>
+<div class="label-face filled">④ データ4</div>
+<div class="label-face filled">⑤ データ5</div>
+<div class="label-face filled">⑥ データ6</div>
+<div class="label-face filled">⑦ データ7</div>
+<div class="label-face filled">⑧ データ8</div>
+<div class="label-face filled">⑨ データ9</div>
+<div class="label-face filled">⑩ データ10</div>
+</div>
+</div>
+<div class="a4-paper">
+<span class="a4-badge">2枚目</span>
+<div class="a4-title">2件＋空き8面</div>
+<div class="a4-grid">
+<div class="label-face filled">① データ11</div>
+<div class="label-face filled">② データ12</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+</div>
+</div>
+</div>
+<h3>ケースB：開始面=9（前回8面使用、残骸の面⑨⑩から開始）</h3>
+<p>データ12件の場合：</p>
+<div class="a4-row">
+<div class="a4-paper">
+<span class="a4-badge warn">1枚目（残骸シール）</span>
+<div class="a4-title">面⑨⑩にデータ &rarr; 残骸を活用</div>
+<div class="a4-grid">
+<div class="label-face used">① 使用済<br><small>(前回印刷)</small></div>
+<div class="label-face used">② 使用済<br><small>(前回印刷)</small></div>
+<div class="label-face used">③ 使用済<br><small>(前回印刷)</small></div>
+<div class="label-face used">④ 使用済<br><small>(前回印刷)</small></div>
+<div class="label-face used">⑤ 使用済<br><small>(前回印刷)</small></div>
+<div class="label-face used">⑥ 使用済<br><small>(前回印刷)</small></div>
+<div class="label-face used">⑦ 使用済<br><small>(前回印刷)</small></div>
+<div class="label-face used">⑧ 使用済<br><small>(前回印刷)</small></div>
+<div class="label-face filled">⑨ データ1<br><small>&larr; ここから開始</small></div>
+<div class="label-face filled">⑩ データ2</div>
+</div>
+</div>
+<div class="a4-paper">
+<span class="a4-badge">2枚目（新品シール）</span>
+<div class="a4-title">面①〜⑩にデータ3〜12</div>
+<div class="a4-grid">
+<div class="label-face filled">① データ3</div>
+<div class="label-face filled">② データ4</div>
+<div class="label-face filled">③ データ5</div>
+<div class="label-face filled">④ データ6</div>
+<div class="label-face filled">⑤ データ7</div>
+<div class="label-face filled">⑥ データ8</div>
+<div class="label-face filled">⑦ データ9</div>
+<div class="label-face filled">⑧ データ10</div>
+<div class="label-face filled">⑨ データ11</div>
+<div class="label-face filled">⑩ データ12</div>
+</div>
+</div>
+</div>
+<h3>ケースC：開始面=4（前回3面使用、残骸の面④から開始）</h3>
+<p>データ5件の場合：</p>
+<div class="a4-row">
+<div class="a4-paper">
+<span class="a4-badge warn">1枚目（残骸シール）</span>
+<div class="a4-title">面④〜⑧にデータ5件 &rarr; 1枚で収まる</div>
+<div class="a4-grid">
+<div class="label-face used">① 使用済</div>
+<div class="label-face used">② 使用済</div>
+<div class="label-face used">③ 使用済</div>
+<div class="label-face filled">④ データ1<br><small>&larr; 開始</small></div>
+<div class="label-face filled">⑤ データ2</div>
+<div class="label-face filled">⑥ データ3</div>
+<div class="label-face filled">⑦ データ4</div>
+<div class="label-face filled">⑧ データ5</div>
+<div class="label-face empty">⑨ 空き</div>
+<div class="label-face empty">⑩ 空き</div>
+</div>
+</div>
+</div>
+<!-- ===== p10 ===== -->
+<h2 id="p10">10. シナリオ別の設定例</h2>
+<div class="scenario-card">
+<h4>シナリオ1：前回7件印刷 &rarr; 残り3面 &rarr; 今回15件</h4>
+<table class="format-table">
+<tr><th>開始面番号（B2）</th><td><strong>8</strong>（前回7面使用、8面目から空き）</td></tr>
+<tr><th>データ件数</th><td>15件</td></tr>
+<tr><th>必要面数</th><td>(8-1)+15 = 22面</td></tr>
+<tr><th>印刷枚数</th><td>CEILING(22/10,1) = 3枚</td></tr>
+</table>
+<p>1枚目：面①〜⑦は空白、面⑧〜⑩にデータ1〜3。2枚目：面①〜⑩にデータ4〜13。3枚目：面①②にデータ14〜15、面③〜⑩は空き。</p>
+</div>
+<div class="scenario-card">
+<h4>シナリオ2：前回ぴったり10件 &rarr; 残骸なし &rarr; 今回3件</h4>
+<table class="format-table">
+<tr><th>開始面番号（B2）</th><td><strong>1</strong>（残骸なし）</td></tr>
+<tr><th>データ件数</th><td>3件</td></tr>
+<tr><th>必要面数</th><td>(1-1)+3 = 3面</td></tr>
+<tr><th>印刷枚数</th><td>1枚</td></tr>
+</table>
+<p>1枚目：面①〜③にデータ、面④〜⑩は空き。通常印刷と同じ結果です。</p>
+</div>
+<div class="scenario-card">
+<h4>シナリオ3：前回9件印刷 &rarr; 残り1面 &rarr; 今回1件だけ</h4>
+<table class="format-table">
+<tr><th>開始面番号（B2）</th><td><strong>10</strong></td></tr>
+<tr><th>データ件数</th><td>1件</td></tr>
+<tr><th>必要面数</th><td>(10-1)+1 = 10面</td></tr>
+<tr><th>印刷枚数</th><td>1枚</td></tr>
+</table>
+<p>1枚目：面①〜⑨は空白、面⑩にデータ1件。残骸シールの最後の1面だけを使い切ります。</p>
+</div>
+<!-- ===== p11 ===== -->
+<h2 id="p11">11. 注意点とよくある質問</h2>
+<h3>プリンターの給紙位置</h3>
+<p>残骸シールをプリンターにセットするとき、上下・表裏の向きに注意してください。多くのインクジェットプリンターでは印刷面を下にして手前からセットしますが、機種によって異なります。先に白紙で試し印刷して向きを確認することをお勧めします。</p>
+<h3>前回使用済みの面に重ねて印刷されないか？</h3>
+<p>開始面より前の面はIFで空文字（""）を返すため、印刷データは出力されません。ただしセルの罫線や背景色がある場合はそれが印刷される可能性があります。ラベルシートの書式設定で、罫線は「なし」、背景色は「なし」にしておくのが安全です。</p>
+<h3>開始面番号を間違えたら？</h3>
+<p>開始面番号を実際より小さく設定すると、前回使用済みの面にデータが重なって印刷されます。逆に大きく設定すると空き面が余計にできて無駄が出ます。前回の印刷が終わったら「次回の開始面番号」を設定シートのメモ欄（例：C2セル）に記録しておく運用がお勧めです。</p>
+<h3>データ件数が10面&times;複数枚を超える場合</h3>
+<p>テンプレートの行数が不足します。あらかじめ多めに数式をコピーしておくか（例：500行＝10枚分）、必要に応じて行を追加してください。ただしテンプレートを増やすほどファイルサイズが大きくなります。</p>
+<h3>COUNTA が正しくカウントされない</h3>
+<p>IFERROR で "" を返すセルは COUNTA でカウントされます。XLOOKUP 版の Print_Area 数式を使うか、宛先リストの A列（No列）でカウントすれば正確です。</p>
+<h3>数式セットアップ時のミスに注意</h3>
+<div class="xdemo-note-warn">
+<strong>⚠ 重要：</strong>この方法はIF判定とVLOOKUPの組み合わせが複雑なため、数式のコピーミスが起きやすいです。特に以下の点を入念に確認してください：
+        <p style="margin:8px 0 0">・左面（A列）と右面（D列）で列オフセットが 1 と 2 で正しく分かれているか<br>
+        ・VLOOKUPの列番号（2=氏名、3=郵便番号、4=住所1、5=住所2、6=会社名）が正しいか<br>
+        ・「開始面」の名前定義が 設定!$B$2 を正しく参照しているか<br>
+        ・印刷プレビューで「使用済み面が空白」「開始面からデータが正しく入っている」ことを全ページ確認</p>
+</div>
+<!-- ===== p12 ===== -->
+<h2 id="p12">12. まとめ</h2>
+<p>シール残骸の活用は、設定シートの「開始面番号」を変えるだけで、使いかけのラベルシールの空き面からデータを詰めて印刷できる仕組みです。核となるのは、面番号と開始面番号の差分でデータ番号を算出するIF＋VLOOKUPの数式と、必要面数に基づくCEILINGのPrint_Area数式の2つです。</p>
+<p>開始面=1にすれば通常の10面ラベル印刷と同じ動作になるため、残骸対応版のファイルひとつで両方のケースに対応できます。前回の印刷後に「次回の開始面番号」をメモしておく運用を定着させれば、シールの無駄を大幅に削減できます。</p>
+<p>Word の差し込み印刷を使えない人にも渡しやすい方法ですが、数式の構造がやや複雑なため、初回セットアップ時のミスには十分注意してください。テンプレートを多く仕込むことでファイルサイズが大きくなる点もあわせて認識しておきましょう。</p>
+<div class="xdemo-note-info">
+<strong>💡 運用のコツ：</strong>設定シートの C2 セルに「次回開始面：___」のメモ欄を作り、印刷のたびに更新する習慣をつけましょう。これだけでシール残骸の管理が格段に楽になります。
+      </div>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+<script>
+    function switchSheet(group, targetId){
+      const wrap = document.querySelector('[data-group="'+group+'"]');
+      if(!wrap) return;
+      const tabs = wrap.querySelectorAll('.sheet-tab');
+      const panels = wrap.closest('.excel-wrap').querySelectorAll('.sheet-panel');
+      tabs.forEach(t=>t.classList.remove('active'));
+      panels.forEach(p=>p.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.getElementById(targetId).classList.add('active');
+    }
+  </script>
+</body>
+</html>
+

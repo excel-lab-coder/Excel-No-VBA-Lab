@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>ERROR.TYPE による分岐（全ver）｜Excel &times; No VBA Lab</title>
+<meta content="ERROR.TYPE関数を使って「#N/A」か「#DIV/0!」などエラーの種類によって処理を分岐させる方法。全バージョン対応。" name="description">
+<meta content="ERROR.TYPE 関数, エラー 分岐, #N/A #DIV/0!, IFERROR 違い, Excel 全バージョン, VBA不要" name="keywords">
+<meta content="ERROR.TYPE による分岐（全ver）｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ERROR.TYPE関数を使って「#N/A」か「#DIV/0!」などエラーの種類によって処理を分岐させる方法。全バージョン対応。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/old/article_errortype.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/old/article_errortype.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "ERROR.TYPE による分岐（全ver）",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "ERROR.TYPE関数を使って「#N/A」か「#DIV/0!」などエラーの種類によって処理を分岐させる方法。全バージョン対応。"
+}</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#old-excel">旧バージョン対応</a><span>&gt;</span>
+<strong>ERROR.TYPE</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="ver-badge ver-all">全バージョン対応</span></div>
+<h1 class="article-title">ERROR.TYPE：エラーの種類を判別して処理を分岐させる</h1>
+</div>
+<section class="goal-section">
+<h2>💡 やりたいこと</h2>
+<p>セルのエラーが「#N/A（検索で見つからない）」なのか「#DIV/0!（ゼロ除算）」なのか「#VALUE!（型の不一致）」なのかによって、<strong>表示するメッセージやその後の計算を細かく変えたい。</strong></p>
+</section>
+<section class="method-section">
+<h2>1. ERROR.TYPE関数の基本</h2>
+<p>IFERRORは「どんなエラーでも一律で同じ処理」にしてしまいますが、ERROR.TYPEを使えばエラーの発生原因を特定できます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=ERROR.TYPE(調査したいセル)</span>
+</div>
+<p class="code-comment">エラーの種類に応じた「数値（1〜8）」を返します。エラーでない場合は #N/A を返してしまう点に注意が必要です。</p>
+<h3>🔥 エラー番号の対応表</h3>
+<ul class="err-list">
+<li><span class="num">1</span><span class="name">#NULL!</span><span class="desc">無効なセル参照指定（カンマ忘れ等）</span></li>
+<li><span class="num">2</span><span class="name">#DIV/0!</span><span class="desc">ゼロによる割り算が発生した</span></li>
+<li><span class="num">3</span><span class="name">#VALUE!</span><span class="desc">データ型が間違っている（文字と数字の計算など）</span></li>
+<li><span class="num">4</span><span class="name">#REF!</span><span class="desc">参照先のセルが削除されてしまった無効な参照</span></li>
+<li><span class="num">5</span><span class="name">#NAME?</span><span class="desc">関数名などの名前のスペルミス・未定義</span></li>
+<li><span class="num">6</span><span class="name">#NUM!</span><span class="desc">数値が大きすぎる、または小さすぎる問題</span></li>
+<li><span class="num">7</span><span class="name">#N/A</span><span class="desc">VLOOKUPなどで検索値が見つからない</span></li>
+<li><span class="num">8</span><span class="name">#GETTING_DATA</span><span class="desc">巨大なデータの計算中・読込中</span></li>
+</ul>
+</section>
+<section class="method-section">
+<h2>2. 実践例：エラー種類別のメッセージ出し分け</h2>
+<p>IF関数を組み合わせて、「エラーがない場合」「エラー2（ゼロ除算）の場合」「エラー7（N/A）の場合」を分岐させます。<br>
+      旧バージョンのExcel（2016など）でIFSやSWITCHが使えない場合はCHOOSE関数と連携させると綺麗です。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">// IF多段ネストで処理を分岐させる（全ver対応）</span>
+<span class="code-line">=IF(ISERROR(A1),</span>
+<span class="code-line">  IF(ERROR.TYPE(A1)=2, "分母がゼロです",</span>
+<span class="code-line">    IF(ERROR.TYPE(A1)=7, "データ未登録", "その他のエラー")</span>
+<span class="code-line">  ),</span>
+<span class="code-line">A1)</span>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">// 新しいExcelならSWITCH関数でスマートに</span>
+<span class="code-line">=IF(ISERROR(A1),</span>
+<span class="code-line">  SWITCH(ERROR.TYPE(A1), 2, "分母がゼロ", 7, "データなし", "その他エラー"),</span>
+<span class="code-line">  A1)</span>
+</div>
+<div class="tip-box">
+<strong>💡 #N/A エラー「だけ」を無視したいなら</strong><br>
+        Excel 2013以降であれば、ERROR.TYPEを使わなくても <code>IFNA(数式, エラー時の値)</code> 関数を使うことで、「#N/Aの時だけ」別の表示にし、それ以外の重大なエラーはあえて画面に残すことができます。
+      </div>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../latest/article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
+<li><a href="../latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+<li><a href="../latest/article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
+<li><a href="../latest/article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COBOL帳票データ整形ガイド｜固定長データをExcel関数・パワークエリで自動化｜Excel × No VBA Lab</title>
+<meta name="description" content="「列が分かれない帳票を毎回手で直している」をCOBOL帳票処理の体系学習で解決。設定手順に加え、失敗しやすいポイント、エラー時の直し方、運用で詰まりやすい場面まで整理し、Excel 2016以降＋Power Query対応環境・VBA不要環境でも実務でそのまま使える形で解説します。">
+<meta name="theme-color" content="#1a3d5c">
+<link rel="canonical" href="https://excel-no-vba-lab.com/cobol/">
+<meta property="og:title" content="COBOL帳票データ整形ガイド｜固定長データをExcel関数・パワークエリで自動化｜Excel × No VBA Lab">
+<meta property="og:description" content="列が分かれない、ヘッダーが繰り返す、1件が複数行にまたがる。COBOL帳票データ整形の悩みを解決する総合ガイドです。固定長・不規則明細をExcel関数とパワークエリで実務化します。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://excel-no-vba-lab.com/cobol/">
+<meta property="og:site_name" content="Excel × No VBA Lab">
+<meta property="og:image" content="https://excel-no-vba-lab.com/image/hero_ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="COBOL帳票データ整形ガイド｜固定長データをExcel関数・パワークエリで自動化｜Excel × No VBA Lab">
+<meta name="twitter:description" content="列が分かれない、ヘッダーが繰り返す、1件が複数行にまたがる。COBOL帳票データ整形の悩みを解決する総合ガイドです。固定長・不規則明細をExcel関数とパワークエリで実務化します。">
+<meta name="twitter:image" content="https://excel-no-vba-lab.com/image/hero_ogp.png">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../common.css">
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../article.css">
+<script>
+  window.ExcelLab = window.ExcelLab || {};
+  window.ExcelLab.rareTech = {
+    "cobol_irregular": { rarity: 1000 },
+    "cobol_expert": { rarity: 1000 },
+    "qr_hardware": { rarity: 1000 },
+    "qr_series": { rarity: 1000 },
+    "cobol_pq_midb": { rarity: 300 },
+    "print_area": { rarity: 300 },
+    "zip_reverse": { rarity: 300 },
+    "shape_circle": { rarity: 200 },
+    "filter_alt": { rarity: 200 },
+    "m_language": { rarity: 200 },
+    "cobol_advanced": { rarity: 200 },
+    "speed_formula": { rarity: 200 },
+    "speed_lookup": { rarity: 200 },
+    "pq_parameter": { rarity: 200 },
+    "volatile": { rarity: 100 },
+    "label_scrap": { rarity: 100 },
+    "qr_generate": { rarity: 100 },
+    "choosecols": { rarity: 50 }
+  };
+  window.RARETECH_CONFIG = window.ExcelLab.rareTech;
+</script>
+<script type="application/ld+json">
+{
+    "@context":  "https://schema.org",
+    "@type":  "CollectionPage",
+    "name":  "COBOL帳票処理",
+    "description":  "列が分かれない、ヘッダーが繰り返す、1件が複数行にまたがる。COBOL帳票データ整形の悩みを解決する総合ガイドです。固定長・不規則明細をExcel関数とパワークエリで実務化します。",
+    "url":  "https://excel-no-vba-lab.com/cobol/",
+    "inLanguage":  "ja",
+    "isPartOf":  {
+                     "@type":  "WebSite",
+                     "name":  "Excel × No VBA Lab",
+                     "url":  "https://excel-no-vba-lab.com/"
+                 },
+    "hasPart":  [
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "COBOL固定長とは何か",
+                        "url":  "https://excel-no-vba-lab.com/cobol/intro/01_article_cobol_fixed.html",
+                        "position":  1
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "固定長データ分割（数式版）",
+                        "url":  "https://excel-no-vba-lab.com/cobol/formula/01_article_cobol_basic.html",
+                        "position":  2
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "不規則明細・完結編",
+                        "url":  "https://excel-no-vba-lab.com/cobol/formula/04_article_cobol_irregular.html",
+                        "position":  3
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "COBOL整形（Power Query版）",
+                        "url":  "https://excel-no-vba-lab.com/cobol/pq/01_article_cobol_pq.html",
+                        "position":  4
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "MIDB相当関数の置換",
+                        "url":  "https://excel-no-vba-lab.com/cobol/pq/03_article_cobol_pq_midb_ref.html",
+                        "position":  5
+                    }
+                ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context":  "https://schema.org",
+    "@type":  "BreadcrumbList",
+    "itemListElement":  [
+                            {
+                                "@type":  "ListItem",
+                                "position":  1,
+                                "name":  "ホーム",
+                                "item":  "https://excel-no-vba-lab.com/"
+                            },
+                            {
+                                "@type":  "ListItem",
+                                "position":  2,
+                                "name":  "COBOL帳票処理",
+                                "item":  "https://excel-no-vba-lab.com/cobol/"
+                            }
+                        ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context":  "https://schema.org",
+    "@type":  "FAQPage",
+    "mainEntity":  [
+                       {
+                           "@type":  "Question",
+                           "name":  "COBOL帳票はなぜ扱いづらいのですか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "紙出力前提の固定桁・改ページ構造になっており、表計算向けの列構造を前提にしていないためです。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "関数版とPower Query版はどちらを選ぶべき？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "単発分析や軽量処理は関数版、定期運用や大量データはPower Query版が向いています。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "不規則明細でも完全自動化できますか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "はい。パターン抽出と例外行ルールを先に定義すれば、多くの帳票で再現可能です。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "ヘッダー繰り返しはどう除去しますか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "行判定キー（帳票タイトル、列名、桁数）を使ってフィルタリングします。関数版/PQ版どちらも対応手順があります。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "元データがShift_JISでも対応可能ですか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "可能です。取り込み時に文字コードを明示し、UTF-8側で処理する流れを推奨しています。"
+                                              }
+                       }
+                   ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">COBOL帳票処理</span><span class="sub-main">カテゴリ総合ランディングページ</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+  <nav aria-label="パンくずリスト">
+    <div class="breadcrumb">
+      <a href="../index.html">ホーム</a><span>&gt;</span><strong>COBOL帳票処理</strong>
+    </div>
+  </nav>
+
+  <section class="method-section">
+    <h1>COBOL帳票処理 総合ガイド</h1>
+    <p class="article-summary">固定長テキストや不規則明細の「読めないデータ」を、分析・転記可能な表に変えるための実務カテゴリです。</p>
+  </section>
+
+  <section class="method-section">
+    <h2><span class="icon">🧩</span> 読者の課題</h2>
+    <ul class="philosophy-list">
+      <li>固定長データを貼ると列が崩壊する。</li>
+      <li>ヘッダー行がページ単位で繰り返される。</li>
+      <li>1レコードが複数行に分割されている。</li>
+      <li>帳票ごとに例外処理が増えてメンテ不能。</li>
+    </ul>
+  </section>
+
+  <section class="method-section">
+    <h2><span class="icon">✅</span> このカテゴリで解決できること</h2>
+    <ul class="philosophy-list">
+      <li>桁位置ルールに基づく分割と型変換。</li>
+      <li>繰り返しヘッダー/フッターの自動除去。</li>
+      <li>複数行レコードの正規化と結合。</li>
+      <li>関数版とPower Query版の両ルートで運用可能。</li>
+    </ul>
+  </section>
+
+
+  <div class="category-hero hero-overlay copy-right hero-cobol">
+    <picture>
+      <source srcset="../image/hero_cobol.avif" type="image/avif">
+      <source srcset="../image/hero_cobol.webp" type="image/webp">
+      <img alt="COBOL帳票処理 特集" decoding="async" height="576" loading="lazy" src="../image/hero_cobol.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Legacy Data</div>
+      <div class="hero-copy-title">COBOL帳票処理</div>
+      <div class="hero-copy-sub">固定長・不規則帳票を、使える表に変える。</div>
+    </div>
+  </div>
+
+  <div class="category-header">
+    <h2>🏭 COBOL帳票データ整形テクニック</h2>
+    <p>基幹システムから出力された固定長テキストデータや不規則な帳票データを、Excelで使えるリストへ整形するテクニックを解説します。</p>
+  </div>
+
+  <!-- 新設：説得力ある導入セクション -->
+  <section class="cobol-selection-guide">
+    <div class="guide-intro">
+      <div class="guide-visual">
+        <video class="demo-video" aria-label="COBOL帳票をExcelで一瞬で整形するデモ" controls loop muted playsinline preload="metadata" poster="../image/hero_cobol.webp" width="1280" height="720">
+          <source src="../video/Cobol1.mp4" type="video/mp4">
+          <img src="../Gif/Cobol.gif" alt="COBOL帳票をExcelで一瞬で整形するデモ" decoding="async" loading="lazy" width="1280" height="720">
+        </video>
+      </div>
+      <div class="guide-content">
+        <h3>COBOLの壁を、<br>「2つの武器」で撃破する。</h3>
+        <p class="lead-text">「VBAが使えないから無理」と諦める必要はありません。<br>現場の制約に合わせて、2つの強力なアプローチを使い分けます。</p>
+        <p class="text-desc">
+          数十年稼働する基幹システムが吐き出す「紙印刷前提」の固定長データ。
+          そのままではExcelで扱えませんが、正しい「数式」か「クエリ」を組み込めば、
+          毎月の手作業コピペはボタン一つ、あるいは貼り付けるだけで完結します。
+        </p>
+      </div>
+    </div>
+
+    <div class="solution-patterns-grid">
+      <!-- パターン1 -->
+      <div class="pattern-card formula">
+        <span class="pattern-badge">Pattern 01</span>
+        <h4>Excel関数アプローチ</h4>
+        <p class="pattern-desc">MIDBやTRIM、スピルを活用した「シート内完結」の解決策。ファイルを配布して「誰でもコピペするだけ」の状態を作りたい場合に最適です。</p>
+        <ul class="pattern-features">
+          <li>全角・半角混在もMIDBで正確に切り出し</li>
+          <li>コピペした瞬間に結果が出る「即時性」</li>
+          <li>VBA禁止、Power Query未導入PCでも動作</li>
+        </ul>
+      </div>
+
+      <!-- パターン2 -->
+      <div class="pattern-card pq">
+        <span class="pattern-badge">Pattern 02</span>
+        <h4>パワークエリ・アプローチ</h4>
+        <p class="pattern-desc">「フォルダから取得」を活用し、毎月の大量ファイルを一括で整形・結合。100万行を超えるようなビッグデータ処理に無類の強さを発揮します。</p>
+        <ul class="pattern-features">
+          <li>複数ファイルの一括読み込み・統合</li>
+          <li>更新ボタン1つで再実行される「自動化」</li>
+          <li>複雑な行除外やピボット解除もGUIで完結</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+
+  <div class="level-legend">
+    <div class="legend-row-levels">
+      <span class="level-legend-item"><span class="lv-dot lv-dot-1"></span>Lv.1 入門</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-2"></span>Lv.2 やさしい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-3"></span>Lv.3 ふつう</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-4"></span>Lv.4 やや難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-5"></span>Lv.5 難しい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-6"></span>Lv.6 かなり難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-7"></span>Lv.7 上級</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-8"></span>Lv.8 超絶技巧</span>
+    </div>
+
+    <div class="legend-row-tags">
+      <span class="legend-tag-desc"><span class="tag-impact">🔥 即戦力</span><span class="tag-desc-text">実務効果が大きい</span></span>
+      <span class="legend-tag-desc"><span class="tag-rare">💎 レアテク</span><span class="tag-desc-text">知る人ぞ知る</span></span>
+      <span class="legend-tag-desc"><span class="tag-prereq">📖 前提知識</span><span class="tag-desc-text">先に読んでおく記事</span></span>
+    </div>
+  </div>
+
+  <div class="category-desc">
+    <p>
+      COBOL帳票は、基幹システムが紙印刷を前提に出力した固定長・不規則なテキストデータです。
+      そのままExcelに貼り付けると、列が分かれない・ヘッダーが繰り返す・1件が複数行にまたがるなどの問題が起きます。
+      このカテゴリでは、関数・Power Queryの両方から攻略します。
+    </p>
+  </div>
+
+  <h3 class="subcategory-heading">1. COBOL帳票の基礎知識・概要</h3>
+
+  <ul class="article-list mb-32" id="list-cobol-intro">
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-prereq">📖 前提知識 — 必ず先に読む</span></span>
+      </div>
+      <a class="article-link" href="../cobol/intro/01_article_cobol_fixed.html">扱っているデータはCOBOL固定長？見分け方と基礎知識</a>
+      <p class="article-summary">固定長データの正体と見分け方を解説します。まず自分のデータがCOBOL帳票なのか確認します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-prereq">📖 前提知識 — 必ず先に読む</span></span>
+      </div>
+      <a class="article-link" href="../cobol/intro/02_article_cobol_approach.html">COBOL帳票処理の3大アプローチ：本当の難易度と完成時のメリット</a>
+      <p class="article-summary">関数・Power Query・VBAなど、複数のアプローチを難易度と工数で比較します。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">2. 数式版（Excel関数でのアプローチ）</h3>
+
+  <ul class="article-list mb-32" id="list-cobol-formula">
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../cobol/formula/01_article_cobol_basic.html">COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）</a>
+      <p class="article-summary">Excelの標準関数だけで、固定長データを列ごとに切り出し、使える表へ変換します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="cobol_advanced"></span></span>
+      </div>
+      <a class="article-link" href="../cobol/formula/02_article_cobol_advanced.html">【関数応用編】不規則なCOBOL帳票の撃破（不要行除外・縦持ち展開）</a>
+      <p class="article-summary">不要なヘッダー行が混ざるデータや縦持ちデータを、関数だけで整形します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-8">
+        <span class="level-label">Lv.8 超絶技巧</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="cobol_expert"></span></span>
+      </div>
+      <a class="article-link" href="../cobol/formula/03_article_cobol_expert.html">🔥【関数超絶技巧編】凶悪COBOL帳票の撃破｜ヘッダー紐付け・フィルダウンをExcel関数で自動化</a>
+      <p class="article-summary">COBOL帳票のヘッダー紐付け・フィルダウンを、Excel関数だけで自動化する上級テクニックです。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-8">
+        <span class="level-label">Lv.8 超絶技巧</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="cobol_irregular"></span></span>
+      </div>
+      <a class="article-link" href="../cobol/formula/04_article_cobol_irregular.html">【不規則明細・完結編】行数がバラバラなデータの正規化展開</a>
+      <p class="article-summary">最凶の不規則帳票に、数式だけで立ち向かう完結編です。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">3. パワークエリ版</h3>
+
+  <ul class="article-list" id="list-cobol-pq">
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../cobol/pq/01_article_cobol_pq.html">【パワークエリ編】COBOL帳票データの不要行除去と一括結合</a>
+      <p class="article-summary">Power Queryで不要行を除去し、複数ファイルの帳票データを一括整形します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../cobol/pq/02_article_cobol_pq3.html">【参考資料】パワークエリでCOBOL帳票を処理する全テクニック</a>
+      <p class="article-summary">Power Queryの標準機能だけで完結する処理パターンを網羅した参考資料です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-7">
+        <span class="level-label">Lv.7 上級</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="cobol_pq_midb"></span></span>
+      </div>
+      <a class="article-link" href="../cobol/pq/03_article_cobol_pq_midb_ref.html">【参考資料】M言語でMIDB相当の自作関数を作る</a>
+      <p class="article-summary">Text.ToBinaryとBinary.Rangeを組み合わせ、バイト単位の切り出しを実現します。</p>
+    </li>
+  </ul>
+
+  <section class="method-section method-section-spaced">
+    <h2><span class="icon">🛣️</span> 推奨学習ルート</h2>
+    <ul class="article-list">
+      <li><a class="article-link" href="./intro/01_article_cobol_fixed.html">1. COBOL固定長とは何か</a><p class="article-summary">まず帳票構造を理解。</p></li>
+      <li><a class="article-link" href="./formula/01_article_cobol_basic.html">2. 固定長データ分割（数式版）</a><p class="article-summary">関数で分割・整形の基本を実装。</p></li>
+      <li><a class="article-link" href="./formula/04_article_cobol_irregular.html">3. 不規則明細・完結編</a><p class="article-summary">実務で難しい崩れ方に対応。</p></li>
+      <li><a class="article-link" href="./pq/01_article_cobol_pq.html">4. COBOL整形（Power Query版）</a><p class="article-summary">更新運用を重視したルート。</p></li>
+      <li><a class="article-link" href="./pq/03_article_cobol_pq_midb_ref.html">5. MIDB相当関数の置換</a><p class="article-summary">レガシー処理を現代化。</p></li>
+    </ul>
+  </section>
+
+  <section class="method-section method-section-spaced">
+    <h2><span class="icon">❓</span> FAQ</h2>
+    <ul class="article-list">
+      <li class="article-item"><p class="article-link">Q. COBOL帳票はなぜ扱いづらいのですか？</p><p class="article-summary">A. 紙出力前提の固定桁・改ページ構造になっており、表計算向けの列構造を前提にしていないためです。</p></li>
+      <li class="article-item"><p class="article-link">Q. 関数版とPower Query版はどちらを選ぶべき？</p><p class="article-summary">A. 単発分析や軽量処理は関数版、定期運用や大量データはPower Query版が向いています。</p></li>
+      <li class="article-item"><p class="article-link">Q. 不規則明細でも完全自動化できますか？</p><p class="article-summary">A. はい。パターン抽出と例外行ルールを先に定義すれば、多くの帳票で再現可能です。</p></li>
+      <li class="article-item"><p class="article-link">Q. ヘッダー繰り返しはどう除去しますか？</p><p class="article-summary">A. 行判定キー（帳票タイトル、列名、桁数）を使ってフィルタリングします。関数版/PQ版どちらも対応手順があります。</p></li>
+      <li class="article-item"><p class="article-link">Q. 元データがShift_JISでも対応可能ですか？</p><p class="article-summary">A. 可能です。取り込み時に文字コードを明示し、UTF-8側で処理する流れを推奨しています。</p></li>
+    </ul>
+  </section>
+
+  <section class="method-section method-section-spaced">
+    <h2><span class="icon">🔗</span> 関連カテゴリへ</h2>
+    <ul class="article-list">
+      <li class="article-item"><a class="article-link" href="../functions/">📐 関数テクニック総合</a><p class="article-summary">検索・抽出・整形を関数で体系化。</p></li>
+      <li class="article-item"><a class="article-link" href="../powerquery/">🔄 パワークエリ総合</a><p class="article-summary">取り込みから更新運用までを一気通貫。</p></li>
+      <li class="article-item"><a class="article-link" href="../qr/">⚡ QR Automation Lab総合</a><p class="article-summary">VBA不要の入力自動化と閉域転送。</p></li>
+      <li class="article-item"><a class="article-link" href="../others/">🧰 現場実務ラボ総合</a><p class="article-summary">速度・印刷・UI改善の実戦ノウハウ。</p></li>
+      <li class="article-item"><a class="article-link" href="../unlocked/">🔓 制限解除ラボ総合</a><p class="article-summary">VBA可環境で最後の5%を補完。</p></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ（Google Forms）</a>
+  </div>
+  <p>&copy; Excel &times; No VBA Lab &horbar; コンテンツは随時追加中です</p>
+  <p><a href="../index.html">🏠 ホームへ戻る</a></p>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>住所から郵便番号を逆引きする方法（最長一致検索）｜Excel &times; No VBA Lab</title>
+<meta content="Excel関数（INDEX・MATCH・MAX・LEFT・LEN）だけで住所から郵便番号を逆引きする方法。最長一致検索のほうが精度が高い理由、安全装置の付け方まで丁寧に解説。VBA不要。" name="description">
+<meta content="Excel 住所 郵便番号, 郵便番号 逆引き, 住所から郵便番号, 郵便番号 関数, 最長一致検索, INDEX MATCH MAX LEFT LEN, VBA不要, utf_all.csv, 郵便番号簿, 配列数式" name="keywords">
+<meta content="住所から郵便番号を逆引きする方法（最長一致検索）｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Excel関数だけで住所から郵便番号を逆引きする実務テクニック。最長一致検索（INDEX・MAX・LEFT・LEN）の仕組みを平易に解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/old/article_zip_reverse.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    .step-grid{display:grid;grid-template-columns:56px 1fr;gap:0;margin:18px 0}
+    .step-num{background:#1565c0;color:#fff;font-weight:700;font-size:.95em;border-radius:4px 0 0 4px;display:flex;align-items:center;justify-content:center;min-height:48px}
+    .step-body{background:#f5f8ff;border:1px solid #bbdefb;border-left:none;border-radius:0 4px 4px 0;padding:10px 14px;font-size:.9em;line-height:1.8}
+    .compare-table .highlight-cell{background:#fff3e0;font-weight:700}
+    .formula-breakdown{background:#f8f8f8;border:1px solid #ddd;border-radius:8px;padding:18px 20px;margin:16px 0;font-size:.9em;line-height:2.2}
+    .formula-breakdown .fb-line{display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap}
+    .formula-breakdown .fb-code{font-family:"Consolas","Courier New",monospace;background:#e8eaf6;padding:2px 8px;border-radius:3px;font-weight:700;white-space:nowrap}
+    .formula-breakdown .fb-arrow{color:#1565c0;font-weight:700;flex-shrink:0}
+    .formula-breakdown .fb-desc{color:#444}
+    .formula-breakdown .fb-highlight{color:#c62828;font-weight:700}
+    .excel-sheet{margin:20px 0;border:1px solid #999;border-radius:4px;overflow:hidden;font-size:.85em;background:#fff}
+    .excel-sheet-tabs{background:#d0d0d0;padding:4px 0 0 4px;border-bottom:1px solid #999}
+    .excel-sheet-tab{display:inline-block;padding:4px 16px;font-weight:700;font-size:.82em;border-radius:4px 4px 0 0;margin-left:2px}
+    .excel-sheet-tab-active{background:#fff;border:1px solid #999;border-bottom:1px solid #fff;color:#1565c0}
+    .excel-sheet-tab-inactive{background:#e0e0e0;border:1px solid #bbb;color:#666}
+    .excel-grid{width:100%;border-collapse:collapse}
+    .excel-grid th,.excel-grid td{border:1px solid #c0c0c0;padding:4px 8px;text-align:center;height:28px;vertical-align:middle}
+    .excel-grid th{background:#f0f0f0;color:#333;font-weight:700;font-size:.78em;min-width:32px}
+    .excel-grid .row-header{background:#f0f0f0;font-weight:700;font-size:.78em;width:28px}
+    .excel-grid .cell-text{background:#fff;text-align:left;font-size:.9em}
+    .excel-grid .cell-result{background:#e8f5e9;font-weight:700;color:#2e7d32;text-align:center}
+    .excel-grid .cell-zip{background:#fff3e0;font-weight:700;color:#e65100;text-align:center;font-family:monospace}
+    .match-demo{margin:20px 0}
+    .match-step{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:.86em;flex-wrap:wrap}
+    .match-step-num{display:inline-block;width:52px;color:#6b7b8d;font-size:.78em;text-align:right;padding-right:8px;flex-shrink:0}
+    .match-active{background:#1565c0;color:#fff;padding:2px 6px;border-radius:4px;letter-spacing:.04em;font-family:"Consolas","Courier New",monospace}
+    .match-trimmed{color:#b0b8c4;text-decoration:line-through;padding:2px 4px;letter-spacing:.04em;font-family:"Consolas","Courier New",monospace}
+    .match-arrow{color:#6b7b8d;font-weight:700}
+    .match-result{color:#2e7d32;font-weight:700}
+    .match-miss{color:#c62828;font-size:.82em}
+    .match-ruler{background:linear-gradient(90deg,#1565c0 0%,#1565c0 var(--pct),#e2e8f0 var(--pct),#e2e8f0 100%);height:10px;border-radius:5px;margin:4px 0 2px}
+    .caution-banner{background:linear-gradient(135deg,#fff4e0 0%,#fff9ee 100%);border-left:5px solid #e6a817;border-radius:6px;padding:16px 20px;margin-bottom:28px}
+    .caution-banner h3{color:#b07d0a;font-size:.98em;margin-bottom:6px}
+    .caution-banner p{font-size:.88em;color:#5a4e30;line-height:1.75}
+    .disclaimer-banner{background:linear-gradient(135deg,#fce4ec 0%,#fff0f0 100%);border-left:5px solid #c62828;border-radius:6px;padding:16px 20px;margin-top:24px}
+    .disclaimer-banner h3{color:#b71c1c;font-size:.98em;margin-bottom:6px}
+    .disclaimer-banner p{font-size:.88em;color:#4a2020;line-height:1.75}
+  </style>
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"住所から郵便番号を逆引きする方法（最長一致検索）","description":"Excel関数（INDEX・MATCH・MAX・LEFT・LEN）だけで住所から郵便番号を逆引きする方法。最長一致検索のほうが精度が高い理由、安全装置の付け方まで丁寧に解説。VBA不要。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/functions/old/article_zip_reverse.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">VBA禁止環境でもExcelを極める</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#functions">Excel関数テクニック</a><span>&gt;</span>
+<a href="../../index.html#functions">旧式の関数</a><span>&gt;</span>
+<strong>住所&rarr;郵便番号 逆引き（最長一致検索）</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-classic">全Ver対応</span><span class="badge badge-classic">Excel 2016でも可</span></div>
+<h1 class="article-title">住所から郵便番号を逆引きする方法（最長一致検索）</h1>
+</div>
+<div class="caution-banner">
+<h3>⚠ このテクニックは「完璧」ではありません</h3>
+<p>巷の簡易的なVLOOKUP方式やワイルドカード方式と比べて<strong>かなり高い精度</strong>を出せますが、日本の住所体系の複雑さにより100%の正解は保証できません。必ず少数テストから始め、結果を目視確認しながら段階的に展開してください。完全に一致しない・おかしな結果が出る場合のために、あえてエラーや警告が出る安全装置も後半で紹介します。</p>
+</div>
+<!-- ===== やりたいこと ===== -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>手元にある住所データから、<strong>郵便番号を自動で逆引き</strong>したい。VBAは使わず、関数だけで。</p>
+</section>
+<!-- ===== シート構成 ===== -->
+<section class="method-section">
+<h2>シート構成（2つだけ）</h2>
+<h3>① 郵便番号簿シート &boxh;&boxh; A列＝郵便番号、B列＝住所</h3>
+<div class="excel-sheet">
+<div class="excel-sheet-tabs">
+<span class="excel-sheet-tab excel-sheet-tab-active">郵便番号簿</span>
+</div>
+<table class="excel-grid">
+<thead><tr><th></th><th style="min-width:80px">A（郵便番号）</th><th style="min-width:200px">B（住所）</th></tr></thead>
+<tbody>
+<tr><td class="row-header">1</td><td style="font-weight:700;background:#e3edf9;font-size:.76em">郵便番号</td><td style="font-weight:700;background:#e3edf9;font-size:.76em">住所</td></tr>
+<tr><td class="row-header">2</td><td class="cell-zip">1830022</td><td class="cell-text">東京都府中市宮西町</td></tr>
+<tr><td class="row-header">3</td><td class="cell-zip">7260004</td><td class="cell-text">広島県府中市府川町</td></tr>
+<tr><td class="row-header">4</td><td class="cell-zip">6048141</td><td class="cell-text">京都府京都市中京区泉正寺町</td></tr>
+<tr><td class="row-header">5</td><td class="cell-zip">9300106</td><td class="cell-text">富山県富山市高木東</td></tr>
+<tr><td class="row-header">6</td><td class="cell-zip">9300106</td><td class="cell-text">富山県富山市高木西</td></tr>
+</tbody>
+</table>
+</div>
+<div class="xdemo-note-info">
+        日本郵便の utf_all.csv をもとに、都道府県＋市区町村＋町域を結合した列。作り方は後半「郵便番号簿の準備」で詳しく説明します。
+      </div>
+<h3>② 入力シート &boxh;&boxh; A列＝住所（検索したいデータ）</h3>
+<div class="excel-sheet">
+<div class="excel-sheet-tabs">
+<span class="excel-sheet-tab excel-sheet-tab-active">入力シート</span>
+<span class="excel-sheet-tab excel-sheet-tab-inactive">郵便番号簿</span>
+</div>
+<table class="excel-grid">
+<thead><tr><th></th><th style="min-width:220px">A（住所）</th><th style="min-width:80px">B（郵便番号）</th><th style="min-width:40px">C（一致数）</th></tr></thead>
+<tbody>
+<tr><td class="row-header">1</td><td style="font-weight:700;background:#e3edf9;font-size:.76em">住所</td><td style="font-weight:700;background:#fff3e0;font-size:.76em">郵便番号</td><td style="font-weight:700;background:#e8f5e9;font-size:.76em">一致文字数</td></tr>
+<tr><td class="row-header">2</td><td class="cell-text">東京都府中市宮西町２&minus;２４</td><td class="cell-zip">1830022</td><td class="cell-result">10</td></tr>
+<tr><td class="row-header">3</td><td class="cell-text">広島県府中市府川町３１５</td><td class="cell-zip">7260004</td><td class="cell-result">9</td></tr>
+<tr><td class="row-header">4</td><td class="cell-text">京都府京都市中京区泉正寺町３３４</td><td class="cell-zip">6048141</td><td class="cell-result">11</td></tr>
+</tbody>
+</table>
+</div>
+<div class="xdemo-note-info" style="border-left-color: #009688; background: #e0f2f1;">
+<strong>💡 まずはこのシンプルな構成で動作を理解してください。</strong> 正規化ヘルパー列・安全装置などの発展的な内容は、基本が動いてから後半で追加します。
+      </div>
+</section>
+<!-- ================================================================ -->
+<!--  最長一致検索のアイデア                                            -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h2>最長一致検索のアイデア</h2>
+<div class="xdemo-note-info" style="border-left-color: #9c27b0; background: #f3e5f5;">
+<strong>📜 なぜ「最長一致」なのか？</strong><br>
+        郵便番号は町域レベルまでしか設定されていないのに、入力住所には番地・建物名まで入っている。完全一致では絶対にヒットしない。かといって短い文字列で探すと大雑把すぎて別の場所がヒットしてしまう。だから「一番長く一致するもの＝一番詳しいもの」を探す。
+      </div>
+<h3>右端から1文字ずつ「食べていく」イメージ</h3>
+<div class="match-demo">
+<div class="match-step"><span class="match-step-num">15文字</span><span class="match-active">東京都府中市宮西町２&minus;２４</span><span class="match-arrow">&rarr;</span><span class="match-miss">該当なし</span></div>
+<div class="match-step"><span class="match-step-num">14文字</span><span class="match-active">東京都府中市宮西町２&minus;２</span><span class="match-trimmed">４</span><span class="match-arrow">&rarr;</span><span class="match-miss">該当なし</span></div>
+<div class="match-step"><span class="match-step-num">&hellip;</span><span style="color:#94a3b8;font-size:.82em">（省略）</span></div>
+<div class="match-step"><span class="match-step-num">10文字</span><span class="match-active">東京都府中市宮西町</span><span class="match-trimmed">２&minus;２４</span><span class="match-arrow">&rarr;</span><span class="match-result">&starf; ヒット！ &rarr; 1830022</span></div>
+</div>
+<p>番地・建物名は右から削る過程で自動的に捨てられます。これが最長一致検索の強みです。</p>
+<h3>逆に短い方から探すと&hellip;（最短一致がダメな理由）</h3>
+<div class="code-block" data-lang="もし最短一致なら&hellip;">
+<span class="code-line">「東」     &rarr; ヒット（東京都？東大阪市？） &larr; 全然違う！</span>
+<span class="code-line">「東京」   &rarr; ヒット（東京都全域？）       &larr; まだ曖昧</span>
+<span class="code-line"></span>
+<span class="code-line">&rarr; 短い方から見つけると大雑把すぎて使えない。</span>
+<span class="code-line">&rarr; だから長い方から探して「一番詳しくマッチしたもの」を採用する！</span>
+</div>
+<h3>数式は「1つのセルの中」でこれを一瞬でやる</h3>
+<div class="flow-diagram">
+<span class="flow-step">入力住所<br><span style="font-size:.72em;font-weight:400">A2セル</span></span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">先頭N文字を切り出し<br><span style="font-size:.72em;font-weight:400">LEFT(A2, N)</span></span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">郵便番号簿と比較<br><span style="font-size:.72em;font-weight:400">約12万行を一括照合</span></span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">最長一致の行を特定<br><span style="font-size:.72em;font-weight:400">MAX で最大N</span></span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step" style="background:#e8f5e9;border-color:#66bb6a">郵便番号を返す<br><span style="font-size:.72em;font-weight:400">INDEX</span></span>
+</div>
+</section>
+<!-- ================================================================ -->
+<!--  メイン数式                                                       -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h2>数式（たった2つ）</h2>
+<div class="xdemo-note">
+<div class="xdemo-note-info">
+<strong>前提</strong><br>
+        ・郵便番号簿シート名＝<strong>「郵便番号簿」</strong><br>
+        ・郵便番号簿の<strong>A列＝郵便番号</strong>、<strong>B列＝住所</strong>（2行目からデータ開始）<br>
+        ・入力シートの<strong>A列＝検索したい住所</strong>
+</div>
+<h3>B2 &boxh;&boxh; 郵便番号を返す</h3>
+<div class="code-block" data-lang="B2セル（郵便番号）">
+<span class="code-line">=INDEX(郵便番号簿!A$2:A$125000,</span>
+<span class="code-line">  MATCH(</span>
+<span class="code-line">    LEFT(A2,</span>
+<span class="code-line">      MAX(</span>
+<span class="code-line">        (LEFT(A2,LEN(郵便番号簿!B$2:B$125000))=郵便番号簿!B$2:B$125000)</span>
+<span class="code-line">        *LEN(郵便番号簿!B$2:B$125000)</span>
+<span class="code-line">      )</span>
+<span class="code-line">    ),</span>
+<span class="code-line">    郵便番号簿!B$2:B$125000,</span>
+<span class="code-line">    0</span>
+<span class="code-line">  )</span>
+<span class="code-line">)</span>
+</div>
+<h3>C2 &boxh;&boxh; 一致文字数（確認用）</h3>
+<div class="code-block" data-lang="C2セル（一致文字数）">
+<span class="code-line">=MAX(</span>
+<span class="code-line">  (LEFT(A2,LEN(郵便番号簿!B$2:B$125000))=郵便番号簿!B$2:B$125000)</span>
+<span class="code-line">  *LEN(郵便番号簿!B$2:B$125000)</span>
+<span class="code-line">)</span>
+</div>
+<table class="compare-table">
+<thead><tr><th>バージョン</th><th>確定方法</th></tr></thead>
+<tbody>
+<tr><td>Excel 2019以前</td><td><strong>Ctrl+Shift+Enter</strong>（数式バーに { } が付く）</td></tr>
+<tr><td>Excel 2021 ／ 365</td><td>普通に <strong>Enter</strong></td></tr>
+</tbody>
+</table>
+<h3>数式の分解（6パーツ）</h3>
+<div class="formula-breakdown">
+<div class="fb-line"><span class="fb-code">❶ LEN(郵便番号簿!B$2:B$125000)</span><span class="fb-arrow">&rarr;</span><span class="fb-desc">郵便番号簿の各住所の<span class="fb-highlight">文字数</span>を配列で取得</span></div>
+<div class="fb-line"><span class="fb-code">❷ LEFT(A2, ❶)</span><span class="fb-arrow">&rarr;</span><span class="fb-desc">入力住所の先頭から<span class="fb-highlight">その文字数ぶん</span>切り出す</span></div>
+<div class="fb-line"><span class="fb-code">❸ ❷ = 郵便番号簿!B$2:B$125000</span><span class="fb-arrow">&rarr;</span><span class="fb-desc"><span class="fb-highlight">一致するか？</span>（TRUE/FALSE の配列）</span></div>
+<div class="fb-line"><span class="fb-code">❹ ❸ &times; ❶</span><span class="fb-arrow">&rarr;</span><span class="fb-desc">一致 &rarr; 文字数 ／ 不一致 &rarr; 0</span></div>
+<div class="fb-line"><span class="fb-code">❺ MAX(❹)</span><span class="fb-arrow">&rarr;</span><span class="fb-desc"><span class="fb-highlight">最大の文字数</span>＝最長一致</span></div>
+<div class="fb-line"><span class="fb-code">❻ LEFT &rarr; MATCH &rarr; INDEX</span><span class="fb-arrow">&rarr;</span><span class="fb-desc">最長一致文字列を復元 &rarr; 行番号 &rarr; <span class="fb-highlight">郵便番号を返す</span></span></div>
+</div>
+</div></section>
+<!-- ================================================================ -->
+<!--  処理トレース                                                     -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h2>1つのセルで何が起きているか &boxh;&boxh; 処理トレース</h2>
+<h3>A2 = 「東京都府中市宮西町２&minus;２４」の場合</h3>
+<div class="step-grid">
+<div class="step-num">❶</div>
+<div class="step-body"><strong>LEN</strong> &rarr; 郵便番号簿の各住所の文字数を取得。「東京都府中市宮西町」は10文字、「広島県府中市府川町」は9文字&hellip;。</div>
+</div>
+<div class="step-grid">
+<div class="step-num">❷</div>
+<div class="step-body"><strong>LEFT</strong> &rarr; 入力住所から各文字数ぶん先頭を切り出す。10文字なら「東京都府中市宮西町」。</div>
+</div>
+<div class="step-grid">
+<div class="step-num">❸</div>
+<div class="step-body"><strong>=比較</strong> &rarr;「東京都府中市宮西町」＝「東京都府中市宮西町」&rarr; <strong>TRUE</strong>！</div>
+</div>
+<div class="step-grid">
+<div class="step-num">❹❺</div>
+<div class="step-body"><strong>&times;LEN &rarr; MAX</strong> &rarr; TRUE&times;10=<strong>10</strong>。全配列の最大値=10。</div>
+</div>
+<div class="step-grid">
+<div class="step-num">❻</div>
+<div class="step-body"><strong>LEFT(A2,10)</strong>&rarr;「東京都府中市宮西町」&rarr; MATCH &rarr; INDEX &rarr; <strong>1830022</strong></div>
+</div>
+</section>
+<!-- ================================================================ -->
+<!--  ここまでが基本。ここから発展的な内容                                -->
+<!-- ================================================================ -->
+<section class="method-section" style="border-top:3px solid #1565c0;padding-top:24px;margin-top:40px">
+<h2>ここから先：精度を上げる・安全装置をつける</h2>
+<p>上記の基本数式だけでも動作しますが、実務で使うには以下の追加対策が重要です。</p>
+</section>
+<!-- ================================================================ -->
+<!--  郵便番号簿の準備                                                  -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h2>郵便番号簿シートの準備（utf_all.csv）</h2>
+<h3>ダウンロード</h3>
+<p>日本郵便の公式サイトから<strong>「住所の郵便番号（1レコード1行、UTF-8形式）（CSV形式）」</strong>をダウンロードします。</p>
+<p>ダウンロード先：<a href="https://www.post.japanpost.jp/zipcode/dl/utf-zip.html" target="_blank">https://www.post.japanpost.jp/zipcode/dl/utf-zip.html</a></p>
+<div class="xdemo-note-info">
+<strong>なぜ utf_all.csv？</strong><br>
+        従来の KEN_ALL.CSV は町域名が長い場合に<strong>複数行に分割される</strong>悪名高い仕様でした。UTF-8版では1レコード1行に統一されており、前処理が不要です。
+      </div>
+<h3>⚠ そのまま開くと文字化けする</h3>
+<p>utf_all.csv は<strong>UTF-8</strong>で保存されています。Excelでダブルクリックして開くと Shift-JIS として解釈されて<strong>文字化け</strong>します。</p>
+<h4>方法① データの取得から読み込む（推奨）</h4>
+<div class="step-grid">
+<div class="step-num">1</div>
+<div class="step-body">Excelで新規ブック &rarr; <strong>「データ」タブ</strong> &rarr; <strong>「テキストまたはCSVから」</strong></div>
+</div>
+<div class="step-grid">
+<div class="step-num">2</div>
+<div class="step-body">utf_all.csv を選択して「インポート」</div>
+</div>
+<div class="step-grid">
+<div class="step-num">3</div>
+<div class="step-body">プレビュー画面で<strong>「元のファイル」を「65001: Unicode (UTF-8)」</strong>に変更 &rarr; 日本語が正しく表示されることを確認</div>
+</div>
+<div class="step-grid">
+<div class="step-num">4</div>
+<div class="step-body">「読み込み」で完了</div>
+</div>
+<h4>方法② メモ帳で開いてANSIで保存し直す</h4>
+<div class="step-grid">
+<div class="step-num">1</div>
+<div class="step-body">utf_all.csv を<strong>メモ帳</strong>で開く（右クリック &rarr;「プログラムから開く」&rarr; メモ帳）</div>
+</div>
+<div class="step-grid">
+<div class="step-num">2</div>
+<div class="step-body">「ファイル」&rarr;「名前を付けて保存」&rarr; 文字コードを<strong>「ANSI」</strong>にして保存</div>
+</div>
+<div class="step-grid">
+<div class="step-num">3</div>
+<div class="step-body">保存したファイルをExcelで普通に開く &rarr; 文字化けしない</div>
+</div>
+<h3>B列（住所）の作り方</h3>
+<p>utf_all.csv のG列（都道府県名）、H列（市区町村名）、I列（町域名）を結合します。括弧は除去し、「以下に掲載がない場合」は町域を空にします。</p>
+<div class="code-block" data-lang="B列の数式（郵便番号簿シート）">
+<span class="code-line">=G2&H2&IF(I2="以下に掲載がない場合","",IF(FIND("（",I2&"（")&lt;=LEN(I2),LEFT(I2,FIND("（",I2)-1),I2))</span>
+</div>
+<p class="code-comment">A列にはC列（郵便番号）をそのまま配置。シート名を「郵便番号簿」に変更。</p>
+</section>
+<!-- ================================================================ -->
+<!--  正規化                                                           -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h2>入力住所の正規化（精度を上げるための前処理）</h2>
+<p>入力住所と郵便番号簿の表記が食い違っていると一致しません。主な対策：</p>
+<table class="compare-table">
+<thead><tr><th>対策</th><th>数式例</th><th>注意</th></tr></thead>
+<tbody>
+<tr><td class="highlight-cell">半角&rarr;全角統一</td><td><code>=JIS(A2)</code></td><td>郵便番号簿が全角なので合わせる</td></tr>
+<tr><td class="highlight-cell">旧字体&rarr;新字体</td><td><code>=SUBSTITUTE(&hellip;,"飛弾","飛騨")</code></td><td>必要な置換だけ。過剰にやらない</td></tr>
+<tr><td class="highlight-cell">ヶ/ケ/が 統一</td><td><code>=SUBSTITUTE(&hellip;,"ヶ","ケ")</code></td><td>問題が出た地名だけ個別対応</td></tr>
+<tr><td class="highlight-cell">都道府県名の補完</td><td>手動または別数式</td><td>なしだと同名市町村で誤マッチ</td></tr>
+</tbody>
+</table>
+<div class="xdemo-note-danger">
+<strong>⚠ 「大字」除去は事故が多い</strong><br>
+        愛知県知多郡阿久比町「植大」のように、地名の末尾が「大」で次に「字」が来ると「大字」と誤認識して地名が壊れます。「大字」「字」の除去は最初から入れず、必要性が確認できてから慎重に追加してください。
+      </div>
+<p>正規化を入れる場合は入力シートに列を追加して、B列の数式のA2を正規化列に変更します。</p>
+</section>
+<!-- ================================================================ -->
+<!--  安全装置                                                         -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h2>安全装置 &boxh;&boxh; 問題のある行を自動で検知する</h2>
+<h3>「以下に掲載がない場合」がフォールバック先になる</h3>
+<p>郵便番号簿のB列に「愛知県名古屋市東区」のような<strong>都道府県＋市区町村だけの短い行</strong>が残っています（「以下に掲載がない場合」の行で町域を空にしたため）。町域レベルで一致しなかった住所は、この短い行にフォールバックしてヒットします。</p>
+<div class="excel-sheet">
+<div class="excel-sheet-tabs">
+<span class="excel-sheet-tab excel-sheet-tab-active">郵便番号簿シート（イメージ）</span>
+</div>
+<table class="excel-grid">
+<thead><tr><th></th><th style="min-width:80px">A（郵便番号）</th><th style="min-width:200px">B（住所）</th></tr></thead>
+<tbody>
+<tr><td class="row-header">&hellip;</td><td class="cell-zip">4610000</td><td class="cell-text" style="font-weight:700;color:#1565c0">愛知県名古屋市東区</td></tr>
+<tr><td class="row-header">&hellip;</td><td class="cell-zip">4610001</td><td class="cell-text">愛知県名古屋市東区泉</td></tr>
+<tr><td class="row-header">&hellip;</td><td class="cell-zip">4610002</td><td class="cell-text">愛知県名古屋市東区代官町</td></tr>
+</tbody>
+</table>
+</div>
+<div class="code-block" data-lang="フォールバックの流れ">
+<span class="code-line">入力：愛知県名古屋市東区&cir;&cir;町１&minus;２（&cir;&cir;町が表記揺れで一致しない場合）</span>
+<span class="code-line"></span>
+<span class="code-line">愛知県名古屋市東区&cir;&cir;町  &larr; 一致しない（表記揺れ）</span>
+<span class="code-line">  &hellip;右から削っていく&hellip;</span>
+<span class="code-line">愛知県名古屋市東区        &larr; &starf; フォールバック行にヒット！</span>
+<span class="code-line"></span>
+<span class="code-line">&rarr; 郵便番号は返る（4610000）が、町域まで到達していない</span>
+<span class="code-line">&rarr; 「何か問題がある」と判定列で検知できる</span>
+</div>
+<h3>判定列の追加（D列）</h3>
+<div class="xdemo-note-info">
+<strong>前提：</strong>判定列で「以下に掲載がない場合」を検出するには、郵便番号簿シートに<strong>元のI列（町域名）が残っている必要があります</strong>。utf_all.csv を読み込んだ際にI列を削除せず残しておいてください。
+      </div>
+<div class="code-block" data-lang="D2セル（判定）">
+<span class="code-line">=IF(C2=0,"一致なし",</span>
+<span class="code-line">  IF(C2&lt;6,"要確認（一致"&C2&"文字）",</span>
+<span class="code-line">    IF(INDEX(郵便番号簿!I$2:I$125000,</span>
+<span class="code-line">         MATCH(LEFT(A2,C2),郵便番号簿!B$2:B$125000,0)</span>
+<span class="code-line">       )="以下に掲載がない場合",</span>
+<span class="code-line">      "要確認（市区町村止まり）",</span>
+<span class="code-line">      ""</span>
+<span class="code-line">    )</span>
+<span class="code-line">  )</span>
+<span class="code-line">)</span>
+</div>
+<h3>安全装置つき完成イメージ</h3>
+<div class="excel-sheet">
+<div class="excel-sheet-tabs">
+<span class="excel-sheet-tab excel-sheet-tab-active">入力シート（D列追加）</span>
+</div>
+<table class="excel-grid">
+<thead><tr><th></th><th style="min-width:200px">A</th><th style="min-width:70px">B</th><th style="min-width:30px">C</th><th style="min-width:130px">D</th></tr></thead>
+<tbody>
+<tr><td class="row-header">1</td><td style="font-weight:700;background:#e3edf9;font-size:.76em">住所</td><td style="font-weight:700;background:#fff3e0;font-size:.76em">郵便番号</td><td style="font-weight:700;background:#e8f5e9;font-size:.76em">一致数</td><td style="font-weight:700;background:#fce4ec;font-size:.76em">判定</td></tr>
+<tr><td class="row-header">2</td><td class="cell-text" style="font-size:.78em">東京都府中市宮西町２&minus;２４</td><td class="cell-zip">1830022</td><td class="cell-result">10</td><td style="background:#e8f5e9;text-align:center;font-size:.78em"></td></tr>
+<tr><td class="row-header">3</td><td class="cell-text" style="font-size:.78em">広島県府中市府川町３１５</td><td class="cell-zip">7260004</td><td class="cell-result">9</td><td style="background:#e8f5e9;text-align:center;font-size:.78em"></td></tr>
+<tr><td class="row-header">4</td><td class="cell-text" style="font-size:.78em">愛知県名古屋市東区&cir;&cir;町&hellip;</td><td class="cell-zip">4610000</td><td style="background:#fce4ec;font-weight:700;color:#c62828;text-align:center">8</td><td style="background:#fce4ec;font-weight:700;color:#c62828;text-align:center;font-size:.72em">要確認（市区町村止まり）</td></tr>
+</tbody>
+</table>
+</div>
+<div class="xdemo-note-info" style="border-left-color: #009688; background: #e0f2f1;">
+<strong>💡 D列の使い方：</strong>D列が空白でない行だけフィルタで抽出すれば「要確認行の一覧」が得られます。正規化を修正すると判定が消え、改善状況が可視化されます。
+      </div>
+<h3>IFERRORで隠してはいけない</h3>
+<div class="xdemo-note-danger">
+<strong>⚠ IFERROR(&hellip;,"") は逆効果</strong><br>
+        エラーを空白で隠すと「問題なし」に見えてしまいます。エラーは隠すのではなく、判定列で原因を追跡するのが正しいアプローチです。
+      </div>
+</section>
+<!-- ================================================================ -->
+<!--  既知の落とし穴                                                    -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h2>既知の落とし穴</h2>
+<table class="compare-table">
+<thead><tr><th>落とし穴</th><th>内容</th><th>対策</th></tr></thead>
+<tbody>
+<tr><td class="highlight-cell">同名市町村</td><td>府中市（東京/広島）、伊達市（北海道/福島）など</td><td>都道府県名を必ず補完</td></tr>
+<tr><td class="highlight-cell">京都の通り名</td><td>「上る/下る」の独自体系で町域と一致しない</td><td>参考値として扱い目視確認必須</td></tr>
+<tr><td class="highlight-cell">大口事業所</td><td>utf_all.csv に含まれない</td><td>別ファイルで対応</td></tr>
+<tr><td class="highlight-cell">「大字」除去事故</td><td>阿久比町「植大」+「字」&rarr;「大字」と誤認識</td><td>最初は除去しない。段階的に</td></tr>
+<tr><td class="highlight-cell">1郵便番号に複数住所</td><td>9300106＝高木東 / 高木西</td><td>住所&rarr;郵便番号は問題なし。逆方向はFILTERで全件抽出</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ================================================================ -->
+<!--  パフォーマンス                                                    -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h2>パフォーマンスの注意</h2>
+<div class="xdemo-note-warn" style="border-left-color:#ff9800;background:#fff3e0;">
+<strong>🔶 この数式は重い</strong> &boxh;&boxh; 1セルにつき約12万回の比較が走ります。
+      </div>
+<table class="compare-table">
+<thead><tr><th>工夫</th><th>効果</th></tr></thead>
+<tbody>
+<tr><td class="highlight-cell">手動計算モード</td><td>数式タブ&rarr;「手動」。F9で必要なときだけ再計算</td></tr>
+<tr><td class="highlight-cell">都道府県フィルタ</td><td>郵便番号簿を都道府県別に分割で大幅高速化</td></tr>
+<tr><td class="highlight-cell">値貼り付け</td><td>結果確認後、B〜C列をコピー&rarr;値のみ貼り付け</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ================================================================ -->
+<!--  推奨ワークフロー                                                  -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h2>推奨ワークフロー</h2>
+<div class="step-grid">
+<div class="step-num">STEP 1</div>
+<div class="step-body"><strong>郵便番号簿の準備</strong><br>utf_all.csv を文字化けなく読み込む &rarr; A列＝郵便番号、B列＝住所（結合済み） &rarr; シート名を「郵便番号簿」に</div>
+</div>
+<div class="step-grid">
+<div class="step-num">STEP 2</div>
+<div class="step-body"><strong>10〜20件で試行</strong><br>手動計算モードでB2・C2に数式を入力 &rarr; F9で再計算 &rarr; 結果を目視確認</div>
+</div>
+<div class="step-grid">
+<div class="step-num">STEP 3</div>
+<div class="step-body"><strong>正規化を調整</strong><br>一致しない行があれば正規化列を追加して表記を統一 &rarr; 再計算で確認</div>
+</div>
+<div class="step-grid">
+<div class="step-num">STEP 4</div>
+<div class="step-body"><strong>安全装置を追加して全件展開</strong><br>判定列を追加 &rarr; 全行にコピー &rarr; 「要確認」行をフィルタで抽出 &rarr; 正規化を修正 &rarr; 繰り返す</div>
+</div>
+<div class="step-grid">
+<div class="step-num">STEP 5</div>
+<div class="step-body"><strong>値貼り付けで確定</strong><br>結果をコピー &rarr; 値のみ貼り付け（計算コストをゼロに）</div>
+</div>
+</section>
+<!-- ================================================================ -->
+<!--  まとめ                                                           -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h2>まとめ</h2>
+<table class="compare-table">
+<thead><tr><th>項目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td class="highlight-cell">基本アイデア</td><td>入力住所の先頭と郵便番号簿を照合し、最も長く一致した行の郵便番号を採用</td></tr>
+<tr><td class="highlight-cell">使用関数</td><td>INDEX・MATCH・MAX・LEFT・LEN（全バージョン共通）</td></tr>
+<tr><td class="highlight-cell">郵便番号簿</td><td>A列＝郵便番号、B列＝住所（都道府県＋市区町村＋町域を結合）</td></tr>
+<tr><td class="highlight-cell">入力シート</td><td>A列＝住所、B列＝郵便番号（数式）、C列＝一致文字数（数式）</td></tr>
+<tr><td class="highlight-cell">確定方法</td><td>2019以前：Ctrl+Shift+Enter ／ 2021・365：Enter</td></tr>
+<tr><td class="highlight-cell">精度の目安</td><td>都道府県名あり＋正規化済みで90〜95%程度</td></tr>
+</tbody>
+</table>
+<div class="caution-banner" style="margin-top:24px">
+<h3>⚠ 最後にもう一度</h3>
+<p>このテクニックは巷の簡易的な方式と比べて<strong>かなり高い精度</strong>を出せますが、<strong>「完璧」ではありません</strong>。必ず少数テストから始め、一致文字数を確認しながら段階的に展開してください。「一発で全件OK」ではなく「慎重に育てていく」テクニックとしてお使いください。</p>
+</div>
+<div class="disclaimer-banner">
+<h3>📋 免責事項</h3>
+<p>本記事で紹介する数式・手法は参考情報です。<strong>結果の正確性・完全性を保証するものではなく、本記事の内容を利用したことによって生じたいかなる損害についても、筆者は一切の責任を負いません。</strong>必ず結果を目視確認のうえ、ご自身の判断と責任においてお使いください。</p>
+</div>
+</section>
+<!-- ================================================================ -->
+<!--  バージョン互換性                                                  -->
+<!-- ================================================================ -->
+<section class="legacy-section">
+<h3>バージョン互換性</h3>
+<table class="compare-table">
+<thead><tr><th>バージョン</th><th>対応</th><th>確定方法</th></tr></thead>
+<tbody>
+<tr><td>Excel 2007〜2019</td><td style="background:#e8f5e9;text-align:center;font-weight:700">&cir;</td><td>Ctrl+Shift+Enter（CSE配列数式）</td></tr>
+<tr><td>Excel 2021</td><td style="background:#e8f5e9;text-align:center;font-weight:700">&cir;</td><td>Enter のみ（スピル対応）</td></tr>
+<tr><td>Microsoft 365</td><td style="background:#e8f5e9;text-align:center;font-weight:700">&cir;</td><td>Enter のみ（スピル対応）</td></tr>
+</tbody>
+</table>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; コンテンツは随時追加中です</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>列の分割｜Excel &times; No VBA Lab</title>
+<meta content="Power Queryで1列に複数の情報が入ったデータを複数列に分割する方法をGUI操作中心に解説。区切り文字・文字数・位置指定に対応。" name="description">
+<meta content="パワークエリ 列分割, Power Query 区切り文字 分割, 1列 複数列 分割, VBA不要 データ整形, Excel PQ" name="keywords">
+<meta content="列の分割｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power Queryで1列に複数の情報が入ったデータを複数列に分割する方法をGUI操作中心に解説。区切り文字・文字数・位置指定に対応。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/advanced/article_pq_split_column.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"列の分割 \u0026horbar; 区切り文字・文字数でテキストを複数列に分ける","description":"Power Queryで1列に複数の情報が入ったデータを複数列に分割する方法をGUI操作中心に解説。区切り文字・文字数・位置指定に対応。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/advanced/article_pq_split_column.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>列の分割</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">列の分割 &horbar; 区切り文字・文字数でテキストを複数列に分ける</h1>
+</div>
+<section class="goal-section">
+<h2><span class="icon">💡</span> この記事で解決すること</h2>
+<p>「姓名」が1列に入っている、「住所」に都道府県と市区町村が一緒に入っている、「品番-サイズ-色」がハイフン区切りで1列にまとまっている。
+        こうした「1列に複数の情報が入っている」データを、複数の列に分割する方法を解説します。</p>
+</section>
+<!-- 区切り文字で分割 -->
+<section class="method-section">
+<h3>区切り文字で分割する</h3>
+<div class="pq-proc">
+<span class="proc-title">操作手順</span>
+          分割したい列のヘッダーを選択 &rarr; ホームタブ &rarr;「列の分割」&rarr;「区切り記号による分割」。<br>
+          右クリック &rarr;「列の分割」&rarr;「区切り記号による分割」でも同じです。<br>
+          ダイアログで区切り文字を選択（または「カスタム」で自由入力）&rarr; 分割位置を選択 &rarr; OK。
+        </div>
+<h4>区切り文字の選択肢</h4>
+<p>ダイアログのドロップダウンには「コンマ」「セミコロン」「タブ」「スペース」「等号」「ハイフン」など主要な区切り文字が用意されています。
+        一覧にない文字で区切りたい場合は「カスタム」を選択して自由に入力できます。「|」「/」「_」「::」なども指定可能です。</p>
+<h4>分割位置の選択</h4>
+<p><strong>「左端の区切り記号」</strong>：最初に見つかった区切り文字で1回だけ分割します。結果は2列。</p>
+<p><strong>「右端の区切り記号」</strong>：最後に見つかった区切り文字で1回だけ分割します。結果は2列。</p>
+<p><strong>「区切り記号の出現ごと」</strong>：すべての区切り文字で分割します。区切り文字が2つあれば3列になります。</p>
+<div class="pq-example">
+<span class="ex-title">例：「A-001-XL」をハイフンで分割</span>
+          区切り記号: - で「出現ごと」&rarr; 3列に分割：「A」「001」「XL」<br>
+          「左端」で分割 &rarr; 2列：「A」「001-XL」<br>
+          「右端」で分割 &rarr; 2列：「A-001」「XL」
+        </div>
+<div class="pq-example">
+<span class="ex-title">例：「山田 太郎」を姓名に分割</span>
+          区切り記号: スペース で「左端」&rarr; 2列：「山田」「太郎」<br>
+          ⚠️ 全角スペースと半角スペースは区別されます。データに全角スペースが使われている場合は「カスタム」で全角スペースを入力してください。
+        </div>
+</section>
+<!-- 文字数で分割 -->
+<section class="method-section">
+<h3>文字数で分割する</h3>
+<div class="pq-proc">
+<span class="proc-title">操作手順</span>
+          列のヘッダーを選択 &rarr; ホームタブ &rarr;「列の分割」&rarr;「文字数による分割」。<br>
+          文字数を入力 &rarr; 分割方法を選択 &rarr; OK。
+        </div>
+<h4>分割方法の選択</h4>
+<p><strong>「左端から1回」</strong>：先頭からN文字で1回だけ分割。結果は2列。</p>
+<p><strong>「右端から1回」</strong>：末尾からN文字で1回だけ分割。結果は2列。</p>
+<p><strong>「繰り返し」</strong>：N文字ごとに分割を繰り返します。12文字を3文字ごとに分割すると4列になります。</p>
+<div class="pq-example">
+<span class="ex-title">例：郵便番号「1234567」を「123」と「4567」に分割</span>
+          文字数: 3 で「左端から1回」&rarr; 2列：「123」「4567」
+        </div>
+<div class="pq-example">
+<span class="ex-title">例：固定長データ「20260321TOKYO001」を日付8文字・地域5文字・番号3文字に分割</span>
+          まず文字数: 8 で「左端から1回」&rarr; 「20260321」と「TOKYO001」。<br>
+          次に「TOKYO001」列を文字数: 5 で「左端から1回」&rarr; 「TOKYO」と「001」。<br>
+          2ステップで3列に分割できます。
+        </div>
+</section>
+<!-- 分割後の注意 -->
+<section class="method-section">
+<h3>分割後に必ずやること</h3>
+<p><strong>列名の変更</strong>：分割すると「元の列名.1」「元の列名.2」のような名前になります。わかりやすい名前に変更してください。</p>
+<p><strong>データ型の確認</strong>：分割後の列はすべてテキスト型になります。数値として使いたい列は整数型や10進数型に変換してください。</p>
+<div class="pq-note-warn">
+          ⚠️ <strong>元の列は分割後に消える</strong>点に注意してください。
+          元のデータも残したい場合は、分割前に「列の複製」をしてから分割を実行してください。
+        </div>
+</section>
+<section class="method-section">
+<h3>まとめ</h3>
+<p>列の分割は「区切り文字」と「文字数」の2パターンがあります。
+        区切り文字の分割では「左端」「右端」「出現ごと」の選択がポイントで、使い分けによって結果が変わります。
+        文字数の分割は固定長データや郵便番号の分割で特に有効です。
+        分割後の列名変更とデータ型変換を忘れないようにしてください。</p>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

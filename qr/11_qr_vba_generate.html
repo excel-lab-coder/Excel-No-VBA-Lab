@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>⑪ VBA標準機能でQRコード生成｜QR Automation Lab｜Excel &times; No VBA Lab</title>
+<meta content="外部ライブラリ不要。VBA標準機能だけで日本語（全角文字）を含むQRコードを生成する方法を完全解説。文字コード（UTF-8/Shift-JIS）の合わせ方、ADODB.StreamでのUTF-8変換コードまで。" name="description">
+<meta content="QRコード,全角,漢字,VBA,ADODB.Stream,閉域環境,データ移行,Excel" name="keywords">
+<link href="https://excel-no-vba-lab.com/qr/11_qr_vba_generate.html" rel="canonical">
+<meta content="article" property="og:type">
+<meta content="⑪ VBA標準機能だけで全角QRコード生成！閉域環境で漢字をQRに｜QR Automation Lab" property="og:title">
+<meta content="外部ライブラリ不要。VBA標準機能のみで日本語QRコード生成。文字コードの合わせ方とVBA実装コードまで完全解説。" property="og:description">
+<meta content="https://excel-no-vba-lab.com/qr/11_qr_vba_generate.html" property="og:url">
+<meta content="https://excel-no-vba-lab.com/image/hero_ogp.png" property="og:image">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="summary_large_image" name="twitter:card">
+<meta content="⑪ VBA標準機能だけで全角QRコード生成｜QR Automation Lab" name="twitter:title">
+<meta content="外部ライブラリ不要。VBA標準機能のみで全角QR生成。文字コードの合わせ方と実装まで完全解説。" name="twitter:description">
+<meta content="https://excel-no-vba-lab.com/image/hero_ogp.png" name="twitter:image">
+<meta content="index, follow" name="robots">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Article",
+  "headline":"⑪ VBA標準機能だけで全角QRコード生成！閉域環境で漢字・ひらがなをQRコードにする完全ガイド",
+  "description":"外部ライブラリ不要。VBA標準機能だけで日本語QRコードを生成する方法と文字コードの合わせ方を完全解説。",
+  "image":"https://excel-no-vba-lab.com/ogp.png",
+  "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
+  "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-no-vba-lab.com/ogp.png"}},
+  "datePublished":"2026-04-17",
+  "dateModified":"2026-04-23",
+  "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/qr/11_qr_vba_generate.html"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://excel-no-vba-lab.com/"},
+    {"@type":"ListItem","position":2,"name":"QR Automation Lab","item":"https://excel-no-vba-lab.com/qr/"},
+    {"@type":"ListItem","position":3,"name":"⑪ VBA標準機能で全角QR生成"}
+  ]
+}
+</script>
+<!-- CSSは ../style.css に統合済みのため空にする -->
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../index.html">ホーム</a><span>&gt;</span>
+<a href="../index.html#qr">QR Automation Lab</a><span>&gt;</span>
+<strong>⑪ VBA標準機能で全角QR生成</strong>
+</div>
+<!-- ===== メインコンテンツ ===== -->
+<article class="article-body">
+<!-- ===== 記事ヘッダー ===== -->
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="badge badge-maniac">QR Automation Lab ⑪ ／ 応用・本命</span>
+</div>
+<h1 class="article-title">VBA標準機能だけで全角QRコード生成<br><small>&horbar; 閉域環境でも漢字・ひらがなをQRコードにする完全ガイド</small></h1>
+<p style="color:#666;font-size:.88rem;">最終更新: 2026-04-23 ｜ 読了目安: 15分 ｜ 前提: <a href="09_qr_closed_transfer.html">⑨ 閉域環境データ転送</a>、<a href="10_qr_system_migration.html">⑩ システム間データ移行</a></p>
+</div>
+<!-- ========================================== -->
+<!-- 冒頭ボックス（課題2対応：ライブラリ優先の案内に変更） -->
+<!-- ========================================== -->
+<div class="breakthrough-box">
+<h3>💡 全角QRコード &horbar; まずライブラリ活用を検討し、不可なら本記事の手法へ</h3>
+<p>
+    記事⑨⑩では、Excelから呼び出せる場合があるバーコードコントロール（ActiveX）を使ったQR転送を解説しました。しかしこのコントロールは主に<strong>Accessに同梱される部品</strong>で、Excelだけしか入っていないPCでは表示されない場合があります。さらに2026年現在、Microsoft 365 / Office 2024ではActiveXが初期設定で表示・作成できないことがありますが、トラストセンター設定で許可すると使える場合もあります。職場PCでは管理者ポリシーにより完全に無効化されていることもあるため、まず設定と一覧を確認してください。加えて、使える環境であっても<strong>半角英数字・記号しか格納できません</strong>。実務データの大半は漢字・ひらがな・カタカナ（全角文字）を含むため、バーコードコントロールだけではデータ移行にほぼ使えません。
+  </p>
+<p>
+    全角文字を含むQRコードを生成するには、大きく分けて<strong>2つのアプローチ</strong>があります。
+  </p>
+<p>
+<strong>【推奨】アプローチ①：ライブラリを持ち込んで活用する</strong><br>
+    GitHub上の <a href="https://github.com/yas78/QRCodeLibVBA" target="_blank">QRCodeLibVBA</a> や <a href="https://github.com/JonasHeidelberg/barcode-vba-macro-only" target="_blank">barcode-vba-macro-only</a>（santarou6氏の全角対応パッチ適用版）を .bas ファイルとしてUSBメモリ等で持ち込み、VBEにインポートする方法です。実装済みのコードを活用するため、開発・テスト工数が大幅に少なく、バグリスクも低くなります。<strong>ライブラリの持ち込みが許可される環境であれば、まずこの方法を検討してください。</strong>
+</p>
+<p>
+<strong>アプローチ②：VBA標準機能のみで自力実装する（本記事）</strong><br>
+    外部ファイルの持ち込み自体がセキュリティポリシーで禁止されている「完全閉域環境」では、ライブラリを搬入できません。そのような場合に限り、Excelに標準搭載されているVBA機能だけでQRを生成するのが本記事の手法です。ADODB.Stream（Windows標準コンポーネント）による文字コード変換、ガロア体演算によるリード・ソロモン符号、セル描画によるマトリクス出力 &horbar;&horbar; すべてをVBAコード内で完結させます。実装難易度は高くなりますが、<strong>バーコードコントロール、外部ライブラリ、インターネット接続が不要</strong>という点が唯一の強みです。
+  </p>
+<div class="xdemo-note-good">
+<strong>✅ 判断基準：</strong>「.bas ファイルをUSBで持ち込めるか？」をまず確認してください。持ち込めるなら &rarr; アプローチ①（ライブラリ活用）。持ち込めないなら &rarr; アプローチ②（本記事の手法）。多くの閉域環境では、申請手続きを経ればファイル持ち込みが可能な場合もあります。手続きを検討する価値は十分にあります。
+  </div>
+</div>
+<!-- ========================================== -->
+<!-- VBA実装：ADODB.StreamによるUTF-8エンコード -->
+<!-- ========================================== -->
+<section class="tips-section">
+<h2>💻 実装編：VBAで文字列をUTF-8のバイト配列に変換する</h2>
+<p>
+    全角QR生成の心臓部となるのが、文字列をUTF-8（またはShift-JIS）のバイト列に変換する処理です。外部ライブラリが使えない閉域環境では、Windows標準の <code>ADODB.Stream</code> を使用して変換を行います。
+  </p>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>' --- 文字列をUTF-8のバイト配列に変換する関数 ---
+Function ConvertToUTF8(ByVal text As String) As Byte()
+    Dim stream As Object
+    Set stream = CreateObject("ADODB.Stream")
+    
+    With stream
+        .Type = 2          ' adTypeText (テキストモード)
+        .Charset = "UTF-8" ' &starf;ここを "Shift_JIS" に変えればShift-JISになる
+        .Open
+        .WriteText text
+        
+        ' バイトモードに変更してデータを読み直す
+        .Position = 0
+        .Type = 1          ' adTypeBinary (バイナリモード)
+        
+        ' BOM（EF BB BF の3バイト）を読み飛ばす
+        .Position = 3
+        
+        Dim bytes() As Byte
+        bytes = .Read
+        .Close
+    End With
+    
+    ConvertToUTF8 = bytes
+    Set stream = Nothing
+End Function</code>
+</div>
+<div class="xdemo-note-good">
+<strong>✅ BOM（Byte Order Mark）のスキップが必須：</strong><br>
+    ADODB.Stream でUTF-8変換すると、ファイルの先頭に必ず 3バイトのBOM（<code>EF BB BF</code>）が付加されます。QRコードのデータ領域にこのBOMを含めると、リーダーで読み取った際に「ゴミ文字」として出力されてしまう場合があるため、<code>.Position = 3</code> としてBOMを読み飛ばす処理が不可欠です。
+  </div>
+<div class="xdemo-note-info">
+<strong>ℹ️ この後の処理について：</strong><br>
+    この関数で取得したバイト配列（<code>Byte()</code>）を、JIS X 0510 に基づきビット列に変換し、リード・ソロモン符号（ガロア体演算）を付加してマトリクスに配置していくのがVBAでの全体実装になります。<br>
+    完全なVBAソースコードは数百行に及ぶため、自作が困難な場合は、前述の <a href="https://qiita.com/santarou6/items/d623417ea8ba33756108" target="_blank">santarou6氏のオープンソース実装</a> や <a href="https://qiita.com/Parshyu/items/4c2bafb0eb24a14cc1fb" target="_blank">Parshyu氏のコード</a> をテキストファイルとして閉域環境へ持ち込み、VBEに貼り付けて活用することを推奨します。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- ゴール -->
+<!-- ========================================== -->
+<section class="goal-section">
+<h2><span class="icon">🎯</span> この記事のゴール</h2>
+<p>この記事を読み終えると、以下を理解・実践できるようになります。</p>
+<ul>
+<li>なぜバーコードコントロールでは全角が使えないのか、その<strong>技術的理由</strong></li>
+<li>ライブラリ活用（推奨）とVBA標準機能のみ（本記事）の<strong>使い分け判断基準</strong></li>
+<li>VBA標準機能だけで全角QRを生成する<strong>処理の全体像</strong></li>
+<li>QR作成時の文字コード（UTF-8 / Shift-JIS）選択が<strong>リーダー設定・出力先アプリとどう連動するか</strong></li>
+<li>データベース移行・住所録入力・処理票転記・定型文入力など、<strong>現場での具体的な活用パターン</strong></li>
+<li>全角QR運用で起きる<strong>トラブルの原因と対処法</strong></li>
+<li>QRコード読み取りの<strong>精度と限界</strong>、業務システムでの<strong>二重チェック設計</strong></li>
+</ul>
+</section>
+<!-- ========================================== -->
+<!-- なぜ全角QRが必要か -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>📐 なぜ「全角QRコード」が必要なのか</h2>
+<p>
+    QRコード規格（JIS X 0510）自体は、バイトモード（モード指示子 0100）を使えばUTF-8でエンコードした任意のバイト列を格納できます。つまり漢字・ひらがな・カタカナもQRコードに入れることは仕様上可能です。問題は「生成側」と「読み取り側」の両方が正しい文字コードで扱えるかどうかにあります。
+  </p>
+<h3>バーコードコントロールの限界</h3>
+<p>
+    Microsoft BarCode Control 16.0（ActiveX）は、Excelから挿入できる場合がありますが、Excel単体の標準機能ではなく、主にAccessに同梱されるコントロールです。Excelだけしか入っていないPCでは一覧に表示されない場合があります。Microsoft 365 / Office 2024では初期設定でActiveXが表示・作成できないことがありますが、トラストセンター設定で許可すると使える場合もあります。ただし、管理者設定によって完全にブロックされている職場PCでは作成・操作できません。また、利用できる環境でも内部で半角ASCII（0x20〜0x7E）しかエンコードしません。全角文字をLinkedCellに入れても無視されるか、文字化けしたQRが生成されます。これが記事⑨⑩で「半角データ限定」と注意していた理由です。
+  </p>
+<h3>閉域環境の現実</h3>
+<p>
+    インターネットに接続できない閉域ネットワーク・スタンドアロンPCでは、Pythonの <span class="code-inline">qrcode</span> ライブラリやnpmパッケージをインストールすることが難しく、外部DLLの持ち込みもセキュリティポリシーで禁止されている場合がほとんどです。
+  </p>
+<p>
+    ただし、<strong>すべての閉域環境でファイル持ち込みが完全に不可能とは限りません</strong>。申請手続きを経てUSBメモリからの .bas ファイルインポートが許可されるケースも多くあります。その場合は、実装済みライブラリの活用が圧倒的に効率的です。本記事のVBA標準機能のみによる実装は、それすらできない「完全閉域」環境を想定した最終手段です。
+  </p>
+<table class="format-table">
+<tr><th>方式</th><th>全角</th><th>外部DLL</th><th>ネット</th><th>難易度</th><th>閉域向き</th><th>推奨度</th></tr>
+<tr><td>バーコードコントロール（記事⑨⑩）</td><td class="text-center">✕ 不可</td><td class="text-center">不要</td><td class="text-center">不要</td><td class="text-center">低</td><td class="text-center">&xutri; 半角のみ</td><td class="text-center">半角なら&cir;</td></tr>
+<tr><td>Python qrcodeライブラリ</td><td class="text-center">&cir;</td><td class="text-center">pip install必要</td><td class="text-center">要</td><td class="text-center">中</td><td class="text-center">✕</td><td class="text-center">開放環境向け</td></tr>
+<tr style="background:#e3f2fd;font-weight:bold"><td>VBA＋外部ライブラリ（QRCodeLibVBA等）</td><td class="text-center">&cir;</td><td class="text-center">.basインポート</td><td class="text-center">初回要</td><td class="text-center">中</td><td class="text-center">&cir;</td><td class="text-center">◎ 第一推奨</td></tr>
+<tr class="bg-e8f5e9"><td>VBA標準機能のみ（本記事）</td><td class="text-center">&cir;</td><td class="text-center">不要</td><td class="text-center">不要</td><td class="text-center">高</td><td class="text-center">◎</td><td class="text-center">&cir; 最終手段</td></tr>
+</table>
+<div class="xdemo-note-good">
+<strong>✅ まずライブラリ持ち込みを検討：</strong>GitHub上の <a href="https://github.com/yas78/QRCodeLibVBA" target="_blank">QRCodeLibVBA</a> や <a href="https://github.com/JonasHeidelberg/barcode-vba-macro-only" target="_blank">barcode-vba-macro-only</a>（santarou6氏の全角対応パッチ適用版）を .bas ファイルで持ち込めれば、実装は大幅に楽になり、テスト工数もバグリスクも格段に減ります。<strong>持ち込み申請が通る可能性があるなら、まずそちらを試してください。</strong>本記事の手法は、それが不可能な場合の最終手段です。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- 文字コード：最重要 -->
+<!-- ========================================== -->
+<section class="tips-section">
+<h2>🔥 最重要 &boxh; 文字コードを「作る側」と「読む側」で必ず合わせる</h2>
+<p>
+    全角QRの最大のハマりどころは<strong>文字コードの不一致による文字化け</strong>です。QRコードを作成するときに「UTF-8で作るか、Shift-JISで作るか」を決め、リーダー側もそれと同じ文字コードに設定しなければなりません。どちらか一方でもずれると、確実に文字化けします。
+  </p>
+<div class="xdemo-note-danger">
+<strong>🔥 鉄則：「QR生成時の文字コード」＝「リーダーの文字コード設定」＝「出力先アプリが受け入れる文字コード」</strong><br>
+    この3点を一致させてください。これが合っていなければ、どんなに正しくQRを作っても読み取り結果は文字化けします。
+  </div>
+<h3>QRコード作成時の文字コード選択</h3>
+<p>
+    VBAで全角QRを生成する際、文字列をバイト列に変換するステップがあります。このときUTF-8で変換するかShift-JISで変換するかによって、QRコードの中身が根本的に変わります。たとえば漢字「光」はShift-JISでは <span class="code-inline">8C F5</span>（2バイト）、UTF-8では <span class="code-inline">E5 85 89</span>（3バイト）になります。まったく異なるバイト列がQRに格納されるため、読み取り側でも同じ文字コードを指定しなければ正しく復元できません。
+  </p>
+<h3>リーダー側の文字コード設定</h3>
+<p>
+    QRコードリーダー（OPI-3601、ALX-3601、L-46X等）には、読み取ったバイト列をどの文字コードとしてPCに送るかを設定する項目があります。QRをUTF-8で作ったならリーダーもUTF-8に、Shift-JISで作ったならShift-JISに設定します。この設定が食い違うと、リーダーが誤った文字コードでバイト列を解釈し、PCには文字化けしたデータが送られます。
+  </p>
+<h3>出力先アプリケーションの文字コード</h3>
+<p>さらに、リーダーから送られたデータを受け取るアプリケーション側の文字コードも関係します。</p>
+<table class="format-table">
+<tr><th>アプリケーション</th><th>内部文字コード</th><th>QRとの関係</th></tr>
+<tr>
+<td>Excel（セル / VBA）</td>
+<td>UTF-16LE</td>
+<td>VBA内部は UTF-16LE。QR生成時に ADODB.Stream 等で UTF-8 または Shift-JIS に明示変換が必要。CSV保存のデフォルトは Shift-JIS（CP932）。</td>
+</tr>
+<tr>
+<td>Word</td>
+<td>Unicode（UTF-16LEベース）</td>
+<td>Shift-JISのQRをUSB-HIDで直接出力すると文字化け。UTF-8 QR＋スキャナUTF-8設定、またはUSB-COM＋WIMEで回避。</td>
+</tr>
+<tr>
+<td>業務Webシステム</td>
+<td>ほぼUTF-8</td>
+<td>HTML5標準がUTF-8。UTF-8 QR＋スキャナUTF-8設定で最も相性がよい。</td>
+</tr>
+<tr>
+<td>メモ帳（Windows 10 1903〜）</td>
+<td>UTF-8（BOMなし）</td>
+<td>2019年のMay 2019 Updateでデフォルトが UTF-8 に変更。UTF-8 QRとの相性は良好。</td>
+</tr>
+<tr>
+<td>メモ帳（Windows 10 1809以前）</td>
+<td>Shift-JIS（ANSI = CP932）</td>
+<td>古い環境。UTF-8 QRを出力すると文字化け。Shift-JIS QRにするか、方法B（WIME）で変換。</td>
+</tr>
+<tr>
+<td>コマンドプロンプト</td>
+<td>Shift-JIS（CP932）</td>
+<td>chcp 65001 でUTF-8に切替可能だが不安定な場合あり。</td>
+</tr>
+</table>
+<h3>UTF-8とShift-JIS &boxh; どちらでQRを作るべきか</h3>
+<table class="compare-table">
+<thead>
+<tr><th>比較項目</th><th>UTF-8で作成</th><th>Shift-JISで作成</th></tr>
+</thead>
+<tbody>
+<tr><td class="text-left">Wordへの出力</td><td><span class="circle">◎</span> そのまま正常表示</td><td><span class="cross">✕</span> 文字化け（USB-HID時）</td></tr>
+<tr><td class="text-left">Webシステムへの出力</td><td><span class="circle">◎</span> そのまま正常表示</td><td><span class="cross">✕</span> 文字化け</td></tr>
+<tr><td class="text-left">メモ帳（Win10 1903+）</td><td><span class="circle">◎</span></td><td><span class="triangle">&xutri;</span> 設定変更が必要</td></tr>
+<tr><td class="text-left">メモ帳（古いWindows）</td><td><span class="cross">✕</span> 文字化け</td><td><span class="circle">◎</span></td></tr>
+<tr><td class="text-left">Excelへの直接入力</td><td><span class="circle">&cir;</span>（IME経由で変換される）</td><td><span class="circle">&cir;</span>（同左）</td></tr>
+<tr><td class="text-left">1文字あたりバイト数（漢字）</td><td>3バイト（やや多い）</td><td>2バイト（少ない）</td></tr>
+<tr><td class="text-left">将来性・汎用性</td><td><span class="circle">◎</span> 世界標準</td><td><span class="triangle">&xutri;</span> 日本語専用</td></tr>
+</tbody>
+</table>
+<p>
+    現在はWordもWebシステムもメモ帳（新しいWindows）もUTF-8が標準です。<strong>特別な理由がない限り、UTF-8でQRを作成し、リーダーもUTF-8に設定する</strong>のが最も安全な選択です。ただしShift-JISのほうが1文字あたりのバイト数が少ないため、容量が厳しい場合や古いWindows環境がメインの場合はShift-JISも選択肢になります。いずれにせよ「作成時と読み取り時で同じ文字コード」が絶対条件です。
+  </p>
+<div class="xdemo-note-warn">
+<strong>⚠️ 具体例：</strong>UTF-8で「東京都新宿区」をQRにした場合、バイト列は <span class="code-inline">E6 9D B1 E4 BA AC E9 83 BD E6 96 B0 E5 AE BF E5 8C BA</span>（18バイト）。これをShift-JIS設定のリーダーで読むと「譁・ｭ怜・菴阪・」のような文字化けになります。リーダーをUTF-8に設定すれば「東京都新宿区」と正しく出力されます。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- 活用シーン -->
+<!-- ========================================== -->
+<section class="tips-section">
+<h2>🛠️ 全角QRコードの活用シーン</h2>
+<div class="xdemo-note-warn">
+<strong>⚠️ QRコードによるデータ入力は「最終手段」です：</strong>QRコードの読み取り精度は手入力と比較すれば桁違いに高い（後述の精度セクション参照）ものの、ネットワーク接続やファイル共有、クリップボード転送など他の手段が使える環境であれば、そちらを優先してください。QRコード経由のデータ入力が真に威力を発揮するのは、それらの手段がすべて使えない閉域環境・コピー禁止環境に限られます。
+  </div>
+<div class="scenario-card">
+<span class="sc-label">基本</span>
+<h4>データベース移行</h4>
+<p>旧システム &rarr; 新システムへ顧客マスタを転記。顧客名（漢字）、住所、電話番号をタブ区切りで1レコードずつQR化。手入力なしでリーダーで読み取るだけ。</p>
+</div>
+<div class="scenario-card">
+<span class="sc-label">基本</span>
+<h4>住所録入力</h4>
+<p>紙の名簿 &rarr; 新PCのExcelに転記。〒、都道府県、市区町村、番地、氏名をまとめてQR化。1枚読むだけで1件入力完了。住所は漢字・数字・カタカナが混在し手入力ミスが多い典型的なデータ。50件の住所録ならA4用紙7〜8枚、読み取り約5分。</p>
+</div>
+<div class="scenario-card">
+<span class="sc-label sc-label-adv">応用</span>
+<h4>Webシステムへの処理票転記（コピー禁止環境）</h4>
+<p>Excelで作成した処理票（点検結果、所見文、備考欄）の内容を、業務Webシステムのテキストエリアに入力。<strong>コピー＆ペーストがセキュリティポリシーで禁止されている環境</strong>や、旧システムと新システムの間でドラッグ＆ドロップができない仮想環境で特に威力を発揮します。</p>
+<p>Excelで文書内容をQR化 &rarr; 印刷 &rarr; リーダーで読み取り、という物理経路で全角文字を含むテキストをそのままフォームに流し込めます。</p>
+</div>
+<div class="scenario-card">
+<span class="sc-label sc-label-adv">応用</span>
+<h4>処理票からの転記</h4>
+<p>Excelで作成した処理票・点検票の内容を、別システムの入力画面に転記。処理票のセル内容をQRにしておけば、手入力なしで別画面に流し込めます。全角の備考欄・コメント欄もそのまま転送可能。</p>
+</div>
+<div class="scenario-card">
+<span class="sc-label sc-label-adv">応用</span>
+<h4>辞書登録に向かない長文の定型入力</h4>
+<p>改行を含む報告テンプレートや、文中に日付・数値を挟む書式テンプレートは、IME辞書登録に向きません（短い単語には向くが、長文や改行を含む文章は登録・呼び出しが煩雑）。こうした定型文をQR化してラミネートカードにしておけば、リーダーで読み取るだけで一発入力。繰り返し使えてカード型なので管理も簡単です。</p>
+</div>
+<div class="scenario-card">
+<span class="sc-label sc-label-adv">応用</span>
+<h4>閉域環境間のファイルレスデータ受渡し</h4>
+<p>ネットワーク分離されたPC間で検査データを共有。タブ＆改行区切りで複数レコードをQR連番化して紙で搬送。</p>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- VBA処理の全体像 -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>📐 VBA標準機能のみでQRを生成する &boxh; 処理の全体像</h2>
+<div class="flow-box">
+<span class="flow-step step-item">① 入力文字列</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-key">② UTF-8(又はShift-JIS)変換</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-item">③ データエンコード</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-enter">④ RS誤り訂正</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-item">⑤ マトリクス構築</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-key">⑥ セル描画/BMP出力</span>
+</div>
+<table class="format-table">
+<tr><th style="width:8%">Step</th><th class="w-25">処理内容</th><th>使用するVBA機能</th></tr>
+<tr><td class="text-center">①</td><td>入力文字列取得</td><td>Range.Value でセルからテキストを取得</td></tr>
+<tr>
+<td class="text-center">②</td>
+<td><strong>文字コード変換</strong></td>
+<td>ADODB.Stream の Charset プロパティで <span class="code-inline">"UTF-8"</span> または <span class="code-inline">"Shift_JIS"</span> を指定し、VBA内部の UTF-16LE &rarr; バイト列に変換。<strong>ここで選んだ文字コードがQRの文字コードになる</strong></td>
+</tr>
+<tr><td class="text-center">③</td><td>データエンコード</td><td>バイトモード指示子＋文字数＋データ＋終端＋パディングのビットストリーム生成（文字列操作・配列）</td></tr>
+<tr><td class="text-center">④</td><td>RS誤り訂正</td><td>GF(2⁸)上のリード・ソロモン符号計算（Long配列演算）</td></tr>
+<tr><td class="text-center">⑤</td><td>マトリクス構築</td><td>位置検出パターン、タイミング、データ配置、マスク最適化（2次元Long配列）</td></tr>
+<tr><td class="text-center">⑥</td><td>セル描画 / BMP出力</td><td>Cells.Interior.Color で黒/白塗り分け、またはBinaryファイルでBMP出力</td></tr>
+</table>
+<div class="xdemo-note-danger">
+<strong>🔥 ステップ②が文字コードの分岐点です。</strong>ADODB.Stream の Charset に <span class="code-inline">"UTF-8"</span> を指定すればUTF-8のQRが、<span class="code-inline">"Shift_JIS"</span> を指定すればShift-JISのQRが生成されます。ここで選んだ文字コードに合わせて、リーダー側の文字コード設定も必ず変更してください。
+  </div>
+<p>
+    処理全体はVBA標準機能（ADODB.Stream、配列演算、セル操作）のみで構成でき、外部参照設定は ADODB（Microsoft ActiveX Data Objects）のみです。ADODBはWindows標準搭載コンポーネントであり、追加インストールは不要です。
+  </p>
+<div class="xdemo-note-good">
+<strong>✅ 参考実装：</strong>VBAのみでQRコードを生成するオープンソース実装として、<a href="https://qiita.com/santarou6/items/d623417ea8ba33756108" target="_blank">santarou6氏の全角対応版</a>（MITライセンス、Jiri Gabriel氏の barcode-vba-macro-only がベース）や、<a href="https://qiita.com/Parshyu/items/4c2bafb0eb24a14cc1fb" target="_blank">Parshyu氏のBMP出力版</a>が公開されています。ライブラリを持ち込める環境では <a href="https://github.com/yas78/QRCodeLibVBA" target="_blank">QRCodeLibVBA</a> も選択肢です。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- QRバージョンと容量 -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>📊 QRバージョンと格納できる日本語文字数</h2>
+<p>
+    日本語（漢字・ひらがな・カタカナ）はUTF-8で1文字あたり3バイト、Shift-JISで2バイトです。QRのバイトモードで格納できるバイト数から、おおよその文字数が決まります。
+  </p>
+<table class="format-table">
+<tr><th>Ver.</th><th>モジュール</th><th>バイト容量(Q)</th><th>UTF-8 文字数</th><th>Shift-JIS 文字数</th><th>用途例</th></tr>
+<tr><td class="text-center">3</td><td class="text-center">29&times;29</td><td class="text-center">32</td><td class="text-center">約10</td><td class="text-center">約16</td><td>氏名のみ</td></tr>
+<tr><td class="text-center">5</td><td class="text-center">37&times;37</td><td class="text-center">62</td><td class="text-center">約20</td><td class="text-center">約31</td><td>氏名＋短い住所</td></tr>
+<tr><td class="text-center">7</td><td class="text-center">45&times;45</td><td class="text-center">86</td><td class="text-center">約28</td><td class="text-center">約43</td><td>住所録1件</td></tr>
+<tr><td class="text-center">10</td><td class="text-center">57&times;57</td><td class="text-center">151</td><td class="text-center">約50</td><td class="text-center">約75</td><td>定型コメント</td></tr>
+<tr><td class="text-center">14</td><td class="text-center">73&times;73</td><td class="text-center">258</td><td class="text-center">約85</td><td class="text-center">約129</td><td>報告文テンプレート</td></tr>
+<tr><td class="text-center">20</td><td class="text-center">97&times;97</td><td class="text-center">482</td><td class="text-center">約160</td><td class="text-center">約241</td><td>長文定型文</td></tr>
+<tr><td class="text-center">25</td><td class="text-center">117&times;117</td><td class="text-center">715</td><td class="text-center">約238</td><td class="text-center">約357</td><td>実用上限に近い</td></tr>
+</table>
+<div class="xdemo-note-warn">
+<strong>⚠️ 実用上限はバージョン14〜20程度：</strong>バージョンが大きくなるほどモジュール数が増え、印刷サイズの確保と読み取り速度が課題になります。データが多い場合は複数QRに分割してください。
+  </div>
+<p>
+    半角英数字が混在する場合は1文字1バイトなので、実効的にはもう少し多く格納できます。たとえば「東京都新宿区1-2-3」は漢字6文字（UTF-8: 18バイト）＋半角5文字（5バイト）＝23バイトです。
+  </p>
+</section>
+<!-- ========================================== -->
+<!-- 精度と限界（課題1対応：新規セクション） -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>📊 QRコード読み取りの信頼性と限界 &horbar; 手入力ミスを大幅に減らせるが、検証は必要</h2>
+<p>
+    QRコードは、手入力と比べて入力ミスの発生要因を大幅に減らせる強力な手段です。
+    手で文字を打つ作業を、機械的な読み取りに置き換えられるため、特に長いコード・住所・定型文・処理票データの転記では大きな効果があります。
+  </p>
+<p>
+    ただし、QRコードの読み取り結果が常に100%保証されるわけではありません。
+    実運用上の信頼性は、QR生成実装、誤り訂正レベル、印刷品質、表示サイズ、リーダー機種、文字コード設定、出力先アプリケーションに依存します。
+    そのため、導入時には必ず読み取りテストと照合を行い、業務システム側でもバリデーションを併用する設計が必要です。
+  </p>
+<h3>手入力 vs QRコード &horbar; 減らせるミスの種類</h3>
+
+<table class="format-table">
+<tr><th>入力方式</th><th>起きやすいミス</th><th>特徴</th><th>確認の考え方</th></tr>
+<tr>
+<td>手入力</td>
+<td>打ち間違い、桁抜け、変換ミス、読み間違い、コピペ位置ずれ</td>
+<td>人の集中力・疲労・慣れに左右される。長い文字列や全角混在データほどミスが増えやすい</td>
+<td>全件目視確認やダブルチェックが必要になりやすい</td>
+</tr>
+<tr>
+<td>手入力＋ダブルチェック</td>
+<td>見落とし、確認者側の判断ミス</td>
+<td>精度は上がるが、工数が大きい。入力者と確認者の双方に負担がかかる</td>
+<td>重要データでは有効だが、大量件数ではコストが高い</td>
+</tr>
+<tr class="bg-e8f5e9">
+<td><strong>QRコード読み取り</strong></td>
+<td>印刷劣化、読み取り失敗、文字コード不一致、生成実装ミス、出力先アプリとの相性</td>
+<td>手入力由来の打鍵ミスを大幅に減らせる。誤り訂正機能により、多少の汚れや欠けにも強い</td>
+<td>導入時の読み取りテスト、自動バリデーション、必要に応じた抜き取り確認で運用する</td>
+</tr>
+</table>
+
+<div class="xdemo-note-good">
+<strong>✅ QRコードの強み：</strong><br>
+QRコードにはリード・ソロモン誤り訂正が組み込まれており、印刷のかすれ・汚れ・一部欠損があっても、一定範囲内でデータを復元できます。
+DENSO WAVEのQRコード解説でも、誤り訂正レベル L / M / Q / H が用意され、利用環境に応じて選択できることが説明されています。
+ただし、これは「汚れや破損に対する復元能力」であり、実運用におけるエラー率そのものを保証するものではありません。
+</div>
+<h3>それでも確認が必要な理由</h3>
+
+<p>
+    QRコードを使う目的は、「確認をゼロにすること」ではありません。
+    手入力による打ち間違い・桁抜け・変換ミスを減らし、確認作業を
+    <strong>全文目視確認から、自動バリデーションや抜き取り確認へ置き換えること</strong>です。
+</p>
+
+<p>
+    特に本記事のようにVBAでQRコードを生成する場合、リーダーの性能だけでなく、
+    <strong>VBA側のQR生成ロジックが正しいか</strong>も確認対象になります。
+    生成したQRを複数のリーダーやスマートフォンアプリで読み取り、元データと一致するかを照合してください。
+</p>
+
+<table class="format-table">
+<tr><th class="w-30">リスク要因</th><th>内容</th><th>対策</th></tr>
+<tr>
+<td>QR生成実装の不具合</td>
+<td>VBAで自作・移植したQR生成ロジックにバグがあると、規格上正しくないQRや、特定文字で壊れるQRが生成される可能性がある</td>
+<td>既知のライブラリを優先。自作する場合は、英数字・漢字・記号・改行・長文など複数パターンで元データとの照合テストを行う</td>
+</tr>
+<tr>
+<td>文字コードの不一致</td>
+<td>生成時とリーダー設定が異なると、読み取り自体は成功しても文字化けしたデータが出力される</td>
+<td>UTF-8 / Shift-JIS のどちらで作ったかを明記し、リーダー側設定と必ず合わせる</td>
+</tr>
+<tr>
+<td>印刷品質・表示品質</td>
+<td>印刷のかすれ、にじみ、紙の折れ、画面反射、QRサイズ不足により読み取り失敗や不安定化が起きる</td>
+<td>十分なサイズ、余白、コントラストを確保する。紙の場合は印刷テスト、画面表示の場合は輝度と反射を確認する</td>
+</tr>
+<tr>
+<td>リーダー機種差</td>
+<td>リーダーによって、全角出力、文字コード、長文QR、画面読み取り性能に差がある</td>
+<td>本番で使うリーダー実機でテストする。スマホアプリだけの確認で済ませない</td>
+</tr>
+<tr>
+<td>出力先アプリとの相性</td>
+<td>Excel、Word、Webシステム、メモ帳、端末エミュレータで、Enter、Tab、文字コード、IMEの扱いが異なる</td>
+<td>実際の入力先アプリでテストする。メモ帳で成功しても業務システムで成功するとは限らない</td>
+</tr>
+<tr>
+<td>運用上の読み飛ばし・重複読み取り</td>
+<td>複数QRを連続で読む場合、1枚飛ばす、同じQRを2回読む、順番を間違える可能性がある</td>
+<td>連番、件数、チェックサム、最終QRでの合計照合を入れる</td>
+</tr>
+</table>
+
+<div class="xdemo-note-danger">
+<strong>🔥 結論：QRコードは手入力ミスを大幅に減らせますが、検証なしで100%保証されるものではありません。</strong><br>
+特に全角QRやVBA生成QRでは、読み取り精度だけでなく、生成ロジック、文字コード、リーダー設定、出力先アプリとの相性まで含めて確認する必要があります。
+ただし、これはQR方式の価値を下げるものではありません。
+手入力の大量ミスを減らし、確認作業を「全文目視」から「自動チェック・異常検出・抜き取り確認」へ移せることが、QR入力の大きなメリットです。
+</div>
+<h3>確認が必要でも、QR化する意味はある</h3>
+
+<p>
+    「確認が必要ならQR化する意味がない」と感じるかもしれませんが、実務上は逆です。
+    QR化の目的は、確認作業をなくすことではなく、<strong>手入力ミスを減らし、確認対象を絞ること</strong>です。
+</p>
+<p>
+    手入力では、入力された文字列そのものを人間が確認する必要があります。
+    一方、QR入力では、元データと読み取り結果の一致確認、チェックディジット、件数照合、マスタ存在チェックなど、機械的な確認に置き換えられます。
+    これにより、確認工数を減らしながら、手入力より安定した運用にできます。
+</p>
+
+<h3>業務システムでの二重チェック設計 &horbar; QR＋バリデーションで万全にする</h3>
+<p>
+    QRコードを実務で安全に使うには、「QRなら確認不要」と考えるのではなく、
+    <strong>QR入力＋業務システム側のバリデーション</strong>で異常を検出する設計にします。
+    これにより、人間が全文を目視確認する作業を減らし、異常値・桁違い・読み飛ばし・文字コード不一致を機械的に発見できます。
+  </p>
+<table class="format-table">
+<tr><th style="width:28%">チェック方法</th><th class="w-35">具体例</th><th>効果</th></tr>
+<tr>
+<td><strong>クロスフィールドチェック</strong></td>
+<td>社員番号と生年月日の組み合わせをマスタと照合。QRから読み取った社員番号「12345」と生年月日「1990-05-15」が既存マスタの組み合わせと一致するか検証</td>
+<td>社員番号が1桁ずれていても、生年月日との組み合わせが一致しなければエラーとして検出できる</td>
+</tr>
+<tr>
+<td><strong>チェックディジット</strong></td>
+<td>顧客コードの末尾にモジュラス10のチェックディジットを付加。QR生成時に計算し、読み取り後に業務システムが再計算して一致確認</td>
+<td>コードの1桁誤りを99%以上検出</td>
+</tr>
+<tr>
+<td><strong>マスタ存在チェック</strong></td>
+<td>QRから入力された部署コード・商品コードがマスタテーブルに存在するか検証</td>
+<td>存在しないコードが入力された場合に即座にエラー表示</td>
+</tr>
+<tr>
+<td><strong>データ型・桁数チェック</strong></td>
+<td>電話番号フィールドに漢字が入っていないか、郵便番号が7桁数字かを検証</td>
+<td>文字コード不一致による文字化けデータの混入を検出</td>
+</tr>
+<tr>
+<td><strong>範囲チェック</strong></td>
+<td>日付が妥当な範囲か、金額がマイナスでないか、年齢が0〜120の範囲か</td>
+<td>デコードエラーで異常値が生成された場合に検出</td>
+</tr>
+<tr>
+<td><strong>件数・合計チェック</strong></td>
+<td>QR連番の最終コードにレコード件数と合計金額を埋め込み、全件読み取り後に照合</td>
+<td>読み飛ばし・重複読み取りを検出</td>
+</tr>
+</table>
+<div class="xdemo-note-good">
+<strong>✅ 実務での推奨パターン：</strong>
+たとえば顧客マスタ移行であれば、QRデータに「顧客コード＋氏名＋生年月日＋住所＋電話番号」を格納し、業務システム側で「顧客コードと氏名の組み合わせ」「電話番号の桁数」「郵便番号のフォーマット」をバリデーションする設計にします。
+QR入力で手入力ミスを減らし、バリデーションで異常値や不整合を検出することで、安全性を高められます。
+  </div>
+<div class="xdemo-note-warn">
+<strong>⚠️ バリデーションが組み込めない場合：</strong>出力先がメモ帳やExcelの空白シートなど、バリデーション機構がないアプリケーションの場合は、読み取り後に目視確認（抜き取りチェック）を行ってください。全件確認が難しければ、10件に1件の抜き取りでも効果があります。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- 実践シナリオ -->
+<!-- ========================================== -->
+<section class="tips-section">
+<h2>📋 実践シナリオ</h2>
+<div class="scenario-card">
+<span class="sc-label">基本</span>
+<h4>シナリオA：データベース移行（顧客マスタ500件）</h4>
+<p>1件あたり「顧客コード（半角8字）＋氏名（全角8字）＋住所（全角20字）＋電話（半角11字）」。UTF-8換算で 8+24+60+11+区切り4 = 約107バイト/件。バージョン14（Q: 258 bytes）に2件格納。500件 &rarr; 250枚のQR &rarr; A4に6枚配置で約42ページ。読み取り時間は1枚3〜5秒 &times; 250 &asymp; 約12〜21分。</p>
+<p style="color:#1565c0;font-size:.9rem;"><strong>二重チェック例：</strong>新システム側で「顧客コード＋生年月日」のクロスチェック、電話番号桁数チェック、最終QRの件数合計照合を実装 &rarr; 万が一の読み取りエラーも検出可能。</p>
+</div>
+<div class="scenario-card">
+<span class="sc-label">基本</span>
+<h4>シナリオB：住所録入力（50件）</h4>
+<p>1件あたり「〒（7バイト）＋住所（全角30字=90バイト）＋氏名（全角8字=24バイト）」&asymp;121バイト。バージョン10（Q: 151 bytes）に1件。50件 &rarr; 50枚 &rarr; A4約9ページ。読み取り約2.5〜4分。手入力なら1件1〜2分 &times; 50 = 50〜100分かかるところが大幅短縮。</p>
+</div>
+<div class="scenario-card">
+<span class="sc-label sc-label-adv">応用</span>
+<h4>シナリオC：Webシステムへの処理票転記</h4>
+<p>Excelで作成した処理票の所見文をWebシステムに入力。コピー＆ペースト禁止環境で、処理票セル内容をQR化しリーダーで読み取ってブラウザフォームに直接流し込み。100文字の所見文（UTF-8: 約300バイト）ならバージョン14のQR 1枚に収まり、読み取り3秒で入力完了。</p>
+</div>
+<div class="scenario-card">
+<span class="sc-label sc-label-adv">応用</span>
+<h4>シナリオD：辞書登録に向かない定型文の即時入力</h4>
+<p>改行を含む報告テンプレートをQR化してラミネートカードに。リーダーで読み取るだけで一発入力。繰り返し使えてカード型なので管理も簡単。</p>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 読み取り設定 -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>📡 読み取り側の設定（全角QR対応）</h2>
+<h3>リーダーの文字コード設定 &boxh; QR作成時と必ず合わせる</h3>
+<table class="format-table">
+<tr><th>設定項目</th><th>OPI-3601 / ALX-3601</th><th>L-46X</th></tr>
+<tr><td>接続方式</td><td class="text-center">USB-HID（方法A）またはUSB-COM（方法B）</td><td class="text-center">同左</td></tr>
+<tr><td>漢字出力モード</td><td class="text-center">有効</td><td class="text-center">有効</td></tr>
+<tr><td>文字コード</td><td class="text-center"><strong>QR作成時と同じもの（UTF-8推奨）</strong></td><td class="text-center"><strong>同左</strong></td></tr>
+<tr><td>サフィックス</td><td class="text-center">NONE（なし）</td><td class="text-center">NONE（なし）</td></tr>
+<tr><td>キャラクター間ディレイ</td><td class="text-center">5〜10 ms</td><td class="text-center">5〜10 ms</td></tr>
+<tr><td>キーボード言語</td><td class="text-center">日本語（JP / PM）</td><td class="text-center">日本語（JP / PM）</td></tr>
+<tr><td>トリガーモード</td><td class="text-center">マニュアル（推奨）</td><td class="text-center">マニュアル（推奨）</td></tr>
+</table>
+<div class="xdemo-note-danger">
+<strong>🔥 文字コード設定の確認方法：</strong>スキャナの文字コード設定は、二次元メニューコード（UniversalConfigで作成）を読み取らせることで変更できます。UTF-8でQRを作ったのにShift-JIS設定のまま読み取ると、確実に文字化けします。詳細は<a href="https://www.opto.co.jp/products/tool/manual_download/instruction_kanjioutput.html" target="_blank">オプトエレクトロニクス 漢字出力インストラクション</a>を参照。
+  </div>
+<h3>USB-HID（方法A）vs USB-COM＋WIME（方法B）</h3>
+<table class="compare-table">
+<thead>
+<tr><th>比較項目</th><th>方法A（USB-HID）</th><th>方法B（USB-COM＋WIME）</th></tr>
+</thead>
+<tbody>
+<tr><td class="text-left">ドライバ/ツール</td><td>不要</td><td>USB-COMドライバ＋WIME必要</td></tr>
+<tr><td class="text-left">文字コード変換</td><td>不可（QRとリーダーを合わせる必要）</td><td>WIMEが吸収（コードページ設定で対応）</td></tr>
+<tr><td class="text-left">全角出力の安定性</td><td><span class="circle">&cir;</span>（IME状態に左右される場合あり）</td><td><span class="circle">◎</span> 安定</td></tr>
+<tr><td class="text-left">転送速度</td><td>普通</td><td><span class="circle">◎</span> 高速</td></tr>
+<tr><td class="text-left">閉域環境での導入</td><td><span class="circle">◎</span> 設定のみ</td><td><span class="triangle">&xutri;</span> WIMEインストーラ搬入必要</td></tr>
+<tr><td class="text-left">Wordへの出力</td><td>UTF-8 QR＋UTF-8設定なら <span class="circle">◎</span></td><td><span class="circle">◎</span>（WIMEが吸収）</td></tr>
+</tbody>
+</table>
+<div class="xdemo-note-good">
+<strong>✅ 閉域環境では方法A（USB-HID）が導入しやすい</strong>ですが、QR生成時の文字コードとリーダーの文字コード設定を厳密に合わせる必要があります。WIMEを搬入できる環境なら方法Bのほうが文字コードの管理が楽です。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- 読み取り速度 -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>⏱️ 読み取り速度とデータ量の目安</h2>
+<p>
+    USB-HIDでキャラクター間ディレイ10 msの場合、1バイトの出力に約10 ms。バージョン7（86 bytes）なら約0.86秒＋デコード0.5秒 &asymp; 1.4秒/枚。バージョン14（258 bytes）なら約2.6秒＋0.5秒 &asymp; 3.1秒/枚。L-46Xでディレイ5 msなら約半分。
+  </p>
+<table class="format-table">
+<tr><th>QR枚数</th><th>Ver.7(Q) &times; 枚数</th><th>日本語文字数（UTF-8）</th><th>読み取り時間</th><th>A4ページ数</th></tr>
+<tr><td class="text-center">10枚</td><td class="text-center">860 bytes</td><td class="text-center">約286文字</td><td class="text-center">約14秒</td><td class="text-center">2ページ</td></tr>
+<tr><td class="text-center">50枚</td><td class="text-center">4,300 bytes</td><td class="text-center">約1,433文字</td><td class="text-center">約70秒</td><td class="text-center">9ページ</td></tr>
+<tr><td class="text-center">100枚</td><td class="text-center">8,600 bytes</td><td class="text-center">約2,866文字</td><td class="text-center">約140秒</td><td class="text-center">17ページ</td></tr>
+<tr><td class="text-center">250枚</td><td class="text-center">21,500 bytes</td><td class="text-center">約7,166文字</td><td class="text-center">約6分</td><td class="text-center">42ページ</td></tr>
+</table>
+<div class="xdemo-note-warn">
+<strong>⚠️ 誤り訂正レベルはQ（25%）を推奨：</strong>全角QRの場合、参考実装（santarou6氏）の報告ではMやLで一部デコーダーが不安定になるケースがあります。Qなら印刷かすれにも強く安定した読み取りが得られます。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- トラブルシューティング -->
+<!-- ========================================== -->
+<section class="tips-section">
+<h2>🔥 トラブルシューティング</h2>
+<table class="format-table">
+<tr><th class="w-25">症状</th><th class="w-35">原因</th><th>対処</th></tr>
+<tr>
+<td>読み取り結果が文字化け</td>
+<td>QR作成時の文字コードとリーダーの文字コード設定が不一致</td>
+<td>QRをUTF-8で作ったならリーダーもUTF-8に。Shift-JISで作ったならShift-JISに。</td>
+</tr>
+<tr>
+<td>Wordに出力すると文字化け、メモ帳はOK</td>
+<td>Shift-JISのQRをUSB-HIDでWord（Unicode）に出力</td>
+<td>QRをUTF-8で作成しリーダーもUTF-8設定に。またはUSB-COM＋WIME（方法B）。</td>
+</tr>
+<tr>
+<td>Webシステムに出力すると文字化け</td>
+<td>WebはUTF-8だがQRがShift-JISで作られている</td>
+<td>QRをUTF-8で作成しリーダーもUTF-8に統一。</td>
+</tr>
+<tr>
+<td>古いWindowsのメモ帳で文字化け</td>
+<td>メモ帳がShift-JISだがQRがUTF-8</td>
+<td>QRをShift-JISで作成しリーダーもShift-JISに。またはWindows更新。</td>
+</tr>
+<tr>
+<td>QRが読み取れない（デコード失敗）</td>
+<td>印刷品質不足、バージョンが大きすぎて解像度不足</td>
+<td>600 dpi以上で印刷。QRサイズ3cm&times;3cm以上。バージョンを下げて分割。</td>
+</tr>
+<tr>
+<td>VBA実行時エラー（ADODB.Stream）</td>
+<td>ADODB参照設定が外れている</td>
+<td>VBE &rarr; ツール &rarr; 参照設定 &rarr; Microsoft ActiveX Data Objects にチェック。またはCreateObjectで遅延バインディング。</td>
+</tr>
+<tr>
+<td>半角数字のみで生成エラー</td>
+<td>barcode-vba-macro-only系の既知バグ</td>
+<td>先頭にダミー半角スペース付加、またはバイトモード強制。</td>
+</tr>
+<tr>
+<td>セル描画が崩れる</td>
+<td>表示倍率やセルサイズが不適切</td>
+<td>表示倍率100%、列幅0.5、行高さ4pt、グリッド線OFF。</td>
+</tr>
+</table>
+</section>
+<!-- ========================================== -->
+<!-- セキュリティ（課題1対応：大幅拡充） -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>🔒 セキュリティとコストに関する注意</h2>
+<h3>紙媒体のセキュリティ管理</h3>
+<p>
+    QRコードを印刷した紙は、データを物理的に持ち出す媒体です。顧客情報・個人情報を含むQRコードを紙に印刷した場合、その紙は機密文書と同等の扱いが必要です。読み取り完了後は速やかにシュレッダーで廃棄することを徹底してください。
+  </p>
+<h3>タブレット表示による紙レス運用 &horbar; コスト削減と機密性の両立</h3>
+<p>
+    QRコードは必ずしも紙に印刷する必要はありません。<strong>タブレットやPCの画面にQRコードを表示し、リーダーで画面を直接読み取る</strong>運用も可能です。この方法には以下のメリットがあります。
+  </p>
+<table class="format-table">
+<tr><th>比較項目</th><th>紙に印刷</th><th>タブレット/PC画面表示</th></tr>
+<tr><td>印刷コスト</td><td>用紙代＋インク/トナー代がかかる。QRコードは黒モジュールの面積が大きいため、<strong>通常の文書より黒インク消費量が多く</strong>、大量印刷ではコストが目立つ</td><td>不要（電気代のみ）</td></tr>
+<tr><td>廃棄の手間</td><td>シュレッダー廃棄が必須</td><td>表示を閉じるだけ。物理的な残存リスクなし</td></tr>
+<tr><td>機密性</td><td>紙が残る限り情報漏洩リスクあり</td><td>画面を閉じれば消える。使い捨て感覚で運用可能</td></tr>
+<tr><td>読み取り品質</td><td>印刷品質に依存（かすれ・にじみリスク）</td><td>画面解像度が高く安定した読み取りが可能。ただし画面の反射・グレアに注意</td></tr>
+<tr><td>環境・条件</td><td>プリンタがあれば可能</td><td>タブレットやサブモニターが必要。画面輝度を十分に上げる必要あり</td></tr>
+</table>
+<div class="xdemo-note-good">
+<strong>✅ タブレット表示の実践方法：</strong>VBAでQRコードをBMPまたはセル描画で生成 &rarr; Excelブックをタブレット（iPadやSurface等）で開く &rarr; リーダーで画面上のQRを読み取り。紙を一枚も使わずにデータ転送が完了します。定型文入力用のQRカードも、ラミネート加工の代わりにタブレット表示にすれば制作コストがゼロになります。
+  </div>
+<div class="xdemo-note-warn">
+<strong>⚠️ 画面読み取り時の注意：</strong>画面の反射（グレア）やブルーライトフィルムの影響で読み取りにくくなる場合があります。画面輝度を最大付近に設定し、リーダーを画面に対して正面から当てると安定します。また、画面のスリープ設定を長めにしておくと、連続読み取り時に画面が消えるトラブルを防げます。
+  </div>
+<h3>紙印刷を行う場合のコスト意識</h3>
+<p>
+    紙に印刷する場合、QRコードは黒モジュール（ドット）の面積比率が高いため、通常のテキスト文書と比べてインク・トナーの消費量が多くなります。特にレーザープリンタのトナーやインクジェットの黒インクは、A4用紙にQRコードを6枚並べて印刷するとかなりの消費になります。大量のデータ移行（数百枚規模）では、印刷コストも事前に見積もっておいてください。可能であればタブレット表示との併用を検討することで、コストを大幅に抑えられます。
+  </p>
+</section>
+<!-- ========================================== -->
+<!-- まとめ -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>📝 まとめ</h2>
+<table class="format-table">
+<tr><th>項目</th><th>内容</th></tr>
+<tr><td>解決した課題</td><td>バーコードコントロールでは不可能だった全角文字（漢字・ひらがな・カタカナ）のQRコード生成</td></tr>
+<tr><td>推奨アプローチ</td><td><strong>第一推奨：ライブラリ（QRCodeLibVBA等）を .bas で持ち込んで活用。</strong>持ち込み不可の完全閉域環境に限り、VBA標準機能のみで実装（本記事の手法）。</td></tr>
+<tr><td>方式（本記事）</td><td>VBA標準機能のみ（ADODB.Stream＋GF(256) RS符号＋セル描画）。外部ライブラリ不要。</td></tr>
+<tr><td>文字コードの鉄則</td><td><strong>QR作成時の文字コード ＝ リーダーの文字コード設定 ＝ 出力先アプリの文字コード</strong>。UTF-8推奨。</td></tr>
+<tr><td>アプリ別の文字コード</td><td>Word・Web＝UTF-8対応。メモ帳＝Win10 1903+はUTF-8。Excel内部はUTF-16LE（VBAで変換）。</td></tr>
+<tr><td>読み取り信頼性</td><td>手入力由来の打ち間違い・桁抜け・変換ミスを大幅に減らせる。ただし、実運用上の信頼性はQR生成実装、リーダー機種、印刷品質、文字コード設定、出力先アプリに依存するため、導入時の照合テストと業務システム側のバリデーションを併用する</td></tr>
+<tr><td>位置づけ</td><td><strong>QRコード入力はあくまで最終手段。</strong>ネットワーク接続・ファイル共有・クリップボード転送が使えるなら、そちらを優先。閉域環境・コピー禁止環境でのみ採用。</td></tr>
+<tr><td>推奨誤り訂正</td><td>Q（25%）&boxh;&boxh; 全角QRで安定読み取り実績あり</td></tr>
+<tr><td>実用文字数</td><td>1枚あたり約28〜160文字（バージョン7〜20, Qレベル, UTF-8）</td></tr>
+<tr><td>QR表示・印刷</td><td>タブレット画面表示（コスト・機密性で優位）または紙印刷（3cm&times;3cm以上、600 dpi）。紙はシュレッダー廃棄を徹底。</td></tr>
+<tr><td>読み取り設定</td><td>文字コード＝QR作成時と一致。サフィックスNONE、ディレイ5〜10 ms、日本語キーボード</td></tr>
+<tr><td>活用シーン</td><td>DB移行、住所録入力、Web処理票転記、コピー禁止環境の文書転送、定型文入力</td></tr>
+</table>
+</section>
+<!-- ========================================== -->
+<!-- 次に読む -->
+<!-- ========================================== -->
+<section class="method-section" style="background:#f0f4c3;border:2px solid #827717;border-radius:10px;padding:24px;">
+<h2 style="color:#33691e;margin-top:0;">🔜 次に読む記事</h2>
+<table class="key-table" style="background:#fff;">
+<tr><th>あなたの状況</th><th>次に読むべき記事</th></tr>
+<tr>
+<td>半角データのQR転送を先に理解したい</td>
+<td><a href="09_qr_closed_transfer.html"><strong>⑨ 閉域環境データ転送（半角編）</strong></a></td>
+</tr>
+<tr>
+<td>システム間のデータ移行設計を知りたい</td>
+<td><a href="10_qr_system_migration.html"><strong>⑩ QRでシステム間データ移行</strong></a></td>
+</tr>
+<tr>
+<td>QRリーダーの基本設定をまだ読んでいない</td>
+<td><a href="07_qr_full_system.html"><strong>⑦ QRリーダー設定の全体像！フルシステム構築ガイド</strong></a></td>
+</tr>
+<tr>
+<td>文字欠け・キー変換など基本を固めたい</td>
+<td><a href="03_qr_character_delay.html"><strong>③ キャラクター間ディレイ</strong></a> &rarr; <a href="04_qr_key_conversion.html"><strong>④ キー変換</strong></a></td>
+</tr>
+</table>
+</section>
+<!-- ========================================== -->
+<!-- シリーズナビ -->
+<!-- ========================================== -->
+<nav class="series-nav">
+<h3>📱 QR Automation Lab &horbar; 全記事一覧</h3>
+<p class="text-sm-gray">
+<span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
+    <span class="color-orange">🟠 応用</span>（④〜⑪）＝ さらに自動化を極める
+  </p>
+<ol>
+<li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでExcel一発入力 &horbar; Tab・Enter埋め込み</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ &horbar; 文字欠けを完全に防ぐ設定</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード &rarr; キー変換テクニック</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware.html">⑧ QRリーダーの選び方と接続方法</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 &horbar; 紙だけでPC間移行</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
+<li class="current"><span class="lv-adv">[応用]</span> <strong>⑪ VBA標準機能だけで全角QRコード生成（この記事）</strong></li>
+</ol>
+</nav>
+</article>
+</main>
+<!-- ===== フッター ===== -->
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../script.js"></script>
+
+</body>
+</html>
+
+

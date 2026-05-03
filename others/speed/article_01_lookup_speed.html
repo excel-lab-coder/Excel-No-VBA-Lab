@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="VLOOKUP・INDEX+MATCH・XLOOKUPの3つの関数の内部的なメモリ消費の違いから、データ規模ごとの最適な使い方とバイナリ検索による劇的な高速化の仕組みまでを徹底解説します。" name="description">
+<title>検索関数の速度とメモリ効率｜Excel &times; No VBA Lab</title>
+<link href="https://excel-no-vba-lab.com/others/speed/article_01_lookup_speed.html" rel="canonical">
+<meta content="検索関数の速度とメモリ効率｜Excel &times; No VBA Lab" property="og:title">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"検索関数の速度とメモリ効率：VLOOKUP・INDEX+MATCH・XLOOKUP を徹底比較","description":"VLOOKUP・INDEX+MATCH・XLOOKUPの3つの関数の内部的なメモリ消費の違いから、データ規模ごとの最適な使い方とバイナリ検索による劇的な高速化の仕組みまでを徹底解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/others/speed/article_01_lookup_speed.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span>
+<a href="../../index.html#others">計算速度</a><span>&gt;</span>
+<strong>検索関数の速度とメモリ効率</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全ver</span>
+<span class="badge badge-365">365</span>
+<span class="badge badge-2021">2021～</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">検索関数の速度とメモリ効率：VLOOKUP・INDEX+MATCH・XLOOKUP を徹底比較</h1>
+</div>
+<p>VLOOKUP・INDEX+MATCH・XLOOKUP &horbar;&horbar; 普段「どれでも同じ」と感じている方が大半でしょう。実際、数百行〜数千行レベルの日常業務では体感差はほぼゼロです。
+        しかし、数万行を超えるマスタと数千行の数式を組み合わせるような場面に入ると、関数の内部構造の違いが「秒単位の速度差」や「32ビットExcelのメモリ上限突破」として突如表面化します。</p>
+<p>この記事では、各検索関数が<strong>「何を」「どれだけ」メモリに読み込んでいるのか</strong>を軸に、速度特性とメモリ効率の本質的な違いを解説します。
+        さらに、ソート済みデータに対する<strong>バイナリ検索（二分探索）</strong>の劇的な高速化メカニズムと、安全に運用するためのSORT関数との組み合わせ方を詳しく掘り下げます。</p>
+<div class="xdemo-note-danger">
+<strong>🔴 この記事で最も伝えたいこと：「速度が速い関数＝最適な関数」ではない</strong><br>
+        ベンチマーク上の速度だけを見ると VLOOKUP が最速ですが、32ビットExcel環境では<strong>メモリ効率の低さが致命的なボトルネック</strong>になります。
+        メモリ上限（約2GB）を超えた瞬間にOSのスワップが発生し、「ベンチマークでは最速の関数が、実際の業務では最も遅い」という逆転現象が起こり得ます。
+        速度・メモリ効率・保守性を<strong>総合的に</strong>判断することが重要です。
+      </div>
+<!-- =========================================================
+         【1】各関数のメモリ読み込み範囲の違い
+      ========================================================= -->
+<section class="method-section">
+<h3>【1】メモリ読み込み範囲の違い &horbar; なぜ INDEX+MATCH はメモリ効率が良いのか</h3>
+<p>検索関数のパフォーマンス差の根本原因は、<strong>「数式が1回の計算でメモリにロードする範囲の広さ」</strong>にあります。各関数が内部で読み込む範囲を視覚化してみましょう。</p>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">各関数がメモリにロードする範囲の比較</div>
+<div style="margin-bottom:16px;">
+<div style="font-size:.85em;font-weight:700;color:#1b5e20;margin-bottom:6px;">▼ INDEX + MATCH &horbar; 必要最小限の2列だけ</div>
+<table class="xdemo-table">
+<tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col">C</td><td class="xd-col">D</td><td class="xd-col">E</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-head">社員ID</td><td class="xd-head">氏名</td><td class="xd-head">部署</td><td class="xd-head">役職</td><td class="xd-head">給与</td></tr>
+<tr>
+<td class="xd-row">2</td>
+<td style="background:#bbdefb;font-weight:700;color:#0d47a1;border:2px solid #1976d2;">1001</td>
+<td class="xd-data text-gray-ccc">田中</td><td class="xd-data text-gray-ccc">営業部</td><td class="xd-data text-gray-ccc">主任</td>
+<td style="background:#c8e6c9;font-weight:700;color:#1b5e20;border:2px solid #43a047;">350,000</td>
+</tr>
+<tr><td class="xd-row">:</td><td style="background:#e3f2fd;color:#1565c0;font-style:italic;">検索列</td><td class="xd-data text-gray-ccc">未読込</td><td class="xd-data text-gray-ccc">未読込</td><td class="xd-data text-gray-ccc">未読込</td><td style="background:#e8f5e9;color:#1b5e20;font-style:italic;">取得列</td></tr>
+</table>
+<div class="code-block" data-lang="excel"><span class="code-line">=INDEX(E:E, MATCH(検索値, A:A, 0))</span></div>
+<p class="code-comment">MATCHはA列（検索列）だけをスキャン。INDEXはE列（取得列）の該当行だけを読む。B・C・D列はメモリに一切ロードされない。</p>
+</div>
+<div style="margin-bottom:16px;">
+<div style="font-size:.85em;font-weight:700;color:#e65100;margin-bottom:6px;">▼ VLOOKUP &horbar; 検索列から取得列まで「全列」をロード</div>
+<table class="xdemo-table">
+<tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col">C</td><td class="xd-col">D</td><td class="xd-col">E</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-head">社員ID</td><td class="xd-head">氏名</td><td class="xd-head">部署</td><td class="xd-head">役職</td><td class="xd-head">給与</td></tr>
+<tr>
+<td class="xd-row">2</td>
+<td style="background:#fff3e0;font-weight:700;color:#e65100;border:2px solid #ff9800;">1001</td>
+<td style="background:#fff3e0;color:#e65100;">田中</td><td style="background:#fff3e0;color:#e65100;">営業部</td><td style="background:#fff3e0;color:#e65100;">主任</td>
+<td style="background:#fff3e0;font-weight:700;color:#e65100;border:2px solid #ff9800;">350,000</td>
+</tr>
+<tr><td class="xd-row">:</td><td colspan="5" style="background:#fff8e1;color:#bf360c;text-align:center;font-style:italic;">A列〜E列の5列分すべてがメモリにロードされる</td></tr>
+</table>
+<div class="code-block" data-lang="excel"><span class="code-line">=VLOOKUP(検索値, A:E, 5, FALSE)</span></div>
+<p class="code-comment">table_array として A:E（5列）を丸ごと指定。実際に必要なのはA列とE列だけだが、間のB・C・D列もすべてメモリに展開される。</p>
+</div>
+<div>
+<div style="font-size:.85em;font-weight:700;color:#1565c0;margin-bottom:6px;">▼ XLOOKUP &horbar; 検索列と取得列を独立指定（INDEX+MATCHと同等）</div>
+<table class="xdemo-table">
+<tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col">C</td><td class="xd-col">D</td><td class="xd-col">E</td></tr>
+<tr>
+<td class="xd-row">2</td>
+<td style="background:#bbdefb;font-weight:700;color:#0d47a1;border:2px solid #1976d2;">1001</td>
+<td class="xd-data text-gray-ccc">田中</td><td class="xd-data text-gray-ccc">営業部</td><td class="xd-data text-gray-ccc">主任</td>
+<td style="background:#c8e6c9;font-weight:700;color:#1b5e20;border:2px solid #43a047;">350,000</td>
+</tr>
+<tr><td class="xd-row">:</td><td style="background:#e3f2fd;color:#1565c0;font-style:italic;">検索配列</td><td class="xd-data text-gray-ccc">未読込</td><td class="xd-data text-gray-ccc">未読込</td><td class="xd-data text-gray-ccc">未読込</td><td style="background:#e8f5e9;color:#1b5e20;font-style:italic;">戻り配列</td></tr>
+</table>
+<div class="code-block" data-lang="excel"><span class="code-line">=XLOOKUP(検索値, A:A, E:E)</span></div>
+<p class="code-comment">INDEX+MATCHと同様に、検索配列（A列）と戻り配列（E列）だけをロードする。中間列は読み込まない。</p>
+</div>
+</div>
+<!-- メモリ使用量バー -->
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">メモリ使用量のイメージ（10万行 &times; 取得列が検索列から5列目の場合）</div>
+<div style="margin:8px 0 4px;font-size:.82em;font-weight:700;color:#1b5e20;">INDEX + MATCH</div>
+<div class="memory-bar">
+<div style="background:#1976d2;flex:1;">A列（検索）</div>
+<div style="background:#43a047;flex:1;">E列（取得）</div>
+<div style="background:#e0e0e0;flex:3;color:#999;">未使用</div>
+</div>
+<div style="margin:8px 0 4px;font-size:.82em;font-weight:700;color:#e65100;">VLOOKUP</div>
+<div class="memory-bar">
+<div style="background:#ff9800;flex:5;">A列〜E列（5列分すべて）</div>
+</div>
+<div style="margin:8px 0 4px;font-size:.82em;font-weight:700;color:#1565c0;">XLOOKUP（1列取得時）</div>
+<div class="memory-bar">
+<div style="background:#1976d2;flex:1;">A列（検索）</div>
+<div style="background:#43a047;flex:1;">E列（取得）</div>
+<div style="background:#e0e0e0;flex:3;color:#999;">未使用</div>
+</div>
+<div class="xdemo-note">
+<strong>結論：</strong>INDEX+MATCHとXLOOKUP（1列取得時）のメモリ使用量は同等で、ともにVLOOKUPの <strong>2/5</strong> 程度。
+            VLOOKUPは「検索列〜取得列の間にある不要な列」までメモリに抱え込むため、列が離れているほど無駄が大きくなります。
+          </div>
+</div>
+<!-- ★★★ 32ビットExcelのメモリ問題 ★★★ -->
+<div class="method-card">
+<div class="method-card-title method-card-title-red">32ビットExcelのメモリ上限問題 &horbar; 「最速の関数」が「最遅」に逆転する瞬間</div>
+<p>32ビット版Excelの仮想アドレス空間は<strong>約2GB</strong>です（LAA有効時でも最大約3〜4GB）。この空間はExcel本体・開いているブック・アドインで共有されます。</p>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">32ビットExcelのメモリ使用イメージ</div>
+<div style="font-size:.82em;color:#555;margin-bottom:4px;">メモリ上限: 2GB（全体で共有）</div>
+<div class="mem-gauge">
+<div class="mem-gauge-fill" style="width:35%;background:#78909c;">Excel本体</div>
+<div class="mem-gauge-fill" style="width:15%;background:#7986cb;">アドイン</div>
+<div class="mem-gauge-fill" style="width:30%;background:#ff9800;">VLOOKUPの<br>キャッシュ</div>
+<div class="mem-gauge-fill" style="width:20%;background:#e0e0e0;color:#999;">残り僅か</div>
+</div>
+<div style="font-size:.82em;color:#555;margin-top:4px;">&darr; VLOOKUPの参照範囲が広いと&hellip;</div>
+<div class="mem-gauge">
+<div class="mem-gauge-fill" style="width:35%;background:#78909c;">Excel本体</div>
+<div class="mem-gauge-fill" style="width:15%;background:#7986cb;">アドイン</div>
+<div class="mem-gauge-fill" style="width:50%;background:#e53935;">VLOOKUPキャッシュ<br>溢れ &rarr; スワップ発生!</div>
+</div>
+</div>
+<p>VLOOKUPで広い範囲（例：A:Z の26列 &times; 50万行）をtable_arrayに指定すると、キャッシュだけで数百MBのメモリを消費する可能性があります。
+            メモリ上限に到達するとOSのスワップ（ページファイル）が発生し、<strong>ディスクI/Oが始まった瞬間に計算速度が数倍〜数十倍に劣化</strong>します。</p>
+<div class="xdemo-note-danger">
+<strong>🔴 「VLOOKUPはベンチマーク最速」が逆転するメカニズム</strong><br>
+            ベンチマークテストは通常、十分なメモリがある環境で行われます。しかし32ビットExcelの実務環境では：<br><br>
+<strong>INDEX+MATCHの場合：</strong>2列分（検索列＋取得列）しかメモリに載せないため、
+            50万行&times;2列 &fallingdotseq; 数十MB程度。メモリ上限の2GBに対して余裕があり、<strong>スワップが発生しない = 本来の速度で処理が完了</strong>する。<br><br>
+<strong>VLOOKUPの場合：</strong>26列分すべてをメモリに載せるため、
+            50万行&times;26列 &fallingdotseq; 数百MB。他のブックやアドインと合わせてメモリ上限を突破すると、<strong>スワップが発生 = ディスクI/Oで劇的に遅くなる</strong>。<br><br>
+
+            結果として、ベンチマーク上は5%速いはずのVLOOKUPが、<strong>実際の業務ではINDEX+MATCHの何倍も遅くなる</strong>という逆転現象が起こります。
+            最悪の場合、「応答なし」でExcelがフリーズし、作業が完全に停止します。
+          </div>
+<div class="xdemo-note-good">
+<strong>✅ 対処法</strong><br>
+            ・可能であれば<strong>64ビット版Excel</strong>に移行する（メモリ上限が事実上撤廃される）<br>
+            ・VLOOKUPの table_array を「業務上必要な最大列範囲」に統一しつつ、不要に広くしすぎない<br>
+            ・<strong>INDEX+MATCH や XLOOKUP に書き換えて</strong>、参照列を必要最小限にする<br>
+            ・列全体参照（A:A）を避け、範囲を限定する（A2:A100000 など）<br>
+            ・テーブル（構造化参照）を活用する（実データ範囲だけを自動参照）
+          </div>
+</div>
+<!-- ★★★ キャッシュの仕組みとアンチパターン ★★★ -->
+<div class="method-card">
+<div class="method-card-title method-card-title-orange">参照範囲のキャッシュと「やりがちなアンチパターン」</div>
+<p>Excelの計算エンジンには、<strong>同じセル範囲を複数の数式が参照している場合、一度メモリに読み込んだ範囲をキャッシュして使い回す</strong>という最適化があります。
+            これは VLOOKUP でも INDEX+MATCH でも COUNTIF でも同様に機能します。</p>
+<p>たとえば、1,000行の数式がすべて <code>=VLOOKUP(&hellip;, A:E, 5, FALSE)</code> と同じ table_array（A:E）を参照している場合、
+            A:E の5列分のデータは <strong>1回だけメモリに読み込まれ、1,000個の数式すべてがそのキャッシュを共有</strong>して検索を行います。</p>
+<p>この仕組みを理解していないと、<strong>「メモリ節約のために参照範囲を個別に狭める」という逆効果の最適化</strong>をやってしまいがちです。</p>
+<h4>VLOOKUPでの典型例</h4>
+<div class="antipattern-vs">
+<div class="antipattern-box antipattern-bad">
+<div class="antipattern-title-bad">❌ やりがちなアンチパターン</div>
+              B列（氏名）を取得：<br>
+<code>=VLOOKUP(X2, A:B, 2, FALSE)</code><br><br>
+              D列（役職）を取得：<br>
+<code>=VLOOKUP(X2, A:D, 4, FALSE)</code><br><br>
+              E列（給与）を取得：<br>
+<code>=VLOOKUP(X2, A:E, 5, FALSE)</code><br><br>
+<span style="color:#c62828;font-weight:700;">table_array が3種類 &rarr; キャッシュが3つ別々に作られる。</span><br>
+              A列は3重にロードされ、メモリ消費が増大。
+            </div>
+<div class="antipattern-box antipattern-good">
+<div class="antipattern-title-good">✅ 正しいアプローチ</div>
+              B列（氏名）を取得：<br>
+<code>=VLOOKUP(X2, A:E, 2, FALSE)</code><br><br>
+              D列（役職）を取得：<br>
+<code>=VLOOKUP(X2, A:E, 4, FALSE)</code><br><br>
+              E列（給与）を取得：<br>
+<code>=VLOOKUP(X2, A:E, 5, FALSE)</code><br><br>
+<span style="color:#1b5e20;font-weight:700;">table_array が全て A:E &rarr; キャッシュは1つだけ。</span><br>
+              3つの数式がすべて同じキャッシュを共有。
+            </div>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ 「VLOOKUPの table_array は必要な列だけに狭めるべき」は半分間違い</strong><br>
+            1種類の数式だけなら狭い方がメモリ消費が少なくなります。しかし、<strong>同じマスタ表から複数の列を取得する数式が混在する場合</strong>（実務では非常によくある）は、
+            範囲をバラバラにすると各範囲が別のキャッシュとなり、トータルのメモリ消費がかえって増大します。<br><br>
+<strong>実務での鉄則：</strong>同じマスタ表を参照するVLOOKUPは、<strong>すべて同じ table_array</strong> にそろえる。列番号だけを変える。
+          </div>
+<div class="xdemo-note-tip">
+<strong>💡 INDEX+MATCHでも同じ原理が働く</strong><br>
+            MATCHの検索列が全数式で同じ範囲（例：<code>A:A</code>）を参照していれば、そのキャッシュは共有されます。<br>
+            さらに、Microsoft公式ドキュメントでは「<strong>MATCHの結果を1つのセルに格納し、複数のINDEXで使い回す</strong>」テクニックが紹介されています。<br>
+<code>H2 =MATCH(X2, A:A, 0)</code>　&larr; MATCHの結果を保存<br>
+<code>I2 =INDEX(B:B, H2)</code>　&larr; 氏名を取得<br>
+<code>J2 =INDEX(D:D, H2)</code>　&larr; 役職を取得<br>
+<code>K2 =INDEX(E:E, H2)</code>　&larr; 給与を取得
+          </div>
+<!-- COUNTIFでのキャッシュ問題 -->
+<h4>COUNTIF / SUMIF でも同じ落とし穴がある</h4>
+<div class="xdemo-note-danger">
+<strong>🔴 COUNTIFの「範囲バラバラ問題」は特に深刻</strong><br>
+            キャッシュの使い回しが効かなくなる問題は、VLOOKUPだけでなく<strong>COUNTIF・SUMIF 系でもまったく同じ</strong>です。
+            特にCOUNTIFは「重複チェック」で大量に使われることが多いため、被害が大きくなりがちです。
+          </div>
+<div class="antipattern-vs">
+<div class="antipattern-box antipattern-bad">
+<div class="antipattern-title-bad">❌ よくある失敗：行ごとに範囲が広がるCOUNTIF</div>
+              A列の重複を「自分より上の行だけ」でカウントしようとして：<br><br>
+              A2：<code>=COUNTIF($A$1:$A2, A2)</code><br>
+              A3：<code>=COUNTIF($A$1:$A3, A3)</code><br>
+              A4：<code>=COUNTIF($A$1:$A4, A4)</code><br>
+              ︙<br>
+              A10000：<code>=COUNTIF($A$1:$A10000, A10000)</code><br><br>
+<span style="color:#c62828;font-weight:700;">範囲が全行で異なる &rarr; 10,000種類の異なるキャッシュが生成される。</span><br>
+              のべ約5,000万セルを読み込む計算になり、<strong>数分〜数十分フリーズ</strong>することもあります。
+            </div>
+<div class="antipattern-box antipattern-good">
+<div class="antipattern-title-good">✅ 正しいアプローチ：全行で同じ範囲</div>
+              範囲を固定して全数式で統一：<br><br>
+              A2：<code>=COUNTIF($A:$A, A2)</code><br>
+              A3：<code>=COUNTIF($A:$A, A3)</code><br>
+              A4：<code>=COUNTIF($A:$A, A4)</code><br>
+              ︙<br><br>
+<span style="color:#1b5e20;font-weight:700;">全数式が同じ $A:$A &rarr; キャッシュは1つだけ。</span><br>
+              SUM・COUNTIF系は列全体参照でも「使用済み範囲」だけを効率的にスキャンするため、
+              固定範囲にした方がキャッシュ共有の恩恵を受けてトータルで圧倒的に高速です。<br><br>
+              ※「自分より上だけ」のカウントが必要な場合でも、全範囲でCOUNTIFしてから別の方法で重複番号を付ける方が、全体の計算時間は短くなります。
+            </div>
+</div>
+<div class="xdemo-note">
+<strong>📝 キャッシュが効く条件のまとめ</strong><br>
+            ・<strong>複数の数式が「完全に同一の範囲」を参照していること</strong>が条件。<code>$A$1:$A100</code> と <code>$A$1:$A101</code> は別キャッシュになる。<br>
+            ・VLOOKUP の table_array、MATCH / COUNTIF / SUMIF の検索範囲、いずれも同じ原理。<br>
+            ・テーブルの構造化参照（例：<code>テーブル1[社員ID]</code>）は自動的に全数式で同一範囲になるため、キャッシュ効率が最も高い。<br>
+            ・<strong>「行ごとに範囲が1行ずつ広がる」パターンが最悪</strong> &horbar; 全数式が別のキャッシュを持つため、メモリ消費と計算時間が爆発的に増加する。
+          </div>
+</div>
+</section>
+<!-- =========================================================
+         【2】速度の実測比較
+      ========================================================= -->
+<section class="method-section">
+<h3>【2】速度の実測比較 &horbar; 各関数はどれが最速なのか</h3>
+<p>「XLOOKUP は最新だから最速」と思われがちですが、実際のベンチマーク結果は意外なものです。
+          ただし、<strong>ベンチマーク上の速度だけで関数を選ぶのは危険</strong>です。【1】で解説したメモリ効率との兼ね合いが実務では重要になります。</p>
+<div class="xdemo-note-speed">
+<strong>⚡ Excel 2021以降で完全一致が大幅高速化</strong><br>
+          Microsoft公式ドキュメントによれば、<strong>Excel 2021</strong>（およびMicrosoft 365のバージョン1809以降）で、
+          未ソートデータに対するVLOOKUP・HLOOKUP・MATCHの完全一致検索が
+          「<em>同じテーブル範囲から複数列を検索する場合に、従来よりはるかに高速</em>」になったと明記されています。<br><br>
+          これは内部的にハッシュテーブル等のキャッシュ最適化が導入されたと推測されており、
+          <strong>Excel 2021以降の環境では、Excel 2019以前のベンチマーク結果がそのまま当てはまらない可能性</strong>があります。<br><br>
+          なお、Excel 2024（買い切り版）での追加の速度改善について、Microsoft公式の明確な言及は確認できていません。
+          Microsoft 365は常時アップデートされるため特定時点の速度特性を語りにくく、
+          本記事のベンチマーク議論は主に<strong>Excel 2021（買い切り版）</strong>を基準としています。
+        </div>
+<!-- ★★★ 列ずれ問題 ★★★ -->
+<div class="method-card">
+<div class="method-card-title method-card-title-teal">INDEX+MATCH / XLOOKUP の最大の実務メリット &horbar; 列の挿入・削除で壊れない</div>
+<p>速度やメモリの議論は大規模データでのみ問題になりますが、
+            <strong>「列の挿入・削除で数式が壊れない」という保守性の利点は、データ規模に関係なく常に効いてきます。</strong>
+            むしろ日常業務では、速度差よりもこちらの方がはるかに重要です。</p>
+<div class="antipattern-vs">
+<div class="antipattern-box antipattern-bad">
+<div class="antipattern-title-bad">❌ VLOOKUPの列番号問題</div>
+<code>=VLOOKUP(A2, マスタ!A:E, <strong>5</strong>, FALSE)</code><br><br>
+              「5列目の給与」を取得。しかし、もし誰かがマスタ表のB列とC列の間に新しい列を挿入すると、
+              <strong>給与は6列目に移動するのに、数式の「5」は自動更新されない。</strong><br><br>
+              結果として、役職データが給与として返される &horbar;&horbar; エラーにならないため<strong>間違いに気づきにくい</strong>。
+            </div>
+<div class="antipattern-box antipattern-good">
+<div class="antipattern-title-good">✅ INDEX+MATCH / XLOOKUP は列を直接指定</div>
+<code>=INDEX(E:E, MATCH(A2, マスタ!A:A, 0))</code><br>
+<code>=XLOOKUP(A2, マスタ!A:A, マスタ!E:E)</code><br><br>
+              いずれも<strong>取得する列を直接セル参照で指定</strong>しているため、
+              列が挿入・削除されてもExcelが参照先を自動追従する。<br>
+              数式を修正する必要がなく、<strong>サイレントな列ずれ事故が原理的に起こらない。</strong>
+</div>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ VLOOKUPの列番号ずれは「Excelで最もよくある重大バグ」の一つ</strong><br>
+            本人が列を挿入した場合は気づけますが、<strong>共有ブックで他の人が列を追加した場合</strong>や、
+            <strong>数ヶ月後にマスタ表のレイアウトを変更した場合</strong>に発覚することが多く、
+            その間ずっと誤った値で業務が回っていたというケースは珍しくありません。<br>
+            INDEX+MATCHやXLOOKUPへの移行で、この種の事故は完全に防げます。
+          </div>
+<div class="xdemo-note">
+<strong>📝 INDEX+MATCHが「全バージョン対応の王道」と呼ばれる理由</strong><br>
+            INDEX+MATCHは Excel 2007 以前から使える組み合わせで、XLOOKUPが使えない Excel 2019 以前の環境でも
+            「列ずれしない」「左方向にも検索できる」「メモリ効率が良い」の三拍子が揃います。
+            XLOOKUPが使える環境であればXLOOKUPの方が数式が短く可読性が高いですが、
+            <strong>どのバージョンでも安定して使える</strong>という点でINDEX+MATCHの信頼性は揺るぎません。
+          </div>
+</div>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">単一列の完全一致検索 &horbar; 速度の相対比較（線形検索・デフォルト設定時）</div>
+<table class="formula-count-table">
+<thead>
+<tr><th style="min-width:140px;">関数</th><th>相対速度</th><th>メモリ効率</th><th>備考</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="text-left"><strong>VLOOKUP</strong></td>
+<td class="fc-good">&starf;&starf;&starf;&starf;&starf;<br><span class="font-sm">最速クラス</span></td>
+<td class="fc-bad">⚠ 低い<br><span class="font-sm">広い範囲をロード</span></td>
+<td style="text-align:left;font-size:.85em;">単純な構造（引数4つ）ゆえに内部最適化が効きやすい。MS公式も「INDEX+MATCHより約5%速い」と記載。<strong>ただし32bit環境ではメモリ不足で逆転リスクあり。列ずれ問題もある。</strong></td>
+</tr>
+<tr>
+<td class="text-left"><strong>INDEX + MATCH</strong></td>
+<td class="fc-good">&starf;&starf;&starf;&starf;&star;<br><span class="font-sm">VLOOKUPの約5%低速</span></td>
+<td class="fc-good">✅ 高い<br><span class="font-sm">最小限の列のみ</span></td>
+<td style="text-align:left;font-size:.85em;">2つの関数の組み合わせによるオーバーヘッドが若干存在。<strong>メモリ効率の高さから32bit環境ではスワップを回避でき、実質最速になるケースも。列ずれが起きないのが最大の強み。</strong></td>
+</tr>
+<tr>
+<td class="text-left"><strong>XLOOKUP</strong></td>
+<td class="fc-bad">&starf;&starf;&starf;&star;&star;<br><span class="font-sm">VLOOKUPより約30〜40%低速</span></td>
+<td class="fc-good">✅ 高い<br><span class="font-sm">最小限の列のみ</span></td>
+<td style="text-align:left;font-size:.85em;">機能が豊富な分（6引数の解釈・スピル対応等）、内部処理が複雑。1列取得ではVLOOKUPやINDEX+MATCHに劣る傾向。<strong>列ずれが起きない。</strong></td>
+</tr>
+<tr>
+<td class="text-left"><strong>LOOKUP</strong></td>
+<td class="fc-good">&starf;&starf;&starf;&starf;&starf;<br><span class="font-sm">最速候補</span></td>
+<td class="fc-good">✅ 高い</td>
+<td style="text-align:left;font-size:.85em;">最もシンプルな構造。ソート済み・近似一致のみ。完全一致検索ができず用途が限られる。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- なぜXLOOKUPが遅いのか -->
+<div class="method-card">
+<div class="method-card-title method-card-title-blue">なぜ XLOOKUP は単純な検索で VLOOKUP より遅いのか</div>
+<p>XLOOKUPは「完全一致がデフォルト」「#N/A回避の引数処理」「複数列返却のスピル対応」「6つの引数の解釈」など、VLOOKUPにはない多くの内部処理を毎回実行しています。
+            これらの追加機能は利便性と安全性を大幅に向上させますが、<strong>「1つの列から1つの値を取るだけ」という最もシンプルなケースでは、その追加処理がそのままオーバーヘッド</strong>になります。</p>
+<p>VLOOKUPは引数が4つだけで構造が極めて単純なため、Excelの内部計算エンジンによる最適化が効きやすいと考えられています。
+            同様の理由で、LOOKUP関数（引数2〜3個・ソート済みデータ前提）が最速候補とされる意見もあります。</p>
+<div class="xdemo-note-tip">
+<strong>💡 INDEX+MATCHのオーバーヘッドについて</strong><br>
+            INDEX+MATCHは「2つの関数を組み合わせている」ため、関数呼び出しのオーバーヘッドが理論上2回分発生します。
+            これがVLOOKUP（1関数）に対して約5%程度遅くなる原因と考えられます。<br>
+            ただし、この差は10万行規模でも秒未満のレベルであり、メモリ効率・保守性（列ずれしない）・柔軟性を考慮すれば、INDEX+MATCHを選択するデメリットはほぼありません。
+            <strong>32ビット環境ではメモリ効率の高さがスワップ回避に直結するため、ベンチマーク上の5%の遅さは実質的に無意味</strong>です。
+          </div>
+</div>
+<!-- XLOOKUPが有利なケース -->
+<div class="method-card">
+<div class="method-card-title method-card-title-green">XLOOKUP が速度面で有利になるケース</div>
+<p>XLOOKUPが「遅い」のは単一列の単純な完全一致検索の場合です。以下のケースでは逆にXLOOKUPが優位に立ちます。</p>
+<div class="limit-grid">
+<div class="limit-card-good">
+<div class="limit-card-good-title">✅ 複数列の一括返却</div>
+              INDEX+MATCHで3列を取得するにはMATCHを3回実行する必要がある（MATCHの結果をセルに保存して使い回す手もあるが、セルを1つ消費する）。
+              XLOOKUPは1回の検索で3列をスピル返却できるため、<strong>取得列が増えるほどXLOOKUPの効率が勝る</strong>。
+            </div>
+<div class="limit-card-good">
+<div class="limit-card-good-title">✅ バイナリ検索モード &horbar; XLOOKUP最大の速度アドバンテージ</div>
+              ソート済みデータに対してXLOOKUPの第6引数=2を使うと、<strong>完全一致のまま</strong>二分探索が可能。
+              VLOOKUPのバイナリ検索（第4引数=TRUE）は近似一致になってしまうため、この組み合わせはXLOOKUP独自の強み。<br><br>
+              SORT関数（Excel 2021以降）の登場により、<strong>「ソート順を関数が常に保証する」環境が整った</strong>ことで、
+              バイナリ検索の前提条件（昇順ソート済み）を安全かつ自動的に満たせるようになりました。
+              つまり「SORT関数 + XLOOKUPバイナリ検索」は、<strong>同時期に揃った2つの新機能が組み合わさって初めて実用的になった最強コンビ</strong>です。
+            </div>
+<div class="limit-card-good">
+<div class="limit-card-good-title">✅ IFERROR が不要</div>
+              VLOOKUPで #N/A 回避のために IFERROR で包むと、「まず VLOOKUP を計算 &rarr; エラーなら再度評価」という二重計算が発生することがある。
+              XLOOKUPの第4引数は内部処理で完結するため、この無駄がない。
+            </div>
+</div>
+</div>
+<!-- ダブルVLOOKUP不要の解説 -->
+<div class="method-card">
+<div class="method-card-title method-card-title-orange">ダブルVLOOKUPテクニックはもう不要 &horbar; XLOOKUPバイナリ検索で完全に代替できる</div>
+<p>XLOOKUPが登場する以前、VLOOKUPで「高速かつ安全な完全一致」を実現するためには<strong>ダブルVLOOKUP</strong>という裏技が広く使われていました。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">/* 旧来のダブルVLOOKUPテクニック */</span></div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(VLOOKUP(A2, D:E, 1, TRUE)=A2, VLOOKUP(A2, D:E, 2, TRUE), "未登録")</span>
+</div>
+<p class="code-comment">
+            1本目のVLOOKUP：近似一致（TRUE）で高速にバイナリ検索し、D列（検索列自身）を返す。<br>
+            IF文：返ってきた値がA2と一致するか検証（＝完全一致かチェック）。<br>
+            2本目のVLOOKUP：一致していれば再度近似一致で目的の列（E列）を取得。不一致なら"未登録"。
+          </p>
+<div class="xdemo-note-warn">
+<strong>⚠️ なぜこんな回りくどいことをしていたのか</strong><br>
+            VLOOKUPの第4引数 <code>TRUE</code>（近似一致）はバイナリ検索で高速ですが、
+            <strong>探している値がデータに存在しなくても「最も近い値」を勝手に返してしまう</strong>という致命的な仕様があります。<br><br>
+            そのため「まず近似一致で検索 &rarr; 結果が本当に一致しているか IF で検算」という2段構えが必要でした。
+            1万行のマスタでこのテクニックを使うと、通常の完全一致（FALSE）より<strong>最大28倍高速</strong>になるという検証結果もあります（FastExcel / Decision Models）。<br><br>
+            しかし、この方法には多くの問題がありました：<br>
+            ・<strong>数式が長く複雑</strong>で、VLOOKUPが2回書かれるため可読性が低い<br>
+            ・<strong>検索値がデータの最小値より小さい場合にエラーが出る</strong>ため、追加のIFERROR処理が必要<br>
+            ・<strong>ソートされていなければ完全に間違った結果</strong>を返すリスクがある<br>
+            ・後任者が仕組みを理解できず<strong>属人化</strong>しやすい
+          </div>
+<div class="xdemo-note-good">
+<strong>✅ XLOOKUPバイナリ検索なら、これが1行で済む</strong>
+<div class="code-block" data-lang="excel" style="margin:8px 0;">
+<span class="code-line">=XLOOKUP(A2, D:D, E:E, "未登録", 0, 2)</span>
+</div>
+            ・<strong>完全一致（第5引数=0）とバイナリ検索（第6引数=2）を同時指定</strong> &horbar; ダブルVLOOKUPの2段構えが不要<br>
+            ・見つからなければ第4引数（"未登録"）を返す &horbar; IFもIFERRORも不要<br>
+            ・数式が短く、意図が明確で保守しやすい<br><br>
+            さらにSORT関数と組み合わせれば、ソート前提の心配も完全に解消されます。
+            <strong>ダブルVLOOKUPテクニックを覚える必要は、もうありません。</strong>
+</div>
+<div class="xdemo-note">
+<strong>💬 補足：近似一致（TRUE）自体を「なんとなく怖い」と避けてきた方へ</strong><br>
+            VLOOKUPの近似一致（TRUE）が高速なのは理屈としてわかっていても、
+            「万が一ソートが崩れていたら」「意図しない値が返ったら」という不安から、<strong>あえて使わずに完全一致（FALSE）で通してきた</strong>という方は非常に多いはずです。
+            実際、近似一致の「勝手に最近傍の値を返す」仕様は<strong>サイレントに間違った結果を返す</strong>ため、
+            業務上のリスクを考えれば慎重な判断として正しいものでした。<br><br>
+            XLOOKUPのバイナリ検索は「完全一致」が前提であり、見つからなければ明示的に第4引数の値を返します。
+            この<strong>「高速」と「安全」の両立</strong>こそが、VLOOKUPの近似一致が抱えていた根本的な不安を解消した点であり、
+            XLOOKUPの速度面における最大の進化と言えます。
+          </div>
+</div>
+</section>
+<!-- =========================================================
+         【3】ベンチマーク参考値
+      ========================================================= -->
+<section class="method-section">
+<h3>【3】ベンチマーク参考値 &horbar; 海外検証サイトのデータから</h3>
+<p>以下は海外の著名なExcel検証サイト（Ablebits.com）が公開しているベンチマーク結果です。
+          環境依存が大きいため、絶対値ではなく<strong>関数間の相対的な速度差</strong>を読み取ることが重要です。
+          また、これはメモリが十分にある環境での計測であり、<strong>32ビット環境のメモリ制約は反映されていない</strong>点に注意してください。</p>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">Ablebits.com のベンチマーク（50万行メイン&times;500行マスタ・32bit Excel環境）</div>
+<table class="formula-count-table">
+<thead>
+<tr><th>関数</th><th>範囲指定</th><th>列全体参照</th><th>テーブル参照</th><th>動的配列</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="text-left-bold">VLOOKUP</td>
+<td>6.6秒</td><td class="fc-bad">14.2秒</td><td class="fc-good">2.3秒</td><td class="fc-good"><strong>1.8秒</strong></td>
+</tr>
+<tr>
+<td class="text-left-bold">INDEX+MATCH</td>
+<td>8.9秒</td><td class="fc-bad">17.7秒</td><td class="fc-good">2.6秒</td><td>4.4秒</td>
+</tr>
+<tr>
+<td class="text-left-bold">XLOOKUP</td>
+<td class="fc-bad">11.2秒</td><td class="fc-danger">24.1秒</td><td>3.3秒</td><td class="fc-bad">7.3秒</td>
+</tr>
+</tbody>
+</table>
+<div class="xdemo-note">
+<strong>注目ポイント：</strong><br>
+            ・<strong>テーブル参照が全方式で最速</strong>。構造化参照は実データ範囲だけを自動参照するため、列全体参照の無駄がなく劇的に高速。<br>
+            ・列全体参照（D:D）は範囲指定の<strong>2倍以上遅い</strong>。104万行分をスキャンするため。
+          </div>
+<div class="xdemo-note-warn">
+<strong>⚠️ このベンチマークの限界</strong><br>
+            マスタが500行と比較的小さいため、VLOOKUPの table_array が広くてもメモリ上限に達しにくい条件です。
+            <strong>実務でマスタが数万行〜数十万行になると、VLOOKUPのメモリ消費が問題化し、特に32ビット環境ではスワップにより速度が逆転する可能性</strong>があります。
+            ベンチマーク結果はあくまで「メモリが十分にある理想的な条件」での参考値として捉えてください。
+          </div>
+</div>
+</section>
+<!-- =========================================================
+         【4】通常は気にしなくていい
+      ========================================================= -->
+<section class="tips-section">
+<h3>【4】正直、通常の業務では気にするレベルではない</h3>
+<p>ここまで詳細に速度差を解説しておいて矛盾するようですが、<strong>大多数の実務シーンでは関数の速度差を体感することはありません。</strong></p>
+<p>マスタ数千行・数式数百行というレベルでは、VLOOKUP・INDEX+MATCH・XLOOKUPのいずれも一瞬で計算が完了します。
+          上記のベンチマークは「50万行&times;50万数式」のような極端な条件で初めて顕在化する差であり、日常業務で関数選択の判断基準にすべきは<strong>速度よりも保守性・可読性・メモリ効率</strong>です。</p>
+<div class="xdemo-note-good">
+<strong>✅ 日常業務での関数選択は「列ずれしないか」で決めてよい</strong><br>
+          速度差が体感ゼロのデータ規模（数千行以下）では、最も重要な判断基準は<strong>保守性</strong>です。
+          VLOOKUPは列の挿入・削除で列番号がずれる「サイレントバグ」のリスクがあるため、
+          <strong>INDEX+MATCH（全バージョン対応）またはXLOOKUP（2021以降）</strong>を使う方が安全です。
+          速度最適化が必要になるのは、以下のような条件が重なったときだけです。
+        </div>
+<div class="xdemo-note-speed">
+<strong>⚡ 速度が問題になるのはこんな場面</strong><br>
+          ・マスタが10万行を超える大規模データ<br>
+          ・数式が数千行以上にコピーされている<br>
+          ・<strong>32ビットExcel環境でメモリ上限に近い</strong>（&larr; この場合は速度より先にメモリ効率を優先すべき）<br>
+          ・ブック内に複数のシートで大量の検索関数が使われている<br>
+          ・INDIRECT や VOLATILE 関数との組み合わせで再計算が頻発する<br><br>
+          これらの条件が重なったときに初めて、関数の選び方やバイナリ検索の導入が「秒単位の改善」として効いてきます。
+        </div>
+</section>
+<!-- =========================================================
+         【5】バイナリ検索の仕組み
+      ========================================================= -->
+<section class="method-section">
+<h3>【5】バイナリ検索（二分探索）はなぜ劇的に速いのか</h3>
+<p>バイナリ検索とは、<strong>ソート済みのデータを「半分に分割しながら」目的の値を絞り込む</strong>アルゴリズムです。
+          電話帳で名前を探すとき、最初のページから1ページずつめくるのではなく、真ん中あたりを開いて「探している名前はこれより前か後か」で判断する &horbar;&horbar; これがバイナリ検索の発想です。</p>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">線形検索（デフォルト）の動き &horbar; 上から順に1つずつ確認</div>
+<div class="flow-diagram">
+<div class="flow-box">1行目<br>確認</div><div class="flow-arrow">&rarr;</div>
+<div class="flow-box">2行目<br>確認</div><div class="flow-arrow">&rarr;</div>
+<div class="flow-box">3行目<br>確認</div><div class="flow-arrow">&rarr;</div>
+<div style="font-size:1.2em;color:#999;">&hellip;</div><div class="flow-arrow">&rarr;</div>
+<div class="flow-box-hit">N行目<br>発見!</div>
+</div>
+<p style="font-size:.82em;color:#555;margin-top:4px;">最悪の場合、全N行を1つずつ確認する必要がある。計算量：<strong>O(N)</strong></p>
+</div>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">バイナリ検索の動き &horbar; 半分に分割しながら絞り込む</div>
+<p style="font-size:.85em;color:#444;margin-bottom:8px;">例：1〜16の昇順データから「11」を探す場合</p>
+<div class="binary-step">
+<div class="binary-step-num">1</div>
+<div>
+<span style="font-size:.85em;color:#555;">中央値=8 &rarr; 11 &gt; 8 なので <strong>後半に絞る</strong></span><br>
+<div class="binary-range">
+<span class="binary-cell bc-dead">1</span><span class="binary-cell bc-dead">2</span><span class="binary-cell bc-dead">3</span><span class="binary-cell bc-dead">4</span>
+<span class="binary-cell bc-dead">5</span><span class="binary-cell bc-dead">6</span><span class="binary-cell bc-dead">7</span><span class="binary-cell bc-mid">8</span>
+<span class="binary-cell bc-active">9</span><span class="binary-cell bc-active">10</span><span class="binary-cell bc-active">11</span><span class="binary-cell bc-active">12</span>
+<span class="binary-cell bc-active">13</span><span class="binary-cell bc-active">14</span><span class="binary-cell bc-active">15</span><span class="binary-cell bc-active">16</span>
+</div>
+</div>
+</div>
+<div class="binary-step">
+<div class="binary-step-num">2</div>
+<div>
+<span style="font-size:.85em;color:#555;">中央値=12 &rarr; 11 &lt; 12 なので <strong>前半に絞る</strong></span><br>
+<div class="binary-range">
+<span class="binary-cell bc-active">9</span><span class="binary-cell bc-active">10</span><span class="binary-cell bc-active">11</span><span class="binary-cell bc-mid">12</span>
+<span class="binary-cell bc-dead">13</span><span class="binary-cell bc-dead">14</span><span class="binary-cell bc-dead">15</span><span class="binary-cell bc-dead">16</span>
+</div>
+</div>
+</div>
+<div class="binary-step">
+<div class="binary-step-num">3</div>
+<div>
+<span style="font-size:.85em;color:#555;">中央値=10 &rarr; 11 &gt; 10 なので <strong>後半に絞る</strong></span><br>
+<div class="binary-range">
+<span class="binary-cell bc-dead">9</span><span class="binary-cell bc-mid">10</span><span class="binary-cell bc-active">11</span><span class="binary-cell bc-dead">12</span>
+</div>
+</div>
+</div>
+<div class="binary-step">
+<div class="binary-step-num">4</div>
+<div>
+<span style="font-size:.85em;color:#555;">中央値=11 &rarr; <strong>一致! 発見!</strong></span><br>
+<div class="binary-range"><span class="binary-cell bc-hit">11</span></div>
+</div>
+</div>
+<p style="font-size:.82em;color:#555;margin-top:8px;">16個のデータからたった <strong>4回</strong> の比較で発見。計算量：<strong>O(log₂ N)</strong></p>
+</div>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">データ件数ごとの最大比較回数</div>
+<table class="formula-count-table" style="max-width:560px;">
+<thead><tr><th>データ件数 (N)</th><th>線形検索<br>（最悪 N 回）</th><th>バイナリ検索<br>（最悪 log₂N 回）</th><th>速度差</th></tr></thead>
+<tbody>
+<tr><td>100</td><td>100回</td><td class="fc-good">7回</td><td class="fc-good">約14倍速い</td></tr>
+<tr><td>1,000</td><td>1,000回</td><td class="fc-good">10回</td><td class="fc-good">約100倍速い</td></tr>
+<tr><td>10,000</td><td>10,000回</td><td class="fc-good">14回</td><td class="fc-good">約714倍速い</td></tr>
+<tr><td>100,000</td><td>100,000回</td><td class="fc-good"><strong>17回</strong></td><td class="fc-good"><strong>約5,882倍速い</strong></td></tr>
+<tr><td>1,000,000</td><td>1,000,000回</td><td class="fc-good"><strong>20回</strong></td><td class="fc-good"><strong>約50,000倍速い</strong></td></tr>
+</tbody>
+</table>
+<div class="xdemo-note">100万行のデータでも、バイナリ検索なら最大たった <strong>20回</strong> の比較で目的の値を見つけ出せます。</div>
+</div>
+</section>
+<!-- =========================================================
+         【6】バイナリ検索の設定方法
+      ========================================================= -->
+<section class="method-section">
+<h3>【6】バイナリ検索の設定方法 &horbar; XLOOKUPの第6引数</h3>
+<p>XLOOKUPでバイナリ検索を使うには、<strong>第5引数（一致モード）を 0（完全一致）、第6引数（検索モード）を 2（昇順バイナリ）または -2（降順バイナリ）</strong>に設定します。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=XLOOKUP(A2, D:D, E:E, "未登録", 0, 2)</span></div>
+<p class="code-comment">第5引数 <code>0</code>：完全一致 / 第6引数 <code>2</code>：バイナリ検索（昇順ソート済みデータ向け）。D列が昇順に並んでいることが絶対条件。</p>
+<div class="xdemo-note-good">
+<strong>✅ XLOOKUPバイナリ検索の最大の強み &horbar; 「完全一致 &times; 高速」の史上初の両立</strong><br>
+          VLOOKUPにも高速検索モードがありますが、それは第4引数を <code>TRUE</code>（近似一致）にした場合のみです。
+          <strong>VLOOKUPでは「完全一致」と「バイナリ検索」を同時に使うことができません</strong>。
+          見つからなかった場合に勝手に最近傍の値を返してしまう危険があります。<br><br>
+          このためVLOOKUPで「高速かつ安全な完全一致」を実現するには、
+          「近似一致で検索&rarr;結果をIFで検算」という<strong>ダブルVLOOKUP</strong>（2回のVLOOKUPを組み合わせるテクニック）が必要でした。
+          数式が長く複雑になり、属人化の原因にもなっていました。<br><br>
+          XLOOKUPは<strong>「完全一致（0）&times; バイナリ検索（2）」を引数指定だけで両立</strong>できる唯一の関数です。
+          見つからなければ第4引数の値を返すため、IFもIFERRORもダブルVLOOKUPも一切不要。<br>
+          さらに、SORT関数の登場により「ソート状態を関数が常に保証する」環境が整ったことで、
+          <strong>バイナリ検索の前提条件（昇順ソート済み）を安全に自動で満たせる</strong>ようになりました。
+          これがXLOOKUPの速度面における最大の進化です。
+        </div>
+<div class="xdemo-note-danger">
+<strong>🔴 バイナリ検索の絶対条件：データがソート済みであること</strong><br>
+          データがソートされていない場合、大小の判断が正しく機能せず、<strong>存在するはずの値が「見つからない」と誤判定</strong>されます。
+          エラーにはならず間違った値や "未登録" が返るため、<strong>サイレントな誤りが最も危険</strong>です。
+        </div>
+<div class="xdemo-note-danger">
+<strong>🔴 見落としがちな落とし穴：空白セルやデータ型の混在もバイナリ検索を壊す</strong><br>
+          バイナリ検索が正しく動くための条件は「昇順ソート済み」だけではありません。
+          <strong>検索列に空白セルが1つでも含まれていると、二分探索の大小判断が狂い、存在するはずの値が「見つからない」と誤判定される</strong>ことがあります。<br><br>
+
+          これは空白セルに限った話ではなく、<strong>数値データの中に文字列が混在している場合</strong>や、
+          <strong>数値と「数値に見える文字列」（セルの表示形式は同じでも内部データ型が異なる）が混在している場合</strong>にも同じ問題が起こります。
+          バイナリ検索は中央値との大小比較で探索方向を決めますが、データ型が異なるセルに当たると比較が成立せず、
+          探索が想定外の方向に進んでしまうためです。<br><br>
+<strong>ソートだけでなく、空白行の除去とデータ型の統一が絶対条件です。</strong>
+          これが、次の【7】で解説する「SORT/SORTBY関数で作業シートに出力する」方法を強く推奨する理由の一つです。
+          SORT関数の出力結果には元データの空白行が含まれないため、空白行問題を自動的に解消できます。
+        </div>
+<div class="xdemo-note">
+<strong>📝 なぜ空白セルが混入するのか &horbar; 実務でよくあるパターン</strong><br>
+          ・マスタ表から行を削除したが、セルの内容だけ消して行自体は残した（見た目は空行だがセル範囲には含まれる）<br>
+          ・データの途中にメモや区切り用の空行を入れている<br>
+          ・CSVインポート時に末尾に空行が紛れ込んだ<br>
+          ・列全体参照（A:A）を使っているため、データ末尾より下の空白セルもすべて検索範囲に含まれる<br><br>
+          いずれも見た目では気づきにくいため、バイナリ検索を使う場合は<strong>「ソート済みの中間テーブルをSORT関数で作り、それを参照する」</strong>方法が最も安全です。
+        </div>
+</section>
+<!-- =========================================================
+         【7】SORT関数で安全にバイナリ検索を使う
+      ========================================================= -->
+<section class="method-section">
+<h3>【7】SORT / SORTBY 関数でソートを保証する &horbar; バイナリ検索を安全に運用する方法</h3>
+<p>バイナリ検索の最大のリスクは「手動でソートするのを忘れた」「誰かがデータを追加してソート順が崩れた」「空白行が紛れ込んだ」というヒューマンエラーです。
+          Excel 2021以降では SORT / SORTBY 関数でこのリスクを根本的に排除できます。</p>
+<div class="method-card">
+<div class="method-card-title method-card-title-green">パターン①：SORT で並べ直した配列に XLOOKUP を適用（小規模データ向け）</div>
+<div class="code-block" data-lang="excel"><span class="code-line">=XLOOKUP(検索値, SORT(A2:A1000), SORTBY(B2:B1000, A2:A1000), "未登録", 0, 2)</span></div>
+<p class="code-comment">元データのソート順に関わらず、常に正しくバイナリ検索できる。</p>
+<div class="xdemo-note-warn">
+<strong>⚠️ 注意：</strong>この書き方では、XLOOKUPの数式1つごとにSORT/SORTBYが実行されます。
+            数式が数十行程度なら問題ありませんが、<strong>数百行以上にコピーする場合はパターン③を使ってください。</strong>
+</div>
+</div>
+<div class="method-card">
+<div class="method-card-title method-card-title-blue">パターン②：LET + SORTBY + CHOOSECOLS で計算コストを最小化（中規模データ向け）</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(
+  sorted, SORTBY(A2:C1000, A2:A1000, 1),
+  XLOOKUP(検索値, CHOOSECOLS(sorted,1), CHOOSECOLS(sorted,2,3), "未登録", 0, 2)
+)</span>
+</div>
+<p class="code-comment">LET で一度だけソート結果を計算して再利用。計算コストを最小化。ただし数式ごとにLET内のSORTBYは実行される。</p>
+</div>
+<div class="method-card">
+<div class="method-card-title method-card-title-orange">パターン③：大量データ &horbar; 作業シートで「1回だけ」SORT &starf;最も実用的</div>
+<p>大量の検索数式がある場合、パターン①②のように各数式内でSORT/SORTBYを呼ぶと、
+            <strong>数式の数だけSORT処理が繰り返されてしまいます</strong>。
+            作業シートにSORT結果をスピルで1回だけ出力し、各XLOOKUPはその結果を参照するのが最も効率的です。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">/* 作業シートのA1セルに入力（1回だけ） */</span></div>
+<div class="code-block" data-lang="excel"><span class="code-line">=SORTBY(マスタ!A2:C500000, マスタ!A2:A500000, 1)</span></div>
+<div class="code-block" data-lang="excel"><span class="code-line">/* 各シートのXLOOKUP &horbar; ソート済みスピル範囲を参照 */</span></div>
+<div class="code-block" data-lang="excel"><span class="code-line">=XLOOKUP(A2, 作業!A1#, CHOOSECOLS(作業!A1#, 2, 3), "未登録", 0, 2)</span></div>
+<div class="xdemo-note-good">
+<strong>✅ この方法が最も実用的な3つの理由</strong><br>
+            ① <strong>SORT処理は1回だけ</strong>：XLOOKUPが1,000行あっても、SORTBYの計算は作業シートの更新時の1回のみ。
+              パターン①のようにXLOOKUP内にSORTを書くと、1,000回SOURTが走ることになる。<br>
+            ② <strong>空白行が自動的に除去される</strong>：元のマスタデータに空白行があっても、SORTBY関数の出力には空白行が含まれないため、
+              バイナリ検索の「空白行で誤判定」問題が自動的に解消される。<br>
+            ③ <strong>データ型の不一致も目視確認しやすい</strong>：作業シートにソート結果が展開されるため、
+              「数値のはずが文字列になっている行」などの異常を発見しやすい。
+          </div>
+<p class="code-comment">SORTBYの計算は作業シートの更新時の1回だけ。XLOOKUPは整列済み・空白除去済みのデータを読むだけなので高速かつ安全。</p>
+</div>
+<div class="xdemo-note-tip">
+<strong>💡 詳細な設定方法は別記事で解説しています</strong><br>
+<a href="../../functions/latest/article_sort.html">&rarr; SORT / SORTBY の詳細解説ページ</a><br>
+<a href="../../functions/latest/article_xlookup_advanced.html">&rarr; XLOOKUP 応用編（第5/第6引数の全設定パターン）</a>
+</div>
+</section>
+<!-- =========================================================
+         【8】最終まとめ
+      ========================================================= -->
+<section class="comparison-section">
+<h3>【8】最終まとめ &horbar; 速度・メモリ・保守性の総合判断</h3>
+<div class="xdemo-note-danger" style="margin-bottom:16px;">
+<strong>🔴 繰り返しになりますが：「ベンチマーク最速 &ne; 最適な関数」</strong><br>
+          32ビットExcel環境では、VLOOKUPのメモリ効率の低さが原因でスワップが発生し、
+          <strong>INDEX+MATCHの方が結果的に何倍も速く完了する</strong>という逆転が実際に起こり得ます。
+          速度だけでなく、<strong>メモリ効率・環境（32/64bit）・保守性（列ずれリスク）</strong>を総合的に判断してください。
+        </div>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">関数選択の判断フロー</div>
+<div class="flow-diagram" style="flex-direction:column;align-items:flex-start;gap:8px;">
+<div style="display:flex;align-items:center;gap:8px;">
+<div class="flow-box">データ数千行以下？</div>
+<div class="flow-arrow">&rarr; Yes</div>
+<div class="flow-box-result">どの関数でもOK<br><span class="text-sm-normal">列ずれしない関数を推奨<br>（XLOOKUP or INDEX+MATCH）</span></div>
+</div>
+<div style="margin-left:40px;font-size:.9em;color:#999;">&darr; No（大量データ）</div>
+<div style="display:flex;align-items:center;gap:8px;">
+<div class="flow-box">Excel 2021以降<br>（2021/2024/365）？</div>
+<div class="flow-arrow">&rarr; Yes</div>
+<div class="flow-box-binary">XLOOKUP + バイナリ検索<br><span class="text-sm-normal">SORT関数で作業シートに出力して<br>空白除去＋ソート保証</span></div>
+</div>
+<div style="margin-left:40px;font-size:.9em;color:#999;">&darr; No（旧バージョン）</div>
+<div style="display:flex;align-items:center;gap:8px;">
+<div class="flow-box" style="background:#fce4ec;border-color:#e53935;">32ビットExcel？</div>
+<div class="flow-arrow">&rarr; Yes</div>
+<div class="flow-box-hit" style="background:#fff3e0;border-color:#ff9800;">INDEX+MATCH 強く推奨<br><span class="text-sm-normal">メモリ効率でスワップ回避<br>列ずれもしない</span></div>
+</div>
+<div style="margin-left:40px;font-size:.9em;color:#999;">&darr; No（64ビット）</div>
+<div style="display:flex;align-items:center;gap:8px;">
+<div class="flow-box-result">INDEX+MATCH を推奨<br><span class="text-sm-normal">速度差は僅差。列ずれしない安全性で優位</span></div>
+</div>
+</div>
+</div>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">総合比較まとめ</div>
+<table class="formula-count-table" style="max-width:100%;">
+<thead><tr><th>項目</th><th>VLOOKUP</th><th>INDEX+MATCH</th><th>XLOOKUP<br>（線形）</th><th>XLOOKUP<br>（バイナリ）</th></tr></thead>
+<tbody>
+<tr>
+<td>単一列の速度<br><span style="font-size:.75em;color:#999;">（メモリ十分時）</span></td>
+<td class="fc-good">✅ 最速クラス</td>
+<td class="fc-good">✅ 僅差で2位</td>
+<td class="fc-bad">⚠ やや遅い</td>
+<td class="fc-good">✅ 圧倒的最速</td>
+</tr>
+<tr>
+<td>複数列の速度</td>
+<td class="fc-ok">列数分の数式が必要</td>
+<td class="fc-bad">⚠ MATCH&times;列数分</td>
+<td class="fc-good">✅ 1回で全列取得</td>
+<td class="fc-good">✅ 1回で全列取得</td>
+</tr>
+<tr>
+<td>メモリ効率</td>
+<td class="fc-bad">⚠ 不要な列も読む</td>
+<td class="fc-good">✅ 最小限</td>
+<td class="fc-good">✅ 最小限</td>
+<td class="fc-good">✅ 最小限</td>
+</tr>
+<tr>
+<td><strong>32bit環境での<br>実質速度</strong></td>
+<td class="fc-danger">❌ スワップで<br>逆転リスク大</td>
+<td class="fc-good">✅ スワップ回避<br>= 実質最速</td>
+<td class="fc-good">✅ スワップ回避</td>
+<td class="fc-good">✅ スワップ回避</td>
+</tr>
+<tr>
+<td>キャッシュ共有</td>
+<td class="fc-good">✅ 同じtable_array<br>なら共有</td>
+<td class="fc-good">✅ 同じ範囲<br>なら共有</td>
+<td class="fc-good">✅ 同じ範囲<br>なら共有</td>
+<td class="fc-good">✅ 同じ範囲<br>なら共有</td>
+</tr>
+<tr>
+<td>完全一致&times;高速</td>
+<td class="fc-danger">❌ 不可<br><span style="font-size:.75em;">（ダブルVLOOKUP必要）</span></td>
+<td class="fc-bad">⚠ 線形のみ</td>
+<td>&horbar; （線形のみ）</td>
+<td class="fc-good">✅ 唯一可能</td>
+</tr>
+<tr>
+<td><strong>列ずれ耐性</strong></td>
+<td class="fc-danger">❌ 列番号がズレる<br><span style="font-size:.75em;">サイレントバグの元</span></td>
+<td class="fc-good">✅ 列を直接参照<br><span style="font-size:.75em;">自動追従する</span></td>
+<td class="fc-good">✅ 列を直接参照<br><span style="font-size:.75em;">自動追従する</span></td>
+<td class="fc-good">✅ 列を直接参照<br><span style="font-size:.75em;">自動追従する</span></td>
+</tr>
+<tr>
+<td>バイナリ検索の<br>空白・型混在耐性</td>
+<td class="fc-danger">❌ 近似一致で事故</td>
+<td class="fc-ok">&horbar; （バイナリなし）</td>
+<td class="fc-ok">&horbar; （線形のみ）</td>
+<td class="fc-bad">⚠ 空白・型混在で誤判定<br><span style="font-size:.75em;">SORT出力で回避可能</span></td>
+</tr>
+<tr>
+<td>対応バージョン</td>
+<td>全ver</td>
+<td>全ver</td>
+<td>2021以降</td>
+<td>2021以降</td>
+</tr>
+</tbody>
+</table>
+<div class="xdemo-note-good">
+<strong>✅ 結論：</strong><br>
+            ・<strong>日常業務（〜数千行）</strong>：速度差は体感ゼロ。<strong>列ずれしない関数を選ぶ</strong>のが最重要。XLOOKUP（2021以降）またはINDEX+MATCH（全バージョン）を推奨。<br>
+            ・<strong>大量データ（1万行超）+ ソート可能</strong>：<strong>XLOOKUP バイナリ検索 + 作業シートにSORT出力</strong> が最速かつ最安全。SORT出力で空白行除去とソート保証を同時に達成。ダブルVLOOKUPはもう不要。<br>
+            ・<strong>同じマスタから複数列を取得</strong>：VLOOKUPなら table_array を統一（キャッシュ共有）。XLOOKUPなら戻り配列を複数列指定で1発。INDEX+MATCHならMATCH結果をセルに保存して使い回し。<br>
+            ・<strong>32ビット環境 + 広い参照範囲</strong>：<strong>VLOOKUPのメモリ浪費でスワップが発生し、ベンチマーク最速のはずが実際には最も遅くなるリスクがある。</strong>INDEX+MATCH に書き換えてメモリ効率を最優先にすべき。<br>
+            ・<strong>旧バージョン（2019以前）</strong>：INDEX+MATCH が速度・メモリ・保守性（列ずれしない）の全方面で最も安定した選択肢。
+          </div>
+</div>
+</section>
+<!-- =========================================================
+         関連記事
+      ========================================================= -->
+<section class="related-articles-section" style="margin-top:40px;border-top:2px dashed #ccc;padding-top:20px;">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<div style="background:#f5f8ff;padding:15px;border-radius:8px;margin-top:15px;">
+<h4 style="margin-top:0;color:#1565c0;border-bottom:1px solid #bbdefb;padding-bottom:5px;">検索関数の詳細解説</h4>
+<ul style="line-height:1.8;">
+<li>XLOOKUPシリーズ &horbar; 全4編の一覧</li>
+        <li><a href="../../functions/latest/article_xlookup_basic.html">XLOOKUP 基本編 &horbar; 構文と動作を完全理解</a></li>
+        <li><a href="../../functions/latest/article_xlookup_advanced.html">XLOOKUP 応用編 &horbar; 複数列返却・バイナリ検索・後ろから検索</a></li>
+        <li><a href="../../functions/latest/article_xlookup_vs.html">XLOOKUP 比較編 &horbar; VLOOKUP・INDEX+MATCHとの使い分け</a></li>
+        <li><a href="../../functions/old/article_index_match.html">INDEX + MATCH &horbar; 全バージョン対応の王道テクニック</a></li>
+        <li><a href="../../functions/latest/article_sort.html">SORT / SORTBY &horbar; 数式での自動並び替え</a></li>
+</ul>
+<h4 style="margin-top:20px;color:#1565c0;border-bottom:1px solid #bbdefb;padding-bottom:5px;">速度・パフォーマンス</h4>
+<ul style="line-height:1.8;">
+<li><a href="../index.html#others">速度カテゴリ &horbar; 計算速度・パフォーマンス最適化の全記事一覧</a></li>
+</ul>
+</div>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+

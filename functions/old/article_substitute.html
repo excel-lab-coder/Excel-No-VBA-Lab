@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>SUBSTITUTE 多段ネスト｜Excel &times; No VBA Lab</title>
+<meta content="ExcelのSUBSTITUTE多段ネストで複数の文字列置換を一括処理する方法を解説。㈱&rarr;株式会社など会社名表記の統一に活用。" name="description">
+<meta content="SUBSTITUTE 多段ネスト, 複数置換 Excel, 会社名 表記 統一, 文字列置換 数式, VBA不要" name="keywords">
+<meta content="SUBSTITUTE 多段ネスト｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのSUBSTITUTE多段ネストで複数の文字列置換を一括処理する方法を解説。㈱&rarr;株式会社など会社名表記の統一に活用。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/old/article_substitute.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/old/article_substitute.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "SUBSTITUTE 多段ネスト",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "ExcelのSUBSTITUTE多段ネストで複数の文字列置換を一括処理する方法を解説。㈱→株式会社など会社名表記の統一に活用。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-no-vba-lab.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-no-vba-lab.com/functions/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "SUBSTITUTE 多段ネスト",
+      "item": "https://excel-no-vba-lab.com/functions/old/article_substitute.html"
+    }
+  ]
+}</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#functions">関数</a><span>&gt;</span><strong>SUBSTITUTE 多段ネスト</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-all">全ver</span></div>
+<h1 class="article-title">SUBSTITUTE 完全ガイド：多段ネスト・LET・REDUCE で複数文字を一括置換</h1>
+</div>
+<!-- ===== 目次 ===== -->
+<div class="toc-box">
+<h4>📖 目次</h4>
+<ol>
+<li><a href="#goal">やりたいこと</a></li>
+<li><a href="#basic">SUBSTITUTE の基本構文</a></li>
+<li><a href="#nth">第4引数：N番目だけ置換する</a></li>
+<li><a href="#nest">多段ネスト（全バージョン対応）</a></li>
+<li><a href="#let">LET で可読性を改善</a></li>
+<li><a href="#reduce">REDUCE + LAMBDA で完全自動化</a></li>
+<li><a href="#compare">3つの手法 比較表</a></li>
+<li><a href="#pitfall">知っておくべき注意点</a></li>
+<li><a href="#vs-replace">SUBSTITUTE vs REPLACE vs CLEAN：使い分け</a></li>
+<li><a href="#patterns">実務パターン集</a></li>
+<li><a href="#summary">まとめ</a></li>
+</ol>
+</div>
+<!-- ===== 1. やりたいこと ===== -->
+<section class="goal-section" id="goal">
+<h2><span class="section-num">1</span> やりたいこと</h2>
+<p>セル内の「㈱」&rarr;「株式会社」、「（有）」&rarr;「有限会社」、全角スペース&rarr;半角スペースなど、複数の置換を一気に済ませたい。Ctrl+H の「検索と置換」では1つずつしか処理できず、元データを直接書き換えてしまうリスクもあります。関数なら元データを保持したまま、数式で一括変換できます。</p>
+</section>
+<!-- ===== 2. 基本構文 ===== -->
+<section class="method-section" id="basic">
+<h2><span class="section-num">2</span> SUBSTITUTE の基本構文</h2>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUBSTITUTE(対象, 検索文字列, 置換文字列, [置換対象])</span>
+</div>
+<p class="code-comment">第4引数（省略可）：何番目に出現した文字を置換するか指定。省略するとすべて置換。</p>
+<h3>基本例：1つの置換</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUBSTITUTE(A1, "㈱", "株式会社")</span>
+</div>
+<p class="code-comment">A1 に含まれる「㈱」をすべて「株式会社」に置き換える。元のセル（A1）は変更されない。</p>
+<h3>文字の「削除」にも使える</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUBSTITUTE(A1, "-", "")</span>
+</div>
+<p class="code-comment">置換文字列を空文字 <code>""</code> にすれば、該当文字を削除できる。電話番号のハイフン除去などに頻出。</p>
+<h3>動作イメージ</h3>
+<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">A（元データ）</td><td class="xd-col">B（数式の結果）</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-data">㈱山田商事</td><td class="xd-result">株式会社山田商事</td></tr>
+<tr><td class="xd-row">2</td><td class="xd-data">㈱鈴木工業</td><td class="xd-result">株式会社鈴木工業</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-data">佐藤建設㈱</td><td class="xd-result">佐藤建設株式会社</td></tr>
+</table></div>
+<p class="code-comment">「㈱」が先頭にあっても末尾にあっても、すべて「株式会社」に置換される。</p>
+</section>
+<!-- ===== 3. 第4引数 ===== -->
+<section class="method-section" id="nth">
+<h2><span class="section-num">3</span> 第4引数：N番目だけ置換する</h2>
+<p>第4引数を指定すると、N番目に出現した検索文字列だけを置換できます。省略するとすべてが対象です。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUBSTITUTE(A1, "-", "", 1)</span>
+</div>
+<p class="code-comment">最初の（1番目の）ハイフンだけを削除。2番目以降のハイフンは残る。</p>
+<h3>活用例：区切り文字の選択的な置換</h3>
+<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">A（元データ）</td><td class="xd-col">B（全て置換）</td><td class="xd-col">C（1番目だけ）</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-data">090-1234-5678</td><td class="xd-result">09012345678</td><td class="xd-result">0901234-5678</td></tr>
+</table></div>
+<div class="xdemo-note">
+<strong>💡 「最後のN番目」を置換したい場合</strong><br>
+        SUBSTITUTE の第4引数は「先頭から数えてN番目」しか指定できません。「最後のハイフンだけ」を置換するには、まず対象文字の出現回数を数えてからその数を第4引数に渡す工夫が必要です。
+        <div class="code-block mt-8" data-lang="excel">
+<span class="code-line">=SUBSTITUTE(A1, "-", "", LEN(A1)-LEN(SUBSTITUTE(A1,"-","")))</span>
+</div>
+<p class="code-comment" style="margin-top:4px;"><code>LEN(A1)-LEN(SUBSTITUTE(A1,"-",""))</code> でハイフンの個数を算出し、それを第4引数に渡すことで最後のハイフンだけを削除。</p>
+</div>
+</section>
+<!-- ===== 4. 多段ネスト ===== -->
+<section class="method-section" id="nest">
+<h2><span class="section-num">4</span> 多段ネスト（全バージョン対応）</h2>
+<p>置換したい文字が複数ある場合、SUBSTITUTE の結果をさらに SUBSTITUTE に渡す「多段ネスト」で対応します。</p>
+<h3>3段ネスト（3つの置換）</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(A1, "㈱", "株式会社"), "（有）", "有限会社"), "　", " ")</span>
+</div>
+<p class="code-comment">内側から順に実行される。①「㈱」&rarr;「株式会社」 ②「（有）」&rarr;「有限会社」 ③ 全角スペース&rarr;半角スペース</p>
+<h3>動作イメージ</h3>
+<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">A（元データ）</td><td class="xd-col">B（結果）</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-data">㈱山田　商事</td><td class="xd-result">株式会社山田 商事</td></tr>
+<tr><td class="xd-row">2</td><td class="xd-data">（有）鈴木　工業</td><td class="xd-result">有限会社鈴木 工業</td></tr>
+</table></div>
+<div class="xdemo-note-warn">
+<strong>⚠️ ネストが深くなると可読性が激減</strong><br>
+        5段以上のネストになると、括弧の対応関係が人間にはほぼ読めなくなります。修正時に括弧を1つ消してしまうと数式全体が壊れるリスクも高まります。4段以上が必要な場合は LET や REDUCE の使用を強く推奨します。
+      </div>
+</section>
+<!-- ===== 5. LET ===== -->
+<section class="method-section" id="let">
+<h2><span class="section-num">5</span> LET で可読性を改善</h2>
+<p>LET関数で中間結果を変数に入れることで、ネストをフラットに書き直せます。各ステップが「何をしているか」一目でわかるようになります。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">    s1, SUBSTITUTE(A1, "㈱", "株式会社"),</span>
+<span class="code-line">    s2, SUBSTITUTE(s1, "（有）", "有限会社"),</span>
+<span class="code-line">    s3, SUBSTITUTE(s2, "　", " "),</span>
+<span class="code-line">    s3</span>
+<span class="code-line">  )</span>
+</div>
+<p class="code-comment">各ステップが独立した行に。変数名を「会社名正規化」「スペース統一」のように日本語にすればさらにわかりやすくなります。</p>
+<h3>5段の比較：ネスト版 vs LET版</h3>
+<span class="code-label">❌ 5段ネスト（読めない）</span>
+<div class="code-readonly">
+<span class="code-line">=SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(A1,"㈱","株式会社"),"（有）","有限会社"),"　"," "),"-",""),"/","／")</span>
+</div>
+<span class="code-label-good">✅ LET版（読める）</span>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">    s1, SUBSTITUTE(A1, "㈱", "株式会社"),</span>
+<span class="code-line">    s2, SUBSTITUTE(s1, "（有）", "有限会社"),</span>
+<span class="code-line">    s3, SUBSTITUTE(s2, "　", " "),</span>
+<span class="code-line">    s4, SUBSTITUTE(s3, "-", ""),</span>
+<span class="code-line">    s5, SUBSTITUTE(s4, "/", "／"),</span>
+<span class="code-line">    s5</span>
+<span class="code-line">  )</span>
+</div>
+<div class="xdemo-note">
+<strong>💡 デバッグのコツ</strong><br>
+        最後の行を途中の変数名（例：<code>s2</code>）に変えるだけで、その段階までの置換結果を確認できます。ステップ実行のような感覚でデバッグできるのが LET の隠れた利点です。
+      </div>
+</section>
+<!-- ===== 6. REDUCE + LAMBDA ===== -->
+<section class="method-section" id="reduce">
+<h2><span class="section-num">6</span> REDUCE + LAMBDA で完全自動化</h2>
+<p>置換対象と置換後をテーブルとして管理し、REDUCE 関数で全行を順番に適用すれば、置換対象がいくら増えても数式の構造が変わりません。</p>
+<h3>置換テーブル（E列・F列）を用意する</h3>
+<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">E</td><td class="xd-col">F</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-head">検索文字列</td><td class="xd-head">置換文字列</td></tr>
+<tr><td class="xd-row">2</td><td class="xd-data">㈱</td><td class="xd-data">株式会社</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-data">（有）</td><td class="xd-data">有限会社</td></tr>
+<tr><td class="xd-row">4</td><td class="xd-data">　</td><td class="xd-data">（半角スペース）</td></tr>
+<tr><td class="xd-row">5</td><td class="xd-data">-</td><td class="xd-data">（空＝削除）</td></tr>
+<tr><td class="xd-row">6</td><td class="xd-data">/</td><td class="xd-data">／</td></tr>
+</table></div>
+<h3>数式（1本で全置換が完了）</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=REDUCE(A1, E2:F6, LAMBDA(acc, row, SUBSTITUTE(acc, INDEX(row,,1), INDEX(row,,2))))</span>
+</div>
+<p class="code-comment">REDUCE が E2:F6 の各行を順に処理。<code>acc</code> は累積結果（最初は A1 の値）、<code>row</code> は現在の行。INDEX(row,,1) で検索文字列、INDEX(row,,2) で置換文字列を取得して SUBSTITUTE に渡します。</p>
+<div class="xdemo-note-good">
+<strong>✅ 置換ルールの追加が最強に簡単</strong><br>
+        新しい置換ルールが必要になったら、テーブルに1行追加して REDUCE の範囲を広げるだけ。数式自体には一切手を触れません。10個でも50個でも同じ数式で対応できます。
+      </div>
+<h3>テーブル参照にすれば範囲の拡張も自動</h3>
+<p>E:F列をExcelテーブル（Ctrl+T）にしておけば、行追加時にテーブル範囲が自動拡張されます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=REDUCE(A1, 置換テーブル, LAMBDA(acc, row, SUBSTITUTE(acc, INDEX(row,,1), INDEX(row,,2))))</span>
+</div>
+<p class="code-comment">テーブル名「置換テーブル」を参照するので、行が追加されても数式の変更は不要。</p>
+<h3>MAP と組み合わせて複数行を一括処理</h3>
+<p>REDUCE は1つのセルに対する処理です。A列の全行に同じ置換を適用したい場合は MAP と組み合わせます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MAP(A2:A100, LAMBDA(cell, REDUCE(cell, 置換テーブル, LAMBDA(acc, row, SUBSTITUTE(acc, INDEX(row,,1), INDEX(row,,2))))))</span>
+</div>
+<p class="code-comment">A2:A100 の各セルに対して REDUCE による全置換が適用され、結果がスピルで展開されます。数式は1つのセルに書くだけ。</p>
+</section>
+<!-- ===== 7. 比較表 ===== -->
+<section class="method-section" id="compare">
+<h2><span class="section-num">7</span> 3つの手法 比較表</h2>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">比較項目</th>
+<th scope="col">多段ネスト</th>
+<th scope="col">LET + SUBSTITUTE</th>
+<th scope="col">REDUCE + LAMBDA</th>
+</tr>
+<tr>
+<td>可読性（3段まで）</td>
+<td class="neutral">まあまあ読める</td>
+<td class="good">良い</td>
+<td class="good">良い</td>
+</tr>
+<tr>
+<td>可読性（5段以上）</td>
+<td class="bad">ほぼ読めない</td>
+<td class="good">良い</td>
+<td class="good">良い</td>
+</tr>
+<tr>
+<td>置換ルールの追加</td>
+<td class="bad">数式を編集（括弧追加）</td>
+<td class="neutral">数式を編集（行追加）</td>
+<td class="good">テーブルに1行追加するだけ</td>
+</tr>
+<tr>
+<td>デバッグのしやすさ</td>
+<td class="bad">困難</td>
+<td class="good">変数名を差し替えるだけ</td>
+<td class="neutral">中間確認がやや難しい</td>
+</tr>
+<tr>
+<td>数式の長さ</td>
+<td class="bad">置換数に比例して伸びる</td>
+<td class="neutral">置換数に比例するが整理されている</td>
+<td class="good">置換数に関係なく一定</td>
+</tr>
+<tr>
+<td>置換ルールのメンテナンス</td>
+<td class="bad">数式内にハードコード</td>
+<td class="bad">数式内にハードコード</td>
+<td class="good">テーブルで外部管理</td>
+</tr>
+<tr>
+<td>複数行への一括適用</td>
+<td class="neutral">各行にコピー</td>
+<td class="neutral">各行にコピー</td>
+<td class="good">MAP併用で1数式スピル</td>
+</tr>
+</table></div>
+</section>
+<!-- ===== 8. 注意点 ===== -->
+<section class="method-section" id="pitfall">
+<h2><span class="section-num">8</span> 知っておくべき注意点</h2>
+<div class="xdemo-note-warn">
+<strong>⚠️ 置換の順序に注意（前の結果が次の入力になる）</strong><br>
+        SUBSTITUTE の多段ネストでは、ある置換の結果が次の置換の入力になります。たとえば「AB」&rarr;「C」と「A」&rarr;「X」を同時に適用する場合、先に「A」&rarr;「X」が走ると「AB」が「XB」になり、「AB」&rarr;「C」が発動しなくなります。<strong>より具体的（長い文字列）な置換を先に配置</strong>してください。
+      </div>
+<div class="xdemo-note-warn">
+<strong>⚠️ 大文字・小文字は区別される</strong><br>
+        SUBSTITUTE は大文字と小文字を区別します。「abc」を「xyz」に置換しても、「ABC」や「Abc」は変換されません。大文字小文字を無視して置換したい場合は、先に UPPER や LOWER で統一してから適用するか、Power Query の「値の置換」機能を検討してください。
+      </div>
+<div class="xdemo-note-warn">
+<strong>⚠️ ワイルドカードは使えない</strong><br>
+        SUBSTITUTE は「文字列の完全一致」でしか動作しません。<code>*</code> や <code>?</code> のようなワイルドカードには対応していません。パターンマッチが必要な場合は、Ctrl+H の「検索と置換」（ワイルドカード対応）や Power Query の「正規表現に近い処理」を検討してください。
+      </div>
+<div class="xdemo-note">
+<strong>💡 空文字への置換で「削除」として使える</strong><br>
+<code>=SUBSTITUTE(A1, "削除したい文字", "")</code> で特定の文字を削除できます。これは CLEAN 関数（制御文字の除去）や TRIM 関数（余分なスペースの除去）ではカバーできない「任意の文字を狙い撃ちで消す」ための定番テクニックです。
+      </div>
+</section>
+<!-- ===== 9. vs REPLACE vs CLEAN ===== -->
+<section class="method-section" id="vs-replace">
+<h2><span class="section-num">9</span> SUBSTITUTE vs REPLACE vs CLEAN：使い分け</h2>
+<p>文字列を操作する関数は複数あり、混同されがちです。それぞれの守備範囲を整理しておきます。</p>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">関数</th>
+<th scope="col">動作</th>
+<th scope="col">指定方法</th>
+<th scope="col">主な用途</th>
+</tr>
+<tr>
+<td><strong>SUBSTITUTE</strong></td>
+<td>特定の「文字列」を別の文字列に置換</td>
+<td>文字列で指定（"㈱" &rarr; "株式会社"）</td>
+<td class="good">特定の文字・単語の変換・削除</td>
+</tr>
+<tr>
+<td><strong>REPLACE</strong></td>
+<td>特定の「位置」の文字を別の文字列に置換</td>
+<td>位置と文字数で指定（3文字目から2文字を"XX"に）</td>
+<td>固定フォーマットの一部差し替え</td>
+</tr>
+<tr>
+<td><strong>CLEAN</strong></td>
+<td>印刷不可能な制御文字（ASCIIコード0〜31）を除去</td>
+<td>引数はセルのみ（対象を指定できない）</td>
+<td>外部データ取込時の文字化け除去</td>
+</tr>
+<tr>
+<td><strong>TRIM</strong></td>
+<td>先頭・末尾のスペースと連続スペースを除去</td>
+<td>引数はセルのみ</td>
+<td>余分なスペースの整理</td>
+</tr>
+</table></div>
+<div class="xdemo-note">
+<strong>💡 「何を」で置換するか「どこを」で置換するか</strong><br>
+        SUBSTITUTE は「何を」（文字列の中身）で対象を特定します。REPLACE は「どこを」（位置）で特定します。「㈱をすべて株式会社に」なら SUBSTITUTE、「先頭3文字を***に」なら REPLACE です。
+      </div>
+<h3>CLEAN では消えない厄介な文字</h3>
+<p>CLEAN が除去できるのは ASCII コード 0〜31 の制御文字だけです。ノーブレークスペース（CHAR(160)）やゼロ幅スペースなど、外部データに紛れ込みやすい「見えない文字」は CLEAN では消えません。こうした文字は SUBSTITUTE で狙い撃ちします。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUBSTITUTE(CLEAN(A1), CHAR(160), "")</span>
+</div>
+<p class="code-comment">まず CLEAN で制御文字を除去し、次に SUBSTITUTE でノーブレークスペース（CHAR(160)）を削除。Webからコピペしたデータのクレンジングに頻出するパターン。</p>
+</section>
+<!-- ===== 10. 実務パターン集 ===== -->
+<section class="method-section" id="patterns">
+<h2><span class="section-num">10</span> 実務パターン集</h2>
+<div class="scenario-box">
+<h4>パターン① 会社名の正規化（㈱・㈲ &rarr; 正式名称）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUBSTITUTE(SUBSTITUTE(A1, "㈱", "株式会社"), "㈲", "有限会社")</span>
+</div>
+</div>
+<div class="scenario-box">
+<h4>パターン② 電話番号のハイフン・スペース除去</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUBSTITUTE(SUBSTITUTE(A1, "-", ""), " ", "")</span>
+</div>
+<p>ハイフンとスペースの両方を除去して数字だけにする。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン③ セル内改行の除去</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUBSTITUTE(A1, CHAR(10), "")</span>
+</div>
+<p><code>CHAR(10)</code> は Alt+Enter で入力されるセル内改行。CLEAN でも除去できますが、SUBSTITUTE のほうが「何を消しているか」が明確です。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン④ 全角スペース&rarr;半角 + 全角英数字&rarr;半角（ASC併用）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=ASC(SUBSTITUTE(A1, "　", " "))</span>
+</div>
+<p>全角スペースは ASC 関数では変換されないため、先に SUBSTITUTE で半角に置換してから ASC で英数字を半角化します。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑤ CSV用のダブルクォートエスケープ</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=""""&SUBSTITUTE(A1, """", """""")&""""</span>
+</div>
+<p>セル内のダブルクォートを2つに増やし、全体をダブルクォートで囲む。CSV出力時のエスケープ処理。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑥ Webコピペデータのクレンジング（見えない文字の除去）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TRIM(SUBSTITUTE(CLEAN(A1), CHAR(160), " "))</span>
+</div>
+<p>CLEAN で制御文字を除去 &rarr; SUBSTITUTE でノーブレークスペースを通常スペースに &rarr; TRIM で余分なスペースを整理。Web からコピペしたデータの定番クレンジング3点セット。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑦ LET で5段階の住所クレンジング</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">    s1, SUBSTITUTE(A1, "　", " "),</span>
+<span class="code-line">    s2, SUBSTITUTE(s1, "ヶ", "ケ"),</span>
+<span class="code-line">    s3, SUBSTITUTE(s2, "ッ", "ツ"),</span>
+<span class="code-line">    s4, SUBSTITUTE(s3, "丁目", "-"),</span>
+<span class="code-line">    s5, SUBSTITUTE(s4, "番地", "-"),</span>
+<span class="code-line">    s5</span>
+<span class="code-line">  )</span>
+</div>
+<p>住所の表記揺れを段階的に正規化。各ステップの意図が明確なのでメンテナンスが容易。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑧ 特定文字の出現回数を数える（SUBSTITUTE応用）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LEN(A1)-LEN(SUBSTITUTE(A1, ",", ""))</span>
+</div>
+<p>SUBSTITUTEで対象文字を削除し、元の文字数との差で出現回数を算出。カンマの数を数えてCSVのフィールド数を確認する場面などに便利。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑨ 数値の桁区切り除去（文字列&rarr;数値変換の前処理）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=VALUE(SUBSTITUTE(SUBSTITUTE(A1, ",", ""), "&yen;", ""))</span>
+</div>
+<p>「&yen;1,234,567」のような文字列からカンマと通貨記号を除去し、VALUE で数値に変換。外部システムから受け取った金額文字列の処理に頻出。</p>
+</div>
+</section>
+<!-- ===== 11. まとめ ===== -->
+<section class="goal-section" id="summary">
+<h2><span class="section-num">11</span> まとめ</h2>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">場面</th>
+<th scope="col">最適な手法</th>
+</tr>
+<tr>
+<td>置換が1〜3個でシンプル</td>
+<td class="good">SUBSTITUTE 多段ネスト</td>
+</tr>
+<tr>
+<td>置換が4個以上で可読性を重視</td>
+<td class="good">LET + SUBSTITUTE</td>
+</tr>
+<tr>
+<td>置換ルールが頻繁に追加・変更される</td>
+<td class="good">REDUCE + LAMBDA（テーブル管理）</td>
+</tr>
+<tr>
+<td>複数行に同じ置換を一括適用</td>
+<td class="good">MAP + REDUCE + LAMBDA</td>
+</tr>
+<tr>
+<td>数百〜数千パターンの大規模クレンジング</td>
+<td class="good">Power Query</td>
+</tr>
+</table></div>
+<div class="xdemo-note-good">
+<strong>✅ 覚えておくべきポイント</strong><br>
+        ① SUBSTITUTE の多段ネストは全バージョンで使えるが、<strong>4段以上は LET で書き直す</strong>のが実務的。<br>
+        ② 置換ルールが増える見込みがあるなら、最初から<strong>テーブル + REDUCE + LAMBDA</strong> で設計する。<br>
+        ③ 置換の<strong>順序</strong>は結果に影響する。具体的（長い文字列）なパターンから先に処理する。<br>
+        ④ SUBSTITUTE は<strong>大文字・小文字を区別</strong>し、<strong>ワイルドカードは使えない</strong>。<br>
+        ⑤ SUBSTITUTE は置換だけでなく、<strong>文字の削除</strong>（空文字への置換）や<strong>出現回数のカウント</strong>にも使える汎用的な関数。
+      </div>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../latest/article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
+<li><a href="../latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+<li><a href="../latest/article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
+<li><a href="../latest/article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

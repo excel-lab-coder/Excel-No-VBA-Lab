@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="10" name="difficulty">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>【不規則明細・完結編】行数がバラバラなデータの正規化展開｜Excel &times; No VBA Lab</title>
+<meta content="行数がバラバラな不規則明細を持つCOBOL帳票を、Excel数式だけで正規化展開する完結編。VBA不要の超絶技巧。" name="description">
+<meta content="COBOL不規則明細 正規化, 行数 バラバラ 展開 数式, Excel関数 帳票整形 完結, VBA不要 COBOL, 超絶技巧 Excel" name="keywords">
+<meta content="【不規則明細・完結編】行数がバラバラなデータの正規化展開｜Excel &times; No VBA Lab" property="og:title">
+<meta content="行数がバラバラな不規則明細を持つCOBOL帳票を、Excel数式だけで正規化展開する完結編。VBA不要の超絶技巧。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/cobol/formula/04_article_cobol_irregular.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "【不規則明細・完結編】行数がバラバラなデータの正規化展開",
+    "description": "行数がバラバラな不規則明細を持つCOBOL帳票を、Excel数式だけで正規化展開する完結編。VBA不要の超絶技巧。",
+    "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-no-vba-lab.com/ogp.png"}},
+    "datePublished": "2026-03-18",
+    "dateModified": "2026-03-18"
+  }
+  </script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-no-vba-lab.com/"},
+      {"@type": "ListItem", "position": 2, "name": "COBOL帳票処理", "item": "https://excel-no-vba-lab.com/#cobol"},
+      {"@type": "ListItem", "position": 3, "name": "行数バラバラの正規化展開"}
+    ]
+  }
+  </script>
+
+<!-- ページ専用のテーブル微調整 CSS（03と共通方針） -->
+<style>
+.demo-table-wrap {
+  overflow-x: auto;
+  margin: 16px 0 22px;
+  border-radius: 6px;
+  box-shadow: var(--shadow-sm);
+}
+.demo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+  background: #fff;
+  table-layout: fixed;
+}
+.demo-table th,
+.demo-table td {
+  border: 1px solid #cfd8dc;
+  padding: 6px 9px;
+  vertical-align: middle;
+  word-break: break-word;
+  line-height: 1.45;
+}
+.demo-table thead th {
+  background: #eef5fb;
+  color: #1f3b57;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+.demo-table .row-num {
+  background: #fffde7;
+  text-align: center;
+  font-weight: 700;
+  width: 38px;
+  color: #6d4c41;
+  font-size: 0.78rem;
+}
+.demo-table .col-letter {
+  text-align: center;
+  font-weight: 700;
+  background: #f5f5f5;
+  color: #888;
+}
+.demo-table .col-letter.hot { color: #d32f2f; }
+.demo-table .col-letter.warm { color: #ef6c00; }
+
+.demo-table .cell-flag-on {
+  background: #fff3cd;
+  color: #c62828;
+  text-align: center;
+  font-weight: 800;
+}
+.demo-table .cell-flag-blank { background: #fafafa; }
+.demo-table .cell-fill-1 {
+  background: #e3f2fd;
+  color: #0d47a1;
+  font-weight: 600;
+}
+.demo-table .cell-fill-2 {
+  background: #e8f5e9;
+  color: #1b5e20;
+  font-weight: 600;
+}
+.demo-table .cell-fill-3 {
+  background: #fff3e0;
+  color: #e65100;
+  font-weight: 600;
+}
+.demo-table .cell-divider {
+  background: #fafafa;
+  color: #bdbdbd;
+  text-align: center;
+  font-size: 0.72rem;
+  letter-spacing: -0.05em;
+}
+.demo-table .cell-detail { background: #fffde7; color: #5d4037; }
+.demo-table .cell-header-1 {
+  background: #bbdefb;
+  color: #0d47a1;
+  font-weight: 700;
+}
+.demo-table .cell-header-2 {
+  background: #c8e6c9;
+  color: #1b5e20;
+  font-weight: 700;
+}
+.demo-table .cell-header-3 {
+  background: #ffe0b2;
+  color: #e65100;
+  font-weight: 700;
+}
+
+.demo-table-caption {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #455a64;
+  margin: 10px 0 6px;
+  padding-left: 10px;
+  border-left: 3px solid #90a4ae;
+}
+
+/* 列幅：Step1 (A=フラグ / B=元データ / C=フィルダウン) */
+.demo-table.lay-paste col.c-num    { width: 38px; }
+.demo-table.lay-paste col.c-flag   { width: 14%; }
+.demo-table.lay-paste col.c-data   { width: 48%; }
+.demo-table.lay-paste col.c-fill   { width: 32%; }
+
+/* 列幅：Step2 (A=元データ / B=親情報) */
+.demo-table.lay-extract col.c-num   { width: 38px; }
+.demo-table.lay-extract col.c-data  { width: 55%; }
+.demo-table.lay-extract col.c-fill  { width: 40%; }
+
+/* パイプラインボックス（3ステップの図） */
+.pipeline-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  background: #f5f8ff;
+  border: 1px solid #c5cae9;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 16px 0 24px;
+  font-size: 0.92rem;
+}
+.pipeline-box .step {
+  background: #fff;
+  border: 1px solid #90caf9;
+  color: #1565c0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85em;
+}
+.pipeline-box .arrow {
+  color: #1976d2;
+  font-weight: 900;
+  font-size: 1.1em;
+}
+
+/* 結果テーブル（Excel風） */
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 22px;
+  font-size: 0.92rem;
+  box-shadow: var(--shadow-sm);
+}
+.result-table th {
+  background: #1565c0;
+  color: #fff;
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 700;
+}
+.result-table td {
+  border: 1px solid #cfd8dc;
+  padding: 7px 12px;
+  background: #fff;
+}
+.result-table tr:nth-child(even) td {
+  background: #f7faff;
+}
+.result-table .num { text-align: center; font-variant-numeric: tabular-nums; }
+.result-table .yen { text-align: right; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 768px) {
+  .demo-table { font-size: 0.76rem; }
+}
+</style>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+  <div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#cobol">COBOLデータ整形</a><span>&gt;</span>
+<strong>不規則明細・完結編</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-maniac" style="background-color:#455a64;color:#fff;">難易度：&starf;&starf;&starf;&starf;&star;（実践応用）</span>
+<span class="badge badge-all">全バージョン対応あり</span>
+<span class="badge badge-maniac">COBOL/マニアック</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">【不規則明細・完結編】行数がバラバラなデータの「正規化展開」</h1>
+</div>
+<!-- ========== 目次 ========== -->
+<div class="toc-box">
+<h3>この記事の内容</h3>
+<ol>
+<li><a href="#sec-intro">伝票ごとに明細行数が違う帳票の攻略</a></li>
+<li><a href="#sec-data">今回の帳票データ</a></li>
+<li><a href="#sec-pipeline">超絶技巧編と同じ3ステップで正規化する</a></li>
+<li><a href="#sec-why">なぜ行数バラバラでも同じ数式で処理できるのか</a></li>
+<li><a href="#sec-speed">速度面の注意</a></li>
+<li><a href="#sec-multiline">本当に難易度が跳ね上がるのは「マルチラインレコード」</a></li>
+<li><a href="#sec-summary">総まとめ</a></li>
+</ol>
+</div>
+<!-- ==========================================================
+         導入
+      ========================================================== -->
+<section class="goal-section" id="sec-intro">
+<h2><span class="icon">💡</span> 伝票ごとに明細行数が違う帳票の攻略</h2>
+<p>前回の<a href="03_article_cobol_expert.html">超絶技巧編</a>では、「ヘッダー行（親情報）を明細行に紐付けるフィルダウン」と「フラグ＋抽出＋MIDB分解」のパイプラインを学びました。</p>
+<p>あの記事で紹介したデータは、各伝票の明細行数がたまたま揃っていました。では<strong>伝票ごとに明細の件数がバラバラだったら？</strong> &horbar; 結論から言えば、<strong>超絶技巧編と全く同じパイプラインがそのまま機能します</strong>。</p>
+<div class="xdemo-note-good">
+<strong>このページのポイント</strong><br>
+          ・明細行数がバラバラでもパイプラインは一切変更不要であることを確認する。<br>
+          ・本当に難易度が跳ね上がる「マルチラインレコード」について、攻略の考え方を押さえる。
+        </div>
+</section>
+<!-- ==========================================================
+         前提データ
+      ========================================================== -->
+<section class="method-section" id="sec-data">
+<h2>【2】今回の帳票データ</h2>
+<p>以下のようなCOBOL帳票を想定します。第一商事は3件、第二物産は2件、第三工業は4件と、<strong>伝票ごとに明細行の件数がバラバラ</strong>です。超絶技巧編と同じフォーマット・同じバイト位置ですが、件数だけが異なります。</p>
+<div class="code-readonly" data-lang="テキスト">
+<span class="code-line">■伝票 9001 ㈱第一商事</span>
+<span class="code-line">-------------------------------</span>
+<span class="code-line">  A 101 消しゴム        500</span>
+<span class="code-line">  A 102 えんぴつ        300</span>
+<span class="code-line">  A 103 ノート          800</span>
+<span class="code-line">-------------------------------</span>
+<span class="code-line">■伝票 9002 ㈱第二物産</span>
+<span class="code-line">-------------------------------</span>
+<span class="code-line">  A 201 ボールペン      120</span>
+<span class="code-line">  A 202 クリップ         60</span>
+<span class="code-line">-------------------------------</span>
+<span class="code-line">■伝票 9003 ㈱第三工業</span>
+<span class="code-line">-------------------------------</span>
+<span class="code-line">  A 301 定規            150</span>
+<span class="code-line">  A 302 ハサミ          400</span>
+<span class="code-line">  A 303 テープ           90</span>
+<span class="code-line">  A 304 のり            110</span>
+</div>
+<div class="xdemo-note-info">
+<strong>行種の判定</strong><br>
+          ヘッダー行は「■」で始まり、明細行は先頭付近に「A」があります。区切り線（---）やその他の行はゴミ行です。この判定条件は超絶技巧編と全く同じです。
+        </div>
+</section>
+<!-- ==========================================================
+         パイプライン確認
+      ========================================================== -->
+<section class="method-section" id="sec-pipeline">
+<h2>【3】超絶技巧編と同じ3ステップで正規化する</h2>
+<p>超絶技巧編で構築したパイプラインをそのまま適用します。流れを改めて確認しましょう。</p>
+<div class="pipeline-box">
+<span class="step">貼付シート</span>
+<span class="arrow">&rarr;</span>
+<span class="step">フラグ列（明細行にROW番号）</span>
+<span class="arrow">&rarr;</span>
+<span class="step">フィルダウン列（親情報を埋める）</span>
+<span class="arrow">&rarr;</span>
+<span class="step">抽出シート</span>
+<span class="arrow">&rarr;</span>
+<span class="step">MIDB分解</span>
+</div>
+<!-- Step 1 -->
+<div class="attack-box">
+<h3 class="attack-title">Step 1 &horbar; 貼付シート：フラグ列とフィルダウン列を作る</h3>
+<p>貼付シートのB列にデータを貼り付け、A列（フラグ列）とC列（フィルダウン列）に数式を入れます。</p>
+<p class="code-label">A列（フラグ列）の数式 &horbar; A2に入れて下方コピー</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(MIDB(B2,3,1)="A", ROW(), "")</span>
+</div>
+<p>明細行の判定位置（3バイト目）に「A」があればROW番号を返し、それ以外は空白にします。</p>
+<p class="code-label">C列（フィルダウン列）の数式 &horbar; C2に入れて下方コピー</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(MIDB(B2,1,2)="■", B2, C1)</span>
+</div>
+<p>行の先頭が「■」（ヘッダー行）であればそのデータを取り込み、そうでなければ直上セルの値を引き継ぎます。</p>
+<div class="xdemo-wrap">
+<span class="xdemo-step-label">貼付シート（A列＝フラグ、B列＝元データ、C列＝フィルダウン）</span>
+<table class="xdemo-table">
+<tr><td class="xd-col"></td><td class="xd-col">A（フラグ）</td><td class="xd-col">B（元データ）</td><td class="xd-col">C（フィルダウン）</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-head">フラグ</td><td class="xd-head">元データ</td><td class="xd-head">親情報</td></tr>
+<tr><td class="xd-row">2</td><td class="xd-result"></td><td class="xd-data">■伝票 9001 ㈱第一商事</td><td class="xd-result">■伝票 9001 ㈱第一商事</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-result"></td><td class="xd-data">-------------------------------</td><td class="xd-result">■伝票 9001 ㈱第一商事</td></tr>
+<tr><td class="xd-row">4</td><td class="xd-hit">4</td><td class="xd-data">  A 101 消しゴム        500</td><td class="xd-result">■伝票 9001 ㈱第一商事</td></tr>
+<tr><td class="xd-row">5</td><td class="xd-hit">5</td><td class="xd-data">  A 102 えんぴつ        300</td><td class="xd-result">■伝票 9001 ㈱第一商事</td></tr>
+<tr><td class="xd-row">6</td><td class="xd-hit">6</td><td class="xd-data">  A 103 ノート          800</td><td class="xd-result">■伝票 9001 ㈱第一商事</td></tr>
+<tr><td class="xd-row">7</td><td class="xd-result"></td><td class="xd-data">-------------------------------</td><td class="xd-result">■伝票 9001 ㈱第一商事</td></tr>
+<tr><td class="xd-row">8</td><td class="xd-result"></td><td class="xd-data">■伝票 9002 ㈱第二物産</td><td class="xd-result">■伝票 9002 ㈱第二物産</td></tr>
+<tr><td class="xd-row">9</td><td class="xd-result"></td><td class="xd-data">-------------------------------</td><td class="xd-result">■伝票 9002 ㈱第二物産</td></tr>
+<tr><td class="xd-row">10</td><td class="xd-hit">10</td><td class="xd-data">  A 201 ボールペン      120</td><td class="xd-result">■伝票 9002 ㈱第二物産</td></tr>
+<tr><td class="xd-row">11</td><td class="xd-hit">11</td><td class="xd-data">  A 202 クリップ         60</td><td class="xd-result">■伝票 9002 ㈱第二物産</td></tr>
+<tr><td class="xd-row">12</td><td class="xd-result"></td><td class="xd-data">-------------------------------</td><td class="xd-result">■伝票 9002 ㈱第二物産</td></tr>
+<tr><td class="xd-row">13</td><td class="xd-result"></td><td class="xd-data">■伝票 9003 ㈱第三工業</td><td class="xd-result">■伝票 9003 ㈱第三工業</td></tr>
+<tr><td class="xd-row">14</td><td class="xd-result"></td><td class="xd-data">-------------------------------</td><td class="xd-result">■伝票 9003 ㈱第三工業</td></tr>
+<tr><td class="xd-row">15</td><td class="xd-hit">15</td><td class="xd-data">  A 301 定規            150</td><td class="xd-result">■伝票 9003 ㈱第三工業</td></tr>
+<tr><td class="xd-row">16</td><td class="xd-hit">16</td><td class="xd-data">  A 302 ハサミ          400</td><td class="xd-result">■伝票 9003 ㈱第三工業</td></tr>
+<tr><td class="xd-row">17</td><td class="xd-hit">17</td><td class="xd-data">  A 303 テープ           90</td><td class="xd-result">■伝票 9003 ㈱第三工業</td></tr>
+<tr><td class="xd-row">18</td><td class="xd-hit">18</td><td class="xd-data">  A 304 のり            110</td><td class="xd-result">■伝票 9003 ㈱第三工業</td></tr>
+</table>
+</div>
+<div class="xdemo-note-good">
+<strong>ポイント</strong><br>
+            フラグもフィルダウンも「今の行がヘッダーか明細かゴミか」を判定しているだけです。伝票ごとの明細が何件あるかという情報は一切参照していません。だから<strong>行数がバラバラでも数式は全く同じ</strong>です。
+          </div>
+</div>
+<!-- Step 2 -->
+<div class="attack-box">
+<h3 class="attack-title">Step 2 &horbar; 抽出シート：明細行だけを取り出す</h3>
+<p>抽出シートでは、フラグ列に値がある行（＝明細行）だけを取り出します。</p>
+<p class="code-label-good">Excel 2021 / 2024 / Microsoft 365 などの場合（FILTER関数）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=FILTER(貼付シート!B:C, 貼付シート!A:A&lt;&gt;"")</span>
+</div>
+<p class="code-label-good">全バージョン対応（INDEX + SMALL + IFERROR）</p>
+<p class="code-label">抽出シート!A2（元データ）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(INDEX(貼付シート!B:B, SMALL(IF(貼付シート!A$2:A$50000&lt;&gt;"", ROW(貼付シート!A$2:A$50000)), ROW()-1)), "")</span>
+</div>
+<p class="code-label">抽出シート!B2（親情報）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(INDEX(貼付シート!C:C, SMALL(IF(貼付シート!A$2:A$50000&lt;&gt;"", ROW(貼付シート!A$2:A$50000)), ROW()-1)), "")</span>
+</div>
+<div class="code-readonly" data-lang="補足">
+<span class="code-line">※ 全バージョン版は Ctrl+Shift+Enter で配列確定。</span>
+</div>
+<div class="xdemo-wrap">
+<span class="xdemo-step-label">抽出シート（明細行のみ）</span>
+<table class="xdemo-table">
+<tr><td class="xd-col"></td><td class="xd-col">A（元データ）</td><td class="xd-col">B（親情報）</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-head">元データ</td><td class="xd-head">親情報</td></tr>
+<tr><td class="xd-row">2</td><td class="xd-data">  A 101 消しゴム        500</td><td class="xd-result">■伝票 9001 ㈱第一商事</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-data">  A 102 えんぴつ        300</td><td class="xd-result">■伝票 9001 ㈱第一商事</td></tr>
+<tr><td class="xd-row">4</td><td class="xd-data">  A 103 ノート          800</td><td class="xd-result">■伝票 9001 ㈱第一商事</td></tr>
+<tr><td class="xd-row">5</td><td class="xd-data">  A 201 ボールペン      120</td><td class="xd-result">■伝票 9002 ㈱第二物産</td></tr>
+<tr><td class="xd-row">6</td><td class="xd-data">  A 202 クリップ         60</td><td class="xd-result">■伝票 9002 ㈱第二物産</td></tr>
+<tr><td class="xd-row">7</td><td class="xd-data">  A 301 定規            150</td><td class="xd-result">■伝票 9003 ㈱第三工業</td></tr>
+<tr><td class="xd-row">8</td><td class="xd-data">  A 302 ハサミ          400</td><td class="xd-result">■伝票 9003 ㈱第三工業</td></tr>
+<tr><td class="xd-row">9</td><td class="xd-data">  A 303 テープ           90</td><td class="xd-result">■伝票 9003 ㈱第三工業</td></tr>
+<tr><td class="xd-row">10</td><td class="xd-data">  A 304 のり            110</td><td class="xd-result">■伝票 9003 ㈱第三工業</td></tr>
+</table>
+</div>
+<p>第一商事は3件、第二物産は2件、第三工業は4件 &horbar; 件数がバラバラでも、明細行だけが正しく親情報と一緒に抽出されています。</p>
+</div>
+<!-- Step 3 -->
+<div class="attack-box">
+<h3 class="attack-title">Step 3 &horbar; MIDB分解：固定長データを列に分ける</h3>
+<p>抽出シートのデータをMIDBで切り出して、最終的な正規化テーブルを作ります。ここも超絶技巧編と同じ手法です。</p>
+<p class="code-label">C列：取引先</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TRIM(MIDB(B2, 13, 20))</span>
+</div>
+<p class="code-label">D列：商品コード</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=MIDB(A2, 5, 3)*1</span>
+</div>
+<p class="code-label">E列：商品名</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TRIM(MIDB(A2, 9, 16))</span>
+</div>
+<p class="code-label">F列：金額</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TRIM(MIDB(A2, 25, 8))*1</span>
+</div>
+<div class="code-readonly" data-lang="補足">
+<span class="code-line">※ バイト位置は帳票仕様に合わせて調整してください。超絶技巧編と同一の位置指定です。</span>
+</div>
+</div>
+<!-- 最終結果 -->
+<h3 style="margin-top:25px;">最終的な正規化テーブル</h3>
+<table class="format-table">
+<tr><th>取引先</th><th>商品コード</th><th>商品名</th><th>金額</th></tr>
+<tr><td>㈱第一商事</td><td class="text-center">101</td><td>消しゴム</td><td class="text-right">500</td></tr>
+<tr><td>㈱第一商事</td><td class="text-center">102</td><td>えんぴつ</td><td class="text-right">300</td></tr>
+<tr><td>㈱第一商事</td><td class="text-center">103</td><td>ノート</td><td class="text-right">800</td></tr>
+<tr><td>㈱第二物産</td><td class="text-center">201</td><td>ボールペン</td><td class="text-right">120</td></tr>
+<tr><td>㈱第二物産</td><td class="text-center">202</td><td>クリップ</td><td class="text-right">60</td></tr>
+<tr><td>㈱第三工業</td><td class="text-center">301</td><td>定規</td><td class="text-right">150</td></tr>
+<tr><td>㈱第三工業</td><td class="text-center">302</td><td>ハサミ</td><td class="text-right">400</td></tr>
+<tr><td>㈱第三工業</td><td class="text-center">303</td><td>テープ</td><td class="text-right">90</td></tr>
+<tr><td>㈱第三工業</td><td class="text-center">304</td><td>のり</td><td class="text-right">110</td></tr>
+</table>
+<div class="xdemo-note-good">
+<strong>パイプラインが行数に依存しない理由</strong><br>
+          各ステップ（フラグ・フィルダウン・抽出・MIDB分解）は、すべて<strong>「今の行がヘッダーか明細かゴミか」</strong>という行種の判定だけで動いています。1伝票に明細が何行あるかという情報は一切必要としません。だから行数が固定でもバラバラでも、同じ数式がそのまま機能するのです。
+        </div>
+</section>
+<!-- ==========================================================
+         核心
+      ========================================================== -->
+<section class="method-section" id="sec-why">
+<h2>【4】なぜ行数バラバラでも同じ数式で処理できるのか</h2>
+<p>改めて核心を整理します。パイプライン方式（フラグ＋フィルダウン＋抽出＋MIDB分解）は<strong>「今の行がヘッダーか明細かゴミか」という行種の判定だけで動いています</strong>。1伝票に明細が何行あるかという情報は一切必要としません。</p>
+<p>フラグ列は「3バイト目がAなら明細」と判定し、フィルダウン列は「先頭が■ならヘッダー」と判定する。この2つの判定は各行が自己完結しているため、前後の行数構成に一切影響されません。抽出シートもフラグが付いた行を拾うだけなので、3件でも2件でも4件でも正しく動きます。</p>
+<div class="xdemo-note">
+<strong>覚えておくべき原則</strong><br>
+          パイプライン方式は行数の規則性に依存しない。行種の判定だけで動く汎用的な手法であり、あらゆる帳票構造に対応できます。
+        </div>
+</section>
+<!-- ==========================================================
+         速度面の注意
+      ========================================================== -->
+<section class="method-section" id="sec-speed">
+<h2>【5】速度面の注意</h2>
+<p>超絶技巧編で解説した速度面の注意はここでも同様に当てはまります。</p>
+<p>COBOL帳票は貼付シートの行数が10万〜30万行になることがあります。MIDB分解のような重い計算を全行に適用すると処理が極端に遅くなるため、<strong>貼付シートではフラグとフィルダウンだけを行い、MIDB分解は抽出シート（明細行だけに絞った後）で実行する</strong>のが鉄則です。</p>
+<p>例えば30万行の帳票で明細行が5,000行なら、MIDB分解の対象が60分の1に削減されます。この設計思想がパイプライン方式の速度上の利点です。</p>
+<div class="xdemo-note-info">
+<strong>速度チューニングの詳細</strong><br>
+          MATCH方式による高速参照や、対応環境でのSCAN＋FILTERによるワンステップ処理については<a href="03_article_cobol_expert.html">超絶技巧編</a>を参照してください。
+        </div>
+</section>
+<!-- ==========================================================
+         マルチラインレコード
+      ========================================================== -->
+<section class="method-section" id="sec-multiline">
+<h2>【6】本当に難易度が跳ね上がるのは「1明細が複数行に跨るケース」</h2>
+<p>ここまで見てきたように、伝票ごとの明細「件数」がバラバラなだけであれば、超絶技巧編のパイプラインをそのまま適用するだけで対処できます。</p>
+<p>しかし実務では、さらにやっかいなケースが存在します。それは<strong>「1つの明細データ自体が2行以上に跨って記述されている」</strong>場合です。これが本当に厄介で、パイプラインをそのまま適用しただけでは解決しません。</p>
+<p>COBOL帳票は印刷帳票のイメージをそのまま出力しているため、1つの明細の情報が<strong>人間が見やすいように複数行に分けて記述される</strong>ことがよくあります。例えば以下のような形です。</p>
+<div class="code-readonly" data-lang="テキスト">
+<span class="code-line">■伝票 9001 ㈱第一商事</span>
+<span class="code-line">-------------------------------</span>
+<span class="code-line">  A 101 消しゴム（特大）       &larr; 明細①の1行目（コード・商品名）</span>
+<span class="code-line">        100個  単価50円          &larr; 明細①の2行目（数量・単価）</span>
+<span class="code-line">        納期: 2026/04/01         &larr; 明細①の3行目（納期）</span>
+<span class="code-line">  A 102 えんぴつ               &larr; 明細②の1行目</span>
+<span class="code-line">        150個  単価30円          &larr; 明細②の2行目</span>
+<span class="code-line">        納期: 2026/04/15         &larr; 明細②の3行目</span>
+</div>
+<p>このように<strong>1つの明細が2行・3行に分かれている「マルチラインレコード」</strong>は、印刷レイアウトの都合でごく当たり前に発生します。各行のMIDB位置（何バイト目に何がある）は固定ですが、1行目にはコードと商品名、2行目には数量と単価、3行目には納期&hellip;というように<strong>情報が行をまたいで分散している</strong>のが特徴です。</p>
+<h3 style="color:#b71c1c;border-bottom:2px solid #ffcdd2;padding-bottom:5px;margin-top:25px;">攻略の考え方：貼付シートの作業列で「1行にまとめる」前処理を行う</h3>
+<p>マルチラインレコードに対処するための基本的な考え方は、<strong>貼付シートの作業列を増やして、各行からMIDBで必要な部分だけを切り出し、それらを1行に集約する</strong>というものです。</p>
+<p>COBOL帳票は固定長データであるため、<strong>「明細の1行目は何バイト目にコードがある」「2行目は何バイト目に数量がある」「3行目は何バイト目に納期がある」という位置の規則性は必ず存在します</strong>。この規則性をまず目視で読み解くことが最初のステップです。</p>
+<p>規則性を把握したら、貼付シートに作業列を追加して各行からMIDBでパーツを切り出します。そして明細の1行目の行に対して、直下の2行目・3行目の情報を作業列で横に集約すれば、<strong>「元は3行に分かれていたデータが、1行のレコードとして揃っている」</strong>状態を作ることができます。あとはその作業列に情報が揃った行だけをフラグで拾い、通常のパイプラインに乗せるだけです。</p>
+<div class="xdemo-note-warn">
+<strong>ただし、実際のパターンは帳票ごとに千差万別です。</strong><br>
+          「明細が常に3行セット」なのか「2行目・3行目があったりなかったり」なのか、帳票によって構造が全く異なります。そのため本ページでは具体的な数式パターンを網羅することはせず、<strong>「まず規則性を目視で読み解き、作業列で1行にまとめてからパイプラインに乗せる」</strong>という考え方の原則だけをお伝えしています。
+        </div>
+<div class="xdemo-note-danger">
+<strong>マルチラインレコードが難しい理由</strong><br>
+          明細の1行目・2行目・3行目で「行の種類を区別する判定条件」を別々に用意した上で、それらを横に結合する仕組みが必要になります。フラグの種類が増え、抽出ロジックも複雑化するため、本シリーズで扱っている「1明細＝1行」の帳票とは根本的に設計が変わります。
+        </div>
+<div class="xdemo-note-good">
+<strong>難易度の目安</strong><br>
+<strong>明細の「件数」がバラバラ</strong>（伝票ごとに明細行数が違う） &rarr; <strong>超絶技巧編と同じ手法で対応可能</strong><br>
+<strong>1明細が「複数行」に跨っている</strong>（マルチラインレコード） &rarr; <strong>規則性の解析＋作業列での結合が必要で、難易度が大きく上がる</strong>
+</div>
+</section>
+<!-- ==========================================================
+         総まとめ
+      ========================================================== -->
+<section class="goal-section" id="sec-summary" style="margin-top:40px;background:linear-gradient(135deg,#f5f8ff 0%,#e8eaf6 100%);border-radius:10px;padding:24px;">
+<h2><span class="icon">📝</span> 総まとめ</h2>
+<p>伝票ごとの明細行数がバラバラでも、超絶技巧編で学んだ「フラグ＋フィルダウン＋抽出＋MIDB分解」のパイプラインは<strong>全く同じ数式でそのまま機能します</strong>。パイプラインは各行の「種類」だけを判定しており、行数の規則性には依存しないためです。</p>
+<p>本当に難易度が上がるのは「1明細が複数行に跨るマルチラインレコード」のケースです。COBOL帳票は印刷レイアウトに合わせて1明細を複数行に分割することが珍しくなく、この場合は帳票の規則性を自分で読み解き、貼付シートの作業列で1行にまとめる前処理が必要になります。ただし、明細の件数が違うだけであれば恐れる必要はありません。</p>
+<div class="xdemo-note-good">
+<strong>シリーズ全体の振り返り</strong><br>
+<strong><a href="01_article_cobol_basic.html">【基本編】MIDB切り出し・浄化・型変換</a></strong> &hellip; 固定長データの基本的な切り出しと型変換のテンプレ。<br>
+<strong><a href="02_article_cobol_advanced.html">【応用編】不要行の除外と横展開</a></strong> &hellip; ROWフラグによる行フィルタリングと固定行数の横展開。<br>
+<strong><a href="03_article_cobol_expert.html">【超絶技巧編】ヘッダー紐付け・フィルダウン</a></strong> &hellip; 親情報のフィルダウンと抽出シートでのMIDB分解。速度チューニング。<br>
+<strong>【不規則明細・完結編】不規則明細の正規化（本ページ）</strong> &hellip; 行数バラバラでも同じパイプラインで正規化できることの確認。マルチラインレコードへの対処の考え方。
+        </div>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ(Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab — 制限環境こそが最高の教師。</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Excel 10面ラベル印刷 &horbar; Print_Area数式で空白シールを自動除外｜Excel &times; No VBA Lab</title>
+<meta content="Excelで10面ラベルシート印刷をVBA・Word不要で実現。Print_Area数式を使いデータ件数に応じて印刷範囲が自動伸縮する実務テクニック。" name="description">
+<meta content="Excel ラベル印刷 10面, Print_Area 数式, VBA不要 ラベル, 宛名シール 印刷 Excel, 印刷範囲 自動" name="keywords">
+<meta content="Excel 10面ラベル印刷 &horbar; Print_Area数式で空白シールを自動除外" property="og:title">
+<meta content="Excelで10面ラベルシート印刷をVBA・Word不要で実現。Print_Area数式を使いデータ件数に応じて印刷範囲が自動伸縮する実務テクニック。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/others/print/article_label_print.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<style>
+    /* ===== article-specific styles ===== */
+    .formula-box .tag{position:absolute;top:8px;right:12px;font-size:.65rem;background:#0078d4;color:#fff;padding:2px 10px;border-radius:4px}
+
+    /* Excel chrome */
+    .excel-wrap{border:1px solid #d0d0d0;border-radius:8px;overflow:hidden;margin:24px 0;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .excel-ribbon{background:linear-gradient(180deg,#217346 0%,#185c37 100%);padding:6px 16px;display:flex;align-items:center;gap:10px}
+    .excel-ribbon span{color:#fff;font-size:.75rem;opacity:.85}
+    .excel-ribbon .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .excel-ribbon .dot.r{background:#ff605c}.excel-ribbon .dot.y{background:#ffbd44}.excel-ribbon .dot.g{background:#00ca4e}
+    .sheet-tabs{display:flex;background:#e8e8e8;border-top:1px solid #c8c8c8}
+    .sheet-tab{padding:6px 18px;font-size:.78rem;cursor:pointer;border-right:1px solid #c8c8c8;background:#e8e8e8;transition:.15s}
+    .sheet-tab:hover{background:#f5f5f5}
+    .sheet-tab.active{background:#fff;font-weight:700;border-bottom:2px solid #217346}
+    .sheet-body{padding:0;background:#fff}
+    .sheet-panel{display:none;padding:20px}
+    .sheet-panel.active{display:block}
+
+    /* Excel grid */
+    .excel-grid{width:100%;border-collapse:collapse;font-size:.78rem}
+    .excel-grid th,.excel-grid td{border:1px solid #c8c8c8;padding:4px 8px;text-align:center;min-width:56px}
+    .excel-grid th{background:#f0f0f0;font-weight:600;color:#333}
+    .excel-grid .row-num{background:#f0f0f0;font-weight:600;color:#555;width:36px}
+    .excel-grid .formula-cell{background:#fffbe6;font-family:monospace;font-size:.72rem;text-align:left}
+
+    /* A4 label card */
+    .a4-row{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;margin:20px 0}
+    .a4-paper{width:260px;min-height:370px;border:2px solid #888;border-radius:4px;background:#fff;padding:16px 12px;box-shadow:2px 4px 12px rgba(0,0,0,.1);display:flex;flex-direction:column;position:relative}
+    .a4-paper .a4-title{font-size:.7rem;font-weight:700;text-align:center;margin-bottom:10px;color:#333}
+    .a4-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(5,1fr);gap:6px;flex:1}
+    .label-face{border:1.5px dashed #aaa;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.68rem;padding:6px 4px;text-align:center;line-height:1.3;min-height:46px}
+    .label-face.filled{background:#e6f4ea;border-color:#34a853;color:#1a7431;font-weight:600}
+    .label-face.empty{background:#f5f5f5;border-color:#ccc;color:#999}
+    .a4-paper .a4-badge{position:absolute;top:-12px;right:-8px;background:#0078d4;color:#fff;font-size:.6rem;padding:2px 10px;border-radius:10px;font-weight:700}
+    .a4-paper .a4-badge.skip{background:#d83b01}
+    .a4-overlay{position:absolute;inset:0;background:rgba(255,255,255,.75);display:flex;align-items:center;justify-content:center;border-radius:4px}
+    .a4-overlay span{background:#d83b01;color:#fff;padding:6px 16px;border-radius:6px;font-size:.82rem;font-weight:700}
+
+    .format-table .em{background:#e6f4ea;font-weight:600}
+
+    /* step list */
+    .step-list{counter-reset:step;margin:16px 0}
+    .step-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start}
+    .step-num{flex-shrink:0;width:32px;height:32px;background:#217346;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem}
+    .step-text{flex:1;font-size:.88rem;line-height:1.6}
+
+    .toc{background:#f8f9fa;border:1px solid #e0e0e0;border-radius:8px;padding:20px 28px;margin:20px 0}
+    .toc ul{list-style:none;padding:0;margin:0}
+    .toc li{padding:4px 0}
+    .toc a{text-decoration:none;color:#0078d4;font-size:.88rem}
+    .toc a:hover{text-decoration:underline}
+  </style>
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Excel 10面ラベル印刷 \u0026horbar; Print_Area数式で空白シールを自動除外","description":"Excelで10面ラベルシート印刷をVBA・Word不要で実現。Print_Area数式を使いデータ件数に応じて印刷範囲が自動伸縮する実務テクニック。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/others/print/article_label_print.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span><a href="../../index.html#others">小技</a><span>&gt;</span><strong>10面ラベル印刷</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-all">全バージョン</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">Excel 10面ラベル印刷 &horbar; Print_Area数式で空白シールを自動除外</h1>
+</div>
+<div class="toc">
+<p><strong>目次</strong></p>
+<ul>
+<li><a href="#sec1">1. この記事でできること</a></li>
+<li><a href="#sec2">2. 前提：10面ラベルシールの構成</a></li>
+<li><a href="#sec3">3. Excel シートの設計</a></li>
+<li><a href="#sec4">4. ラベルシートに数式を仕込む</a></li>
+<li><a href="#sec5">5. Print_Area に動的数式を設定する</a></li>
+<li><a href="#sec6">6. データ件数と印刷ページの対応</a></li>
+<li><a href="#sec7">7. 印刷手順（実際の操作フロー）</a></li>
+<li><a href="#sec8">8. 10面ラベルの構成イメージ</a></li>
+<li><a href="#sec9">9. トラブルシューティング</a></li>
+<li><a href="#sec10">10. まとめ</a></li>
+</ul>
+</div>
+<!-- ===== sec1 ===== -->
+<h2 id="sec1">1. この記事でできること</h2>
+<p>市販の10面ラベルシール（A4に左右2列&times;5段＝10面）にExcelだけで宛名やバーコードを印刷します。データ件数に応じて Print_Area が自動的に伸縮するため、8件しかデータがなければ1枚目だけが印刷され、空白シールだけの2枚目は出力されません。VBAもWordの差し込み印刷も使わないので、Excelの基本操作ができる人に渡してそのまま作業してもらえます。</p>
+<!-- ===== sec2 ===== -->
+<h2 id="sec2">2. 前提：10面ラベルシールの構成</h2>
+<p>A4用紙1枚に10面のラベルが並びます。Excel上では1面あたり5行を使い、左右2列で合計6列（A〜F列）を使用します。1ページ＝5段&times;5行＝50行です。この「50行で1ページ」という単位が Print_Area の CEILING 計算の基礎になります。</p>
+<div class="a4-row">
+<!-- 1枚目 -->
+<div class="a4-paper">
+<span class="a4-badge">1ページ目</span>
+<div class="a4-title">シール1枚目（1〜50行）&horbar; データ10件で全面使用</div>
+<div class="a4-grid">
+<div class="label-face filled">① 山田太郎<br>東京都&hellip;</div>
+<div class="label-face filled">② 鈴木花子<br>大阪府&hellip;</div>
+<div class="label-face filled">③ 佐藤一郎<br>北海道&hellip;</div>
+<div class="label-face filled">④ 高橋美咲<br>福岡県&hellip;</div>
+<div class="label-face filled">⑤ 田中健太<br>愛知県&hellip;</div>
+<div class="label-face filled">⑥ 渡辺裕子<br>神奈川&hellip;</div>
+<div class="label-face filled">⑦ 伊藤誠<br>埼玉県&hellip;</div>
+<div class="label-face filled">⑧ 中村由美<br>千葉県&hellip;</div>
+<div class="label-face filled">⑨ 小林大輔<br>京都府&hellip;</div>
+<div class="label-face filled">⑩ 加藤陽子<br>兵庫県&hellip;</div>
+</div>
+</div>
+<!-- 2枚目 -->
+<div class="a4-paper">
+<span class="a4-badge">2ページ目</span>
+<div class="a4-title">シール2枚目（51〜100行）&horbar; データ5件＋空き5面</div>
+<div class="a4-grid">
+<div class="label-face filled">⑪ 吉田真一<br>静岡県&hellip;</div>
+<div class="label-face filled">⑫ 松本幸恵<br>広島県&hellip;</div>
+<div class="label-face filled">⑬ 井上隆<br>宮城県&hellip;</div>
+<div class="label-face filled">⑭ 木村彩<br>新潟県&hellip;</div>
+<div class="label-face filled">⑮ 林正樹<br>長野県&hellip;</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+</div>
+</div>
+<!-- 3枚目 -->
+<div class="a4-paper" style="opacity:.55">
+<span class="a4-badge skip">印刷しない</span>
+<div class="a4-title">シール3枚目（101〜150行）&horbar; データ0件</div>
+<div class="a4-grid">
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+</div>
+<div class="a4-overlay"><span>Print_Area 外 &rarr; 出力なし</span></div>
+</div>
+</div>
+<!-- ===== sec3 ===== -->
+<h2 id="sec3">3. Excel シートの設計</h2>
+<p>ブックには最低2つのシートを作ります。「宛先リスト」にデータを一覧で入力し、「ラベル」シートが印刷用のレイアウトになります。</p>
+<div class="excel-wrap">
+<div class="excel-ribbon">
+<span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+<span>ラベル印刷.xlsx</span>
+</div>
+<div class="sheet-tabs" data-group="label-design">
+<div class="sheet-tab active" onclick="switchSheet('label-design','tab-label')">ラベル</div>
+<div class="sheet-tab" onclick="switchSheet('label-design','tab-list')">宛先リスト</div>
+</div>
+<div class="sheet-body">
+<!-- ラベルシート -->
+<div class="sheet-panel active" id="tab-label">
+<p style="font-size:.82rem;color:#555;margin-bottom:10px">▼ ラベルシートの Excel 上の構成（A〜F列、1面＝5行、1ページ＝50行）</p>
+<table class="excel-grid">
+<tr>
+<th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th>
+</tr>
+<tr>
+<td class="row-num">1</td>
+<td class="formula-cell" colspan="3">〒 =VLOOKUP(...)</td>
+<td class="formula-cell" colspan="3">〒 =VLOOKUP(...)</td>
+</tr>
+<tr>
+<td class="row-num">2</td>
+<td class="formula-cell" colspan="3">住所1</td>
+<td class="formula-cell" colspan="3">住所1</td>
+</tr>
+<tr>
+<td class="row-num">3</td>
+<td class="formula-cell" colspan="3">住所2</td>
+<td class="formula-cell" colspan="3">住所2</td>
+</tr>
+<tr>
+<td class="row-num">4</td>
+<td class="formula-cell" colspan="3">会社名・部署</td>
+<td class="formula-cell" colspan="3">会社名・部署</td>
+</tr>
+<tr>
+<td class="row-num">5</td>
+<td class="formula-cell" colspan="3">氏名  様</td>
+<td class="formula-cell" colspan="3">氏名  様</td>
+</tr>
+<tr><td class="row-num" style="background:#e6f4ea">6</td><td colspan="6" style="text-align:center;color:#999;font-size:.72rem">&boxh;&boxh; 2面目開始 &boxh;&boxh;</td></tr>
+<tr>
+<td class="row-num">6</td>
+<td class="formula-cell" colspan="3">〒 =VLOOKUP(...)</td>
+<td class="formula-cell" colspan="3">〒 =VLOOKUP(...)</td>
+</tr>
+<tr>
+<td class="row-num">&hellip;</td>
+<td colspan="6" style="text-align:center;color:#aaa">（以降 5行単位で繰り返し）</td>
+</tr>
+<tr>
+<td class="row-num">46</td>
+<td class="formula-cell" colspan="3">〒 =VLOOKUP(...)</td>
+<td class="formula-cell" colspan="3">〒 =VLOOKUP(...)</td>
+</tr>
+<tr>
+<td class="row-num">47-50</td>
+<td class="formula-cell" colspan="3">住所〜氏名</td>
+<td class="formula-cell" colspan="3">住所〜氏名</td>
+</tr>
+</table>
+<div class="xdemo-note-info">
+<strong>ポイント：</strong>1面＝5行、左右2面で1段。5段&times;5行＝50行で1ページ（＝シール1枚）が完成します。A〜C列が左面、D〜F列が右面です。
+            </div>
+</div>
+<!-- 宛先リスト -->
+<div class="sheet-panel" id="tab-list">
+<p style="font-size:.82rem;color:#555;margin-bottom:10px">▼ 宛先リスト（データ入力シート）</p>
+<table class="excel-grid">
+<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr>
+<tr><td class="row-num">1</td><td>No</td><td>氏名</td><td>郵便番号</td><td>住所1</td><td>住所2</td><td>会社名・部署</td></tr>
+<tr><td class="row-num">2</td><td>1</td><td>山田太郎</td><td>100-0001</td><td>東京都千代田区&hellip;</td><td>&xcirc;&xcirc;ビル3F</td><td>株式会社ABC 営業部</td></tr>
+<tr><td class="row-num">3</td><td>2</td><td>鈴木花子</td><td>530-0001</td><td>大阪府大阪市&hellip;</td><td></td><td>DEF株式会社 総務部</td></tr>
+<tr><td class="row-num">&hellip;</td><td colspan="6" style="text-align:center;color:#aaa">（データを下方向に追加）</td></tr>
+</table>
+</div>
+</div>
+</div>
+<!-- ===== sec4 ===== -->
+<h2 id="sec4">4. ラベルシートに数式を仕込む</h2>
+<p>ラベルシートの各セルには VLOOKUP（または XLOOKUP）を使い、宛先リストからデータを自動取得します。ポイントは「何番目のデータを取得するか」をセルの行位置から逆算する仕組みです。</p>
+<h3>4-1. 面番号の計算</h3>
+<p>各面が何番目のデータに対応するかを算出します。左面（A列側）と右面（D列側）で計算が異なります。</p>
+<div class="formula-box">
+<span class="tag">面番号の計算（A1セルの場合）</span>
+左面の面番号 = (INT((ROW()-1)/5)) * 2 + 1
+右面の面番号 = (INT((ROW()-1)/5)) * 2 + 2
+
+例：A1〜A5 &rarr; 面番号1（1件目）、D1〜D5 &rarr; 面番号2（2件目）
+　　A6〜A10 &rarr; 面番号3（3件目）、D6〜D10 &rarr; 面番号4（4件目）
+      </div>
+<h3>4-2. VLOOKUP で宛先を取得</h3>
+<p>左面のA1セル（郵便番号行）に入れる数式の例です。面番号を VLOOKUP の検索値として使います。</p>
+<div class="formula-box">
+<span class="tag">A1：郵便番号（左面）</span>
+=IFERROR(
+  "〒"&VLOOKUP(
+    (INT((ROW()-1)/5))*2+1,
+    宛先リスト!$A:$F,
+    3, FALSE
+  ),
+  ""
+)
+      </div>
+<div class="formula-box">
+<span class="tag">D1：郵便番号（右面）</span>
+=IFERROR(
+  "〒"&VLOOKUP(
+    (INT((ROW()-1)/5))*2+2,
+    宛先リスト!$A:$F,
+    3, FALSE
+  ),
+  ""
+)
+      </div>
+<p>住所1（2行目）、住所2（3行目）、会社名（4行目）、氏名（5行目）も同様に、VLOOKUP の列番号を 4, 5, 6, 2 に変更するだけです。氏名の場合は末尾に「&" 様"」を付けます。</p>
+<div class="formula-box">
+<span class="tag">A5：氏名（左面）</span>
+=IFERROR(
+  VLOOKUP(
+    (INT((ROW()-1)/5))*2+1,
+    宛先リスト!$A:$F,
+    2, FALSE
+  ) & "  様",
+  ""
+)
+      </div>
+<h3>4-3. 数式のコピー</h3>
+<p>A1:C5（左面1面目）とD1:F5（右面1面目）の数式が完成したら、A1:F5 を選択して50行目（A50:F50）まで一括コピーします。ROW() を使っているので面番号が自動的に変わり、10面すべてに正しいデータが表示されます。2ページ目以降も同様に50行単位でコピーを続けます。</p>
+<div class="xdemo-note-warn">
+<strong>⚠ 数式を間違えると、ズレたまま大量印刷してしまう危険があります。</strong>必ず印刷プレビューで全ページの宛名が正しいか確認してください。特に VLOOKUP の列番号（3, 4, 5, 6, 2）の指定ミスに注意します。
+      </div>
+<!-- ===== sec5 ===== -->
+<h2 id="sec5">5. Print_Area に動的数式を設定する</h2>
+<p>データ件数が変わっても印刷範囲が自動調整されるよう、名前の管理で Print_Area に数式を設定します。</p>
+<div class="step-list">
+<div class="step-item">
+<div class="step-num">1</div>
+<div class="step-text">「数式」タブ &rarr;「名前の管理」を開きます。</div>
+</div>
+<div class="step-item">
+<div class="step-num">2</div>
+<div class="step-text">一覧から「Print_Area」を選択します（存在しない場合は「新規作成」で名前を <code>Print_Area</code>、範囲を「ラベル」シートにします）。</div>
+</div>
+<div class="step-item">
+<div class="step-num">3</div>
+<div class="step-text">「参照範囲」欄に以下の数式を入力して「OK」&rarr;「閉じる」。</div>
+</div>
+</div>
+<h3>XLOOKUP 版（Microsoft 365 推奨）</h3>
+<div class="formula-box">
+<span class="tag">Print_Area 数式</span>
+=ラベル!$A$1:INDEX(
+  ラベル!$A:$F,
+  CEILING(
+    XLOOKUP(TRUE, INDEX(ラベル!$A:$A&lt;&gt;"",0), ROW(ラベル!$A:$A), ,0,-1),
+    50
+  ),
+  6
+)
+      </div>
+<p>XLOOKUP で A列に値がある最終行を検索し、CEILING で50の倍数に切り上げます。データ15件なら最終行は38行目付近 &rarr; CEILING(38,50)＝50 &rarr; 1ページ分。データ11件なら最終行は30行目付近 &rarr; CEILING(30,50)＝50 &rarr; やはり1ページ。データ11件で右面にも配置されるので最終行は実際にはもう少し下がり、場合によっては2ページに及びます。</p>
+<h3>COUNTA 版（Excel 2019 以前）</h3>
+<div class="formula-box">
+<span class="tag">Print_Area 数式</span>
+=ラベル!$A$1:INDEX(
+  ラベル!$A:$F,
+  CEILING(COUNTA(ラベル!$A:$A), 50),
+  6
+)
+      </div>
+<div class="xdemo-note-warn">
+<strong>⚠ 最大の落とし穴：</strong>この数式を設定した後、「ページレイアウト」&rarr;「印刷範囲」&rarr;「印刷範囲の設定」ボタンを絶対にクリックしないでください。数式が静的な範囲に上書きされます。
+      </div>
+<!-- ===== sec6 ===== -->
+<h2 id="sec6">6. データ件数と印刷ページの対応</h2>
+<table class="format-table">
+<tr>
+<th>データ件数</th>
+<th>最終データ行</th>
+<th>CEILING(最終行, 50)</th>
+<th>印刷されるA4用紙<br>（＝シール）の枚数</th>
+<th>Print_Areaに<br>設定される範囲</th>
+</tr>
+<tr>
+<td>5件</td><td>15行目</td><td>50</td><td>1枚</td><td>A1:F50</td>
+</tr>
+<tr>
+<td>10件</td><td>25行目</td><td>50</td><td>1枚</td><td>A1:F50</td>
+</tr>
+<tr class="em">
+<td>11件</td><td>30行目</td><td>50</td><td class="em">1枚</td><td>A1:F50</td>
+</tr>
+<tr class="em">
+<td>15件</td><td>40行目</td><td>50</td><td class="em">1枚</td><td>A1:F50</td>
+</tr>
+<tr>
+<td>20件</td><td>50行目</td><td>50</td><td>1枚</td><td>A1:F50</td>
+</tr>
+<tr class="em">
+<td>21件</td><td>55行目</td><td>100</td><td class="em">2枚</td><td>A1:F100</td>
+</tr>
+<tr>
+<td>30件</td><td>75行目</td><td>100</td><td>2枚</td><td>A1:F100</td>
+</tr>
+<tr class="em">
+<td>50件</td><td>125行目</td><td>150</td><td class="em">3枚</td><td>A1:F150</td>
+</tr>
+</table>
+<div class="xdemo-note-info">
+<strong>ポイント：</strong>左右2列配置のため、データ件数&divide;2 が段数になります。10件なら5段＝25行（1面5行&times;5段）、11件なら6段目に入るので30行目まで使い、CEILING(30,50)＝50で1枚に収まります。ただし20件を超えると2枚目が必要になります。
+      </div>
+<!-- ===== sec7 ===== -->
+<h2 id="sec7">7. 印刷手順（実際の操作フロー）</h2>
+<div class="step-list">
+<div class="step-item">
+<div class="step-num">1</div>
+<div class="step-text">「宛先リスト」シートにデータを入力します。A列にNo（連番）、B列に氏名、C列に郵便番号、D列に住所1、E列に住所2、F列に会社名・部署を入力します。</div>
+</div>
+<div class="step-item">
+<div class="step-num">2</div>
+<div class="step-text">「ラベル」シートに切り替えます。VLOOKUP の数式により、入力したデータが各面に自動表示されます。</div>
+</div>
+<div class="step-item">
+<div class="step-num">3</div>
+<div class="step-text"><kbd>Ctrl</kbd>+<kbd>P</kbd> で印刷プレビューを開き、ページ数とレイアウトが正しいか確認します。</div>
+</div>
+<div class="step-item">
+<div class="step-num">4</div>
+<div class="step-text">プリンターにラベルシールをセットして印刷します。Print_Area の数式により、空白シールだけのページは印刷されません。</div>
+</div>
+</div>
+<div class="xdemo-note-info">
+<strong>💡 他の人に渡す場合：</strong>このファイルは Wordの差し込み印刷を知らない人でも使えます。「宛先リストにデータを入力 &rarr; ラベルシートで印刷」の2ステップだけ伝えれば作業できます。ただしファイルサイズは通常のリストより大きくなります（10ページ分のテンプレートを仕込むため）。大量のデータ（50件超）を扱う場合は、テンプレートの行数を追加する必要があります。
+      </div>
+<!-- ===== sec8 ===== -->
+<h2 id="sec8">8. 10面ラベルの構成イメージ</h2>
+<p>実際のA4ラベルシール上の配置を示します。データは上から順に左&rarr;右で配置され、シール1枚（＝1ページ）の中で使い切ります。</p>
+<div class="a4-row">
+<div class="a4-paper">
+<span class="a4-badge">1ページ目</span>
+<div class="a4-title">データ10件 &rarr; 全面使用</div>
+<div class="a4-grid">
+<div class="label-face filled">① 山田太郎<br><small>〒100-0001</small><br><small>東京都千代田区&hellip;</small></div>
+<div class="label-face filled">② 鈴木花子<br><small>〒530-0001</small><br><small>大阪府大阪市&hellip;</small></div>
+<div class="label-face filled">③ 佐藤一郎<br><small>〒060-0001</small><br><small>北海道札幌市&hellip;</small></div>
+<div class="label-face filled">④ 高橋美咲<br><small>〒810-0001</small><br><small>福岡県福岡市&hellip;</small></div>
+<div class="label-face filled">⑤ 田中健太<br><small>〒460-0001</small><br><small>愛知県名古屋市&hellip;</small></div>
+<div class="label-face filled">⑥ 渡辺裕子<br><small>〒220-0001</small><br><small>神奈川県横浜市&hellip;</small></div>
+<div class="label-face filled">⑦ 伊藤誠<br><small>〒330-0001</small><br><small>埼玉県さいたま市&hellip;</small></div>
+<div class="label-face filled">⑧ 中村由美<br><small>〒260-0001</small><br><small>千葉県千葉市&hellip;</small></div>
+<div class="label-face filled">⑨ 小林大輔<br><small>〒600-0001</small><br><small>京都府京都市&hellip;</small></div>
+<div class="label-face filled">⑩ 加藤陽子<br><small>〒650-0001</small><br><small>兵庫県神戸市&hellip;</small></div>
+</div>
+</div>
+<div class="a4-paper">
+<span class="a4-badge">2ページ目</span>
+<div class="a4-title">データ5件 &rarr; 半分使用</div>
+<div class="a4-grid">
+<div class="label-face filled">⑪ 吉田真一<br><small>〒420-0001</small><br><small>静岡県静岡市&hellip;</small></div>
+<div class="label-face filled">⑫ 松本幸恵<br><small>〒730-0001</small><br><small>広島県広島市&hellip;</small></div>
+<div class="label-face filled">⑬ 井上隆<br><small>〒980-0001</small><br><small>宮城県仙台市&hellip;</small></div>
+<div class="label-face filled">⑭ 木村彩<br><small>〒950-0001</small><br><small>新潟県新潟市&hellip;</small></div>
+<div class="label-face filled">⑮ 林正樹<br><small>〒380-0001</small><br><small>長野県長野市&hellip;</small></div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+<div class="label-face empty">空き</div>
+</div>
+</div>
+</div>
+<!-- ===== sec9 ===== -->
+<h2 id="sec9">9. トラブルシューティング</h2>
+<h3>Print_Area の数式が消えた</h3>
+<p>「印刷範囲の設定」ボタンを誤ってクリックした可能性があります。「名前の管理」を開いて Print_Area の参照範囲を確認し、静的な範囲（例：=$A$1:$F$50）に変わっていたら、セクション5の数式を再入力してください。数式を印刷範囲外のセル（例：Z1）にテキストとしてメモしておくと復旧が簡単です。</p>
+<h3>宛名がズレている</h3>
+<p>VLOOKUP の列番号が間違っている可能性が高いです。郵便番号＝3列目、住所1＝4列目、住所2＝5列目、会社名＝6列目、氏名＝2列目であることを確認してください。</p>
+<h3>空白ページが印刷される</h3>
+<p>CEILING の計算結果が実際のデータ行数より大幅に大きい場合、空白面だけのページが含まれます。COUNTA が空白セル以外のセル（ヘッダーや数式で空文字を返すセル）をカウントしていないか確認してください。IFERROR で "" を返す数式はCOUNTAでカウントされるため、XLOOKUP 版の数式を使う方が安全です。</p>
+<!-- ===== sec10 ===== -->
+<h2 id="sec10">10. まとめ</h2>
+<p>10面ラベルシール印刷は、1面＝5行・1ページ＝50行という単位を基準に VLOOKUP で宛先を配置し、Print_Area に CEILING を使った動的数式を設定することで実現します。データ件数に応じて印刷枚数が自動調整されるため、空白シールだけのページは印刷されません。Word の差し込み印刷が使えない人にも渡せる手軽さがある反面、テンプレートを多く仕込む分ファイルサイズが大きくなる点、数式のセットアップミスがそのまま印刷ミスにつながる点には注意が必要です。</p>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+<script>
+    function switchSheet(group, targetId){
+      const wrap = document.querySelector('[data-group="'+group+'"]');
+      if(!wrap) return;
+      const tabs = wrap.querySelectorAll('.sheet-tab');
+      const panels = wrap.closest('.excel-wrap').querySelectorAll('.sheet-panel');
+      tabs.forEach(t=>t.classList.remove('active'));
+      panels.forEach(p=>p.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.getElementById(targetId).classList.add('active');
+    }
+  </script>
+</body>
+</html>
+
+

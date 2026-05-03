@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>XLOOKUP ネスト（多条件検索）｜Excel &times; No VBA Lab</title>
+<meta content="XLOOKUPのネストで多条件・複数条件の一致検索を実現する方法をVBA禁止環境向けに解説。" name="description">
+<meta content="XLOOKUP 多条件, XLOOKUP ネスト 複数条件, 複数キー 検索 Excel, Excel 2021, VBA不要" name="keywords">
+<meta content="XLOOKUP ネスト（多条件検索）｜Excel &times; No VBA Lab" property="og:title">
+<meta content="XLOOKUPのネストで多条件・複数条件の一致検索を実現する方法をVBA禁止環境向けに解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/latest/article_xlookup_multi.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "XLOOKUP ネスト（多条件検索）",
+    "description": "XLOOKUPのネストで多条件・複数条件の一致検索を実現する方法をVBA禁止環境向けに解説。",
+    "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-no-vba-lab.com/ogp.png"}},
+    "datePublished": "2023-10-01",
+    "dateModified": "2023-10-01"
+  }
+  </script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-no-vba-lab.com/"},
+      {"@type": "ListItem", "position": 2, "name": "関数", "item": "https://excel-no-vba-lab.com/#functions"},
+      {"@type": "ListItem", "position": 3, "name": "XLOOKUP ネスト（多条件検索）"}
+    ]
+  }
+  </script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#functions">関数</a><span>&gt;</span>
+<strong>XLOOKUP ネスト（多条件検索）</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-365">365</span>
+<span class="badge badge-2021">2021～</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">XLOOKUP ネスト（多条件検索）：配列計算で複数列の条件をスパッと射抜く</h1>
+</div>
+<!-- =========================================================
+         やりたいこと
+    ========================================================= -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>「店舗」と「商品名」など、<strong>複数の条件（列）の組み合わせが完全に一致する行</strong>を探し出し、別の列（売上など）を取り出したい。
+          たとえば「東京店」の「パソコン」の売上だけをピンポイントで抽出する、といった場面です。</p>
+</section>
+<!-- =========================================================
+         重要な前提知識
+    ========================================================= -->
+<section class="method-section">
+<h3><span class="icon">📌</span> この記事を読む前に知っておくべきこと</h3>
+<div class="xdemo-note-info">
+<strong>「＆結合」や「ブール論理による多条件検索」は、XLOOKUP の専売特許ではありません。</strong><br>
+<code>INDEX+MATCH</code> でも <code>VLOOKUP+CHOOSE</code>
+          でも、同じ書き方（＆結合やブール乗算）による多条件検索は<strong>昔から可能</strong>でした。<br><br>
+          ただし大きな違いがあります。Excel 2019 以前では、これらの配列を使う数式は <code>Ctrl+Shift+Enter</code>（CSE）で確定しないと動きません。Excel 2021/2024/Microsoft 365 などでは
+          CSE が不要になり、どの関数でも普通の <code>Enter</code> だけで配列処理されます。<br><br>
+          つまり<strong>XLOOKUP の真の優位性は「＆結合ができること」ではなく</strong>、「#N/A回避が引数内で完結する」「複数列を一括でスピル返却できる」「可読性が高い」という別の点にあります。<br>
+          この記事では、この事実を正確に踏まえた上で、各方式を網羅的に解説します。
+        </div>
+</section>
+<!-- =========================================================
+         サンプルデータ
+    ========================================================= -->
+<section class="method-section">
+<h3>サンプルデータ（この記事で使う共通のマスタ表）</h3>
+<p>以下の売上データ（D〜G列）を使って、すべてのテクニックを説明します。</p>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">マスタ表（D〜G列）</div>
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col">D</td>
+<td class="xd-col">E</td>
+<td class="xd-col">F</td>
+<td class="xd-col">G</td>
+</tr>
+<tr>
+<td class="xd-row">1</td>
+<td class="xd-head">店舗</td>
+<td class="xd-head">商品名</td>
+<td class="xd-head">売上</td>
+<td class="xd-head">数量</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="xd-master">東京店</td>
+<td class="xd-master">パソコン</td>
+<td class="xd-master">500,000</td>
+<td class="xd-master">5</td>
+</tr>
+<tr>
+<td class="xd-row">3</td>
+<td class="xd-master">東京店</td>
+<td class="xd-master">スマホ</td>
+<td class="xd-master">300,000</td>
+<td class="xd-master">15</td>
+</tr>
+<tr>
+<td class="xd-row">4</td>
+<td class="xd-hit"><strong>大阪店</strong></td>
+<td class="xd-hit"><strong>パソコン</strong></td>
+<td class="xd-hit"><strong>450,000</strong></td>
+<td class="xd-hit"><strong>4</strong></td>
+</tr>
+<tr>
+<td class="xd-row">5</td>
+<td class="xd-master">大阪店</td>
+<td class="xd-master">スマホ</td>
+<td class="xd-master">280,000</td>
+<td class="xd-master">12</td>
+</tr>
+<tr>
+<td class="xd-row">6</td>
+<td class="xd-master">福岡店</td>
+<td class="xd-master">パソコン</td>
+<td class="xd-master">380,000</td>
+<td class="xd-master">3</td>
+</tr>
+<tr>
+<td class="xd-row">7</td>
+<td class="xd-master">福岡店</td>
+<td class="xd-master">スマホ</td>
+<td class="xd-master">220,000</td>
+<td class="xd-master">10</td>
+</tr>
+</table></div>
+<div class="xdemo-note-info">
+            🟠 橙の行（行4）が今回の検索ターゲット：「<strong>大阪店</strong>」かつ「<strong>パソコン</strong>」の売上 <strong>450,000</strong>
+            を取得するのがゴールです。
+          </div>
+</div>
+<p>検索側（A〜C列）はこのようなレイアウトです。</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col">A</td>
+<td class="xd-col">B</td>
+<td class="xd-col">C</td>
+</tr>
+<tr>
+<td class="xd-row">1</td>
+<td class="xd-head">店舗</td>
+<td class="xd-head">商品名</td>
+<td class="xd-head">売上（結果）</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="xd-key">大阪店</td>
+<td class="xd-key">パソコン</td>
+<td class="xd-data">（ここに数式を入れる）</td>
+</tr>
+</table></div>
+</div>
+</section>
+<!-- =========================================================
+         全方式の一覧表（先に俯瞰）
+    ========================================================= -->
+<section class="comparison-section">
+<h3><span class="icon">🗺️</span> 全方式の俯瞰マップ</h3>
+<p>この記事で紹介する多条件検索の方式を先に一覧で示します。詳細は後述します。</p>
+<div class="table-responsive">
+<div class="table-wrapper"><table class="formula-count-table" style="max-width:100%;"><caption>データテーブル</caption>
+<thead>
+<tr>
+<th scope="col" style="min-width:50px;">方式</th>
+<th scope="col">数式の概要</th>
+<th scope="col">CSE必要?</th>
+<th scope="col">対応Ver</th>
+<th scope="col">作業列</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>①</strong></td>
+<td class="text-left">XLOOKUP ＆結合</td>
+<td class="fc-good">不要</td>
+<td>2021/2024/365</td>
+<td class="fc-good">不要</td>
+</tr>
+<tr>
+<td><strong>②</strong></td>
+<td class="text-left">XLOOKUP ブール論理（乗算）</td>
+<td class="fc-good">不要</td>
+<td>2021/2024/365</td>
+<td class="fc-good">不要</td>
+</tr>
+<tr>
+<td><strong>③</strong></td>
+<td class="text-left">INDEX+MATCH ＆結合</td>
+<td class="fc-bad">⚠ 2019以前は必要</td>
+<td>全ver</td>
+<td class="fc-good">不要</td>
+</tr>
+<tr>
+<td><strong>④</strong></td>
+<td class="text-left">INDEX+MATCH ブール論理</td>
+<td class="fc-bad">⚠ 2019以前は必要</td>
+<td>全ver</td>
+<td class="fc-good">不要</td>
+</tr>
+<tr>
+<td><strong>⑤</strong></td>
+<td class="text-left">INDEX+MATCH 二重INDEX技（CSE回避）</td>
+<td class="fc-good">不要</td>
+<td>全ver</td>
+<td class="fc-good">不要</td>
+</tr>
+<tr>
+<td><strong>⑥</strong></td>
+<td class="text-left">VLOOKUP+CHOOSE ブール論理</td>
+<td class="fc-bad">⚠ 2019以前は必要</td>
+<td>全ver</td>
+<td class="fc-good">不要</td>
+</tr>
+<tr>
+<td><strong>⑦</strong></td>
+<td class="text-left">VLOOKUP＋作業列（結合キー）</td>
+<td class="fc-good">不要</td>
+<td>全ver</td>
+<td class="fc-bad">必要</td>
+</tr>
+<tr>
+<td><strong>⑧</strong></td>
+<td class="text-left">AGGREGATE 方式</td>
+<td class="fc-good">不要</td>
+<td>2010～</td>
+<td class="fc-good">不要</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</section>
+<!-- =========================================================
+         方式①：XLOOKUP ＆結合（推奨）
+    ========================================================= -->
+<section class="method-section">
+<h3>方式①：XLOOKUP ＆結合（推奨） <span class="badge badge-2021" style="font-size:0.7em;">2021～</span></h3>
+<div class="method-card">
+<div class="method-card-title method-card-title-green">数式</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=XLOOKUP(A2 & B2, D:D & E:E, F:F, "該当なし")</span>
+</div>
+<p class="code-comment">
+            A2（大阪店）とB2（パソコン）を結合した「大阪店パソコン」を、D列とE列を結合した仮想配列の中から探し、見つかったらF列（売上）を返す。見つからなければ「該当なし」。
+          </p>
+</div>
+<!-- 内部動作図 -->
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">内部動作：仮想配列の生成と検索</div>
+<div class="xdemo-layout">
+<div class="xdemo-block">
+<div class="xdemo-block-title">D列 & E列 &rarr; 仮想配列</div>
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col">D</td>
+<td class="xd-col" style="background:transparent;border:none;padding:0;min-width:10px;"></td>
+<td class="xd-col">E</td>
+<td class="xd-col" style="background:transparent;border:none;padding:0;min-width:10px;"></td>
+<td class="xd-virtual-head">仮想配列</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="xd-master">東京店</td>
+<td style="border:none;text-align:center;padding:0;font-weight:bold;color:#999;">&</td>
+<td class="xd-master">パソコン</td>
+<td style="border:none;text-align:center;padding:0;font-weight:bold;color:#999;">&rarr;</td>
+<td class="xd-virtual">東京店パソコン</td>
+</tr>
+<tr>
+<td class="xd-row">3</td>
+<td class="xd-master">東京店</td>
+<td style="border:none;text-align:center;padding:0;font-weight:bold;color:#999;">&</td>
+<td class="xd-master">スマホ</td>
+<td style="border:none;text-align:center;padding:0;font-weight:bold;color:#999;">&rarr;</td>
+<td class="xd-virtual">東京店スマホ</td>
+</tr>
+<tr>
+<td class="xd-row">4</td>
+<td class="xd-hit"><strong>大阪店</strong></td>
+<td style="border:none;text-align:center;padding:0;font-weight:bold;color:#e65100;">&</td>
+<td class="xd-hit"><strong>パソコン</strong></td>
+<td style="border:none;text-align:center;padding:0;font-weight:bold;color:#e65100;">&rarr;</td>
+<td class="xd-virtual" style="background:#ffcc02;color:#e65100;border:2px solid #e65100;">
+<strong>大阪店パソコン &checkmark;</strong></td>
+</tr>
+<tr>
+<td class="xd-row">5</td>
+<td class="xd-master">大阪店</td>
+<td style="border:none;text-align:center;padding:0;font-weight:bold;color:#999;">&</td>
+<td class="xd-master">スマホ</td>
+<td style="border:none;text-align:center;padding:0;font-weight:bold;color:#999;">&rarr;</td>
+<td class="xd-virtual">大阪店スマホ</td>
+</tr>
+<tr>
+<td class="xd-row">6</td>
+<td class="xd-master">福岡店</td>
+<td style="border:none;text-align:center;padding:0;font-weight:bold;color:#999;">&</td>
+<td class="xd-master">パソコン</td>
+<td style="border:none;text-align:center;padding:0;font-weight:bold;color:#999;">&rarr;</td>
+<td class="xd-virtual">福岡店パソコン</td>
+</tr>
+</table></div>
+</div>
+<div class="xdemo-arrow">&rarr;</div>
+<div class="xdemo-block">
+<div class="xdemo-block-title">結果</div>
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col">C</td>
+</tr>
+<tr>
+<td class="xd-result"><strong>450,000</strong></td>
+</tr>
+</table></div>
+</div>
+</div>
+<div class="xdemo-note-info">
+            この仮想配列はExcelの内部メモリ上で生成されるため、シート上に作業列を追加する必要はありません。
+          </div>
+</div>
+<div class="xdemo-note-good">
+<strong>✅ XLOOKUPならではの利点（他の関数でも＆結合は可能だが、これらは不可）</strong><br>
+          ・<strong>#N/A 回避が引数内で完結</strong>：第4引数 <code>"該当なし"</code> だけでOK。IFERROR で包む必要がない。<br>
+          ・<strong>複数列の一括返却</strong>：<code>=XLOOKUP(A2 & B2, D:D & E:E, F:G, "該当なし")</code> で売上と数量を同時にスピル展開。<br>
+          ・<strong>後方検索</strong>：第6引数に <code>-1</code> を指定すると、最後にヒットした行を取得可能。
+        </div>
+<!-- 誤ヒット注意 -->
+<div class="xdemo-note-warn">
+<strong>⚠️ ＆結合の落とし穴：意図しない誤ヒットに注意</strong><br>
+          「A」&「BC」と「AB」&「C」はどちらも結合すると「ABC」になり、区別できません。<br>
+          実務でこのリスクがある場合は、間に区切り文字を挟みます。<br>
+<code>=XLOOKUP(A2 & "|" & B2, D:D & "|" & E:E, F:F, "該当なし")</code>
+</div>
+</section>
+<!-- =========================================================
+         方式②：XLOOKUP ブール論理
+    ========================================================= -->
+<section class="method-section">
+<h3>方式②：XLOOKUP ブール論理（乗算） <span class="badge badge-2021" style="font-size:0.7em;">2021～</span></h3>
+<div class="method-card">
+<div class="method-card-title method-card-title-blue">数式</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=XLOOKUP(1, (D:D=A2) * (E:E=B2), F:F, "該当なし")</span>
+</div>
+<p class="code-comment">
+            D列がA2と一致（TRUE=1 / FALSE=0）かつ E列がB2と一致。両方1のとき 1&times;1=1。検索値を「1」にしてその行を探す。
+          </p>
+</div>
+<!-- ブール演算の内部動作図 -->
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">内部動作：TRUE/FALSE &rarr; 0/1 &rarr; 乗算</div>
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col">D</td>
+<td class="xd-col">E</td>
+<td class="xd-col" style="background:transparent;border:none;padding:0;min-width:4px;"></td>
+<td class="xd-col" style="min-width:70px;">D=A2?</td>
+<td class="xd-col" style="min-width:70px;">E=B2?</td>
+<td class="xd-col" style="background:transparent;border:none;padding:0;min-width:4px;"></td>
+<td class="xd-col" style="min-width:56px;">乗算</td>
+<td class="xd-col" style="background:transparent;border:none;padding:0;min-width:4px;"></td>
+<td class="xd-col">F</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="xd-master">東京店</td>
+<td class="xd-master">パソコン</td>
+<td class="border-none"></td>
+<td class="xd-bool-false">0</td>
+<td class="xd-bool-true">1</td>
+<td class="border-none"></td>
+<td class="xd-multiply">0</td>
+<td class="border-none"></td>
+<td class="xd-master" style="color:#bbb;">500,000</td>
+</tr>
+<tr>
+<td class="xd-row">3</td>
+<td class="xd-master">東京店</td>
+<td class="xd-master">スマホ</td>
+<td class="border-none"></td>
+<td class="xd-bool-false">0</td>
+<td class="xd-bool-false">0</td>
+<td class="border-none"></td>
+<td class="xd-multiply">0</td>
+<td class="border-none"></td>
+<td class="xd-master" style="color:#bbb;">300,000</td>
+</tr>
+<tr>
+<td class="xd-row">4</td>
+<td class="xd-hit"><strong>大阪店</strong></td>
+<td class="xd-hit"><strong>パソコン</strong></td>
+<td class="border-none"></td>
+<td class="xd-bool-true"><strong>1</strong></td>
+<td class="xd-bool-true"><strong>1</strong></td>
+<td class="border-none"></td>
+<td class="xd-multiply-hit"><strong>1</strong></td>
+<td class="border-none"></td>
+<td class="xd-result"><strong>450,000</strong></td>
+</tr>
+<tr>
+<td class="xd-row">5</td>
+<td class="xd-master">大阪店</td>
+<td class="xd-master">スマホ</td>
+<td class="border-none"></td>
+<td class="xd-bool-true">1</td>
+<td class="xd-bool-false">0</td>
+<td class="border-none"></td>
+<td class="xd-multiply">0</td>
+<td class="border-none"></td>
+<td class="xd-master" style="color:#bbb;">280,000</td>
+</tr>
+<tr>
+<td class="xd-row">6</td>
+<td class="xd-master">福岡店</td>
+<td class="xd-master">パソコン</td>
+<td class="border-none"></td>
+<td class="xd-bool-false">0</td>
+<td class="xd-bool-true">1</td>
+<td class="border-none"></td>
+<td class="xd-multiply">0</td>
+<td class="border-none"></td>
+<td class="xd-master" style="color:#bbb;">380,000</td>
+</tr>
+</table></div>
+<div class="xdemo-note-info">
+            乗算結果が <strong>1</strong> になるのは、すべての条件がTRUEの行だけ。<code>XLOOKUP(1, &hellip;)</code> はこの 1 を探し、同じ行のF列（450,000）を返します。
+          </div>
+</div>
+<div class="xdemo-note-info">
+<strong>💡 ブール論理の強み：数値条件やOR条件にも対応</strong><br>
+          ・3条件以上：<code>* (G:G&gt;=3)</code> のように <code>*</code> で繋げるだけ。<br>
+          ・OR条件（いずれか一致）：<code>+</code> を使い、<code>=XLOOKUP(1, (D:D=A2) * ((E:E="パソコン")+(E:E="スマホ")), F:F)</code><br>
+          ・数値の範囲条件（&gt;=, &lt;= 等）を自然に記述可能。＆結合では不可能。
+        </div>
+<!-- 方式①②使い分け -->
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">＆結合 vs ブール論理 &horbar; どちらを使うべきか</div>
+<div class="table-wrapper"><table class="formula-count-table"><caption>データテーブル</caption>
+<thead>
+<tr>
+<th scope="col">比較項目</th>
+<th scope="col">＆結合</th>
+<th scope="col">ブール論理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>可読性</td>
+<td class="fc-good">✅ 高い（直感的）</td>
+<td class="fc-bad">⚠ やや難解</td>
+</tr>
+<tr>
+<td>文字列の完全一致のみ（2条件）</td>
+<td class="fc-good">✅ 最適</td>
+<td class="fc-ok">&cir; 使用可能</td>
+</tr>
+<tr>
+<td>数値範囲条件（&gt;= 等）</td>
+<td class="fc-bad">❌ 不可</td>
+<td class="fc-good">✅ 自然に記述可能</td>
+</tr>
+<tr>
+<td>OR条件</td>
+<td class="fc-bad">❌ 不可</td>
+<td class="fc-good">✅ <code>+</code> で記述可能</td>
+</tr>
+<tr>
+<td>誤ヒットのリスク</td>
+<td class="fc-bad">⚠ あり（区切り文字で回避）</td>
+<td class="fc-good">✅ なし</td>
+</tr>
+<tr>
+<td>処理速度</td>
+<td class="fc-good">✅ やや速い</td>
+<td class="fc-bad">⚠ やや遅い</td>
+</tr>
+</tbody>
+</table></div>
+<div class="xdemo-note-info">
+<strong>結論：</strong>文字列の完全一致だけなら「＆結合」、数値条件や複雑なロジックが絡むなら「ブール論理」。
+          </div>
+</div>
+</section>
+<!-- =========================================================
+         旧バージョンでの代替法（大幅拡充）
+    ========================================================= -->
+<section class="legacy-section">
+<h3><span class="icon">🔧</span> 旧バージョンでの代替法（全方式の解説）</h3>
+<p>ここが重要なポイントです。<strong>＆結合もブール論理も、INDEX+MATCHやVLOOKUPでも昔から使えます。</strong>
+          ただしExcelのバージョンによってCSEの要否が異なります。以下、方式ごとに正確に整理します。</p>
+<!-- ═══ 方式③：INDEX+MATCH ＆結合 ═══ -->
+<div class="method-card">
+<div class="method-card-title method-card-title-orange">方式③：INDEX+MATCH ＆結合 <span class="badge-ver">全ver</span></div>
+<p><strong>Excel 2021 / 2024 / Microsoft 365 などの場合：</strong>普通の <code>Enter</code> で確定するだけで動作します。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(INDEX(F:F, MATCH(A2 & B2, D:D & E:E, 0)), "該当なし")</span>
+</div>
+<p><strong>Excel 2019 以前の場合：</strong>まったく同じ数式ですが、<code>Ctrl+Shift+Enter</code> が必須です。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">{=IFERROR(INDEX(F:F, MATCH(A2 & B2, D:D & E:E, 0)), "該当なし")}</span>
+</div>
+<p class="code-comment">
+            ※ 波括弧 <code>{}</code> は手入力ではなく、Ctrl+Shift+Enter で自動的に付きます。
+          </p>
+<div class="xdemo-note-info">
+<strong>書き方はXLOOKUPの＆結合と本質的に同じです。</strong>
+<code>D:D & E:E</code> で仮想的な結合配列を作り、<code>A2 & B2</code>
+            を検索する仕組みはまったく同じ。違いはCSEの要否と、IFERRORが必要かどうかです。
+          </div>
+</div>
+<!-- ═══ 方式④：INDEX+MATCH ブール論理 ═══ -->
+<div class="method-card">
+<div class="method-card-title method-card-title-orange">方式④：INDEX+MATCH ブール論理 <span class="badge-ver">全ver</span></div>
+<p><strong>Excel 2021 / 2024 / Microsoft 365 など：</strong></p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(INDEX(F:F, MATCH(1, (D:D=A2) * (E:E=B2), 0)), "該当なし")</span>
+</div>
+<p><strong>Excel 2019 以前：</strong></p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">{=IFERROR(INDEX(F:F, MATCH(1, (D:D=A2) * (E:E=B2), 0)), "該当なし")}</span>
+</div>
+<p class="code-comment">Ctrl+Shift+Enter で確定が必須。</p>
+</div>
+<!-- ═══ 方式⑤：二重INDEX技（CSE回避） ═══ -->
+<div class="method-card">
+<div class="method-card-title method-card-title-purple">方式⑤：二重INDEX技 &horbar; CSEを回避する裏技 <span class="badge-ver">全ver</span></div>
+<p>2019以前の環境で <code>Ctrl+Shift+Enter</code> を忘れてしまう問題を根本的に回避するため、コミュニティで発見されたテクニックです。
+            <strong>2つ目の INDEX関数</strong>を挟むことで、CSE なしで配列を処理させます。
+          </p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(INDEX(F:F, MATCH(1, INDEX((D:D=A2)*(E:E=B2), 0, 1), 0)), "該当なし")</span>
+</div>
+<p class="code-comment">
+            普通の <code>Enter</code> だけで確定OK。CSE 不要。全バージョンで動作。
+          </p>
+<!-- 二重INDEX技の動作フロー図 -->
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">二重INDEX技の内部動作フロー</div>
+<div class="flow-diagram">
+<div class="flow-box">
+                ① ブール演算<br>
+<span style="font-size:0.8em;font-weight:normal;">(D:D=A2)*(E:E=B2)<br>&rarr;
+                  {0,0,<strong>1</strong>,0,0,0}</span>
+</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-box" style="background:#f3e5f5;border-color:#9c27b0;">
+                ② <strong>2つ目のINDEX</strong><br>
+<span style="font-size:0.8em;font-weight:normal;">INDEX(&hellip;, 0, 1)<br>配列を「受け取って返す」<br>&rarr;
+                  CSEの代わりに配列を確定</span>
+</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-box-hit">
+                ③ MATCH(1, &hellip;, 0)<br>
+<span style="font-size:0.8em;font-weight:normal;">&rarr; 位置「3」を返す</span>
+</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-box-result">
+                ④ INDEX(F:F, 3)<br>
+<span style="font-size:0.8em;font-weight:normal;">&rarr; <strong>450,000</strong></span>
+</div>
+</div>
+</div>
+<div class="xdemo-note-info">
+<strong>仕組み：</strong><code>INDEX(配列, 0, 1)</code>
+            は「行番号0（=全行）、列番号1」を意味し、INDEX関数が配列をネイティブに処理して<strong>そのまま配列として返す</strong>という特性を利用しています。
+            技術的には内部で配列計算が行われていますが、CSE操作が不要なため「弾丸耐性（bulletproof）」のある数式として知られています。
+          </div>
+<div class="xdemo-note-warn">
+<strong>⚠️ 注意点</strong><br>
+            ・数式が1段深くなるため、可読性はやや低下します。<br>
+            ・内部では配列計算が走っているため、<strong>処理速度はCSE配列数式と同等</strong>（改善されるわけではない）。<br>
+            ・Excel 2021/2024/Microsoft 365 環境なら不要なテクニックです。レガシー環境向けの知識として理解しておくのが最善。
+          </div>
+</div>
+<!-- ═══ 方式⑥：VLOOKUP+CHOOSE ═══ -->
+<div class="method-card">
+<div class="method-card-title method-card-title-teal">方式⑥：VLOOKUP + CHOOSE（作業列なしのVLOOKUP多条件） <span class="badge-ver">全ver</span></div>
+<p>VLOOKUPは本来、検索値を1つしか受け取れません。しかし <code>CHOOSE</code>
+            関数を使って<strong>メモリ上に仮想的な2列テーブルを構築</strong>し、その1列目にブール論理の結果（0/1）、2列目に戻り値を配置することで、作業列なしの多条件検索が可能です。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=VLOOKUP(1, CHOOSE({1,2}, (D2:D7=A2)*(E2:E7=B2), F2:F7), 2, 0)</span>
+</div>
+<p class="code-comment">
+          Excel 2019 以前では <code>Ctrl+Shift+Enter</code> で確定が必要。Excel 2021/2024/Microsoft 365 などでは通常の Enter でOK。
+          </p>
+<!-- CHOOSE仮想テーブルの動作図 -->
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">CHOOSE が作る仮想テーブルのイメージ</div>
+<div class="xdemo-layout">
+<div class="xdemo-block">
+<div class="xdemo-block-title">ブール演算の結果</div>
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col">乗算結果</td>
+</tr>
+<tr>
+<td class="xd-multiply">0</td>
+</tr>
+<tr>
+<td class="xd-multiply">0</td>
+</tr>
+<tr>
+<td class="xd-multiply-hit"><strong>1</strong></td>
+</tr>
+<tr>
+<td class="xd-multiply">0</td>
+</tr>
+<tr>
+<td class="xd-multiply">0</td>
+</tr>
+<tr>
+<td class="xd-multiply">0</td>
+</tr>
+</table></div>
+</div>
+<div class="xdemo-block">
+<div class="xdemo-block-title">F列（売上）</div>
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col">F</td>
+</tr>
+<tr>
+<td class="xd-master">500,000</td>
+</tr>
+<tr>
+<td class="xd-master">300,000</td>
+</tr>
+<tr>
+<td class="xd-hit"><strong>450,000</strong></td>
+</tr>
+<tr>
+<td class="xd-master">280,000</td>
+</tr>
+<tr>
+<td class="xd-master">380,000</td>
+</tr>
+<tr>
+<td class="xd-master">220,000</td>
+</tr>
+</table></div>
+</div>
+<div class="xdemo-arrow">&rarr;</div>
+<div class="xdemo-block">
+<div class="xdemo-block-title">CHOOSE({1,2}, &hellip;) で生成される仮想テーブル</div>
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-choose-head">列1</td>
+<td class="xd-choose-head">列2</td>
+</tr>
+<tr>
+<td class="xd-choose">0</td>
+<td class="xd-choose">500,000</td>
+</tr>
+<tr>
+<td class="xd-choose">0</td>
+<td class="xd-choose">300,000</td>
+</tr>
+<tr>
+<td class="xd-choose" style="background:#ffcc02;color:#e65100;border:2px solid #e65100;">
+<strong>1</strong></td>
+<td class="xd-choose" style="background:#c8e6c9;color:#1b5e20;"><strong>450,000</strong></td>
+</tr>
+<tr>
+<td class="xd-choose">0</td>
+<td class="xd-choose">280,000</td>
+</tr>
+<tr>
+<td class="xd-choose">0</td>
+<td class="xd-choose">380,000</td>
+</tr>
+<tr>
+<td class="xd-choose">0</td>
+<td class="xd-choose">220,000</td>
+</tr>
+</table></div>
+</div>
+</div>
+<div class="xdemo-note-info">
+<code>CHOOSE({1,2}, 配列A, 配列B)</code> は、<code>{1,2}</code>
+              という配列定数により「1番目と2番目を同時に要求」し、2つの配列を横に結合した仮想テーブルを作ります。<br>
+              VLOOKUPはこのテーブルの列1から「1」を探し、列2の値（450,000）を返します。
+            </div>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ この方式の注意点</strong><br>
+            ・CHOOSE の仕組みを理解していないと数式の意味が全くわからない（<strong>属人化リスクが極めて高い</strong>）<br>
+            ・Excel 2019 以前では CSE が必要<br>
+            ・列全体参照（D:D）ではなく<strong>範囲を限定して指定</strong>する必要がある（CHOOSEが列全体を仮想テーブル化するとメモリ負荷が極大になる）<br>
+            ・VLOOKUPの列番号指定（ここでは <code>2</code>）が必要なため、保守性は VLOOKUP 固有の弱さを引き継ぐ
+          </div>
+</div>
+<!-- ═══ 方式⑦：作業列＋VLOOKUP ═══ -->
+<div class="method-card">
+<div class="method-card-title method-card-title-orange">方式⑦：作業列（結合キー）＋ VLOOKUP <span class="badge-ver">全ver</span></div>
+<p>最も古典的で、最も理解しやすい手法。マスタ表の左端に結合キー列を追加し、VLOOKUPで検索します。</p>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">作業列を追加（C列に結合キー）</div>
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col">C</td>
+<td class="xd-col">D</td>
+<td class="xd-col">E</td>
+<td class="xd-col">F</td>
+</tr>
+<tr>
+<td class="xd-row">1</td>
+<td class="xd-workkey-head">結合キー（作業列）</td>
+<td class="xd-head">店舗</td>
+<td class="xd-head">商品名</td>
+<td class="xd-head">売上</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="xd-workkey">東京店パソコン</td>
+<td class="xd-master">東京店</td>
+<td class="xd-master">パソコン</td>
+<td class="xd-master">500,000</td>
+</tr>
+<tr>
+<td class="xd-row">3</td>
+<td class="xd-workkey">東京店スマホ</td>
+<td class="xd-master">東京店</td>
+<td class="xd-master">スマホ</td>
+<td class="xd-master">300,000</td>
+</tr>
+<tr>
+<td class="xd-row">4</td>
+<td class="xd-workkey" style="background:#c8e6c9;color:#1b5e20;"><strong>大阪店パソコン</strong></td>
+<td class="xd-hit"><strong>大阪店</strong></td>
+<td class="xd-hit"><strong>パソコン</strong></td>
+<td class="xd-hit"><strong>450,000</strong></td>
+</tr>
+</table></div>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(VLOOKUP(A2 & B2, C:F, 4, FALSE), "該当なし")</span>
+</div>
+<p class="code-comment">CSE不要。全バージョンで動作。ただし作業列（C列）の追加・維持が必要。</p>
+<div class="xdemo-note-good">
+<strong>✅ この方式のメリット</strong><br>
+            ・<strong>CSEが一切不要</strong>（配列計算をしないため）<br>
+            ・<strong>処理速度が速い</strong>（メモリ上に仮想配列を生成しない）<br>
+            ・<strong>数式がシンプル</strong>で、VLOOKUP を知っている人なら誰でも理解できる<br>
+            ・全バージョンで安定動作
+          </div>
+<div class="xdemo-note-warn">
+<strong>⚠️ デメリット</strong><br>
+            ・元データの構造を変更する必要がある（列の挿入）<br>
+            ・データ行が増えるたびに作業列の数式をコピーする必要がある<br>
+            ・ファイルサイズが増加する<br>
+            ・VLOOKUPの列番号指定により、列の挿入・削除でズレるリスクがある
+          </div>
+</div>
+<!-- ═══ 方式⑧：AGGREGATE ═══ -->
+<div class="method-card">
+<div class="method-card-title method-card-title-red">方式⑧：AGGREGATE（CSE不要・2010以降） <span class="badge-ver">2010～</span></div>
+<p>Excel 2010 で追加された <code>AGGREGATE</code> 関数は、配列を引数に受け取れるため <strong>CSE なしで多条件検索が可能</strong>です。
+            CSE配列数式のフリーズ問題を回避する手段として、2010〜2019 の環境で重宝されてきました。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(INDEX(F:F, AGGREGATE(15, 6, ROW(D2:D7)/((D2:D7=A2)*(E2:E7=B2)), 1)),
+              "該当なし")</span>
+</div>
+<p class="code-comment">
+            AGGREGATE(15, 6, &hellip;, 1) = SMALL関数相当（エラー無視モード）。<br>
+            条件に一致しない行は 0 で除算されるため #DIV/0! になり、AGGREGATE のエラー無視機能（第2引数=6）で自動的にスキップされます。
+          </p>
+<!-- AGGREGATE の動作図 -->
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">AGGREGATE 方式の内部動作</div>
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col">ROW()</td>
+<td class="xd-col">条件乗算</td>
+<td class="xd-col" style="background:transparent;border:none;padding:0;min-width:4px;"></td>
+<td class="xd-col">ROW &divide; 乗算</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="xd-master">2</td>
+<td class="xd-multiply">0</td>
+<td class="border-none"></td>
+<td class="xd-bool-false">2&divide;0 = <strong>#DIV/0!</strong>（除外）</td>
+</tr>
+<tr>
+<td class="xd-row">3</td>
+<td class="xd-master">3</td>
+<td class="xd-multiply">0</td>
+<td class="border-none"></td>
+<td class="xd-bool-false">3&divide;0 = <strong>#DIV/0!</strong>（除外）</td>
+</tr>
+<tr>
+<td class="xd-row">4</td>
+<td class="xd-hit"><strong>4</strong></td>
+<td class="xd-multiply-hit"><strong>1</strong></td>
+<td class="border-none"></td>
+<td class="xd-result"><strong>4&divide;1 = 4</strong>（行番号として採用）</td>
+</tr>
+<tr>
+<td class="xd-row">5</td>
+<td class="xd-master">5</td>
+<td class="xd-multiply">0</td>
+<td class="border-none"></td>
+<td class="xd-bool-false">5&divide;0 = <strong>#DIV/0!</strong>（除外）</td>
+</tr>
+</table></div>
+<div class="xdemo-note-info">
+              AGGREGATE(15, 6, &hellip;, 1) は「エラーを無視して最小値を返す」。結果は行番号 <strong>4</strong>。<br>
+              INDEX(F:F, 4) = <strong>450,000</strong>。
+            </div>
+</div>
+<div class="xdemo-note-info">
+<strong>💡 AGGREGATE の強み</strong><br>
+            ・CSE 完全不要で2010以降の全バージョンで動作<br>
+            ・<code>AGGREGATE(15,6,&hellip;,ROWS($A$1:$A1))</code> のように k 値を連番にすると、<strong>複数のヒット行を順番に取得</strong>できる（MATCH
+            にはできない）<br>
+            ・ただし数式が長く難解になりやすいため、2021/2024/Microsoft 365 環境なら XLOOKUP や FILTER 関数を使うべき
+          </div>
+</div>
+</section>
+<!-- =========================================================
+         CSE配列数式の限界と問題点
+    ========================================================= -->
+<section class="tips-section">
+<h3><span class="icon">⚠️</span> CSE配列数式（Ctrl+Shift+Enter）の限界と問題点</h3>
+<p>方式③④⑥で必要となるCSE配列数式は、<strong>数多くの深刻な制約と落とし穴</strong>を抱えています。
+          XLOOKUPをはじめとする新しい動的配列関数が登場した最大の理由が、これらの問題を根本的に解消するためでした。</p>
+<!-- CSEの歴史タイムライン -->
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">CSE配列数式の歴史的変遷</div>
+<div class="timeline-bar">
+<div class="timeline-era timeline-era-old">
+<strong>Excel 97 〜 2019</strong><br>
+<span>CSE配列数式が必須<br>Ctrl+Shift+Enter で確定</span>
+</div>
+<div class="timeline-era timeline-era-mid">
+<strong>Excel 2021</strong><br>
+<span>動的配列エンジン導入<br>CSE 不要に</span>
+</div>
+<div class="timeline-era timeline-era-new">
+<strong>Excel 2024 / Microsoft 365</strong><br>
+<span>関数ごとに差はあるが<br>新関数の対応範囲が広い</span>
+</div>
+</div>
+</div>
+<!-- CSEの限界カード -->
+<div class="limit-grid">
+<div class="limit-card">
+<div class="limit-card-title">❌ 限界①：Ctrl+Shift+Enter の入力忘れ</div>
+            通常の <code>Enter</code> だけで確定すると、配列として処理されず<strong>全く別の結果や #VALUE! エラー</strong>が返ります。
+            数式バーを見ても波括弧 <code>{}</code> が付いていないことに気づかないまま運用されるケースが多く、<strong>サイレントなデータ事故</strong>の温床です。
+          </div>
+<div class="limit-card">
+<div class="limit-card-title">❌ 限界②：編集するとCSEが外れる</div>
+            セルを編集して普通に <code>Enter</code> で確定すると、<strong>CSE状態が解除</strong>されて壊れます。
+            CSEを知らない後任者がファイルをメンテナンスすると確実に問題が発生します。
+          </div>
+<div class="limit-card">
+<div class="limit-card-title">❌ 限界③：処理速度が深刻に遅い</div>
+<strong>数式が入っているセルの数だけ、配列全体の計算を毎回繰り返します。</strong>
+            1万行のマスタに対してCSE数式を1,000行にコピーした場合、のべ数千万回の計算が発生し、ブック全体がフリーズすることもあります。
+          </div>
+<div class="limit-card">
+<div class="limit-card-title">❌ 限界④：列全体参照が危険</div>
+<code>D:D</code> のような列全体参照を使うと、約104万行分の配列がメモリに展開され、<strong>極端に遅くなるかフリーズ</strong>します。
+            CSEでは <code>D2:D10000</code> のように範囲を限定するのが実務ルールでした。
+          </div>
+<div class="limit-card">
+<div class="limit-card-title">❌ 限界⑤：他の人が理解できない（属人化）</div>
+            波括弧の意味、なぜ <code>Ctrl+Shift+Enter</code> が必要なのか、なぜ普通の Enter だと壊れるのか。
+            独学では到達しにくい知識のため、作成者の異動・退職後に<strong>メンテナンス不能</strong>になる典型パターンです。
+          </div>
+<div class="limit-card">
+<div class="limit-card-title">❌ 限界⑥：配列の一部だけ削除・変更不可</div>
+            CSE配列数式が複数セルにまたがっている場合、一部のセルだけを削除・変更できません。「配列の一部を変更することはできません」エラーが発生します。
+          </div>
+</div>
+<!-- 処理速度の詳細比較 -->
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">処理速度の比較フロー（マスタ10,000行 &times; 数式1,000行）</div>
+<div style="margin-bottom:14px;">
+<div style="font-size:0.82em;font-weight:bold;color:#1b5e20;margin-bottom:4px;">▼ XLOOKUP ＆結合（2021以降）</div>
+<div class="flow-diagram" style="background:#f1f8e9;">
+<div class="flow-box-result" style="min-width:160px;">
+                各セルの計算<br>
+<span style="font-size:0.8em;font-weight:normal;">内部で結合配列を生成&rarr;検索<br>動的配列エンジンが最適化</span>
+</div>
+<div class="flow-arrow">&times;</div>
+<div style="font-size:0.9em;color:#555;">1,000セル</div>
+</div>
+</div>
+<div style="margin-bottom:14px;">
+<div style="font-size:0.82em;font-weight:bold;color:#880e4f;margin-bottom:4px;">▼ CSE配列数式（2019以前）</div>
+<div class="flow-diagram" style="background:#fce4ec;">
+<div class="flow-box-cse" style="min-width:200px;">
+                各セルの計算<br>
+<span style="font-size:0.8em;font-weight:normal;">①10,000個のTRUE/FALSE配列を生成&times;条件数<br>②10,000回の乗算<br>③MATCHで10,000個を走査<br>④メモリに一時配列を確保&rarr;破棄</span>
+</div>
+<div class="flow-arrow">&times;</div>
+<div style="font-size:0.9em;color:#555;">1,000セル（毎回ゼロから）</div>
+</div>
+</div>
+<div class="xdemo-note-danger">
+<strong>🔴 CSEが遅い核心的な理由：</strong>各セルが「配列全体を生成して評価する」処理を独立して毎回ゼロから行うため。
+          動的配列エンジン（2021/2024/Microsoft 365）はメモリ管理と計算キャッシュの効率が根本的に異なります。
+          </div>
+</div>
+<!-- 体感速度の目安 -->
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">実務での体感速度の目安</div>
+<div class="table-wrapper"><table class="formula-count-table" style="max-width:100%;"><caption>データテーブル</caption>
+<thead>
+<tr>
+<th scope="col">データ規模</th>
+<th scope="col">CSE配列数式</th>
+<th scope="col">XLOOKUP<br>＆結合</th>
+<th scope="col">作業列<br>＋VLOOKUP</th>
+<th scope="col">AGGREGATE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>マスタ100行 &times; 数式10行</td>
+<td>一瞬</td>
+<td>一瞬</td>
+<td>一瞬</td>
+<td>一瞬</td>
+</tr>
+<tr>
+<td>マスタ10,000行 &times; 数式1,000行</td>
+<td class="fc-danger">数秒〜十数秒</td>
+<td class="fc-good">✅ 一瞬〜1秒</td>
+<td class="fc-good">✅ 一瞬〜1秒</td>
+<td class="fc-ok">&cir; 数秒</td>
+</tr>
+<tr>
+<td>マスタ100,000行 &times; 数式10,000行</td>
+<td class="fc-danger">🔴 数十秒〜数分</td>
+<td class="fc-good">✅ 数秒</td>
+<td class="fc-good">✅ 数秒</td>
+<td class="fc-bad">⚠ 十数秒</td>
+</tr>
+<tr>
+<td>マスタ500,000行以上</td>
+<td class="fc-danger">🔴 実用困難</td>
+<td class="fc-good">✅ 十数秒</td>
+<td class="fc-ok">&cir; 数秒〜十数秒</td>
+<td class="fc-bad">⚠ 厳しい</td>
+</tr>
+</tbody>
+</table></div>
+<div class="xdemo-note-info">
+            ※ 環境（CPU・メモリ・Excel バージョン）により大きく変動します。相対的なイメージです。<br>
+            &rarr; 詳細なベンチマーク比較は <a href="../../index.html#others">速度カテゴリ</a> を参照。
+          </div>
+</div>
+<!-- 新旧の対比まとめ -->
+<div class="limit-grid">
+<div class="limit-card-good">
+<div class="limit-card-good-title">✅ 新関数（XLOOKUP等）で解消されたこと</div>
+            ・<code>Ctrl+Shift+Enter</code> が完全に不要<br>
+            ・編集後も配列計算が壊れない<br>
+            ・処理速度が劇的に改善<br>
+            ・列全体参照（D:D）が安全に使える<br>
+            ・可読性が大幅に向上<br>
+            ・スピル展開で数式1本から複数セルに結果が出せる
+          </div>
+<div class="limit-card">
+<div class="limit-card-title">⚠️ CSEの知識が依然必要なケース</div>
+            ・社内にExcel 2019以前のPCが残る場合<br>
+            ・既存ファイルの保守（レガシーファイルの理解）<br>
+            ・新関数は2019以前では <code>#NAME?</code> エラーになる<br>
+            ・移行期間中は互換性の確認が必要
+          </div>
+</div>
+</section>
+<!-- =========================================================
+         全方式の比較まとめ
+    ========================================================= -->
+<section class="comparison-section">
+<h3>全方式の最終比較まとめ</h3>
+<div class="table-responsive">
+<div class="table-wrapper"><table class="comparison-table"><caption>データテーブル</caption>
+<thead>
+<tr>
+<th scope="col">項目</th>
+<th scope="col">①XLOOKUP<br>＆結合</th>
+<th scope="col">②XLOOKUP<br>ブール</th>
+<th scope="col">③④INDEX<br>+MATCH</th>
+<th scope="col">⑤二重<br>INDEX技</th>
+<th scope="col">⑥VLOOKUP<br>+CHOOSE</th>
+<th scope="col">⑦作業列<br>+VLOOKUP</th>
+<th scope="col">⑧AGGREGATE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>対応Ver</td>
+<td>2021/2024/365</td>
+<td>2021/2024/365</td>
+<td>全ver</td>
+<td>全ver</td>
+<td>全ver</td>
+<td>全ver</td>
+<td>2010～</td>
+</tr>
+<tr>
+<td>CSE必要</td>
+<td>✅ 不要</td>
+<td>✅ 不要</td>
+<td>⚠ 2019以前は必要</td>
+<td>✅ 不要</td>
+<td>⚠ 2019以前は必要</td>
+<td>✅ 不要</td>
+<td>✅ 不要</td>
+</tr>
+<tr>
+<td>作業列</td>
+<td>✅ 不要</td>
+<td>✅ 不要</td>
+<td>✅ 不要</td>
+<td>✅ 不要</td>
+<td>✅ 不要</td>
+<td>❌ 必要</td>
+<td>✅ 不要</td>
+</tr>
+<tr>
+<td>#N/A回避</td>
+<td>✅ 引数内</td>
+<td>✅ 引数内</td>
+<td>⚠ IFERROR</td>
+<td>⚠ IFERROR</td>
+<td>⚠ IFERROR</td>
+<td>⚠ IFERROR</td>
+<td>⚠ IFERROR</td>
+</tr>
+<tr>
+<td>数値範囲条件</td>
+<td>❌ 不可</td>
+<td>✅ 可能</td>
+<td>✅ 可能</td>
+<td>✅ 可能</td>
+<td>✅ 可能</td>
+<td>❌ 不可</td>
+<td>✅ 可能</td>
+</tr>
+<tr>
+<td>速度</td>
+<td>✅ 高速</td>
+<td>&cir; やや速い</td>
+<td>❌ CSE時は遅い</td>
+<td>❌ 内部は同等に遅い</td>
+<td>❌ CSE時は遅い</td>
+<td>✅ 高速</td>
+<td>&cir; 中程度</td>
+</tr>
+<tr>
+<td>可読性</td>
+<td>✅ 高い</td>
+<td>&cir; やや難解</td>
+<td>&cir; 普通</td>
+<td>❌ 難解</td>
+<td>❌ 非常に難解</td>
+<td>✅ 高い</td>
+<td>❌ 難解</td>
+</tr>
+<tr>
+<td>複数列返却</td>
+<td>✅ スピル</td>
+<td>✅ スピル</td>
+<td>❌ 列ごと</td>
+<td>❌ 列ごと</td>
+<td>❌ 列ごと</td>
+<td>❌ 列ごと</td>
+<td>❌ 列ごと</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="xdemo-note-good">
+<strong>✅ 結論：</strong>Excel 2021/2024/Microsoft 365 が使えるなら<strong>方式①（XLOOKUP ＆結合）</strong>が第一選択。
+          数値範囲条件が絡むなら<strong>方式②（ブール論理）</strong>。
+          2019以前の環境では<strong>方式⑤（二重INDEX技）</strong>か<strong>方式⑦（作業列）</strong>が安全。
+          CSE配列数式は「仕組みを理解しておく」ことが重要ですが、新規で積極的に使うべき場面はほとんどありません。
+        </div>
+</section>
+<!-- =========================================================
+         小技・注意点
+    ========================================================= -->
+<section class="tips-section">
+<h3><span class="icon">📝</span> 小技・注意点</h3>
+<ul>
+<li>
+<strong>【大文字・小文字の区別】</strong><br>
+            XLOOKUP や MATCH の標準検索は大文字・小文字を区別しません。
+            区別したい場合は EXACT 関数をブール論理に組み込みます。<br>
+<code>=XLOOKUP(1, EXACT(D:D, A2) * EXACT(E:E, B2), F:F, "該当なし")</code>
+</li>
+<li>
+<strong>【重複データがある場合】</strong><br>
+            XLOOKUP は最初にヒットした行を返します。最後のヒットを取得するには第6引数 <code>-1</code>（末尾から検索）を指定。
+            条件に合致する<strong>複数行をすべて取得</strong>したい場合は <a href="article_filter.html">FILTER関数</a> の領域です。
+          </li>
+<li>
+<strong>【3条件以上の実例】</strong><br>
+            ＆結合：<code>=XLOOKUP(A2 & "|" & B2 & "|" & C2, D:D & "|" & E:E & "|" & F:F, G:G, "該当なし")</code><br>
+            ブール：<code>=XLOOKUP(1, (D:D=A2) * (E:E=B2) * (F:F=C2), G:G, "該当なし")</code><br>
+            条件が増えるほどブール論理のほうが簡潔です。
+          </li>
+<li>
+<strong>【SUMIFSとの使い分け】</strong><br>
+            多条件で「合計」を求めたい場合（同じ店舗・商品の売上合計など）は XLOOKUP ではなく <code>SUMIFS</code> の領域です。
+            XLOOKUP はあくまで「1行を特定して値を取り出す」関数です。
+          </li>
+<li>
+<strong>【＆結合でバイナリ検索は使えない】</strong><br>
+<code>D:D & E:E</code> の仮想配列はソート状態が保証されないため、
+            第6引数=2（バイナリ検索）を指定しても正しく動作しない可能性があります。
+          </li>
+</ul>
+</section>
+<!-- =========================================================
+         関連記事一覧
+    ========================================================= -->
+<section class="related-articles-section" style="margin-top:40px;border-top:2px dashed #ccc;padding-top:20px;">
+<h2><span class="icon">🔗</span> 関数・抽出テクニック 関連記事</h2>
+<p>実務で必須となる検索・抽出系の関数テクニックをカテゴリ別にまとめています。</p>
+<div style="background:#f5f8ff;padding:15px;border-radius:8px;margin-top:15px;">
+<h4 style="margin-top:0;color:#1565c0;border-bottom:1px solid #bbdefb;padding-bottom:5px;">検索・抽出のステップアップ</h4>
+<ul style="line-height:1.8;">
+<li><a href="article_xlookup_basic.html">XLOOKUP：VLOOKUPの完全上位互換。左側検索もエラー回避もこれ1つ</a></li>
+<li><a class="font-bold" href="article_xlookup_multi.html">XLOOKUP ネスト（多条件検索）2021～ &larr; この記事</a></li>
+<li><a href="../old/article_index_match_multi.html">INDEX + MATCH + 結合キー列 全ver（旧バージョンの多条件）</a></li>
+<li><a href="article_xmatch.html">XMATCH 2021～（MATCH関数との違いと代替）</a></li>
+<li><a href="../old/article_index_match.html">INDEX + MATCH 全ver &hellip;全バージョン対応の王道テクニック</a></li>
+</ul>
+<h4 style="margin-top:20px;color:#1565c0;border-bottom:1px solid #bbdefb;padding-bottom:5px;">
+          スピルを活用した高度な抽出（2021/2024/Microsoft 365～）</h4>
+<ul style="line-height:1.8;">
+<li><a href="article_choosecols.html">CHOOSECOLS / CHOOSEROWS（Excel 2024 / Microsoft 365などの対応環境）</a></li>
+<li>DROP / TAKE（Excel 2024 / Microsoft 365などの対応環境）</li>
+<li><a class="font-bold" href="article_filter.html">FILTER関数 2021～ &hellip;条件に合うデータを動的抽出</a></li>
+<li><a href="article_unique.html">UNIQUE関数 2021～（重複を排除したリスト作成）</a></li>
+<li><a href="article_sort.html">SORT / SORTBY 2021～（数式での自動並び替え）</a></li>
+</ul>
+<h4 style="margin-top:20px;color:#1565c0;border-bottom:1px solid #bbdefb;padding-bottom:5px;">
+            旧バージョンでの代替テクニック</h4>
+<ul style="line-height:1.8;">
+<li>INDEX で列・行を指定抽出 全ver（CHOOSECOLS代替）</li>
+<li>OFFSET + COUNTA 全ver（動的範囲の取得）</li>
+<li><a href="../old/article_countif_extract.html">COUNTIF + IF + SMALL + INDEX 全ver（FILTER代替の複数抽出）</a></li>
+<li>COUNTIF + IF で重複排除リスト 全ver（UNIQUE代替）</li>
+</ul>
+<h4 style="margin-top:20px;color:#1565c0;border-bottom:1px solid #bbdefb;padding-bottom:5px;">
+            パフォーマンス・速度最適化</h4>
+<ul style="line-height:1.8;">
+<li><a class="font-bold" href="../../index.html#others">速度カテゴリ &horbar; 関数の処理速度・メモリ効率の詳細比較</a></li>
+</ul>
+</div>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab &horbar; コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

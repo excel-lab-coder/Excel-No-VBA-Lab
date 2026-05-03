@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="テーブル機能、LET関数による中間結果の再利用、事前IF評価の短絡評価、FILTER関数や最終行カウントを用いたスピル範囲最適化など、数式の処理速度を劇的に引き上げる実践テクニック集です。" name="description">
+<title>数式の速度UPテクニック集｜Excel &times; No VBA Lab</title>
+<link href="https://excel-no-vba-lab.com/others/speed/article_02_formula_techniques.html" rel="canonical">
+<meta content="数式の速度UPテクニック集｜Excel &times; No VBA Lab" property="og:title">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"数式の速度UPテクニック集：テーブル・LET・セル参照コスト・FILTER・スピル検索・事前IF・最終行カウント","description":"テーブル機能、LET関数による中間結果の再利用、事前IF評価の短絡評価、FILTER関数や最終行カウントを用いたスピル範囲最適化など、数式の処理速度を劇的に引き上げる実践テクニック集です。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/others/speed/article_02_formula_techniques.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span>
+<a href="../../index.html#others">計算速度</a><span>&gt;</span>
+<strong>数式の速度UPテクニック集</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全ver</span>
+<span class="badge badge-365">365</span>
+<span class="badge badge-2021">2021～</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">数式の速度UPテクニック集：テーブル・LET・セル参照コスト・FILTER・スピル検索・事前IF・最終行カウント</h1>
+</div>
+<p>前回の記事「<a href="article_01_lookup_speed.html">検索関数の速度とメモリ効率</a>」では、VLOOKUP・INDEX+MATCH・XLOOKUPの関数間の速度差を掘り下げました。
+        今回はそこからさらに一歩進んで、<strong>「関数の選び方」ではなく「数式の書き方・構造の工夫」で速度を上げるテクニック</strong>を集中的に解説します。</p>
+<p>テーブル参照、LET関数による中間結果の再利用、作業セル vs セル内再計算のコスト比較、FILTER関数による一括抽出、スピル検索によるファイルサイズ圧縮、
+        そして<strong>事前IF空白チェックと最終行カウントによるスピル最適化</strong>まで、
+        <strong>数式を1文字も変えずに速くなる方法</strong>と、<strong>数式の構造を見直して劇的に速くなる方法</strong>の両面をカバーします。</p>
+<div class="xdemo-note-danger">
+<strong>🔴 この記事の前提：完全一致検索での話です</strong><br>
+        速度比較はすべて<strong>完全一致検索（VLOOKUP の FALSE / XLOOKUP のデフォルト）</strong>を前提にしています。
+        バイナリ検索（ソート済みデータの二分探索）を使える場合は、そちらの方が桁違いに速くなります。
+        バイナリ検索については「<a href="article_01_lookup_speed.html">検索関数の速度とメモリ効率</a>」の【5】〜【7】を参照してください。
+      </div>
+<!-- =========================================================
+         【1】テーブル（構造化参照）で劇的に高速化
+      ========================================================= -->
+<section class="method-section">
+<h3>【1】テーブル（構造化参照）&horbar; 「何もしなくても速くなる」最強の土台</h3>
+<p>Excelの「テーブル」機能（Ctrl+T）でデータをテーブル化し、数式で構造化参照（例：<code>テーブル1[社員ID]</code>）を使うだけで、
+          <strong>列全体参照（A:A）や範囲指定（A2:A100000）より劇的に速くなる</strong>ことがベンチマークで確認されています。</p>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">Ablebits.com ベンチマーク（50万行メイン&times;500行マスタ）&horbar; 参照方法別の速度比較</div>
+<table class="formula-count-table">
+<thead>
+<tr><th>関数</th><th>範囲指定<br><span style="font-size:.75em;">A2:A500</span></th><th>列全体参照<br><span style="font-size:.75em;">A:A</span></th><th>テーブル参照<br><span style="font-size:.75em;">テーブル1[列名]</span></th><th>テーブル参照の<br>高速化率</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="text-left-bold">VLOOKUP</td>
+<td>6.6秒</td><td class="fc-bad">14.2秒</td><td class="fc-good"><strong>2.3秒</strong></td><td class="fc-good">範囲指定の約2.9倍速</td>
+</tr>
+<tr>
+<td class="text-left-bold">INDEX+MATCH</td>
+<td>8.9秒</td><td class="fc-bad">17.7秒</td><td class="fc-good"><strong>2.6秒</strong></td><td class="fc-good">範囲指定の約3.4倍速</td>
+</tr>
+<tr>
+<td class="text-left-bold">XLOOKUP</td>
+<td>11.2秒</td><td class="fc-danger">24.1秒</td><td class="fc-good"><strong>3.3秒</strong></td><td class="fc-good">範囲指定の約3.4倍速</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="method-card">
+<div class="method-card-title method-card-title-green">なぜテーブル参照は速いのか &horbar; 3つの理由</div>
+<p><strong>① 実データ範囲だけを自動参照する</strong>：列全体参照（A:A）は104万行をスキャン対象にしますが、テーブルの構造化参照は「テーブルに含まれる行」だけを自動的に参照します。データが500行なら500行分だけがスキャン対象になります。これは範囲指定よりもさらに正確で、余分な空白行を一切含みません。</p>
+<p><strong>② キャッシュ効率が最大化される</strong>：構造化参照は全数式で自動的に「完全に同一の範囲」を指すため、Excelのキャッシュ共有が100%効きます。範囲指定では人為的なミスで <code>A2:A500</code> と <code>A2:A501</code> のようなズレが発生しがちですが、テーブル参照ではこの問題が原理的に起こりません。</p>
+<p><strong>③ 行の追加・削除に自動追従する</strong>：データ行を追加してもテーブル範囲が自動拡張されるため、数式を修正する必要がありません。これは速度面だけでなく保守性の面でも大きなメリットです。</p>
+</div>
+<div class="antipattern-vs">
+<div class="antipattern-box antipattern-bad">
+<div class="antipattern-title-bad">❌ 列全体参照</div>
+<code>=VLOOKUP(A2, マスタ!A:E, 3, FALSE)</code><br><br>
+            104万行&times;5列をスキャン対象に<strong>見える</strong>が、実際にはUsedRangeの末尾まで。<br>
+            ただしUsedRangeが肥大化していると無駄な走査が発生する。
+          </div>
+<div class="antipattern-box antipattern-good">
+<div class="antipattern-title-good">✅ テーブル参照</div>
+<code>=VLOOKUP(A2, マスタテーブル, 3, FALSE)</code><br><br>
+            テーブルの実データ範囲（500行&times;5列）だけを参照。<br>
+            行の追加にも自動追従。キャッシュ共有も完璧。
+          </div>
+</div>
+<div class="xdemo-note">
+<strong>📝 列全体参照（A:A）は本当に104万行スキャンするのか？</strong><br>
+          VLOOKUP・MATCH・XLOOKUPなどの<strong>標準検索関数</strong>は、列全体参照（A:A）を指定しても<strong>UsedRangeの末尾で走査を停止</strong>します。
+          データが500行しかなければ、残りの103万行分の空白セルは走査されません。<br><br>
+          ただし以下のケースではUsedRangeが肥大化し、実質的に広範囲を走査することになります：<br>
+          ・最終行付近にデータや書式が残っている（例：誰かが1048576行目にセル書式を設定した）<br>
+          ・大量の行を削除した後にファイルを保存していない（UsedRangeが縮まない）<br><br>
+          また、<strong>SUMPRODUCTやレガシーCSE配列数式（Ctrl+Shift+Enter）はUsedRangeに関係なく列全体を走査</strong>するため、
+          列全体参照は避けるべきです。
+          テーブル参照ならUsedRangeに依存せず常にデータ行のみを対象にするため、最も安全です。
+        </div>
+<div class="xdemo-note-good">
+<strong>✅ テーブル化は「最もコストの低い高速化」</strong><br>
+          数式を一切変えなくても、データをテーブル化して構造化参照に切り替えるだけで、
+          <strong>列全体参照比で5〜10倍、範囲指定比でも2〜3倍の高速化</strong>が期待できます。
+          数式の最適化に取り組む前に、まずデータのテーブル化を検討してください。
+        </div>
+</section>
+<!-- =========================================================
+         【2】LET関数で中間結果を再利用する
+      ========================================================= -->
+<section class="method-section">
+<h3>【2】LET関数 &horbar; 同じ計算を1回だけ実行して再利用する</h3>
+<p>LET関数（Excel 2021以降）は、数式内で変数を定義し、その結果を複数回参照できる関数です。
+          <strong>同じ部分式が数式内に複数回登場する場合、LETで1回だけ計算して使い回すことで、計算コストを削減</strong>できます。</p>
+<div class="method-card">
+<div class="method-card-title method-card-title-blue">LET関数の基本構文</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(
+  変数名1, 計算式1,
+  変数名2, 計算式2,
+  最終的な結果の式
+)</span>
+</div>
+<p class="code-comment">変数名に計算結果を格納し、以降の式で何度でも参照可能。各変数は1回だけ計算される。</p>
+</div>
+<div class="antipattern-vs">
+<div class="antipattern-box antipattern-bad">
+<div class="antipattern-title-bad">❌ LETなし &horbar; MATCHが2回実行される</div>
+<code>=IF(MATCH(A2,D:D,0)&gt;0, INDEX(E:E,MATCH(A2,D:D,0)), "未登録")</code><br><br>
+<span class="color-red">MATCH(A2,D:D,0) が2回書かれている &rarr; 2回とも独立して計算される。</span><br>
+            10万行のD列を2回スキャンすることになる。
+          </div>
+<div class="antipattern-box antipattern-good">
+<div class="antipattern-title-good">✅ LETあり &horbar; MATCHは1回だけ</div>
+<code>=LET(pos, MATCH(A2,D:D,0), IF(pos&gt;0, INDEX(E:E,pos), "未登録"))</code><br><br>
+<span style="color:#1b5e20;">MATCHの結果を <code>pos</code> に格納し、IF と INDEX の両方で再利用。</span><br>
+            10万行のスキャンは1回だけ。
+          </div>
+</div>
+<div class="method-card">
+<div class="method-card-title method-card-title-green">LETが特に効果を発揮するケース</div>
+<div class="limit-grid">
+<div class="limit-card-good">
+<div class="limit-card-good-title">✅ SORT / FILTER の結果を複数回使う</div>
+              SORT/FILTER の計算結果は配列全体のソートやフィルタリングなので重い処理です。
+              LETで1回だけ実行してCHOOSECOLSで列を取り出せば、同じSORT処理が何度も走ることを防げます。
+            </div>
+<div class="limit-card-good">
+<div class="limit-card-good-title">✅ 複雑な条件式を複数箇所で使う</div>
+              例えば <code>IF(AND(B2&gt;100, C2="A"), ...)</code> のような条件を数式内の複数箇所で参照する場合、
+              LETで条件結果をTRUE/FALSEの変数に格納すれば、条件評価が1回で済みます。
+            </div>
+<div class="limit-card-good">
+<div class="limit-card-good-title">✅ 可読性の向上</div>
+              速度だけでなく、長大なネスト数式が変数名で分解されるため、保守性・デバッグ効率も大幅に向上します。
+            </div>
+</div>
+<div class="xdemo-note-tip">
+<strong>💡 LET関数自体のオーバーヘッドはほぼゼロ</strong><br>
+            Reddit（r/excel）やMicrosoft Tech Communityでの検証によると、
+            LET関数自体が追加するオーバーヘッドは計測不能なレベルです。
+            「LETで包んだから遅くなる」ということはなく、<strong>重複計算を避けた分だけ純粋に速くなる</strong>と考えてよいでしょう。
+            ただし、LETの中で定義した変数を1回しか使わない場合は速度改善の意味がないため、
+            その場合は可読性向上のための利用と割り切ってください。
+          </div>
+</div>
+</section>
+<!-- =========================================================
+         【3】セル参照コスト vs セル内再計算 ― 意外な逆転
+      ========================================================= -->
+<section class="method-section">
+<h3>【3】セル参照コスト vs セル内再計算 &horbar; 「作業セルに保存」が常に最速とは限らない</h3>
+<p>Microsoft公式ドキュメントでは「重複する計算は作業セル（ヘルパー列）に分離して再利用せよ」と推奨されています。
+          しかし実際には、<strong>セル参照自体にもコストがある</strong>ため、データ規模によって最適解が変わります。</p>
+<div class="xdemo-note-danger">
+<strong>🔴 この節で最も伝えたいこと：「セル参照はタダではない」</strong><br>
+          Excelの計算エンジンは、セルを参照するたびに依存関係の追跡・値の読み取り・型変換などの処理を行います。
+          数式内で同じ計算を2回実行するコストと、作業セルに結果を保存して参照するコストのどちらが大きいかは、
+          <strong>「計算の重さ」と「データ行数」のバランス</strong>で決まります。
+        </div>
+<div class="method-card">
+<div class="method-card-title method-card-title-teal">ケーススタディ：MATCH結果を作業セルに保存すべきか？</div>
+<p>典型的なパターンとして、同じマスタから3列を取得するINDEX+MATCHを考えます。</p>
+<div class="antipattern-vs">
+<div class="antipattern-box antipattern-good" style="background:#e3f2fd;border-color:#90caf9;">
+<div style="font-weight:700;color:#1565c0;margin-bottom:6px;font-size:.95em;">方法A：作業セルにMATCH結果を保存</div>
+              H2：<code>=MATCH(A2, マスタ!A:A, 0)</code><br>
+              I2：<code>=INDEX(マスタ!B:B, H2)</code><br>
+              J2：<code>=INDEX(マスタ!C:C, H2)</code><br>
+              K2：<code>=INDEX(マスタ!D:D, H2)</code><br><br>
+              MATCHは1回だけ。INDEXはセル参照（H2）で行番号を取得。<br>
+<strong>数式4個 &times; N行 = 4N個の数式</strong>
+</div>
+<div class="antipattern-box antipattern-good" style="background:#fff3e0;border-color:#ffb74d;">
+<div style="font-weight:700;color:#e65100;margin-bottom:6px;font-size:.95em;">方法B：数式内でMATCHを毎回実行</div>
+              I2：<code>=INDEX(マスタ!B:B, MATCH(A2, マスタ!A:A, 0))</code><br>
+              J2：<code>=INDEX(マスタ!C:C, MATCH(A2, マスタ!A:A, 0))</code><br>
+              K2：<code>=INDEX(マスタ!D:D, MATCH(A2, マスタ!A:A, 0))</code><br><br>
+              MATCHが3回実行される。ただし作業セルの参照コストはゼロ。<br>
+<strong>数式3個 &times; N行 = 3N個の数式</strong>
+</div>
+</div>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">データ規模別の速度傾向（完全一致検索）</div>
+<table class="formula-count-table">
+<thead>
+<tr><th>データ規模</th><th>方法A<br>（作業セル＋INDEX）</th><th>方法B<br>（MATCH毎回実行）</th><th>判定</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="text-left">マスタ〜数百行<br>数式〜数百行</td>
+<td class="fc-ok">作業セルの参照コストが<br>相対的に大きい</td>
+<td class="fc-good">MATCHの計算が軽いので<br>3回実行しても問題なし</td>
+<td class="fc-good"><strong>方法B（セル内再計算）<br>の方が速い傾向</strong></td>
+</tr>
+<tr>
+<td class="text-left">マスタ〜数千行<br>数式〜数千行</td>
+<td class="fc-ok">ほぼ同等</td>
+<td class="fc-ok">ほぼ同等</td>
+<td class="fc-ok">差がほとんどない<br>可読性で選んでOK</td>
+</tr>
+<tr>
+<td class="text-left">マスタ10万行超<br>数式1万行超</td>
+<td class="fc-good">MATCHの計算（10万行スキャン）が<br>1回で済む効果が大きい</td>
+<td class="fc-bad">10万行スキャンを<br>3回&times;1万行 = 3万回実行</td>
+<td class="fc-good"><strong>方法A（作業セル保存）<br>の方が速い</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="xdemo-note-speed">
+<strong>⚡ なぜ逆転が起こるのか</strong><br>
+            セル参照のコストは<strong>データ規模に依存しない「固定コスト」</strong>です（依存関係の解決・値の読み取りは一定時間）。
+            一方、MATCH関数の計算コストは<strong>マスタの行数に比例する「変動コスト」</strong>です。<br><br>
+            マスタが小さいとき &rarr; MATCHの計算コストは小さいので、3回実行してもセル参照1回分のコストと大差ない。むしろ作業セルの参照・依存関係追跡のオーバーヘッドが目立つ。<br>
+            マスタが大きいとき &rarr; MATCHの1回あたりの計算コストが大きくなるため、3回実行を1回に減らす効果が圧倒的に勝る。
+          </div>
+<div class="xdemo-note-good">
+<strong>✅ 実務での判断基準</strong><br>
+            ・<strong>マスタが1万行以上</strong>、かつ同じMATCH結果を3回以上使う &rarr; <strong>作業セルに保存</strong>が有利<br>
+            ・<strong>マスタが数千行以下</strong>、かつ使い回しが2回程度 &rarr; <strong>セル内で再計算</strong>しても問題なし（むしろシートがすっきりする）<br>
+            ・<strong>LET関数が使える環境（2021以降）</strong>なら &rarr; <strong>LETで変数化</strong>するのが最善。作業セルも不要、再計算も1回で済む<br><br>
+            迷ったら<strong>LET関数を使う</strong>のが最もバランスの良い選択です。作業セルを消費せず、再計算を防ぎ、可読性も高い。
+          </div>
+</div>
+<!-- Microsoft公式の推奨 -->
+<div class="method-card">
+<div class="method-card-title method-card-title-blue">Microsoft公式ドキュメントの推奨：「中間結果を行・列に分離せよ」</div>
+<p>Microsoft公式のパフォーマンスガイド（「Excel performance: Improving calculation performance」）では、
+            <strong>「重複する計算を作業セルに分離して1回だけ計算し、他の数式で参照する」</strong>ことが第一のルールとして明記されています。</p>
+<p>この推奨は正しいのですが、<strong>小規模データでは「作業セル分離のコスト &gt; 重複計算のコスト」になるケースがある</strong>ことは公式ドキュメントには書かれていません。
+            公式の推奨は主に大規模データ（数万行以上）を想定していると理解してください。</p>
+<div class="xdemo-note">
+<strong>📝 公式ドキュメントの例：期首からの累計SUM</strong><br>
+<code>B1=SUM($A$1:$A1)</code> を2,000行にコピーすると、のべ200万セルの参照が発生し80ミリ秒。
+            <code>C1=A1, C2=C1+A2</code> と前行の結果を加算するだけなら、のべ3,999セルの参照で3.7ミリ秒。
+            <strong>約22倍の高速化</strong>。これが「中間結果を活用する」効果の典型例です。<br>
+            ただし、この例は「SUM範囲が行ごとに異なる = キャッシュが効かない」パターンであるため効果が大きいのであって、
+            すべてのケースで22倍になるわけではありません。
+          </div>
+</div>
+</section>
+<!-- =========================================================
+         【4】FILTER関数で一括抽出 ― 大量のVLOOKUPを置き換える
+      ========================================================= -->
+<section class="method-section">
+<h3>【4】FILTER関数で一括抽出 &horbar; 同じ条件のVLOOKUPを何百行もコピーしない</h3>
+<p>FILTER関数（Excel 2021以降）は、条件に一致する<strong>すべての行をまとめて一括抽出</strong>する関数です。
+          「特定の部署の社員一覧を取得する」「特定の月の売上データを抜き出す」といった用途では、
+          VLOOKUPやXLOOKUPを何百行もコピーするよりも、<strong>FILTER関数を1つ置くだけで済む</strong>場合があります。</p>
+<div class="method-card">
+<div class="method-card-title method-card-title-green">VLOOKUPの繰り返し vs FILTER一発 &horbar; 速度とファイルサイズの比較</div>
+<div class="antipattern-vs">
+<div class="antipattern-box antipattern-bad">
+<div class="antipattern-title-bad">❌ 従来：同じ条件のXLOOKUPを何百行もコピー</div>
+              「営業部」の社員を50件取得するために：<br><br>
+              B2：<code>=XLOOKUP(条件, ...)</code>（1件目）<br>
+              B3：<code>=XLOOKUP(条件, ...)</code>（2件目）<br>
+              ︙<br>
+              B51：<code>=XLOOKUP(条件, ...)</code>（50件目）<br><br>
+<span style="color:#c62828;font-weight:700;">50個の独立した数式。</span>
+              各数式が独立してマスタ全体をスキャン。<br>
+              ファイルに50個分の数式データが保存される。
+            </div>
+<div class="antipattern-box antipattern-good">
+<div class="antipattern-title-good">✅ FILTER関数で1発抽出</div>
+<code>=FILTER(マスタ!A:D, マスタ!C:C="営業部", "該当なし")</code><br><br>
+<span style="color:#1b5e20;font-weight:700;">数式は1個だけ。</span>
+              マスタを1回スキャンして条件に合う全行をスピルで出力。<br>
+              ファイルに保存されるのは1個の数式だけ。
+            </div>
+</div>
+<div class="xdemo-note-speed">
+<strong>⚡ FILTERが速い理由</strong><br>
+            ・マスタのスキャンが<strong>1回</strong>で済む（50個のXLOOKUPは各々がスキャンする）<br>
+            ・結果は1つの配列としてメモリに展開されるため、セルごとの依存関係追跡のオーバーヘッドがない<br>
+            ・Redditの検証（r/excel）では、FILTERはXLOOKUPに比べて<strong>約30%高速</strong>という結果も報告されている<br><br>
+            ただし、FILTERは「条件に合う全行」を返すのに対し、VLOOKUPは「最初の1件」を返すという違いがあります。
+            用途が異なるため、<strong>「同じ条件で複数件を取得する」場面でFILTERが特に有利</strong>です。
+          </div>
+</div>
+<div class="method-card">
+<div class="method-card-title method-card-title-orange">FILTERが不利になるケース</div>
+<p>FILTERはあらゆる場面でVLOOKUPより速いわけではありません。以下のケースでは注意が必要です。</p>
+<div class="limit-grid">
+<div class="limit-card">
+<div class="limit-card-title">⚠ 結果の件数が不定</div>
+              FILTERの結果はスピルで展開されるため、出力先のセルが空いている必要があります。
+              結果件数が可変であるため、レイアウトが固定のシートでは使いにくい場合があります。
+            </div>
+<div class="limit-card">
+<div class="limit-card-title">⚠ 多数のFILTER数式がある場合</div>
+              FILTER自体はマスタ全体をスキャンするため、異なる条件のFILTER数式が何十個もある場合は、
+              それぞれがマスタ全体をスキャンします。条件ごとのVLOOKUPと比較して大差がないこともあります。
+            </div>
+<div class="limit-card">
+<div class="limit-card-title">⚠ 1件だけの完全一致検索</div>
+              「IDで1件だけ引く」用途ではVLOOKUPやXLOOKUPの方が適切です。
+              FILTERは「条件に一致する全行」を返すため、1件取得にはオーバースペックです。
+            </div>
+</div>
+</div>
+<div class="xdemo-note-good">
+<strong>✅ FILTERの使いどころまとめ</strong><br>
+          ・同じ条件で<strong>複数件の結果</strong>を取得したい &rarr; FILTER が圧倒的に適切<br>
+          ・IDで<strong>1件だけ</strong>取得したい &rarr; XLOOKUP / INDEX+MATCH の方が適切<br>
+          ・複数条件の組み合わせで抽出したい &rarr; <strong>FILTER + 論理演算（*や+）</strong>が柔軟で高速
+        </div>
+</section>
+<!-- =========================================================
+         【5】スピル検索 ― 1数式で数万行のVLOOKUPを代替する
+      ========================================================= -->
+<section class="method-section">
+<h3>【5】スピル検索 &horbar; 1個の数式で15,000行分のVLOOKUPを置き換える</h3>
+<p>Excel 2021以降では、XLOOKUPやVLOOKUPの検索値に<strong>配列（複数セルの範囲）</strong>を渡すことで、
+          1個の数式から結果がスピル（自動展開）されます。
+          これは速度面に加えて、<strong>ファイルサイズの劇的な削減</strong>という隠れた大きなメリットがあります。</p>
+<div class="method-card">
+<div class="method-card-title method-card-title-purple">従来方式 vs スピル検索 &horbar; 15,000行のVLOOKUPで比較</div>
+<div class="antipattern-vs">
+<div class="antipattern-box antipattern-bad">
+<div class="antipattern-title-bad">❌ 従来：15,000行に数式をコピー</div>
+              B1：<code>=XLOOKUP(A1, マスタ!A:A, マスタ!C:C)</code><br>
+              B2：<code>=XLOOKUP(A2, マスタ!A:A, マスタ!C:C)</code><br>
+              ︙<br>
+              B15000：<code>=XLOOKUP(A15000, マスタ!A:A, マスタ!C:C)</code><br><br>
+<span style="color:#c62828;font-weight:700;">15,000個の独立した数式がファイルに保存される。</span><br>
+              数式1つあたり数十バイト &times; 15,000 = 数百KB〜数MBの数式データ。
+            </div>
+<div class="antipattern-box antipattern-good">
+<div class="antipattern-title-good">✅ スピル検索：1個の数式で全行を処理</div>
+              B1：<code>=XLOOKUP(A1:A15000, マスタ!A:A, マスタ!C:C)</code><br><br>
+<span style="color:#1b5e20;font-weight:700;">数式は1個だけ。</span>結果がB1:B15000にスピルで自動展開。<br>
+              ファイルに保存されるのは1個の数式データのみ。
+            </div>
+</div>
+</div>
+<div class="method-card">
+<div class="method-card-title method-card-title-green">ファイルサイズの劇的な削減</div>
+<p>Excelのxlsxファイル形式は、内部的にはXMLファイルをZIP圧縮したものです。各セルの数式はXMLとして1つ1つ記録されます。
+            15,000行の数式をコピーすると、15,000個の <code>&lt;f&gt;</code> タグがXMLに書かれます。</p>
+<p>スピル検索では数式が1個だけなので、XMLに記録される <code>&lt;f&gt;</code> タグも1個だけです。
+            スピルで展開された結果セルはキャッシュ値として保存されますが、数式そのもののデータ量は激減します。</p>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">ファイルサイズの比較イメージ（15,000行のXLOOKUP）</div>
+<div style="margin:8px 0 4px;font-size:.82em;font-weight:700;color:#c62828;">従来方式：15,000個の数式</div>
+<div class="memory-bar">
+<div style="background:#e53935;flex:7;">数式データ（15,000個の&lt;f&gt;タグ）</div>
+<div style="background:#78909c;flex:2;">値キャッシュ</div>
+<div style="background:#e0e0e0;flex:1;color:#999;">他</div>
+</div>
+<div style="margin:8px 0 4px;font-size:.82em;font-weight:700;color:#1b5e20;">スピル検索：1個の数式</div>
+<div class="memory-bar">
+<div style="background:#43a047;flex:1;">数式（1個）</div>
+<div style="background:#78909c;flex:3;">値キャッシュ</div>
+<div style="background:#e0e0e0;flex:6;color:#999;">未使用</div>
+</div>
+</div>
+<div class="xdemo-note-good">
+<strong>✅ 実測例</strong><br>
+            15,000行の XLOOKUP をコピーしたブック &rarr; 約3〜5MB<br>
+            同じ検索をスピル1数式に置き換えたブック &rarr; 約500KB〜1MB<br>
+<strong>ファイルサイズが3〜5分の1に圧縮</strong>されるケースが珍しくありません。<br>
+            ファイルサイズの削減は、ネットワーク越しの共有やメール添付でも実用的なメリットがあります。
+          </div>
+</div>
+<div class="method-card">
+<div class="method-card-title method-card-title-orange">スピル検索の速度特性 &horbar; 必ずしも「常に高速」ではない</div>
+<p>スピル検索は1個の数式で全行を処理しますが、<strong>速度面では「常に個別数式より速い」とは限りません。</strong></p>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">スピル検索 vs 個別数式 &horbar; 速度の傾向</div>
+<table class="formula-count-table">
+<thead>
+<tr><th>観点</th><th>スピル検索（1数式）</th><th>個別数式（N行コピー）</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="text-left">初回計算</td>
+<td class="fc-ok">全行を一括計算<br>（並列化の恩恵を受けにくい場合あり）</td>
+<td class="fc-ok">マルチスレッドで<br>並列計算されやすい</td>
+</tr>
+<tr>
+<td class="text-left">1セル変更時の<br>再計算</td>
+<td class="fc-bad">⚠ <strong>検索値が1つ変わっても<br>全行が再計算される</strong></td>
+<td class="fc-good">✅ 変更されたセルの<br>数式だけが再計算される</td>
+</tr>
+<tr>
+<td class="text-left">ファイルサイズ</td>
+<td class="fc-good">✅ 圧倒的に小さい</td>
+<td class="fc-bad">⚠ 数式数に比例して大きい</td>
+</tr>
+<tr>
+<td class="text-left">数式の数</td>
+<td class="fc-good">✅ 1個</td>
+<td class="fc-bad">⚠ N個</td>
+</tr>
+<tr>
+<td class="text-left">保守性</td>
+<td class="fc-good">✅ 修正は1箇所</td>
+<td class="fc-bad">⚠ N箇所に影響</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ スピル検索の最大の注意点：1セル変更でも全行再計算になる</strong><br>
+            個別数式なら「A5だけ変更 &rarr; B5だけ再計算」ですが、
+            スピル数式は「A5が変更 &rarr; B1:B15000全体が再計算」されます。
+            <strong>検索値が頻繁に変わるシート</strong>では、この再計算範囲の広さが速度低下の原因になることがあります。<br><br>
+            逆に、<strong>「一度データを入力したらあまり変更しない」シート</strong>（月次集計レポートなど）では、
+            再計算頻度が低いためスピル検索のデメリットはほぼなく、ファイルサイズ削減と保守性のメリットだけが残ります。
+          </div>
+<div class="xdemo-note-good">
+<strong>✅ スピル検索が特に有効な場面</strong><br>
+            ・データ入力後にあまり変更しない帳票・レポート系のシート<br>
+            ・ファイルサイズを小さくしたい（メール添付・ネットワーク共有）<br>
+            ・数式の保守コストを下げたい（修正は1箇所だけ）<br>
+            ・XLOOKUPのバイナリ検索と組み合わせる場合（元々高速なので再計算コストが小さい）
+          </div>
+</div>
+</section>
+<!-- =========================================================
+         【6】事前IF空白チェック ― スピル vs 個別セルで効果が真逆
+      ========================================================= -->
+<section class="method-section">
+<h3>【6】事前IF空白チェック &horbar; スピルと個別セルで効果が真逆になる</h3>
+<p>検索値が空白のときにVLOOKUP/XLOOKUPの実行をスキップする「事前IFチェック」は、
+          <strong>スピル式と個別セル数式で効果がまったく異なります</strong>。
+          これはExcel の IF関数の評価方式の違いに起因しています。</p>
+<div class="method-card">
+<div class="method-card-title method-card-title-green">個別セル数式（非スピル）：✅ 高速化する</div>
+<p>各セルに入力してコピーする従来方式では、事前IFは<strong>確実に高速化</strong>します。</p>
+<div class="antipattern-vs">
+<div class="antipattern-box antipattern-bad">
+<div class="antipattern-title-bad">❌ IFなし &horbar; 空白行でもVLOOKUPが走る</div>
+<code>=VLOOKUP(A2, マスタ!D:E, 2, FALSE)</code><br><br>
+              A2が空白でもVLOOKUPがマスタ全体をスキャンし、<br>
+              結果として#N/Aエラーまたは意図しない値を返す。<br>
+<span class="color-red">15,000行のうち5,000行が空白なら、<br>5,000回分のVLOOKUPが無駄に実行される。</span>
+</div>
+<div class="antipattern-box antipattern-good">
+<div class="antipattern-title-good">✅ 事前IFあり &horbar; 空白行はVLOOKUPをスキップ</div>
+<code>=IF(A2="", "", VLOOKUP(A2, マスタ!D:E, 2, FALSE))</code><br><br>
+              A2が空白の場合、IFの短絡評価により<br>
+<strong>VLOOKUPは一切実行されない</strong>。<br>
+<span style="color:#1b5e20;">5,000回分のVLOOKUPがまるごとスキップされる。</span>
+</div>
+</div>
+<div class="xdemo-note-speed">
+<strong>⚡ なぜ個別セルでは高速化するのか &horbar; IF関数の「短絡評価」</strong><br>
+            Excel の IF 関数は<strong>短絡評価（ショートサーキット）</strong>を行います。
+            <code>=IF(条件, 真の式, 偽の式)</code> において、条件がTRUEなら「真の式」<strong>だけ</strong>が評価され、
+            「偽の式」は<strong>一切評価されません</strong>。逆も同様です。<br><br>
+            これはMicrosoft Tech Community（JKPieterse氏のVBA UDFテスト）や
+            Stack Overflow（<code>=IF(TRUE, "成功", IF(TRUE, 0/0, LOG(-1)))</code> でエラーが発生しないテスト）で
+            確実に検証されています。<br><br>
+            つまり <code>=IF(A2="", "", VLOOKUP(...))</code> でA2が空白なら、
+            <strong>VLOOKUPの数式解析すら行われず、計算コストは実質ゼロ</strong>です。
+          </div>
+</div>
+<div class="method-card">
+<div class="method-card-title method-card-title-red">スピル式：❌ 高速化しない（むしろ遅くなりうる）</div>
+<p>スピル式で同じIFチェックを行っても、<strong>高速化効果はありません</strong>。</p>
+<div class="antipattern-vs">
+<div class="antipattern-box antipattern-bad">
+<div class="antipattern-title-bad">❌ スピルの事前IF &horbar; 効果なし</div>
+<code>=IF(A1:A15000="", "", XLOOKUP(A1:A15000, マスタ!D:D, マスタ!E:E, "", 0))</code><br><br>
+<span class="color-red">IFの条件が配列のため、短絡評価が働かない。</span><br>
+              XLOOKUP は15,000行分<strong>すべて</strong>先に計算され、<br>
+              その後IFが各行の結果を振り分けるだけ。<br>
+              IFの条件チェック分のオーバーヘッドが<strong>上乗せ</strong>される。
+            </div>
+<div class="antipattern-box antipattern-good">
+<div class="antipattern-title-good">✅ スピルではIFなしの方がよい</div>
+<code>=XLOOKUP(A1:A15000, マスタ!D:D, マスタ!E:E, "", 0)</code><br><br>
+<span style="color:#1b5e20;">第4引数 <code>if_not_found</code> に <code>""</code> を指定。</span><br>
+              空白検索値がマスタに該当しなければ自動で""を返す。<br>
+              IFのオーバーヘッドもなく、最もシンプル。
+            </div>
+</div>
+<div class="xdemo-note-danger">
+<strong>🔴 配列IFには短絡評価がない &horbar; 検証済みの事実</strong><br>
+            Reddit（u/uhlyeiss, 2024年9月）の検証で、配列の
+            <code>=IF({TRUE,TRUE}, {5,6}, HSTACK({7}, A1))</code>
+            が循環参照エラーを発生させることが確認されています。
+            条件がすべてTRUEであっても、FALSE側の <code>HSTACK({7}, A1)</code> が評価されていた証拠です。<br><br>
+            非配列の <code>=IF(TRUE, 5, A1)</code> では循環参照エラーは発生せず、短絡評価が正常に機能しています。<br><br>
+            つまり<strong>配列（スピル）モードのIFは、TRUEブランチもFALSEブランチも両方とも全要素を計算</strong>してから結果を振り分けます。
+          </div>
+</div>
+<div class="method-card">
+<div class="method-card-title method-card-title-teal">事前IF空白チェックの効果 &horbar; 比較まとめ</div>
+<div class="xdemo-wrap">
+<table class="formula-count-table">
+<thead>
+<tr><th>方式</th><th>IFの評価</th><th>空白行のVLOOKUP</th><th>速度効果</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="text-left">個別セル数式 + 事前IF</td>
+<td class="fc-good">短絡評価あり</td>
+<td class="fc-good">スキップされる</td>
+<td class="fc-good"><strong>✅ 高速化する</strong></td>
+</tr>
+<tr>
+<td class="text-left">スピル式 + 事前IF</td>
+<td class="fc-bad">短絡評価なし</td>
+<td class="fc-bad">全行実行される</td>
+<td class="fc-danger"><strong>❌ 効果なし（やや遅い）</strong></td>
+</tr>
+<tr>
+<td class="text-left">スピル式 + if_not_found=""</td>
+<td class="fc-ok">IF不使用</td>
+<td class="fc-ok">全行実行される</td>
+<td class="fc-ok">IFオーバーヘッドなし</td>
+</tr>
+<tr>
+<td class="text-left">スピル式 + 最終行カウント</td>
+<td class="fc-good">IF不使用</td>
+<td class="fc-good">空白行が範囲外</td>
+<td class="fc-good"><strong>✅ 最も高速（次節で解説）</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="xdemo-note-good">
+<strong>✅ 結論</strong><br>
+            ・<strong>個別セル数式</strong>（非スピル）を使う場合 &rarr; <code>=IF(A2="","", VLOOKUP(...))</code> は<strong>確実に高速化する</strong>。空白率が高いほど効果大。<br>
+            ・<strong>スピル式</strong>を使う場合 &rarr; 事前IFは<strong>効果なし</strong>。代わりに<strong>最終行カウントで範囲を絞る</strong>のが最善。
+          </div>
+</div>
+</section>
+<!-- =========================================================
+         【7】最終行カウントでスピル範囲を絞る最適化
+      ========================================================= -->
+<section class="method-section">
+<h3>【7】最終行カウント &horbar; スピル式の「本当の高速化」はここにある</h3>
+<p>スピル式の高速化で<strong>最も効果的</strong>なのは、事前IFではなく、
+          <strong>入力配列のサイズ自体を最小化する</strong>ことです。
+          空白行をIFでスキップするのではなく、そもそも空白行を含まない範囲だけを渡します。</p>
+<div class="method-card">
+<div class="method-card-title method-card-title-green">基本形：COUNTAで最終行を取得してスピル範囲を絞る</div>
+<div class="antipattern-vs">
+<div class="antipattern-box antipattern-bad">
+<div class="antipattern-title-bad">❌ 固定範囲 &horbar; 空白行も含む</div>
+<code>=XLOOKUP(A1:A15000, マスタ!D:D, マスタ!E:E, "", 0)</code><br><br>
+              データが8,000行しかなくても、残り7,000行分の空白に対して<br>
+              XLOOKUPの検索処理が走る（結果は""だが処理は実行される）。<br>
+              再計算時も15,000行分が対象になる。
+            </div>
+<div class="antipattern-box antipattern-good">
+<div class="antipattern-title-good">✅ 最終行カウント &horbar; データ行だけを処理</div>
+<code>=XLOOKUP(A1:INDEX(A:A, COUNTA(A:A)), マスタ!D:D, マスタ!E:E, "", 0)</code><br><br>
+<code>COUNTA(A:A)</code> が8,000を返し、<code>A1:A8000</code> だけが処理対象。<br>
+              7,000回分の検索がまるごとカットされる。<br>
+              再計算時も8,000行分だけが対象。
+            </div>
+</div>
+<div class="xdemo-note-speed">
+<strong>⚡ 高速化の理由はシンプル</strong><br>
+            ① <strong>検索回数の削減</strong>：配列サイズが8,000なら8,000回、15,000なら15,000回の検索処理が走る。実データ行に絞れば無駄な検索がなくなる。<br>
+            ② <strong>再計算コストの削減</strong>：スピル式は変更があると配列全体を再計算する。配列が小さいほど再計算も速い。<br>
+            ③ <strong>事前IFが完全に不要</strong>：空白行がそもそも範囲に含まれないため、IFによる空白チェック自体が不要。IFのオーバーヘッドもゼロ。
+          </div>
+</div>
+<div class="method-card">
+<div class="method-card-title method-card-title-blue">LETとの組み合わせ（推奨形）</div>
+<p>LETで最終行計算を変数化することで、可読性が高く保守しやすい数式になります。</p>
+<div class="antipattern-box antipattern-good" style="margin:12px 0;">
+<div class="antipattern-title-good">✅ 推奨：LET + COUNTA + XLOOKUP</div>
+<code>=LET(<br>
+            &nbsp;&nbsp;最終行, COUNTA(A:A),<br>
+            &nbsp;&nbsp;検索値, A1:INDEX(A:A, 最終行),<br>
+            &nbsp;&nbsp;XLOOKUP(検索値, マスタ!D:D, マスタ!E:E, "", 0)<br>
+            )</code><br><br>
+<span style="color:#1b5e20;">COUNTAの計算が1回だけ変数に格納され、INDEX で範囲を動的に構成。<br>
+            スピル配列のサイズが実データ行に自動調整される。</span>
+</div>
+</div>
+<div class="method-card">
+<div class="method-card-title method-card-title-orange">途中に空白がある場合の対策</div>
+<p><code>COUNTA</code> はセルに値があるものをカウントするため、
+            データの途中に空白セルがあるとカウントがずれます。
+            途中に空白を含む可能性がある場合は、最終データ行を正確に取得する方法を使います。</p>
+<div class="antipattern-vs">
+<div class="antipattern-box antipattern-good" style="background:#e3f2fd;border-color:#90caf9;">
+<div style="font-weight:700;color:#1565c0;margin-bottom:6px;font-size:.95em;">数値データの場合</div>
+<code>=LET(<br>
+              &nbsp;&nbsp;最終行, MATCH(1E+99, A:A, 1),<br>
+              &nbsp;&nbsp;検索値, A1:INDEX(A:A, 最終行),<br>
+              &nbsp;&nbsp;XLOOKUP(検索値, マスタ!D:D, マスタ!E:E, "", 0)<br>
+              )</code><br><br>
+              MATCHの近似一致(型1)で最後の数値の位置を取得。<br>
+              途中空白があっても正確。
+            </div>
+<div class="antipattern-box antipattern-good" style="background:#fff3e0;border-color:#ffb74d;">
+<div style="font-weight:700;color:#e65100;margin-bottom:6px;font-size:.95em;">文字列・数値混在の場合</div>
+<code>=LET(<br>
+              &nbsp;&nbsp;最終行, MAX((A:A&lt;&gt;"")*ROW(A:A)),<br>
+              &nbsp;&nbsp;検索値, A1:INDEX(A:A, 最終行),<br>
+              &nbsp;&nbsp;XLOOKUP(検索値, マスタ!D:D, マスタ!E:E, "", 0)<br>
+              )</code><br><br>
+              空でないセルのROW番号の最大値を取得。<br>
+              データ型を問わず正確だが配列計算のコストがある。
+            </div>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ MAX配列計算のコスト</strong><br>
+<code>MAX((A:A&lt;&gt;"")*ROW(A:A))</code> は列全体に対する配列演算で、それ自体にもコストがあります。
+            データに途中空白がないことが保証されているなら <code>COUNTA</code> の方が軽量です。<br>
+<strong>途中空白が発生しないようにデータを管理するのがベストプラクティス</strong>です。
+          </div>
+</div>
+<div class="method-card">
+<div class="method-card-title method-card-title-teal">スピル最適化の3手法 &horbar; 比較まとめ</div>
+<div class="xdemo-wrap">
+<table class="formula-count-table">
+<thead>
+<tr><th>手法</th><th>速度効果</th><th>仕組み</th><th>注意点</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="text-left">事前IF</td>
+<td class="fc-danger">❌ 効果なし</td>
+<td>配列IFに短絡評価がないため<br>全行の検索が実行される</td>
+<td>IFのオーバーヘッド分だけ<br>わずかに遅くなる可能性</td>
+</tr>
+<tr>
+<td class="text-left">if_not_found=""</td>
+<td class="fc-ok">&xutri; 速度は同じ</td>
+<td>全行検索は実行されるが<br>IFのオーバーヘッドはない</td>
+<td>速度改善にはならないが<br>最もシンプルな記述</td>
+</tr>
+<tr>
+<td class="text-left-bold">最終行カウント</td>
+<td class="fc-good"><strong>✅ 高速化する</strong></td>
+<td>空白行を配列から除外し<br>検索回数自体を減らす</td>
+<td>途中空白ありの場合は<br>COUNTAの代わりにMATCH/MAX</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="xdemo-note-good">
+<strong>✅ スピル式の高速化はこれで決まり</strong><br>
+            スピル式を使う場合の高速化は<strong>「最終行カウントで範囲を絞る」一択</strong>です。<br>
+            事前IFは効果がなく、if_not_foundは速度を変えません。<br>
+            範囲を絞れば検索回数も再計算範囲もメモリ使用量も減り、すべての面で有利です。<br><br>
+<strong>個別セル数式</strong>を使う場合は<code>=IF(A2="","", VLOOKUP(...))</code>の事前IFが有効です。
+            スピルと個別で最適解が異なることを覚えておいてください。
+          </div>
+</div>
+</section>
+<!-- =========================================================
+         【8】テクニック選択の判断フロー
+      ========================================================= -->
+<section class="comparison-section">
+<h3>【8】最終まとめ &horbar; どのテクニックをいつ使うか</h3>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">テクニック選択の判断フロー</div>
+<div class="flow-diagram" style="flex-direction:column;align-items:flex-start;gap:8px;">
+<div style="display:flex;align-items:center;gap:8px;">
+<div class="flow-box">データがテーブル化<br>されていない？</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-box-result">まずテーブル化する<br><span class="text-sm-normal">数式を変えずに2〜3倍速くなる</span></div>
+</div>
+<div style="margin-left:40px;font-size:.9em;color:#999;">&darr; テーブル化済み</div>
+<div style="display:flex;align-items:center;gap:8px;">
+<div class="flow-box">同じ部分式が<br>数式内に複数回ある？</div>
+<div class="flow-arrow">&rarr; Yes</div>
+<div class="flow-box-result" style="background:#e3f2fd;border-color:#1976d2;color:#0d47a1;">LET関数で変数化<br><span class="text-sm-normal">重複計算を排除</span></div>
+</div>
+<div style="margin-left:40px;font-size:.9em;color:#999;">&darr;</div>
+<div style="display:flex;align-items:center;gap:8px;">
+<div class="flow-box">条件に合う<br>「複数行」を取得？</div>
+<div class="flow-arrow">&rarr; Yes</div>
+<div class="flow-box-result" style="background:#f3e5f5;border-color:#ce93d8;color:#4a148c;">FILTER関数で一括抽出<br><span class="text-sm-normal">VLOOKUPを何百行もコピーしない</span></div>
+</div>
+<div style="margin-left:40px;font-size:.9em;color:#999;">&darr;</div>
+<div style="display:flex;align-items:center;gap:8px;">
+<div class="flow-box">同じ検索を<br>大量の行で実行？</div>
+<div class="flow-arrow">&rarr; Yes</div>
+<div class="flow-box-result" style="background:#fff3e0;border-color:#ff9800;color:#e65100;">スピル検索 + 最終行カウント<br><span class="text-sm-normal">ファイルサイズ削減＋範囲絞りで高速化</span></div>
+</div>
+<div style="margin-left:40px;font-size:.9em;color:#999;">&darr; 個別数式を使う場合</div>
+<div style="display:flex;align-items:center;gap:8px;">
+<div class="flow-box">検索値に空白行が<br>多い？</div>
+<div class="flow-arrow">&rarr; Yes</div>
+<div class="flow-box-result">事前IF空白チェック<br><span class="text-sm-normal">個別セルのIFは短絡評価で高速化</span></div>
+</div>
+<div style="margin-left:40px;font-size:.9em;color:#999;">&darr;</div>
+<div style="display:flex;align-items:center;gap:8px;">
+<div class="flow-box">マスタが10万行超で<br>MATCH結果を3回以上使う？</div>
+<div class="flow-arrow">&rarr; Yes</div>
+<div class="flow-box-result">作業セルにMATCH結果を保存<br><span class="text-sm-normal">大規模データではセル参照コスト<br>より再計算コストの方が大きい</span></div>
+</div>
+</div>
+</div>
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">テクニック総合比較</div>
+<table class="formula-count-table" style="max-width:100%;">
+<thead><tr><th>テクニック</th><th>速度改善効果</th><th>ファイルサイズ</th><th>保守性</th><th>対応ver</th><th>手間</th></tr></thead>
+<tbody>
+<tr>
+<td class="text-left-bold">テーブル化</td>
+<td class="fc-good">✅ 2〜10倍速</td>
+<td class="fc-ok">変化なし</td>
+<td class="fc-good">✅ 大幅向上</td>
+<td>全ver</td>
+<td class="fc-good">✅ Ctrl+Tだけ</td>
+</tr>
+<tr>
+<td class="text-left-bold">LET関数</td>
+<td class="fc-good">✅ 重複分だけ削減</td>
+<td class="fc-ok">変化なし</td>
+<td class="fc-good">✅ 可読性向上</td>
+<td>2021以降</td>
+<td class="fc-ok">数式書き換え</td>
+</tr>
+<tr>
+<td class="text-left-bold">作業セル分離</td>
+<td class="fc-good">✅ 大規模データで有効</td>
+<td class="fc-bad">⚠ 列が増える</td>
+<td class="fc-ok">やや複雑になる</td>
+<td>全ver</td>
+<td class="fc-ok">列追加＋数式変更</td>
+</tr>
+<tr>
+<td class="text-left-bold">FILTER一括抽出</td>
+<td class="fc-good">✅ 複数件取得で有効</td>
+<td class="fc-good">✅ 数式1個で済む</td>
+<td class="fc-good">✅ 修正1箇所</td>
+<td>2021以降</td>
+<td class="fc-good">✅ 数式置換だけ</td>
+</tr>
+<tr>
+<td class="text-left-bold">スピル検索</td>
+<td class="fc-ok">場合による</td>
+<td class="fc-good">✅ 劇的に小さい</td>
+<td class="fc-good">✅ 修正1箇所</td>
+<td>2021以降</td>
+<td class="fc-good">✅ 数式置換だけ</td>
+</tr>
+<tr>
+<td class="text-left-bold">事前IF（個別セル）</td>
+<td class="fc-good">✅ 空白率に比例</td>
+<td class="fc-ok">変化なし</td>
+<td class="fc-ok">数式がやや長くなる</td>
+<td>全ver</td>
+<td class="fc-ok">数式にIF追加</td>
+</tr>
+<tr>
+<td class="text-left-bold">事前IF（スピル）</td>
+<td class="fc-danger">❌ 効果なし</td>
+<td class="fc-ok">変化なし</td>
+<td class="fc-bad">&times; 無駄に複雑</td>
+<td>&horbar;</td>
+<td class="fc-bad">やらない方がよい</td>
+</tr>
+<tr>
+<td class="text-left-bold">最終行カウント（スピル）</td>
+<td class="fc-good">✅ 空白率に比例</td>
+<td class="fc-good">✅ さらに圧縮</td>
+<td class="fc-good">✅ LET併用で良好</td>
+<td>2021以降</td>
+<td class="fc-ok">数式書き換え</td>
+</tr>
+</tbody>
+</table>
+<div class="xdemo-note-good">
+<strong>✅ 優先順位の結論</strong><br>
+            ① <strong>テーブル化（Ctrl+T）</strong>：数式を変えずに最も簡単に高速化できる。全員がまずやるべき。<br>
+            ② <strong>LET関数で重複排除</strong>：数式内の同じ計算を1回にまとめる。2021以降で最もバランスの良い最適化。<br>
+            ③ <strong>FILTER / スピル検索への置き換え</strong>：用途に応じて数式数を劇的に減らし、ファイルサイズも削減。スピル式には最終行カウントを必ず併用。<br>
+            ④ <strong>個別セル数式の事前IF</strong>：スピルを使わない場合の空白行スキップに有効。短絡評価で確実に高速化。<br>
+            ⑤ <strong>作業セル分離</strong>：大規模データで効果大。ただしLETが使えるならLETの方がシートが汚れない。<br>
+            ⑥ <strong>バイナリ検索</strong>：ソート可能なデータなら桁違いの高速化（前回記事参照）。
+          </div>
+</div>
+</section>
+<!-- =========================================================
+         関連記事
+      ========================================================= -->
+<section class="related-articles-section" style="margin-top:40px;border-top:2px dashed #ccc;padding-top:20px;">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<div style="background:#f5f8ff;padding:15px;border-radius:8px;margin-top:15px;">
+<h4 style="margin-top:0;color:#1565c0;border-bottom:1px solid #bbdefb;padding-bottom:5px;">速度・パフォーマンス</h4>
+<ul style="line-height:1.8;">
+<li><a href="article_01_lookup_speed.html">検索関数の速度とメモリ効率 &horbar; VLOOKUP・INDEX+MATCH・XLOOKUPを徹底比較</a></li>
+<li><a href="../../index.html#others">速度カテゴリ &horbar; 計算速度・パフォーマンス最適化の全記事一覧</a></li>
+</ul>
+<h4 style="margin-top:20px;color:#1565c0;border-bottom:1px solid #bbdefb;padding-bottom:5px;">関連する関数の詳細解説</h4>
+<ul style="line-height:1.8;">
+<li><a href="../../functions/latest/article_let.html">LET関数 &horbar; 数式内で変数を定義する</a></li>
+<li><a href="../../functions/latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを一括抽出</a></li>
+<li>XLOOKUPシリーズ &horbar; 全4編の一覧</li>
+<li><a href="../../functions/latest/article_sort.html">SORT / SORTBY &horbar; 数式での自動並び替え</a></li>
+<li><a href="../../functions/old/article_index_match.html">INDEX + MATCH &horbar; 全バージョン対応の王道テクニック</a></li>
+</ul>
+</div>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

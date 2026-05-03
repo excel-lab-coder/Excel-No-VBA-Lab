@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>TEXT関数 和暦変換＆書式コード逆引き完全ガイド｜Excel &times; No VBA Lab</title>
+<meta content="ExcelのTEXT関数で西暦&rarr;和暦変換（令和・平成・昭和）するコードを全バージョン向けに解説。書式コード逆引き一覧つき。" name="description">
+<meta content="TEXT 関数 和暦変換, 令和 変換 Excel, 和暦 西暦 数式, TEXT 書式コード, VBA不要 日付" name="keywords">
+<meta content="TEXT関数 和暦変換＆書式コード逆引き完全ガイド｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのTEXT関数で西暦&rarr;和暦変換（令和・平成・昭和）するコードを全バージョン向けに解説。書式コード逆引き一覧つき。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/old/article_text_date.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/old/article_text_date.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "TEXT関数 和暦変換＆書式コード逆引き完全ガイド",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "ExcelのTEXT関数で西暦→和暦変換（令和・平成・昭和）するコードを全バージョン向けに解説。書式コード逆引き一覧つき。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-no-vba-lab.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-no-vba-lab.com/functions/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "TEXT関数 和暦変換＆書式コード逆引き完全ガイド",
+      "item": "https://excel-no-vba-lab.com/functions/old/article_text_date.html"
+    }
+  ]
+}</script>
+
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#functions">関数</a><span>&gt;</span>
+<strong>TEXT関数 和暦変換＆書式コード完全ガイド</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全ver</span>
+</div>
+<h1 class="article-title">TEXT関数 和暦変換＆書式コード逆引き完全ガイド<br><span style="font-size:.55em;font-weight:400;color:#666;">&horbar; 西暦&hArr;令和/平成変換・IF条件分岐・ユーザー定義まで全網羅 &horbar;</span></h1>
+</div>
+<!-- ===== 目次 ===== -->
+<div class="toc-box">
+<h4>📖 この記事の内容</h4>
+<ol>
+<li><a href="#sec-intro">書式設定とTEXT関数の違い &horbar; 同じ言葉で2つの使い方</a></li>
+<li><a href="#sec-diff">「セルの書式設定」と「TEXT関数」の決定的な違い</a></li>
+<li><a href="#sec-wareki">和暦変換の全パターン &horbar; g / gg / ggg / e / ee の使い分け</a></li>
+<li><a href="#sec-if">IF関数&times;TEXT関数で和暦条件分岐</a></li>
+<li><a href="#sec-number">数値・金額を整える書式コード</a></li>
+<li><a href="#sec-date">日付・時刻・曜日を操る書式コード</a></li>
+<li><a href="#sec-string">文字列操作と「完全に消す」裏ワザコード</a></li>
+<li><a href="#sec-caution">注意点 &horbar; 令和対応・環境依存・落とし穴</a></li>
+<li><a href="#sec-patterns">実務パターン集</a></li>
+<li><a href="#sec-summary">まとめ</a></li>
+</ol>
+</div>
+<!-- ===== 1. 導入 ===== -->
+<section class="goal-section" id="sec-intro">
+<h2><span class="section-num">1</span> 書式設定（見た目）と TEXT関数（データ化）は同じ言葉で動く</h2>
+<p>Excelにおける「表示形式のコード（<code>#,##0</code> や <code>yyyy/mm/dd</code> など）」は、以下の2つの機能で<strong>まったく同じ記法</strong>として使い回せます。</p>
+<div class="compare-grid">
+<div class="compare-left">
+<h4 class="text-blue-dark">① セルの書式設定（Ctrl+1）</h4>
+<p>セルを右クリック &rarr; [セルの書式設定] &rarr; [ユーザー定義] にコードを入力。<br>
+<strong>データの中身（数値や日付）はそのまま</strong>で、画面上の「見た目だけ」をお化粧して変える方法。</p>
+</div>
+<div class="compare-right">
+<h4 style="color:#f57f17;">② TEXT関数でデータ化</h4>
+<p><code>=TEXT(A1, "yyyy/mm/dd")</code> のように関数内にコードを指定。<br>
+          見た目ではなく、<strong>中身を完全に「指定した形式の文字列データ」に変換</strong>してしまう方法。文字結合（&）や書き出し時に必須。</p>
+</div>
+</div>
+<p style="margin-top:20px;">この法則さえ覚えておけば、以下のほぼ全ての書式を「書式設定」と「TEXT関数」の両方で自由自在に操ることができます。</p>
+</section>
+<!-- ===== 2. 決定的な違い ===== -->
+<section class="method-section" id="sec-diff">
+<h2><span class="section-num">2</span> 「セルの書式設定」と「TEXT関数」の決定的な違い</h2>
+<p>同じ書式コードを使う2つの機能ですが、<strong>生成されるデータの性質がまったく異なります</strong>。ここを理解していないと「見た目は同じなのに計算できない！」というトラブルが頻発します。</p>
+<h3>具体例で比較する</h3>
+<p>セル A1 に日付 <code>2026/4/1</code>（シリアル値 46113）が入っている場合を考えます。</p>
+<div class="compare-grid" style="margin:20px 0;">
+<div class="compare-left">
+<h4 class="text-blue-dark">① セルの書式設定で和暦にした場合</h4>
+<p>A1 のユーザー定義に <code>ggge"年"m"月"d"日"</code> を設定。<br><br>
+<strong>画面表示：</strong>令和8年4月1日<br>
+<strong>セルの中身：</strong>46113（シリアル値のまま）<br>
+<strong>データ型：</strong>数値（日付）</p>
+</div>
+<div class="compare-right">
+<h4 style="color:#f57f17;">② TEXT関数で和暦にした場合</h4>
+<p><code>=TEXT(A1, "ggge""年""m""月""d""日""")</code><br><br>
+<strong>画面表示：</strong>令和8年4月1日<br>
+<strong>セルの中身：</strong>"令和8年4月1日"（文字列）<br>
+<strong>データ型：</strong>文字列</p>
+</div>
+</div>
+<p>画面上はまったく同じ「令和8年4月1日」に見えますが、中身は全くの別物です。</p>
+<h3>できること・できないことの比較表</h3>
+<div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col" style="width:40%">やりたいこと</th>
+<th class="w-30" scope="col">セルの書式設定<br><span class="text-sm-normal">（見た目だけ変更）</span></th>
+<th class="w-30" scope="col">TEXT関数<br><span class="text-sm-normal">（文字列に変換）</span></th>
+</tr>
+<tr>
+<td class="col-item">日付同士の引き算（日数計算）</td>
+<td><span class="diff-ok">✅ できる</span><br><span class="font-sm">中身はシリアル値のまま</span></td>
+<td><span class="diff-ng">❌ できない</span><br><span class="font-sm">文字列なので #VALUE! エラー</span></td>
+</tr>
+<tr>
+<td class="col-item">SUM / AVERAGE などの計算関数</td>
+<td><span class="diff-ok">✅ できる</span></td>
+<td><span class="diff-ng">❌ できない</span><br><span class="font-sm">数値ではないので無視される</span></td>
+</tr>
+<tr>
+<td class="col-item">IF文で日付の大小比較</td>
+<td><span class="diff-ok">✅ できる</span></td>
+<td><span class="diff-ng">❌ できない</span><br><span class="font-sm">文字列と数値の比較になる</span></td>
+</tr>
+<tr>
+<td class="col-item">VLOOKUP / INDEX-MATCH の検索キー</td>
+<td><span class="diff-ok">✅ 数値として検索</span></td>
+<td><span class="diff-ng">⚠️ 注意</span><br><span class="font-sm">文字列として検索されるため<br>検索先と型を揃える必要あり</span></td>
+</tr>
+<tr>
+<td class="col-item">& で他の文字列と結合</td>
+<td><span class="diff-ng">⚠️ 注意</span><br><span class="font-sm">シリアル値がそのまま結合される<br>（例："請求日:46113"）</span></td>
+<td><span class="diff-ok">✅ そのまま結合できる</span><br><span class="font-sm">（例："請求日:令和8年4月1日"）</span></td>
+</tr>
+<tr>
+<td class="col-item">CSVやテキスト書き出しで形式を保持</td>
+<td><span class="diff-ng">⚠️ 注意</span><br><span class="font-sm">書き出し時に書式が消えて<br>シリアル値や別形式になりがち</span></td>
+<td><span class="diff-ok">✅ 文字列としてそのまま出力</span></td>
+</tr>
+<tr>
+<td class="col-item">IF文で元号を判定</td>
+<td><span style="color:#666;">&horbar; そもそもTEXT関数を使う</span></td>
+<td><span class="diff-ok">✅ 得意中の得意</span></td>
+</tr>
+</table></div>
+<div class="xdemo-note-red">
+<strong>最重要ルール：TEXT関数は「最後の仕上げ」に使う</strong><br>
+        日付や数値の計算・比較・集計はすべて<strong>元のデータ（シリアル値や数値）のまま</strong>行い、人に見せる最終出力の段階でTEXT関数を使って文字列に変換する &horbar; これが鉄則です。<br><br>
+        逆に言えば「&で文章に埋め込む」「IF条件で元号の文字を判定する」「CSVに決まった形式で書き出す」といった<strong>"文字列であることが武器になる"場面</strong>でこそTEXT関数の本領が発揮されます。
+      </div>
+<h3>数値でも同じことが起きる</h3>
+<div class="compare-grid" style="margin:20px 0;">
+<div class="compare-left">
+<h4 class="text-blue-dark">書式設定で「#,##0"円"」</h4>
+<p>A1 に <code>15000</code> と入力し、書式を設定。<br><br>
+<strong>画面表示：</strong>15,000円<br>
+<strong>セルの中身：</strong>15000（数値のまま）<br>
+<strong>SUM関数：</strong><span class="diff-ok">✅ 15000として合計される</span></p>
+</div>
+<div class="compare-right">
+<h4 style="color:#f57f17;">TEXT関数で「#,##0"円"」</h4>
+<p><code>=TEXT(A1, "#,##0""円""")</code><br><br>
+<strong>画面表示：</strong>15,000円<br>
+<strong>セルの中身：</strong>"15,000円"（文字列）<br>
+<strong>SUM関数：</strong><span class="diff-ng">❌ 無視される（0扱い）</span></p>
+</div>
+</div>
+<div class="xdemo-note-good">
+<strong>見分け方のコツ</strong><br>
+        セルを選択して数式バーを見れば、中身が数値なのか文字列なのか一目瞭然です。また、文字列はデフォルトで<strong>左揃え</strong>、数値・日付はデフォルトで<strong>右揃え</strong>になるので、配置で見分けることもできます。
+      </div>
+</section>
+<!-- ===== 3. 和暦変換 ===== -->
+<section class="method-section" id="sec-wareki">
+<h2><span class="section-num">3</span> 和暦変換の全パターン &horbar; g / gg / ggg / e / ee の使い分け</h2>
+<p>TEXT関数の第2引数に和暦専用の書式コードを指定するだけで、西暦の日付を自動的に元号付きの和暦に変換できます。</p>
+<h3>元号の書式コード一覧</h3>
+<div class="table-wrapper"><table class="format-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">書式コード</th>
+<th scope="col">出力内容</th>
+<th scope="col">具体例（2026/4/1 の場合）</th>
+</tr>
+<tr>
+<td><span class="format-code">g</span></td>
+<td>元号の頭文字（アルファベット1文字）</td>
+<td>R</td>
+</tr>
+<tr>
+<td><span class="format-code">gg</span></td>
+<td>元号の短縮名（漢字1文字）</td>
+<td>令</td>
+</tr>
+<tr>
+<td><span class="format-code">ggg</span></td>
+<td>元号のフルネーム（漢字2文字）</td>
+<td>令和</td>
+</tr>
+<tr>
+<td><span class="format-code">e</span></td>
+<td>和暦の年（ゼロ埋めなし）</td>
+<td>8</td>
+</tr>
+<tr>
+<td><span class="format-code">ee</span></td>
+<td>和暦の年（ゼロ埋め2桁）</td>
+<td>08</td>
+</tr>
+</table></div>
+<h3>和暦の元号一覧（Excelが対応する範囲）</h3>
+<div class="table-wrapper"><table class="format-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">元号</th>
+<th scope="col">期間</th>
+<th scope="col">g / gg / ggg の出力</th>
+</tr>
+<tr>
+<td><span class="era-badge era-m">明治</span></td>
+<td>1868/1/25 ～ 1912/7/29</td>
+<td>M / 明 / 明治</td>
+</tr>
+<tr>
+<td><span class="era-badge era-t">大正</span></td>
+<td>1912/7/30 ～ 1926/12/24</td>
+<td>T / 大 / 大正</td>
+</tr>
+<tr>
+<td><span class="era-badge era-s">昭和</span></td>
+<td>1926/12/25 ～ 1989/1/7</td>
+<td>S / 昭 / 昭和</td>
+</tr>
+<tr>
+<td><span class="era-badge era-h">平成</span></td>
+<td>1989/1/8 ～ 2019/4/30</td>
+<td>H / 平 / 平成</td>
+</tr>
+<tr>
+<td><span class="era-badge era-r">令和</span></td>
+<td>2019/5/1 ～</td>
+<td>R / 令 / 令和</td>
+</tr>
+</table></div>
+<h3>実践：和暦変換の数式バリエーション</h3>
+<p>セル A1 に <code>2026/4/1</code> が入っている場合の各出力例です。</p>
+<h4>パターン① フル和暦（「令和8年4月1日」）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(A1, "ggge""年""m""月""d""日""")</span>
+</div>
+<p class="code-comment">&rarr; 令和8年4月1日</p>
+<h4>パターン② ゼロ埋めフル和暦（「令和08年04月01日」）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(A1, "gggee""年""mm""月""dd""日""")</span>
+</div>
+<p class="code-comment">&rarr; 令和08年04月01日</p>
+<h4>パターン③ 短縮ドット表記（「R8.4.1」）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(A1, "ge.m.d")</span>
+</div>
+<p class="code-comment">&rarr; R8.4.1</p>
+<h4>パターン④ 漢字1文字＋年度表記（「令8年度」）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(A1, "gge""年度""")</span>
+</div>
+<p class="code-comment">&rarr; 令8年度</p>
+<h4>パターン⑤ 元号フル＋曜日付き（「令和8年4月1日(水)」）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(A1, "ggge""年""m""月""d""日""(aaa)")</span>
+</div>
+<p class="code-comment">&rarr; 令和8年4月1日(水)</p>
+<h4>パターン⑥ 文字結合で和暦を文章に埋め込む</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">="発行日：" & TEXT(A1, "ggge""年""m""月""d""日""") & "付"</span>
+</div>
+<p class="code-comment">&rarr; 発行日：令和8年4月1日付</p>
+<div class="xdemo-note">
+<strong>💡 元年表示について</strong><br>
+        Excelの標準的なTEXT関数では、令和1年は「令和1年」と表示されます。「令和元年」としたい場合は、後述のIF関数との組み合わせで対応できます。
+      </div>
+</section>
+<!-- ===== 4. IF×TEXT ===== -->
+<section class="method-section" id="sec-if">
+<h2><span class="section-num">4</span> IF関数&times;TEXT関数で和暦の条件分岐</h2>
+<p>TEXT関数で日付を「文字列」に変換すれば、IF関数の条件にそのまま使えます。DATE関数で境界日を計算するよりはるかに直感的で、元号ベースの条件分岐が驚くほど簡単になります。</p>
+<!-- ----- 実務定番：生年月日判定 ----- -->
+<h3>実務定番：生年月日から元号を一発判定する</h3>
+<p>社員マスタや顧客リストの「生年月日」列から、その人が昭和生まれなのか・平成生まれなのか・令和生まれなのかを判定したい &horbar; これは実務で非常によくある処理です。</p>
+<p>TEXT関数の <code>"g"</code> は日付のシリアル値を内部的に元号の境界日と照合して、頭文字1文字を返してくれます。つまり<strong>自分でDATE関数の境界日を調べて書く必要がありません</strong>。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(A2, "g")</span>
+</div>
+<p class="code-comment">これだけで A2 の日付が昭和なら "S"、平成なら "H"、令和なら "R" を返す。</p>
+<div class="code-readonly">
+<span class="code-line">A2 = 1975/6/15  &rarr; "S"</span>
+<span class="code-line">A2 = 1995/3/20  &rarr; "H"</span>
+<span class="code-line">A2 = 2020/8/1   &rarr; "R"</span>
+</div>
+<p>この「S」「H」「R」を IF の条件に使えば、元号で処理を分岐できます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(TEXT(A2,"g")="S", "昭和",</span>
+<span class="code-line">  IF(TEXT(A2,"g")="H", "平成",</span>
+<span class="code-line">    IF(TEXT(A2,"g")="R", "令和", "その他")))</span>
+</div>
+<div class="compare-grid" style="margin:20px 0;">
+<div class="compare-left">
+<h4 class="color-red">従来のやり方（DATE境界を自分で書く）</h4>
+<p style="font-size:.85em;"><code>=IF(AND(A2&gt;=DATE(1926,12,25), A2&lt;=DATE(1989,1,7)), "昭和", IF(AND(A2&gt;=DATE(1989,1,8), A2&lt;=DATE(2019,4,30)), "平成", ...))</code><br><br>
+          ・境界日を正確に覚えている必要がある<br>
+          ・数式が長く、ミスしやすい<br>
+          ・新しい元号が来たら全数式を修正</p>
+</div>
+<div class="compare-right">
+<h4 class="color-2e7d32">TEXT(,"g") を使うやり方</h4>
+<p style="font-size:.85em;"><code>=IF(TEXT(A2,"g")="S", "昭和", ...)</code><br><br>
+          ・<strong>境界日の知識が不要</strong>（Excelが内部管理）<br>
+          ・数式が短くて読みやすい<br>
+          ・新元号にもExcel更新で自動対応</p>
+</div>
+</div>
+<h4>短縮和暦の生成にもそのまま使える</h4>
+<div class="scenario-box">
+<h4>シナリオ：帳票の生年月日欄に「S50.6.15」「H7.3.20」のような短縮和暦を自動出力したい</h4>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(A2, "ge.m.d")</span>
+</div>
+<div class="code-readonly">
+<span class="code-line">A2 = 1975/6/15  &rarr; "S50.6.15"</span>
+<span class="code-line">A2 = 1995/3/20  &rarr; "H7.3.20"</span>
+<span class="code-line">A2 = 2020/8/1   &rarr; "R2.8.1"</span>
+</div>
+<p class="code-comment">IFすら不要。TEXT関数1つで「元号頭文字＋和暦年＋月日」が完成する。</p>
+<!-- ----- 基本：複数元号 ----- -->
+<h3>IFS / SWITCH でさらにスッキリ書く</h3>
+<div class="scenario-box">
+<h4>シナリオ：生年月日（A1）から「昭和/平成/令和」を自動判定して列に出力したい</h4>
+</div>
+<span class="code-label-good">✅ IFS関数版</span>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFS(TEXT(A1,"g")="S", "昭和生まれ",</span>
+<span class="code-line">     TEXT(A1,"g")="H", "平成生まれ",</span>
+<span class="code-line">     TEXT(A1,"g")="R", "令和生まれ",</span>
+<span class="code-line">     TRUE, "大正以前")</span>
+</div>
+<span class="code-label-good">✅ SWITCH関数版（値の完全一致ならこちらが見やすい）</span>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SWITCH(TEXT(A1,"g"),</span>
+<span class="code-line">  "S", "昭和生まれ",</span>
+<span class="code-line">  "H", "平成生まれ",</span>
+<span class="code-line">  "R", "令和生まれ",</span>
+<span class="code-line">  "大正以前")</span>
+</div>
+<span class="code-label-good">✅ ネストIF版（どのバージョンでもOK）</span>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(TEXT(A1,"g")="R", "令和生まれ",</span>
+<span class="code-line">  IF(TEXT(A1,"g")="H", "平成生まれ",</span>
+<span class="code-line">    IF(TEXT(A1,"g")="S", "昭和生まれ", "大正以前")))</span>
+</div>
+<div class="xdemo-note">
+<strong>💡 どれを使えばいい？</strong><br>
+        判定は「"S"、"H"、"R" のどれか」という<strong>完全一致</strong>なので、SWITCH が最もスッキリ書けます。IFS は「以上・以下」などの範囲条件も使える汎用型。ネストIF はどのバージョンでも動く安心型です。
+      </div>
+<!-- ----- 応用：元年表示 ----- -->
+<h3>応用① 「令和1年」を「令和元年」に自動変換する</h3>
+<div class="scenario-box">
+<h4>シナリオ：和暦表示で1年目を「元年」と表示したい（公文書・社内文書で頻出）</h4>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(A1,"ggg") & IF(TEXT(A1,"e")="1", "元", TEXT(A1,"e")) & "年" & TEXT(A1,"m") & "月" & TEXT(A1,"d") & "日"</span>
+</div>
+<div class="code-readonly">
+<span class="code-line">👉 2019/5/1  &rarr; 令和元年5月1日</span>
+<span class="code-line">👉 2020/3/15 &rarr; 令和2年3月15日</span>
+<span class="code-line">👉 1989/1/8  &rarr; 平成元年1月8日</span>
+<span class="code-line">👉 1989/12/1 &rarr; 平成元年12月1日</span>
+</div>
+<div class="xdemo-note">
+<strong>💡 仕組みの解説</strong><br>
+<code>TEXT(A1,"e")</code> で和暦の年数だけを取り出し、それが "1" なら「元」に置き換えます。<code>TEXT(A1,"ggg")</code>で元号フルネームを取得しているため、平成元年・昭和元年・大正元年すべてに自動対応します。
+      </div>
+<!-- ----- 応用：年度判定 ----- -->
+<h3>応用② 和暦の「年度」を判定する（4月始まり対応）</h3>
+<div class="scenario-box">
+<h4>シナリオ：日付（A1）が「令和何年度」に属するかを自動表示したい（4月始まり）</h4>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(DATE(YEAR(A1)-IF(MONTH(A1)&lt;4,1,0), 4, 1), "ggg") &</span>
+<span class="code-line"> TEXT(DATE(YEAR(A1)-IF(MONTH(A1)&lt;4,1,0), 4, 1), "e") & "年度"</span>
+</div>
+<div class="code-readonly">
+<span class="code-line">👉 2026/4/1  &rarr; 令和8年度</span>
+<span class="code-line">👉 2027/3/31 &rarr; 令和8年度</span>
+<span class="code-line">👉 2026/3/15 &rarr; 令和7年度</span>
+</div>
+<p class="code-comment">ポイントは <code>IF(MONTH(A1)&lt;4, 1, 0)</code> の部分です。1～3月なら年を1引いて前年度に属させています。その「年度の4月1日」を作り、それをTEXTで和暦変換します。</p>
+<!-- ----- 応用：元号が変わった年 ----- -->
+<h3>応用③ 元号が切り替わる年の特殊処理</h3>
+<div class="scenario-box">
+<h4>シナリオ：2019年は4月まで「平成31年」、5月から「令和元年」と正確に出し分けたい</h4>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(A1, "ggge""年""m""月""d""日""")</span>
+</div>
+<div class="code-readonly">
+<span class="code-line">👉 2019/4/30 &rarr; 平成31年4月30日</span>
+<span class="code-line">👉 2019/5/1  &rarr; 令和1年5月1日</span>
+</div>
+<p class="code-comment">Excelは内部的に元号の境界日を管理しているため、TEXT関数の <code>ggg</code> や <code>g</code> は日付に応じて自動的に正しい元号を返します。「令和元年」表記にしたい場合は応用①を併用してください。</p>
+<!-- ----- 応用：和暦→西暦 逆変換 ----- -->
+<h3>応用④ 和暦文字列 &rarr; 西暦日付へ逆変換</h3>
+<div class="scenario-box">
+<h4>シナリオ：「令和8年4月1日」のような和暦テキストを日付シリアル値に戻したい</h4>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=DATEVALUE("令和8年4月1日")</span>
+</div>
+<p class="code-comment">&rarr; 46113（= 2026/4/1 のシリアル値）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=DATEVALUE(A1)</span>
+</div>
+<p class="code-comment">A1に「令和8年4月1日」と入っていれば 2026/4/1 のシリアル値を返す。DATEVALUE関数は日本語環境のExcelであれば「令和」「平成」「昭和」などの元号テキストを正しく解釈してシリアル値に変換してくれます。</p>
+</section>
+<!-- ===== 5. 数値・金額 ===== -->
+<section class="method-section" id="sec-number">
+<h2><span class="section-num">5</span> 数値・金額を一瞬で整える書式コード</h2>
+<div class="table-wrapper"><table class="format-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">やりたいこと</th>
+<th scope="col">書式記号コード</th>
+<th scope="col">TEXT関数での書き方（実践例）</th>
+</tr>
+<tr>
+<td>桁区切りのカンマを入れる</td>
+<td><span class="format-code">#,##0</span></td>
+<td><code>=TEXT(A1, "#,##0")</code><br><span class="color-666-small">&rarr; 1500000 が "1,500,000" になる</span></td>
+</tr>
+<tr>
+<td>後ろに特定の文字（円、個など）を付ける</td>
+<td><span class="format-code">#,##0"円"</span></td>
+<td><code>=TEXT(A1, "#,##0""円""")</code> または<br><code>=TEXT(A1, "#,##0") & "円"</code><br><span class="color-666-small">&rarr; "1,200円"になる（&で繋ぐのが簡単です）</span></td>
+</tr>
+<tr>
+<td>常に指定桁数にする（ゼロ埋め）<br><span style="font-size:.8em">※社員番号や口座番号の結合で必須</span></td>
+<td><span class="format-code">0000000</span></td>
+<td><code>="社員ID：" & TEXT(A1, "0000000")</code><br><span class="color-666-small">&rarr; "社員ID：0015024" になる</span></td>
+</tr>
+<tr>
+<td>小数点第1位まで絶対表示する</td>
+<td><span class="format-code">0.0</span></td>
+<td><code>=TEXT(A1, "0.0")</code><br><span class="color-666-small">&rarr; 15 が "15.0" になる</span></td>
+</tr>
+<tr>
+<td>千円単位で表示する（下3桁を省略）</td>
+<td><span class="format-code">#,##0,</span></td>
+<td><code>=TEXT(A1, "#,##0,") & "千円"</code><br><span class="color-666-small">&rarr; 1500000 が "1,500千円" になる</span></td>
+</tr>
+<tr>
+<td>百万円単位で表示する（下6桁を省略）</td>
+<td><span class="format-code">#,##0,,</span></td>
+<td><code>=TEXT(A1, "#,##0,,") & "百万円"</code><br><span class="color-666-small">&rarr; 15000000 が "15百万円" になる</span></td>
+</tr>
+<tr>
+<td>パーセント表示する</td>
+<td><span class="format-code">0.0%</span></td>
+<td><code>=TEXT(A1, "0.0%")</code><br><span class="color-666-small">&rarr; 0.853 が "85.3%" になる</span></td>
+</tr>
+<tr>
+<td>正・負・ゼロで表示を分ける</td>
+<td><span class="format-code">#,##0;▲#,##0;"&boxh;"</span></td>
+<td><code>=TEXT(A1, "#,##0;""▲""#,##0;""&boxh;""")</code><br><span class="color-666-small">&rarr; 正:"1,500" 負:"▲1,500" ゼロ:"&boxh;"</span></td>
+</tr>
+</table></div>
+</section>
+<!-- ===== 6. 日付・時刻・曜日 ===== -->
+<section class="method-section" id="sec-date">
+<h2><span class="section-num">6</span> 日付・時刻・曜日を自在に操る書式コード</h2>
+<div class="table-wrapper"><table class="format-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">やりたいこと</th>
+<th scope="col">書式記号コード</th>
+<th scope="col">TEXT関数での書き方（実践例）</th>
+</tr>
+<tr>
+<td>西暦でゼロ埋めスラッシュ（一番標準）</td>
+<td><span class="format-code">yyyy/mm/dd</span></td>
+<td><code>=TEXT(A1, "yyyy/mm/dd")</code><br><span class="color-666-small">&rarr; "2026/03/05"</span></td>
+</tr>
+<tr>
+<td>年を省略し、ゼロ埋めもしない</td>
+<td><span class="format-code">m/d</span></td>
+<td><code>=TEXT(A1, "m/d")</code><br><span class="color-666-small">&rarr; "3/5"</span></td>
+</tr>
+<tr>
+<td>和暦（令和〇年〇月〇日）で表示する</td>
+<td><span class="format-code">ggge"年"m"月"d"日"</span></td>
+<td><code>=TEXT(A1, "ggge""年""m""月""d""日""")</code><br><span class="color-666-small">&rarr; "令和8年3月18日"</span></td>
+</tr>
+<tr>
+<td>和暦の頭文字アルファベット（R, H, S等）</td>
+<td><span class="format-code">g</span></td>
+<td><code>=TEXT(A1, "g") & TEXT(A1, "e") & "年度"</code><br><span class="color-666-small">&rarr; "R8年度"</span></td>
+</tr>
+<tr>
+<td>曜日を1文字で出す（月, 火, 水&hellip;）</td>
+<td><span class="format-code">aaa</span></td>
+<td><code>=TEXT(A1, "aaa")</code><br><span class="color-666-small">&rarr; "水"</span></td>
+</tr>
+<tr>
+<td>曜日をフルで出す（水曜日&hellip;）</td>
+<td><span class="format-code">aaaa</span></td>
+<td><code>=TEXT(A1, "aaaa")</code><br><span class="color-666-small">&rarr; "水曜日"</span></td>
+</tr>
+<tr>
+<td>英語の曜日（略称 / フル）</td>
+<td><span class="format-code">ddd / dddd</span></td>
+<td><code>=TEXT(A1, "ddd")</code> &rarr; "Wed"<br><code>=TEXT(A1, "dddd")</code> &rarr; "Wednesday"</td>
+</tr>
+<tr>
+<td>英語の月名（略称 / フル）</td>
+<td><span class="format-code">mmm / mmmm</span></td>
+<td><code>=TEXT(A1, "mmm")</code> &rarr; "Mar"<br><code>=TEXT(A1, "mmmm")</code> &rarr; "March"</td>
+</tr>
+<tr>
+<td>日付と曜日をカッコ付きでまとめる</td>
+<td><span class="format-code">yyyy/mm/dd (aaa)</span></td>
+<td><code>="作業日は " & TEXT(A1, "yyyy/mm/dd (aaa)") & " です"</code><br><span class="color-666-small">&rarr; "作業日は 2026/03/18 (水) です"</span></td>
+</tr>
+<tr>
+<td>時間・分・秒を表示する</td>
+<td><span class="format-code">h:mm:ss</span></td>
+<td><code>=TEXT(A1, "h:mm:ss")</code><br><span class="color-666-small">&rarr; "9:05:00"</span></td>
+</tr>
+<tr>
+<td>24時間を超える時間を集計する</td>
+<td><span class="format-code">[h]:mm</span></td>
+<td><code>="総労働時間は " & TEXT(A1, "[h]:mm")</code><br><span class="color-666-small">&rarr; "総労働時間は 25:30"（[h]がないと1:30にリセットされる）</span></td>
+</tr>
+</table></div>
+<h3>実務で頻出する「日付の文字化」</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">="本日の作業日は " & TEXT(TODAY(), "yyyy/mm/dd (aaa)") & " です"</span>
+</div>
+<p class="code-comment">&rarr; "本日の作業日は 2026/03/23 (月) です"</p>
+<div class="xdemo-note">
+<strong>💡 ロケール指定で英語表示を強制する</strong><br>
+        日本語環境でも <code>[$-409]</code> を書式コードの先頭に付けると英語表示になります。<br>
+<code>=TEXT(A1, "[$-409]mmm dd, yyyy")</code> &rarr; "Apr 01, 2026"<br>
+        海外拠点とのやり取りや英語帳票で便利です。<code>[$-409]</code> は英語（米国）、<code>[$-411]</code> は日本語のロケールIDです。
+      </div>
+</section>
+<!-- ===== 7. 文字列・その他 ===== -->
+<section class="method-section" id="sec-string">
+<h2><span class="section-num">7</span> 文字列の操作と「完全に消す」裏ワザコード</h2>
+<div class="table-wrapper"><table class="format-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">やりたいこと</th>
+<th scope="col">書式記号コード</th>
+<th scope="col">TEXT関数での書き方（実践例）</th>
+</tr>
+<tr>
+<td>文字の後ろに自動で「様」や「御中」を付ける<br><span style="font-size:.8em;color:gray">※主に「書式設定」専用テクニック</span></td>
+<td><span class="format-code">@" 様"</span></td>
+<td>TEXT関数ではなく<br><code>= A1 & " 様"</code> で文字結合<br><span class="color-666-small">&rarr; "田中 様"</span></td>
+</tr>
+<tr>
+<td><strong>セルの中身を完全に非表示にする</strong><br>※VLOOKUPのキー列、パスワード入力欄などに</td>
+<td><span class="format-code">;;;</span></td>
+<td>※「セルの書式設定」に <code>;;;</code> を入力<br>&rarr; <strong>（画面上から完全に消えて見えなくなる）</strong></td>
+</tr>
+</table></div>
+<div class="xdemo-note-warn">
+<strong>⚠️ 「;;;」の仕組み</strong><br>
+        エクセルの表示形式は基本的に <code>プラスの書式 ; マイナスの書式 ; ゼロの書式 ; 文字列の書式</code> という4つのブロックをセミコロンで区切って定義します。<br>
+        つまり、<code>;;;</code> とだけ書くと「全てにおいて表示する書式が存在しない」ことになり、データは存在するのに画面からは完全に消滅する状態になります。
+      </div>
+</section>
+<!-- ===== 8. 注意点 ===== -->
+<section class="method-section" id="sec-caution">
+<h2><span class="section-num">8</span> 注意点 &horbar; 令和対応・環境依存・よくある落とし穴</h2>
+<h3>⚠️ 新元号「令和」への対応条件</h3>
+<div class="xdemo-note-warn">
+<strong>Windows / Officeの更新プログラムが適用済み</strong>であれば、2019年5月1日以降の日付は「令和」と正しく表示されます。古い未更新の環境では、令和の日付が「平成31年以降」として表示されてしまう場合があります。<br><br>
+<strong>確認方法：</strong> <code>=TEXT(DATE(2019,5,1), "ggg")</code> と入力して「令和」と出れば対応済みです。「平成」と出る場合はWindows UpdateまたはOffice更新が必要です。
+      </div>
+<h3>⚠️ 「#」と「0」の違い &horbar; ゼロの扱い</h3>
+<div class="xdemo-note">
+<code>#</code> は「値がゼロの桁は表示しない」、<code>0</code> は「値がゼロでも必ず表示する」という違いがあります。<br>
+        例：値が <code>5</code> の場合 &rarr; <code>###</code> &rarr; "5" / <code>000</code> &rarr; "005"<br>
+        社員番号のゼロ埋めなどには必ず <code>0</code> を使ってください。
+      </div>
+<h3>⚠️ ダブルクォーテーションのエスケープ</h3>
+<div class="xdemo-note">
+        書式コード内で「年」「月」などの日本語文字列を入れる場合、<strong>セルの書式設定では <code>"年"</code> のようにダブルクォーテーション1組</strong>ですが、<strong>TEXT関数内では <code>""年""</code> のようにダブルクォーテーションを2重にする</strong>必要があります。これはExcelの数式内で文字列リテラル中のダブルクォーテーションをエスケープするためです。<br><br>
+<strong>セルの書式設定：</strong> <code>ggge"年"m"月"d"日"</code><br>
+<strong>TEXT関数：</strong> <code>=TEXT(A1, "ggge""年""m""月""d""日""")</code>
+</div>
+<h3>⚠️ m（月）と m（分）の衝突</h3>
+<div class="xdemo-note-warn">
+<code>m</code> は文脈で「月」か「分」か変わります。<code>h</code>（時間）の直後にある <code>m</code> は「分」として解釈されます。日時を1つの書式で扱う場合は、日付パートと時刻パートを分けてTEXTで変換し、& で結合するのが安全です。<br><br>
+<code>=TEXT(A1,"yyyy/mm/dd") & " " & TEXT(A1,"hh:mm:ss")</code>
+</div>
+<h3>⚠️ 1900年日付システムの制限</h3>
+<div class="xdemo-note">
+        Excel（Windows版）は1900年1月1日以降の日付しか扱えません。1899年以前の日付をTEXTに渡すと意図しない結果になります。また、Lotus 1-2-3 との互換性のため1900年2月29日が存在する扱いになっており、1900年3月1日より前の日付は1日ズレる可能性があります。
+      </div>
+<h3>⚠️ TEXT関数では文字の色は変わらない</h3>
+<div class="xdemo-note">
+        セルの書式設定では <code>[赤]</code> などで文字色を変更できますが、TEXT関数で <code>[赤]</code> を指定しても文字の色は変わりません。TEXT関数は文字列を返すだけなので、色の制御には条件付き書式を使ってください。
+      </div>
+</section>
+<!-- ===== 9. 実務パターン集 ===== -->
+<section class="method-section" id="sec-patterns">
+<h2><span class="section-num">9</span> 実務パターン集</h2>
+<div class="scenario-box">
+<h4>パターン① 請求書のヘッダーに和暦で発行日を埋め込む</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">="請求日：" & TEXT(A1, "ggge""年""m""月""d""日""")</span>
+</div>
+<p>&rarr; "請求日：令和8年4月1日"</p>
+</div>
+<div class="scenario-box">
+<h4>パターン② ファイル名に日付を埋め込む（区切りなし）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">="売上報告_" & TEXT(TODAY(), "yyyymmdd") & ".xlsx"</span>
+</div>
+<p>&rarr; "売上報告_20260408.xlsx"</p>
+</div>
+<div class="scenario-box">
+<h4>パターン③ 勤務時間の合計を「&cir;時間&cir;分」形式に</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(SUM(B2:B31), "[h]""時間""m""分""")</span>
+</div>
+<p>&rarr; "173時間30分"</p>
+</div>
+<div class="scenario-box">
+<h4>パターン④ 伝票番号のゼロ埋め</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">="INV-" & TEXT(A1, "000000")</span>
+</div>
+<p>A1 = 42 の場合 &rarr; "INV-000042"</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑤ 金額を「千円単位」で表示</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(A1, "#,##0,") & "千円"</span>
+</div>
+<p>A1 = 1234567 の場合 &rarr; "1,235千円"（千円未満は四捨五入）</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑥ IF と組み合わせて期限メッセージ</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(A1&gt;=TODAY(), "期限まであと " & TEXT(A1-TODAY(), "0") & " 日", "期限超過 " & TEXT(TODAY()-A1, "0") & " 日")</span>
+</div>
+</div>
+<div class="scenario-box">
+<h4>パターン⑦ TEXTJOIN + TEXT で複数日付を一括結合</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXTJOIN(", ", TRUE, TEXT(A1:A5, "mm/dd"))</span>
+</div>
+<p>&rarr; "04/08, 04/09, 04/10, 04/11, 04/12"</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑧ LET で長い結合数式を読みやすく</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">    日付, A1,</span>
+<span class="code-line">    金額, B1,</span>
+<span class="code-line">    表示日, TEXT(日付, "ggge""年""m""月""d""日"""),</span>
+<span class="code-line">    表示額, TEXT(金額, "&yen;#,##0"),</span>
+<span class="code-line">    表示日 & " 売上：" & 表示額</span>
+<span class="code-line">  )</span>
+</div>
+<p>&rarr; "令和8年4月1日 売上：&yen;1,234,567"</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑨ 生年月日から元年対応の和暦を生成（帳票用）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(A2,"ggg") & IF(TEXT(A2,"e")="1","元",TEXT(A2,"e")) & "年" & TEXT(A2,"m月d日")</span>
+</div>
+<p>&rarr; "昭和50年6月15日"、"平成元年1月8日"、"令和2年8月1日"<br>元年対応込みの万能パターン。社員名簿・履歴書・公的書類の生年月日欄に。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑩ DATEVALUE で和暦テキストを日付に戻す</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=DATEVALUE(A1)</span>
+</div>
+<p>A1 = "令和8年4月1日" の場合 &rarr; 2026/4/1（シリアル値 46113）</p>
+</div>
+</section>
+<!-- ===== 10. まとめ ===== -->
+<section class="goal-section" id="sec-summary">
+<h2><span class="section-num">10</span> まとめ</h2>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">場面</th>
+<th scope="col">最適な手法</th>
+</tr>
+<tr>
+<td>セルの見た目だけ変えたい（計算に影響させない）</td>
+<td class="good">セルの書式設定（Ctrl+1）</td>
+</tr>
+<tr>
+<td>& で文字列結合して文章に埋め込む</td>
+<td class="good">TEXT関数 + &</td>
+</tr>
+<tr>
+<td>生年月日から元号を判定・分岐する</td>
+<td class="good">TEXT(A1,"g") + IF / IFS / SWITCH</td>
+</tr>
+<tr>
+<td>「令和元年」表記にしたい</td>
+<td class="good">TEXT + IF（e="1" なら "元"）</td>
+</tr>
+<tr>
+<td>CSV書き出しで日付形式を固定したい</td>
+<td class="good">TEXT関数（文字列としてそのまま出力）</td>
+</tr>
+<tr>
+<td>和暦テキストを日付に戻したい</td>
+<td class="good">DATEVALUE関数</td>
+</tr>
+<tr>
+<td>英語の日付表示を強制したい</td>
+<td class="good">TEXT + [$-409]</td>
+</tr>
+</table></div>
+<div class="xdemo-note-good">
+<strong>✅ 覚えておくべき3つの法則</strong><br>
+        ① 書式コードは「セルの書式設定」と「TEXT関数」で<strong>同じ記法</strong>。ただし、書式設定は中身を保ったまま見た目を変え、TEXT関数は中身ごと文字列に変換する。<br>
+        ② TEXT関数の出力は<strong>文字列</strong>。計算・日付比較・SUM集計には使えないが、&で文章に埋め込む・IF条件で元号を判定する・CSV書き出しで形式を保つ場面では無敵。<strong>計算は元データのまま行い、最後の出力でTEXTを使う</strong>のが鉄則。<br>
+        ③ 和暦の <code>g</code> / <code>gg</code> / <code>ggg</code> と <code>e</code> / <code>ee</code> の組み合わせを覚えれば、元号判定もIF関数で自由自在。生年月日の「昭和か平成か令和か」は <code>TEXT(A1,"g")</code> 一発で判定できる。
+      </div>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../latest/article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
+<li><a href="../latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+<li><a href="../latest/article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
+<li><a href="../latest/article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

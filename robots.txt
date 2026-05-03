@@ -1,0 +1,32 @@
+# robots.txt for https://excel-no-vba-lab.com
+User-agent: *
+Allow: /
+Disallow: /_trash/
+Disallow: /NOTEBOOKLLM/
+Disallow: /評価/
+Disallow: /image/_backup/
+Disallow: /image/storage/
+Disallow: /image/画像追加/
+Disallow: /index_test.html
+Disallow: /debug_others.txt
+Disallow: /*.py$
+
+# Allow core CSS/JS assets
+Allow: /style.css
+Allow: /common.css
+Allow: /index.css
+Allow: /article.css
+Allow: /script.js
+
+# Allow article and OGP images
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.svg
+Allow: /*.webp
+Allow: /*.avif
+
+User-agent: Googlebot
+Allow: /
+
+Sitemap: https://excel-no-vba-lab.com/sitemap.xml

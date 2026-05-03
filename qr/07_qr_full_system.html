@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>QRリーダー設定の全体像！①〜⑥を統合したフルシステム構築ガイド｜Excel &times; No VBA Lab</title>
+<meta content="QRコードリーダーの設定を①サフィックス②ディレイ③キー変換④Sleepまで一気通貫で構築する完全ガイド。現場でリーダー1台を最初から最後までセットアップする手順書。" name="description">
+<meta content="QRコードリーダー 設定 全体像, バーコードリーダー セットアップ, サフィックス ディレイ キー変換 Sleep, QR フルシステム, リーダー設定 手順書" name="keywords">
+<meta content="QRリーダー設定の全体像！①〜⑥を統合したフルシステム構築ガイド｜Excel &times; No VBA Lab" property="og:title">
+<meta content="①〜⑥の全設定を統合し、リーダー1台を最初から最後までセットアップする完全手順書。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/qr/07_qr_full_system.html" rel="canonical">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"QRリーダー設定の全体像！①〜⑥を統合したフルシステム構築ガイド","description":"QRコードリーダーの設定を①サフィックス②ディレイ③キー変換④Sleepまで一気通貫で構築する完全ガイド。現場でリーダー1台を最初から最後までセットアップする手順書。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/qr/07_qr_full_system.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../index.html">ホーム</a><span>&gt;</span>
+<a href="../index.html#qr">QR Automation Lab</a><span>&gt;</span>
+<strong>フルシステム構築ガイド</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="badge badge-maniac">QR連携/フルシステム/設定手順書</span>
+</div>
+<h1 class="article-title">QRリーダー設定の全体像！<br>①〜⑥を統合したフルシステム構築ガイド</h1>
+</div>
+<!-- ===== ゴール ===== -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> この記事の目的</h2>
+<p>①〜⑥の個別テクニックを学んできたあなたは、すでに十分な知識を持っています。しかし<strong>「結局、リーダーを1台渡されたら何をどの順番で設定すればいいのか？」</strong>と聞かれると、意外と迷うものです。</p>
+<p>この記事は、<strong>リーダー開封から本番運用開始まで</strong>を1本の流れで通す「現場の手順書」です。各ステップでやることは①〜⑥で詳しく解説済みなので、ここでは<strong>「何を・どの順番で・なぜやるのか」</strong>に集中します。</p>
+<ul>
+<li><strong>設定の全体マップ：</strong>リーダーに入れるべき設定の全項目を一覧化</li>
+<li><strong>3つの運用レベル：</strong>Excel入力のみ &rarr; 業務システム &rarr; フルシステムの段階別ガイド</li>
+<li><strong>コピペ用チェックリスト：</strong>印刷してリーダーの横に貼れる設定確認表</li>
+<li><strong>設定の保存と復元：</strong>リーダーが壊れても同じ設定を即再現する方法</li>
+</ul>
+</section>
+<!-- ===== システム全体像 ===== -->
+<section class="method-section">
+<h2>全体像：QR入力自動化システムの構成</h2>
+<p>まず、このシステムを構成する要素と、データの流れを確認します。</p>
+<div class="arch-diagram">
+<div class="arch-row">
+<div class="arch-box arch-qr">
+              QRコード<br>
+<span class="arch-label">CHAR関数＋トリガー文字</span>
+</div>
+<div class="arch-arrow">&rarr; 光学読取 &rarr;</div>
+<div class="arch-box arch-reader">
+              QRリーダー<br>
+<span class="arch-label">サフィックス・ディレイ・キー変換・Sleep</span>
+</div>
+<div class="arch-arrow">&rarr; USB-HID &rarr;</div>
+<div class="arch-box arch-pc">
+              PC<br>
+<span class="arch-label">キーボード入力として受信</span>
+</div>
+<div class="arch-arrow">&rarr;</div>
+<div class="arch-box arch-app">
+              Excel / 業務システム<br>
+<span class="arch-label">自動入力・自動操作</span>
+</div>
+</div>
+</div>
+<video src="../video/qr_07_full_system_captioned.mp4?v=20260502031723" autoplay loop muted playsinline controls poster="../image/hero_qr.webp" style="width:100%; border-radius:8px; border:1px solid #ddd;"></video>
+<p class="text-sm-gray" style="text-align:center; margin-top:8px;">【フルシステム動作例】①〜⑥の全設定を統合したリーダーの挙動。手入力ゼロで業務システムを制御します。</p>
+<table class="format-table">
+<tr><th>構成要素</th><th>役割</th><th>設定対象</th></tr>
+<tr>
+<td class="text-center"><strong>QRコード</strong></td>
+<td>データ＋制御文字（CHAR関数）＋トリガー文字を格納する「指示書」</td>
+<td>Excel の数式で作成（①）</td>
+</tr>
+<tr>
+<td class="text-center"><strong>QRリーダー</strong></td>
+<td>QRコードを読み取り、キーボード信号に変換してPCに送信する「翻訳機」</td>
+<td>サフィックス（②）、ディレイ（③）、キー変換（④）、Sleep（⑥）</td>
+</tr>
+<tr>
+<td class="text-center"><strong>PC</strong></td>
+<td>リーダーからの信号を「キーボードが押された」として受け取る</td>
+<td>特になし（USBで繋ぐだけ）</td>
+</tr>
+<tr>
+<td class="text-center"><strong>Excel / 業務システム</strong></td>
+<td>キーボード信号に従ってデータを受け取り、処理する</td>
+<td>Excel の「Enterキーで移動」設定（②）</td>
+</tr>
+</table>
+<div class="xdemo-note-info">
+<strong>📝 ポイント：設定するのはほぼ「リーダー」だけ</strong><br>
+          PC にはドライバーのインストールも不要（USB-HIDなのでOS標準ドライバーで動作）。Excel の設定変更も最小限です。<strong>作業の95%はリーダーの設定</strong>です。だからこそ、この手順書が重要なのです。
+        </div>
+</section>
+<!-- ===== 3つの運用レベル ===== -->
+<section class="method-section">
+<h2>3つの運用レベル &horbar; あなたの現場はどれ？</h2>
+<p>すべての現場がフル装備の設定を必要とするわけではありません。<strong>自分の現場に必要なレベル</strong>を見極めてから設定に入りましょう。</p>
+<table class="key-table">
+<thead>
+<tr><th>レベル</th><th>対象</th><th>必要な設定</th><th>所要時間</th><th>対応記事</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="text-center"><span class="level-badge level-excel">Lv.1 Excel入力</span></td>
+<td>Excel シートへの入力自動化のみ</td>
+<td>サフィックス＋ディレイ</td>
+<td>約10分</td>
+<td>① ② ③</td>
+</tr>
+<tr>
+<td class="text-center"><span class="level-badge level-system">Lv.2 業務システム</span></td>
+<td>業務システムへの入力自動化（NUM Enter 等が必要）</td>
+<td>Lv.1 ＋ キー変換</td>
+<td>約30分</td>
+<td>① ② ③ ④</td>
+</tr>
+<tr>
+<td class="text-center"><span class="level-badge level-full">Lv.3 フルシステム</span></td>
+<td>業務システム＋画面遷移待ち＋PrintScreen＋印刷待ち等</td>
+<td>Lv.2 ＋ Sleep</td>
+<td>約60分</td>
+<td>① ② ③ ④ ⑤ ⑥</td>
+</tr>
+</tbody>
+</table>
+<div class="xdemo-note-good">
+<strong>💡 迷ったら Lv.1 から始めてください</strong><br>
+          Lv.1 の設定は5〜10分で完了し、すぐに効果を実感できます。「もっとやりたい」と思ったら Lv.2 &rarr; Lv.3 と段階的に追加していけば OK です。<strong>最初から全部やろうとしないこと</strong>が挫折しないコツです。
+        </div>
+</section>
+<!-- ===== セットアップ手順 ===== -->
+<section class="tips-section">
+<h2>セットアップ手順 &horbar; 開封から運用開始まで</h2>
+<p>以下の順番で設定してください。<strong>順番は厳守</strong>です。後の工程は前の工程の設定が正しく完了していることを前提としています。</p>
+<!-- STEP 0 -->
+<div class="setup-step">
+<div class="setup-step-header">
+<span class="step-number">0</span>
+<span class="step-title">リーダーの接続と初期状態の確認</span>
+<span class="step-time">所要 2分</span>
+</div>
+<p>リーダーを USB でPCに接続し、メモ帳を開いて適当なQRコードやバーコードをスキャンします。文字が入力されれば接続は成功です。</p>
+<ul class="checklist">
+<li>リーダーを USB ポートに挿す（ドライバーは自動認識）</li>
+<li>メモ帳を開いてスキャンテスト。文字が表示されるか確認</li>
+<li>Bluetooth の場合はペアリングを完了させる</li>
+</ul>
+<div class="xdemo-note-info">
+<strong>📝 工場出荷状態に戻したい場合</strong><br>
+            設定がおかしくなったら、マニュアルに記載の「Factory Reset（工場出荷設定に戻す）」バーコードをスキャンしてください。ほぼすべてのメーカーのマニュアル冒頭に掲載されています。
+          </div>
+</div>
+<!-- STEP 1 -->
+<div class="setup-step">
+<div class="setup-step-header">
+<span class="step-number">1</span>
+<span class="step-title">サフィックスを None（なし）に変更する</span>
+<span class="step-ref">記事②</span>
+<span class="step-time">所要 2分</span>
+<span class="level-badge level-excel">Lv.1〜</span>
+</div>
+<p>ほとんどのリーダーは出荷時にサフィックス＝CR（改行）が設定されています。QRコード内に CHAR(10) や CHAR(13) で Enter を埋め込む運用では、サフィックスの CR と<strong>二重に Enter が送信</strong>されてしまいます。</p>
+<ul class="checklist">
+<li>マニュアルの「Suffix」セクションを開く</li>
+<li>「Suffix = None」または「Suffix = Disable」のバーコードをスキャン</li>
+<li>メモ帳でスキャン &rarr; 末尾で改行されなくなっていれば成功</li>
+</ul>
+<div class="xdemo-note-danger">
+<strong>🔥 これが全設定の土台です</strong><br>
+            サフィックスが残っていると、以降のすべての設定が正しく動きません。<strong>最初に必ずやること。</strong>テストも必ず行ってください。
+          </div>
+</div>
+<!-- STEP 2 -->
+<div class="setup-step">
+<div class="setup-step-header">
+<span class="step-number">2</span>
+<span class="step-title">キャラクター間ディレイを設定する</span>
+<span class="step-ref">記事③</span>
+<span class="step-time">所要 5分</span>
+<span class="level-badge level-excel">Lv.1〜</span>
+</div>
+<p>文字の送信速度を調整し、バッファオーバーフローによる文字欠けを防ぎます。</p>
+<ul class="checklist">
+<li>マニュアルの「Inter-character Delay」セクションを開く</li>
+<li>まず <strong>20ms</strong> を設定</li>
+<li>40文字以上のテスト用QRコードでスキャンテスト（10回連続）</li>
+<li>1回でも文字欠けがあれば 30ms &rarr; 50ms と増加</li>
+</ul>
+<div class="xdemo-note-good">
+<strong>💡 推奨値：まず20msから</strong><br>
+            ほとんどの環境で 20ms あれば十分です。文字欠けが起きたときだけ増やしてください。大きくしすぎるとスキャンが体感的に遅くなります。
+          </div>
+</div>
+<!-- STEP 3 -->
+<div class="setup-step">
+<div class="setup-step-header">
+<span class="step-number">3</span>
+<span class="step-title">ファンクション間ディレイを設定する</span>
+<span class="step-ref">記事③</span>
+<span class="step-time">所要 3分</span>
+<span class="level-badge level-excel">Lv.1〜</span>
+</div>
+<p>Tab / Enter などの制御文字を送信した後、Excel やシステムがそれを処理する時間を確保します。</p>
+<ul class="checklist">
+<li>マニュアルの「Inter-function Delay」セクションを開く</li>
+<li><strong>50ms</strong> を設定（Tab/Enter 後に50ms待機）</li>
+<li>Tab＋Enter を含むQRコードでスキャンテスト</li>
+<li>Tab が効かない / Enter が効かない場合は 80ms &rarr; 100ms に増加</li>
+</ul>
+</div>
+<!-- STEP 4 -->
+<div class="setup-step">
+<div class="setup-step-header">
+<span class="step-number">4</span>
+<span class="step-title">Excel 側の設定を確認する</span>
+<span class="step-ref">記事②</span>
+<span class="step-time">所要 1分</span>
+<span class="level-badge level-excel">Lv.1〜</span>
+</div>
+<p>Excel の「Enter キーを押した後にセルを移動する」設定がONになっていることを確認します。</p>
+<ul class="checklist">
+<li>Excel &rarr; ファイル &rarr; オプション &rarr; 詳細設定</li>
+<li>「Enter キーを押したら、セルを移動する」が ☑ ON であること</li>
+<li>方向が「下」になっていること（通常はデフォルトで下）</li>
+</ul>
+<div class="xdemo-note-info">
+<strong>📝 この設定はデフォルトでONです</strong><br>
+            誰かが変更していない限り、確認するだけで作業完了です。
+          </div>
+</div>
+<!-- ===== Lv.1 完了ライン ===== -->
+<div style="background:#e8f5e9;border:2px solid #4caf50;border-radius:10px;padding:16px;margin:2em 0;text-align:center;">
+<strong style="color:#2e7d32;font-size:1.1em;">✅ ここまでで Lv.1（Excel入力）は完了！</strong><br>
+<span style="font-size:.9em;color:#555;">パターン①〜⑤（横入力・縦入力・スキップ・自動保存）がすべて使えます。<br>Excel だけで使う場合はこれ以降の設定は不要です。</span>
+</div>
+<!-- STEP 5 -->
+<div class="setup-step">
+<div class="setup-step-header">
+<span class="step-number">5</span>
+<span class="step-title">キー変換を設定する（NUM Enter）</span>
+<span class="step-ref">記事④</span>
+<span class="step-time">所要 10分</span>
+<span class="level-badge level-system">Lv.2〜</span>
+</div>
+<p>業務システムの確定に必要な NUM Enter のキー変換を設定します。これが業務システム連携の最重要設定です。</p>
+<ul class="checklist">
+<li>トリガー文字を決定：<span class="trigger-char">~</span> を推奨（データに含まれないことを確認）</li>
+<li>マニュアルの「Key Remap」セクションで <code>~</code>（HEX: 7E）&rarr; NUM Enter（スキャンコード: E01C）を登録</li>
+<li>メモ帳テスト：<code>TEST~</code> のQRをスキャン &rarr; 「TEST」＋改行 が出ればOK</li>
+<li>業務システムテスト：入力フィールドでスキャン &rarr; フィールドが確定するか確認</li>
+</ul>
+</div>
+<!-- STEP 6 -->
+<div class="setup-step">
+<div class="setup-step-header">
+<span class="step-number">6</span>
+<span class="step-title">キー変換を追加する（F2 / F5 / その他）</span>
+<span class="step-ref">記事④</span>
+<span class="step-time">所要 10分</span>
+<span class="level-badge level-system">Lv.2〜</span>
+</div>
+<p>NUM Enter 以外に必要なキー変換を追加します。必要なものだけを設定してください。</p>
+<ul class="checklist">
+<li><span class="trigger-char">^</span> &rarr; F2（Excel セル編集）&hellip; 必要な場合のみ</li>
+<li><span class="trigger-char">{</span> &rarr; F5（検索起動）&hellip; 業務システムで使う場合</li>
+<li><span class="trigger-char">`</span> &rarr; &darr;（Down Arrow）&hellip; 必要な場合のみ</li>
+<li><span class="trigger-char">}</span> &rarr; PageUp &hellip; 必要な場合のみ</li>
+<li><span class="trigger-char">\</span> &rarr; PageDown &hellip; 必要な場合のみ</li>
+<li><span class="trigger-char">|</span> &rarr; PrintScreen &hellip; エビデンス取得に使う場合</li>
+<li><span class="trigger-char">@</span> &rarr; Pause/Break &hellip; 処理中断に使う場合</li>
+<li>各変換をメモ帳で個別にテスト</li>
+</ul>
+<div class="xdemo-note-warn">
+<strong>⚠️ 全部入れる必要はありません</strong><br>
+            使わないキー変換を入れても意味がないだけでなく、トリガー文字がデータに含まれていた場合に事故の原因になります。<strong>「実際に使うものだけ」</strong>を設定してください。
+          </div>
+</div>
+<!-- ===== Lv.2 完了ライン ===== -->
+<div style="background:#ede7f6;border:2px solid #7e57c2;border-radius:10px;padding:16px;margin:2em 0;text-align:center;">
+<strong style="color:#4527a0;font-size:1.1em;">✅ ここまでで Lv.2（業務システム）は完了！</strong><br>
+<span style="font-size:.9em;color:#555;">パターン⑦〜⑨（NUM Enter確定・複数フィールド連続・F5検索）がすべて使えます。<br>画面遷移の待ち時間が問題にならない環境ではここで十分です。</span>
+</div>
+<!-- STEP 7 -->
+<div class="setup-step">
+<div class="setup-step-header">
+<span class="step-number">7</span>
+<span class="step-title">Sleep（一時停止）を設定する</span>
+<span class="step-ref">記事⑥</span>
+<span class="step-time">所要 15分</span>
+<span class="level-badge level-full">Lv.3</span>
+</div>
+<p>業務システムの画面遷移・印刷出力・PrintScreen のために「秒」単位の待機を設定します。</p>
+<ul class="checklist">
+<li>方式A（トリガー文字）の場合：Sleep のトリガー文字を決定（例：<code>!</code> = 1秒）</li>
+<li>方式B（Inter-function Delay）の場合：制御文字後の待ち時間を一括設定</li>
+<li>手動操作で画面遷移時間を計測（5回） &rarr; 最大値＋1秒を設定</li>
+<li>Sleep を含むQRコードで 10回連続テスト</li>
+</ul>
+</div>
+<!-- STEP 8 -->
+<div class="setup-step">
+<div class="setup-step-header">
+<span class="step-number">8</span>
+<span class="step-title">本番テスト（10回連続スキャン）</span>
+<span class="step-time">所要 10分</span>
+<span class="level-badge level-excel">全レベル</span>
+</div>
+<p>すべての設定が完了したら、本番環境で使用する実際のQRコードを使って最終テストを行います。</p>
+<ul class="checklist">
+<li>実際に運用するQRコードを用意する</li>
+<li>本番の入力先（Excel or 業務システム）を開く</li>
+<li><strong>10回連続</strong>でスキャン。1回もエラーがないことを確認</li>
+<li>エラーが出た場合 &rarr; ⑤のトラブルシューティング表を参照</li>
+<li>業務システムの場合、ピーク時間帯にも再テスト</li>
+</ul>
+<div class="xdemo-note-danger">
+<strong>🔥 「9回成功・1回失敗」は NG です</strong><br>
+            成功率 90% は、100回スキャンすれば10回失敗するということです。現場では1回の失敗が手戻り・誤データの原因になります。<strong>10回中10回成功するまで設定を追い込んでください。</strong>
+</div>
+</div>
+<!-- STEP 9 -->
+<div class="setup-step">
+<div class="setup-step-header">
+<span class="step-number">9</span>
+<span class="step-title">設定の記録と保存</span>
+<span class="step-time">所要 5分</span>
+<span class="level-badge level-excel">全レベル</span>
+</div>
+<p>リーダーが故障した場合や、2台目を追加する場合に、同じ設定を即再現できるよう記録を残します。</p>
+<ul class="checklist">
+<li>下の「設定記録シート」に全設定値を記入</li>
+<li>設定に使用したマニュアルの該当ページに付箋を貼る</li>
+<li>メーカーの設定ユーティリティがある場合は設定ファイルをPCにエクスポート・保存</li>
+<li>設定記録シートとマニュアルをリーダーと一緒に保管</li>
+</ul>
+</div>
+<!-- ===== Lv.3 完了ライン ===== -->
+<div style="background:#fce4ec;border:2px solid #e57373;border-radius:10px;padding:16px;margin:2em 0;text-align:center;">
+<strong style="color:#c62828;font-size:1.1em;">✅ Lv.3（フルシステム）構築完了！</strong><br>
+<span style="font-size:.9em;color:#555;">パターン①〜⑩ ＋ Sleep A〜E のすべてが使える状態です。<br>QRコードから送れないキーはもうありません。</span>
+</div>
+</section>
+<!-- ===== 設定記録シート ===== -->
+<section class="method-section">
+<h2>設定記録シート &horbar; 印刷して保管</h2>
+<p>以下の表を印刷し、設定値を記入してリーダーと一緒に保管してください。リーダーの交換・追加時にそのまま再現できます。</p>
+<table class="key-table">
+<thead>
+<tr><th style="width:5%">No.</th><th class="w-30">設定項目</th><th class="w-25">設定値</th><th class="w-20">テスト結果</th><th class="w-20">備考</th></tr>
+</thead>
+<tbody>
+<tr><td class="text-center">1</td><td>リーダー機種名</td><td></td><td>&horbar;</td><td></td></tr>
+<tr><td class="text-center">2</td><td>シリアル番号</td><td></td><td>&horbar;</td><td></td></tr>
+<tr><td class="text-center">3</td><td>接続方式</td><td>USB / Bluetooth</td><td>&horbar;</td><td></td></tr>
+<tr><td class="text-center">4</td><td>サフィックス</td><td>None / CR / LF / Tab</td><td>OK / NG</td><td></td></tr>
+<tr><td class="text-center">5</td><td>キャラクター間ディレイ</td><td>　　　ms</td><td>OK / NG</td><td></td></tr>
+<tr><td class="text-center">6</td><td>ファンクション間ディレイ</td><td>　　　ms</td><td>OK / NG</td><td></td></tr>
+<tr><td class="text-center">7</td><td>キー変換①：　&rarr;　</td><td></td><td>OK / NG</td><td></td></tr>
+<tr><td class="text-center">8</td><td>キー変換②：　&rarr;　</td><td></td><td>OK / NG</td><td></td></tr>
+<tr><td class="text-center">9</td><td>キー変換③：　&rarr;　</td><td></td><td>OK / NG</td><td></td></tr>
+<tr><td class="text-center">10</td><td>キー変換④：　&rarr;　</td><td></td><td>OK / NG</td><td></td></tr>
+<tr><td class="text-center">11</td><td>キー変換⑤：　&rarr;　</td><td></td><td>OK / NG</td><td></td></tr>
+<tr><td class="text-center">12</td><td>Sleep 方式</td><td>A（トリガー） / B（一括）</td><td>OK / NG</td><td></td></tr>
+<tr><td class="text-center">13</td><td>Sleep トリガー / 値</td><td></td><td>OK / NG</td><td></td></tr>
+<tr><td class="text-center">14</td><td>本番テスト（10回連続）</td><td></td><td>　/10 成功</td><td></td></tr>
+<tr><td class="text-center">15</td><td>設定日 / 設定者</td><td></td><td>&horbar;</td><td></td></tr>
+</tbody>
+</table>
+</section>
+<!-- ===== レベル別 設定値 早見表 ===== -->
+<section class="method-section">
+<h2>レベル別 設定値クイックリファレンス</h2>
+<table class="format-table">
+<tr>
+<th>設定項目</th>
+<th><span class="level-badge level-excel">Lv.1 Excel</span></th>
+<th><span class="level-badge level-system">Lv.2 業務</span></th>
+<th><span class="level-badge level-full">Lv.3 フル</span></th>
+</tr>
+<tr>
+<td class="text-center">サフィックス</td>
+<td class="text-center"><strong>None</strong></td>
+<td class="text-center"><strong>None</strong></td>
+<td class="text-center"><strong>None</strong></td>
+</tr>
+<tr>
+<td class="text-center">キャラクター間ディレイ</td>
+<td class="text-center"><strong>20ms</strong></td>
+<td class="text-center"><strong>20〜50ms</strong></td>
+<td class="text-center"><strong>20〜50ms</strong></td>
+</tr>
+<tr>
+<td class="text-center">ファンクション間ディレイ</td>
+<td class="text-center"><strong>50ms</strong></td>
+<td class="text-center"><strong>50〜100ms</strong></td>
+<td class="text-center"><strong>50〜100ms</strong></td>
+</tr>
+<tr>
+<td class="text-center">~ &rarr; NUM Enter</td>
+<td class="text-center">&horbar;</td>
+<td class="text-center"><strong>設定</strong></td>
+<td class="text-center"><strong>設定</strong></td>
+</tr>
+<tr>
+<td class="text-center">^ &rarr; F2</td>
+<td class="text-center">&horbar;</td>
+<td class="text-center">必要時のみ</td>
+<td class="text-center">必要時のみ</td>
+</tr>
+<tr>
+<td class="text-center">{ &rarr; F5</td>
+<td class="text-center">&horbar;</td>
+<td class="text-center">必要時のみ</td>
+<td class="text-center">必要時のみ</td>
+</tr>
+<tr>
+<td class="text-center">| &rarr; PrintScreen</td>
+<td class="text-center">&horbar;</td>
+<td class="text-center">&horbar;</td>
+<td class="text-center">必要時のみ</td>
+</tr>
+<tr>
+<td class="text-center">@ &rarr; Pause/Break</td>
+<td class="text-center">&horbar;</td>
+<td class="text-center">&horbar;</td>
+<td class="text-center">必要時のみ</td>
+</tr>
+<tr>
+<td class="text-center">Sleep</td>
+<td class="text-center">&horbar;</td>
+<td class="text-center">&horbar;</td>
+<td class="text-center"><strong>設定</strong>（1〜10秒）</td>
+</tr>
+</table>
+</section>
+<!-- ===== 設定の保存と復元 ===== -->
+<section class="tips-section">
+<h2>設定の保存と復元 &horbar; リーダーが壊れても大丈夫</h2>
+<h3>方法①：メーカーのユーティリティソフトで設定ファイルをエクスポート</h3>
+<p>Honeywell（EZConfig）、Zebra（123Scan2）、Keyence（AutoID Keyboard Wedge）など、多くのメーカーがPCから設定を読み書きできるユーティリティを提供しています。設定完了後に<strong>設定ファイルをPCにエクスポート</strong>しておけば、新しいリーダーに即インポートできます。</p>
+<h3>方法②：設定用バーコードを印刷して保管</h3>
+<p>設定に使用したバーコード（マニュアルからスキャンしたもの）を順番に紙に印刷し、<strong>「この順番でスキャンすればセットアップ完了」</strong>というシートを作っておきます。ユーティリティが使えない環境でも、紙1枚あれば同じ設定を5分で再現できます。</p>
+<h3>方法③：設定記録シート（上記）を紙で保管</h3>
+<p>最もローテクですが最も確実な方法です。設定値が記録されていれば、マニュアルを見ながら手動で再設定できます。</p>
+<div class="xdemo-note-good">
+<strong>💡 推奨：3つ全部やる</strong><br>
+          ①の設定ファイルは PC が壊れたら消えます。②の紙は紛失するかもしれません。③の記録シートは「最後の砦」です。<strong>3つとも用意しておくのが最も安全</strong>です。手間は最初の1回だけです。
+        </div>
+</section>
+<!-- ===== 複数リーダーの管理 ===== -->
+<section class="method-section">
+<h2>複数リーダーの管理 &horbar; チームで運用するとき</h2>
+<table class="format-table">
+<tr><th>課題</th><th>対策</th></tr>
+<tr>
+<td>誰かが勝手に設定を変えてしまう</td>
+<td>設定後に「設定ロック」バーコード（対応機種）をスキャンしてロック。解除には管理者パスワードが必要。</td>
+</tr>
+<tr>
+<td>リーダーごとに設定が違うかもしれない</td>
+<td>設定記録シートにシリアル番号を記入し、全リーダーの設定を一元管理。定期的に抜き打ちテスト。</td>
+</tr>
+<tr>
+<td>新しいリーダーを追加したい</td>
+<td>方法①（設定ファイルのインポート）または方法②（設定用バーコードシート）で即セットアップ。</td>
+</tr>
+<tr>
+<td>別の部署で別のトリガー文字を使っている</td>
+<td>トリガー文字の対応表を全社で統一する。または部署ごとにリーダーを分けて混用しない。</td>
+</tr>
+<tr>
+<td>リーダーが壊れた</td>
+<td>予備機を1台確保し、同じ設定を入れておく。故障時は即交換。</td>
+</tr>
+</table>
+</section>
+<!-- ===== よくある失敗パターン ===== -->
+<section class="tips-section">
+<h2>よくある失敗パターン &horbar; 先人の教訓</h2>
+<h3>失敗① サフィックスを消し忘れた</h3>
+<div class="scenario-box">
+<strong>症状：</strong>Enter が2回入って行が飛ぶ。業務システムでフィールドが1つ飛ぶ。<br>
+<strong>原因：</strong>サフィックスのCR + QRコード内の CHAR(10) で二重送信。<br>
+<strong>教訓：</strong>STEP 1 を絶対に飛ばさない。テストも忘れずに。
+        </div>
+<h3>失敗② ディレイを設定せずに長文QRをスキャン</h3>
+<div class="scenario-box">
+<strong>症状：</strong>4セル分のデータのうち、3セル目の途中から文字が消える。<br>
+<strong>原因：</strong>バッファオーバーフロー。リーダーが高速で送りすぎている。<br>
+<strong>教訓：</strong>STEP 2 のディレイは「保険」。20ms あるだけで劇的に安定する。
+        </div>
+<h3>失敗③ トリガー文字がデータに含まれていた</h3>
+<div class="scenario-box">
+<strong>症状：</strong>品番「ABC~123」をスキャンすると「ABC」の後に NUM Enter が発動し、「123」が次のフィールドに入ってしまう。<br>
+<strong>原因：</strong>品番に <code>~</code> が含まれており、キー変換のトリガーになってしまった。<br>
+<strong>教訓：</strong>トリガー文字を決める前に、運用するデータに含まれない文字であることを必ず確認する。
+        </div>
+<h3>失敗④ Sleep を設定したのにテストせず本番投入</h3>
+<div class="scenario-box">
+<strong>症状：</strong>月曜の朝（サーバー高負荷）だけ画面遷移が遅く、Sleep 3秒では足りなくてデータが前の画面に入る。<br>
+<strong>原因：</strong>テストを閑散時間帯でしか行わなかった。<br>
+<strong>教訓：</strong>Sleep のテストはピーク時間帯でも必ず行う。余裕を持った値を設定する。
+        </div>
+<h3>失敗⑤ 設定を記録しなかった</h3>
+<div class="scenario-box">
+<strong>症状：</strong>リーダーが故障 &rarr; 新品に交換 &rarr; 前の設定が分からず、ゼロからやり直し。<br>
+<strong>原因：</strong>設定記録シートを作成していなかった。<br>
+<strong>教訓：</strong>STEP 9 の設定記録は「未来の自分」への最大の贈り物。5分で終わる。
+        </div>
+</section>
+<!-- ===== 全シリーズ設定サマリー ===== -->
+<section class="method-section" style="background:#f8f9fa; border-top: 2px solid #ddd;">
+<h2>全シリーズ設定サマリー</h2>
+<table class="format-table">
+<tr><th style="width:8%">記事</th><th style="width:22%">テーマ</th><th class="w-35">設定するもの</th><th class="w-35">解決する問題</th></tr>
+<tr>
+<td class="text-center">①</td>
+<td>QR生成と基礎</td>
+<td>バーコードコントロールの配置 / CHAR関数の数式作成</td>
+<td>QRコードの生成方法・使える文字の理解</td>
+</tr>
+<tr>
+<td class="text-center">②</td>
+<td>Tab・Enter埋め込み</td>
+<td>サフィックス＝None / Excel のEnter移動設定</td>
+<td>Tab&rarr;Enter のカーソル移動ルール・二重Enter問題</td>
+</tr>
+<tr>
+<td class="text-center">③</td>
+<td>キャラクター間ディレイ</td>
+<td>キャラクター間ディレイ / ファンクション間ディレイ</td>
+<td>文字欠け（バッファオーバーフロー）</td>
+</tr>
+<tr>
+<td class="text-center">④</td>
+<td>キー変換テクニック</td>
+<td>トリガー文字 &rarr; 物理キーの変換ルール</td>
+<td>CHAR関数で送れないキー（NUM Enter / F1〜F12 / 矢印 / PageUp・Down / PrintScreen / Pause 等）</td>
+</tr>
+<tr>
+<td class="text-center">⑤</td>
+<td>実践パターン集</td>
+<td>（①〜④の組み合わせ。追加設定なし）</td>
+<td>現場で使える数式テンプレート 10パターン</td>
+</tr>
+<tr>
+<td class="text-center">⑥</td>
+<td>Sleep（一時停止）</td>
+<td>Sleep トリガー or Inter-function Delay の秒数設定</td>
+<td>業務システムの画面遷移待ち・印刷待ち・PrintScreen待ち</td>
+</tr>
+<tr>
+<td class="text-center"><strong>⑦</strong></td>
+<td><strong>フルシステム構築</strong></td>
+<td><strong>（①〜⑥の統合。この記事）</strong></td>
+<td><strong>「何を・どの順番で・なぜ設定するか」の全体像</strong></td>
+</tr>
+</table>
+<div class="flow-diagram">
+<span class="flow-step">① QR生成</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">② Tab/Enter</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">③ ディレイ</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">④ キー変換</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">⑤ 実践パターン</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">⑥ Sleep</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-current">⑦ 全体像（今ここ）</span>
+</div>
+<div class="xdemo-note-good">
+<strong>💡 次のステップ</strong><br>
+<strong>リーダーをどのメーカーのどの機種にすればいいか分からない</strong> &rarr; 記事⑧「QRリーダーの選び方と接続方法」へ。<br>
+<strong>とにかくトラブルが起きた</strong> &rarr; 記事⑤「実践パターン集」のトラブルシューティング表へ。<br>
+<strong>もう一度基礎に戻りたい</strong> &rarr; 記事①「バーコードコントロールでQRコード生成」へ。
+        </div>
+</section>
+<nav class="series-nav">
+<h3>📱 QR Automation Lab &horbar; 全記事一覧</h3>
+<p class="text-sm-gray">
+<span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
+    <span class="color-orange">🟠 応用</span>（④〜⑪）＝ さらに自動化を極める
+  </p>
+<ol>
+<li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでExcel一発入力 &horbar; Tab・Enter埋め込み</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ &horbar; 文字欠けを完全に防ぐ設定</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード &rarr; キー変換テクニック</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+<li class="current"><span class="lv-adv">[応用]</span> <strong>⑦ QRリーダー設定の全体像！フルシステム構築ガイド（この記事）</strong></li>
+<li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware.html">⑧ QRリーダーの選び方と接続方法</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 &horbar; 紙だけでPC間移行</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコード生成</a></li>
+</ol>
+</nav>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../script.js"></script>
+
+</body>
+</html>
+

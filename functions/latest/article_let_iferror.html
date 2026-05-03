@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>LET関数 深掘り②：SORT/SORTBY の重い処理を変数化（2021～）｜Excel &times; No VBA Lab</title>
+<meta content="ExcelのLET＋IFERROR組み合わせで、重い関数を二重記述せずエラー処理する効率的な書き方を解説。" name="description">
+<meta content="LET IFERROR Excel, エラー処理 効率, IFERROR 二重計算 回避, LET 関数 応用, Excel 2021" name="keywords">
+<meta content="LET関数 深掘り②：SORT/SORTBY の重い処理を変数化（2021～）｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのLET＋IFERROR組み合わせで、重い関数を二重記述せずエラー処理する効率的な書き方を解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/latest/article_let_iferror.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/latest/article_let_iferror.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "LET関数 深掘り②：SORT/SORTBY の重い処理を変数化（2021～）",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "ExcelのLET＋IFERROR組み合わせで、重い関数を二重記述せずエラー処理する効率的な書き方を解説。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-no-vba-lab.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-no-vba-lab.com/functions/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "LET関数 深掘り②：SORT/SORTBY の重い処理を変数化（2021～）",
+      "item": "https://excel-no-vba-lab.com/functions/latest/article_let_iferror.html"
+    }
+  ]
+}</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">Excel × No VBA Lab</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#functions">関数</a><span>&gt;</span><strong>LET 深掘り② SORT/SORTBY</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-2021">2021～</span></div>
+<h1 class="article-title">LET関数 深掘り②：SORT / SORTBY の重い処理を変数化して高速化</h1>
+</div>
+<!-- ===== やりたいこと ===== -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>SORT / SORTBY / FILTER などのスピル関数は、大量データに対して実行するとそれなりに重い処理です。同じソート結果を複数の場所で使いたい場合、数式内で何度も SORTBY(...) を書くと計算が倍々に膨れ上がります。LETで1回だけソートし、変数として使い回すテクニック &boxh;&boxh; そしてそれでも限界がある場合に「作業シートに出すべき」という判断基準を解説します。</p>
+</section>
+<!-- ===== 悪い例 ===== -->
+<section class="method-section">
+<h3>"よくあるダメな例"：同じソートを複数回</h3>
+<p>売上データを金額降順にソートし、上位3件の「商品名」と「金額」を横並びで表示したいケース。</p>
+<span class="code-label">❌ 6セルで同じSORTBYが6回実行される</span>
+<div class="code-readonly">
+<span class="code-line">D2（1位の商品名）:</span>
+<span class="code-line">  =INDEX(SORTBY(B2:B1000, C2:C1000, -1), 1)</span>
+<span class="code-line"></span>
+<span class="code-line">E2（1位の金額）:</span>
+<span class="code-line">  =INDEX(SORTBY(C2:C1000, C2:C1000, -1), 1)</span>
+<span class="code-line"></span>
+<span class="code-line">D3（2位の商品名）:</span>
+<span class="code-line">  =INDEX(SORTBY(B2:B1000, C2:C1000, -1), 2)</span>
+<span class="code-line"></span>
+<span class="code-line">E3（2位の金額）:</span>
+<span class="code-line">  =INDEX(SORTBY(C2:C1000, C2:C1000, -1), 2)</span>
+<span class="code-line"></span>
+<span class="code-line">... D4, E4 も同様（計6セルで SORTBY が6回）</span>
+</div>
+<p class="code-comment">999行のデータを降順ソートする処理が <strong>6回</strong> 実行されます。データが数万行になるとフリーズ級の遅さに。</p>
+</section>
+<!-- ===== LETで改善 ===== -->
+<section class="method-section">
+<h3>LET で1回のソート結果を使い回す</h3>
+<p>1つのセルに LET + SORTBY を書き、結果をスピルさせる方法です。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">    データ, SORTBY(A2:C1000, C2:C1000, -1),</span>
+<span class="code-line">    上位3, INDEX(データ, SEQUENCE(3), SEQUENCE(1,3)),</span>
+<span class="code-line">    上位3</span>
+<span class="code-line">  )</span>
+</div>
+<p class="code-comment">SORTBYは <strong>1回だけ</strong> 実行。変数「データ」にソート済み配列が入り、INDEX + SEQUENCE で上位3行&times;3列を切り出してスピル表示します。</p>
+<div class="xdemo-note-perf">
+<strong>⚡ 効果</strong><br>
+        SORTBY 6回 &rarr; 1回。ソート処理は O(n log n) の計算量を持つため、データ量が増えるほど「回数削減」の恩恵が大きくなります。1万行なら体感で明確な差が出ます。
+      </div>
+</section>
+<!-- ===== FILTER + SORT の合わせ技 ===== -->
+<section class="method-section">
+<h3>応用：FILTER &rarr; SORT を LET で1回にまとめる</h3>
+<p>「特定カテゴリだけを抽出してからソートする」というパイプライン処理も、LETで変数をつなげると綺麗に書けます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">    カテゴリ, "食品",</span>
+<span class="code-line">    抽出, FILTER(A2:D1000, A2:A1000=カテゴリ, "該当なし"),</span>
+<span class="code-line">    並替, SORTBY(抽出, INDEX(抽出,,4), -1),</span>
+<span class="code-line">    上位5, TAKE(並替, 5),</span>
+<span class="code-line">    上位5</span>
+<span class="code-line">  )</span>
+</div>
+<p class="code-comment">処理の流れが一目でわかります：カテゴリ定義 &rarr; FILTER で絞り込み &rarr; SORTBY で並べ替え &rarr; TAKE で上位5件だけ切り出し。各ステップが変数名になっているのでデバッグも容易です。</p>
+<div class="xdemo-note">
+<strong>🔧 デバッグのコツ</strong><br>
+        途中経過を確認したいときは、最後の行を見たい変数名に差し替えるだけ。例えば「上位5」の代わりに「抽出」と書けば、FILTER の結果だけがスピル表示されます。ステップ実行のような感覚で調整できるのが LET の隠れた利点です。
+      </div>
+</section>
+<!-- ===== 作業シートとの使い分け ===== -->
+<section class="method-section">
+<h3>それでも「作業シートに出すべき」ケース</h3>
+<p>LETは万能ではありません。以下のような場合は、素直に作業シートに SORTBY / FILTER の結果をスピルさせ、他のシートからそれを参照するほうが圧倒的に有利です。</p>
+<div class="scenario-box">
+<h4>ケース①：ソート結果を複数のセル・シートから参照する</h4>
+<p>LETの変数はそのセルの中でしか使えません。ダッシュボードのグラフ、ピボット的な集計表、帳票シートなど複数の場所から同じソート結果を使うなら、作業シートに1回だけスピルさせてそこを参照する構成がベストです。</p>
+<div class="flow-diagram">
+<span class="flow-step">元データ</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">作業シート（SORTBY 1回）</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">グラフ / 集計表 / 帳票</span>
+</div>
+</div>
+<div class="scenario-box">
+<h4>ケース②：データが10万行を超えるような大規模処理</h4>
+<p>LET内の SORTBY でも10万行のソートは重いです。そもそも関数での処理限界に近づくため、Power Query（パワークエリ）でETL処理として事前にソート・フィルターを済ませ、結果テーブルをシートに出力するほうが適切です。</p>
+<div class="flow-diagram">
+<span class="flow-step">元データ</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Power Query<br>（ソート＋フィルター）</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">出力テーブル</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">関数で参照</span>
+</div>
+</div>
+<div class="scenario-box">
+<h4>ケース③：同じ数式が行ごとに入る場合</h4>
+<p>A列の各行に =LET(データ, SORTBY(...), ...) と入れると、行数ぶんだけ SORTBY が実行されます。LET は「1セル内の重複」を防ぐだけで、「他のセルとの重複」は防げません。この場合は作業シートに SORTBY を1回だけ書き、各行からはその結果を INDEX / MATCH で引くべきです。</p>
+</div>
+</section>
+<!-- ===== 判断フローチャート ===== -->
+<section class="method-section">
+<h3>判断基準：LET？作業シート？Power Query？</h3>
+<div class="table-wrapper"><table class="comparison-table"><caption>データテーブル</caption>
+<thead>
+<tr><th scope="col">状況</th><th scope="col">最適な方法</th><th scope="col">理由</th></tr>
+</thead>
+<tbody>
+<tr><td>1つのセル内で同じソート結果を複数回参照</td><td class="highlight-cell">LET</td><td>変数化で重複評価を排除。最もシンプル</td></tr>
+<tr><td>複数セル・複数シートから同じソート結果を参照</td><td class="highlight-cell">作業シート</td><td>LETの変数はセル外から参照不可。作業シートに1回スピルが正解</td></tr>
+<tr><td>行ごとに同じSORT/FILTERが入る数式</td><td class="highlight-cell">作業シート</td><td>LETでは行間の重複を防げない</td></tr>
+<tr><td>10万行超のデータのソート・フィルター</td><td class="highlight-cell">Power Query</td><td>関数の処理限界。ETLツールで事前処理すべき規模</td></tr>
+<tr><td>FILTER &rarr; SORT &rarr; TAKE のパイプライン処理</td><td class="highlight-cell">LET（結果が1箇所なら）</td><td>各ステップに名前がつき、可読性・デバッグ性が最高</td></tr>
+</tbody>
+</table></div>
+</section>
+<!-- ===== LAMBDA との連携予告 ===== -->
+<section class="method-section">
+<h3>発展：LET + LAMBDA でさらに強力に</h3>
+<p>LET の変数にはスカラー値や配列だけでなく、LAMBDA（自作関数）も格納できます。これにより「ソートのキーを動的に切り替える」「フィルター条件を変数として渡す」といった、より柔軟な構成が可能になります。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">    ソートキー列, IF(G1="金額", 4, 3),</span>
+<span class="code-line">    データ, FILTER(A2:D1000, A2:A1000=G2),</span>
+<span class="code-line">    並替, SORTBY(データ, INDEX(データ,,ソートキー列), -1),</span>
+<span class="code-line">    TAKE(並替, 10)</span>
+<span class="code-line">  )</span>
+</div>
+<p class="code-comment">セルG1に「金額」と入力すればD列で、それ以外ならC列でソート。G2でカテゴリを切り替えられるインタラクティブなダッシュボードを関数だけで構築できます。</p>
+</section>
+<!-- ===== 旧バージョン ===== -->
+<section class="legacy-section">
+<h3>旧バージョンでの代替法</h3>
+<p>LET も SORT / SORTBY / FILTER も使えない環境（Excel 2019以前）では、そもそもスピル配列が存在しません。作業シートに LARGE / SMALL + INDEX / MATCH で疑似ランキングを構築するか、Power Query でソート済みテーブルを出力する方式が現実的な選択肢です。Excel 2016以前では Power Query がアドイン扱いの場合もあるため、環境確認が必要です。</p>
+</section>
+<div class="series-nav" style="margin-top:40px; padding: 20px; background: #f0f4f8; border-radius: 8px;">
+<h4>LET関数 深掘りシリーズ</h4>
+<ul>
+<li><a href="article_let.html">① LET関数の基本とメリット</a></li>
+<li><a href="article_let_if.html">② 深掘り①：VLOOKUPの重複評価を排除</a></li>
+<li><a href="article_let_iferror.html">③ 深掘り②：SORT/SORTBYの重い処理を変数化</a></li>
+</ul>
+</div>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>パワークエリでPDFを取り込む &horbar; 基本編（Excel 2019〜）｜Excel &times; No VBA Lab</title>
+<meta content="Power QueryでPDFからデータを取り込む基本的な手順をGUI操作中心に丁寧に解説。Excel 2019以降対応。" name="description">
+<meta content="パワークエリ PDF 基本, Power Query PDF 手順, PDF 表 取り込み, Excel 2019 パワークエリ, VBA不要" name="keywords">
+<meta content="パワークエリでPDFを取り込む &horbar; 基本編（Excel 2019〜）｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power QueryでPDFからデータを取り込む基本的な手順をGUI操作中心に丁寧に解説。Excel 2019以降対応。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/basic/article_pdf_powerquery_basic.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    .format-table{border-collapse:collapse;font-size:.9em;margin:20px 0;width:100%;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+    .format-table th,.format-table td{border:1px solid #ddd;padding:12px 15px;text-align:left}
+    .format-table th{background-color:#607d8b;color:#fff;text-align:center;font-weight:700}
+    .xdemo-note{font-size:.85em;color:#444;margin-top:10px;padding:10px 15px;background:#f5f8ff;border-left:4px solid #90caf9;line-height:1.75}
+    .xdemo-note-good{font-size:.85em;color:#444;margin-top:10px;padding:10px 15px;background:#e8f5e9;border-left:4px solid #66bb6a;line-height:1.75}
+    .xdemo-note-warn{font-size:.85em;color:#444;margin-top:10px;padding:10px 15px;background:#fff8e1;border-left:4px solid #ffc107;line-height:1.75}
+    .xdemo-note-fire{font-size:.85em;color:#444;margin-top:10px;padding:10px 15px;background:#fce4ec;border-left:4px solid #e53935;line-height:1.75}
+    .toc-box{background:#f5f8ff;border:1px solid #c5cae9;border-radius:8px;padding:18px 24px;margin:24px 0}
+    .toc-box h3{margin:0 0 10px;font-size:1em;color:#1565c0}
+    .toc-box ol{margin:0;padding-left:1.4em;line-height:2}
+    .toc-box a{text-decoration:none;color:#1565c0}
+    .toc-box a:hover{text-decoration:underline}
+    .scenario-box{background:#f9fbe7;border:1px solid #c5e1a5;border-radius:8px;padding:18px 22px;margin:20px 0}
+    .scenario-box h4{margin:0 0 8px;color:#558b2f}
+    .diff-table{border-collapse:collapse;font-size:.88em;margin:20px 0;width:100%;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+    .diff-table th,.diff-table td{border:1px solid #ddd;padding:11px 14px;text-align:center}
+    .diff-table th{background-color:#455a64;color:#fff;font-weight:700}
+    .diff-table .col-item{text-align:left;font-weight:700}
+    .diff-ok{color:#2e7d32;font-weight:700}
+    .diff-ng{color:#c62828;font-weight:700}
+
+    .ui-mock{border:2px solid #d0d0d0;border-radius:8px;overflow:hidden;margin:16px 0}
+    .ui-mock .ui-titlebar{background:#f0f0f0;padding:8px 16px;font-size:.78rem;font-weight:600;border-bottom:1px solid #d0d0d0;display:flex;align-items:center;gap:8px}
+    .ui-mock .ui-body{padding:16px;background:#fff}
+    .ui-mock .ui-tree{font-size:.8rem;line-height:2}
+    .ui-mock .ui-tree .indent{padding-left:24px}
+    .ui-mock .ui-tree .selected{background:#e8d5f5;padding:2px 8px;border-radius:4px;font-weight:600}
+
+    .nav-link-box{display:flex;gap:16px;background:#f5f8ff;border:1px solid #c5cae9;border-radius:8px;padding:16px 20px;margin:20px 0;flex-wrap:wrap}
+    .nav-link-box .nav-link-item{flex:1;min-width:200px}
+    .nav-link-box .nav-link-item .nl-title{font-weight:700;font-size:.88rem;color:#1565c0}
+    .nav-link-box .nav-link-item .nl-desc{font-size:.82rem;color:#555;margin-top:4px;line-height:1.6}
+    .nav-link-box .nav-link-item a{color:#1565c0}
+
+    .sample-grid{width:100%;border-collapse:collapse;font-size:.82rem;margin:16px 0}
+    .sample-grid th,.sample-grid td{border:1px solid #c8c8c8;padding:6px 10px;text-align:center;min-width:56px}
+    .sample-grid th{background:#f0f0f0;font-weight:600;color:#333}
+    .sample-grid .row-num{background:#f0f0f0;font-weight:600;color:#555;width:36px}
+
+    @media(max-width:700px){
+      .nav-link-box{flex-direction:column}
+    }
+  </style>
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"パワークエリでPDFを取り込む \u0026horbar; 基本編\u0026horbar; 「データの取得」→「PDFから」で表を直接Excelに取り込む全手順 \u0026horbar;","description":"Power QueryでPDFからデータを取り込む基本的な手順をGUI操作中心に丁寧に解説。Excel 2019以降対応。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/basic/article_pdf_powerquery_basic.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span>
+<a href="article_pdf_overview.html">PDF取得テクニック</a><span>&gt;</span>
+<strong>パワークエリ基本編</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Excel 2019〜</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">パワークエリでPDFを取り込む &horbar; 基本編<br><span style="font-size:.55em;font-weight:400;color:#666;">&horbar; 「データの取得」&rarr;「PDFから」で表を直接Excelに取り込む全手順 &horbar;</span></h1>
+</div>
+<!-- ========== 目次 ========== -->
+<div class="toc-box">
+<h3>この記事の内容</h3>
+<ol>
+<li><a href="#sec-what">パワークエリとは？</a></li>
+<li><a href="#sec-version">前提条件と対応バージョン</a></li>
+<li><a href="#sec-steps">基本手順：PDFの表をExcelに取り込む</a></li>
+<li><a href="#sec-navigator">ナビゲーター画面の見方</a></li>
+<li><a href="#sec-editor">パワークエリエディターでの基本整形</a></li>
+<li><a href="#sec-load">Excelシートへの読み込み</a></li>
+<li><a href="#sec-refresh">データの更新（リフレッシュ）</a></li>
+<li><a href="#sec-example">実践例：売上レポートPDFを取り込む</a></li>
+<li><a href="#sec-trouble">よくあるつまずきポイント</a></li>
+<li><a href="#sec-summary">まとめ＆実践編への案内</a></li>
+</ol>
+</div>
+<!-- ==========================================================
+         【1】パワークエリとは？
+      ========================================================== -->
+<section class="goal-section" id="sec-what">
+<h2><span class="icon">💡</span> パワークエリとは？</h2>
+<p>パワークエリ（Power Query）は、Excelに標準搭載されているデータ取得・変換ツールです。外部データソース（ファイル、データベース、Web、PDFなど）からデータを読み込み、列の分割・フィルター・型変換・結合といった加工をGUI操作で行い、結果をExcelシートやデータモデルに出力します。</p>
+<p>最大の特徴は、加工ステップが「クエリ」として記録・保存される点です。元のPDFファイルが更新されても「すべて更新」ボタンひとつで同じ加工を自動的に再実行できます。Word変換のように毎回手作業を繰り返す必要がありません。</p>
+</section>
+<!-- ==========================================================
+         【2】前提条件と対応バージョン
+      ========================================================== -->
+<section class="method-section" id="sec-version">
+<h2>【2】前提条件と対応バージョン</h2>
+<table class="diff-table">
+<tr><th class="w-25">バージョン</th><th class="w-20">PDFコネクタ</th><th style="width:55%">備考</th></tr>
+<tr><td class="col-item">Excel 2013</td><td><span class="diff-ng">非対応</span></td><td class="text-left">パワークエリはアドインとして提供されたがPDFコネクタなし</td></tr>
+<tr><td class="col-item">Excel 2016</td><td><span class="diff-ng">非対応</span></td><td class="text-left">パワークエリが標準搭載されたがPDFコネクタは未搭載</td></tr>
+<tr><td class="col-item">Excel 2019</td><td><span class="diff-ok">対応</span></td><td class="text-left">PDFコネクタ搭載。基本的なテーブル抽出が可能</td></tr>
+<tr><td class="col-item">Microsoft 365</td><td><span class="diff-ok">対応（最新版）</span></td><td class="text-left">継続的に検出精度が向上。推奨環境</td></tr>
+</table>
+<div class="xdemo-note">
+<strong>前提</strong><br>
+          テキストベースのPDFであること。スキャンした画像PDFはテキスト情報がないため取り込めません。PDFをAdobe Readerで開いて <kbd>Ctrl</kbd>+<kbd>A</kbd> で文字が選択できればOKです。
+        </div>
+</section>
+<!-- ==========================================================
+         【3】基本手順
+      ========================================================== -->
+<section class="method-section" id="sec-steps">
+<h2>【3】基本手順：PDFの表をExcelに取り込む</h2>
+<p><strong>STEP 1</strong> &mdash; Excelを開き、「<strong>データ</strong>」タブをクリックします。</p>
+<p><strong>STEP 2</strong> &mdash; 「<strong>データの取得</strong>」&rarr;「<strong>ファイルから</strong>」&rarr;「<strong>PDFから</strong>」を選択します。</p>
+<p><strong>STEP 3</strong> &mdash; ファイル選択ダイアログが表示されるので、取り込みたいPDFファイルを選択して「<strong>インポート</strong>」をクリックします。</p>
+<p><strong>STEP 4</strong> &mdash; 「<strong>ナビゲーター</strong>」画面が表示されます。PDFから検出されたテーブルとページの一覧が左側のツリーに表示されます（詳細は次のセクション）。</p>
+<p><strong>STEP 5</strong> &mdash; 取り込みたいテーブルを選択し、右側のプレビューで内容を確認します。</p>
+<p><strong>STEP 6</strong> &mdash; そのまま取り込む場合は「<strong>読み込み</strong>」をクリック。整形が必要な場合は「<strong>データの変換</strong>」をクリックしてパワークエリエディターを開きます。</p>
+</section>
+<!-- ==========================================================
+         【4】ナビゲーター画面の見方
+      ========================================================== -->
+<section class="method-section" id="sec-navigator">
+<h2>【4】ナビゲーター画面の見方</h2>
+<p>ナビゲーターはPDFの構造を「ページ」と「テーブル」の2つの単位で表示します。</p>
+<div class="ui-mock">
+<div class="ui-titlebar">ナビゲーター</div>
+<div class="ui-body">
+<div class="ui-tree">
+<div>請求書.pdf</div>
+<div class="indent"><span class="selected">Table001 (Page 1)</span></div>
+<div class="indent">Table002 (Page 2)</div>
+<div class="indent">Table003 (Page 3)</div>
+<div class="indent">Page001</div>
+<div class="indent">Page002</div>
+<div class="indent">Page003</div>
+</div>
+</div>
+</div>
+<table class="diff-table">
+<tr><th style="width:15%">種類</th><th class="w-25">名前の例</th><th style="width:60%">内容</th></tr>
+<tr><td class="col-item">Table</td><td>Table001, Table002&hellip;</td><td class="text-left">PDFから検出された表データ。行・列の構造が自動推定される。取り込みに最も適した形式。</td></tr>
+<tr><td class="col-item">Page</td><td>Page001, Page002&hellip;</td><td class="text-left">ページ全体のテキスト。表以外のテキスト（見出し、注釈など）も含む。表の検出に失敗した場合のフォールバック。</td></tr>
+</table>
+<div class="xdemo-note-good">
+<strong>テーブルが検出されない場合</strong><br>
+          PDF内の表が罫線のない「スペース揃え」の表だと、Table として検出されないことがあります。その場合は Page を選んでパワークエリエディターで手動整形するか、Word変換をフォールバックとして使います。
+        </div>
+</section>
+<!-- ==========================================================
+         【5】パワークエリエディターでの基本整形
+      ========================================================== -->
+<section class="method-section" id="sec-editor">
+<h2>【5】パワークエリエディターでの基本整形</h2>
+<p>「データの変換」をクリックするとパワークエリエディターが開きます。ここでデータの整形を行います。操作はすべて自動的にステップとして記録されます。</p>
+<h3>5-1. 1行目をヘッダーに昇格</h3>
+<p>「ホーム」タブ &rarr;「<strong>1行目をヘッダーとして使用</strong>」をクリックします。1行目のデータが列名になります。</p>
+<h3>5-2. 不要な列の削除</h3>
+<p>不要な列のヘッダーを右クリック &rarr;「<strong>列の削除</strong>」。または必要な列だけを選択（Ctrlクリック）&rarr; 右クリック &rarr;「<strong>他の列の削除</strong>」。</p>
+<h3>5-3. データ型の変更</h3>
+<p>列ヘッダーの左にある型アイコン（ABC、123 など）をクリックし、正しいデータ型（整数、10進数、日付、テキストなど）を選択します。数値列が「テキスト」になっている場合はここで「整数」や「10進数」に変更します。</p>
+<h3>5-4. 空白行のフィルター除去</h3>
+<p>キーとなる列のフィルターボタン（▼）をクリック &rarr;「<strong>null</strong>」と「<strong>空白</strong>」のチェックを外して「OK」。これでデータのない行が除去されます。</p>
+<h3>5-5. 列の分割</h3>
+<p>1つの列に「郵便番号 住所」のようにスペース区切りで複数のデータが入っている場合：該当列を選択 &rarr;「変換」タブ &rarr;「<strong>列の分割</strong>」&rarr;「<strong>区切り記号による分割</strong>」&rarr; スペースを指定 &rarr; OK。</p>
+</section>
+<!-- ==========================================================
+         【6】Excelシートへの読み込み
+      ========================================================== -->
+<section class="method-section" id="sec-load">
+<h2>【6】Excelシートへの読み込み</h2>
+<p><strong>STEP 1</strong> &mdash; パワークエリエディターで整形が完了したら、「ホーム」タブ &rarr;「<strong>閉じて読み込む</strong>」をクリックします。</p>
+<p><strong>STEP 2</strong> &mdash; データがExcelシートにテーブルとして出力されます。テーブル名はクエリ名と同じになります。</p>
+<p><strong>STEP 3</strong> &mdash; 読み込み先を変更したい場合は「閉じて読み込む」の▼ &rarr;「<strong>閉じて次に読み込む&hellip;</strong>」で、既存のシート・セル位置・データモデルなどを指定できます。</p>
+<h3>読み込み結果のイメージ</h3>
+<table class="sample-grid">
+<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td class="row-num">1</td><td class="font-bold-700">日付</td><td class="font-bold-700">商品名</td><td class="font-bold-700">数量</td><td class="font-bold-700">単価</td><td class="font-bold-700">売上</td></tr>
+<tr><td class="row-num">2</td><td>2026/1/5</td><td>商品A</td><td>100</td><td>500</td><td>50,000</td></tr>
+<tr><td class="row-num">3</td><td>2026/1/5</td><td>商品B</td><td>50</td><td>1,200</td><td>60,000</td></tr>
+<tr><td class="row-num">4</td><td>2026/1/8</td><td>商品C</td><td>200</td><td>300</td><td>60,000</td></tr>
+<tr><td class="row-num">&hellip;</td><td colspan="5" style="color:#aaa;text-align:center">（PDFの全データが自動整形されて出力）</td></tr>
+</table>
+<div class="xdemo-note">
+<strong>「クエリと接続」パネル</strong><br>
+          読み込み完了後、Excel右側に「クエリと接続」パネルが表示されます。ここにクエリ名・読み込み行数・最終更新日が表示されます。クエリをダブルクリックすると、パワークエリエディターを再度開いて整形ステップを修正できます。
+        </div>
+</section>
+<!-- ==========================================================
+         【7】データの更新
+      ========================================================== -->
+<section class="method-section" id="sec-refresh">
+<h2>【7】データの更新（リフレッシュ）</h2>
+<p>パワークエリの最大のメリットは、PDFファイルが更新されたときにワンクリックで再取り込みできることです。</p>
+<p><strong>STEP 1</strong> &mdash; 元のPDFファイルを新しいバージョンに差し替えます（同じファイル名・同じ場所に保存）。</p>
+<p><strong>STEP 2</strong> &mdash; Excelで「<strong>データ</strong>」タブ &rarr;「<strong>すべて更新</strong>」をクリックします。</p>
+<p><strong>STEP 3</strong> &mdash; パワークエリが自動的にPDFを再読み込みし、同じ加工ステップを適用して結果を更新します。手作業は一切不要です。</p>
+<div class="xdemo-note-good">
+<strong>ファイル名やパスが変わった場合</strong><br>
+          右側の「クエリと接続」パネルでクエリをダブルクリック &rarr; パワークエリエディター &rarr;「ホーム」&rarr;「詳細エディター」で <code>File.Contents("パス")</code> 部分を新しいパスに変更します。
+        </div>
+</section>
+<!-- ==========================================================
+         【8】実践例
+      ========================================================== -->
+<section class="method-section" id="sec-example">
+<h2>【8】実践例：売上レポートPDFを取り込む</h2>
+<div class="scenario-box">
+<h4>シナリオ：3ページにまたがる月次売上レポートPDF（ヘッダー＋50行の明細表）を取り込む</h4>
+</div>
+<p><strong>STEP 1</strong> &mdash; 「データ」&rarr;「データの取得」&rarr;「PDFから」&rarr; ファイル選択。</p>
+<p><strong>STEP 2</strong> &mdash; ナビゲーターに Table001、Table002、Table003 が表示される。プレビューで確認すると3つとも同じ列構造の表（日付・商品名・数量・単価・売上）。</p>
+<p><strong>STEP 3</strong> &mdash; 3つすべてにチェックを入れ、「<strong>データの変換</strong>」をクリック。3つのクエリが別々に作成される。</p>
+<p><strong>STEP 4</strong> &mdash; パワークエリエディターで「ホーム」&rarr;「<strong>クエリの追加</strong>」&rarr;「<strong>3つ以上のテーブルを追加</strong>」で Table001・Table002・Table003 を結合。1つのクエリにまとまる。</p>
+<p><strong>STEP 5</strong> &mdash; 「1行目をヘッダーとして使用」&rarr; 2ページ目・3ページ目の重複ヘッダー行をフィルターで除去（「日付」列で "日付" という文字列を除外）。</p>
+<p><strong>STEP 6</strong> &mdash; データ型を設定して「閉じて読み込む」。50行すべてが1つのExcelテーブルに出力される。</p>
+<div class="xdemo-note">
+<strong>ポイント</strong><br>
+          ページまたぎの表を結合する際、各ページの先頭に重複するヘッダー行が含まれることがあります。結合後にフィルターで除去するのが定番の対処法です。
+        </div>
+</section>
+<!-- ==========================================================
+         【9】よくあるつまずきポイント
+      ========================================================== -->
+<section class="method-section" id="sec-trouble">
+<h2>【9】よくあるつまずきポイント</h2>
+<table class="diff-table">
+<tr>
+<th class="w-30">症状</th>
+<th style="width:70%">原因と対処法</th>
+</tr>
+<tr>
+<td class="col-item">「PDFから」メニューが見つからない</td>
+<td class="text-left">Excel 2016以前ではPDFコネクタが搭載されていません。Excel 2019以降にアップグレードするか、Word変換を使ってください。</td>
+</tr>
+<tr>
+<td class="col-item">テーブルが1つも検出されない</td>
+<td class="text-left">PDFの表に罫線がなく、スペースだけで列を揃えている場合に起こります。Page（ページ全体のテキスト）を選んで取り込み、パワークエリエディターで「列の分割」を使って手動で整形します。</td>
+</tr>
+<tr>
+<td class="col-item">列がズレている</td>
+<td class="text-left">セル結合を含む複雑な表はパワークエリでも正確に認識できないことがあります。パワークエリエディターで「列の入れ替え」「列の分割・統合」を使って修正します。</td>
+</tr>
+<tr>
+<td class="col-item">日本語の列名が文字化けする</td>
+<td class="text-left">まれにPDFのエンコーディング問題で文字化けが起きます。パワークエリエディターで列名をダブルクリックして手動で正しい名前に変更してください。</td>
+</tr>
+<tr>
+<td class="col-item">数値が文字列になっている</td>
+<td class="text-left">型アイコン（列ヘッダー左）をクリックして「整数」「10進数」「通貨」など適切な型に変更します。&yen;記号が付いている場合は「値の置換」で&yen;を削除してから型変換します。</td>
+</tr>
+</table>
+</section>
+<!-- ==========================================================
+         【10】まとめ＆実践編
+      ========================================================== -->
+<section class="goal-section" id="sec-summary" style="margin-top:40px;background:linear-gradient(135deg,#f5f8ff 0%,#e8eaf6 100%);border-radius:10px;padding:24px;">
+<h2><span class="icon">📝</span> まとめ</h2>
+<p>パワークエリのPDFコネクタを使えば、PDFの表データをExcelに取り込む作業が「ファイルを指定 &rarr; テーブルを選択 &rarr; 整形 &rarr; 読み込み」の一連のフローになります。加工ステップがクエリとして保存されるため、PDFが更新されるたびに「すべて更新」を押すだけで最新データが反映されます。Word変換と比較して、操作ステップが少なく、再利用性が高く、ページまたぎの表も結合できるという大きな利点があります。</p>
+<div class="nav-link-box">
+<div class="nav-link-item">
+<div class="nl-title">&rarr; 実践・進化編</div>
+<div class="nl-desc">複数テーブルの結合、M言語での高度な制御、フォルダー一括取り込みなど。<a href="article_pdf_powerquery_advanced.html">実践編を見る</a></div>
+</div>
+<div class="nav-link-item">
+<div class="nl-title">&rarr; Word変換（旧式）</div>
+<div class="nl-desc">Excel 2016以前の環境で使えるフォールバック手段。<a href="article_pdf_word.html">旧式の手順を見る</a></div>
+</div>
+</div>
+</section>
+<p>パワークエリの基本操作は &rarr; <a href="article_pq_first_steps.html">GUIマスターシリーズ①〜⑥</a><br>応用操作は &rarr; <a href="../advanced/article_pq_merge_append.html">応用編⑦〜⑪</a></p>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

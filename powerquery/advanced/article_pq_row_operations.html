@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="Power Queryでの行操作を完全解説。フィルター（オートフィルターとの違い）、並べ替え、重複行の削除、上位/下位行の保持/削除、フィル（上方向・下方向）をGUI操作中心に丁寧に解説します。" name="description">
+<meta content="パワークエリ, Power Query, Excel パワークエリ, VBA不要, Excel実務" name="keywords">
+<meta content="行を操る &horbar; フィルター・並べ替え・重複削除・フィル｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power Queryでの行操作を完全解説。フィルター（オートフィルターとの違い）、並べ替え、重複行の削除、上位/下位行の保持/削除、フィル（上方向・下方向）をGUI操作中心に丁寧に解説します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/advanced/article_pq_row_operations.html" rel="canonical">
+<title>行を操る &horbar; フィルター・並べ替え・重複削除・フィル｜Excel &times; No VBA Lab</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"行を操る \u0026horbar; フィルター・並べ替え・重複削除・フィル","description":"Power Queryでの行操作を完全解説。フィルター（オートフィルターとの違い）、並べ替え、重複行の削除、上位/下位行の保持/削除、フィル（上方向・下方向）をGUI操作中心に丁寧に解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/advanced/article_pq_row_operations.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>行を操る</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">行を操る &horbar; フィルター・並べ替え・重複削除・フィル</h1>
+</div>
+<!-- ============================== -->
+<section id="goal">
+<h2>このページのゴール</h2>
+<p>Power Queryで行を絞り込む（フィルター）、順序を変える（並べ替え）、重複を消す、空欄を埋める（フィル）操作をマスターし、Excelのオートフィルターとの違いを理解することです。</p>
+</section>
+<!-- ============================== -->
+<section id="filter">
+<h2>フィルター &horbar; 必要な行だけを残す</h2>
+<h3>基本のフィルター操作</h3>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. フィルターしたい列のヘッダーにある<strong>ドロップダウン矢印（▼）</strong>をクリックします。<br>
+          2. 値の一覧が表示されるので、<strong>残したい値にチェック</strong>を入れます（不要な値のチェックを外します）。<br>
+          3. 「OK」をクリックすると、チェックを外した値の行が削除されます。</p>
+</div>
+<h3>Excelのオートフィルターとの決定的な違い</h3>
+<table class="ref-table">
+<thead><tr><th>項目</th><th>Excelのオートフィルター</th><th>Power Queryのフィルター</th></tr></thead>
+<tbody>
+<tr><td><strong>行の扱い</strong></td><td>フィルターした行は<strong>非表示</strong>（データは残っている）</td><td>フィルターした行は<strong>完全に除外</strong>される</td></tr>
+<tr><td><strong>元データへの影響</strong></td><td>元データを直接操作している</td><td>元データには一切触れない（クエリ内だけの処理）</td></tr>
+<tr><td><strong>条件の保持</strong></td><td>フィルターを解除すると元に戻る</td><td>フィルターはステップとして保存され、更新のたびに自動適用される</td></tr>
+<tr><td><strong>数式への影響</strong></td><td>SUBTOTAL以外の関数は非表示行も計算に含む</td><td>除外された行は存在しないため、すべての処理から除外</td></tr>
+</tbody>
+</table>
+<p>つまりPower Queryのフィルターは「一時的に隠す」のではなく、「条件に合わないデータを工程から完全に取り除く」操作です。次に更新したときも同じ条件が自動適用される点が、毎回手作業でフィルターするオートフィルターとの最大の違いです。</p>
+<h3>テキストフィルター &horbar; 部分一致・前方一致・後方一致</h3>
+<p>ドロップダウン矢印をクリック &rarr; <strong>テキスト フィルター</strong> を選ぶと、より高度な条件が使えます。</p>
+<table class="ref-table">
+<thead><tr><th>条件</th><th>動作</th><th>例</th></tr></thead>
+<tbody>
+<tr><td>指定の値に等しい</td><td>完全一致する行だけ残す</td><td>「営業部」に等しい &rarr; 営業部の行だけ</td></tr>
+<tr><td>指定の値で始まる</td><td>前方一致</td><td>「東」で始まる &rarr; 東京都、東北支店&hellip;</td></tr>
+<tr><td>指定の値で終わる</td><td>後方一致</td><td>「県」で終わる &rarr; 埼玉県、千葉県&hellip;</td></tr>
+<tr><td>指定の値を含む</td><td>部分一致</td><td>「田」を含む &rarr; 田中、太田、秋田&hellip;</td></tr>
+<tr><td>指定の値を含まない</td><td>部分不一致</td><td>「テスト」を含まない &rarr; テスト行を除外</td></tr>
+</tbody>
+</table>
+<h3>数値フィルター・日付フィルター</h3>
+<p>列のデータ型が数値の場合は「数値フィルター」（より大きい、より小さい、間&hellip;）、日付型の場合は「日付フィルター」（指定日以降、指定日の間、今年&hellip;）が表示されます。これらはデータ型が正しく設定されていないと表示されないため、前のページ「取り込み直後の5操作」でデータ型を正しく設定しておくことが重要です。</p>
+<div class="tip-box">
+<strong>複数列にフィルターを重ねがけ</strong><br>
+          1つの列にフィルターを適用したあと、別の列にもフィルターを追加できます。「部署 = 営業部」かつ「売上 &gt; 100万」のようなAND条件を、フィルターを重ねるだけで実現できます。
+        </div>
+</section>
+<!-- ============================== -->
+<section id="sort">
+<h2>並べ替え</h2>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. 並べ替えたい列のヘッダーにある<strong>ドロップダウン矢印（▼）</strong>をクリックします。<br>
+          2. <strong>「昇順で並べ替え」</strong>または<strong>「降順で並べ替え」</strong>を選択します。<br>
+          ※ヘッダーをクリックした状態で<strong>ホーム タブ &rarr; 並べ替え</strong>ボタンでも同じことができます。</p>
+</div>
+<h3>複数列での並べ替え</h3>
+<p>「部署で昇順 &rarr; 売上で降順」のように複数キーで並べ替えたい場合は、<strong>後から並べ替えたい列を先に操作</strong>します。Power Queryのステップは上から順に処理されるため、「売上で降順」&rarr;「部署で昇順」の順にステップを追加すると、結果として「部署の昇順の中で、売上が降順」になります。</p>
+<div class="warning-box">
+<strong>並べ替えは「見た目」以上の意味がある</strong><br>
+          Power Queryにおける並べ替えは、単なる表示順の変更ではなく、後続の操作（インデックス列の追加やフィルなど）の結果に直接影響します。特に「フィル」操作は並べ替え後の行順を前提に動作するため、フィルの前に正しい順序で並べ替えておくことが重要です。
+        </div>
+</section>
+<!-- ============================== -->
+<section id="remove-duplicates">
+<h2>重複行の削除</h2>
+<p>Excelの「重複の削除」機能に対応しますが、Power Queryでは「どの列を基準に重複を判定するか」をより直感的に制御できます。</p>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. 重複判定の基準にしたい列を選択します（1列でも複数列でもOK。Ctrl+クリックで複数選択）。<br>
+          2. <strong>ホーム タブ &rarr; 行の削除 &rarr; 重複の削除</strong> をクリックします。<br>
+          3. 選択した列の値が同じ行のうち、最初の1行だけが残り、2行目以降が削除されます。</p>
+</div>
+<div class="before-after">
+<div>
+<p><strong>Before</strong></p>
+<table><thead><tr><th>部署</th><th>氏名</th></tr></thead>
+<tbody>
+<tr><td>営業部</td><td>田中</td></tr>
+<tr><td>経理部</td><td>佐藤</td></tr>
+<tr><td>営業部</td><td>鈴木</td></tr>
+<tr><td>営業部</td><td>田中</td></tr>
+</tbody></table>
+</div>
+<div>
+<p><strong>After（「部署」列で重複削除）</strong></p>
+<table><thead><tr><th>部署</th><th>氏名</th></tr></thead>
+<tbody>
+<tr><td>営業部</td><td>田中</td></tr>
+<tr><td>経理部</td><td>佐藤</td></tr>
+</tbody></table>
+</div>
+</div>
+<p>「部署」列だけを基準にしたため、「営業部」の最初の行（田中）だけが残り、鈴木の行と重複する田中の行は削除されました。「部署」と「氏名」の両方を選択していれば、「営業部・田中」が重複するため1行だけ消え、「営業部・鈴木」は残ります。</p>
+</section>
+<!-- ============================== -->
+<section id="keep-remove-rows">
+<h2>上位行・下位行の保持と削除</h2>
+<p>「先頭のN行だけ残す」「末尾のN行を消す」といった操作です。前ページで「不要行の削除」としても使いましたが、ここでは全体像をまとめます。</p>
+<table class="ref-table">
+<thead><tr><th>操作</th><th>場所</th><th>動作</th><th>使いどころ</th></tr></thead>
+<tbody>
+<tr><td>上位の行の保持</td><td>ホーム &rarr; 行の保持 &rarr; 上位の行の保持</td><td>先頭からN行だけ残し、それ以降を削除</td><td>サンプルとして先頭100件だけ確認したいとき</td></tr>
+<tr><td>下位の行の保持</td><td>ホーム &rarr; 行の保持 &rarr; 下位の行の保持</td><td>末尾からN行だけ残す</td><td>最新N件だけ残したいとき（事前に日付で並べ替え）</td></tr>
+<tr><td>上位の行の削除</td><td>ホーム &rarr; 行の削除 &rarr; 上位の行の削除</td><td>先頭からN行を削除</td><td>ヘッダー以前の説明行を除去</td></tr>
+<tr><td>下位の行の削除</td><td>ホーム &rarr; 行の削除 &rarr; 下位の行の削除</td><td>末尾からN行を削除</td><td>合計行や注記行を除去</td></tr>
+<tr><td>代替の行の削除</td><td>ホーム &rarr; 行の削除 &rarr; 代替の行の削除</td><td>N行残してM行スキップを繰り返す</td><td>1行おきにデータが入っている特殊なレイアウト</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ============================== -->
+<section id="fill">
+<h2>フィル &horbar; 空欄を上（または下）のデータで埋める</h2>
+<p>Excelでよく見かける「セル結合された表」をPower Queryに取り込むと、結合が解除されて先頭行にだけ値が入り、残りがnullになります。この「歯抜け」状態を修復するのがフィル操作です。</p>
+<div class="before-after">
+<div>
+<p><strong>Before（セル結合解除後）</strong></p>
+<table><thead><tr><th>部署</th><th>氏名</th></tr></thead>
+<tbody>
+<tr><td>営業部</td><td>田中</td></tr>
+<tr><td>null</td><td>鈴木</td></tr>
+<tr><td>null</td><td>高橋</td></tr>
+<tr><td>経理部</td><td>佐藤</td></tr>
+<tr><td>null</td><td>山田</td></tr>
+</tbody></table>
+</div>
+<div>
+<p><strong>After（フィル下方向）</strong></p>
+<table><thead><tr><th>部署</th><th>氏名</th></tr></thead>
+<tbody>
+<tr><td>営業部</td><td>田中</td></tr>
+<tr><td>営業部</td><td>鈴木</td></tr>
+<tr><td>営業部</td><td>高橋</td></tr>
+<tr><td>経理部</td><td>佐藤</td></tr>
+<tr><td>経理部</td><td>山田</td></tr>
+</tbody></table>
+</div>
+</div>
+<div class="step-box">
+<h4>操作手順（フィル下方向）</h4>
+<p>1. フィルしたい列のヘッダーをクリックして選択します。<br>
+          2. <strong>変換 タブ &rarr; フィル &rarr; 下</strong> をクリックします。<br>
+          3. null の部分が、直上の値で埋められます。</p>
+</div>
+<div class="warning-box">
+<strong>フィルは「null」だけを埋める</strong><br>
+          フィルが埋めるのは<strong>null（値なし）</strong>だけです。空文字列（""）はフィルの対象になりません。空文字列をnullに変えてからフィルする場合は、<strong>値の置換で "" を null に変換</strong>するか、列を選択して右クリック &rarr;「値の置換」&rarr; 検索する値を空欄、置換後も空欄にして「詳細オプション」で「セル全体の内容を照合する」にチェック &rarr; 置換後に「null」を選ぶ方法があります。
+        </div>
+<div class="warning-box">
+<strong>フィルの前に並べ替えを確認する</strong><br>
+          フィルは「直上（または直下）の値をコピーする」操作です。データの順序が期待と違うと、間違った値で埋められます。フィルの前に、必ず行の順序が正しいことを確認してください。
+        </div>
+<h3>フィル上方向</h3>
+<p><strong>変換 タブ &rarr; フィル &rarr; 上</strong> を使うと、null の部分が直下の値で埋められます。使用頻度は低いですが、最終行にだけ合計値があり、それを全行にコピーしたい場合などに便利です。</p>
+</section>
+<!-- ============================== -->
+<section id="null-error-handling">
+<h2>null・空白・エラー行の処理まとめ</h2>
+<p>行操作でよく遭遇する「困ったデータ」と、それぞれの対処法をまとめます。</p>
+<table class="ref-table">
+<thead><tr><th>状態</th><th>データプレビューでの見え方</th><th>対処法</th></tr></thead>
+<tbody>
+<tr>
+<td><strong>null</strong></td>
+<td>セルにイタリック体で「null」と表示</td>
+<td>フィルターでnullを除外 ／ フィルで埋める ／ 値の置換でnullを特定の値に変換</td>
+</tr>
+<tr>
+<td><strong>空文字列（""）</strong></td>
+<td>セルが空に見える（nullとは違い何も表示されない）</td>
+<td>値の置換で "" &rarr; null に変換してからフィルターまたはフィル</td>
+</tr>
+<tr>
+<td><strong>Error</strong></td>
+<td>セルに赤字で「Error」と表示</td>
+<td>ホーム &rarr; 行の削除 &rarr; エラーの削除 ／ 右クリック &rarr;「エラーの置換」で任意の値に変換</td>
+</tr>
+</tbody>
+</table>
+</section>
+<!-- ============================== -->
+<section id="practice">
+<h2>実践例 &horbar; 結合セルのある報告書データを整える</h2>
+<p>部署のセルが結合された報告書をPower Queryに取り込み、フィルで空欄を埋め、不要行を除去し、特定の部署だけフィルターする一連の流れを実践してみましょう。</p>
+<div class="step-box">
+<h4>Step 1：フィルで部署の空欄を埋める</h4>
+<p>「部署」列を選択 &rarr; <strong>変換 &rarr; フィル &rarr; 下</strong></p>
+</div>
+<div class="step-box">
+<h4>Step 2：合計行を削除する</h4>
+<p>「氏名」列のドロップダウン &rarr; 「合計」のチェックを外す、またはテキストフィルター &rarr;「指定の値を含まない」&rarr;「合計」</p>
+</div>
+<div class="step-box">
+<h4>Step 3：営業部だけにフィルターする</h4>
+<p>「部署」列のドロップダウン &rarr; 「営業部」だけにチェック &rarr; 「OK」</p>
+</div>
+<div class="step-box">
+<h4>Step 4：売上の降順で並べ替え</h4>
+<p>「売上」列のドロップダウン &rarr; 「降順で並べ替え」</p>
+</div>
+<p>4つのステップで、結合セルのある見づらい報告書が、営業部の売上ランキングに変わりました。</p>
+</section>
+<!-- ============================== -->
+<section id="summary">
+<h2>まとめ</h2>
+<p>行操作のポイントは3つです。<strong>第一に</strong>、Power Queryのフィルターは行を「隠す」のではなく「除外する」操作であり、ステップとして保存されるため次回更新時も自動適用されること。<strong>第二に</strong>、フィルは null だけを対象とし、空文字列は対象外であること。セル結合データを扱うときは特に注意が必要です。<strong>第三に</strong>、並べ替えは後続の操作（フィル・インデックス列）に影響するため、「いつ並べ替えるか」を意識して配置すること。この3点を押さえれば、行操作は自信を持って使いこなせます。</p>
+</section>
+<!-- ============================== -->
+<nav class="nav-series">
+<strong>パワークエリ GUIマスターシリーズ</strong>
+<a href="../basic/article_powerquery_intro.html">⓪ パワークエリとは</a>
+<a href="../basic/article_pq_editor_ui.html">① エディターの画面構成と「適用したステップ」</a>
+<a href="../basic/article_pq_first_steps.html">② 取り込んだ直後にやる5つの定番操作</a>
+<a href="article_pq_text_operations.html">③ テキスト列を整形する</a>
+<a class="current" href="article_pq_row_operations.html">④ 行を操る &horbar; フィルター・並べ替え・重複削除・フィル（このページ）</a>
+<a href="article_pq_add_columns.html">⑤ 新しい列を作る &horbar; 条件列・インデックス・カスタム列</a>
+<a href="article_pq_number_date.html">⑥ 数値と日付を扱う</a>
+</nav>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+

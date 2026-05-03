@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="Power Queryのパラメータクエリを完全解説。Excelシートのセル値をフィルター条件やファイルパスとして渡し、エディターを開かずに更新だけで結果を切り替える方法。" name="description">
+<meta content="パワークエリ, Power Query, Excel パワークエリ, VBA不要, Excel実務" name="keywords">
+<meta content="パラメータクエリ &horbar; セルの値で結果を切り替える｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power Queryのパラメータクエリを完全解説。Excelシートのセル値をフィルター条件やファイルパスとして渡し、エディターを開かずに更新だけで結果を切り替える方法。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/advanced/article_pq_parameter_query.html" rel="canonical">
+<title>パラメータクエリ &horbar; セルの値で結果を切り替える｜Excel &times; No VBA Lab</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"パラメータクエリ \u0026horbar; セルの値で結果を切り替える","description":"Power Queryのパラメータクエリを完全解説。Excelシートのセル値をフィルター条件やファイルパスとして渡し、エディターを開かずに更新だけで結果を切り替える方法。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/advanced/article_pq_parameter_query.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>パラメータクエリ</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">パラメータクエリ &horbar; セルの値で結果を切り替える</h1>
+</div>
+<section id="goal"><h2>このページのゴール</h2><p>Excelシート上のセルに入力した値をPower Queryのフィルター条件やファイルパスとして渡し、エディターを一切開かずに「更新」ボタンだけで出力結果を切り替えられるようになることです。</p></section>
+<!-- ==================== 仕組み ==================== -->
+<section id="mechanism">
+<h2>パラメータクエリの仕組み</h2>
+<p>パラメータクエリは3つの要素で構成されます。</p>
+<table class="ref-table">
+<thead><tr><th>要素</th><th>役割</th><th>具体例</th></tr></thead>
+<tbody>
+<tr><td><strong>①パラメータテーブル</strong></td><td>シート上に作成する小さなテーブル。ユーザーが条件値を入力するセルを含む。</td><td>セルA2に「営業部」と入力</td></tr>
+<tr><td><strong>②パラメータ取得クエリ</strong></td><td>①のテーブルからセル値を読み取り、1つの値（テキスト・数値）として返すクエリ。Excel.CurrentWorkbook() を使用。</td><td>「営業部」というテキストを返す</td></tr>
+<tr><td><strong>③メインクエリ</strong></td><td>②で得た値をフィルター条件やファイルパスとして使用するクエリ。</td><td>部署列が「営業部」の行だけ残す</td></tr>
+</tbody>
+</table>
+<p>ユーザーがシート上のセルの値を変えて「更新」するだけで、②&rarr;③が再実行され、結果が切り替わります。</p>
+</section>
+<!-- ==================== 手順 ==================== -->
+<section id="step-by-step">
+<h2>セル値をフィルター条件にする &horbar; 手順</h2>
+<h3>Step 1：パラメータテーブルを作成する</h3>
+<div class="step-box">
+<h4>操作</h4>
+<p>1. シート上にパラメータ用の小さな表を作ります。例：<br>
+          A1に「部署」、A2に「営業部」と入力。<br>
+          2. A1:A2を選択して <strong>Ctrl+T</strong> でテーブル化します。<br>
+          3. テーブル名を<strong>「param_部署」</strong>などわかりやすい名前に変更します（テーブルデザインタブで変更）。</p>
+</div>
+<h3>Step 2：パラメータ取得クエリを作成する</h3>
+<div class="step-box">
+<h4>操作</h4>
+<p>1. <strong>データ タブ &rarr; テーブルまたは範囲から</strong>（パラメータテーブルをクリックした状態で）。<br>
+          2. エディターが開きます。1行1列の小さなテーブルが表示されます。<br>
+          3. 「部署」列のヘッダー下にある値「営業部」の<strong>セルを右クリック &rarr; 「ドリルダウン」</strong>します。<br>
+          4. テーブルが消え、「営業部」というテキスト値だけが残ります。<br>
+          5. <strong>ホーム &rarr; 閉じて次に読み込む &rarr; 接続のみ</strong>で保存します。<br>
+          6. クエリ名を「prm_部署」に変更します。</p>
+</div>
+<div class="tip-box">
+<strong>ドリルダウンとは？</strong><br>
+          テーブル（複数行&times;複数列の構造）から1つの値を取り出す操作です。ドリルダウン後のクエリは「テーブル」ではなく「単一の値」を返すクエリになります。この値を他のクエリから参照できるのがパラメータクエリの核心です。
+        </div>
+<h3>Step 3：メインクエリでパラメータを参照する</h3>
+<div class="step-box">
+<h4>操作（M言語の一部修正が必要）</h4>
+<p>1. メインのデータクエリをエディターで開きます。<br>
+          2. 「部署」列でフィルターをかけます（何でもよいので適当な値で）。フィルターのステップが追加されます。<br>
+          3. <strong>数式バー</strong>を確認すると、次のようなM言語が表示されています：</p>
+<div class="code-block">= Table.SelectRows(前のステップ, each [部署] = "営業部")</div>
+<p>4. この <code>"営業部"</code> の部分を、パラメータクエリの名前に書き換えます：</p>
+<div class="code-block">= Table.SelectRows(前のステップ, each [部署] = prm_部署)</div>
+<p>5. Enterで確定します。これで「prm_部署」クエリが返す値でフィルターされるようになります。</p>
+</div>
+<h3>Step 4：使ってみる</h3>
+<div class="step-box">
+<h4>操作</h4>
+<p>1. シートに戻り、パラメータテーブルの値を「経理部」に変更します。<br>
+          2. <strong>データ タブ &rarr; すべて更新</strong>をクリックします。<br>
+          3. メインクエリの出力が「経理部」のデータに切り替わります。エディターは一切開いていません。</p>
+</div>
+</section>
+<!-- ==================== ファイルパスに使う ==================== -->
+<section id="filepath">
+<h2>セル値をファイルパスに使う</h2>
+<p>取り込むファイルのパスをシート上で管理し、パスを変えて「更新」するだけで別のファイルを取り込めるようにする方法です。</p>
+<div class="step-box">
+<h4>操作</h4>
+<p>1. パラメータテーブルに「パス」列を追加し、セルに <code>C:\Data\sales_202603.csv</code> と入力。テーブル名「param_FilePath」。<br>
+          2. Step 2と同様にドリルダウンして「prm_FilePath」クエリを作成（接続のみ）。<br>
+          3. メインクエリの詳細エディター（表示タブ &rarr; 詳細エディター）を開き、ソースステップのファイルパスを次のように書き換えます：</p>
+<div class="code-block">let
+    ソース = Csv.Document(File.Contents(prm_FilePath), [Delimiter=",", Encoding=65001]),
+    ...</div>
+<p>4. シート上のパスを変えて更新すれば、別のCSVが自動で取り込まれます。</p>
+</div>
+<div class="warning-box">
+<strong>パスの区切りはバックスラッシュ</strong><br>
+          Windowsのファイルパスは <code>\</code>（バックスラッシュ）です。M言語のテキスト内では <code>\\</code> ではなく <code>\</code> をそのまま使えます。フォルダパスの末尾にバックスラッシュを付けるかどうかは統一してください。
+        </div>
+</section>
+<!-- ==================== 応用 ==================== -->
+<section id="advanced-patterns">
+<h2>応用パターン</h2>
+<table class="ref-table">
+<thead><tr><th>パターン</th><th>パラメータの内容</th><th>使いどころ</th></tr></thead>
+<tbody>
+<tr><td>日付でフィルター</td><td>「2026/03/01」（日付型に変換してドリルダウン）</td><td>月次データから特定月だけ抽出</td></tr>
+<tr><td>Top N件</td><td>「10」（数値型に変換してドリルダウン）</td><td>上位N件を動的に切り替え</td></tr>
+<tr><td>フォルダパス</td><td>「C:\Data\2026年3月\」</td><td>月ごとにフォルダが変わるファイル取り込み</td></tr>
+<tr><td>複数パラメータ</td><td>部署・期間など複数のパラメータテーブルを用意</td><td>ダッシュボード的な使い方</td></tr>
+</tbody>
+</table>
+</section>
+<section id="summary"><h2>まとめ</h2><p>パラメータクエリの本質は「シート上のセルの値をM言語のコード内で参照する」ことです。設定に必要なM言語の修正は、数式バーの文字列リテラル（"営業部"）をクエリ名（prm_部署）に書き換えるだけ。この1箇所の修正だけで、エディターを開かずに「セルの値を変えて更新」するだけで結果が切り替わる強力な仕組みが手に入ります。</p></section>
+<nav class="nav-series">
+<strong>パワークエリ 応用編シリーズ</strong>
+<a href="../basic/article_powerquery_intro.html">⓪ パワークエリとは</a>
+<a href="article_pq_merge_append.html">⑦ テーブルの結合</a>
+<a href="article_pq_group_pivot.html">⑧ 集計とピボット</a>
+<a href="article_pq_import_patterns.html">⑨ データ取り込みパターン集</a>
+<a class="current" href="article_pq_parameter_query.html">⑩ パラメータクエリ（このページ）</a>
+<a href="../basic/article_pq_management.html">⑪ 更新と管理</a>
+</nav>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

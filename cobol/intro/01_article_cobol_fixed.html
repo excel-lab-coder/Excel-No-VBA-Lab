@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="2" name="difficulty">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>扱っているデータはCOBOL固定長？見分け方と基礎知識｜Excel &times; No VBA Lab</title>
+<meta content="COBOL帳票・固定長データの見分け方を解説。区切り文字なし・1行の長さが同じ・ゼロ埋め・余白などの特徴と、MIDB関数による切り出し方の基礎を紹介。" name="description">
+<meta content="COBOL帳票, 固定長データ, COBOL Excel, MIDB 関数, 固定長 見分け方, テキストデータ 整形, VBA禁止 COBOL" name="keywords">
+<meta content="扱っているデータはCOBOL固定長？見分け方と基礎知識｜Excel &times; No VBA Lab" property="og:title">
+<meta content="COBOL帳票・固定長データの特徴と見分け方、MIDB関数による基礎的な切り出し方を解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/cobol/intro/01_article_cobol_fixed.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "扱っているデータはCOBOL固定長？見分け方と基礎知識",
+    "description": "COBOL帳票・固定長データの特徴と見分け方、MIDB関数による基礎的な切り出し方を解説。",
+    "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-no-vba-lab.com/ogp.png"}},
+    "datePublished": "2026-03-20",
+    "dateModified": "2026-03-20"
+  }
+  </script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-no-vba-lab.com/"},
+      {"@type": "ListItem", "position": 2, "name": "COBOL帳票処理", "item": "https://excel-no-vba-lab.com/#cobol"},
+      {"@type": "ListItem", "position": 3, "name": "固定長データの見分け方"}
+    ]
+  }
+  </script>
+<style>
+    .xdemo-wrap { margin: 1.4em 0; overflow-x: auto; }
+
+    .code-block-large { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 6px; font-family: 'Consolas', monospace; line-height: 1.6; font-size: 0.95em; overflow-x: auto; }
+
+    .sample-box {
+      position: relative;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      border-radius: 6px;
+      padding: 16px;
+      margin: 1em 0;
+      overflow-x: auto;
+    }
+    .sample-box pre {
+      margin: 0;
+      font-family: 'Courier New', Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre;
+    }
+  </style>
+
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#cobol">COBOLデータ整形</a><span>&gt;</span>
+<strong>固定長データの見分け方</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="badge badge-maniac">基礎知識</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">扱っているデータはCOBOL帳票？固定長データの見分け方と基礎知識</h1>
+</div>
+<section class="goal-section">
+<h2><span class="icon">💡</span> この記事の目的</h2>
+<p>「システムから抽出したテキストデータが、Excelで開いても列が分かれない」「謎の文字の羅列になっている」&hellip;&hellip;そんな経験はありませんか？</p>
+<p>それはカンマ区切りのCSVではなく、<strong>「固定長（こていちょう）データ」</strong>と呼ばれる形式かもしれません。この記事では、手元のデータがCOBOL等で出力された固定長データなのかどうかを見分ける方法と、その背景について解説します。</p>
+</section>
+<section class="method-section">
+<h2>そもそも「固定長データ」とは？</h2>
+<p>Excelでよく扱う「CSV形式」は、データとデータの区切りにカンマ（<code>,</code>）を使います。データによって文字数が変わるため「可変長（かへんちょう）データ」と呼ばれます。</p>
+<p>一方、<strong>固定長データは「カンマなどの区切り文字を使わず、あらかじめ決められた文字数（バイト数）で項目を区切る」</strong>データ形式です。</p>
+<div class="code-block-large" style="margin-top: 20px;">
+          【CSV（可変長）の例】カンマで区切られる<br>
+          101,山田太郎,15000<br>
+          102,クリストファー・ロビン,800<br><br>
+          【固定長データの例】桁数が固定され、隙間はスペース等で埋められる<br>
+<span class="text-blue-light">0101</span><span style="color:#c586c0">山田太郎　　　　　　　</span><span style="color:#ce9178">0000015000</span><br>
+<span class="text-blue-light">0102</span><span style="color:#c586c0">クリストファー・ロビン</span><span style="color:#ce9178">0000000800</span>
+</div>
+<div class="xdemo-note-good">
+          固定長データは見た目が「一枚の長方形のブロック」のように整然と並ぶことが多いのが特徴です。
+        </div>
+</section>
+<section class="method-section">
+<h2>手元のデータが固定長（COBOL帳票など）か見分ける4つのポイント</h2>
+<p>Windowsの「メモ帳」などでデータを開いてみて、以下の特徴に当てはまれば、それは固定長データである可能性が極めて高いです。</p>
+<table class="format-table">
+<tr>
+<th>チェック項目</th>
+<th>詳細と特徴</th>
+</tr>
+<tr>
+<td class="text-center-bold">① 区切り文字がない</td>
+<td>カンマ（,）やタブ（Tab）などの明確な区切り記号が存在せず、文字や数字が隙間なく（あるいは不自然なスペースを挟んで）連続している。</td>
+</tr>
+<tr>
+<td class="text-center-bold">② 1行の長さがすべて同じ</td>
+<td>どの行を見ても、行の末尾（改行位置）がピタリと揃っている。すべての行が同じバイト数で作られています。</td>
+</tr>
+<tr>
+<td class="text-center-bold">③ 数値が「ゼロ埋め」されている</td>
+<td>金額や数量が <code>0000150000</code> のように、指定の桁数に満たない部分が <code>0</code> で埋められている。（パディングと呼ばれます）</td>
+</tr>
+<tr>
+<td class="text-center-bold">④ 文字列に「余白」がある</td>
+<td>会社名や氏名などの短い文字の後に、必ず半角スペース（または全角スペース）が複数連続して入力され、次の項目の開始位置を無理やり揃えている。</td>
+</tr>
+</table>
+<div class="xdemo-note-warn">
+<strong>※拡張子では判断できません：</strong> 固定長データは <code>.txt</code> や <code>.dat</code>、場合によっては拡張子なしで提供されることが多く、「ファイル名」だけでは判別が難しいです。必ずテキストエディタで中身を見て確認してください。
+        </div>
+</section>
+<section class="tips-section">
+<h2>なぜ「COBOL」でよく固定長が使われるのか？</h2>
+<p>当サイトでも「COBOLデータ整形」として紹介していますが、なぜ古いシステム（メインフレームやオフコンなど）の出力ファイルは固定長が多いのでしょうか。</p>
+<ul style="line-height: 1.8; margin-top: 10px;">
+<li><strong>メモリと処理速度の節約：</strong> 昔のコンピューターは性能が低かったため、「カンマを探してデータを切り分ける」という処理すら負担でした。「何バイト目から何バイト目を読む」と決め打ちできる固定長の方が、圧倒的に高速に処理できたのです。</li>
+<li><strong>COBOL言語の仕様：</strong> COBOLというプログラミング言語自体が、データを「何桁の数字」「何桁の文字」といったレコードレイアウト（構造体）で厳格に定義して扱うように設計されているため、出力もそのまま固定長になりやすいという背景があります。</li>
+</ul>
+</section>
+<section class="method-section">
+<h2>COBOL以外でも固定長データは存在する？</h2>
+<p>「ウチの会社にCOBOLのシステムなんて無いから関係ない」と思われるかもしれませんが、実は現代でも固定長データは様々な重要な場面で現役で活躍しています。</p>
+<table class="format-table">
+<tr>
+<th>分野・システム</th>
+<th>利用シーンの例</th>
+</tr>
+<tr>
+<td class="text-center-bold">銀行・金融機関</td>
+<td>給与振込や口座振替で使われる<strong>「全銀協規定フォーマット（全銀フォーマット）」</strong>は、1行120バイトの厳格な固定長データです。</td>
+</tr>
+<tr>
+<td class="text-center-bold">行政・公共機関</td>
+<td>マイナンバー関連の連携データや、一部の社会保険・雇用保険の電子申請データなどには、現在でも固定長フォーマットが指定されることがあります。</td>
+</tr>
+<tr>
+<td class="text-center-bold">企業間取引（EDI）</td>
+<td>古い規格のまま運用され続けている受発注データ連携（流通BMS以前のJCA手順など）では、固定長テキストがやり取りされています。</td>
+</tr>
+<tr>
+<td class="text-center-bold">POSレジデータ</td>
+<td>一部のレジシステムから日次で吐き出される売上明細ログファイルなどが、固定長で記録されている場合があります。</td>
+</tr>
+</table>
+<h3 style="margin-top:2em;">「シンプルな固定長」と「COBOL帳票」は難易度が全く違う</h3>
+<p>ここで重要な注意点があります。同じ「固定長データ」でも、<strong>データの構造によって整形の難易度は天と地ほど違います。</strong></p>
+<table class="format-table">
+<tr>
+<th style="width:22%;">データの種類</th>
+<th>特徴</th>
+<th style="width:15%;">難易度</th>
+</tr>
+<tr>
+<td class="text-center-bold">シンプルな固定長<br><span style="font-size:0.82em; font-weight:normal; color:#666;">（全銀データなど）</span></td>
+<td>
+<strong>1行＝1件のデータ</strong>がきれいに並んでいる。不要な行が混ざっておらず、すべての行が同じレイアウト。<br>
+              &rarr; <span class="code-inline">MIDB</span> ＋ <span class="code-inline">TRIM</span> だけで各項目を切り出せる。
+            </td>
+<td class="text-center"><span style="background:#43a047; color:#fff; padding:3px 10px; border-radius:4px; font-weight:bold; font-size:0.85em;">対応しやすい</span></td>
+</tr>
+<tr>
+<td class="text-center-bold">COBOL帳票<br>（固定行数型）<br><span style="font-size:0.82em; font-weight:normal; color:#666;">ヘッダー混在＋<br>1件＝決まった行数</span></td>
+<td>
+              以下のような「罠」が複数同時に存在する：
+              <ul style="margin-top:6px; line-height:1.8;">
+<li><strong>ページヘッダー・タイトル行・罫線行・空白行</strong>が何十行おきに繰り返し混入する</li>
+<li><strong>1件のデータが2〜3行にまたがっている</strong>（1行目に名前、2行目に住所など）</li>
+<li>上部に記載された<strong>会社名や支店名などの親情報</strong>を、下の明細行に紐付ける必要がある</li>
+</ul>
+              1件あたりの行数は固定（例：必ず3行で1セット）なので、<strong>規則性を見抜ければ対処は可能</strong>。それでもヘッダーの紐付けなどは相当面倒な作業になる。
+            </td>
+<td class="text-center"><span style="background:#e53935; color:#fff; padding:3px 10px; border-radius:4px; font-weight:bold; font-size:0.85em;">難しい</span></td>
+</tr>
+<tr>
+<td class="text-center-bold">COBOL帳票<br>（不定行数型）<br><span style="font-size:0.82em; font-weight:normal; color:#666;">明細の行数が<br>毎回バラバラ</span></td>
+<td>
+              上記の「罠」に加え、最凶の要素が加わる：
+              <ul style="margin-top:6px; line-height:1.8;">
+<li><strong>1件あたりの明細行数が毎回異なる</strong>（A社は2行、B社は7行、C社は10行&hellip;など）</li>
+<li>「ここからここまでが1件」の境界を<strong>データの内容から判定する</strong>必要がある</li>
+<li>固定行数型の手法がそのまま使えず、行の種別を識別する仕組みを数式で自力構築しなければならない</li>
+</ul>
+</td>
+<td class="text-center"><span style="background:#6a1b9a; color:#fff; padding:3px 10px; border-radius:4px; font-weight:bold; font-size:0.85em;">超難関</span></td>
+</tr>
+</table>
+<div class="xdemo-note-warn">
+<strong>つまり：</strong>「システムから出た謎のテキストデータ」が<strong>1行＝1レコードのシンプルな固定長</strong>であれば、<span class="code-inline">MIDB</span> ＋ <span class="code-inline">TRIM</span> のテクニックだけでExcel上で処理できます。<br><br>
+          しかし、実務で遭遇するCOBOL帳票は「ヘッダー混在＋固定行数」パターン、さらには「明細行数が毎回バラバラ」という最凶パターンまで存在し、単純な切り出しだけでは歯が立ちません。当サイトでは、<strong>シンプルなケースから最凶の不規則帳票まで段階的に攻略する方法</strong>を解説しています。
+        </div>
+</section>
+<section class="tips-section" style="background:#fcfcfc;">
+<h2>まとめ：固定長データだと分かったら？</h2>
+<p>手元のデータが「固定長データ」だと判明したら、そのままExcelで開いてはいけません。すべての行が<strong>A列の1列だけ</strong>に読み込まれ、1行分の長い文字列がそのまま1つのセルに入ってしまいます。列が分かれていないため、並べ替え・フィルター・集計など、Excelの基本機能がまったく使えない状態です。</p>
+<p>次のステップでは、Excel関数の<strong>MIDB＋TRIM</strong>を使って、この1列の塊から必要な項目を正確に切り出す方法を解説します。</p>
+<p style="margin-top: 1.5em; font-weight: bold;">➡️ 具体的な切り出し手法はこちらの記事へ</p>
+<ul>
+<li><a href="../formula/01_article_cobol_basic.html">COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）</a></li>
+</ul>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ(Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab — 制限環境こそが最高の教師。</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+

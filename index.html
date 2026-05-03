@@ -1,0 +1,2237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+<title>Excel × No VBA Lab — VBA禁止環境でもExcelを極める</title>
+
+<meta content="VBA禁止環境でも、Excel関数・パワークエリ・動的配列を限界まで駆使する実務テクニック集。COBOL帳票データ整形・QRコード連携・計算速度最適化まで幅広く解説。" name="description">
+<meta content="#1a3d5c" name="theme-color">
+<link href="https://excel-no-vba-lab.com/" rel="canonical">
+<link rel="preload" as="image" href="./image/hero_main_overview.avif" type="image/avif">
+
+<!-- OGP -->
+<meta content="Excel × No VBA Lab — VBA禁止環境でもExcelを極める" property="og:title">
+<meta content="VBA禁止環境でも、Excel関数・パワークエリ・動的配列を限界まで駆使する実務テクニック集。COBOL帳票データ整形・QRコード連携・計算速度最適化まで幅広く解説。" property="og:description">
+<meta content="website" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-no-vba-lab.com/" property="og:url">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/image/hero_ogp.png" property="og:image">
+
+<!-- Twitter Card -->
+<meta content="summary_large_image" name="twitter:card">
+<meta content="Excel × No VBA Lab — VBA禁止環境でもExcelを極める" name="twitter:title">
+<meta content="VBA禁止環境でも、Excel関数・パワークエリ・動的配列を限界まで駆使する実務テクニック集。" name="twitter:description">
+<meta content="https://excel-no-vba-lab.com/image/hero_ogp.png" name="twitter:image">
+
+<meta content="index, follow" name="robots">
+
+<link href="/favicon.ico" rel="icon">
+<link href="/apple-touch-icon.png" rel="apple-touch-icon">
+
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+<link href="common.css" rel="stylesheet">
+<link href="index.css?v=2" rel="stylesheet">
+<link href="article.css" rel="stylesheet">
+
+<script>
+  window.ExcelLab = window.ExcelLab || {};
+  window.ExcelLab.rareTech = {
+    "cobol_irregular": { rarity: 1000 },
+    "cobol_expert": { rarity: 1000 },
+    "qr_hardware": { rarity: 1000 },
+    "qr_series": { rarity: 1000 },
+    "cobol_pq_midb": { rarity: 300 },
+    "print_area": { rarity: 300 },
+    "zip_reverse": { rarity: 300 },
+    "shape_circle": { rarity: 200 },
+    "filter_alt": { rarity: 200 },
+    "m_language": { rarity: 200 },
+    "cobol_advanced": { rarity: 200 },
+    "speed_formula": { rarity: 200 },
+    "speed_lookup": { rarity: 200 },
+    "pq_parameter": { rarity: 200 },
+    "pq_add_columns": { rarity: 100 },
+    "volatile": { rarity: 100 },
+    "label_scrap": { rarity: 100 },
+    "qr_generate": { rarity: 100 },
+    "choosecols": { rarity: 50 }
+  };
+  window.RARETECH_CONFIG = window.ExcelLab.rareTech;
+</script>
+
+<!-- JSON-LD: WebSite -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Excel × No VBA Lab",
+  "url": "https://excel-no-vba-lab.com/",
+  "inLanguage": "ja",
+  "description": "VBA禁止環境でもExcel関数・パワークエリ・動的配列を限界まで駆使する実務テクニック集"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Excel × No VBA Lab",
+  "url": "https://excel-no-vba-lab.com/",
+  "logo": "https://excel-no-vba-lab.com/image/hero_ogp.png"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-no-vba-lab.com/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "url": "https://excel-no-vba-lab.com/functions/latest/article_xlookup_basic.html", "name": "XLOOKUP基本編" },
+    { "@type": "ListItem", "position": 2, "url": "https://excel-no-vba-lab.com/functions/latest/article_filter.html", "name": "FILTER関数" },
+    { "@type": "ListItem", "position": 3, "url": "https://excel-no-vba-lab.com/functions/latest/article_unique.html", "name": "UNIQUE関数" },
+    { "@type": "ListItem", "position": 4, "url": "https://excel-no-vba-lab.com/functions/latest/article_let.html", "name": "LET関数" },
+    { "@type": "ListItem", "position": 5, "url": "https://excel-no-vba-lab.com/functions/latest/article_textsplit.html", "name": "TEXTSPLIT" },
+    { "@type": "ListItem", "position": 6, "url": "https://excel-no-vba-lab.com/functions/old/article_index_match.html", "name": "INDEX+MATCH" },
+    { "@type": "ListItem", "position": 7, "url": "https://excel-no-vba-lab.com/functions/old/article_zip_reverse.html", "name": "住所→郵便番号逆引き" },
+    { "@type": "ListItem", "position": 8, "url": "https://excel-no-vba-lab.com/functions/old/article_countif_extract.html", "name": "FILTER代替（旧ver）" },
+    { "@type": "ListItem", "position": 9, "url": "https://excel-no-vba-lab.com/powerquery/basic/article_powerquery_intro.html", "name": "パワークエリとは" },
+    { "@type": "ListItem", "position": 10, "url": "https://excel-no-vba-lab.com/powerquery/advanced/article_pq_parameter_query.html", "name": "パラメータクエリ" },
+    { "@type": "ListItem", "position": 11, "url": "https://excel-no-vba-lab.com/powerquery/advanced/article_pq_m_language.html", "name": "M言語入門" },
+    { "@type": "ListItem", "position": 12, "url": "https://excel-no-vba-lab.com/cobol/formula/01_article_cobol_basic.html", "name": "COBOL固定長基本編" },
+    { "@type": "ListItem", "position": 13, "url": "https://excel-no-vba-lab.com/cobol/formula/04_article_cobol_irregular.html", "name": "不規則明細完結編" },
+    { "@type": "ListItem", "position": 14, "url": "https://excel-no-vba-lab.com/qr/08_qr_hardware.html", "name": "QRリーダーの選び方" },
+    { "@type": "ListItem", "position": 15, "url": "https://excel-no-vba-lab.com/others/speed/article_01_lookup_speed.html", "name": "検索関数の速度" },
+    { "@type": "ListItem", "position": 16, "url": "https://excel-no-vba-lab.com/qr/01_qr_barcode_control.html", "name": "バーコードコントロールでQR生成" },
+    { "@type": "ListItem", "position": 17, "url": "https://excel-no-vba-lab.com/qr/07_qr_full_system.html", "name": "入力自動化システム" },
+    { "@type": "ListItem", "position": 18, "url": "https://excel-no-vba-lab.com/qr/09_qr_closed_transfer.html", "name": "閉域環境のデータ転送" },
+    { "@type": "ListItem", "position": 19, "url": "https://excel-no-vba-lab.com/qr/10_qr_system_migration.html", "name": "システム間データ移行" },
+    { "@type": "ListItem", "position": 20, "url": "https://excel-no-vba-lab.com/qr/11_qr_vba_generate.html", "name": "VBA標準機能だけで全角QR生成" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "VBAが使えない環境でExcelの自動化は本当にできますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "はい。Excel関数・パワークエリ・ハードウェア連携の3つの武器で、VBAなしでも多くの自動化が実現できます。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Excel 2016でも使えるテクニックはありますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "INDEX+MATCH、COUNTIFS、SUMIFSなどの旧式関数テクニックと、パワークエリはExcel 2016でも使用可能です。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "COBOL帳票データとは何ですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "基幹システムのCOBOLプログラムが出力する固定長テキストデータです。紙印刷を前提にしたレイアウトのため、そのままExcelに貼ると列が分かれない、ヘッダーが繰り返す、1件が複数行にまたがるといった問題が起きます。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "パワークエリとVBAの違いは何ですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "パワークエリはGUI操作でデータの取り込み・整形・結合を自動化するExcel標準機能です。VBAのようにマクロコードを書く必要がなく、更新ボタンで定型処理を再実行できます。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "QRコードでExcelの入力を自動化できますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "はい。QRリーダーの設定を組み合わせれば、VBA・RPA不要で入力自動化が可能です。Tab、Enter、待ち時間、キー変換などを活用することで、読み取りからセル移動まで自動化できます。"
+      }
+    }
+  ]
+}
+</script>
+
+<!-- クリティカルCSS -->
+<style>
+  .site-header { background: #1a3d5c; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+</style>
+</head>
+
+<body>
+
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<!-- ========== ヘッダー ========== -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="site-title">
+      <a href="index.html">Excel × No VBA Lab</a>
+    </div>
+    <p class="site-subtitle">VBA禁止環境を突破する「モダンExcel体系化」メソッド</p>
+  </div>
+</header>
+
+<!-- ========== タブナビゲーション ========== -->
+<nav aria-label="コンテンツカテゴリ" class="tab-nav">
+  <div class="tab-nav-inner" role="tablist">
+    <button
+      aria-selected="true"
+      aria-controls="home"
+      class="tab-btn active"
+      data-tab="home"
+      id="tab-btn-home"
+      role="tab"
+      tabindex="0">
+      🏠 ホーム
+    </button>
+    <button
+      aria-selected="false"
+      aria-controls="functions"
+      class="tab-btn"
+      data-tab="functions"
+      id="tab-btn-functions"
+      role="tab"
+      tabindex="-1">
+      📐 関数テクニック
+    </button>
+    <button
+      aria-selected="false"
+      aria-controls="powerquery"
+      class="tab-btn"
+      data-tab="powerquery"
+      id="tab-btn-pq"
+      role="tab"
+      tabindex="-1">
+      🔄 パワークエリ
+    </button>
+    <button
+      aria-selected="false"
+      aria-controls="cobol"
+      class="tab-btn"
+      data-tab="cobol"
+      id="tab-btn-cobol"
+      role="tab"
+      tabindex="-1">
+      🏭 COBOL帳票処理
+    </button>
+    <button
+      aria-selected="false"
+      aria-controls="qr"
+      class="tab-btn"
+      data-tab="qr"
+      id="tab-btn-qr"
+      role="tab"
+      tabindex="-1">
+      ⚡ QR Automation Lab
+    </button>
+    <button
+      aria-selected="false"
+      aria-controls="others"
+      class="tab-btn"
+      data-tab="others"
+      id="tab-btn-others"
+      role="tab"
+      tabindex="-1">
+      🛠 現場実務ラボ
+    </button>
+    <button
+      aria-selected="false"
+      aria-controls="unlocked"
+      class="tab-btn"
+      data-tab="unlocked"
+      id="tab-btn-unlocked"
+      role="tab"
+      tabindex="-1">
+      🔓 制限解除ラボ <span class="tag-vba ml-4">VBA OK</span>
+    </button>
+  </div>
+  <div class="tab-nav-aux">
+    <a href="./troubleshoot/index.html">🔍 お悩み索引（困りごとから探す）</a>
+  </div>
+</nav>
+
+<!-- ========== メインコンテンツ ========== -->
+<main class="main-content" id="main-content">
+
+<!-- ==========================================
+     タブ1: ホーム
+     ========================================== -->
+  <div aria-labelledby="tab-btn-home" class="tab-panel active" id="home" role="tabpanel" tabindex="-1">
+
+  <div class="category-hero hero-overlay hero-main-overview">
+    <picture>
+      <source srcset="./image/hero_main_overview.avif" type="image/avif">
+      <source srcset="./image/hero_main_overview.webp" type="image/webp">
+      <img alt="Excel × No VBA Lab サイトコンセプトバナー" decoding="async" fetchpriority="high" loading="eager" height="576" src="./image/hero_main_overview.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">VBA禁止環境を突破する</div>
+      <h1 class="hero-copy-title">Excel × No VBA Lab</h1>
+      <div class="hero-copy-sub">関数・Power Query・QR連携で、手作業を仕組みに変える。</div>
+    </div>
+  </div>
+
+  <p class="hero-practical">
+    このサイトでは、VBA・マクロが使えない職場でも実装できる
+    Excel関数、Power Query、QRリーダー連携、COBOL帳票整形の具体的な手順を紹介しています。
+    Excel 2016対応の旧式関数テクニックから、Excel 2021・2024・Microsoft 365 などの動的配列関数まで、
+    関数ごとの対応差をふまえて使える方法を整理しています。
+  </p>
+
+  <section class="quick-route" aria-labelledby="quick-route-title">
+    <h2 id="quick-route-title">🚀 目的から選ぶ</h2>
+    <p class="quick-route-lead">
+      いま困っている作業に近いテーマから読み始めてください。
+      VBA・マクロが使えない環境でも、関数・Power Query・QR連携で突破できます。
+    </p>
+
+    <div class="quick-route-grid">
+      <a class="quick-route-card qrc-functions" href="#functions" data-tab-trigger="functions" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">
+        <span class="quick-route-icon">📐</span>
+        <span class="quick-route-title">関数で自動化したい</span>
+        <span class="quick-route-text">XLOOKUP、FILTER、LET、旧Excel対応の関数テクニック</span>
+      </a>
+
+      <a class="quick-route-card qrc-pq" href="#powerquery" data-tab-trigger="powerquery" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">
+        <span class="quick-route-icon">🔄</span>
+        <span class="quick-route-title">毎月の整形作業をなくしたい</span>
+        <span class="quick-route-text">CSV・PDF・Excelファイルの取り込みと整形を更新ボタンで自動化</span>
+      </a>
+
+      <a class="quick-route-card qrc-cobol" href="#cobol" data-tab-trigger="cobol" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">
+        <span class="quick-route-icon">🏭</span>
+        <span class="quick-route-title">COBOL帳票を整形したい</span>
+        <span class="quick-route-text">固定長・不規則帳票・ヘッダー混在データをExcelで使える表へ</span>
+      </a>
+
+      <a class="quick-route-card qrc-qr" href="#qr" data-tab-trigger="qr" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">
+        <span class="quick-route-icon">⚡</span>
+        <span class="quick-route-title">QRで入力を自動化したい</span>
+        <span class="quick-route-text">ソフト禁止環境でもQRリーダー設定で入力作業を自動化</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="site-description" id="philosophy">
+    <h2>⚔️ VBA禁止？ — 諦めるのはまだ早い。</h2>
+
+    <div class="hero-banner">
+      <span class="hero-eyecatch">🔥 VBA・マクロ全面禁止の職場へ</span>
+
+      <h3 class="hero-headline">
+        <span class="accent-red">「VBAが使えない」</span>＝<span class="accent-red">「手作業に戻るしかない」</span><br>
+        — その常識を覆す、モダンExcelの体系的メソッド。
+      </h3>
+
+      <p class="hero-sub">
+        ネットで調べれば「VBAで解決！」ばかり。<br>
+        情シスの一言でマクロは封じられ、積み上げた知識も使えない。<br>
+        <strong>「この環境では、もう手作業に戻るしかない」</strong>……本当に？<br><br>
+        制約は、思考を研ぎ澄ます最高のスパイスです。<br>
+        長年の制約環境下での泥臭い試行錯誤から導き出した、<br>
+        <strong>VBAに依存しない「モダンExcelの最適解」を体系化しました。</strong>
+      </p>
+
+      <div class="hero-pain">
+        <div class="hero-pain-title">🤔 ここで手に入る「4つのブレイクスルー」</div>
+        <div class="hero-pain-list">
+          <span class="hero-pain-item">その作業、本当に「VBAでしか」できないものですか？</span>
+          <span class="hero-pain-item">関数やパワークエリの最新機能を、全て試しましたか？</span>
+          <span class="hero-pain-item">ソフトが封じられたとき、ハードウェア側から攻める発想はありますか？</span>
+          <span class="hero-pain-item">「無理だ」と思い込んでいるだけで、まだ知らない手札がありませんか？</span>
+        </div>
+      </div>
+
+      <div class="hero-answer">
+        <div class="hero-answer-title">💡 このサイトの答え</div>
+        <p class="hero-answer-text">
+          VBAが封じられても、<strong>関数・パワークエリ・ハードウェア連携</strong>という強大な武器が残っています。<br><br>
+          数式の組み合わせで「VBAでしか無理」と思っていた処理に手が届く。<br>
+          パワークエリで毎月の手作業が「更新」ボタン1つになる。<br>
+          ソフトが全て封じられても、ハードウェア側から制約を突破する。<br><br>
+          <strong>私が長年培ってきた「VBAなしでの最適解」を、ここに全て公開します。</strong>
+        </p>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-num num-blue">60+</span>
+          <span class="hero-stat-label">テクニック記事</span>
+        </div>
+
+        <div class="hero-stat">
+          <span class="hero-stat-num num-gold">Lv.1〜8</span>
+          <span class="hero-stat-label">難易度8段階で表示</span>
+        </div>
+
+        <div class="hero-stat">
+          <span class="hero-stat-num num-purple">💎</span>
+          <span class="hero-stat-label">レアテク度つき<br><small>ネットに情報がない度合い</small></span>
+        </div>
+
+        <div class="hero-stat">
+          <span class="hero-stat-num num-orange">🔥</span>
+          <span class="hero-stat-label">即戦力タグつき<br><small>今すぐ業務で使える度合い</small></span>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="weapons-heading">🗡️ VBAの代わりに研ぎ澄ます「4つの武器」</h3>
+
+    <div class="weapons-grid">
+      <div class="weapon-card wc-blue">
+        <div class="weapon-card-num">01</div>
+        <div class="weapon-card-title">📐 Excel関数（全バージョン）</div>
+        <p class="weapon-card-desc">VLOOKUP・INDEX+MATCH・COUNTIFS・SUMIFSなど。旧バージョンでもフル活用できる定番テクニック。</p>
+      </div>
+
+      <div class="weapon-card wc-green">
+        <div class="weapon-card-num">02</div>
+        <div class="weapon-card-title">✨ モダンExcel関数</div>
+        <p class="weapon-card-desc">XLOOKUP・FILTER・LET・UNIQUE・TEXTSPLITなど。「VBAでしかできなかった処理」の多くを関数だけで代替。</p>
+      </div>
+
+      <div class="weapon-card wc-orange">
+        <div class="weapon-card-num">03</div>
+        <div class="weapon-card-title">🔄 パワークエリ</div>
+        <p class="weapon-card-desc">GUIによるデータ加工・結合・整形の自動化。毎月のコピペ作業を更新ボタン一発で完結。</p>
+      </div>
+
+      <div class="weapon-card wc-purple">
+        <div class="weapon-card-num">04</div>
+        <div class="weapon-card-title">💎 ハードウェア逆転発想</div>
+        <p class="weapon-card-desc">
+          ソフトが全て封じられたなら、ハードから突破する。QRリーダーの設定書き換えで入力を完全自動化。<br>
+          <a class="color-purple-bold" href="#qr" data-tab-trigger="qr" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">→ QR Automation Labへ</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="version-guide">
+      <div class="version-guide-header">🗂️ あなたのExcelバージョン別・推奨読み順</div>
+
+      <div class="version-guide-body">
+        <div class="version-col">
+          <div class="version-col-title vc-old">📗 Excel 2016・2019</div>
+          <ol>
+            <li>関数テクニックタブ「旧式の関数」から開始</li>
+            <li>VLOOKUP → INDEX+MATCH の順に習得</li>
+            <li>COUNTIFS・SUMIFS で集計を自動化</li>
+            <li>パワークエリで繰り返し作業を排除</li>
+          </ol>
+        </div>
+
+        <div class="version-col">
+          <div class="version-col-title vc-new">✨ Excel 2021・2024</div>
+          <ol>
+            <li><a class="vc-link-new" href="#functions" data-tab-trigger="functions" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">関数テクニックタブ</a>から開始</li>
+            <li>XLOOKUP・FILTER・UNIQUE・LET などをまず確認</li>
+            <li>Excel 2024ではTEXTSPLIT・CHOOSECOLSなども使える場合あり</li>
+            <li>買い切り版は関数ごとに差があるため、未対応なら旧式代替へ</li>
+          </ol>
+        </div>
+
+        <div class="version-col">
+          <div class="version-col-title vc-365">💎 Microsoft 365</div>
+          <ol>
+            <li>最新関数が順次追加される環境</li>
+            <li>更新チャネルや職場ポリシーで利用可否が変わる点に注意</li>
+            <li>LAMBDA・REDUCE・MAP などが使えれば関数を自作</li>
+            <li>パワークエリ + M言語でさらに高みへ</li>
+          </ol>
+        </div>
+      </div>
+      <p style="margin:12px 0 0;font-size:.9rem;color:#555;line-height:1.8;">
+        ※対応バージョンは目安です。Excel 2024でも使えるモダン関数は増えていますが、関数ごとにExcel 2021まで対応するもの、Excel 2024 / Microsoft 365中心のもの、Microsoft 365の更新チャネルで先行提供されるものが混在します。実務では、まずセルで <code>=関数名(</code> を入力して候補に出るか確認してください。
+      </p>
+    </div>
+
+    <h3 class="reasons-heading">💡 「VBAなしでも戦える」4つの理由</h3>
+
+
+    <div class="reasons-grid">
+      <div class="reason-card rc-blue" data-num="1">
+        <span class="reason-card-before">❌ 「この処理、VBAがないと無理でしょ」</span>
+        <div class="reason-card-title">モダンExcel関数がVBAの領域を侵食している</div>
+        <p class="reason-card-text">FILTER・XLOOKUP・UNIQUE・LETの登場で、<strong>動的抽出・変数処理が関数だけで実現可能</strong>に。守備範囲は確実に広がっています。</p>
+      </div>
+
+      <div class="reason-card rc-green" data-num="2">
+        <span class="reason-card-before">❌ 「関数の限界はとっくに知っている」</span>
+        <div class="reason-card-title">旧来の関数も、限界は思っているより遥かに先にある</div>
+        <p class="reason-card-text">INDEX+MATCHも使いこなし、VBAも書ける。— それでも、<strong>旧式関数の「正しい組み合わせ」を知れば、VBA相当の処理が再現できます。</strong>「関数では無理」と思い込んでいただけで、旧バージョンの関数にはまだ引き出せる力が眠っています。</p>
+      </div>
+
+      <div class="reason-card rc-orange" data-num="3">
+        <span class="reason-card-before">❌ 「毎月のCSV整形に3時間かかる」</span>
+        <div class="reason-card-title">パワークエリが繰り返し作業を消す</div>
+        <p class="reason-card-text">CSV取り込み→整形→コピペを1回設定すれば、以後は<strong>「更新」ボタン1つ</strong>。VBAなしでも定型作業は自動化できます。</p>
+      </div>
+
+      <div class="reason-card rc-purple" data-num="4">
+        <span class="reason-card-before">❌ 「ソフトが全て封じられた」</span>
+        <div class="reason-card-title">逆転の発想で突破口を開く</div>
+        <p class="reason-card-text">ソフトウェアが封じられたなら、ハードウェア側から攻める。<strong>制限の外側にこそ、究極の最適解</strong>があります。</p>
+      </div>
+    </div>
+
+
+    <div class="hero-cta-box">
+      <p class="hero-cta-msg">
+        📖 まずは、あなたのExcelバージョンに合った手法から習得を開始してください。
+        <span class="cta-sub">難易度・対応バージョン・実務でのレア度まで、体系的に整理しています。</span>
+      </p>
+
+      <div class="hero-cta-buttons">
+        <a href="#functions" aria-label="関数テクニックカテゴリへ移動" class="hero-cta-btn btn-new" data-tab-trigger="functions" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">📐 関数テクニックへ</a>
+        <a href="#powerquery" aria-label="パワークエリカテゴリへ移動" class="hero-cta-btn btn-pq" data-tab-trigger="powerquery" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">🔄 パワークエリへ</a>
+        <a href="#cobol" aria-label="COBOL帳票処理カテゴリへ移動" class="hero-cta-btn btn-old" data-tab-trigger="cobol" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">🏭 COBOL帳票処理へ</a>
+        <a href="#qr" aria-label="QR Automation Labへ移動" class="hero-cta-btn btn-old btn-qr-gradient" data-tab-trigger="qr" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">⚡ QR Automation Labへ</a>
+        <a href="#unlocked" aria-label="制限解除ラボへ移動" class="hero-cta-btn btn-unlocked-cta btn-unlocked-gradient" data-tab-trigger="unlocked" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">🔓 制限解除ラボへ <span class="tag-vba-label">VBA OK</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ピックアップ -->
+  <section class="pickup-section">
+    <h2>🔥 注目の特集・ピックアップ</h2>
+
+    <div class="pickup-grid">
+      <a class="pickup-card card-qr" href="#qr" data-tab-trigger="qr" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true" title="QR Automation Labの記事一覧へ">
+        <div class="qr-badge-row">
+          <span class="qr-badge badge-rare">💎 ネット上にほぼ情報なし</span>
+          <span class="qr-badge badge-new">🔓 VBA完全不要</span>
+        </div>
+
+        <div class="qr-title">⚡ QR Automation Lab — 全11記事＋ハードウェア解説</div>
+
+        <div class="qr-highlight">
+          💡 ソフトウェアが封じられた環境で、ハードウェア側から自動化を実現する逆転の発想
+        </div>
+
+        <p class="qr-desc">
+          VBA・マクロ・RPA・PowerShellすべてが禁止された環境でも、<strong>QRリーダー本体の設定</strong>を書き換えるだけで「読み取り → セル入力 → Tab移動 → 次の読み取り」を完全自動化。<br>
+          さらに閉域環境へのデータ転送、システム間データ移行、全角QRコード生成まで。<br>
+          ソフト側ではなく<strong>ハードウェア側から制約を突破する</strong>、他に類を見ない体系的なアプローチです。
+        </p>
+
+        <span class="qr-cta">→ QR Automation Labへ（全11記事）</span>
+      </a>
+
+      <a class="pickup-card card-cobol" href="#cobol" data-tab-trigger="cobol" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true" title="COBOL帳票処理の記事一覧へ">
+        <div class="cobol-badge-row">
+          <span class="cobol-badge badge-rare">💎 専門書にも載っていない手法</span>
+          <span class="cobol-badge badge-break">🔥 手作業ゼロへ</span>
+        </div>
+
+        <div class="notice">
+          <div class="notice-title">⚠ こんなデータに困っていませんか？</div>
+          <div class="symptoms">
+            <span class="sym">全部A列に詰まって列が分かれない</span>
+            <span class="sym">ヘッダーが何十行おきに繰り返す</span>
+            <span class="sym">1件が2〜3行にまたがる</span>
+          </div>
+        </div>
+
+        <div class="main-title">それは <span class="cobol-word">COBOL帳票</span>（固定長データ）です</div>
+
+        <div class="industries">
+          <span class="ind">🏦 銀行・信金</span>
+          <span class="ind">🏛️ 自治体・税務</span>
+          <span class="ind">📋 保険</span>
+          <span class="ind">🏭 製造業</span>
+          <span class="ind">🚚 物流</span>
+          <span class="ind">🏥 医療</span>
+        </div>
+
+        <p class="desc">
+          数十年稼働するCOBOLシステムが<strong>紙印刷前提</strong>で吐き出すデータの塊。「VBAが使えないからExcelでは無理」と諦めていませんか？<br>
+          <strong>関数だけ・パワークエリだけ</strong>で、毎月の手作業コピペ整形を<strong>完全自動化</strong>する堅牢な仕組みをゼロから構築します。
+        </p>
+
+        <span class="cta">→ COBOL帳票 攻略ガイドへ</span>
+      </a>
+
+      <a class="pickup-card card-print pickup-card-green-border" href="#others" data-tab-trigger="others" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true" title="現場実務ラボの記事一覧へ">
+        <div class="main-title mt-10">🖨 VBAなし印刷自動化シリーズ</div>
+        <p class="desc">
+          Print_Area、スピンボタン、XLOOKUP、VLOOKUPで、<br>
+          ラベル印刷・案内文書印刷・シール残骸活用をExcelだけで自動化。<br>
+          Word差し込み印刷やVBAが使えない現場向けの実務シリーズ。
+        </p>
+        <span class="cta color-green-bold">→ 現場実務ラボへ</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- 新着記事 ＋ ランキング -->
+  <div class="home-sub-grid">
+    <div class="home-card">
+      <h2>📰 新着記事 NEW</h2>
+
+      <ul class="news-list">
+        <li class="is-new">
+          <a href="qr/11_qr_vba_generate.html">VBA標準機能だけで全角QRコード生成</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-qr">QR Automation Lab</span>
+            <time datetime="2026-04-17">2026-04-17</time>
+          </span>
+        </li>
+        <li class="is-new">
+          <a href="qr/10_qr_system_migration.html">QRコードでシステム間データ移行</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-qr">QR Automation Lab</span>
+            <time datetime="2026-04-17">2026-04-17</time>
+          </span>
+        </li>
+        <li class="is-new">
+          <a href="qr/09_qr_closed_transfer.html">QRコードで閉域環境のデータ転送</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-qr">QR Automation Lab</span>
+            <time datetime="2026-04-17">2026-04-17</time>
+          </span>
+        </li>
+        <li>
+          <a href="functions/old/article_zip_reverse.html">住所から郵便番号を逆引き(最長一致検索)</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-functions">関数テクニック</span>
+            <time datetime="2026-04-10">2026-04-10</time>
+          </span>
+        </li>
+        <li>
+          <a href="functions/latest/article_xlookup_basic.html">XLOOKUP 基本編(構文・動作を完全理解)</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-functions">関数テクニック</span>
+            <time datetime="2026-03-18">2026-03-18</time>
+          </span>
+        </li>
+        <li>
+          <a href="functions/latest/article_filter.html">FILTER関数(条件に合うデータを動的抽出)</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-functions">関数テクニック</span>
+            <time datetime="2026-03-15">2026-03-15</time>
+          </span>
+        </li>
+        <li>
+          <a href="functions/latest/article_textbefore.html">TEXTBEFORE / TEXTAFTER</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-functions">関数テクニック</span>
+            <time datetime="2026-03-05">2026-03-05</time>
+          </span>
+        </li>
+        <li>
+          <a href="others/ui/article_shape_circle.html">セルの文字を○で囲む 表示／非表示(名前の管理＋図形)</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-others">現場実務ラボ</span>
+            <time datetime="2026-02-28">2026-02-28</time>
+          </span>
+        </li>
+        <li>
+          <a href="others/print/article_label_scrap.html">シール残骸を活用 — 開始位置を指定して途中から印刷</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-others">現場実務ラボ</span>
+            <time datetime="2026-02-22">2026-02-22</time>
+          </span>
+        </li>
+        <li>
+          <a href="powerquery/advanced/article_pq_parameter_query.html">パラメータクエリ — セルの値で結果を切り替える</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-pq">パワークエリ</span>
+            <time datetime="2026-02-15">2026-02-15</time>
+          </span>
+        </li>
+      </ul>
+
+
+      <p class="more-link">
+        <a href="./functions/index.html">→ 関数テクニック総合へ</a> /
+        <a href="./powerquery/index.html">パワークエリ総合へ</a> /
+        <a href="./cobol/index.html">COBOL帳票処理総合へ</a> /
+        <a href="./qr/index.html">QR Automation Lab総合へ</a> /
+        <a href="./others/index.html">現場実務ラボ総合へ</a> /
+        <a href="./unlocked/index.html">制限解除ラボ総合へ</a>
+      </p>
+    </div>
+
+    <!-- ランキング -->
+    <div class="home-card ranking-card">
+      <div class="ranking-tabs">
+        <button class="ranking-tab-btn active" data-ranking="rare" data-ranking-trigger="rare">💎 レアテク</button>
+        <button class="ranking-tab-btn" data-ranking="impact" data-ranking-trigger="impact">🔥 即戦力</button>
+        <button class="ranking-tab-btn" data-ranking="combined" data-ranking-trigger="combined">⭐ 総合</button>
+      </div>
+
+      <!-- レアテクランキング -->
+      <div class="ranking-panel active" id="ranking-rare">
+        <p class="ranking-desc">知る人ぞ知る — 超マニアックテクニック順</p>
+
+        <ol aria-label="レアテクランキング" class="rarity-ranking">
+          <li><a href="cobol/formula/04_article_cobol_irregular.html">不規則明細・完結編 — 行数バラバラの正規化展開</a><span class="rank-badge lv8" aria-label="難易度レベル8、超絶技巧">Lv.8</span><span class="rank-rarity" data-rare-id="cobol_irregular"></span></li>
+          <li><a href="cobol/formula/03_article_cobol_expert.html">【関数超絶技巧編】凶悪COBOL帳票の撃破｜ヘッダー紐付け・フィルダウンをExcel関数で自動化</a><span class="rank-badge lv8" aria-label="難易度レベル8、超絶技巧">Lv.8</span><span class="rank-rarity" data-rare-id="cobol_expert"></span></li>
+          <li><a href="qr/08_qr_hardware.html">QRリーダーの選び方と接続方法</a><span class="rank-badge lv6" aria-label="難易度レベル6、かなり難しい">Lv.6</span><span class="rank-rarity" data-rare-id="qr_hardware"></span></li>
+          <li><a href="qr/07_qr_full_system.html">QR1回で業務システム全操作を完結</a><span class="rank-badge lv7" aria-label="難易度レベル7、かなり難しい">Lv.7</span><span class="rank-rarity" data-rare-id="qr_series"></span></li>
+          <li><a href="cobol/pq/03_article_cobol_pq_midb_ref.html">M言語でMIDB相当の自作関数を作る</a><span class="rank-badge lv7" aria-label="難易度レベル7、かなり難しい">Lv.7</span><span class="rank-rarity" data-rare-id="cobol_pq_midb"></span></li>
+          <li><a href="others/print/article_print_area.html">印刷範囲を自動で伸縮させる裏ワザ（名前の管理）</a><span class="rank-badge lv4" aria-label="難易度レベル4、やや難しい">Lv.4</span><span class="rank-rarity" data-rare-id="print_area"></span></li>
+          <li><a href="functions/old/article_zip_reverse.html">住所→郵便番号 逆引き（最長一致検索）</a><span class="rank-badge lv7" aria-label="難易度レベル7、かなり難しい">Lv.7</span><span class="rank-rarity" data-rare-id="zip_reverse"></span></li>
+          <li><a href="others/ui/article_shape_circle.html">図形の○を条件で表示／非表示（名前の管理＋図形）</a><span class="rank-badge lv6" aria-label="難易度レベル6、かなり難しい">Lv.6</span><span class="rank-rarity" data-rare-id="shape_circle"></span></li>
+          <li><a href="functions/old/article_countif_extract.html">【FILTER代替】VBA不要・CSE不要の複数抽出</a><span class="rank-badge lv7" aria-label="難易度レベル7、かなり難しい">Lv.7</span><span class="rank-rarity" data-rare-id="filter_alt"></span></li>
+          <li><a href="powerquery/advanced/article_pq_add_columns.html">新しい列を作る（条件列・カスタム列）</a><span class="rank-badge lv4" aria-label="難易度レベル4、やや難しい">Lv.4</span><span class="rank-rarity" data-rare-id="pq_add_columns"></span></li>
+        </ol>
+      </div>
+
+      <!-- 即戦力ランキング -->
+      <div class="ranking-panel" id="ranking-impact">
+        <p class="ranking-desc">実務効果が大きい — 今すぐ使えるテクニック順</p>
+
+        <ol aria-label="即戦力ランキング" class="rarity-ranking">
+          <li><a href="functions/latest/article_xlookup_basic.html">XLOOKUP 基本編 — 検索関数の決定版</a><span class="rank-badge lv1" aria-label="難易度レベル1、入門">Lv.1</span><span class="rank-impact">🔥 即戦力</span></li>
+          <li><a href="functions/latest/article_filter.html">FILTER関数 — 条件に合うデータを動的抽出</a><span class="rank-badge lv2" aria-label="難易度レベル2、やさしい">Lv.2</span><span class="rank-impact">🔥 即戦力</span></li>
+          <li><a href="functions/latest/article_unique.html">UNIQUE関数 — 重複を消して一意リストを作る</a><span class="rank-badge lv1" aria-label="難易度レベル1、入門">Lv.1</span><span class="rank-impact">🔥 即戦力</span></li>
+          <li><a href="functions/latest/article_textsplit.html">TEXTSPLIT — カンマ区切りを一気に分割</a><span class="rank-badge lv2" aria-label="難易度レベル2、やさしい">Lv.2</span><span class="rank-impact">🔥 即戦力</span></li>
+          <li><a href="functions/latest/article_let.html">LET関数で可読性＆速度UP</a><span class="rank-badge lv3" aria-label="難易度レベル3、標準">Lv.3</span><span class="rank-impact">🔥 即戦力</span></li>
+          <li><a href="functions/old/article_index_match.html">INDEX＋MATCH — 旧ver対応の最強検索</a><span class="rank-badge lv3" aria-label="難易度レベル3、標準">Lv.3</span><span class="rank-impact">🔥 即戦力</span></li>
+          <li><a href="powerquery/basic/article_powerquery_intro.html">パワークエリとは — 全体像を把握</a><span class="rank-badge lv1" aria-label="難易度レベル1、入門">Lv.1</span><span class="rank-impact">🔥 即戦力</span></li>
+        </ol>
+      </div>
+
+      <!-- 総合ランキング -->
+      <div class="ranking-panel" id="ranking-combined">
+        <p class="ranking-desc">レアテク度 × 即戦力度 — 知っておくと最も差がつく記事</p>
+
+        <ol aria-label="総合ランキング" class="rarity-ranking">
+          <li><a href="qr/07_qr_full_system.html">QR1回で業務システム全操作を完結</a><span class="rank-badge lv7" aria-label="難易度レベル7、かなり難しい">Lv.7</span><span class="rank-combined" data-rare-id="qr_series" data-rare-prefix="🔥💎"></span></li>
+          <li><a href="functions/old/article_countif_extract.html">【FILTER代替】VBA不要・CSE不要の複数抽出</a><span class="rank-badge lv7" aria-label="難易度レベル7、かなり難しい">Lv.7</span><span class="rank-combined" data-rare-id="filter_alt" data-rare-prefix="🔥💎"></span></li>
+          <li><a href="others/speed/article_02_formula_techniques.html">数式の速度UPテクニック集</a><span class="rank-badge lv6" aria-label="難易度レベル6、かなり難しい">Lv.6</span><span class="rank-combined" data-rare-id="speed_formula" data-rare-prefix="🔥💎"></span></li>
+          <li><a href="others/speed/article_01_lookup_speed.html">検索関数の速度とメモリ効率</a><span class="rank-badge lv5" aria-label="難易度レベル5、難しい">Lv.5</span><span class="rank-combined" data-rare-id="speed_lookup" data-rare-prefix="🔥💎"></span></li>
+          <li><a href="functions/old/article_zip_reverse.html">住所→郵便番号 逆引き（最長一致検索）</a><span class="rank-badge lv7" aria-label="難易度レベル7、かなり難しい">Lv.7</span><span class="rank-combined" data-rare-id="zip_reverse" data-rare-prefix="🔥💎"></span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <!-- FAQセクション -->
+  <section class="faq-section" aria-labelledby="faq-title">
+    <h2 id="faq-title">❓ よくある質問</h2>
+
+    <div class="faq-list">
+      <details>
+        <summary>VBAが使えない環境でExcelの自動化は本当にできますか？</summary>
+        <p>はい。Excel関数・パワークエリ・ハードウェア連携の3つの武器で、VBAなしでも多くの自動化が実現できます。</p>
+      </details>
+
+      <details>
+        <summary>Excel 2016でも使えるテクニックはありますか？</summary>
+        <p>INDEX+MATCH、COUNTIFS、SUMIFSなどの旧式関数テクニックと、パワークエリはExcel 2016でも使用可能です。</p>
+      </details>
+
+      <details>
+        <summary>COBOL帳票データとは何ですか？</summary>
+        <p>基幹システムのCOBOLプログラムが出力する固定長テキストデータです。紙印刷を前提にしたレイアウトのため、そのままExcelに貼ると列が分かれない、ヘッダーが繰り返す、1件が複数行にまたがるといった問題が起きます。</p>
+      </details>
+
+      <details>
+        <summary>パワークエリとVBAの違いは何ですか？</summary>
+        <p>パワークエリはGUI操作でデータの取り込み・整形・結合を自動化するExcel標準機能です。VBAのようにマクロコードを書く必要がなく、更新ボタンで定型処理を再実行できます。</p>
+      </details>
+
+      <details>
+        <summary>QRコードでExcelの入力を自動化できますか？</summary>
+        <p>はい。QRリーダーの設定を組み合わせれば、VBA・RPA不要で入力自動化が可能です。Tab、Enter、待ち時間、キー変換などを活用することで、読み取りからセル移動まで自動化できます。</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- 将来的なSEO改善案：
+    /functions/index.html
+    /powerquery/index.html
+    /cobol/index.html
+    /qr/index.html
+    /others/index.html
+    /unlocked/index.html
+    トップページは総合玄関、カテゴリページは検索流入用LP、個別記事はロングテール流入用として設計する。
+  -->
+
+</div>
+<!-- /tab-panel#home -->
+
+
+<!-- ==========================================
+     タブ2: 関数テクニック
+     ========================================== -->
+<div aria-labelledby="tab-btn-functions" class="tab-panel" id="functions" role="tabpanel" tabindex="-1">
+  <p class="more-link more-link-subtle"><a href="./functions/index.html">関数テクニック一覧を見る</a></p>
+
+  <div class="category-hero hero-overlay hero-functions-latest">
+    <picture>
+      <source srcset="./image/hero_functions_latest_365.avif" type="image/avif">
+      <source srcset="./image/hero_functions_latest_365.webp" type="image/webp">
+      <img alt="モダンExcel関数・動的配列テクニック特集" decoding="async" height="576" loading="lazy" src="./image/hero_functions_latest_365.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Modern Functions</div>
+      <div class="hero-copy-title">モダンExcel関数</div>
+      <div class="hero-copy-sub">2021・2024・365対応。抽出・検索・整形を一気に進化。</div>
+    </div>
+  </div>
+
+  <div class="category-header">
+    <h2>📐 関数テクニック</h2>
+    <p>モダンExcel関数から旧バージョン対応の王道手法まで。バージョン別に整理しています。</p>
+  </div>
+
+  <div class="level-legend">
+    <div class="legend-row-levels">
+      <span class="level-legend-item"><span class="lv-dot lv-dot-1"></span>Lv.1 入門</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-2"></span>Lv.2 やさしい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-3"></span>Lv.3 ふつう</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-4"></span>Lv.4 やや難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-5"></span>Lv.5 難しい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-6"></span>Lv.6 かなり難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-7"></span>Lv.7 上級</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-8"></span>Lv.8 超絶技巧</span>
+    </div>
+
+    <div class="legend-row-tags">
+      <span class="legend-tag-desc"><span class="tag-impact">🔥 即戦力</span><span class="tag-desc-text">実務効果が大きい</span></span>
+      <span class="legend-tag-desc"><span class="tag-rare">💎 レアテク</span><span class="tag-desc-text">知る人ぞ知る</span></span>
+    </div>
+  </div>
+
+  <h3 class="subcategory-heading">1. モダンExcel関数（Excel 2021・2024・365対応）</h3>
+
+  <h4>🔍 検索・抽出・配列系</h4>
+
+  <ul class="article-list mb-32" id="list-functions-modern-search">
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_xlookup_basic.html">XLOOKUP 基本編</a>
+      <p class="article-summary">Excel 2021 / 2024 / Microsoft 365 で使える検索関数の決定版。VLOOKUPの弱点を克服。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_xlookup_advanced.html">XLOOKUP 応用編</a>
+      <p class="article-summary">第3引数（戻り配列）に複数列の範囲を指定するだけで、ヒットした行の複数列を横並びに一気に展開できます。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_xlookup_multi.html">XLOOKUP ネスト（多条件検索）</a>
+      <p class="article-summary">「店舗」と「商品名」など、複数条件の組み合わせが完全一致する行を探し出します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_xlookup_vs.html">XLOOKUP比較編：VLOOKUP・INDEX+MATCHとの使い分け</a>
+      <p class="article-summary">VLOOKUPの弱点、INDEX+MATCHの強み、XLOOKUPの便利さを比較して使い分けます。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_xmatch.html">XMATCH関数</a>
+      <p class="article-summary">リストの中から特定の値を探し、それが上から何番目にあるかを安全・確実に取得します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="choosecols"></span><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_choosecols.html">CHOOSECOLS関数 — 離れた列を自在に抽出</a>
+      <p class="article-summary">指定した配列から、必要な列番号だけを選んでスピル展開する関数です。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_filter.html">FILTER関数</a>
+      <p class="article-summary">条件に合うデータを複数件まとめて動的抽出します。抽出作業の自動化に非常に強力です。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_unique.html">UNIQUE関数</a>
+      <p class="article-summary">重複を消して一意リストを作成します。商品名・担当者・部署名などの一覧化に便利です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_sort.html">SORT / SORTBY関数</a>
+      <p class="article-summary">抽出結果や一覧を、条件に応じて自動で並べ替えます。</p>
+    </li>
+  </ul>
+
+  <h4>🧠 論理・条件分岐系</h4>
+
+  <ul class="article-list mb-32" id="list-functions-modern-logic">
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_let.html">LET関数で可読性を上げる</a>
+      <p class="article-summary">長大で読めない数式を変数名で整理し、同じ計算の繰り返しを減らして速度改善にもつなげます。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_ifs.html">IFS関数</a>
+      <p class="article-summary">条件が多段階あるとき、IF関数のネスト地獄を避けて読みやすく分岐できます。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_let_if.html">LET + IF の複雑ロジック</a>
+      <p class="article-summary">複雑なIF条件や結果値をLET関数の変数で整理し、見やすく・保守しやすくします。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_let_iferror.html">LET + IFERROR の効率的ハンドリング</a>
+      <p class="article-summary">IFERRORの中で重い関数を2回書くのを避け、エラー時の分岐処理も整理します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_switch.html">SWITCH関数</a>
+      <p class="article-summary">特定の値に対して決まった結果を返す処理を、IFよりすっきり書けます。</p>
+    </li>
+  </ul>
+
+  <h4>🔤 文字列操作系</h4>
+
+  <ul class="article-list mb-32" id="list-functions-modern-text">
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_textsplit.html">TEXTSPLIT</a>
+      <p class="article-summary">カンマ区切りや区切り文字つきの文字列を、複数セルに一気に分割します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_textjoin.html">TEXTJOIN</a>
+      <p class="article-summary">複数セルの文字列を、指定した区切り文字でまとめます。空白セルを無視する設定も可能です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_concat.html">CONCAT vs CONCATENATE vs「&」徹底比較</a>
+      <p class="article-summary">Excelで文字列を結合する方法を比較し、実務でどれを使うべきか整理します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_textbefore.html">TEXTBEFORE / TEXTAFTER関数</a>
+      <p class="article-summary">文字列から、特定の区切り文字の前後だけを抜き出します。</p>
+    </li>
+  </ul>
+
+  <h4>📅 日付・その他</h4>
+
+  <ul class="article-list" id="list-functions-modern-date">
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_sequence.html">SEQUENCE で日付リスト自動生成</a>
+      <p class="article-summary">日付一覧や連番リストを、1セルの数式だけで自動展開します。</p>
+    </li>
+  </ul>
+
+  <br>
+
+  <div class="category-hero hero-overlay hero-functions-standard">
+    <picture>
+      <source srcset="./image/hero_functions_standard_clean.avif" type="image/avif">
+      <source srcset="./image/hero_functions_standard_clean.webp" type="image/webp">
+      <img alt="定番・王道関数活用特集 Excel 2016対応" decoding="async" height="576" loading="lazy" src="./image/hero_functions_standard_clean.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Classic Functions</div>
+      <div class="hero-copy-title">定番・王道関数</div>
+      <div class="hero-copy-sub">Excel 2016環境でも使える、実務の土台。</div>
+    </div>
+  </div>
+
+  <h3 class="subcategory-heading">2. 旧式の関数（Excel 2016以前から使える王道手法）</h3>
+
+  <h4>🔍 検索・抽出系</h4>
+
+  <ul class="article-list mb-32" id="list-functions-old-search">
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="functions/old/article_index_match.html">INDEX + MATCH（全ver対象）</a>
+      <p class="article-summary">検索キーより左側にある列のデータを取得したい場合など、旧バージョンで強力な検索手法です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/old/article_index_match_multi.html">INDEX + MATCH + 結合キー列</a>
+      <p class="article-summary">複数条件の組み合わせで検索したいとき、旧Excelでも安定して実装できます。</p>
+    </li>
+  </ul>
+
+  <h4>🔥 検索・抽出【超絶技巧編】</h4>
+
+  <div class="category-hero hero-overlay hero-small hero-functions-expert margin-y-10-20 max-width-800">
+    <picture>
+      <source srcset="./image/hero_functions_expert.avif" type="image/avif">
+      <source srcset="./image/hero_functions_expert.webp" type="image/webp">
+      <img alt="関数超絶技巧・マニアックテクニック" decoding="async" height="576" loading="lazy" src="./image/hero_functions_expert.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Formula Mastery</div>
+      <div class="hero-copy-title">関数超絶技巧</div>
+      <div class="hero-copy-sub">旧式関数を組み合わせ、限界処理を突破する。</div>
+    </div>
+  </div>
+
+  <ul class="article-list mb-32" id="list-functions-old-expert">
+    <li class="article-item highlight">
+      <div class="level-bar lv-7">
+        <span class="level-label">Lv.7 上級</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="filter_alt"></span></span>
+      </div>
+      <a class="article-link" href="functions/old/article_countif_extract.html">【FILTER代替】VBA不要・CSE不要の複数抽出</a>
+      <p class="article-summary">Excel 2016以前でも通常の関数だけでFILTERと同等の複数行抽出を実現します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-7">
+        <span class="level-label">Lv.7 上級</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="zip_reverse"></span></span>
+      </div>
+      <a class="article-link" href="functions/old/article_zip_reverse.html">住所→郵便番号 逆引き（最長一致検索）</a>
+      <p class="article-summary">郵便番号簿からINDEX+MATCH+MAX+LEFT+LENで最長一致検索を行う高度な関数テクニック。</p>
+    </li>
+  </ul>
+
+  <h4>🧠 論理・文字列・その他</h4>
+
+  <ul class="article-list" id="list-functions-old-other">
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="functions/old/article_iferror.html">IFERROR vs IFNA の使い分け</a>
+      <p class="article-summary">#N/Aだけを処理したいのか、他のエラーもまとめて処理したいのかで使い分けます。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare">💎 レアテク</span></span>
+      </div>
+      <a class="article-link" href="functions/old/article_errortype.html">ERROR.TYPE による分岐</a>
+      <p class="article-summary">セルのエラー種類によって表示メッセージや処理を変えたい場合に使います。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/old/article_substitute.html">SUBSTITUTE 多段ネスト</a>
+      <p class="article-summary">複数の文字置換を一気に済ませたいときの定番テクニックです。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/old/article_midb.html">MID / MIDB関数 — 文字数やバイト数で文字列を抽出する</a>
+      <p class="article-summary">文字列の途中から指定した分だけテキストを抜き出す関数です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/old/article_text_date.html">TEXT関数による和暦変換</a>
+      <p class="article-summary">日付を令和表記や省略形式に変換する表示テクニックです。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="functions/old/article_datedif.html">DATEDIFの注意点</a>
+      <p class="article-summary">年齢や勤続年数の計算で便利ですが、仕様に注意が必要な関数です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="volatile"></span></span>
+      </div>
+      <a class="article-link" href="functions/old/article_volatile.html">【要注意】揮発性関数とは？激重Excel化を防ぐ</a>
+      <p class="article-summary">INDIRECT・OFFSETなどの揮発性関数による再計算負荷を理解し、重いブックを防ぎます。</p>
+    </li>
+  </ul>
+</div>
+<!-- /tab-panel#functions -->
+
+
+<!-- ==========================================
+     タブ3: パワークエリ
+     ========================================== -->
+<div aria-labelledby="tab-btn-pq" class="tab-panel" id="powerquery" role="tabpanel" tabindex="-1">
+  <p class="more-link more-link-subtle"><a href="./powerquery/index.html">パワークエリ一覧を見る</a></p>
+
+  <div class="category-hero hero-overlay hero-pq">
+    <picture>
+      <source srcset="./image/hero_pq.avif" type="image/avif">
+      <source srcset="./image/hero_pq.webp" type="image/webp">
+      <img alt="パワークエリ Power Query 特集" decoding="async" height="576" loading="lazy" src="./image/hero_pq.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Data Transformation</div>
+      <div class="hero-copy-title">Power Query特集</div>
+      <div class="hero-copy-sub">毎月の整形作業を、更新ボタンひとつに。</div>
+    </div>
+  </div>
+
+  <div class="category-header">
+    <h2>🔄 パワークエリ（Power Query）</h2>
+    <p>GUIによるデータ加工の自動化。基本操作から応用テクニックまで体系的に解説します。</p>
+  </div>
+
+  <div class="level-legend">
+    <div class="legend-row-levels">
+      <span class="level-legend-item"><span class="lv-dot lv-dot-1"></span>Lv.1 入門</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-2"></span>Lv.2 やさしい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-3"></span>Lv.3 ふつう</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-4"></span>Lv.4 やや難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-5"></span>Lv.5 難しい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-6"></span>Lv.6 かなり難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-7"></span>Lv.7 上級</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-8"></span>Lv.8 超絶技巧</span>
+    </div>
+
+    <div class="legend-row-tags">
+      <span class="legend-tag-desc"><span class="tag-impact">🔥 即戦力</span><span class="tag-desc-text">実務効果が大きい</span></span>
+      <span class="legend-tag-desc"><span class="tag-rare">💎 レアテク</span><span class="tag-desc-text">知る人ぞ知る</span></span>
+      <span class="legend-tag-desc"><span class="tag-prereq">📖 前提知識</span><span class="tag-desc-text">先に読んでおく記事</span></span>
+    </div>
+  </div>
+
+  <h3 class="subcategory-heading">1. 基本（まずここから）</h3>
+
+  <ul class="article-list mb-32" id="list-pq-basic">
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-prereq">📖 前提知識 — 必ず先に読む</span><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="powerquery/basic/article_powerquery_intro.html">パワークエリとは</a>
+      <p class="article-summary">VBA・ワークシート関数と比較しながら、Power Queryの全体像を把握します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="powerquery/basic/article_powerquery_intro_deep.html">パワークエリとは【補足編】</a>
+      <p class="article-summary">読み込み先の選択肢、パラメータクエリ、SharePoint連携などの発展的内容。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-prereq">📖 前提知識 — 必ず先に読む</span><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="powerquery/basic/article_pq_editor_ui.html">Power Queryエディターの画面構成</a>
+      <p class="article-summary">エディターの5つのエリアの役割を解説し、どこを見れば何がわかるかを把握します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="powerquery/basic/article_pq_editor_ui_2.html">Power Queryエディターの画面構成と「適用したステップ」</a>
+      <p class="article-summary">「適用したステップ」の読み方・戻し方・削除・途中挿入まで丁寧にカバーします。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-prereq">📖 前提知識 — 必ず先に読む</span><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="powerquery/basic/article_pq_data_type.html">データ型の変換</a>
+      <p class="article-summary">型が正しくないと、計算・フィルター・並べ替えが意図通りに動きません。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-prereq">📖 前提知識 — 必ず先に読む</span><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="powerquery/basic/article_pq_first_steps.html">取り込んだ直後にやる5つの定番操作</a>
+      <p class="article-summary">ヘッダー昇格・列の削除・列名変更・データ型変換・不要行の削除を解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="powerquery/basic/article_pq_fill.html">フィル（下方向・上方向）</a>
+      <p class="article-summary">空白セル（null）を直前の値で自動的に埋める、帳票処理で重要な操作です。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="powerquery/basic/article_pq_management.html">更新と管理 — 接続・エラー対策・設計パターン</a>
+      <p class="article-summary">更新方法、読み込み先の選び方、接続のみクエリの活用、エラー予防策をまとめて解説。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">2. PDF・Wordからの取り込み</h3>
+
+  <ul class="article-list mb-32" id="list-pq-pdf">
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="powerquery/basic/article_pdf_overview.html">PDFからのデータ取り込み 概要</a>
+      <p class="article-summary">対応できるケースとできないケース、注意点を解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="powerquery/basic/article_pdf_powerquery_basic.html">PDFからのデータ取り込み 基本編</a>
+      <p class="article-summary">Power QueryでPDFから取り込む基本的な手順をGUI操作中心に解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="powerquery/basic/article_pdf_powerquery_advanced.html">PDFからのデータ取り込み 応用編</a>
+      <p class="article-summary">レイアウト崩れや文字化けなど、難しいケースへの対処法を解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="powerquery/basic/article_pdf_word.html">WordファイルからPower Queryでデータを取り込む</a>
+      <p class="article-summary">Wordドキュメント内のテーブルをPower Queryで取り込む方法を解説します。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">3. データ整形テクニック</h3>
+
+  <ul class="article-list mb-32" id="list-pq-transform">
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="powerquery/advanced/article_pq_import_patterns.html">データ取り込みパターン集 — CSV・Excel・PDF・Web・フォルダ</a>
+      <p class="article-summary">Power Queryのデータ取り込みパターンをGUI操作で丁寧に解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="powerquery/advanced/article_pq_column_delete.html">列の削除・選択・並べ替え・名前変更</a>
+      <p class="article-summary">不要な列の削除と列名の整理。列に対する4つの基本操作を解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="powerquery/advanced/article_pq_row_operations.html">行を操る — フィルター・並べ替え・重複削除・フィル</a>
+      <p class="article-summary">Power Queryでの行操作を完全解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="powerquery/advanced/article_pq_text_operations.html">テキスト列を整形する — 書式・置換・トリム・抽出・分割・マージ</a>
+      <p class="article-summary">テキスト列を整形する方法をまとめて解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="powerquery/advanced/article_pq_split_column.html">列の分割</a>
+      <p class="article-summary">1列に複数の情報が入っているデータを、複数列に分割します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="powerquery/advanced/article_pq_number_date.html">数値と日付を扱う — 丸め・統計・日付抽出・期間計算</a>
+      <p class="article-summary">数値操作と日付操作をGUI中心に解説。Excel関数との対応表付き。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="powerquery/advanced/article_pq_add_columns.html">新しい列を作る — 条件列・インデックス・カスタム列・例からの列</a>
+      <p class="article-summary">Power Queryで新しい列を追加する方法を完全解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="powerquery/advanced/article_pq_group_pivot.html">集計とピボット — グループ化・ピボット・ピボット解除</a>
+      <p class="article-summary">グループ化・ピボット・ピボット解除をGUI中心に徹底解説します。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">4. 応用（結合・パラメータ・列加工）</h3>
+
+  <div class="category-hero hero-overlay hero-small hero-pq-merge-params margin-y-16-24 max-width-800">
+    <picture>
+      <source srcset="./image/hero_pq_merge_params.avif" type="image/avif">
+      <source srcset="./image/hero_pq_merge_params.webp" type="image/webp">
+      <img alt="パワークエリ応用 結合・統合設計" decoding="async" height="576" loading="lazy" src="./image/hero_pq_merge_params.jpg" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Query Design</div>
+      <div class="hero-copy-title">結合・統合設計</div>
+      <div class="hero-copy-sub">マージ・追加・パラメータでデータを一括管理。</div>
+    </div>
+  </div>
+
+  <ul class="article-list" id="list-pq-advanced">
+    <li class="article-item highlight">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="powerquery/advanced/article_pq_merge_append.html">テーブルの結合 — マージと追加</a>
+      <p class="article-summary">マージ（横方向）と追加（縦方向）を、結合型の違いから解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-5">
+        <span class="level-label">Lv.5 難しい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="pq_parameter"></span></span>
+      </div>
+      <a class="article-link" href="powerquery/advanced/article_pq_parameter_query.html">パラメータクエリ — セルの値で結果を切り替える</a>
+      <p class="article-summary">セル値をフィルター条件やファイルパスとして渡し、更新だけで結果を切り替えます。</p>
+
+      <div class="category-hero hero-overlay hero-small hero-pq-params-control margin-y-10-20 max-width-700">
+        <picture>
+          <source srcset="./image/hero_pq_params_control.avif" type="image/avif">
+          <source srcset="./image/hero_pq_params_control.webp" type="image/webp">
+          <img alt="パラメータクエリによる動的制御" decoding="async" height="576" loading="lazy" src="./image/hero_pq_params_control.jpg" width="1024">
+        </picture>
+        <div class="hero-copy">
+          <div class="hero-copy-kicker">Dynamic Control</div>
+          <div class="hero-copy-title">パラメータクエリ</div>
+          <div class="hero-copy-sub">セルの値で、取り込み条件を動的に変える。</div>
+        </div>
+      </div>
+    </li>
+
+<li class="article-item">
+  <div class="level-bar lv-4">
+    <span class="level-label">Lv.4 やや難</span>
+    <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+    <span class="tag-row"><span class="tag-rare" data-rare-id="pq_add_columns"></span></span>
+  </div>
+  <a class="article-link" href="powerquery/advanced/article_pq_add_columns.html">新しい列を作る — 条件列・インデックス・カスタム列</a>
+  <p class="article-summary">条件列・インデックス列・カスタム列を使い分け、手作業の補助列づくりをPower Queryに置き換えます。</p>
+
+  <div class="category-hero hero-overlay hero-small hero-pq margin-y-10-20 max-width-700">
+    <picture>
+      <source srcset="./image/hero_pq.avif" type="image/avif">
+      <source srcset="./image/hero_pq.webp" type="image/webp">
+      <img alt="Power Queryの列加工イメージ" decoding="async" height="576" loading="lazy" src="./image/hero_pq.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Column Design</div>
+      <div class="hero-copy-title">新しい列を作る</div>
+      <div class="hero-copy-sub">条件列・インデックス列・カスタム列で、補助列を再現性ある手順にする。</div>
+    </div>
+  </div>
+</li>
+  </ul>
+</div>
+<!-- /tab-panel#powerquery -->
+
+
+<!-- ==========================================
+     タブ4: COBOL帳票処理
+     ========================================== -->
+<div aria-labelledby="tab-btn-cobol" class="tab-panel" id="cobol" role="tabpanel" tabindex="-1">
+  <p class="more-link more-link-subtle"><a href="./cobol/index.html">COBOL帳票処理一覧を見る</a></p>
+
+  <div class="category-hero hero-overlay copy-right hero-cobol">
+    <picture>
+      <source srcset="./image/hero_cobol.avif" type="image/avif">
+      <source srcset="./image/hero_cobol.webp" type="image/webp">
+      <img alt="COBOL帳票処理 特集" decoding="async" height="576" loading="lazy" src="./image/hero_cobol.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Legacy Data</div>
+      <div class="hero-copy-title">COBOL帳票処理</div>
+      <div class="hero-copy-sub">固定長・不規則帳票を、使える表に変える。</div>
+    </div>
+  </div>
+
+  <div class="category-header">
+    <h2>🏭 COBOL帳票データ整形テクニック</h2>
+    <p>基幹システムから出力された固定長テキストデータや不規則な帳票データを、Excelで使えるリストへ整形するテクニックを解説します。</p>
+  </div>
+
+  <!-- 新設：説得力ある導入セクション -->
+  <section class="cobol-selection-guide">
+    <div class="guide-intro">
+      <div class="guide-visual">
+        <video class="demo-video" aria-label="COBOL帳票をExcelで一瞬で整形するデモ" controls loop muted playsinline preload="metadata" poster="./image/hero_cobol.webp" width="1280" height="720">
+          <source src="./video/Cobol1.mp4" type="video/mp4">
+          <img src="./Gif/Cobol.gif" alt="COBOL帳票をExcelで一瞬で整形するデモ" loading="lazy" decoding="async" width="1280" height="720">
+        </video>
+      </div>
+      <div class="guide-content">
+        <h3>COBOLの壁を、<br>「2つの武器」で撃破する。</h3>
+        <p class="lead-text">「VBAが使えないから無理」と諦める必要はありません。<br>現場の制約に合わせて、2つの強力なアプローチを使い分けます。</p>
+        <p class="text-desc">
+          数十年稼働する基幹システムが吐き出す「紙印刷前提」の固定長データ。
+          そのままではExcelで扱えませんが、正しい「数式」か「クエリ」を組み込めば、
+          毎月の手作業コピペはボタン一つ、あるいは貼り付けるだけで完結します。
+        </p>
+      </div>
+    </div>
+
+    <div class="solution-patterns-grid">
+      <!-- パターン1 -->
+      <div class="pattern-card formula">
+        <span class="pattern-badge">Pattern 01</span>
+        <h4>Excel関数アプローチ</h4>
+        <p class="pattern-desc">MIDBやTRIM、スピルを活用した「シート内完結」の解決策。ファイルを配布して「誰でもコピペするだけ」の状態を作りたい場合に最適です。</p>
+        <ul class="pattern-features">
+          <li>全角・半角混在もMIDBで正確に切り出し</li>
+          <li>コピペした瞬間に結果が出る「即時性」</li>
+          <li>VBA禁止、Power Query未導入PCでも動作</li>
+        </ul>
+      </div>
+
+      <!-- パターン2 -->
+      <div class="pattern-card pq">
+        <span class="pattern-badge">Pattern 02</span>
+        <h4>パワークエリ・アプローチ</h4>
+        <p class="pattern-desc">「フォルダから取得」を活用し、毎月の大量ファイルを一括で整形・結合。100万行を超えるようなビッグデータ処理に無類の強さを発揮します。</p>
+        <ul class="pattern-features">
+          <li>複数ファイルの一括読み込み・統合</li>
+          <li>更新ボタン1つで再実行される「自動化」</li>
+          <li>複雑な行除外やピボット解除もGUIで完結</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+
+  <div class="level-legend">
+    <div class="legend-row-levels">
+      <span class="level-legend-item"><span class="lv-dot lv-dot-1"></span>Lv.1 入門</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-2"></span>Lv.2 やさしい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-3"></span>Lv.3 ふつう</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-4"></span>Lv.4 やや難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-5"></span>Lv.5 難しい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-6"></span>Lv.6 かなり難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-7"></span>Lv.7 上級</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-8"></span>Lv.8 超絶技巧</span>
+    </div>
+
+    <div class="legend-row-tags">
+      <span class="legend-tag-desc"><span class="tag-impact">🔥 即戦力</span><span class="tag-desc-text">実務効果が大きい</span></span>
+      <span class="legend-tag-desc"><span class="tag-rare">💎 レアテク</span><span class="tag-desc-text">知る人ぞ知る</span></span>
+      <span class="legend-tag-desc"><span class="tag-prereq">📖 前提知識</span><span class="tag-desc-text">先に読んでおく記事</span></span>
+    </div>
+  </div>
+
+  <div class="category-desc">
+    <p>
+      COBOL帳票は、基幹システムが紙印刷を前提に出力した固定長・不規則なテキストデータです。
+      そのままExcelに貼り付けると、列が分かれない・ヘッダーが繰り返す・1件が複数行にまたがるなどの問題が起きます。
+      このカテゴリでは、関数・Power Queryの両方から攻略します。
+    </p>
+  </div>
+
+  <h3 class="subcategory-heading">1. COBOL帳票の基礎知識・概要</h3>
+
+  <ul class="article-list mb-32" id="list-cobol-intro">
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-prereq">📖 前提知識 — 必ず先に読む</span></span>
+      </div>
+      <a class="article-link" href="cobol/intro/01_article_cobol_fixed.html">扱っているデータはCOBOL固定長？見分け方と基礎知識</a>
+      <p class="article-summary">固定長データの正体と見分け方を解説します。まず自分のデータがCOBOL帳票なのか確認します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-prereq">📖 前提知識 — 必ず先に読む</span></span>
+      </div>
+      <a class="article-link" href="cobol/intro/02_article_cobol_approach.html">COBOL帳票処理の3大アプローチ：本当の難易度と完成時のメリット</a>
+      <p class="article-summary">関数・Power Query・VBAなど、複数のアプローチを難易度と工数で比較します。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">2. 数式版（Excel関数でのアプローチ）</h3>
+
+  <ul class="article-list mb-32" id="list-cobol-formula">
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="cobol/formula/01_article_cobol_basic.html">COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）</a>
+      <p class="article-summary">Excelの標準関数だけで、固定長データを列ごとに切り出し、使える表へ変換します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="cobol_advanced"></span></span>
+      </div>
+      <a class="article-link" href="cobol/formula/02_article_cobol_advanced.html">【関数応用編】不規則なCOBOL帳票の撃破（不要行除外・縦持ち展開）</a>
+      <p class="article-summary">不要なヘッダー行が混ざるデータや縦持ちデータを、関数だけで整形します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-8">
+        <span class="level-label">Lv.8 超絶技巧</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="cobol_expert"></span></span>
+      </div>
+      <a class="article-link" href="cobol/formula/03_article_cobol_expert.html">🔥【関数超絶技巧編】凶悪COBOL帳票の撃破｜ヘッダー紐付け・フィルダウンをExcel関数で自動化</a>
+      <p class="article-summary">COBOL帳票のヘッダー紐付け・フィルダウンを、Excel関数だけで自動化する上級テクニックです。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-8">
+        <span class="level-label">Lv.8 超絶技巧</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="cobol_irregular"></span></span>
+      </div>
+      <a class="article-link" href="cobol/formula/04_article_cobol_irregular.html">【不規則明細・完結編】行数がバラバラなデータの正規化展開</a>
+      <p class="article-summary">最凶の不規則帳票に、数式だけで立ち向かう完結編です。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">3. パワークエリ版</h3>
+
+  <ul class="article-list" id="list-cobol-pq">
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="cobol/pq/01_article_cobol_pq.html">【パワークエリ編】COBOL帳票データの不要行除去と一括結合</a>
+      <p class="article-summary">Power Queryで不要行を除去し、複数ファイルの帳票データを一括整形します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="cobol/pq/02_article_cobol_pq3.html">【参考資料】パワークエリでCOBOL帳票を処理する全テクニック</a>
+      <p class="article-summary">Power Queryの標準機能だけで完結する処理パターンを網羅した参考資料です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-7">
+        <span class="level-label">Lv.7 上級</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="cobol_pq_midb"></span></span>
+      </div>
+      <a class="article-link" href="cobol/pq/03_article_cobol_pq_midb_ref.html">【参考資料】M言語でMIDB相当の自作関数を作る</a>
+      <p class="article-summary">Text.ToBinaryとBinary.Rangeを組み合わせ、バイト単位の切り出しを実現します。</p>
+    </li>
+  </ul>
+</div>
+<!-- /tab-panel#cobol -->
+
+
+<!-- ==========================================
+     タブ5: QR Automation Lab
+     ========================================== -->
+<div aria-labelledby="tab-btn-qr" class="tab-panel" id="qr" role="tabpanel" tabindex="-1">
+  <p class="more-link more-link-subtle"><a href="./qr/index.html">QR Automation Lab一覧を見る</a></p>
+
+  <div class="category-hero hero-overlay hero-qr">
+    <picture>
+      <source srcset="./image/hero_qr.avif" type="image/avif">
+      <source srcset="./image/hero_qr.webp" type="image/webp">
+      <img alt="QR Automation Lab ハードウェア連携" decoding="async" height="576" loading="lazy" src="./image/hero_qr.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Hardware Automation</div>
+      <div class="hero-copy-title">QR Automation Lab</div>
+      <div class="hero-copy-sub">ソフトが使えないなら、ハード側から自動化する。</div>
+    </div>
+  </div>
+
+  <div class="category-header">
+    <h2>⚡ QR Automation Lab — ソフト禁止環境をハードウェアで突破する</h2>
+    <p>
+      VBA・マクロ・RPA・PowerShellすべてが禁止された環境でも、
+      <strong>QRリーダー本体の設定を書き換える</strong>だけで入力を自動化。
+      さらに閉域環境へのデータ転送、システム間移行、全角QR生成まで。
+      <strong>ソフト側ではなくハードウェア側から攻める</strong>、他に類を見ないアプローチです。
+    </p>
+
+    <div class="category-hero hero-concept-wall mx-auto max-width-800 my-20">
+      <picture>
+        <source srcset="./image/concept_breaking_wall.avif" type="image/avif">
+        <source srcset="./image/concept_breaking_wall.webp" type="image/webp">
+        <img alt="ソフトの壁をハードで突破するコンセプト" decoding="async" height="576" loading="lazy" src="./image/concept_breaking_wall.png" width="1024">
+      </picture>
+    </div>
+  </div>
+
+  <div class="level-legend">
+    <div class="legend-row-levels">
+      <span class="level-legend-item"><span class="lv-dot lv-dot-1"></span>Lv.1 入門</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-2"></span>Lv.2 やさしい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-3"></span>Lv.3 ふつう</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-4"></span>Lv.4 やや難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-5"></span>Lv.5 難しい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-6"></span>Lv.6 かなり難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-7"></span>Lv.7 上級</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-8"></span>Lv.8 超絶技巧</span>
+    </div>
+
+    <div class="legend-row-tags">
+      <span class="legend-tag-desc"><span class="tag-impact">🔥 即戦力</span><span class="tag-desc-text">実務効果が大きい</span></span>
+      <span class="legend-tag-desc"><span class="tag-rare">💎 レアテク</span><span class="tag-desc-text">知る人ぞ知る</span></span>
+    </div>
+  </div>
+
+  <h3 class="subcategory-heading">📱 セクション1：入力自動化シリーズ（全7記事）</h3>
+
+  <ul class="article-list" id="list-qr-input">
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="qr_generate"></span></span>
+      </div>
+<a class="article-link" href="qr/01_qr_barcode_control.html">① Access搭載環境向けQRコード生成 — バーコードコントロールの使い方と2つの厳しい限界</a>
+<p class="article-summary">Access由来のバーコードコントロールをExcelから配置し、LinkedCellでセル連動するQRコードを生成。ExcelのみのPCでは使えない点、半角255文字・全角不可の限界も解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="qr/02_qr_tab_enter.html">② QRコード1回で複数セルに自動入力 — Tab・Enterの埋め込み実践ガイド</a>
+      <p class="article-summary">CHAR(9)でTab、CHAR(13)でEnterを埋め込み、1回の読み取りで複数セルにデータを振り分けます。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="qr/03_qr_character_delay.html">③ QRリーダーの読み取りが速すぎて文字が欠ける — キャラクター間ディレイで解決</a>
+      <p class="article-summary">文字欠け・セルずれを、キャラクター間ディレイの設定で解決します。推奨値はまず20msから。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-5">
+        <span class="level-label">Lv.5 難しい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare">💎 レアテク</span></span>
+      </div>
+      <a class="article-link" href="qr/04_qr_key_conversion.html">④ QRコードの中の1文字がキーボード操作に変わる — 文字→キー変換の仕組み</a>
+      <p class="article-summary">「#」をF2に、「$」をEscに変換。QRリーダーを命令実行エンジンに変える概念の転換点です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="qr/05_qr_key_practice.html">⑤ QRコード1回で業務システムを操作する — 変換ルール実践編</a>
+      <p class="article-summary">在庫管理・イベント受付・既存データの部分更新など、実務シナリオでQRプログラムを設計します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="qr/06_qr_sleep.html">⑥ QRコードの中に「待ち時間」を作る — スリープで画面遷移を待つ</a>
+      <p class="article-summary">業務システムの画面遷移やWebフォームの応答を待ってから次の操作を実行します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-7">
+        <span class="level-label">Lv.7 上級</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="qr_series"></span></span>
+      </div>
+      <a class="article-link" href="qr/07_qr_full_system.html">⑦ QRコード1回で業務システムの全操作を完結させる — 6つの技術を統合した入力自動化システム</a>
+      <p class="article-summary">メニュー選択→画面遷移→検索→待機→データ入力→登録。手作業をQR読み取り1回に圧縮します。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">🔒 セクション2：データ転送・移行シリーズ（全4記事）</h3>
+
+  <ul class="article-list" id="list-qr-transfer">
+    <li class="article-item">
+      <div class="level-bar lv-5">
+        <span class="level-label">Lv.5 難しい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="qr_hardware"></span></span>
+      </div>
+      <a class="article-link" href="qr/08_qr_hardware.html">⑧ QRリーダーの選び方と接続方法</a>
+      <p class="article-summary">筆者が検証した機種を中心に、選び方・USB-HID接続・設定方法まで解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="qr/09_qr_closed_transfer.html">⑨ QRコードで閉域環境のデータ転送 — ネットワーク不要・紙だけでExcelデータを別PCに移す</a>
+      <p class="article-summary">USBメモリ禁止・ネット接続不可でも、紙のQRコードだけでデータ転送する方法を解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-7">
+        <span class="level-label">Lv.7 上級</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="qr/10_qr_system_migration.html">⑩ QRコードでシステム間データ移行 — 旧システムから新システムへ読み取るだけで引っ越し完了</a>
+      <p class="article-summary">APIもCSVインポートもない新システムに、QRリーダーでデータを流し込む移行手法です。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-8">
+        <span class="level-label">Lv.8 超絶技巧</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare">💎 レアテク</span></span>
+      </div>
+      <a class="article-link" href="qr/11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコードを生成 — バーコードコントロール不要・UTF-8対応</a>
+      <p class="article-summary">外部ライブラリ不要。ADODB.Stream＋ガロア体演算＋セル描画でQRコードを自力生成します。</p>
+    </li>
+  </ul>
+</div>
+<!-- /tab-panel#qr -->
+
+
+<!-- ==========================================
+     タブ6: その他 / 現場実務ラボ
+     ========================================== -->
+<div aria-labelledby="tab-btn-others" class="tab-panel" id="others" role="tabpanel" tabindex="-1">
+  <p class="more-link more-link-subtle"><a href="./others/index.html">現場実務ラボ一覧を見る</a></p>
+
+  <div class="category-hero hero-overlay hero-others-lab">
+    <picture>
+      <source srcset="./image/hero_others_lab_main.avif" type="image/avif">
+      <source srcset="./image/hero_others_lab_main.webp" type="image/webp">
+      <img alt="現場実務ラボ 活用テクニック特集" decoding="async" height="576" loading="lazy" src="./image/hero_others_lab_main.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Practical Excel Lab</div>
+      <div class="hero-copy-title">現場実務ラボ</div>
+      <div class="hero-copy-sub">印刷・速度・UIまで、日々の手間を減らす。</div>
+    </div>
+  </div>
+
+  <div class="category-header">
+    <h2>🛠 現場実務ラボ</h2>
+    <p>
+      印刷・ラベル・フォーム操作・表示形式・速度改善など、
+      関数・パワークエリ・COBOL・QRの枠に収まりきらない
+      「現場で本当に効く」実務改善テクニックをまとめています。
+      VBAなしで毎日の面倒な作業を減らすための横断ラボです。
+    </p>
+  </div>
+
+  <div class="level-legend">
+    <div class="legend-row-levels">
+      <span class="level-legend-item"><span class="lv-dot lv-dot-1"></span>Lv.1 入門</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-2"></span>Lv.2 やさしい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-3"></span>Lv.3 ふつう</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-4"></span>Lv.4 やや難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-5"></span>Lv.5 難しい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-6"></span>Lv.6 かなり難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-7"></span>Lv.7 上級</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-8"></span>Lv.8 超絶技巧</span>
+    </div>
+
+    <div class="legend-row-tags">
+      <span class="legend-tag-desc"><span class="tag-impact">🔥 即戦力</span><span class="tag-desc-text">実務効果が大きい</span></span>
+      <span class="legend-tag-desc"><span class="tag-rare">💎 レアテク</span><span class="tag-desc-text">知る人ぞ知る</span></span>
+    </div>
+  </div>
+
+  <h3 class="subcategory-heading">🚀 限界突破の計算速度</h3>
+
+  <div class="category-hero hero-overlay hero-small hero-others-speed margin-y-16-24 max-width-800">
+    <picture>
+      <source srcset="./image/hero_others_speed.avif" type="image/avif">
+      <source srcset="./image/hero_others_speed.webp" type="image/webp">
+      <img alt="Excel Speed Lab 業務高速化" decoding="async" height="576" loading="lazy" src="./image/hero_others_speed.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Performance</div>
+      <div class="hero-copy-title">Excel Speed Lab</div>
+      <div class="hero-copy-sub">重いブックを、数式設計から軽くする。</div>
+    </div>
+  </div>
+
+  <p class="text-desc">
+    VLOOKUPをINDEX+MATCHに変えても遅いまま？本当の原因はメモリスワップにあるかもしれません。
+    検索関数の選び方から数式の高速化テクニックまで、Excelの処理速度を劇的に引き上げるノウハウです。
+  </p>
+
+  <ul class="article-list" id="list-others-speed">
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/speed/article_memory_swap.html">Excelが遅い本当の原因 — メモリスワップと数式設計の関係</a>
+      <p class="article-summary">VLOOKUPをINDEX+MATCHに変えても遅いまま？RAM・SSD・32ビット制限・数式設計の考え方を解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-5">
+        <span class="level-label">Lv.5 難しい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="speed_lookup"></span></span>
+      </div>
+      <a class="article-link" href="others/speed/article_01_lookup_speed.html">検索関数の速度とメモリ効率</a>
+      <p class="article-summary">VLOOKUP・INDEX+MATCH・XLOOKUPのメモリ消費の違いと、検索設計による高速化を解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="speed_formula"></span></span>
+      </div>
+      <a class="article-link" href="others/speed/article_02_formula_techniques.html">数式の速度UPテクニック集</a>
+      <p class="article-summary">数式の処理速度を劇的に引き上げる実践テクニック集です。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">🖨 印刷自動化・ラベル印刷</h3>
+
+  <div class="category-hero hero-overlay hero-small hero-others-print margin-y-16-24 max-width-800">
+    <picture>
+      <source srcset="./image/hero_others_print_main.avif" type="image/avif">
+      <source srcset="./image/hero_others_print_main.webp" type="image/webp">
+      <img alt="印刷自動化・ラベル印刷 特集" decoding="async" height="576" loading="lazy" src="./image/hero_others_print_main.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Print Automation</div>
+      <div class="hero-copy-title">印刷自動化ラボ</div>
+      <div class="hero-copy-sub">印刷範囲・ラベル・帳票出力をVBAなしで制御。</div>
+    </div>
+  </div>
+
+  <p class="text-desc">
+    Print_Area、スピンボタン、XLOOKUP、VLOOKUPを組み合わせ、
+    VBAなしで印刷範囲・ラベル・案内文書を自動化する実務シリーズです。
+  </p>
+
+  <ul class="article-list" id="list-others-print">
+    <li class="article-item highlight">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="print_area"></span></span>
+      </div>
+      <a class="article-link" href="others/print/article_print_area.html">【VBA完全不要】印刷範囲を自動で伸縮させる裏ワザ（名前の管理）</a>
+      <p class="article-summary">データが増えたら印刷範囲も自動で広がり、空白行は印刷されないようにする方法です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="others/print/article_label_print.html">Excel 10面ラベル印刷 — Print_Area数式で空白シールを自動除外</a>
+      <p class="article-summary">データ件数に応じてPrint_Areaが自動伸縮。VBAもWordも不要でラベル印刷を制御します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="label_scrap"></span></span>
+      </div>
+      <a class="article-link" href="others/print/article_label_scrap.html">Excelシール残骸を活用 — 開始位置を指定して途中から印刷する方法</a>
+      <p class="article-summary">使いかけのラベルシールを無駄なく活用する方法です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="others/print/article_mail_print.html">宛名1ページ1枚 案内文書インスタント印刷 — スピンボタン＋Print_Area</a>
+      <p class="article-summary">スピンボタン＋VLOOKUPで差し込み印刷をExcelだけで実現します。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">🎛 操作UI・入力補助</h3>
+
+  <div class="category-hero hero-overlay hero-small hero-others-ui margin-y-16-24 max-width-800">
+    <picture>
+      <source srcset="./image/hero_others_ui_plain.avif" type="image/avif">
+      <source srcset="./image/hero_others_ui_plain.webp" type="image/webp">
+      <img alt="操作UI・入力補助 利便性向上" decoding="async" height="576" loading="lazy" src="./image/hero_others_ui_plain.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Input Support</div>
+      <div class="hero-copy-title">操作UI・入力補助</div>
+      <div class="hero-copy-sub">入力・選択・表示を、現場で使いやすく。</div>
+    </div>
+  </div>
+
+  <ul class="article-list" id="list-others-ui">
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/ui/article_form_controls.html">🎛️ 開発タブ＆フォームコントロール完全ガイド</a>
+      <p class="article-summary">スピンボタンなどのフォームコントロールを使い、VBAなしで操作性を改善します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="shape_circle"></span></span>
+      </div>
+      <a class="article-link" href="others/ui/article_shape_circle.html">セルの文字を○で囲む 表示／非表示 — 名前の管理＋図形（VBA不要）</a>
+      <p class="article-summary">入力値に応じて図形の○を自動表示する、Excelの隠れた仕様を活用したテクニックです。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">⌨ 日常時短・表示整形</h3>
+
+  <ul class="article-list" id="list-others-misc">
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/misc/article_shortcuts.html">実務で本当に使うショートカットキー厳選集</a>
+      <p class="article-summary">日常業務で本当に役立つExcelショートカットだけを厳選して紹介します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/misc/article_format.html">【保存版】ユーザー定義の表示形式＆TEXT関数 逆引き一覧</a>
+      <p class="article-summary">表示形式コードとTEXT関数の使い方を逆引きで整理します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="others/misc/article_statusbar.html">電卓不要！ステータスバー（オートカルク）の最強活用術</a>
+      <p class="article-summary">数式を立てずに合計・平均・件数を瞬時に確認できる機能を活用します。</p>
+    </li>
+  </ul>
+</div>
+<!-- /tab-panel#others -->
+
+
+<!-- ==========================================
+     タブ7: 制限解除ラボ
+     ========================================== -->
+<div aria-labelledby="tab-btn-unlocked" class="tab-panel" id="unlocked" role="tabpanel" tabindex="-1">
+  <p class="more-link more-link-subtle"><a href="./unlocked/index.html">制限解除ラボ一覧を見る</a></p>
+
+  <div class="category-hero hero-overlay hero-unlocked">
+    <picture>
+      <source srcset="./image/hero_unlocked.avif" type="image/avif">
+      <source srcset="./image/hero_unlocked.webp" type="image/webp">
+      <img alt="制限解除ラボ VBA OK な環境の最適解" decoding="async" height="576" loading="lazy" src="./image/hero_unlocked.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">VBA Available</div>
+      <div class="hero-copy-title">制限解除ラボ</div>
+      <div class="hero-copy-sub">VBAが使える環境で、さらに先の自動化へ。</div>
+    </div>
+  </div>
+
+  <div class="category-header">
+    <h2>🔓 制限解除ラボ — VBAが使える環境ならここまでできる</h2>
+    <p>
+      このサイトの本編は「VBAなし」で業務を攻略する手法をまとめています。<br>
+      このセクションは逆に、VBAやマクロが使える環境向けです。<br>
+      本編で「ここだけはVBAなしでは届かなかった」部分を補完し、制限がない環境での最適解を提示します。
+    </p>
+  </div>
+
+  <div class="unlocked-concept">
+    <ul>
+      <li><strong>位置づけ：</strong>本編（VBAなし）の「裏口」ではなく「補完」です。本編で完結する手法を先に学び、それでも届かない部分だけをVBAで埋める構成をとります。</li>
+      <li><strong>対象読者：</strong>VBAが使える環境にいる方、または将来VBA禁止が解除される可能性がある方。</li>
+      <li><strong>本編との関係：</strong>各記事の冒頭には必ず「VBA禁止環境での代替手法」へのリンクを記載し、環境に応じて双方向に行き来できるように設計します。</li>
+      <li class="mt-10">📖 <strong>より詳しくは</strong> <a class="color-deep-purple-bold" href="unlocked/index.html">制限解除ラボの全体像ページ</a> をご覧ください。本編との対応表・ロードマップを掲載しています。</li>
+    </ul>
+  </div>
+
+  <h3 class="subcategory-heading">VBAによる制限突破・機能補完</h3>
+
+  <ul class="article-list" id="list-unlocked-vba">
+    <li class="article-item highlight">
+      <div class="level-bar lv-7">
+        <span class="level-label">Lv.7 上級</span>
+        <span class="tag-row"><span class="tag-vba">VBA / UIA</span></span>
+      </div>
+      <a class="article-link" href="vba/article_vba_uia_automation.html">UIA（UI Automation）で他アプリへ自動入力</a>
+      <p class="article-summary">QRリーダーの代わりにVBAで直接Webシステムに入力。閉域環境ではQR、制限なし環境ではUIA、という使い分けです。<br><small>対応する本編：QR Automation Lab</small></p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="tag-row"><span class="tag-vba">VBA</span></span>
+      </div>
+      <a class="article-link" href="vba/article_vba_file_rename.html">VBAでフォルダ内ファイル一括処理</a>
+      <p class="article-summary">リネーム・移動・アーカイブなど、Power Queryだけでは届きにくいファイル操作を補完します。<br><small>対応する本編：パワークエリ「データ取り込みパターン集」</small></p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="tag-row"><span class="tag-vba">VBA / Web</span></span>
+      </div>
+      <a aria-disabled="true" class="article-link" href="unlocked/coming_soon.html?topic=vba_web_scraping">VBAでWebスクレイピング — 動的ページからデータ取得 <span class="badge-prep">準備中</span></a>
+      <p class="article-summary">Power QueryのWeb取込では取れないJavaScriptレンダリングページのデータ取得を補完します。<br><small>対応する本編：パワークエリ「データ取り込みパターン集」</small></p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="tag-row"><span class="tag-vba">VBA / QR</span></span>
+      </div>
+      <a aria-disabled="true" class="article-link" href="unlocked/coming_soon.html?topic=vba_qr_generate">QRコード一括生成 VBA完全版 <span class="badge-prep">準備中</span></a>
+      <p class="article-summary">全角文字対応のQRコードをVBAだけで生成する完全コード。QR Automation Labの実装補完です。<br><small>対応する本編：QR Automation Lab 記事⑪</small></p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-5">
+        <span class="level-label">Lv.5 難しい</span>
+        <span class="tag-row"><span class="tag-vba">VBA</span></span>
+      </div>
+      <a aria-disabled="true" class="article-link" href="unlocked/coming_soon.html?topic=vba_supplement">本編で“あと一歩”だった処理のVBA補完集 <span class="badge-prep">準備中</span></a>
+      <p class="article-summary">関数・Power Queryで95%解決できるが、残り5%にVBAが必要だったケースをまとめます。<br><small>対応する本編：各関数記事・パワークエリ記事</small></p>
+    </li>
+  </ul>
+
+  <p class="text-center font-size-085 color-text-light mt-30">
+    ※ このセクションの記事は順次公開予定です。本編（VBAなし）の記事はすべて完成しています。<br>
+    まずは本編で制限環境での手法を身につけてから、このセクションで補完することをおすすめします。
+  </p>
+</div>
+<!-- /tab-panel#unlocked -->
+
+</main>
+
+
+<!-- ========== コンタクトセクション ========== -->
+<section class="main-content contact-section" aria-label="お問い合わせ">
+  <div class="category-hero hero-overlay copy-center hero-contact mx-auto max-width-680">
+    <a class="hero-contact-link" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank" aria-label="お問い合わせフォームをGoogle Formsで開く">
+      <picture>
+        <source srcset="./image/hero_contact.avif" type="image/avif">
+        <source srcset="./image/hero_contact.webp" type="image/webp">
+        <img alt="お問い合わせ・ご相談はこちら" decoding="async" height="576" loading="lazy" src="./image/hero_contact.png" width="1024">
+      </picture>
+      <div class="hero-copy">
+        <div class="hero-copy-kicker">Contact</div>
+        <div class="hero-copy-title">お問い合わせ</div>
+        <div class="hero-copy-sub">Excel業務改善・制限環境のご相談はこちら。</div>
+        <div class="hero-contact-button" aria-hidden="true">フォームを開く →</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+
+<!-- ========== フッター ========== -->
+<footer class="site-footer">
+  <p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p>このサイトがお役に立ちましたら「シェア」「Bookmark」をお願いいたします。</p>
+
+  <p class="font-size-082 mt-10 opacity-085">
+    <a class="color-light-purple" href="sitemap.xml">🗺️ サイトマップ</a>
+  </p>
+</footer>
+
+
+<script src="script.js" defer></script>
+
+</body>
+</html>
+
+

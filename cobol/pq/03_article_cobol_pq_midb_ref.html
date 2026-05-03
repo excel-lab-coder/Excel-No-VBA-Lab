@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="8" name="difficulty">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>【参考資料】M言語でMIDB相当の自作関数を作る｜Excel &times; No VBA Lab</title>
+<meta content="Power QueryのM言語でMIDB相当のバイト単位文字列切り出しを実現する自作関数の作り方を参考資料として解説。" name="description">
+<meta content="パワークエリ M言語 MIDB, Power Query バイト 切り出し, Text.ToBinary Binary.Range, M言語 自作関数, COBOL PQ 上級" name="keywords">
+<meta content="【参考資料】M言語でMIDB相当の自作関数を作る｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power QueryのM言語でMIDB相当のバイト単位文字列切り出しを実現する自作関数の作り方を参考資料として解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/cobol/pq/03_article_cobol_pq_midb_ref.html" rel="canonical">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "【参考資料】M言語でMIDB相当の自作関数を作る",
+    "description": "Power QueryのM言語でMIDB相当のバイト単位文字列切り出しを実現する自作関数の作り方を参考資料として解説。",
+    "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-no-vba-lab.com/ogp.png"}},
+    "datePublished": "2026-03-20",
+    "dateModified": "2026-03-20"
+  }
+  </script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-no-vba-lab.com/"},
+      {"@type": "ListItem", "position": 2, "name": "COBOL帳票処理", "item": "https://excel-no-vba-lab.com/#cobol"},
+      {"@type": "ListItem", "position": 3, "name": "M言語でMIDB"}
+    ]
+  }
+  </script>
+<style>
+  /* ===== このページ固有の最小スタイル（共通分は style.css） ===== */
+  .xdemo-wrap { margin: 1.4em 0; overflow-x: auto; }
+
+  .pq-step-box { background: #fdfdfd; border: 1px solid #dcdcdc; border-left: 5px solid #00acc1; padding: 20px; margin: 20px 0; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+  .pq-step-title { font-size: 1.1em; color: #00838f; margin-top: 0; margin-bottom: 10px; font-weight: bold; border-bottom: 1px dashed #b2ebf2; padding-bottom: 5px; }
+
+  .pipeline-box { background: #f0f4f8; border: 2px solid #b0bec5; border-radius: 8px; padding: 18px 22px; margin: 18px 0; font-size: 0.97em; line-height: 1.9; text-align: center; }
+  .pipeline-box .step { display: inline-block; background: #fff; border: 1px solid #90a4ae; border-radius: 6px; padding: 4px 14px; margin: 3px 4px; font-weight: bold; }
+  .pipeline-box .arrow { color: #78909c; font-weight: bold; margin: 0 2px; }
+
+  .func-signature { background: #263238; color: #eeffff; padding: 14px 18px; border-radius: 6px; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.95em; margin: 12px 0; line-height: 1.6; }
+  .func-signature .param { color: #f78c6c; }
+  .func-signature .type { color: #c792ea; }
+  .func-signature .arrow { color: #89ddff; }
+  .func-signature .kw { color: #c792ea; }
+
+  .technique-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px 24px; margin: 20px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .technique-card h3 { color: #00838f; margin-top: 0; font-size: 1.05em; border-bottom: 2px solid #e0f7fa; padding-bottom: 8px; }
+
+  .demo-result { background: #f1f8e9; border: 1px solid #c5e1a5; border-radius: 4px; padding: 10px 15px; font-family: 'Consolas', monospace; font-size: 0.9em; margin: 10px 0; line-height: 1.8; }
+  .demo-result .label { color: #558b2f; font-weight: bold; }
+  .demo-result .value { color: #1b5e20; }
+
+  .step-number { display: inline-block; background: #00acc1; color: #fff; width: 28px; height: 28px; line-height: 28px; text-align: center; border-radius: 50%; font-weight: bold; font-size: 0.9em; margin-right: 8px; }
+
+  .api-ref { background: #fafafa; border: 1px solid #e0e0e0; border-radius: 4px; padding: 12px 16px; margin: 10px 0; font-size: 0.88em; line-height: 1.7; }
+  .api-ref code { background: #e8eaf6; padding: 1px 6px; border-radius: 3px; font-size: 0.95em; }
+
+  /* style.css 側に無い場合の保険：xdemo-note 系 */
+  .xdemo-note,
+  .xdemo-note-good,
+  .xdemo-note-warn,
+  .xdemo-note-danger { border-radius: 6px; padding: 14px 18px; margin: 14px 0; font-size: 0.92em; line-height: 1.85; }
+  .xdemo-note        { background: #f5f7fa; border-left: 4px solid #90a4ae; color: #37474f; }
+  .xdemo-note-good   { background: #e8f5e9; border-left: 4px solid #43a047; color: #1b5e20; }
+  .xdemo-note-warn   { background: #fff8e1; border-left: 4px solid #fb8c00; color: #5d4037; }
+  .xdemo-note-danger { background: #ffebee; border-left: 4px solid #e53935; color: #b71c1c; }
+  .xdemo-note code,
+  .xdemo-note-good code,
+  .xdemo-note-warn code,
+  .xdemo-note-danger code { background: rgba(255,255,255,0.7); padding: 1px 6px; border-radius: 3px; }
+
+  /* インラインstyle置換用ユーティリティ */
+  .title-sub { font-size: 0.55em; color: #607d8b; }
+  .mt-12 { margin-top: 12px; }
+  .mt-15 { margin-top: 15px; }
+  .mt-20 { margin-top: 20px; }
+  .tips-bg-soft { background: #fcfcfc; }
+</style>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+  <div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#cobol">COBOLデータ整形</a><span>&gt;</span>
+<a href="#">パワークエリ編</a><span>&gt;</span>
+<strong>参考資料：M言語でMIDB自作関数</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Excel 2016以降</span>
+<span class="badge badge-maniac">パワークエリ</span>
+<span class="badge badge-maniac">M言語</span>
+<span class="badge badge-maniac">COBOL/マニアック</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">【参考資料】M言語でMIDB相当の自作関数を作る<br><small style="font-size:0.55em;color:#607d8b;">&horbar; パワークエリ最大の壁を越えるための完全テクニック集 &horbar;</small></h1>
+</div>
+<!-- ======================== 導入 ======================== -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> この資料の位置づけ</h2>
+<p><a href="01_article_cobol_pq.html">パワークエリ編</a>で説明した「MIDBの壁」を実際に越えるための技術的な手順をまとめた参考資料です。M言語にはバイト単位で文字列を切り出す標準関数が存在しないため、<code>Text.ToBinary</code> と <code>Binary.Range</code> を組み合わせてExcelのMIDB・LEFTB・RIGHTB・LENBに相当するカスタム関数を自作します。</p>
+<div class="xdemo-note-warn">
+<strong>💬 前提知識：</strong><br>
+          ・パワークエリの基本操作（エディタの起動、ステップの追加）がわかっていること。<br>
+          ・M言語の基本文法（<code>let...in</code> 構文、関数の書き方）をざっくり理解していること。<br>
+          ・COBOL帳票の固定長データが「半角＝1バイト、全角＝2バイト」であることを把握していること。<br><br>
+          M言語を全く触ったことがない方は、先にパワークエリのGUI操作で自動生成されるMコードを読む練習をしてから本資料に進むことをお勧めします。
+        </div>
+</section>
+<!-- ======================== 核心技術 ======================== -->
+<section class="method-section">
+<h2>核心技術：Text.ToBinary + Binary.Range + Text.FromBinary</h2>
+<p>M言語でバイト単位の操作を実現するカギは、<strong>文字列をバイナリに変換し、バイナリレベルで切り出してから文字列に戻す</strong>という3段階の処理です。この3つの関数がすべての基礎になります。</p>
+<div class="pipeline-box">
+<span class="step">文字列（text）</span>
+<span class="arrow">&rarr;</span>
+<span class="step">Text.ToBinary<br><small>Shift_JIS バイナリに変換</small></span>
+<span class="arrow">&rarr;</span>
+<span class="step">Binary.Range<br><small>バイト位置で切り出し</small></span>
+<span class="arrow">&rarr;</span>
+<span class="step">Text.FromBinary<br><small>文字列に復元</small></span>
+</div>
+<p>ポイントは<strong>エンコーディングにShift_JIS（コードページ932）を指定する</strong>ことです。Shift_JISでは半角文字が1バイト、全角文字が2バイトとなり、これはCOBOL帳票の固定長ルールと完全に一致します。M言語の <code>Text.ToBinary</code> と <code>Text.FromBinary</code> はコードページ番号を受け取れるため、<code>932</code> を渡すだけでShift_JISでの変換が可能です。</p>
+<div class="api-ref">
+<strong>使用する主要関数（Microsoft公式リファレンス）：</strong><br>
+<code>Text.ToBinary(text, 932)</code> &horbar; 文字列をShift_JISエンコーディングでバイナリに変換<br>
+<code>Binary.Length(binary)</code> &horbar; バイナリのバイト数を返す<br>
+<code>Binary.Range(binary, offset, count)</code> &horbar; バイナリの指定位置から指定バイト数を切り出す（0始まり）<br>
+<code>Text.FromBinary(binary, 932)</code> &horbar; バイナリをShift_JISとして文字列に復元
+        </div>
+<div class="xdemo-note-danger">
+<strong>⚠ 重要：Binary.Range のオフセットは0始まり</strong><br>
+          ExcelのMIDB関数は開始位置が<strong>1始まり</strong>ですが、M言語の Binary.Range は<strong>0始まり</strong>です。自作関数の中でこの差を吸収するか、使う側で意識する必要があります。本資料の自作関数では<strong>ExcelのMIDBと同じ1始まり</strong>に統一しています。
+        </div>
+</section>
+<!-- ======================== LENB ======================== -->
+<section class="method-section">
+<h2><span class="step-number">1</span> LENB相当：fx_LENB &horbar; バイト数を数える</h2>
+<p>まず最もシンプルな関数から始めます。ExcelのLENB関数に相当する、文字列のバイト数を返す関数です。これ自体がMIDB自作関数の土台になるだけでなく、COBOL帳票の行長チェックなどにも単体で活躍します。</p>
+<div class="technique-card">
+<h3>fx_LENB のコード</h3>
+<p>パワークエリエディタで [ホーム] &rarr; [詳細エディター] を開き、新しい空のクエリに以下を貼り付けます。クエリ名を <code>fx_LENB</code> に変更してください。</p>
+<div class="code-block-large"><span class="cm-comment">// fx_LENB &horbar; ExcelのLENB相当（Shift_JIS基準）</span>
+(<span class="cm-param">targetText</span> <span class="cm-keyword">as</span> <span class="cm-type">text</span>) <span class="cm-keyword">as</span> <span class="cm-type">number</span> <span class="cm-op">=&gt;</span>
+<span class="cm-keyword">let</span>
+<span class="cm-comment">// 文字列をShift_JISバイナリに変換</span>
+    bin <span class="cm-op">=</span> <span class="cm-func">Text.ToBinary</span>(<span class="cm-param">targetText</span>, <span class="cm-number">932</span>),
+    <span class="cm-comment">// バイナリの長さ ＝ バイト数</span>
+    length <span class="cm-op">=</span> <span class="cm-func">Binary.Length</span>(bin)
+<span class="cm-keyword">in</span>
+    length</div>
+<div class="demo-result">
+<span class="label">検証例：</span><br>
+<code>fx_LENB("ABC")</code> &rarr; <span class="value">3</span>（半角3文字 = 3バイト）<br>
+<code>fx_LENB("新宿本店")</code> &rarr; <span class="value">8</span>（全角4文字 = 8バイト）<br>
+<code>fx_LENB("AB新宿")</code> &rarr; <span class="value">6</span>（半角2 + 全角2 = 2+4 = 6バイト）
+          </div>
+</div>
+<div class="xdemo-note-good">
+<strong>💡 なぜ932を指定するのか：</strong><br>
+          932はWindowsにおけるShift_JISのコードページ番号です。COBOL帳票がShift_JISで出力されている場合（日本の業務システムでは大多数）、この値を使います。帳票がUTF-8の場合は全角が3バイトになるため、932ではなく<code>65001</code>を指定し、切り出しバイト数もそれに合わせて調整する必要があります。ただし、COBOL帳票のほとんどはShift_JIS前提で設計されているため、通常は932で問題ありません。
+        </div>
+</section>
+<!-- ======================== MIDB ======================== -->
+<section class="method-section">
+<h2><span class="step-number">2</span> MIDB相当：fx_MIDB &horbar; バイト位置で切り出す</h2>
+<p>これが本丸です。ExcelのMIDB関数と同じように、「開始バイト位置」と「バイト数」を指定して文字列の一部を切り出します。COBOL帳票の列分解で最も多用する関数です。</p>
+<div class="technique-card">
+<h3>fx_MIDB のコード</h3>
+<div class="code-block-large"><span class="cm-comment">// fx_MIDB &horbar; ExcelのMIDB相当（Shift_JIS基準・1始まり）</span>
+(<span class="cm-param">targetText</span> <span class="cm-keyword">as</span> <span class="cm-type">text</span>, <span class="cm-param">startByte</span> <span class="cm-keyword">as</span> <span class="cm-type">number</span>, <span class="cm-param">numBytes</span> <span class="cm-keyword">as</span> <span class="cm-type">number</span>) <span class="cm-keyword">as</span> <span class="cm-type">text</span> <span class="cm-op">=&gt;</span>
+<span class="cm-keyword">let</span>
+<span class="cm-comment">// 文字列をShift_JISバイナリに変換</span>
+    bin <span class="cm-op">=</span> <span class="cm-func">Text.ToBinary</span>(<span class="cm-param">targetText</span>, <span class="cm-number">932</span>),
+    <span class="cm-comment">// Binary.Rangeは0始まり &rarr; ExcelのMIDB（1始まり）に合わせて -1 する</span>
+    sliced <span class="cm-op">=</span> <span class="cm-func">Binary.Range</span>(bin, <span class="cm-param">startByte</span> <span class="cm-op">-</span> <span class="cm-number">1</span>, <span class="cm-param">numBytes</span>),
+    <span class="cm-comment">// バイナリをShift_JISとして文字列に復元</span>
+    result <span class="cm-op">=</span> <span class="cm-func">Text.FromBinary</span>(sliced, <span class="cm-number">932</span>)
+<span class="cm-keyword">in</span>
+    result</div>
+<div class="demo-result">
+<span class="label">検証例（帳票行: " 1001    新宿本店        0050000    山田"）：</span><br>
+<code>fx_MIDB(row, 2, 4)</code> &rarr; <span class="value">"1001"</span>（店舗ID）<br>
+<code>fx_MIDB(row, 9, 14)</code> &rarr; <span class="value">"新宿本店      "</span>（店舗名 ※末尾スペース含む）<br>
+<code>fx_MIDB(row, 25, 7)</code> &rarr; <span class="value">"0050000"</span>（売上金額）
+          </div>
+</div>
+<div class="xdemo-note-warn">
+<strong>💬 引数の対応関係（ExcelのMIDBと完全に同じ）：</strong><br>
+<code>fx_MIDB(文字列, 開始バイト位置, バイト数)</code><br>
+          ・<strong>開始バイト位置</strong>：1始まり（先頭は1）。ExcelのMIDBと同じ。<br>
+          ・<strong>バイト数</strong>：切り出すバイト数。半角1バイト、全角2バイト。<br><br>
+          COBOL帳票の<strong>PICTURE句やレイアウト定義書のバイト位置をそのまま使える</strong>ため、Excel関数版からの移行もスムーズです。
+        </div>
+</section>
+<!-- ======================== LEFTB / RIGHTB ======================== -->
+<section class="method-section">
+<h2><span class="step-number">3</span> LEFTB・RIGHTB相当：fx_LEFTB / fx_RIGHTB</h2>
+<p>左端・右端からバイト数で切り出す関数も、同じ仕組みで簡単に作れます。COBOL帳票では使用頻度はMIDBほど高くありませんが、レコード種別の先頭判定や末尾のチェックディジット取得などに便利です。</p>
+<div class="technique-card">
+<h3>fx_LEFTB のコード</h3>
+<div class="code-block-large"><span class="cm-comment">// fx_LEFTB &horbar; ExcelのLEFTB相当</span>
+(<span class="cm-param">targetText</span> <span class="cm-keyword">as</span> <span class="cm-type">text</span>, <span class="cm-param">numBytes</span> <span class="cm-keyword">as</span> <span class="cm-type">number</span>) <span class="cm-keyword">as</span> <span class="cm-type">text</span> <span class="cm-op">=&gt;</span>
+<span class="cm-keyword">let</span>
+    bin <span class="cm-op">=</span> <span class="cm-func">Text.ToBinary</span>(<span class="cm-param">targetText</span>, <span class="cm-number">932</span>),
+    sliced <span class="cm-op">=</span> <span class="cm-func">Binary.Range</span>(bin, <span class="cm-number">0</span>, <span class="cm-param">numBytes</span>),
+    result <span class="cm-op">=</span> <span class="cm-func">Text.FromBinary</span>(sliced, <span class="cm-number">932</span>)
+<span class="cm-keyword">in</span>
+    result</div>
+</div>
+<div class="technique-card">
+<h3>fx_RIGHTB のコード</h3>
+<div class="code-block-large"><span class="cm-comment">// fx_RIGHTB &horbar; ExcelのRIGHTB相当</span>
+(<span class="cm-param">targetText</span> <span class="cm-keyword">as</span> <span class="cm-type">text</span>, <span class="cm-param">numBytes</span> <span class="cm-keyword">as</span> <span class="cm-type">number</span>) <span class="cm-keyword">as</span> <span class="cm-type">text</span> <span class="cm-op">=&gt;</span>
+<span class="cm-keyword">let</span>
+    bin <span class="cm-op">=</span> <span class="cm-func">Text.ToBinary</span>(<span class="cm-param">targetText</span>, <span class="cm-number">932</span>),
+    totalLen <span class="cm-op">=</span> <span class="cm-func">Binary.Length</span>(bin),
+    sliced <span class="cm-op">=</span> <span class="cm-func">Binary.Range</span>(bin, totalLen <span class="cm-op">-</span> <span class="cm-param">numBytes</span>, <span class="cm-param">numBytes</span>),
+    result <span class="cm-op">=</span> <span class="cm-func">Text.FromBinary</span>(sliced, <span class="cm-number">932</span>)
+<span class="cm-keyword">in</span>
+    result</div>
+</div>
+<div class="demo-result">
+<span class="label">検証例：</span><br>
+<code>fx_LEFTB("AB新宿本店", 6)</code> &rarr; <span class="value">"AB新宿"</span>（2 + 4 = 6バイト）<br>
+<code>fx_RIGHTB("AB新宿本店", 4)</code> &rarr; <span class="value">"本店"</span>（全角2文字 = 4バイト）
+        </div>
+</section>
+<!-- ======================== 登録手順 ======================== -->
+<section class="method-section">
+<h2><span class="step-number">4</span> カスタム関数の登録手順</h2>
+<p>自作関数をパワークエリに登録する手順を示します。一度登録すれば、同じブック内のどのクエリからでも呼び出せます。</p>
+<div class="pq-step-box">
+<h3 class="pq-step-title">手順① 空のクエリを作成</h3>
+<p>[データ] &rarr; [データの取得] &rarr; [その他のデータソースから] &rarr; [空のクエリ] を選択します。パワークエリエディタが開きます。</p>
+</div>
+<div class="pq-step-box">
+<h3 class="pq-step-title">手順② 詳細エディターにコードを貼り付け</h3>
+<p>[ホーム] &rarr; [詳細エディター] をクリックし、表示されたエディタの内容をすべて削除してから、上記の関数コード（例：fx_MIDBのコード全体）を貼り付けます。[完了] をクリックします。</p>
+</div>
+<div class="pq-step-box">
+<h3 class="pq-step-title">手順③ クエリ名を変更</h3>
+<p>画面右側の「クエリの設定」ペインで、名前を <code>fx_MIDB</code> などわかりやすい名前に変更します。関数として正しく認識されると、エディタ上部に引数の入力欄が表示されます。</p>
+</div>
+<div class="pq-step-box">
+<h3 class="pq-step-title">手順④ 動作確認</h3>
+<p>引数入力欄にテスト値を入れて [呼び出し] ボタンを押し、期待どおりの結果が返ることを確認します。確認後、自動生成された呼び出しクエリは削除して構いません。</p>
+</div>
+<div class="xdemo-note">
+<strong>📌 4つの関数すべてを登録する場合：</strong><br>
+<code>fx_LENB</code>、<code>fx_MIDB</code>、<code>fx_LEFTB</code>、<code>fx_RIGHTB</code> の4つをそれぞれ空のクエリとして登録します。クエリ一覧の左側ペインに4つの関数アイコン（fxマーク）が並びます。
+        </div>
+</section>
+<!-- ======================== 実践での使い方 ======================== -->
+<section class="method-section">
+<h2><span class="step-number">5</span> 実践：COBOL帳票の列分解に使う</h2>
+<p>登録した自作関数を使って、COBOL帳票を列分解する具体的な手順を示します。</p>
+<div class="pq-step-box">
+<h3 class="pq-step-title">想定する帳票レイアウト</h3>
+<div class="code-block-large"><span class="cm-comment">位置    バイト数   項目名</span>
+<span class="cm-comment">&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;</span>
+  1       4       店舗ID（半角数字）
+  5       1       区切りスペース
+  6      14       店舗名（全角/半角混在）
+ 20       1       区切りスペース
+ 21       7       売上金額（半角数字）
+ 28       1       区切りスペース
+ 29       8       担当者名（全角）</div>
+</div>
+<div class="pq-step-box">
+<h3 class="pq-step-title">カスタム列の追加でfx_MIDBを呼び出す</h3>
+<p>帳票データが1列（例：Column1）に取り込まれている状態で、[列の追加] &rarr; [カスタム列] を選択し、以下のような式を入力します。</p>
+<div class="code-block">
+<span class="code-line">// 店舗ID列（バイト位置1～4）</span>
+<span class="code-line">fx_MIDB([Column1], 1, 4)</span>
+</div>
+<div class="code-block">
+<span class="code-line">// 店舗名列（バイト位置6～19）</span>
+<span class="code-line">Text.Trim( fx_MIDB([Column1], 6, 14) )</span>
+</div>
+<div class="code-block">
+<span class="code-line">// 売上金額列（バイト位置21～27）</span>
+<span class="code-line">Number.FromText( fx_MIDB([Column1], 21, 7) )</span>
+</div>
+<div class="code-block">
+<span class="code-line">// 担当者名列（バイト位置29～36）</span>
+<span class="code-line">Text.Trim( fx_MIDB([Column1], 29, 8) )</span>
+</div>
+</div>
+<div class="xdemo-note-good">
+<strong>💡 Text.Trim と Number.FromText を組み合わせる：</strong><br>
+          COBOL帳票のフィールドはスペース埋めされているため、文字列項目は <code>Text.Trim()</code> で前後のスペースを除去します。数値項目は <code>Number.FromText()</code> で数値型に変換すれば、先頭のゼロ埋め（例："0050000" &rarr; 50000）も自動的に処理されます。これはExcel関数版で <code>TRIM()</code> や <code>VALUE()</code> を使っていたのと同じ発想です。
+        </div>
+</section>
+<!-- ======================== 対応表 ======================== -->
+<section class="method-section">
+<h2>Excel関数 &harr; M言語 自作関数 対応表</h2>
+<p>Excel関数パイプラインからパワークエリに移行する際の対応関係をまとめます。</p>
+<table class="compare-table">
+<thead>
+<tr>
+<th>処理内容</th>
+<th>Excel関数</th>
+<th>M言語（自作関数）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="label-col">バイト数を返す</td>
+<td><code>LENB(A1)</code></td>
+<td><code>fx_LENB([Column1])</code></td>
+</tr>
+<tr>
+<td class="label-col">バイト位置で切り出し</td>
+<td><code>MIDB(A1, 6, 14)</code></td>
+<td><code>fx_MIDB([Column1], 6, 14)</code></td>
+</tr>
+<tr>
+<td class="label-col">左端からバイト数で取得</td>
+<td><code>LEFTB(A1, 4)</code></td>
+<td><code>fx_LEFTB([Column1], 4)</code></td>
+</tr>
+<tr>
+<td class="label-col">右端からバイト数で取得</td>
+<td><code>RIGHTB(A1, 8)</code></td>
+<td><code>fx_RIGHTB([Column1], 8)</code></td>
+</tr>
+<tr>
+<td class="label-col">前後スペース除去</td>
+<td><code>TRIM(...)</code></td>
+<td><code>Text.Trim(...)</code>　※標準関数</td>
+</tr>
+<tr>
+<td class="label-col">数値変換</td>
+<td><code>VALUE(...)</code></td>
+<td><code>Number.FromText(...)</code>　※標準関数</td>
+</tr>
+<tr>
+<td class="label-col">行フラグ判定</td>
+<td><code>IF(LEFTB(A1,3)="===", ...)</code></td>
+<td>フィルター操作で除外、または<br><code>Text.StartsWith([Column1], "===")</code></td>
+</tr>
+<tr>
+<td class="label-col">フィルダウン</td>
+<td><code>IF(条件, 新値, 直上セル参照)</code></td>
+<td>[変換] &rarr; [フィル] &rarr; [下方向]　※標準機能</td>
+</tr>
+</tbody>
+</table>
+</section>
+<!-- ======================== エラー処理 ======================== -->
+<section class="method-section">
+<h2>⚠ エラーハンドリング：境界ケースへの対処</h2>
+<p>自作関数を実際の帳票データに使うと、空行やバイト位置が範囲外のケースでエラーが発生することがあります。安全に使うためのエラー処理パターンを示します。</p>
+<div class="technique-card">
+<h3>fx_MIDB 安全版（エラー処理付き）</h3>
+<div class="code-block-large"><span class="cm-comment">// fx_MIDB_Safe &horbar; 範囲外や空文字列でもエラーにならない安全版</span>
+(<span class="cm-param">targetText</span> <span class="cm-keyword">as</span> <span class="cm-type">nullable text</span>, <span class="cm-param">startByte</span> <span class="cm-keyword">as</span> <span class="cm-type">number</span>, <span class="cm-param">numBytes</span> <span class="cm-keyword">as</span> <span class="cm-type">number</span>) <span class="cm-keyword">as</span> <span class="cm-type">nullable text</span> <span class="cm-op">=&gt;</span>
+<span class="cm-keyword">let</span>
+<span class="cm-comment">// null や空文字列のガード</span>
+    safeText <span class="cm-op">=</span> <span class="cm-keyword">if</span> <span class="cm-param">targetText</span> <span class="cm-op">=</span> <span class="cm-keyword">null</span> <span class="cm-keyword">or</span> <span class="cm-param">targetText</span> <span class="cm-op">=</span> <span class="cm-string">""</span> <span class="cm-keyword">then</span> <span class="cm-keyword">null</span>
+<span class="cm-keyword">else</span>
+<span class="cm-keyword">let</span>
+            bin <span class="cm-op">=</span> <span class="cm-func">Text.ToBinary</span>(<span class="cm-param">targetText</span>, <span class="cm-number">932</span>),
+            totalLen <span class="cm-op">=</span> <span class="cm-func">Binary.Length</span>(bin),
+            <span class="cm-comment">// 開始位置がバイト長を超えている場合は空文字</span>
+            adjStart <span class="cm-op">=</span> <span class="cm-param">startByte</span> <span class="cm-op">-</span> <span class="cm-number">1</span>,
+            <span class="cm-comment">// 切り出し範囲が末尾を超えないよう調整</span>
+            adjCount <span class="cm-op">=</span> <span class="cm-func">Number.Min</span>({<span class="cm-param">numBytes</span>, totalLen <span class="cm-op">-</span> adjStart}),
+            result <span class="cm-op">=</span> <span class="cm-keyword">if</span> adjStart <span class="cm-op">&gt;=</span> totalLen <span class="cm-keyword">or</span> adjCount <span class="cm-op">&lt;=</span> <span class="cm-number">0</span> <span class="cm-keyword">then</span> <span class="cm-string">""</span>
+<span class="cm-keyword">else</span> <span class="cm-func">Text.FromBinary</span>(<span class="cm-func">Binary.Range</span>(bin, adjStart, adjCount), <span class="cm-number">932</span>)
+        <span class="cm-keyword">in</span>
+            result
+<span class="cm-keyword">in</span>
+    safeText</div>
+</div>
+<div class="xdemo-note-warn">
+<strong>💬 安全版を使うべきケース：</strong><br>
+          ・帳票にヘッダー行やフッター行が含まれており、バイト長が明細行と異なる場合。<br>
+          ・フィルターで不要行を除去する<strong>前</strong>にMIDB分解を行う場合。<br>
+          ・null値が混在するデータを処理する場合。<br><br>
+          不要行をフィルターで除去した<strong>後</strong>にMIDB分解を行う（＝全行が同一レイアウト）なら、シンプル版で十分です。処理の順序に応じて使い分けてください。
+        </div>
+</section>
+<!-- ======================== パフォーマンス ======================== -->
+<section class="method-section">
+<h2>⚡ パフォーマンスに関する注意</h2>
+<p>自作関数は便利ですが、パワークエリのカスタム関数は標準関数と比べて処理速度が遅くなる傾向があります。特にMIDB分解では行ごとにバイナリ変換を行うため、データ量が多い場合はパフォーマンスへの影響に注意が必要です。</p>
+<div class="technique-card">
+<h3>パフォーマンスを改善するテクニック</h3>
+<p><strong>テクニック①：先にフィルターで行数を減らす</strong></p>
+<p>MIDB分解（重い処理）の<strong>前に</strong>不要行をフィルターで除去します。これにより、バイナリ変換の回数が大幅に減ります。1万行のデータから5,000行が不要行なら、処理時間は半分になります。</p>
+<p><strong>テクニック②：一括バイナリ変換パターン</strong></p>
+<p>各列をカスタム列として個別に追加すると、行ごとに何度もText.ToBinaryが呼ばれます。以下のように1回のバイナリ変換から複数の列を切り出すほうが効率的です。</p>
+<div class="code-block-large"><span class="cm-comment">// 1行分のバイナリ変換を1回だけ行い、複数項目を切り出す</span>
+<span class="cm-comment">// カスタム列でレコードを返し、展開する方式</span>
+<span class="cm-keyword">let</span>
+    bin <span class="cm-op">=</span> <span class="cm-func">Text.ToBinary</span>([Column1], <span class="cm-number">932</span>),
+    店舗ID   <span class="cm-op">=</span> <span class="cm-func">Text.FromBinary</span>(<span class="cm-func">Binary.Range</span>(bin, <span class="cm-number">0</span>, <span class="cm-number">4</span>), <span class="cm-number">932</span>),
+    店舗名   <span class="cm-op">=</span> <span class="cm-func">Text.Trim</span>(<span class="cm-func">Text.FromBinary</span>(<span class="cm-func">Binary.Range</span>(bin, <span class="cm-number">5</span>, <span class="cm-number">14</span>), <span class="cm-number">932</span>)),
+    売上金額 <span class="cm-op">=</span> <span class="cm-func">Number.FromText</span>(<span class="cm-func">Text.FromBinary</span>(<span class="cm-func">Binary.Range</span>(bin, <span class="cm-number">20</span>, <span class="cm-number">7</span>), <span class="cm-number">932</span>)),
+    担当者名 <span class="cm-op">=</span> <span class="cm-func">Text.Trim</span>(<span class="cm-func">Text.FromBinary</span>(<span class="cm-func">Binary.Range</span>(bin, <span class="cm-number">28</span>, <span class="cm-number">8</span>), <span class="cm-number">932</span>))
+<span class="cm-keyword">in</span>
+    [店舗ID=店舗ID, 店舗名=店舗名, 売上金額=売上金額, 担当者名=担当者名]</div>
+<p style="margin-top:12px;">このパターンでは、<code>Text.ToBinary</code> が行あたり1回しか実行されません。4列を個別に追加すると4回実行されるところが、4分の1に減ります。カスタム列でレコード型を返し、そのレコードを展開して各列にすることで実現できます。</p>
+<p><strong>テクニック③：Table.Buffer で中間結果をキャッシュ</strong></p>
+<p>複雑なクエリでは、MIDBの結果テーブルを <code>Table.Buffer()</code> でメモリにキャッシュすることで、後続のステップでの再計算を防げます。</p>
+</div>
+<div class="xdemo-note">
+<strong>📌 パフォーマンスの目安：</strong><br>
+          数千行程度 &hellip; パフォーマンスを意識する必要はほぼない。<br>
+          1万～5万行 &hellip; テクニック①（先にフィルター）を適用すれば問題ない。<br>
+          5万行以上 &hellip; テクニック②（一括変換）を検討。それでも遅い場合はテクニック③も併用。<br>
+          数十万行以上 &hellip; パワークエリ単体では限界がある場合も。Power BIやデータベース経由の処理も視野に入れる。
+        </div>
+</section>
+<!-- ======================== エンコーディング ======================== -->
+<section class="method-section">
+<h2>📋 エンコーディングとコードページ一覧</h2>
+<p>本資料ではShift_JIS（コードページ932）を前提としていますが、帳票のエンコーディングが異なる場合は、<code>Text.ToBinary</code> と <code>Text.FromBinary</code> に渡すコードページ番号を変更します。</p>
+<table class="compare-table">
+<thead>
+<tr>
+<th>エンコーディング</th>
+<th>コードページ</th>
+<th>全角1文字のバイト数</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="label-col">Shift_JIS</td>
+<td><code>932</code></td>
+<td>2バイト</td>
+<td>日本のCOBOL帳票の大多数。ExcelのMIDBと同じバイト計算。</td>
+</tr>
+<tr>
+<td class="label-col">UTF-8</td>
+<td><code>65001</code></td>
+<td>3バイト</td>
+<td>最近のシステムで増加中。全角が3バイトのため、COBOL帳票のレイアウト定義と合わないことが多い。</td>
+</tr>
+<tr>
+<td class="label-col">EUC-JP</td>
+<td><code>20932</code></td>
+<td>2バイト</td>
+<td>UNIX系システムのCOBOL帳票で稀に使用。</td>
+</tr>
+<tr>
+<td class="label-col">IBM CP930<br>(EBCDIC日本語)</td>
+<td><code>&horbar;</code></td>
+<td>2バイト</td>
+<td>メインフレームからの直接出力。パワークエリ（Windows）では直接対応しないため、事前にShift_JISへ変換が必要。</td>
+</tr>
+</tbody>
+</table>
+<div class="xdemo-note-danger">
+<strong>⚠ エンコーディングの確認方法：</strong><br>
+          帳票ファイルが何のエンコーディングで出力されているかわからない場合は、テキストエディタ（サクラエディタ、VSCodeなど）でファイルを開き、ステータスバーに表示されるエンコーディングを確認してください。Shift_JIS、CP932、SJIS、MS932 などはすべてコードページ932で処理できます。
+        </div>
+</section>
+<!-- ======================== トラブルシューティング ======================== -->
+<section class="method-section">
+<h2>🔧 トラブルシューティング</h2>
+<p>自作関数を使っていて遭遇しやすい問題と対処法をまとめます。</p>
+<div class="pq-step-box">
+<h3 class="pq-step-title">症状：切り出し結果が文字化けする</h3>
+<p><strong>原因：</strong> 全角文字の途中（2バイトの1バイト目だけ、または2バイト目だけ）を切り出している。開始位置やバイト数が1バイトずれると、全角文字の境界をまたいでしまいます。</p>
+<p><strong>対処：</strong> COBOL帳票のレイアウト定義書を再確認し、全角項目の開始バイト位置と長さが偶数バイトで揃っているか確認してください。全角項目は必ず2の倍数のバイト位置から、2の倍数のバイト数で切り出す必要があります。</p>
+</div>
+<div class="pq-step-box">
+<h3 class="pq-step-title">症状：Expression.Error - 引数が範囲外</h3>
+<p><strong>原因：</strong> <code>Binary.Range</code> のオフセットやカウントがバイナリの長さを超えている。ヘッダー行やフッター行など、明細行よりバイト長が短い行が混在している可能性があります。</p>
+<p><strong>対処：</strong> MIDB分解の<strong>前に</strong>フィルターで不要行を除去するか、安全版の <code>fx_MIDB_Safe</code> を使用してください。</p>
+</div>
+<div class="pq-step-box">
+<h3 class="pq-step-title">症状：半角カタカナの切り出し結果がおかしい</h3>
+<p><strong>原因：</strong> Shift_JISでは半角カタカナは1バイトですが、UTF-8では3バイトです。帳票のエンコーディングとコードページの指定が合っていない可能性があります。</p>
+<p><strong>対処：</strong> 帳票のエンコーディングを確認し、コードページ番号が正しいか検証してください。COBOL帳票がShift_JISなら932、UTF-8なら65001を指定します。</p>
+</div>
+<div class="pq-step-box">
+<h3 class="pq-step-title">症状：関数呼び出しで「クエリが見つかりません」エラー</h3>
+<p><strong>原因：</strong> カスタム関数のクエリ名が正しく設定されていない、またはクエリが「接続のみ」になっていない。</p>
+<p><strong>対処：</strong> カスタム関数のクエリが [閉じて読み込む] &rarr; [接続の作成のみ] で保存されているか確認してください。また、関数を呼び出すクエリとカスタム関数のクエリが同じブック内にあることを確認してください。</p>
+</div>
+</section>
+<!-- ======================== まとめ ======================== -->
+<section class="tips-section" style="background:#fcfcfc;">
+<h2>🎯 まとめ：この資料の関数一覧</h2>
+<table class="format-table">
+<thead>
+<tr>
+<th>クエリ名</th>
+<th>対応するExcel関数</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="label-col"><code>fx_LENB</code></td>
+<td>LENB</td>
+<td>文字列のバイト数を返す。行長チェック・条件分岐に使用。</td>
+</tr>
+<tr>
+<td class="label-col"><code>fx_MIDB</code></td>
+<td>MIDB</td>
+<td>バイト位置指定で切り出す。COBOL帳票の列分解の中核。</td>
+</tr>
+<tr>
+<td class="label-col"><code>fx_LEFTB</code></td>
+<td>LEFTB</td>
+<td>左端からバイト数で切り出す。レコード種別判定に使用。</td>
+</tr>
+<tr>
+<td class="label-col"><code>fx_RIGHTB</code></td>
+<td>RIGHTB</td>
+<td>右端からバイト数で切り出す。チェックディジット取得等。</td>
+</tr>
+<tr>
+<td class="label-col"><code>fx_MIDB_Safe</code></td>
+<td>MIDB（エラー耐性版）</td>
+<td>null・範囲外を自動処理。不要行混在時に使用。</td>
+</tr>
+</tbody>
+</table>
+<div class="xdemo-note-good" style="margin-top: 20px;">
+<strong>💡 この資料の関数を使えば、<a href="#">パワークエリ編</a>で解説した以下のパイプラインがすべて実現できます：</strong><br><br>
+<strong>フォルダから一括取込</strong> &rarr; <strong>フィルターで不要行除去</strong> &rarr; <strong>フィル下方向（フィルダウン）</strong> &rarr; <strong>fx_MIDBで列分解</strong> &rarr; <strong>型変換・整形</strong><br><br>
+          最初の壁を越えた後は、パワークエリの標準機能（フィルター、フィルダウン、フォルダ結合）と組み合わせることで、関数パイプラインよりはるかに簡潔なCOBOL帳票処理が可能になります。
+        </div>
+<div class="xdemo-note" style="margin-top: 15px;">
+<strong>📌 シリーズリンク：</strong><br>
+<strong><a href="../formula/01_article_cobol_basic.html">【完全版】MIDB切り出し・浄化・型変換</a></strong> &hellip; 固定長データの基本的な切り出しと型変換。<br>
+<strong><a href="../formula/02_article_cobol_advanced.html">【応用編】不要行の除外と横展開</a></strong> &hellip; ROWフラグによる行フィルタリング。<br>
+<strong><a href="../formula/03_article_cobol_expert.html">【超絶技巧編】ヘッダー紐付け・フィルダウン</a></strong> &hellip; 親情報のフィルダウンとMIDB分解パイプライン。<br>
+<strong><a href="../formula/04_article_cobol_irregular.html">【不規則明細・完結編】行数バラバラの正規化</a></strong> &hellip; 不規則明細とマルチラインレコード。<br>
+<strong><a href="01_article_cobol_pq.html">【パワークエリ編】不要行除去と一括結合</a></strong> &hellip; MIDBの壁と越えた後の優位性。関数との使い分け。<br>
+<strong><a href="03_article_cobol_pq_midb_ref.html">【参考資料】M言語でMIDB自作関数を作る（本ページ）</a></strong> &hellip; 壁を越える具体的テクニック集。
+        </div>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ(Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab — 制限環境こそが最高の教師。</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

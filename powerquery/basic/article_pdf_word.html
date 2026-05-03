@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>旧式：WordでPDFを開いてExcelに取り込む方法 &horbar; 手順・コツ・限界｜Excel &times; No VBA Lab</title>
+<meta content="Power QueryでWordドキュメントのテーブルをExcelに取り込む方法を手順・コツ含めて解説。VBA不要。" name="description">
+<meta content="パワークエリ Word 取り込み, Power Query Word テーブル, Word Excel 連携, VBA不要, Excel PQ Word" name="keywords">
+<meta content="旧式：WordでPDFを開いてExcelに取り込む方法 &horbar; 手順・コツ・限界｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power QueryでWordドキュメントのテーブルをExcelに取り込む方法を手順・コツ含めて解説。VBA不要。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/basic/article_pdf_word.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    .format-table{border-collapse:collapse;font-size:.9em;margin:20px 0;width:100%;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+    .format-table th,.format-table td{border:1px solid #ddd;padding:12px 15px;text-align:left}
+    .format-table th{background-color:#607d8b;color:#fff;text-align:center;font-weight:700}
+    .xdemo-note{font-size:.85em;color:#444;margin-top:10px;padding:10px 15px;background:#f5f8ff;border-left:4px solid #90caf9;line-height:1.75}
+    .xdemo-note-good{font-size:.85em;color:#444;margin-top:10px;padding:10px 15px;background:#e8f5e9;border-left:4px solid #66bb6a;line-height:1.75}
+    .xdemo-note-warn{font-size:.85em;color:#444;margin-top:10px;padding:10px 15px;background:#fff8e1;border-left:4px solid #ffc107;line-height:1.75}
+    .xdemo-note-fire{font-size:.85em;color:#444;margin-top:10px;padding:10px 15px;background:#fce4ec;border-left:4px solid #e53935;line-height:1.75}
+    .toc-box{background:#f5f8ff;border:1px solid #c5cae9;border-radius:8px;padding:18px 24px;margin:24px 0}
+    .toc-box h3{margin:0 0 10px;font-size:1em;color:#1565c0}
+    .toc-box ol{margin:0;padding-left:1.4em;line-height:2}
+    .toc-box a{text-decoration:none;color:#1565c0}
+    .toc-box a:hover{text-decoration:underline}
+    .scenario-box{background:#f9fbe7;border:1px solid #c5e1a5;border-radius:8px;padding:18px 22px;margin:20px 0}
+    .scenario-box h4{margin:0 0 8px;color:#558b2f}
+    .diff-table{border-collapse:collapse;font-size:.88em;margin:20px 0;width:100%;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+    .diff-table th,.diff-table td{border:1px solid #ddd;padding:11px 14px;text-align:center}
+    .diff-table th{background-color:#455a64;color:#fff;font-weight:700}
+    .diff-table .col-item{text-align:left;font-weight:700}
+    .diff-ok{color:#2e7d32;font-weight:700}
+    .diff-ng{color:#c62828;font-weight:700}
+
+    .flow-box{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0;padding:16px;background:#f8f9fa;border-radius:8px}
+    .flow-step{padding:10px 16px;border-radius:6px;font-size:.8rem;font-weight:600;text-align:center;min-width:80px;color:#fff}
+    .flow-step.pdf{background:#c62828}
+    .flow-step.word{background:#2b579a}
+    .flow-step.excel{background:#217346}
+    .flow-arrow{font-size:1.2rem;color:#888}
+
+    .before-after{display:flex;gap:20px;flex-wrap:wrap;margin:20px 0}
+    .ba-card{flex:1;min-width:280px;border:2px solid #d0d0d0;border-radius:8px;overflow:hidden}
+    .ba-header{padding:10px 16px;font-weight:700;font-size:.82rem;color:#fff}
+    .ba-header.before{background:#c62828}
+    .ba-header.after{background:#2e7d32}
+    .ba-body{padding:16px}
+
+    .sample-grid{width:100%;border-collapse:collapse;font-size:.82rem;margin:8px 0}
+    .sample-grid th,.sample-grid td{border:1px solid #c8c8c8;padding:6px 10px;text-align:center;min-width:56px}
+    .sample-grid th{background:#f0f0f0;font-weight:600;color:#333}
+    .sample-grid .row-num{background:#f0f0f0;font-weight:600;color:#555;width:36px}
+
+    @media(max-width:700px){
+      .before-after{flex-direction:column}
+      .flow-box{justify-content:center}
+    }
+  </style>
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"旧式：WordでPDFを開いてExcelに取り込む方法\u0026horbar; PDF Reflow機能を使った手順・整形テクニック・限界まで \u0026horbar;","description":"Power QueryでWordドキュメントのテーブルをExcelに取り込む方法を手順・コツ含めて解説。VBA不要。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/basic/article_pdf_word.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span>
+<a href="article_pdf_overview.html">PDF取得テクニック</a><span>&gt;</span>
+<strong>Word変換（旧式）</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Word 2013〜</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">旧式：WordでPDFを開いてExcelに取り込む方法<br><span style="font-size:.55em;font-weight:400;color:#666;">&horbar; PDF Reflow機能を使った手順・整形テクニック・限界まで &horbar;</span></h1>
+</div>
+<!-- ========== 目次 ========== -->
+<div class="toc-box">
+<h3>この記事の内容</h3>
+<ol>
+<li><a href="#sec-overview">この方法の概要と前提条件</a></li>
+<li><a href="#sec-flow">全体フロー</a></li>
+<li><a href="#sec-open">手順① PDFをWordで開く</a></li>
+<li><a href="#sec-check">手順② Word上で表を確認・修正する</a></li>
+<li><a href="#sec-paste">手順③ Excelにコピー＆ペーストする</a></li>
+<li><a href="#sec-format">手順④ Excel上での整形テクニック</a></li>
+<li><a href="#sec-trouble">よくある問題と対処法</a></li>
+<li><a href="#sec-example">実践例：請求書PDFからデータを取得する</a></li>
+<li><a href="#sec-limit">この方法の限界</a></li>
+<li><a href="#sec-summary">まとめ</a></li>
+</ol>
+</div>
+<!-- ==========================================================
+         【1】概要と前提条件
+      ========================================================== -->
+<section class="goal-section" id="sec-overview">
+<h2><span class="icon">💡</span> この方法の概要と前提条件</h2>
+<p>Word 2013で追加された「PDF Reflow」機能を利用し、PDFファイルをWordで開いて編集可能な文書に変換します。表データが含まれていれば Word の表として再構成されるため、それをコピーして Excel に貼り付けることでデータを取得します。</p>
+<p>この方法を使うには以下の環境が必要です：Word 2013以降（Word 2016、2019、Microsoft 365 いずれも可）、テキストベースのPDF（スキャンした画像PDFは不可）、PDFにパスワード保護がかかっていないこと（または解除済みであること）の3つです。</p>
+</section>
+<!-- ==========================================================
+         【2】全体フロー
+      ========================================================== -->
+<section class="method-section" id="sec-flow">
+<h2>【2】全体フロー</h2>
+<div class="flow-box">
+<div class="flow-step pdf">PDF<br>ファイル</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-step word">Wordで開く<br>（PDF Reflow）</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-step word">表を確認<br>修正</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-step excel">Excelに<br>コピペ</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-step excel">整形<br>完成</div>
+</div>
+</section>
+<!-- ==========================================================
+         【3】手順① PDFをWordで開く
+      ========================================================== -->
+<section class="method-section" id="sec-open">
+<h2>【3】手順① PDFをWordで開く</h2>
+<p><strong>STEP 1</strong> &mdash; Wordを起動し、「ファイル」&rarr;「開く」&rarr;「参照」をクリックします。</p>
+<p><strong>STEP 2</strong> &mdash; ファイルの種類を「すべてのファイル」または「PDF ファイル (*.pdf)」に変更します。デフォルトではWordファイルしか表示されないため、この切り替えが必須です。</p>
+<p><strong>STEP 3</strong> &mdash; 取り込みたいPDFファイルを選択して「開く」をクリックします。</p>
+<p><strong>STEP 4</strong> &mdash; 「PDFから編集可能なWord文書に変換します。この処理には時間がかかることがあります。作成されたWord文書は、元のPDFとまったく同じ表示にはならない場合があります。」という警告ダイアログが表示されます。<strong>「OK」</strong>をクリックします。</p>
+<p><strong>STEP 5</strong> &mdash; 変換処理が実行され、PDFの内容がWord文書として表示されます。ページ数の多いPDF（50ページ以上）は変換に数分かかることがあります。</p>
+<div class="xdemo-note-warn">
+<strong>「互換モード」の表示について</strong><br>
+          変換後のWordファイルはタイトルバーに「互換モード」と表示されることがあります。これは正常な動作です。そのまま操作を続けてください。
+        </div>
+</section>
+<!-- ==========================================================
+         【4】手順② Word上で表を確認・修正
+      ========================================================== -->
+<section class="method-section" id="sec-check">
+<h2>【4】手順② Word上で表を確認・修正する</h2>
+<p>Wordに変換された表は、元のPDFの見た目を再現しようとした結果、余計な列や結合セルが発生していることがあります。Excelに貼り付ける前にWord上で確認と修正を行うと、後の作業が楽になります。</p>
+<p><strong>STEP 1</strong> &mdash; Word上の表をクリックして選択状態にします。表の左上に「＋」マーク（表移動ハンドル）が表示されることを確認します。</p>
+<p><strong>STEP 2</strong> &mdash; 表のセル数が元のPDFと一致しているか確認します。1つのセルが複数セルに分割されている場合は、Word上で「セルの結合」を使って修正します。</p>
+<p><strong>STEP 3</strong> &mdash; 表の前後に余計なテキストボックスや画像が入っていることがあります。これらはExcelに貼り付けるときにノイズになるため、表だけを正確に選択できるよう整理します。</p>
+<p><strong>STEP 4</strong> &mdash; PDFが複数ページにまたがる表を含む場合、Wordでは各ページの表が個別の表オブジェクトとして変換されることがあります。この場合は後述の「ページまたぎの結合」で対処します。</p>
+</section>
+<!-- ==========================================================
+         【5】手順③ Excelにコピー＆ペースト
+      ========================================================== -->
+<section class="method-section" id="sec-paste">
+<h2>【5】手順③ Excelにコピー＆ペーストする</h2>
+<p><strong>STEP 1</strong> &mdash; Word上の表の左上にある「＋」マーク（表移動ハンドル）をクリックして表全体を選択し、<kbd>Ctrl</kbd>+<kbd>C</kbd> でコピーします。</p>
+<p><strong>STEP 2</strong> &mdash; Excelを開き、貼り付け先のセル（通常はA1）を選択します。</p>
+<p><strong>STEP 3</strong> &mdash; <kbd>Ctrl</kbd>+<kbd>V</kbd> で貼り付けます。Wordの表がExcelのセルに展開されます。</p>
+<p><strong>STEP 4</strong> &mdash; 貼り付けオプション（右下に表示される小さなアイコン）で「貼り付け先の書式に合わせる」を選ぶと、Wordの装飾（フォント・色・罫線）が除去されてクリーンなデータになります。書式情報も必要な場合は「元の書式を保持」のままにします。</p>
+<div class="xdemo-note-good">
+<strong>代替：テキストだけ貼り付ける</strong><br>
+          表の構造が大きく崩れている場合は、<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd>（形式を選択して貼り付け）&rarr;「テキスト」を選ぶと、タブ区切りの平文として貼り付けられます。その後「データ」&rarr;「区切り位置」で列を分割する方法もあります。
+        </div>
+</section>
+<!-- ==========================================================
+         【6】手順④ Excel上での整形テクニック
+      ========================================================== -->
+<section class="method-section" id="sec-format">
+<h2>【6】手順④ Excel上での整形テクニック</h2>
+<p>Word経由で貼り付けたデータは、そのままでは使えないことが多いです。以下の整形テクニックを使ってクリーンなデータにします。</p>
+<h3>6-1. 余計な空白行の削除</h3>
+<p>表の途中に空白行が挿入されていることがあります。A列で <code>=LEN(TRIM(A1))=0</code> のようなフィルター条件を使い、空白行だけを抽出して一括削除します。</p>
+<h3>6-2. セル内改行の除去</h3>
+<p>セル内に改行（Char(10)）が残っていると、後の集計でエラーの原因になります。</p>
+<p class="code-label-good">セル内改行を除去する数式</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUBSTITUTE(A1, CHAR(10), "")</span>
+</div>
+<p>全セルに一括適用するには、空列に上記の数式を入れてコピーし、「値のみ貼り付け」で元のセルに上書きします。</p>
+<h3>6-3. 先頭・末尾のスペース除去</h3>
+<p class="code-label-good">TRIM＋CLEANで制御文字とスペースを除去</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TRIM(CLEAN(A1))</span>
+</div>
+<p>CLEAN関数は印刷不可能な制御文字を除去し、TRIMは余分なスペースを取り除きます。PDF変換では見えない制御文字が混入することがあるため、CLEAN と TRIM の併用がお勧めです。</p>
+<h3>6-4. 数値の文字列化を修正</h3>
+<p>数値データがテキストとして貼り付けられ、セルの左上に緑色の三角マークが表示されることがあります。該当セルを選択 &rarr;「エラーチェックオプション」&rarr;「数値に変換」で修正するか、以下の数式でまとめて変換します。</p>
+<p class="code-label-good">文字列&rarr;数値に変換する数式</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=VALUE(SUBSTITUTE(SUBSTITUTE(A1, ",", ""), "&yen;", ""))</span>
+</div>
+<h3>6-5. ページまたぎの表を結合する</h3>
+<p>元のPDFで3ページにまたがる表が、Word変換で3つの別々の表になった場合、Excel上では3回の貼り付けが必要です。2回目以降はデータ部分だけ（ヘッダー行を除いて）コピーし、1回目のデータの末尾に追記します。列の並び順がすべて同じであることを必ず確認してください。</p>
+</section>
+<!-- ==========================================================
+         【7】よくある問題と対処法
+      ========================================================== -->
+<section class="method-section" id="sec-trouble">
+<h2>【7】よくある問題と対処法</h2>
+<table class="diff-table">
+<tr>
+<th class="w-30">問題</th>
+<th style="width:70%">原因と対処法</th>
+</tr>
+<tr>
+<td class="col-item">1つのセルに複数列のデータが入ってしまう</td>
+<td class="text-left">PDFの表で列の区切りが罫線ではなくスペースで表現されていた場合に起きます。Excel上で「データ」&rarr;「区切り位置」&rarr;「スペース」で分割します。固定長のレポート（官公庁の統計表など）では「固定幅」を選んで手動で区切り線を入れる方が正確です。</td>
+</tr>
+<tr>
+<td class="col-item">表がテキストボックスの集合として変換される</td>
+<td class="text-left">PDFの作り方によっては、表がテキストボックス（図形）の集合としてWord上に配置されることがあります。この場合はWord上で表を修正するのが難しいため、PDFからテキストだけをコピー（Adobe ReaderでCtrl+A &rarr; Ctrl+C）してExcelにテキスト貼り付けし、「区切り位置」で整形する方が早いです。</td>
+</tr>
+<tr>
+<td class="col-item">日本語が文字化けする</td>
+<td class="text-left">PDFにフォント情報が正しく埋め込まれていない場合に発生します。この場合はWord変換では対処が困難です。Adobe Acrobat ProやサードパーティツールでExcel/CSV直接エクスポートを試みてください。</td>
+</tr>
+<tr>
+<td class="col-item">変換に非常に時間がかかる</td>
+<td class="text-left">100ページを超えるPDFや、複雑なレイアウト（グラフ・画像が多い）PDFは変換に長時間かかります。必要なページだけを事前にAdobe Readerで抽出（「印刷」&rarr;「PDF」&rarr;ページ範囲指定）してからWordで開くと効率的です。</td>
+</tr>
+</table>
+</section>
+<!-- ==========================================================
+         【8】実践例
+      ========================================================== -->
+<section class="method-section" id="sec-example">
+<h2>【8】実践例：請求書PDFからデータを取得する</h2>
+<div class="scenario-box">
+<h4>シナリオ：取引先から届いた請求書PDF（3ページ、明細行50行）をExcelに取り込む</h4>
+</div>
+<div class="before-after">
+<div class="ba-card">
+<div class="ba-header before">Before：PDFの状態</div>
+<div class="ba-body">
+<table class="sample-grid">
+<tr><th>品名</th><th>数量</th><th>単価</th><th>金額</th></tr>
+<tr><td>A4コピー用紙</td><td>10</td><td>&yen;350</td><td>&yen;3,500</td></tr>
+<tr><td>ボールペン黒</td><td>50</td><td>&yen;80</td><td>&yen;4,000</td></tr>
+<tr><td colspan="4" style="color:#aaa;text-align:center">&hellip;（計50行、3ページにまたがる）</td></tr>
+</table>
+</div>
+</div>
+<div class="ba-card">
+<div class="ba-header after">After：Excelに取り込んだ状態</div>
+<div class="ba-body">
+<table class="sample-grid">
+<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+<tr><td class="row-num">1</td><td>品名</td><td>数量</td><td>単価</td><td>金額</td></tr>
+<tr><td class="row-num">2</td><td>A4コピー用紙</td><td>10</td><td>350</td><td>3500</td></tr>
+<tr><td class="row-num">3</td><td>ボールペン黒</td><td>50</td><td>80</td><td>4000</td></tr>
+<tr><td class="row-num">&hellip;</td><td colspan="4" style="color:#aaa;text-align:center">（50行すべて取り込み完了）</td></tr>
+</table>
+</div>
+</div>
+</div>
+<p><strong>STEP 1</strong> &mdash; Wordで請求書.pdfを開く。変換ダイアログで「OK」。3ページ分の表が3つの独立した表としてWord上に表示される。</p>
+<p><strong>STEP 2</strong> &mdash; 1つ目の表（1ページ目）を全選択してコピーし、ExcelのA1に貼り付け。ヘッダー行＋データ行が取得される。</p>
+<p><strong>STEP 3</strong> &mdash; 2つ目の表（2ページ目）はヘッダー行が重複しているので、データ行だけを選択してコピーし、Excelの末尾に追記。3つ目も同様。</p>
+<p><strong>STEP 4</strong> &mdash; 「単価」「金額」列が文字列（&yen;記号付き）になっているため、以下の数式で数値に変換。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=VALUE(SUBSTITUTE(SUBSTITUTE(C2,"&yen;",""),",",""))</span>
+</div>
+<p><strong>STEP 5</strong> &mdash; TRIM(CLEAN()) で制御文字・余分なスペースを除去して完成。</p>
+</section>
+<!-- ==========================================================
+         【9】この方法の限界
+      ========================================================== -->
+<section class="method-section" id="sec-limit">
+<h2>【9】この方法の限界</h2>
+<p>Word変換はPDFデータ取得の最初の手段として長く使われてきましたが、以下の明確な限界があります。</p>
+<table class="diff-table">
+<tr><th class="w-25">限界</th><th style="width:75%">詳細</th></tr>
+<tr><td class="col-item">再現性が低い</td><td class="text-left">同じPDFでもWord変換のたびに微妙に異なる結果になることがある。再現性のある処理パイプラインを構築できない。</td></tr>
+<tr><td class="col-item">自動化できない</td><td class="text-left">毎回手作業（Word&rarr;コピー&rarr;Excel&rarr;整形）が必要。VBAで自動化することは技術的に可能だが複雑。</td></tr>
+<tr><td class="col-item">複数テーブルの扱いが困難</td><td class="text-left">1つのPDFに複数の異なる表がある場合、どの表がどのデータかを目視で判断して個別にコピーする必要がある。</td></tr>
+<tr><td class="col-item">ページまたぎが手作業</td><td class="text-left">ページをまたぐ表はページ単位で分割されるため、手動で結合しなければならない。</td></tr>
+<tr><td class="col-item">大量ファイルの処理に不向き</td><td class="text-left">10個のPDFを処理するなら10回同じ作業を繰り返す必要がある。</td></tr>
+</table>
+<div class="xdemo-note-good">
+<strong>Excel 2019 以降をお使いなら</strong><br>
+          パワークエリのPDFコネクタを使えば、これらの限界の多くが解消されます。<a href="article_pdf_powerquery_basic.html">パワークエリ基本編</a>をご覧ください。
+        </div>
+</section>
+<!-- ==========================================================
+         【10】まとめ
+      ========================================================== -->
+<section class="goal-section" id="sec-summary" style="margin-top:40px;background:linear-gradient(135deg,#f5f8ff 0%,#e8eaf6 100%);border-radius:10px;padding:24px;">
+<h2><span class="icon">📝</span> まとめ</h2>
+<p>Word経由のPDF変換は、Excel 2013〜2016の時代に主流だった方法であり、Word 2013以降があれば追加のソフトなしに使えるという手軽さがあります。テキストベースのPDFであれば、表構造が比較的シンプルな場合（列数が少ない、罫線がはっきりしている）には今でも十分実用的です。</p>
+<p>ただし、セル結合のズレ、ページまたぎの手動結合、繰り返し作業の自動化不可といった限界があるため、Excel 2019以降の環境ではパワークエリへの移行を強くお勧めします。Word変換は「古い環境での緊急手段」または「パワークエリで上手くいかないときの補助手段」として位置づけるのが適切です。</p>
+</section>
+<p>パワークエリの基本操作は &rarr; <a href="article_pq_first_steps.html">GUIマスターシリーズ①〜⑥</a><br>応用操作は &rarr; <a href="../advanced/article_pq_merge_append.html">応用編⑦〜⑪</a></p>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

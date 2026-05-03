@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>列の削除・選択・並べ替え・名前変更｜Excel &times; No VBA Lab</title>
+<meta content="Power Queryで列の削除・選択・並べ替え・名前変更を行う4つの基本操作をGUI中心にわかりやすく解説。" name="description">
+<meta content="パワークエリ 列削除, Power Query 列名変更, 列 並べ替え PQ, VBA不要 データ整形, Excel パワークエリ" name="keywords">
+<meta content="列の削除・選択・並べ替え・名前変更｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power Queryで列の削除・選択・並べ替え・名前変更を行う4つの基本操作をGUI中心にわかりやすく解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/advanced/article_pq_column_delete.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"列の削除・選択・並べ替え・名前変更 \u0026horbar; 最初に覚える列操作","description":"Power Queryで列の削除・選択・並べ替え・名前変更を行う4つの基本操作をGUI中心にわかりやすく解説。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/advanced/article_pq_column_delete.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>列の削除・選択・並べ替え・名前変更</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">列の削除・選択・並べ替え・名前変更 &horbar; 最初に覚える列操作</h1>
+</div>
+<section class="goal-section">
+<h2><span class="icon">💡</span> この記事で解決すること</h2>
+<p>データを取り込んだ直後に最初にやることは、不要な列の削除と列名の整理です。
+        この記事では列に対する4つの基本操作を解説します。</p>
+</section>
+<!-- 列の削除 -->
+<section class="method-section">
+<h3>列の削除 &horbar; 不要な列を取り除く</h3>
+<div class="pq-proc">
+<span class="proc-title">操作手順</span>
+          削除したい列のヘッダーをクリックして選択 &rarr; ホームタブ &rarr;「列の削除」&rarr;「列の削除」。<br>
+          複数列を選択する場合はCtrlキーを押しながら列ヘッダーをクリック。<br>
+          右クリック &rarr;「削除」でも同じです。
+        </div>
+<p>取り込んだデータには空白列や管理用のID列など、最終出力に不要な列が含まれていることが多くあります。
+        不要な列は最初に削除しておくと、以降の操作がシンプルになり、処理速度も向上します。</p>
+</section>
+<!-- 他の列の削除 -->
+<section class="method-section">
+<h3>「他の列の削除」 &horbar; 残したい列だけを指定する逆転の発想</h3>
+<div class="pq-proc">
+<span class="proc-title">操作手順</span>
+          残したい列のヘッダーをCtrl＋クリックで複数選択 &rarr; ホームタブ &rarr;「列の削除」&rarr;「他の列の削除」。<br>
+          右クリック &rarr;「他の列の削除」でも同じです。
+        </div>
+<p>20列あるデータから3列だけ使いたい場合、17列を1つずつ削除するのは手間です。
+        「他の列の削除」は選択した列以外をすべて一括削除します。残したい列が少ない場合はこちらのほうが圧倒的に速いです。</p>
+<div class="pq-note-good">
+          ✅ <strong>「他の列の削除」には運用上の大きなメリットがあります。</strong>
+          「列の削除」は「列Aと列Bを削除する」というステップですが、「他の列の削除」は「列Cと列Dと列Eを残す」というステップです。
+          元データに将来新しい列が追加されても、「他の列の削除」なら必要な列だけが残り続けます。
+          「列の削除」だと新しい列が消されずに残ってしまいます。
+          長期運用するクエリでは「他の列の削除」を優先的に使うのがベストプラクティスです。
+        </div>
+</section>
+<!-- 列の並べ替え -->
+<section class="method-section">
+<h3>列の並べ替え &horbar; ドラッグで列の順序を変える</h3>
+<div class="pq-proc">
+<span class="proc-title">操作手順</span>
+          列ヘッダーをドラッグして、目的の位置に移動する。
+        </div>
+<p>Excelのシート上で列を移動するにはカット＆挿入が必要ですが、Power Queryエディターでは列ヘッダーをドラッグするだけです。
+        この操作もステップとして記録されるため、更新のたびに同じ列順序が再現されます。</p>
+<p>リボンからの操作は「変換」タブ &rarr;「移動」&rarr;「左へ」「右へ」「先頭へ」「末尾へ」でも可能です。
+        複数列を選択してからの移動もできます。</p>
+</section>
+<!-- 列名の変更 -->
+<section class="method-section">
+<h3>列名の変更 &horbar; わかりやすい名前に直す</h3>
+<div class="pq-proc">
+<span class="proc-title">操作手順</span>
+          列ヘッダーをダブルクリック &rarr; 直接入力で名前を変更 &rarr; Enterで確定。<br>
+          右クリック &rarr;「名前の変更」でも同じです。
+        </div>
+<p>CSVから取り込んだデータの列名が「Column1」「Column2」のまま、あるいは「売上_202601_東京_修正版」のように長すぎることはよくあります。
+        列名はステップに記録されるため、ここでわかりやすい名前に統一しておけば、以降の操作や関数での参照が楽になります。</p>
+<div class="pq-note-warn">
+          ⚠️ 列名を変更した後にマージ（結合）を設定した場合、元データの列名が変わるとエラーになることがあります。
+          列名の変更は取り込みの直後（ステップの早い段階）で行うのが安全です。
+        </div>
+</section>
+<!-- 列の複製 -->
+<section class="method-section">
+<h3>列の複製 &horbar; 元データを残したまま加工したいとき</h3>
+<div class="pq-proc">
+<span class="proc-title">操作手順</span>
+          列ヘッダーを右クリック &rarr;「列の複製」。<br>
+          または「列の追加」タブ &rarr;「重複する列」。
+        </div>
+<p>「住所」列を分割したいけど元の「住所」列も残しておきたい場合に使います。
+        複製した列に対して分割や抽出を行えば、元の列はそのまま維持できます。</p>
+</section>
+<section class="method-section">
+<h3>まとめ</h3>
+<p>列の削除・選択・並べ替え・名前変更は、データ取り込み直後に最初に行う操作です。
+        特に「他の列の削除」は長期運用で列追加に強い設計になるため、積極的に使いましょう。
+        これらの操作はすべてステップとして記録され、更新のたびに自動で再実行されます。</p>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+

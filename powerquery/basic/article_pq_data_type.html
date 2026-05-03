@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>データ型の変換｜Excel &times; No VBA Lab</title>
+<meta content="Power Queryでデータ型（数値・テキスト・日付等）を正しく変換する方法を解説。型ミスによる計算エラーを防ぐ必須知識。" name="description">
+<meta content="パワークエリ データ型, Power Query 型変換, 数値 テキスト 日付 変換, VBA不要, Excel PQ 型" name="keywords">
+<meta content="データ型の変換｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power Queryでデータ型（数値・テキスト・日付等）を正しく変換する方法を解説。型ミスによる計算エラーを防ぐ必須知識。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/basic/article_pq_data_type.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"データ型の変換 \u0026horbar; テキスト・整数・小数・日付・ロケール指定","description":"Power Queryでデータ型（数値・テキスト・日付等）を正しく変換する方法を解説。型ミスによる計算エラーを防ぐ必須知識。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/basic/article_pq_data_type.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>データ型の変換</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">データ型の変換 &horbar; テキスト・整数・小数・日付・ロケール指定</h1>
+</div>
+<section class="goal-section">
+<h2><span class="icon">💡</span> この記事で解決すること</h2>
+<p>Power Queryではすべての列に「データ型」があります。
+        型が正しくないと、計算・フィルター・並べ替えが意図通りに動きません。
+        この記事では型の確認方法、変更方法、よくあるトラブルと対処法を解説します。</p>
+</section>
+<section class="method-section">
+<h3>データ型とは？ なぜ重要なのか</h3>
+<p>Excelのセルは「見た目の書式」と「中身のデータ」が別々に管理されていますが、Power Queryではもっと厳密です。
+        列ごとに「この列はテキスト」「この列は整数」「この列は日付」という型が設定されており、型が合わないと操作がエラーになります。</p>
+<p>例えば「金額」列がテキスト型のままだと、合計や平均の計算ができません。
+        「日付」列がテキスト型だと、年や月の抽出ができません。
+        データを取り込んだ直後に型を正しく設定するのが鉄則です。</p>
+</section>
+<section class="method-section">
+<h3>型の確認方法</h3>
+<p>各列ヘッダーの左側にアイコンが表示されています。これがその列のデータ型です。</p>
+<div style="overflow-x:auto;">
+<table class="pq-type-table">
+<thead><tr><th>アイコン</th><th>データ型</th><th>M言語の型名</th><th>用途</th></tr></thead>
+<tbody>
+<tr><td style="text-align:center;font-weight:700;">ABC</td><td>テキスト</td><td>type text</td><td>文字列全般。商品名・住所・コードなど</td></tr>
+<tr><td style="text-align:center;font-weight:700;">123</td><td>整数</td><td>Int64.Type</td><td>小数点のない数値。個数・ID・年齢など</td></tr>
+<tr><td style="text-align:center;font-weight:700;">1.2</td><td>10進数</td><td>type number</td><td>小数点のある数値。金額・比率など</td></tr>
+<tr><td style="text-align:center;font-weight:700;">📅</td><td>日付</td><td>type date</td><td>年月日</td></tr>
+<tr><td style="text-align:center;font-weight:700;">🕐</td><td>日付/時刻</td><td>type datetime</td><td>年月日＋時刻</td></tr>
+<tr><td style="text-align:center;font-weight:700;">T/F</td><td>True/False</td><td>type logical</td><td>論理値</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="method-section">
+<h3>型の変更方法</h3>
+<div class="pq-proc">
+<span class="proc-title">方法1：列ヘッダーのアイコンをクリック</span>
+          列ヘッダー左のアイコン（ABCや123）をクリック &rarr; ドロップダウンから変更先の型を選択。<br>
+          最も手軽な方法です。
+        </div>
+<div class="pq-proc">
+<span class="proc-title">方法2：ホームタブ &rarr;「データ型」ドロップダウン</span>
+          列を選択 &rarr; ホームタブ &rarr;「データ型: &cir;&cir;」の▼ &rarr; 変更先の型を選択。<br>
+          複数列をCtrl＋クリックで選択してから一括変更も可能です。
+        </div>
+<div class="pq-proc">
+<span class="proc-title">方法3：右クリック &rarr;「型の変更」</span>
+          列ヘッダーを右クリック &rarr;「型の変更」&rarr; 変更先の型を選択。
+        </div>
+<div class="pq-proc">
+<span class="proc-title">方法4：「データ型の検出」で自動判定</span>
+          ホームタブ &rarr;「データ型の検出」。データの中身からPower Queryが型を自動推測して一括設定します。<br>
+          CSVの取り込み時に自動で適用されることも多いです。
+        </div>
+</section>
+<section class="method-section">
+<h3>「ロケールを使用して変更」&horbar; 日付の形式が違うとき</h3>
+<div class="pq-proc">
+<span class="proc-title">操作手順</span>
+          列ヘッダーを右クリック &rarr;「型の変更」&rarr;「ロケールを使用...」&rarr; ダイアログで「データ型」と「ロケール」を選択。
+        </div>
+<p>海外から届いたデータで日付が「03/21/2026」（月/日/年）形式になっている場合、通常の日付型変換では正しく認識されません。
+        「ロケールを使用して変更」で「英語（米国）」を選択すると、MM/DD/YYYY形式として正しく解釈されます。</p>
+<p>日本形式（2026/03/21）なのに日付型に変換できない場合は「日本語」ロケールを明示的に指定してみてください。</p>
+</section>
+<section class="method-section">
+<h3>「型の変更」ステップの置き換え確認</h3>
+<p>型を変更すると、多くの場合「現在のステップの置換」か「新しいステップの挿入」かを確認するダイアログが出ます。</p>
+<p><strong>「現在のステップの置換」</strong>：既存の「変更された型」ステップに今回の変更を統合します。1つのステップで複数列の型変更をまとめる場合はこちら。</p>
+<p><strong>「新しいステップの挿入」</strong>：新しいステップとして追加します。型変更の操作を分けて管理したい場合はこちら。</p>
+<div class="pq-note">
+          💡 データ取り込み時に「変更された型」ステップが自動追加されることがあります。
+          これはPower Queryの自動型検出によるもので、意図しない型になっていることもあります。
+          自動生成されたステップも必ず確認し、間違っていれば修正してください。
+        </div>
+</section>
+<section class="method-section">
+<h3>よくあるトラブル</h3>
+<p><strong>数値列をテキストにしたい場合（商品コード「001」が「1」になる問題）</strong>：
+        「001」のような先頭ゼロ付きのコードは数値型にすると「1」になってしまいます。
+        この列はテキスト型にする必要があります。型変換のタイミングは「できるだけ早い段階」が鉄則です。
+        一度数値型になってしまうと先頭ゼロは消えて復元できません。</p>
+<p><strong>日付型への変換で「Error」になる場合</strong>：
+        「2026年3月21日」「R8.3.21」のような和暦・日本語表記はそのままでは日付型に変換できません。
+        テキスト操作（置換・抽出）で「2026/03/21」形式に整形してから型変換する必要があります。</p>
+<div class="pq-note-danger">
+          ⚠️ <strong>型変換は取り戻せない場合がある</strong>ことに注意してください。
+          テキスト「001」&rarr; 整数「1」&rarr; テキスト「1」のように、一度失われた情報は戻りません。
+          先頭ゼロを保持する列・テキストとして扱うべき列は、最初にテキスト型を明示的に設定してください。
+        </div>
+</section>
+<section class="method-section">
+<h3>まとめ</h3>
+<p>データ型の設定はPower Queryのほぼすべての操作の前提です。
+        取り込み直後に型を確認・修正するのを習慣にしてください。
+        列ヘッダーのアイコンクリックが最速、海外日付にはロケール指定、先頭ゼロにはテキスト型を先に設定するのがポイントです。</p>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

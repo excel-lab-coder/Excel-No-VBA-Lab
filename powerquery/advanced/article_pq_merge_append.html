@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="Power Queryでテーブルを結合する2つの方法「マージ（横方向の結合＝VLOOKUP的）」と「追加（縦方向の結合＝UNION的）」を、6種の結合型の違いからBefore/After付きで丁寧に解説します。" name="description">
+<meta content="パワークエリ, Power Query, Excel パワークエリ, VBA不要, Excel実務" name="keywords">
+<meta content="テーブルの結合 &horbar; マージと追加｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power Queryでテーブルを結合する2つの方法「マージ（横方向の結合＝VLOOKUP的）」と「追加（縦方向の結合＝UNION的）」を、6種の結合型の違いからBefore/After付きで丁寧に解説します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/advanced/article_pq_merge_append.html" rel="canonical">
+<title>テーブルの結合 &horbar; マージと追加｜Excel &times; No VBA Lab</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"テーブルの結合 \u0026horbar; マージと追加","description":"Power Queryでテーブルを結合する2つの方法「マージ（横方向の結合＝VLOOKUP的）」と「追加（縦方向の結合＝UNION的）」を、6種の結合型の違いからBefore/After付きで丁寧に解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/advanced/article_pq_merge_append.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>テーブルの結合</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">テーブルの結合 &horbar; マージと追加</h1>
+</div>
+<!-- ==================== -->
+<section id="goal">
+<h2>このページのゴール</h2>
+<p>Power Queryでテーブルを結合する2つの方法 &horbar;「マージ（横方向に列を増やす＝VLOOKUP的）」と「追加（縦方向に行を増やす＝UNION的）」&horbar; の違いを理解し、6種類の結合型を場面に応じて使い分けられるようになることです。</p>
+</section>
+<!-- ==================== -->
+<section id="merge-vs-append">
+<h2>「マージ」と「追加」の違い</h2>
+<table class="ref-table">
+<thead><tr><th></th><th>マージ（Merge）</th><th>追加（Append）</th></tr></thead>
+<tbody>
+<tr><td><strong>方向</strong></td><td>横方向 &horbar; 列が増える</td><td>縦方向 &horbar; 行が増える</td></tr>
+<tr><td><strong>イメージ</strong></td><td>VLOOKUP / XLOOKUP で別テーブルの列を引っ張ってくる</td><td>2つの表を上下に貼り合わせる（Excelの「コピー＆末尾に貼り付け」）</td></tr>
+<tr><td><strong>前提条件</strong></td><td>両テーブルに共通のキー列（商品コード、社員番号など）が必要</td><td>両テーブルの列構成が同じ（または似ている）こと</td></tr>
+<tr><td><strong>SQL相当</strong></td><td>JOIN</td><td>UNION ALL</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ==================== マージ ==================== -->
+<section id="merge-basic">
+<h2>マージ（横結合）の基本操作</h2>
+<h3>サンプルデータ</h3>
+<div class="before-after">
+<div>
+<p><strong>売上テーブル</strong></p>
+<table>
+<thead><tr><th>注文ID</th><th>商品コード</th><th>数量</th></tr></thead>
+<tbody>
+<tr><td>1001</td><td>A01</td><td>3</td></tr>
+<tr><td>1002</td><td>B02</td><td>1</td></tr>
+<tr><td>1003</td><td>A01</td><td>5</td></tr>
+<tr><td>1004</td><td>C03</td><td>2</td></tr>
+</tbody>
+</table>
+</div>
+<div>
+<p><strong>商品マスタ</strong></p>
+<table>
+<thead><tr><th>商品コード</th><th>商品名</th><th>単価</th></tr></thead>
+<tbody>
+<tr><td>A01</td><td>ノートPC</td><td>80000</td></tr>
+<tr><td>B02</td><td>マウス</td><td>3000</td></tr>
+<tr><td>D04</td><td>キーボード</td><td>5000</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>売上テーブルに商品名と単価を付加したい &horbar; Excelなら VLOOKUP を使う場面です。</p>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. 売上テーブルのクエリをエディターで開きます。<br>
+          2. <strong>ホーム タブ &rarr; クエリのマージ</strong> をクリックします。<br>
+          3. ダイアログ上部に現在のテーブル（売上テーブル）が表示されます。下部のドロップダウンから<strong>商品マスタ</strong>を選択します。<br>
+          4. 上のテーブルで「商品コード」列をクリック、下のテーブルでも「商品コード」列をクリックして、キー列を対応付けます。<br>
+          5. 「結合の種類」は<strong>「左外部（最初のテーブルのすべての行と、2番目のテーブルの一致する行）」</strong>のままで「OK」。<br>
+          6. 右端に「商品マスタ」というテーブル型の列が追加されます。<br>
+          7. その列のヘッダーにある<strong>展開ボタン（&hArr;アイコン）</strong>をクリックします。<br>
+          8. 展開したい列（商品名、単価）にチェックを入れ、「元の列名をプレフィックスとして使用します」のチェックは外して「OK」。<br>
+          9. 商品名と単価の列が追加されます。</p>
+</div>
+<h3>結果</h3>
+<table class="ba-table">
+<thead><tr><th>注文ID</th><th>商品コード</th><th>数量</th><th>商品名</th><th>単価</th></tr></thead>
+<tbody>
+<tr><td>1001</td><td>A01</td><td>3</td><td>ノートPC</td><td>80000</td></tr>
+<tr><td>1002</td><td>B02</td><td>1</td><td>マウス</td><td>3000</td></tr>
+<tr><td>1003</td><td>A01</td><td>5</td><td>ノートPC</td><td>80000</td></tr>
+<tr><td>1004</td><td>C03</td><td>2</td><td>null</td><td>null</td></tr>
+</tbody>
+</table>
+<p>注文ID 1004の商品コード「C03」は商品マスタに存在しないため、商品名と単価が null になっています。これは「左外部結合」の動作で、VLOOKUPでいう #N/A に相当します。</p>
+</section>
+<!-- ==================== 結合の種類 ==================== -->
+<section id="join-types">
+<h2>6種類の結合型を理解する</h2>
+<p>マージのダイアログで選べる「結合の種類」は6つあります。実務で最も使うのは「左外部」ですが、他の型も知っておくと便利です。</p>
+<table class="ref-table">
+<thead><tr><th>結合の種類</th><th>動作</th><th>VLOOKUPとの対応</th><th>使いどころ</th></tr></thead>
+<tbody>
+<tr>
+<td><strong>左外部</strong><br>（Left Outer）</td>
+<td>左テーブル（現在のクエリ）の全行を残し、右テーブルは一致する行だけ付加。一致しなければ null。</td>
+<td>VLOOKUP と同じ（#N/A &rarr; null）</td>
+<td><strong>最も頻繁に使う。</strong>売上データにマスタ情報を付加する場面。</td>
+</tr>
+<tr>
+<td><strong>右外部</strong><br>（Right Outer）</td>
+<td>右テーブルの全行を残し、左テーブルは一致する行だけ。</td>
+<td>左外部の逆</td>
+<td>マスタ側を基準にし、注文がない商品も一覧に含めたいとき。</td>
+</tr>
+<tr>
+<td><strong>完全外部</strong><br>（Full Outer）</td>
+<td>両テーブルの全行を残す。一致しない行は null で補完。</td>
+<td>&horbar;</td>
+<td>2つのリストの「突合せ」。どちらにしかないデータも含めて見たいとき。</td>
+</tr>
+<tr>
+<td><strong>内部</strong><br>（Inner）</td>
+<td>両テーブルで一致する行だけ残す。一致しない行は消える。</td>
+<td>VLOOKUPで #N/A の行を除外した状態</td>
+<td>マスタに存在するデータだけに絞りたいとき。</td>
+</tr>
+<tr>
+<td><strong>左反</strong><br>（Left Anti）</td>
+<td>左テーブルのうち、右テーブルに一致しない行だけ残す。</td>
+<td>VLOOKUP で #N/A になる行だけ抽出</td>
+<td>「マスタに登録されていない商品コード」を探すとき。データ品質チェックに便利。</td>
+</tr>
+<tr>
+<td><strong>右反</strong><br>（Right Anti）</td>
+<td>右テーブルのうち、左テーブルに一致しない行だけ残す。</td>
+<td>&horbar;</td>
+<td>「使われていないマスタレコード」を探すとき。</td>
+</tr>
+</tbody>
+</table>
+<div class="tip-box">
+<strong>実務で特に役立つ「左反結合」</strong><br>
+          マスタに登録されていないコード、前月と今月で差分があるレコードなど、「存在しないもの」を見つけるのが左反結合です。VLOOKUPで #N/A を探して手作業でフィルターしていた作業が、ワンクリックで済みます。
+        </div>
+<div class="warning-box">
+<strong>結合キーのデータ型を揃えること</strong><br>
+          左テーブルのキー列がテキスト型、右テーブルのキー列が数値型の場合、Power Queryは「一致なし」と判定します。マージの前に、両方のキー列のデータ型が同じであることを確認してください。特に「001」（テキスト）と「1」（整数）は一致しません。
+        </div>
+</section>
+<!-- ==================== 複数キー ==================== -->
+<section id="multi-key">
+<h2>複数キーでのマージ</h2>
+<p>1つのキー列だけでは一意にならない場合（たとえば「部署コード＋社員番号」で1人を特定する場合）、複数のキー列を指定できます。</p>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>マージのダイアログで、上のテーブルの1つ目のキー列をクリックした後、<strong>Ctrlキーを押しながら</strong>2つ目のキー列をクリックします。下のテーブルでも同じ順序で2列をCtrl+クリックします。列名の横に「1」「2」の番号が表示され、対応関係がわかります。</p>
+</div>
+</section>
+<!-- ==================== 新しいクエリとしてマージ ==================== -->
+<section id="merge-as-new">
+<h2>「新しいクエリとしてマージ」</h2>
+<p>ホームタブの「クエリのマージ」ボタンのドロップダウンに「<strong>新しいクエリとしてクエリをマージ</strong>」があります。通常のマージは現在のクエリにステップを追加しますが、こちらは<strong>元のクエリを変更せずに、新しいクエリとして結果を生成</strong>します。元のクエリを汚したくない場合や、同じクエリを別の結合にも使い回したい場合に便利です。</p>
+</section>
+<!-- ==================== 追加 ==================== -->
+<section id="append">
+<h2>追加（縦結合）の基本操作</h2>
+<p>「追加」は、同じ構造のテーブルを縦に積み重ねる操作です。月ごとの売上ファイルをまとめたり、支店別データを統合したりするときに使います。</p>
+<div class="before-after">
+<div>
+<p><strong>1月売上</strong></p>
+<table>
+<thead><tr><th>日付</th><th>商品</th><th>売上</th></tr></thead>
+<tbody>
+<tr><td>1/5</td><td>A</td><td>10000</td></tr>
+<tr><td>1/12</td><td>B</td><td>5000</td></tr>
+</tbody>
+</table>
+</div>
+<div>
+<p><strong>2月売上</strong></p>
+<table>
+<thead><tr><th>日付</th><th>商品</th><th>売上</th></tr></thead>
+<tbody>
+<tr><td>2/3</td><td>A</td><td>12000</td></tr>
+<tr><td>2/20</td><td>C</td><td>8000</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. いずれかのクエリをエディターで開きます。<br>
+          2. <strong>ホーム タブ &rarr; クエリの追加</strong> をクリックします。<br>
+          3. 「2つのテーブル」を選択し、ドロップダウンから追加したいテーブルを選んで「OK」。<br>
+          ※3つ以上のテーブルを一度に追加したい場合は「3つ以上のテーブル」を選択し、リストに追加します。</p>
+</div>
+<h3>結果（追加後）</h3>
+<table class="ba-table">
+<thead><tr><th>日付</th><th>商品</th><th>売上</th></tr></thead>
+<tbody>
+<tr><td>1/5</td><td>A</td><td>10000</td></tr>
+<tr><td>1/12</td><td>B</td><td>5000</td></tr>
+<tr><td>2/3</td><td>A</td><td>12000</td></tr>
+<tr><td>2/20</td><td>C</td><td>8000</td></tr>
+</tbody>
+</table>
+<div class="warning-box">
+<strong>列名が一致しない場合</strong><br>
+          追加する2つのテーブルで列名が異なる場合（「売上金額」と「売上」など）、Power Queryはそれぞれ別の列として扱い、一致しない列には null が入ります。事前に列名を統一しておくか、追加後に不要な列を削除してください。
+        </div>
+</section>
+<!-- ==================== 実践例 ==================== -->
+<section id="practice">
+<h2>実践例 &horbar; 売上データにマスタを結合して金額を算出</h2>
+<div class="step-box">
+<h4>Step 1：マージで商品マスタを結合</h4>
+<p>売上クエリ &rarr; ホーム &rarr; クエリのマージ &rarr; 商品マスタ &rarr; キー「商品コード」&rarr; 左外部 &rarr; 展開（商品名、単価）</p>
+</div>
+<div class="step-box">
+<h4>Step 2：カスタム列で金額を計算</h4>
+<p>列の追加 &rarr; カスタム列 &rarr; <code>[数量] * [単価]</code></p>
+</div>
+<div class="step-box">
+<h4>Step 3：null行を確認（左反結合で検証）</h4>
+<p>別途「新しいクエリとしてマージ」&rarr; 左反結合 で、マスタに未登録の商品コードを洗い出し。</p>
+</div>
+<p>VLOOKUPで何千行もコピーしていた作業が、3ステップで完了します。しかもデータが増えても「更新」するだけです。</p>
+</section>
+<!-- ==================== まとめ ==================== -->
+<section id="summary">
+<h2>まとめ</h2>
+<p>テーブル結合のポイントは4つです。<strong>マージ</strong>は横方向にデータを引っ張ってくる操作で、VLOOKUPの上位互換です。<strong>追加</strong>は縦方向に行を積み重ねる操作で、月次データの統合などに使います。マージの6種の結合型のうち、<strong>左外部</strong>がVLOOKUP相当で最も頻繁に使い、<strong>左反</strong>は「存在しないもの探し」に非常に便利です。そして結合キーの<strong>データ型を揃える</strong>ことを忘れないでください。</p>
+</section>
+<nav class="nav-series">
+<strong>パワークエリ 応用編シリーズ</strong>
+<a href="../basic/article_powerquery_intro.html">⓪ パワークエリとは</a>
+<a class="current" href="article_pq_merge_append.html">⑦ テーブルの結合 &horbar; マージと追加（このページ）</a>
+<a href="article_pq_group_pivot.html">⑧ 集計とピボット &horbar; グループ化・ピボット・ピボット解除</a>
+<a href="article_pq_import_patterns.html">⑨ データ取り込みパターン集</a>
+<a href="article_pq_parameter_query.html">⑩ パラメータクエリ &horbar; セルの値で結果を切り替える</a>
+<a href="../basic/article_pq_management.html">⑪ 更新と管理 &horbar; 接続・エラー対策・設計パターン</a>
+</nav>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>フィル（下方向・上方向）｜Excel &times; No VBA Lab</title>
+<meta content="Power Queryのフィル（下方向・上方向）操作で空白セル（null）を直前の値で自動的に埋める方法を解説。VBA不要。" name="description">
+<meta content="パワークエリ フィル 空白 埋める, Power Query null 埋める, 下方向フィル PQ, VBA不要, Excel PQ 空白" name="keywords">
+<meta content="フィル（下方向・上方向）｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power Queryのフィル（下方向・上方向）操作で空白セル（null）を直前の値で自動的に埋める方法を解説。VBA不要。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/basic/article_pq_fill.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"フィル（下方向・上方向）\u0026horbar; 空白セルを直前・直後の値で埋める","description":"Power Queryのフィル（下方向・上方向）操作で空白セル（null）を直前の値で自動的に埋める方法を解説。VBA不要。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/basic/article_pq_fill.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>フィル（下方向・上方向）</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">フィル（下方向・上方向）&horbar; 空白セルを直前・直後の値で埋める</h1>
+</div>
+<section class="goal-section">
+<h2><span class="icon">💡</span> この記事で解決すること</h2>
+<p>Excelの「セル結合」やPDFからの取り込みで、分類名が先頭行にだけ入っていて2行目以降が空白になっているデータはよくあります。
+        このままでは集計やフィルターが正しく動きません。
+        フィル操作で空白セル（null）を直前の値で自動的に埋めます。</p>
+</section>
+<section class="method-section">
+<h3>どんなときに使う？</h3>
+<p>以下のように「カテゴリ」列で先頭行にだけ値が入り、同じカテゴリの2行目以降がnullになっているデータを想定します。</p>
+<div class="pq-before-after">
+<div>
+<p style="font-weight:700;text-align:center;font-size:.85em;margin:0 0 6px;">フィル前</p>
+<table class="pq-mini-table">
+<thead><tr><th>カテゴリ</th><th>商品</th></tr></thead>
+<tbody>
+<tr><td>食品</td><td>りんご</td></tr>
+<tr><td class="null-cell">null</td><td>バナナ</td></tr>
+<tr><td class="null-cell">null</td><td>みかん</td></tr>
+<tr><td>飲料</td><td>コーヒー</td></tr>
+<tr><td class="null-cell">null</td><td>紅茶</td></tr>
+</tbody>
+</table>
+</div>
+<div class="arrow">&rarr;</div>
+<div>
+<p style="font-weight:700;text-align:center;font-size:.85em;margin:0 0 6px;">フィル後（下方向）</p>
+<table class="pq-mini-table">
+<thead><tr><th>カテゴリ</th><th>商品</th></tr></thead>
+<tbody>
+<tr><td>食品</td><td>りんご</td></tr>
+<tr><td class="filled-cell">食品</td><td>バナナ</td></tr>
+<tr><td class="filled-cell">食品</td><td>みかん</td></tr>
+<tr><td>飲料</td><td>コーヒー</td></tr>
+<tr><td class="filled-cell">飲料</td><td>紅茶</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section class="method-section">
+<h3>フィル（下方向）の操作</h3>
+<div class="pq-proc">
+<span class="proc-title">操作手順</span>
+          フィルしたい列のヘッダーを選択 &rarr; 変換タブ &rarr;「フィル」&rarr;「下」。<br>
+          右クリック &rarr;「フィル」&rarr;「下」でも同じです。
+        </div>
+<p>null（空白）セルが、その上にある最も近い値で埋められます。
+        nullでないセルはそのまま維持されます。</p>
+</section>
+<section class="method-section">
+<h3>フィル（上方向）の操作</h3>
+<div class="pq-proc">
+<span class="proc-title">操作手順</span>
+          列のヘッダーを選択 &rarr; 変換タブ &rarr;「フィル」&rarr;「上」。
+        </div>
+<p>nullセルが、その下にある最も近い値で埋められます。
+        データの最終行に値があり、上に向かってnullが並んでいる場合に使います。出番は「下方向」より少ないですが、特定のレイアウトで必要になります。</p>
+</section>
+<section class="method-section">
+<h3>フィル前にやるべきこと</h3>
+<p><strong>Excelのセル結合を解除してから取り込む。</strong>
+        セル結合されたデータをPower Queryに取り込むと、結合の先頭セルにだけ値が入り、残りはnullになります。
+        これは正常な動作ですが、元のExcelでセル結合を解除しておくと後の作業が楽になります。</p>
+<p><strong>空白文字列（""）とnullは違う。</strong>
+        フィルが効くのはnullだけです。見た目は空白でも実際にはスペースや空文字列が入っている場合、フィルは動作しません。
+        その場合は先に「値の置換」で空文字列をnullに変換（「検索する値」に空文字列、「置換後」を空欄）してからフィルを実行してください。</p>
+<div class="pq-note-warn">
+          ⚠️ フィルは「並べ替え」の後に実行する場合、意図しない値で埋められることがあります。
+          フィルはデータの現在の並び順に依存するため、並べ替えの前に実行するのが基本です。
+        </div>
+</section>
+<section class="tips-section">
+<h3><span class="icon">📝</span> Excelとの操作比較</h3>
+<p>Excelで同じことをやる場合は「空白セルを選択」&rarr;「=上のセル参照」&rarr;「Ctrl+Enter」&rarr;「値として貼り付け」という4ステップが必要です。
+        しかも手動操作なので、データが更新されるたびに同じ作業を繰り返す必要があります。
+        Power Queryのフィルなら1クリックで完了し、更新のたびに自動で再実行されます。</p>
+</section>
+<section class="method-section">
+<h3>まとめ</h3>
+<p>フィル（下方向）はセル結合されたデータやPDF取り込みデータで必ず必要になる操作です。
+        nullセルを直前の値で自動的に埋め、集計やフィルターが正しく動く状態にします。
+        空白文字列はフィルの対象にならないため、事前に値の置換でnullに変換しておくことがポイントです。</p>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

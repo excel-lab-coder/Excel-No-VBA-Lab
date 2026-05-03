@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>DATEDIF完全ガイド：隠し関数の落とし穴と安全な年齢・勤続計算｜Excel &times; No VBA Lab</title>
+<link href="https://excel-no-vba-lab.com/functions/old/article_datedif.html" rel="canonical">
+<meta content="年齢計算や勤続年数計算に必須のDATEDIF関数。なぜ隠し関数なのか、MD単位のバグ、そして安全な代替手法を解説します。" name="description">
+<meta content="DATEDIF, 年齢計算, 勤続年数, Excel 隠し関数, MD エラー, VBA不要" name="keywords">
+<meta content="DATEDIF完全ガイド：隠し関数の落とし穴と安全な年齢・勤続計算｜Excel &times; No VBA Lab" property="og:title">
+<meta content="年齢計算や勤続年数計算に必須のDATEDIF関数。なぜ隠し関数なのか、MD単位のバグ、そして安全な代替手法を解説します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/old/article_datedif.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "DATEDIF完全ガイド：隠し関数の落とし穴と安全な年齢・勤続計算",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "年齢計算や勤続年数計算に必須のDATEDIF関数。なぜ隠し関数なのか、MD単位のバグ、実務で迷う「終了日+1」の是非を解説します。"
+}</script>
+
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#functions">関数</a><span>&gt;</span>
+<strong>DATEDIF 完全ガイド</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-all">全ver</span></div>
+<h1 class="article-title">DATEDIF 完全ガイド：隠し関数の落とし穴と安全な年齢・勤続計算<br><span style="font-size:.55em;font-weight:400;color:#666;">&horbar; MDバグの正体・終了日+1の是非・パワークエリの罠まで &horbar;</span></h1>
+</div>
+<div class="toc-box">
+<h4>📖 この記事の内容</h4>
+<ol>
+<li><a href="#sec-goal">やりたいこと</a></li>
+<li><a href="#sec-basic">DATEDIF関数の基本構文と全6単位</a></li>
+<li><a href="#sec-hidden">なぜ「隠し関数」なのか？ &horbar; 入力補完に出ない理由</a></li>
+<li><a href="#sec-md-bug">致命的な「MD」単位のバグ &horbar; 実例で検証</a></li>
+<li><a href="#sec-safe-age">DATEDIFを使わない年齢計算（安全版）</a></li>
+<li><a href="#sec-safe-ym">安全な「&xcirc;年&xcirc;ヶ月&xcirc;日」の出し方</a></li>
+<li><a href="#sec-y-ym-safe">「終了日+1」の判断基準 &horbar; 年齢か期間か</a></li>
+<li><a href="#sec-start-end">開始日 &gt; 終了日のエラー処理</a></li>
+<li><a href="#sec-patterns">実務パターン集</a></li>
+<li><a href="#sec-pq">パワークエリで年齢計算する場合の注意</a></li>
+<li><a href="#sec-compare">方式比較表</a></li>
+<li><a href="#sec-summary">まとめ</a></li>
+</ol>
+</div>
+<section class="goal-section" id="sec-goal">
+<h2><span class="section-num">1</span> やりたいこと</h2>
+<p>生年月日から現在の「満年齢」を計算したい。あるいは、入社日から現在までの「勤続年数」を「&xcirc;年&xcirc;ヶ月」というフォーマットで表示させたい。Excelで日付の差を「年・月・日」の単位で分解する定番がDATEDIF関数ですが、この関数には見過ごせない落とし穴があります。</p>
+</section>
+<section class="method-section" id="sec-basic">
+<h2><span class="section-num">2</span> DATEDIF関数の基本構文と全6単位</h2>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=DATEDIF(開始日, 終了日, 単位)</span>
+</div>
+<p class="code-comment">開始日と終了日の間の期間を、指定した単位で返す。開始日 &leqq; 終了日でなければ #NUM! エラー。</p>
+<h3>全6単位の一覧</h3>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">単位</th>
+<th scope="col">意味</th>
+<th scope="col">例（2000/8/10 &rarr; 2026/4/5）</th>
+<th scope="col">安全性</th>
+</tr>
+<tr>
+<td><strong>"Y"</strong></td>
+<td>満年数</td>
+<td>25</td>
+<td class="good">✅ 安全</td>
+</tr>
+<tr>
+<td><strong>"M"</strong></td>
+<td>満月数（トータル）</td>
+<td>307</td>
+<td class="good">✅ 安全</td>
+</tr>
+<tr>
+<td><strong>"D"</strong></td>
+<td>日数（トータル）</td>
+<td>9370</td>
+<td class="good">✅ 安全</td>
+</tr>
+<tr>
+<td><strong>"YM"</strong></td>
+<td>1年に満たない月数（端数の月）</td>
+<td>7</td>
+<td class="good">✅ 安全</td>
+</tr>
+<tr>
+<td><strong>"YD"</strong></td>
+<td>1年に満たない日数（端数の日）</td>
+<td>238</td>
+<td class="bad">❌ 使用禁止</td>
+</tr>
+<tr>
+<td><strong>"MD"</strong></td>
+<td>1月に満たない日数（端数の日）</td>
+<td>バグあり</td>
+<td class="bad">❌ 使用禁止</td>
+</tr>
+</table></div>
+<h3>基本例：満年齢の計算</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=DATEDIF(A1, TODAY(), "Y")</span>
+</div>
+<p class="code-comment">A1 に生年月日がある場合、今日時点の満年齢を返す。誕生日にカウントアップされます。</p>
+<h3>基本例：&xcirc;年&xcirc;ヶ月のフォーマット</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=DATEDIF(A1, TODAY(), "Y") & "年" & DATEDIF(A1, TODAY(), "YM") & "ヶ月"</span>
+</div>
+<p class="code-comment">&rarr; "25年7ヶ月" のように表示される。</p>
+</section>
+<section class="method-section" id="sec-hidden">
+<h2><span class="section-num">3</span> なぜ「隠し関数」なのか？ &horbar; 入力補完に出ない理由</h2>
+<p><code>=DAT</code> とセルに打ち始めても、DATEDIFは候補リストに表示されません。これはExcel初心者が最初にぶつかる壁です。</p>
+<div class="xdemo-note-warn">
+<strong>⚠️ 入力補完に出ない理由</strong><br>
+        DATEDIFはもともと、大昔の表計算ソフト「Lotus 1-2-3」との互換性を保つためだけに搭載された関数です。Microsoftは公式のヘルプページにDATEDIFの説明を載せてはいますが、関数ウィザードや入力補完のリストには含めていません。「正式にサポートされているが、積極的に推奨はしていない」という微妙な立ち位置です。さらに公式ヘルプでも「特定のシナリオで誤った計算結果を返すことがある」と明記されています。
+      </div>
+<p>手打ちで最後まで <code>=DATEDIF(</code> と入力すれば普通に機能します。引数のヒント（ツールチップ）も表示されませんが、動作自体は問題ありません。</p>
+<div class="xdemo-note">
+<strong>💡 入力のコツ</strong><br>
+        入力補完が効かないため、スペルミス（DATEIF, DATEDIFF など）に注意してください。正しくは <strong>DATEDIF</strong>（Date + Dif）です。末尾の F は1つだけです。
+      </div>
+</section>
+<section class="method-section" id="sec-md-bug">
+<h2><span class="section-num">4</span> 致命的な「MD」「YD」単位のバグ &horbar; 実例で検証</h2>
+<div class="xdemo-note-red">
+<strong>結論："MD" と "YD" は絶対に使ってはいけない</strong><br>
+        "MD"（1月に満たない日数）と "YD"（1年に満たない日数）には、うるう年を挟む計算で<strong>マイナス値や明らかに間違った値</strong>が返るバグが存在します。Microsoftの公式ドキュメントでも「誤った計算結果を返すことがある」と明記されています。+1 でも回避できないため、使用そのものを禁止すべきです。
+      </div>
+<h3>"MD" のバグ実例</h3>
+<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">A（開始日）</td><td class="xd-col">B（終了日）</td><td class="xd-col">C（DATEDIF "MD"）</td><td class="xd-col">D（正しい日数）</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-data">2026/1/31</td><td class="xd-data">2026/3/1</td><td class="xd-bad">-2</td><td class="xd-result">1</td></tr>
+<tr><td class="xd-row">2</td><td class="xd-data">2026/3/31</td><td class="xd-data">2026/5/1</td><td class="xd-bad">-2</td><td class="xd-result">1</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-data">2025/5/31</td><td class="xd-data">2025/7/1</td><td class="xd-bad">0</td><td class="xd-result">1</td></tr>
+<tr><td class="xd-row">4</td><td class="xd-data">2026/1/29</td><td class="xd-data">2026/3/1</td><td class="xd-bad">-1</td><td class="xd-result">1</td></tr>
+</table></div>
+<h3>"YD" のバグ実例</h3>
+<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">A（開始日）</td><td class="xd-col">B（終了日）</td><td class="xd-col">C（DATEDIF "YD"）</td><td class="xd-col">D（正しい日数）</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-data">2015/1/1</td><td class="xd-data">2016/2/29</td><td class="xd-result">59</td><td class="xd-result">59（OK）</td></tr>
+<tr><td class="xd-row">2</td><td class="xd-data">2015/1/1</td><td class="xd-data">2016/3/1</td><td class="xd-bad">59</td><td class="xd-result">60</td></tr>
+</table></div>
+<p class="code-comment">うるう年の3月1日以降、1日のズレがその年中ずっと続く。</p>
+<div class="xdemo-note">
+<strong>💡 なぜバグが起きるのか</strong><br>
+        "MD" の内部計算は「終了日の日 - 開始日の日」に近い単純な引き算をしているとされています。しかし月によって日数が異なる（28日、30日、31日）ため、月末を跨ぐと辻褄が合わなくなります。"YD" も同様にうるう年の366日目を正しく処理できません。これらのバグは初期バージョンから存在し、互換性のために修正されないまま現在に至っています。
+      </div>
+</section>
+<section class="method-section" id="sec-safe-age">
+<h2><span class="section-num">5</span> DATEDIFを使わない年齢計算（安全版）</h2>
+<p>DATEDIFの "Y" 単位は安全に使えますが、「隠し関数に頼りたくない」「他の人が見たときに関数名がわからない」という場合は、以下のTEXT関数を使った方法が定番です。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=INT((TEXT(TODAY(),"yyyymmdd") - TEXT(A1,"yyyymmdd")) / 10000)</span>
+</div>
+<div class="xdemo-note-good">
+<strong>💡 なぜこれで年齢が出るのか？</strong><br>
+        例えば今日が「2026年4月5日（20260405）」、生年月日が「2000年8月10日（20000810）」だとしたら、引き算をします。<br><br>
+<code>20260405 - 20000810 = 259595</code><br><br>
+        これを 10000 で割って小数点以下を切り捨てる（INT）と <code>25</code> になります。<br>
+        誕生日がまだ来ていない場合（例：今日が2026/4/5、生年月日が2000/12/25）は <code>20260405 - 20001225 = 259180</code> &rarr; INT(25.918) &rarr; <code>25</code> と、きちんと「まだ26歳になっていない」状態を正しく返します。<br><br>
+        この方法はうるう年の2月29日生まれでも正しく動作します。日付を8桁の数値に変換して比較するだけなので、月の日数に依存しません。
+      </div>
+<h3>DATEDIF版との比較</h3>
+<div style="display:flex;gap:20px;margin:16px 0;">
+<div style="flex:1;padding:15px;border-radius:6px;background:#f5f8ff;border:1px solid #c5cae9;">
+<h4 style="color:#1565c0;margin:0 0 8px;">DATEDIF版</h4>
+<p style="font-size:.9em;margin:0;"><code>=DATEDIF(A1, TODAY(), "Y")</code><br><br>
+          ・短くて読みやすい<br>
+          ・入力補完が効かない<br>
+          ・知らない人が見ると「何この関数？」<br>
+          ・2/29生まれの判定が業務ルールと合うか確認が必要</p>
+</div>
+<div style="flex:1;padding:15px;border-radius:6px;background:#fff8e1;border:1px solid #ffe082;">
+<h4 style="color:#f57f17;margin:0 0 8px;">TEXT版（安全版）</h4>
+<p style="font-size:.9em;margin:0;"><code>=INT((TEXT(TODAY(),"yyyymmdd")-TEXT(A1,"yyyymmdd"))/10000)</code><br><br>
+          ・隠し関数に依存しない<br>
+          ・+1 なども不要でそのまま安全<br>
+          ・数式の長さがやや長い<br>
+          ・アルゴリズムが明快で説明しやすい</p>
+</div>
+</div>
+</section>
+<section class="method-section" id="sec-safe-ym">
+<h2><span class="section-num">6</span> 安全な「&xcirc;年&xcirc;ヶ月&xcirc;日」の出し方</h2>
+<p>「&xcirc;年&xcirc;ヶ月&xcirc;日」を出したい場合に "MD" は使えません。「日」の部分だけ安全な方法で計算する必要があります。</p>
+<h3>方法① DATEDIFの "Y" と "YM" は使い、"日" だけ手計算する</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=DATEDIF(A1,TODAY(),"Y") & "年" &</span>
+<span class="code-line"> DATEDIF(A1,TODAY(),"YM") & "ヶ月" &</span>
+<span class="code-line"> DAY(TODAY())-DAY(A1)+IF(DAY(TODAY())&lt;DAY(A1),DAY(DATE(YEAR(TODAY()),MONTH(TODAY()),0)),0) & "日"</span>
+</div>
+<h3>方法② LET で読みやすく整理する</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">    開始, A1,</span>
+<span class="code-line">    終了, TODAY(),</span>
+<span class="code-line">    年, DATEDIF(開始, 終了, "Y"),</span>
+<span class="code-line">    月, DATEDIF(開始, 終了, "YM"),</span>
+<span class="code-line">    日補正, DAY(DATE(YEAR(終了), MONTH(終了), 0)),</span>
+<span class="code-line">    日, DAY(終了) - DAY(開始) + IF(DAY(終了) &lt; DAY(開始), 日補正, 0),</span>
+<span class="code-line">    年 & "年" & 月 & "ヶ月" & 日 & "日"</span>
+<span class="code-line">  )</span>
+</div>
+</section>
+<section class="method-section" id="sec-y-ym-safe">
+<h2><span class="section-num">7</span> 「終了日+1」の判断基準 &horbar; 年齢 vs 期間計算</h2>
+<p>DATEDIFで最も間違いやすいのが「終了日に +1 するかどうか」の判断です。計算の目的によって正解が変わります。</p>
+
+<h3>① 満年齢・勤続年数計算の場合</h3>
+<p>一般的な年齢計算では、原則として <strong>+1 は行わず <code>TODAY()</code> をそのまま使います</strong>。</p>
+<div class="xdemo-note-red">
+<strong>⚠️ 年齢計算で +1 する危険性</strong><br>
+例えば、生年月日が「2000/4/27」、今日が「2026/4/26」の場合、この人はまだ25歳です。しかし <code>TODAY()+1</code> を使うと、内部的な基準日が「2026/4/27」となり、誕生日前日なのに26歳と判定されてしまいます。
+</div>
+
+<h3>② 契約期間・プロジェクト期間（両端含み）の場合</h3>
+<p>一方で、「開始日から終了日まで当日を含めてカウントする」業務では、<strong>終了日に +1 を検討します</strong>。</p>
+<p>Excelの日付は内部的に「その日の0時0分」を指しています。そのため「1/1から1/1」をDATEDIFで計算すると 0日 になります。当日を含めて「1日間」としたい場合は <code>終了日+1</code> または <code>結果に+1</code> が必要です。</p>
+
+<div class="xdemo-note-good">
+<strong>✅ 使い分けのまとめ</strong><br>
+・<strong>満年齢・勤続年数</strong>：原則 <code>TODAY()</code>。誕生日にカウントアップ。<br>
+・<strong>契約期間・工数計算</strong>：<code>終了日+1</code>。最終日当日を期間に含める場合。<br>
+・<strong>法的な年齢計算</strong>：誕生日前日の24時に加齢するため、実務上あえて <code>+1</code> を使うケースもありますが、一般的な表示では不要です。
+</div>
+</section>
+<section class="method-section" id="sec-start-end">
+<h2><span class="section-num">8</span> 開始日 &gt; 終了日のエラー処理</h2>
+<p>DATEDIFは開始日が終了日より未来の場合、<code>#NUM!</code> エラーを返します。未来の日付が混在するリストを処理する場合にはエラー処理が必要です。</p>
+<span class="code-label">❌ エラーになるケース</span>
+<div class="code-readonly">
+<span class="code-line">=DATEDIF(DATE(2030,1,1), TODAY(), "Y")</span>
+<span class="code-line">&rarr; #NUM!   &larr; 開始日が未来なので計算不能</span>
+</div>
+<span class="code-label-good">✅ IFERROR で安全に処理</span>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(DATEDIF(A1, TODAY(), "Y"), "日付エラー")</span>
+</div>
+</section>
+<section class="method-section" id="sec-patterns">
+<h2><span class="section-num">9</span> 実務パターン集</h2>
+<div class="scenario-box">
+<h4>パターン① 社員名簿の年齢列</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=DATEDIF(A2, TODAY(), "Y")</span>
+</div>
+<p>A列に生年月日があれば、誕生日当日にカウントアップされる一般的な満年齢を表示します。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン② 勤続年数を「&xcirc;年&xcirc;ヶ月」で表示</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=DATEDIF(A2, TODAY(), "Y") & "年" & DATEDIF(A2, TODAY(), "YM") & "ヶ月"</span>
+</div>
+</div>
+<div class="scenario-box">
+<h4>パターン③ 契約期間の残月数（&xcirc;ヶ月残り）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(B2&lt;TODAY(), "期限切れ", DATEDIF(TODAY(), B2+1, "M") & "ヶ月")</span>
+</div>
+<p>B列に契約終了日。当日を含めて数えるため <code>B2+1</code> としています。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン④ 特定の日付時点での年齢（基準日指定）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=DATEDIF(A2, DATE(2026,4,1), "Y")</span>
+</div>
+<p>年度初め（4月1日）時点での年齢一覧表作成などに。</p>
+</div>
+</section>
+<section class="method-section" id="sec-pq">
+<h2><span class="section-num">10</span> パワークエリで年齢計算する場合の注意</h2>
+<p>パワークエリの「列の追加 &rarr; 日付 &rarr; 期間」で求めた日数を 365 で割る方法は、<strong>うるう年の影響でズレが累積します</strong>。</p>
+<div class="xdemo-note-red">
+<strong>パワークエリ &divide;365 方式の問題</strong><br>
+        日数を単純に 365 で割ると、4年に1度のうるう年（+1日）が考慮されません。40年間の期間計算では、<strong>誕生日の10日も前に歳をとってしまう</strong>という致命的な誤差が生じます。
+      </div>
+<p>正確な年齢が必要な場合は、パワークエリ内で M言語のカスタム関数（年の差を出し、月日で判定するロジック）を実装するか、読み込んだ後のワークシート上で DATEDIF / TEXT版関数を使うのが安全です。</p>
+</section>
+<section class="method-section" id="sec-compare">
+<h2><span class="section-num">11</span> 方式比較表</h2>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">比較項目</th>
+<th scope="col">DATEDIF "Y"</th>
+<th scope="col">TEXT版（INT&divide;10000）</th>
+<th scope="col">パワークエリ（&divide;365）</th>
+</tr>
+<tr>
+<td>数式の長さ</td>
+<td class="good">短い</td>
+<td class="neutral">やや長い</td>
+<td class="good">GUI操作</td>
+</tr>
+<tr>
+<td>安全性</td>
+<td class="good">✅ 正しく使えば安全</td>
+<td class="good">✅ 完全に安全</td>
+<td class="bad">❌ うるう年でズレる</td>
+</tr>
+<tr>
+<td>他人への説明</td>
+<td class="neutral">隠し関数という説明が必要</td>
+<td class="good">アルゴリズムが明快</td>
+<td class="good">直感的だが罠あり</td>
+</tr>
+<tr>
+<td>おすすめ用途</td>
+<td class="good">年齢・勤続（年/月）</td>
+<td class="good">年齢のみ（共有用）</td>
+<td class="neutral">大雑把な傾向分析のみ</td>
+</tr>
+</table></div>
+</section>
+<section class="goal-section" id="sec-summary">
+<h2><span class="section-num">12</span> まとめ</h2>
+<div class="xdemo-note-good">
+<strong>✅ 覚えておくべきポイント</strong><br>
+        ① DATEDIFは入力補完に出ない「隠し関数」。スペルは <strong>DATEDIF</strong>（Fは1つ）。<br>
+        ② <strong>"MD" と "YD" はバグがあるため絶対に使わない</strong>。日は手計算で回避する。<br>
+        ③ <strong>満年齢計算は原則 TODAY()</strong>。誕生日前日に加齢させないよう注意する。<br>
+        ④ 契約期間など、終了日当日を数に含めたい業務のみ <code>終了日+1</code> を検討する。<br>
+        ⑤ パワークエリの &divide;365 方式は不正確。法定書類など正確さが求められる場面では避ける。
+      </div>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../latest/article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
+<li><a href="../latest/article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>COUNTIFS・SUMIFS完全ガイド &horbar; 複数条件の集計（全バージョン対応）｜Excel &times; No VBA Lab</title>
+<meta content="COUNTIFS・SUMIFSを使った複数条件の件数カウント・合計集計を完全解説。Excel 2016・2019でも完全動作。FILTER代替・クロス集計まで網羅。" name="description">
+<meta content="COUNTIFS, SUMIFS, 複数条件 集計, Excel 2016, Excel 2019, FILTER 代替" name="keywords">
+<meta content="COUNTIFS・SUMIFS完全ガイド &horbar; 複数条件の集計（全バージョン対応）｜Excel &times; No VBA Lab" property="og:title">
+<meta content="COUNTIFS・SUMIFSを使った複数条件の件数カウント・合計集計を完全解説。Excel 2016・2019でも完全動作。FILTER代替・クロス集計まで網羅。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/old/article_countifs_sumifs.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/old/article_countifs_sumifs.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "COUNTIFS・SUMIFS完全ガイド ― 複数条件の集計（全バージョン対応）",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "COUNTIFS・SUMIFSを使った複数条件の件数カウント・合計集計を完全解説。Excel 2016・2019でも完全動作。FILTER代替・クロス集計まで網羅。"
+}</script>
+
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#old-excel">旧バージョン対応</a><span>&gt;</span>
+<strong>COUNTIFS・SUMIFS</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="ver-badge ver-all">全バージョン対応</span>
+<span class="ver-badge ver-old">Excel 2016・2019</span>
+</div>
+<h1 class="article-title">COUNTIFS・SUMIFS完全ガイド &horbar; 複数条件の件数カウント・合計集計</h1>
+<p class="article-lead">「東京支店かつ営業部の件数は？」「A商品で売上10万以上の合計は？」といった複数条件の集計を、VBA不要・FILTER不要で実現する方法をすべて解説します。Excel 2016・2019でも完全動作します。</p>
+</div>
+<!-- ============ 1. 関数の使い分け ============ -->
+<section class="method-section">
+<h2>💡 まず整理：COUNTIF系・SUMIF系の使い分け</h2>
+<div class="table-wrapper"><table class="func-table"><caption>データテーブル</caption>
+<thead><tr><th scope="col">関数</th><th scope="col">やること</th><th scope="col">条件数</th></tr></thead>
+<tbody>
+<tr><td><strong>COUNTIF</strong></td><td>1条件に合う <strong>件数</strong> をカウント</td><td>1つ</td></tr>
+<tr><td><strong>COUNTIFS</strong></td><td>複数条件に合う <strong>件数</strong> をカウント</td><td>127条件まで</td></tr>
+<tr><td><strong>SUMIF</strong></td><td>1条件に合う行の <strong>合計</strong> を集計</td><td>1つ</td></tr>
+<tr><td><strong>SUMIFS</strong></td><td>複数条件に合う行の <strong>合計</strong> を集計</td><td>127条件まで</td></tr>
+<tr><td><strong>AVERAGEIFS</strong></td><td>複数条件に合う行の <strong>平均</strong> を集計</td><td>127条件まで</td></tr>
+<tr><td><strong>MAXIFS / MINIFS</strong></td><td>複数条件に合う行の <strong>最大・最小</strong> を集計</td><td>Excel 2019以降</td></tr>
+</tbody>
+</table></div>
+</section>
+<!-- ============ 2. COUNTIFSの基本 ============ -->
+<section class="method-section">
+<h2>🔢 COUNTIFS の基本構文</h2>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=COUNTIFS(条件範囲1, 条件1, 条件範囲2, 条件2, ...)</span>
+</div>
+<div class="demo-area">
+<h4>サンプルデータ：売上明細</h4>
+<div class="table-wrapper"><table class="demo-table"><caption>データテーブル</caption>
+<thead><tr><th scope="col">A: 支店</th><th scope="col">B: 部署</th><th scope="col">C: 売上</th></tr></thead>
+<tbody>
+<tr><td>東京</td><td>営業部</td><td>120,000</td></tr>
+<tr><td>東京</td><td>企画部</td><td>85,000</td></tr>
+<tr><td>大阪</td><td>営業部</td><td>200,000</td></tr>
+<tr><td>東京</td><td>営業部</td><td>95,000</td></tr>
+<tr><td>大阪</td><td>企画部</td><td>110,000</td></tr>
+</tbody>
+</table></div>
+</div>
+<h3>例①：東京支店かつ営業部の件数</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=COUNTIFS(A:A, "東京", B:B, "営業部")</span>
+<span class="code-line">// &rarr; 2（1行目と4行目）</span>
+</div>
+<h3>例②：条件をセル参照で指定（より実用的）</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">// E1に「東京」、F1に「営業部」が入力されている場合</span>
+<span class="code-line">=COUNTIFS(A:A, E1, B:B, F1)</span>
+</div>
+<div class="tip-box">
+        💡 <strong>条件をセル参照にする利点</strong><br>
+        集計条件をセルに入力して参照することで、条件を変えるたびに数式を書き直さずに済む「動的な集計」が作れます。
+      </div>
+<h3>例③：数値の比較演算子（文字列で指定）</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">// 売上が10万以上の件数</span>
+<span class="code-line">=COUNTIFS(C:C, "&gt;=100000")</span>
+<span class="code-line"></span>
+<span class="code-line">// セル参照と組み合わせる場合（E1に100000が入力）</span>
+<span class="code-line">=COUNTIFS(C:C, "&gt;="&E1)</span>
+</div>
+</section>
+<!-- ============ 3. SUMIFSの基本 ============ -->
+<section class="method-section">
+<h2>➕ SUMIFS の基本構文</h2>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUMIFS(合計範囲, 条件範囲1, 条件1, 条件範囲2, 条件2, ...)</span>
+</div>
+<div class="warn-box">
+        ⚠️ <strong>SUMIFとSUMIFSは引数の順番が違う！</strong><br>
+        SUMIF：<code>=SUMIF(条件範囲, 条件, <strong>合計範囲</strong>)</code>（合計範囲が最後）<br>
+        SUMIFS：<code>=SUMIFS(<strong>合計範囲</strong>, 条件範囲1, 条件1...)</code>（合計範囲が最初）<br>
+        複数条件を使う場合はSUMIFSに統一することをお勧めします。
+      </div>
+<h3>例①：東京支店の売上合計</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUMIFS(C:C, A:A, "東京")</span>
+<span class="code-line">// &rarr; 300,000（120,000 + 85,000 + 95,000）</span>
+</div>
+<h3>例②：東京支店かつ営業部の売上合計</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUMIFS(C:C, A:A, "東京", B:B, "営業部")</span>
+<span class="code-line">// &rarr; 215,000（120,000 + 95,000）</span>
+</div>
+<h3>例③：期間を指定した合計（日付の範囲検索）</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">// D列が日付列の場合、2026年4月の売上合計</span>
+<span class="code-line">=SUMIFS(C:C, D:D, "&gt;="&DATE(2026,4,1), D:D, "&lt;="&DATE(2026,4,30))</span>
+<span class="code-line"></span>
+<span class="code-line">// E1に開始日・F1に終了日を入力しておく場合</span>
+<span class="code-line">=SUMIFS(C:C, D:D, "&gt;="&E1, D:D, "&lt;="&F1)</span>
+</div>
+</section>
+<!-- ============ 4. クロス集計（行列ともに条件） ============ -->
+<section class="method-section">
+<h2>📊 応用：クロス集計表を作る</h2>
+<p>「縦軸＝支店、横軸＝部署」のクロス集計表を、COUNTIFS・SUMIFSで一気に作る方法です。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">// 集計表のレイアウト：</span>
+<span class="code-line">// 行ヘッダー（E列）に支店名、列ヘッダー（F1〜H1）に部署名が入っている</span>
+<span class="code-line"></span>
+<span class="code-line">// セルF2の数式（下・右にコピーできる形）：</span>
+<span class="code-line">=SUMIFS($C:$C, $A:$A, $E2, $B:$B, F$1)</span>
+</div>
+<div class="tip-box">
+        💡 <strong>混合参照を使ってコピーを効率化</strong><br>
+<code>$E2</code> &rarr; E列は固定・行は変動（下コピーで支店が変わる）<br>
+<code>F$1</code> &rarr; 列は変動・1行は固定（右コピーで部署が変わる）<br>
+        この混合参照の組み合わせで、1つの数式を全セルにコピーするだけでクロス集計表が完成します。
+      </div>
+</section>
+<!-- ============ 5. よくある応用パターン ============ -->
+<section class="method-section">
+<h2>🔧 よく使う応用パターン集</h2>
+<h3>① ワイルドカードで部分一致</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">// 「東京」を含む支店名すべてをカウント（東京本社・東京支店など）</span>
+<span class="code-line">=COUNTIFS(A:A, "*東京*")</span>
+<span class="code-line"></span>
+<span class="code-line">// 「営業」で終わる部署名</span>
+<span class="code-line">=COUNTIFS(B:B, "*営業")</span>
+</div>
+<h3>② 空白・非空白のカウント</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">// C列が空白（未入力）の件数</span>
+<span class="code-line">=COUNTIFS(C:C, "")</span>
+<span class="code-line"></span>
+<span class="code-line">// C列に何か入力されている件数</span>
+<span class="code-line">=COUNTIFS(C:C, "&lt;&gt;"&"")</span>
+</div>
+<h3>③ AVERAGEIFS で複数条件の平均</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">// 東京支店・営業部の平均売上</span>
+<span class="code-line">=AVERAGEIFS(C:C, A:A, "東京", B:B, "営業部")</span>
+</div>
+<h3>④ MAXIFS・MINIFS（Excel 2019以降）</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">// 東京支店の最高売上（Excel 2019以降）</span>
+<span class="code-line">=MAXIFS(C:C, A:A, "東京")</span>
+<span class="code-line"></span>
+<span class="code-line">// Excel 2016の場合：配列数式で代替</span>
+<span class="code-line">=MAX(IF(A2:A100="東京", C2:C100))  &larr; Ctrl+Shift+Enter</span>
+</div>
+<div class="warn-box">
+        ⚠️ <strong>MAXIFS/MINIFSはExcel 2019から</strong><br>
+        Excel 2016 にはMAXIFS・MINIFSが存在しません。2016では上記のMAX+IF配列数式（<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd>）で代替してください。
+      </div>
+</section>
+<!-- ============ 関連記事 ============ -->
+<section class="method-section">
+<h2>📗 関連記事（旧バージョン向け）</h2>
+<ul style="font-size:0.92em; line-height:2; padding-left:20px;">
+<li><a href="article_vlookup.html">VLOOKUP完全ガイド &horbar; 基本から限界まで</a></li>
+<li><a href="article_index_match.html">INDEX + MATCH &horbar; VLOOKUPの弱点を解消</a></li>
+<li><a href="article_countif_extract.html">【FILTER代替】VBA不要の複数行抽出</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+

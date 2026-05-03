@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="5" name="difficulty">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）｜Excel &times; No VBA Lab</title>
+<meta content="COBOL帳票・固定長テキストデータをExcel関数（MIDB・TRIM・VALUE・DATE・DATEVALUE）だけで切り出し・整形する実践テクニック。VBA不要で全角半角混在データも対応。" name="description">
+<meta content="COBOL 固定長 Excel, MIDB TRIM 関数, COBOL帳票 切り出し, 固定長データ 整形, VBA禁止 COBOL, DATEVALUE 和暦, DATE 西暦変換, バイト数 Excel" name="keywords">
+<meta content="COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Excel関数だけでCOBOL固定長データを切り出し・整形する実践テクニック。和暦・西暦の日付変換も解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/cobol/formula/01_article_cobol_basic.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）",
+    "description": "Excel関数だけでCOBOL固定長データを切り出し・整形する実践テクニック。和暦・西暦の日付変換も解説。",
+    "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-no-vba-lab.com/ogp.png"}},
+    "datePublished": "2026-03-19",
+    "dateModified": "2026-03-19"
+  }
+  </script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-no-vba-lab.com/"},
+      {"@type": "ListItem", "position": 2, "name": "COBOL帳票処理", "item": "https://excel-no-vba-lab.com/#cobol"},
+      {"@type": "ListItem", "position": 3, "name": "MIDB＋TRIM 基本編"}
+    ]
+  }
+  </script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+  <div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#cobol">COBOLデータ整形</a><span>&gt;</span>
+<strong>MIDB＋TRIM 基本編</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="badge badge-maniac">COBOL/固定長</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）</h1>
+</div>
+<!-- ========== 目次 ========== -->
+<div class="toc-box">
+<h3>この記事の内容</h3>
+<ol>
+<li><a href="#sec-goal">やりたいこと</a></li>
+<li><a href="#sec-layout">レイアウト定義（サンプル）</a></li>
+<li><a href="#sec-sample">サンプルデータ</a></li>
+<li><a href="#sec-step1">STEP 1：文字列の切り出しと余白除去（MIDB＋TRIM）</a></li>
+<li><a href="#sec-step2">STEP 2：和暦日付の変換（元号コード＋YYMMDD）</a></li>
+<li><a href="#sec-step3">STEP 3：西暦日付の変換（YYYYMMDD）</a></li>
+<li><a href="#sec-result">全体の結果イメージ</a></li>
+<li><a href="#sec-summary">まとめ：数式の使い分け</a></li>
+<li><a href="#sec-supplement">補足</a></li>
+</ol>
+</div>
+<!-- ==========================================================
+         導入
+      ========================================================== -->
+<section class="goal-section" id="sec-goal">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>COBOL等の基幹システムから出力された固定長テキストデータを、Excelの標準関数だけで「使えるデータ」に変換します。</p>
+<p>基本は <strong>MIDB で切り出して、TRIM で余白を取る</strong> だけです。数値や日付が必要なときだけ VALUE・DATE・DATEVALUE を追加します。</p>
+<div class="code-readonly" data-lang="テキスト">
+<span class="code-line">【処理前】A1セルの固定長データ</span>
+<span class="code-line">1234567株式会社エクセル商事0000150000  5-531215  20260318</span>
+<span class="code-line"></span>
+<span class="code-line">【処理後】</span>
+<span class="code-line">B1: 1234567　C1: 株式会社エクセル商事　D1: 150000（数値）</span>
+<span class="code-line">E1: 1978/12/15（和暦&rarr;日付）　F1: 2026/03/18（西暦&rarr;日付）</span>
+</div>
+</section>
+<!-- ==========================================================
+         レイアウト定義
+      ========================================================== -->
+<section class="method-section" id="sec-layout">
+<h2>【2】レイアウト定義（サンプル）</h2>
+<p>この記事では以下の固定長レイアウト（1行＝57バイト）を使います。和暦・西暦の両方の日付フィールドが含まれています。</p>
+<table class="format-table">
+<tr>
+<th>項目</th>
+<th>開始バイト</th>
+<th>バイト数</th>
+<th>内容</th>
+</tr>
+<tr><td>顧客番号</td><td class="text-center">1</td><td class="text-center">7</td><td>半角数字</td></tr>
+<tr><td>会社名</td><td class="text-center">8</td><td class="text-center">20</td><td>全角文字＋半角スペース埋め</td></tr>
+<tr><td>売上金額</td><td class="text-center">28</td><td class="text-center">10</td><td>半角数字（ゼロ埋め）</td></tr>
+<tr><td>（空き）</td><td class="text-center">38</td><td class="text-center">2</td><td>半角スペース</td></tr>
+<tr><td>和暦日付</td><td class="text-center">40</td><td class="text-center">8</td><td>N-YYMMDD（元号コード＋年月日）</td></tr>
+<tr><td>（空き）</td><td class="text-center">48</td><td class="text-center">2</td><td>半角スペース</td></tr>
+<tr><td>西暦日付</td><td class="text-center">50</td><td class="text-center">8</td><td>YYYYMMDD</td></tr>
+</table>
+<div class="xdemo-note-good">
+<strong>MID と MIDB の違い</strong><br>
+          MID は「文字数」で数えますが、MIDB は「バイト数」で数えます（全角＝2バイト、半角＝1バイト）。固定長データのレイアウトはバイト単位で定義されているため、必ず MIDB を使います。
+        </div>
+</section>
+<!-- ==========================================================
+         サンプルデータ
+      ========================================================== -->
+<section class="method-section" id="sec-sample">
+<h2>【3】サンプルデータ</h2>
+<p>コピーボタンを押して、Excelの A1 セルに貼り付けてください。3行が A1:A3 に入ります。1つのデータに和暦・西暦の両方が入っているので、すべての数式をこのデータで試せます。</p>
+<p class="code-label">サンプルデータ（A1:A3 に貼り付け）</p>
+<div class="code-block" data-lang="テキスト">
+<span class="code-line">1234567株式会社エクセル商事0000150000  5-531215  20260318</span>
+<span class="code-line">9876543山田商店            0000085000  7-100115  19980115</span>
+<span class="code-line">0012345鈴木電機工業        0003200000  9-070401  20251201</span>
+</div>
+</section>
+<!-- ==========================================================
+         STEP 1：切り出し＋TRIM
+      ========================================================== -->
+<section class="method-section" id="sec-step1">
+<h2>【4】STEP 1：文字列の切り出しと余白除去（MIDB＋TRIM）</h2>
+<p>固定長データは指定バイト数に満たない部分を半角スペースで埋めています。MIDB で切り出した後 <code>TRIM</code> で包めば、この余白がきれいに消えます。</p>
+<h3>数式（B1〜D1 に入力し、下方向へコピー）</h3>
+<p class="code-label-good">B1：顧客番号</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TRIM(MIDB(A1,1,7))</span>
+</div>
+<p class="code-label-good">C1：会社名</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TRIM(MIDB(A1,8,20))</span>
+</div>
+<p class="code-label-good">D1：売上金額（数値に変換）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=VALUE(TRIM(MIDB(A1,28,10)))</span>
+</div>
+<div class="xdemo-note-warn">
+<strong>VALUE の付け忘れに注意</strong><br>
+          VALUE を付けると "0000150000" &rarr; 数値 150000 に変換されます。顧客番号のように先頭ゼロを残したい項目には VALUE を付けないでください。
+        </div>
+<h3>結果イメージ</h3>
+<table class="format-table">
+<tr><th>B（顧客番号）</th><th>C（会社名）</th><th>D（売上金額）</th></tr>
+<tr><td>1234567</td><td>株式会社エクセル商事</td><td class="text-right">150000</td></tr>
+<tr><td>9876543</td><td>山田商店</td><td class="text-right">85000</td></tr>
+<tr><td>0012345</td><td>鈴木電機工業</td><td class="text-right">3200000</td></tr>
+</table>
+</section>
+<!-- ==========================================================
+         STEP 2：和暦日付の変換
+      ========================================================== -->
+<section class="method-section" id="sec-step2">
+<h2>【5】STEP 2：和暦日付の変換（元号コード＋YYMMDD）</h2>
+<p>「5-531215」のように元号コード（1桁）＋ハイフン＋年月日（6桁）＝8バイトの日付を変換します。元号コードから元号名を組み立て、DATEVALUE で日付に変換します。</p>
+<h3>元号コード対応表</h3>
+<table class="format-table">
+<tr><th>コード</th><th>元号</th><th>データ例</th><th>意味</th><th>西暦</th></tr>
+<tr><td class="text-center">1</td><td>明治</td><td>1-450101</td><td>明治45年1月1日</td><td>1912/01/01</td></tr>
+<tr><td class="text-center">3</td><td>大正</td><td>3-010730</td><td>大正1年7月30日</td><td>1912/07/30</td></tr>
+<tr><td class="text-center">5</td><td>昭和</td><td>5-531215</td><td>昭和53年12月15日</td><td>1978/12/15</td></tr>
+<tr><td class="text-center">7</td><td>平成</td><td>7-100115</td><td>平成10年1月15日</td><td>1998/01/15</td></tr>
+<tr><td class="text-center">9</td><td>令和</td><td>9-070401</td><td>令和7年4月1日</td><td>2025/04/01</td></tr>
+</table>
+<div class="xdemo-note-good">
+<strong>元号コードはシステム依存</strong><br>
+          元号コードの割り当てはシステムによって異なります。実際のデータに合わせて SWITCH や IF の中身を変更してください。
+        </div>
+<h3>バイト位置の確認</h3>
+<p>和暦日付フィールドは40バイト目から8バイトです。すべて MIDB で直接切り出します。</p>
+<table class="format-table">
+<tr><th>部品</th><th>数式</th><th>例（1行目）</th></tr>
+<tr><td>元号コード（1バイト）</td><td><code>MIDB(A1,40,1)</code></td><td>5</td></tr>
+<tr><td>ハイフン（1バイト）</td><td>&mdash;（スキップ）</td><td>-</td></tr>
+<tr><td>年（2バイト）</td><td><code>MIDB(A1,42,2)</code></td><td>53</td></tr>
+<tr><td>月（2バイト）</td><td><code>MIDB(A1,44,2)</code></td><td>12</td></tr>
+<tr><td>日（2バイト）</td><td><code>MIDB(A1,46,2)</code></td><td>15</td></tr>
+</table>
+<h3>数式① SWITCH版（Excel 2021 / Microsoft 365 以降）</h3>
+<p class="code-label-good">E1：取引日（和暦&rarr;日付）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=DATEVALUE(SWITCH(MIDB(A1,40,1),"1","明治","3","大正","5","昭和","7","平成","9","令和")&MIDB(A1,42,2)&"年"&MIDB(A1,44,2)&"月"&MIDB(A1,46,2)&"日")</span>
+</div>
+<div class="xdemo-note-good">
+<strong>SWITCH のメリット</strong><br>
+          SWITCH は MIDB が返す文字列 "5" をそのまま比較できるため、*1 で数値に変換する必要がありません。コードが連番でなくても自由にマッピングできます。
+        </div>
+<h3>数式② IF版（Excel 2019 以前でも使える）</h3>
+<p>SWITCH が使えない環境では、IF のネストで同じことができます。</p>
+<p class="code-label-good">E1：取引日（和暦&rarr;日付）IF版</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=DATEVALUE(IF(MIDB(A1,40,1)="1","明治",IF(MIDB(A1,40,1)="3","大正",IF(MIDB(A1,40,1)="5","昭和",IF(MIDB(A1,40,1)="7","平成",IF(MIDB(A1,40,1)="9","令和","")))))&MIDB(A1,42,2)&"年"&MIDB(A1,44,2)&"月"&MIDB(A1,46,2)&"日")</span>
+</div>
+<h3>数式の動きを順番に見てみる（1行目の場合）</h3>
+<table class="format-table">
+<tr><th>順番</th><th>処理</th><th>結果</th></tr>
+<tr>
+<td class="text-center">①</td>
+<td>MIDB(A1,40,1) &rarr; 元号コードを取得</td>
+<td>"5"</td>
+</tr>
+<tr>
+<td class="text-center">②</td>
+<td>SWITCH("5", "1","明治", "3","大正", "5","昭和", &hellip;) &rarr; 元号名を選択</td>
+<td>昭和</td>
+</tr>
+<tr>
+<td class="text-center">③</td>
+<td>"昭和" & "53" & "年" & "12" & "月" & "15" & "日" &rarr; 和暦文字列を組み立て</td>
+<td>昭和53年12月15日</td>
+</tr>
+<tr>
+<td class="text-center">④</td>
+<td>DATEVALUE("昭和53年12月15日") &rarr; シリアル値に変換</td>
+<td>28839</td>
+</tr>
+<tr>
+<td class="text-center">⑤</td>
+<td>表示形式を「日付」にする</td>
+<td>1978/12/15</td>
+</tr>
+</table>
+<h3>結果イメージ（E列）</h3>
+<table class="format-table">
+<tr><th>和暦データ</th><th>E（変換後）</th></tr>
+<tr><td>5-531215（昭和53年12月15日）</td><td>1978/12/15</td></tr>
+<tr><td>7-100115（平成10年1月15日）</td><td>1998/01/15</td></tr>
+<tr><td>9-070401（令和7年4月1日）</td><td>2025/04/01</td></tr>
+</table>
+<div class="xdemo-note-danger">
+<strong>日本語版Excel限定</strong><br>
+          DATEVALUE が「昭和53年12月15日」のような和暦文字列を認識するのは<strong>日本語版 Excel</strong> です。英語版では #VALUE! エラーになります。
+        </div>
+</section>
+<!-- ==========================================================
+         STEP 3：西暦日付の変換
+      ========================================================== -->
+<section class="method-section" id="sec-step3">
+<h2>【6】STEP 3：西暦日付の変換（YYYYMMDD）</h2>
+<p>西暦8桁（例: 20260318）の変換はシンプルです。MIDB で年・月・日を直接取り出して DATE 関数に渡します。</p>
+<h3>バイト位置の確認</h3>
+<table class="format-table">
+<tr><th>部品</th><th>数式</th><th>例（1行目）</th></tr>
+<tr><td>年（4バイト）</td><td><code>MIDB(A1,50,4)</code></td><td>2026</td></tr>
+<tr><td>月（2バイト）</td><td><code>MIDB(A1,54,2)</code></td><td>03</td></tr>
+<tr><td>日（2バイト）</td><td><code>MIDB(A1,56,2)</code></td><td>18</td></tr>
+</table>
+<h3>数式</h3>
+<p class="code-label-good">F1：取引日（西暦&rarr;日付）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=DATE(MIDB(A1,50,4),MIDB(A1,54,2),MIDB(A1,56,2))</span>
+</div>
+<h3>結果イメージ（F列）</h3>
+<table class="format-table">
+<tr><th>西暦データ</th><th>F（変換後）</th></tr>
+<tr><td>20260318</td><td>2026/03/18</td></tr>
+<tr><td>19980115</td><td>1998/01/15</td></tr>
+<tr><td>20251201</td><td>2025/12/01</td></tr>
+</table>
+<div class="xdemo-note-warn">
+<strong>シリアル値が表示される場合</strong><br>
+          E列・F列に数値（シリアル値）が表示される場合は、セルの表示形式を「日付」に変更してください。セルを右クリック &rarr; セルの書式設定 &rarr; 表示形式 &rarr; 日付。
+        </div>
+</section>
+<!-- ==========================================================
+         全体の結果
+      ========================================================== -->
+<section class="method-section" id="sec-result">
+<h2>【7】全体の結果イメージ</h2>
+<p>B1〜F1 に数式を入れて下方向へコピーすると、以下のようになります。</p>
+<table class="format-table">
+<tr>
+<th>B（顧客番号）</th>
+<th>C（会社名）</th>
+<th>D（売上金額）</th>
+<th>E（和暦&rarr;日付）</th>
+<th>F（西暦&rarr;日付）</th>
+</tr>
+<tr>
+<td>1234567</td>
+<td>株式会社エクセル商事</td>
+<td class="text-right">150000</td>
+<td>1978/12/15</td>
+<td>2026/03/18</td>
+</tr>
+<tr>
+<td>9876543</td>
+<td>山田商店</td>
+<td class="text-right">85000</td>
+<td>1998/01/15</td>
+<td>1998/01/15</td>
+</tr>
+<tr>
+<td>0012345</td>
+<td>鈴木電機工業</td>
+<td class="text-right">3200000</td>
+<td>2025/04/01</td>
+<td>2025/12/01</td>
+</tr>
+</table>
+</section>
+<!-- ==========================================================
+         まとめ
+      ========================================================== -->
+<section class="goal-section" id="sec-summary" style="margin-top:40px;background:linear-gradient(135deg,#f5f8ff 0%,#e8eaf6 100%);border-radius:10px;padding:24px;">
+<h2><span class="icon">📝</span> まとめ：数式の使い分け</h2>
+<table class="format-table">
+<tr><th>項目の種類</th><th>数式</th></tr>
+<tr>
+<td><strong>文字列</strong>（会社名・コード等）</td>
+<td><code>=TRIM(MIDB(A1, 開始, バイト数))</code></td>
+</tr>
+<tr>
+<td><strong>数値</strong>（金額・数量等）</td>
+<td><code>=VALUE(TRIM(MIDB(A1, 開始, バイト数)))</code></td>
+</tr>
+<tr>
+<td><strong>西暦日付</strong>（YYYYMMDD）</td>
+<td><code>=DATE(MIDB(A1,開始,4), MIDB(A1,開始+4,2), MIDB(A1,開始+6,2))</code></td>
+</tr>
+<tr>
+<td><strong>和暦日付</strong>（N-YYMMDD）Excel 2021〜</td>
+<td><code>=DATEVALUE(SWITCH(MIDB(&hellip;),"コード","元号",&hellip;)&MIDB(&hellip;)&"年"&MIDB(&hellip;)&"月"&MIDB(&hellip;)&"日")</code></td>
+</tr>
+<tr>
+<td><strong>和暦日付</strong>（N-YYMMDD）Excel 2019以前</td>
+<td><code>=DATEVALUE(IF(MIDB(&hellip;)="コード","元号",IF(&hellip;))&MIDB(&hellip;)&"年"&MIDB(&hellip;)&"月"&MIDB(&hellip;)&"日")</code></td>
+</tr>
+</table>
+</section>
+<!-- ==========================================================
+         補足
+      ========================================================== -->
+<section class="method-section" id="sec-supplement">
+<h2>【9】補足</h2>
+<h3>CLEAN 関数は必要？</h3>
+<p>通常は不要です。CLEAN は印刷できない制御文字（改行コード・NULL等）を除去する関数ですが、一般的な固定長データに制御文字が混入していることはまれです。FTP転送やターミナルからのコピーで文字化けが起きた場合にだけ <code>=TRIM(CLEAN(MIDB(...)))</code> としてください。まずは TRIM だけで試して、問題があれば追加する方針で十分です。</p>
+<h3>TRIM で消えない空白がある場合</h3>
+<p>TRIM が除去するのは半角スペース（文字コード 32）だけです。全角スペースが混ざっている場合は SUBSTITUTE で先に置換してください。</p>
+<p class="code-label-good">全角スペースを除去してからTRIM</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TRIM(SUBSTITUTE(MIDB(A1,8,20),"　",""))</span>
+</div>
+<h3>数式をもっと見やすくしたい場合</h3>
+<p>同じ MIDB を何度も書くのが気になる場合は、LET 関数を使って一度変数に入れる方法があります。詳しくは <a href="../../functions/latest/article_let.html">LET関数で固定長データの数式を整理する</a> を参照してください。</p>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ（Google Forms）</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab — 制限環境こそが最高の教師。</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

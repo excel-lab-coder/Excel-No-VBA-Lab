@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>図形&cir;のON/OFF切替（VBA不要）｜Excel &times; No VBA Lab</title>
+<meta content="Excelの図形（楕円・テキストボックス）と名前の管理を組み合わせて、セルの文字を&cir;で囲む表示／非表示をVBA不要で実現。条件に応じて&cir;が自動移動する出来を解説。" name="description">
+<meta content="Excel 図形 条件, &cir; 表示非表示 VBA不要, 名前の管理 図形, 処理票 &cir;, Excel IF 図形, 楕円 条件, チェックボックス代替, Excel 97" name="keywords">
+<meta content="図形&cir;のON/OFF切替（VBA不要） &horbar; 名前の管理＋図形" property="og:title">
+<meta content="Excel図形と名前の管理でセルの文字を&cir;で囲む表示／非表示をVBA不要で実現。100人に1人のレアテク。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/others/ui/article_shape_circle.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    .step-grid{display:grid;grid-template-columns:56px 1fr;gap:0;margin:18px 0}
+    .step-num{background:#1565c0;color:#fff;font-weight:700;font-size:.95em;border-radius:4px 0 0 4px;display:flex;align-items:center;justify-content:center;min-height:48px}
+    .step-body{background:#f5f8ff;border:1px solid #bbdefb;border-left:none;border-radius:0 4px 4px 0;padding:10px 14px;font-size:.9em;line-height:1.8}
+    .compare-table .highlight-cell{background:#fff3e0;font-weight:700}
+    .formula-breakdown{background:#f8f8f8;border:1px solid #ddd;border-radius:8px;padding:18px 20px;margin:16px 0;font-size:.9em;line-height:2.2}
+    .formula-breakdown .fb-line{display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap}
+    .formula-breakdown .fb-code{font-family:"Consolas","Courier New",monospace;background:#e8eaf6;padding:2px 8px;border-radius:3px;font-weight:700;white-space:nowrap}
+    .formula-breakdown .fb-arrow{color:#1565c0;font-weight:700;flex-shrink:0}
+    .formula-breakdown .fb-desc{color:#444}
+    .formula-breakdown .fb-highlight{color:#c62828;font-weight:700}
+
+    /* Excel風シート */
+    .excel-sheet{margin:20px 0;border:1px solid #999;border-radius:4px;overflow:hidden;font-size:.85em;background:#fff}
+    .excel-sheet-tabs{background:#d0d0d0;padding:4px 0 0 4px;border-bottom:1px solid #999}
+    .excel-sheet-tab{display:inline-block;padding:4px 16px;font-weight:700;font-size:.82em;border-radius:4px 4px 0 0;margin-left:2px}
+    .excel-sheet-tab-active{background:#fff;border:1px solid #999;border-bottom:1px solid #fff;color:#1565c0}
+    .excel-sheet-tab-inactive{background:#e0e0e0;border:1px solid #bbb;color:#666}
+    .excel-grid{width:100%;border-collapse:collapse}
+    .excel-grid th,.excel-grid td{border:1px solid #c0c0c0;padding:4px 8px;text-align:center;height:28px;vertical-align:middle}
+    .excel-grid th{background:#f0f0f0;color:#333;font-weight:700;font-size:.78em;min-width:32px}
+    .excel-grid .row-header{background:#f0f0f0;font-weight:700;font-size:.78em;width:28px}
+    .excel-grid .cell-empty{background:#fff}
+    .excel-grid .cell-text{background:#fff;text-align:left;font-size:.9em}
+    .excel-grid .cell-input-val{background:#fffde7;font-weight:700;color:#d84315;text-align:center}
+    .excel-grid .cell-on{background:#e8f5e9;font-weight:700;color:#2e7d32;font-size:1.3em}
+    .excel-grid .cell-off{background:#fff8e1;color:#bbb;font-style:italic;font-size:.78em}
+
+    /* 処理票イメージ */
+    .form-preview{margin:20px 0;border:2px solid #333;border-radius:2px;overflow:visible;background:#fff;max-width:540px}
+    .form-tbl{width:100%;border-collapse:collapse}
+    .form-tbl td{border:1px solid #333;padding:0;height:48px;vertical-align:middle;}
+    .form-tbl .fl{background:#f5f5f5;font-weight:700;text-align:center;width:90px;font-size:.9em;vertical-align:middle;}
+    .form-tbl .fv{text-align:center;padding:6px 12px;vertical-align:middle}
+    .cell-word{display:inline-block;position:relative;width:40px;height:40px;line-height:40px;text-align:center;font-weight:700;font-size:1.05em;vertical-align:middle}
+    .cell-word-w{width:52px}
+    .cell-dot{display:inline-block;width:20px;text-align:center;color:#555;font-size:.9em;vertical-align:middle}
+    .cell-date{display:inline-block;margin-left:8px;font-size:.92em;vertical-align:middle}
+    .overlay-circle{position:absolute;top:1px;left:1px;right:1px;bottom:1px;border:2px solid #c62828;border-radius:50%;pointer-events:none}
+
+    /* 3段階図解 */
+    .layer-demo{margin:20px 0;max-width:480px}
+    .layer-step{margin:0 0 20px;padding:14px;border:1px solid #ddd;border-radius:8px;background:#fafafa}
+    .layer-step h5{margin:0 0 10px;font-size:.92em;color:#1565c0}
+    .layer-cells{display:flex;align-items:center;gap:4px;margin:8px 0;flex-wrap:wrap}
+    .layer-cell{width:52px;height:44px;border:1px solid #999;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1em;background:#fff;position:relative;flex-shrink:0}
+    .layer-cell-label{width:72px;height:44px;border:1px solid #999;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8em;background:#f0f0f0;color:#555;flex-shrink:0}
+    .layer-dot{width:24px;height:44px;display:flex;align-items:center;justify-content:center;font-size:.9em;color:#555;flex-shrink:0}
+    .layer-shape{position:absolute;top:2px;left:2px;right:2px;bottom:2px;border:2.5px solid #c62828;border-radius:50%;pointer-events:none}
+    .layer-shape-ghost{position:absolute;top:2px;left:2px;right:2px;bottom:2px;border:2.5px dashed #90caf9;border-radius:50%;pointer-events:none}
+    .layer-caption{font-size:.72em;color:#666;margin-top:4px;line-height:1.5}
+    .layer-caption strong{color:#c62828}
+    .layer-arrow-down{text-align:center;font-size:1.4em;color:#1565c0;margin:6px 0}
+
+    /* 設定パネル風 */
+    .setting-panel{border:1px solid #bbb;border-radius:6px;background:#f9f9f9;padding:14px 16px;margin:12px 0;max-width:420px}
+    .setting-panel h5{margin:0 0 10px;font-size:.88em;color:#333;border-bottom:1px solid #ddd;padding-bottom:6px}
+    .setting-row{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:.85em}
+    .setting-label{width:80px;font-weight:700;color:#555;flex-shrink:0}
+    .setting-value{flex:1}
+    .setting-radio{display:inline-flex;align-items:center;gap:4px;margin-right:12px}
+    .setting-radio input[type="radio"]{margin:0}
+    .setting-select{padding:3px 8px;border:1px solid #999;border-radius:3px;font-size:.9em;background:#fff}
+    .setting-color-box{display:inline-block;width:18px;height:18px;border:1px solid #999;border-radius:2px;vertical-align:middle;margin-right:4px}
+    .setting-before-after{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin:16px 0}
+    .setting-before-after .sa-arrow{font-size:1.4em;color:#1565c0;font-weight:700;text-align:center}
+    .shape-demo{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle}
+    .shape-demo-ellipse{width:48px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1em}
+    .shape-demo-textbox{width:48px;height:42px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1em}
+  </style>
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"セルの文字を\u0026cir;で囲む表示/非表示 \u0026boxh;\u0026boxh; 名前の管理＋図形（VBA不要）","description":"Excelの図形（楕円・テキストボックス）と名前の管理を組み合わせて、セルの文字を\u0026cir;で囲む表示／非表示をVBA不要で実現。条件に応じて\u0026cir;が自動移動する出来を解説。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/others/ui/article_shape_circle.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span><a href="../../index.html#others">小技</a><span>&gt;</span><strong>図形&cir; ON/OFF切替</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-classic">全Ver対応</span></div>
+<div class="sc-row" style="margin-top: 10px; margin-bottom: 10px;"><span class="sc sc-d">⚡<b>6</b></span><span class="sc sc-i">&starf;<b>7</b></span><span class="sc sc-r r-hi">💎<b>9</b></span><span class="rarity-chip">🔮 100人に1人</span></div>
+<h1 class="article-title">セルの文字を&cir;で囲む表示/非表示 &boxh;&boxh; 名前の管理＋図形（VBA不要）</h1>
+</div>
+<!-- ===== やりたいこと ===== -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>処理票のセルに最初から入っている「男」「女」「昭和」「平成」「令和」の文字を、入力値に応じて<strong>図形の&cir;で囲んだように見せたい</strong>。VBA不要で。</p>
+</section>
+<!-- ===== 完成イメージ ===== -->
+<section class="method-section">
+<h3>先に完成形を見る</h3>
+<p>入力シートで「男」「平成」を選ぶと、処理票がこうなります。</p>
+<div class="form-preview" style="margin-bottom:40px">
+<table class="form-tbl">
+<tr>
+<td class="fl">性別</td>
+<td class="fv">
+<span class="cell-word"><span class="overlay-circle"></span>男</span>
+<span class="cell-dot">・</span>
+<span class="cell-word">女</span>
+</td>
+</tr>
+<tr>
+<td class="fl">生年月日</td>
+<td class="fv">
+<span class="cell-word cell-word-w">昭和</span>
+<span class="cell-dot">・</span>
+<span class="cell-word cell-word-w"><span class="overlay-circle"></span>平成</span>
+<span class="cell-dot">・</span>
+<span class="cell-word cell-word-w">令和</span>
+<span class="cell-date">5年 3月 15日</span>
+</td>
+</tr>
+</table>
+</div>
+<p>入力を「女」「令和」に変えると&hellip;</p>
+<div class="form-preview" style="margin-bottom:40px">
+<table class="form-tbl">
+<tr>
+<td class="fl">性別</td>
+<td class="fv">
+<span class="cell-word">男</span>
+<span class="cell-dot">・</span>
+<span class="cell-word"><span class="overlay-circle"></span>女</span>
+</td>
+</tr>
+<tr>
+<td class="fl">生年月日</td>
+<td class="fv">
+<span class="cell-word cell-word-w">昭和</span>
+<span class="cell-dot">・</span>
+<span class="cell-word cell-word-w">平成</span>
+<span class="cell-dot">・</span>
+<span class="cell-word cell-word-w"><span class="overlay-circle"></span>令和</span>
+<span class="cell-date">2年 8月 1日</span>
+</td>
+</tr>
+</table>
+</div>
+<p class="code-comment">&cir;が自動で移動。セルの文字自体は変わらない。</p>
+</section>
+<!-- ===== テクニック紹介 ===== -->
+<section class="method-section">
+<div class="xdemo-note-info" style="border-left-color: #9c27b0; background: #f3e5f5;">
+<strong>📜 このテクニックについて</strong><br>
+        「図形の数式バーにセル参照を入力できる」仕様は Excel 97 から存在。知っている人は体感100人に1人。<strong>セル内のIFだと大きさや位置の自由が利かない</strong>ため、図形でセルの文字の上に&cir;を重ねるこの手法が有効です。
+      </div>
+</section>
+<!-- ================================================================ -->
+<!--  3段階図解                                                        -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h3>「セルの上に図形が乗る」仕組み &boxh;&boxh; 3段階で理解</h3>
+<div class="layer-demo">
+<div class="layer-step">
+<h5>① セルだけの状態</h5>
+<p style="font-size:.82em;color:#555;margin:0 0 8px">処理票のセルに「男」「女」が固定で入っている。まだ図形は何もない。</p>
+<div class="layer-cells">
+<span class="layer-cell-label">性別：</span>
+<span class="layer-cell">男</span>
+<span class="layer-dot">・</span>
+<span class="layer-cell">女</span>
+</div>
+<div class="layer-caption">B5セル =「男」、D5セル =「女」（固定テキスト）</div>
+</div>
+<div class="layer-arrow-down">▼</div>
+<div class="layer-step">
+<h5>② 図形をセルの文字の上に重ねて置く</h5>
+<p style="font-size:.82em;color:#555;margin:0 0 8px">各文字の上に楕円（またはテキストボックス）を配置。この時点では透明。青い点線が図形の位置。</p>
+<div class="layer-cells">
+<span class="layer-cell-label">性別：</span>
+<span class="layer-cell">男<span class="layer-shape-ghost"></span></span>
+<span class="layer-dot">・</span>
+<span class="layer-cell">女<span class="layer-shape-ghost"></span></span>
+</div>
+<div class="layer-caption">「男」の上の図形 &rarr; 数式バーに <strong>=丸男</strong><br>「女」の上の図形 &rarr; 数式バーに <strong>=丸女</strong></div>
+</div>
+<div class="layer-arrow-down">▼</div>
+<div class="layer-step">
+<h5>③ 入力シートで「男」を選ぶと&hellip;</h5>
+<div class="layer-cells">
+<span class="layer-cell-label">性別：</span>
+<span class="layer-cell">男<span class="layer-shape"></span></span>
+<span class="layer-dot">・</span>
+<span class="layer-cell">女<span class="layer-shape-ghost" style="border-color:#eee"></span></span>
+</div>
+<div class="layer-caption"><strong>「男」だけが&cir;で囲まれた！</strong>「女」の上の図形は透明で見えない。</div>
+</div>
+</div>
+<p>生年月日欄もまったく同じ仕組みです。</p>
+<div class="layer-demo">
+<div class="layer-step">
+<h5>① セルだけ</h5>
+<div class="layer-cells">
+<span class="layer-cell-label" style="font-size:.7em">生年月日：</span>
+<span class="layer-cell">昭和</span><span class="layer-dot">・</span>
+<span class="layer-cell">平成</span><span class="layer-dot">・</span>
+<span class="layer-cell">令和</span>
+</div>
+</div>
+<div class="layer-arrow-down">▼</div>
+<div class="layer-step">
+<h5>② 図形を重ねる</h5>
+<div class="layer-cells">
+<span class="layer-cell-label" style="font-size:.7em">生年月日：</span>
+<span class="layer-cell">昭和<span class="layer-shape-ghost"></span></span><span class="layer-dot">・</span>
+<span class="layer-cell">平成<span class="layer-shape-ghost"></span></span><span class="layer-dot">・</span>
+<span class="layer-cell">令和<span class="layer-shape-ghost"></span></span>
+</div>
+</div>
+<div class="layer-arrow-down">▼</div>
+<div class="layer-step">
+<h5>③ 「平成」を選ぶと&hellip;</h5>
+<div class="layer-cells">
+<span class="layer-cell-label" style="font-size:.7em">生年月日：</span>
+<span class="layer-cell">昭和<span class="layer-shape-ghost" style="border-color:#eee"></span></span><span class="layer-dot">・</span>
+<span class="layer-cell">平成<span class="layer-shape"></span></span><span class="layer-dot">・</span>
+<span class="layer-cell">令和<span class="layer-shape-ghost" style="border-color:#eee"></span></span>
+</div>
+<div class="layer-caption"><strong>「平成」だけ&cir;で囲まれた！</strong></div>
+</div>
+</div>
+</section>
+<!-- ================================================================ -->
+<!--  入力シート                                                       -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h3>「入力」シートの中身</h3>
+<div class="excel-sheet">
+<div class="excel-sheet-tabs">
+<span class="excel-sheet-tab excel-sheet-tab-active">入力</span>
+<span class="excel-sheet-tab excel-sheet-tab-inactive">処理票</span>
+</div>
+<table class="excel-grid">
+<thead>
+<tr><th></th><th style="min-width:60px">A</th><th style="min-width:80px">B</th><th style="min-width:20px;color:#ccc">&hellip;</th><th style="min-width:55px;background:#e8f5e9">H</th><th style="min-width:55px;background:#fff8e1">I</th></tr>
+</thead>
+<tbody>
+<tr><td class="row-header">1</td><td class="cell-text">氏名</td><td class="cell-text">山田太郎</td><td class="cell-empty" style="border-color:#eee"></td><td style="background:#e8f5e9;font-size:.62em;color:#555">ONスイッチ</td><td style="background:#fff8e1;font-size:.62em;color:#555">OFFスイッチ</td></tr>
+<tr><td class="row-header">2</td><td class="cell-text font-bold-700">性別</td><td class="cell-input-val">男</td><td class="cell-empty" style="border-color:#eee"></td><td class="cell-on">&cir;</td><td class="cell-off">（空白）</td></tr>
+<tr><td class="row-header">3</td><td class="cell-text font-bold-700">元号</td><td class="cell-input-val">平成</td><td class="cell-empty" style="border-color:#eee"></td><td class="cell-empty"></td><td class="cell-empty"></td></tr>
+<tr><td class="row-header">4</td><td class="cell-text">年</td><td class="cell-input-val">5</td><td class="cell-empty" style="border-color:#eee"></td><td class="cell-empty"></td><td class="cell-empty"></td></tr>
+<tr><td class="row-header">5</td><td class="cell-text">月</td><td class="cell-input-val">3</td><td class="cell-empty" style="border-color:#eee"></td><td class="cell-empty"></td><td class="cell-empty"></td></tr>
+<tr><td class="row-header">6</td><td class="cell-text">日</td><td class="cell-input-val">15</td><td class="cell-empty" style="border-color:#eee"></td><td class="cell-empty"></td><td class="cell-empty"></td></tr>
+</tbody>
+</table>
+</div>
+<div class="xdemo-note-info">
+<strong>B2</strong>：性別を入力 &rarr; &cir;の位置が決まる ／ <strong>B3</strong>：元号を入力 &rarr; &cir;の位置が決まる<br>
+<strong>H2</strong>：「&cir;」入力済み（ONスイッチ） ／ <strong>I2</strong>：空白（OFFスイッチ）&boxh;&boxh; 全名前で共有
+      </div>
+</section>
+<!-- ================================================================ -->
+<!--  IF式                                                             -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h3>名前の管理に登録するIF式</h3>
+<div class="code-block" data-lang="例：「丸男」の参照範囲">
+<span class="code-line">=IF('入力'!$B$2="男", '入力'!$H$2, '入力'!$I$2)</span>
+</div>
+<div class="formula-breakdown">
+<div class="fb-line"><span class="fb-code">'入力'!$B$2="男"</span><span class="fb-arrow">&rarr;</span><span class="fb-desc">「入力」シートの <span class="fb-highlight">B2</span> が「男」か？</span></div>
+<div class="fb-line"><span class="fb-code">'入力'!$H$2</span><span class="fb-arrow">&rarr;</span><span class="fb-desc">YESなら <span class="fb-highlight">H2</span>（= &cir;）&rarr; 図形に&cir;が出る</span></div>
+<div class="fb-line"><span class="fb-code">'入力'!$I$2</span><span class="fb-arrow">&rarr;</span><span class="fb-desc">NOなら <span class="fb-highlight">I2</span>（= 空白）&rarr; 図形が透明のまま</span></div>
+</div>
+<h4>式がシートのどこを見ているか</h4>
+<div class="excel-sheet">
+<div class="excel-sheet-tabs"><span class="excel-sheet-tab excel-sheet-tab-active">入力</span></div>
+<table class="excel-grid">
+<thead><tr><th></th><th>A</th><th>B</th><th style="color:#ccc">&hellip;</th><th>H</th><th>I</th></tr></thead>
+<tbody>
+<tr>
+<td class="row-header">2</td>
+<td class="cell-text">性別</td>
+<td style="background:#ffcdd2;font-weight:700;text-align:center;border:3px solid #c62828">男<br><span style="font-size:.58em;color:#c62828;font-weight:700">$B$2 条件</span></td>
+<td class="cell-empty" style="border-color:#eee"></td>
+<td style="background:#c8e6c9;font-weight:700;text-align:center;border:3px solid #2e7d32;font-size:1.2em">&cir;<br><span style="font-size:.48em;color:#2e7d32;font-weight:700">$H$2 YES</span></td>
+<td style="background:#fff8e1;text-align:center;border:3px solid #e65100;color:#999">空白<br><span style="font-size:.6em;color:#e65100;font-weight:700">$I$2 NO</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- ================================================================ -->
+<!--  名前一覧                                                         -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h3>登録する名前の一覧</h3>
+<h4>▼ 性別欄</h4>
+<table class="compare-table">
+<thead><tr><th>名前</th><th>参照範囲</th><th>処理票で&cir;がつく場所</th></tr></thead>
+<tbody>
+<tr><td class="highlight-cell">丸男</td><td style="font-family:monospace;font-size:.78em">=IF('入力'!$B$2="男",'入力'!$H$2,'入力'!$I$2)</td><td>B5セル「男」の上の図形</td></tr>
+<tr><td class="highlight-cell">丸女</td><td style="font-family:monospace;font-size:.78em">=IF('入力'!$B$2="女",'入力'!$H$2,'入力'!$I$2)</td><td>D5セル「女」の上の図形</td></tr>
+</tbody>
+</table>
+<h4>▼ 生年月日欄</h4>
+<table class="compare-table">
+<thead><tr><th>名前</th><th>参照範囲</th><th>処理票で&cir;がつく場所</th></tr></thead>
+<tbody>
+<tr><td class="highlight-cell">丸昭和</td><td style="font-family:monospace;font-size:.78em">=IF('入力'!$B$3="昭和",'入力'!$H$2,'入力'!$I$2)</td><td>B7セル「昭和」の上の図形</td></tr>
+<tr><td class="highlight-cell">丸平成</td><td style="font-family:monospace;font-size:.78em">=IF('入力'!$B$3="平成",'入力'!$H$2,'入力'!$I$2)</td><td>D7セル「平成」の上の図形</td></tr>
+<tr><td class="highlight-cell">丸令和</td><td style="font-family:monospace;font-size:.78em">=IF('入力'!$B$3="令和",'入力'!$H$2,'入力'!$I$2)</td><td>F7セル「令和」の上の図形</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ================================================================ -->
+<!--  作成手順                                                         -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h3>作成手順</h3>
+<div class="step-grid">
+<div class="step-num">STEP 1</div>
+<div class="step-body"><strong>「入力」シートの H2 に「&cir;」、I2 は空白にする</strong></div>
+</div>
+<div class="step-grid">
+<div class="step-num">STEP 2</div>
+<div class="step-body">
+<strong>H2・I2 の周辺を白で隠す</strong><br>
+          G～J列あたりを広めに選択 &rarr; 塗りつぶし<strong>白</strong>・フォント色<strong>白</strong>・罫線<strong>なし</strong>
+</div>
+</div>
+<div class="step-grid">
+<div class="step-num">STEP 3</div>
+<div class="step-body">
+<strong>名前の管理で上の一覧の通り名前を登録する</strong><br>
+<code>数式</code>タブ &rarr; <code>名前の管理</code> &rarr; <code>新規作成</code>
+</div>
+</div>
+<div class="step-grid">
+<div class="step-num">STEP 4</div>
+<div class="step-body">
+<strong>「処理票」シートのセルの文字の上に図形を配置する</strong><br>
+          楕円またはテキストボックスを「男」「女」「昭和」「平成」「令和」の各セルの上にぴったり重ねる。
+          <div class="layer-cells" style="margin:10px 0">
+<span class="layer-cell">男<span class="layer-shape-ghost"></span></span>
+<span style="font-size:.72em;color:#666;padding:0 6px">&larr; セルの文字の上に図形を重ねる</span>
+</div>
+</div>
+</div>
+<!-- ===== STEP 5：透明化の詳細手順 ===== -->
+<div class="step-grid">
+<div class="step-num">STEP 5</div>
+<div class="step-body">
+<strong>図形を透明にする（図形の書式設定）</strong><br><br>
+
+          図形を右クリック &rarr; <code>図形の書式設定</code> を開く。<br>
+          右側に設定パネルが出るので、以下の2箇所を変更します。
+
+          <!-- 塗りつぶし設定 -->
+<div class="setting-panel">
+<h5>❶ 塗りつぶし</h5>
+<div class="setting-row">
+<span class="setting-label">変更前：</span>
+<span class="setting-value">
+<label class="setting-radio"><input checked disabled type="radio"> 塗りつぶし（単色）</label>
+<span class="setting-color-box" style="background:#4472c4"></span>青系の色
+              </span>
+</div>
+<div style="text-align:center;font-size:1.2em;color:#1565c0;margin:4px 0">▼ これを変更</div>
+<div class="setting-row">
+<span class="setting-label">変更後：</span>
+<span class="setting-value">
+<label class="setting-radio"><input checked disabled type="radio"> <strong>塗りつぶしなし</strong></label>
+</span>
+</div>
+</div>
+<!-- 線の設定 -->
+<div class="setting-panel">
+<h5>❷ 線</h5>
+<div class="setting-row">
+<span class="setting-label">変更前：</span>
+<span class="setting-value">
+<label class="setting-radio"><input checked disabled type="radio"> 線（単色）</label>
+<span class="setting-color-box" style="background:#2f5597"></span>青系の色
+              </span>
+</div>
+<div style="text-align:center;font-size:1.2em;color:#1565c0;margin:4px 0">▼ これを変更</div>
+<div class="setting-row">
+<span class="setting-label">変更後：</span>
+<span class="setting-value">
+<label class="setting-radio"><input checked disabled type="radio"> <strong>線なし</strong></label>
+</span>
+</div>
+</div>
+<!-- Before / After -->
+<p style="font-size:.85em;margin:14px 0 6px;font-weight:700">設定前後の見た目：</p>
+<div class="setting-before-after">
+<div class="text-center">
+<span style="font-size:.72em;color:#666;display:block;margin-bottom:4px">設定前</span>
+<span class="shape-demo">
+<span class="shape-demo-ellipse" style="background:#d6e4f0;border:2px solid #2f5597;color:#333">男</span>
+</span>
+<span style="font-size:.68em;color:#999;display:block;margin-top:4px">青い塗りつぶし＋青い枠線</span>
+</div>
+<span class="sa-arrow">&rarr;</span>
+<div class="text-center">
+<span style="font-size:.72em;color:#666;display:block;margin-bottom:4px">設定後</span>
+<span class="shape-demo">
+<span class="shape-demo-ellipse" style="background:transparent;border:2px dashed #ccc;color:#333">男</span>
+</span>
+<span style="font-size:.68em;color:#999;display:block;margin-top:4px">透明（何も見えない）</span>
+</div>
+</div>
+</div>
+</div>
+<!-- ===== STEP 6：周辺セルの白塗り ===== -->
+<div class="step-grid">
+<div class="step-num">STEP 6</div>
+<div class="step-body">
+<strong>図形の周辺セルも白塗り＋罫線なしにする</strong><br><br>
+          図形を透明にしても、下のセルの罫線やグリッド線が透けて見えます。<br>
+          図形を配置した付近のセルを選択して以下を設定します。
+
+          <div class="setting-panel">
+<h5>セルの書式設定</h5>
+<div class="setting-row">
+<span class="setting-label">塗りつぶし</span>
+<span class="setting-value"><span class="setting-color-box" style="background:#fff"></span> <strong>白</strong></span>
+</div>
+<div class="setting-row">
+<span class="setting-label">フォント色</span>
+<span class="setting-value"><span class="setting-color-box" style="background:#fff;border-color:#ccc"></span> <strong>白</strong>（スイッチ用セルの場合）</span>
+</div>
+<div class="setting-row">
+<span class="setting-label">罫線</span>
+<span class="setting-value"><strong>なし</strong>（すべての辺を削除）</span>
+</div>
+</div>
+</div>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠ 図形の透明化 ＋ 周辺セルの白塗り &boxh;&boxh; 両方セットで必要</strong><br>
+        ・図形だけ透明にしても &rarr; 下のセルの罫線が透けて見える<br>
+        ・セルだけ白塗りにしても &rarr; 図形の枠線が残って見える<br>
+        必ず両方行ってください。
+      </div>
+<!-- ===== STEP 7：数式バー ===== -->
+<div class="step-grid">
+<div class="step-num">STEP 7</div>
+<div class="step-body">
+<strong>図形を1回クリック &rarr; 数式バーに名前を入力 &rarr; Enter</strong>
+<p style="font-size:.85em;margin:10px 0 6px;font-weight:700">操作手順：</p>
+<div class="setting-panel">
+<h5>数式バーへの入力</h5>
+<div class="setting-row">
+<span class="setting-label">①</span>
+<span class="setting-value">図形を <strong>1回クリック</strong>（周囲に&cir;ハンドルが出る状態）</span>
+</div>
+<div class="setting-row">
+<span class="setting-label">②</span>
+<span class="setting-value">シート上部の <strong>数式バー</strong> をクリック</span>
+</div>
+<div class="setting-row">
+<span class="setting-label">③</span>
+<span class="setting-value">名前を入力して <strong>Enter</strong>（例：<code>=丸男</code>）</span>
+</div>
+</div>
+<table class="compare-table" style="margin:12px 0">
+<thead><tr><th>セルの文字の上に置いた図形</th><th>数式バーに入力</th></tr></thead>
+<tbody>
+<tr><td>B5「男」の上の図形</td><td class="highlight-cell" style="font-family:monospace">=丸男</td></tr>
+<tr><td>D5「女」の上の図形</td><td class="highlight-cell" style="font-family:monospace">=丸女</td></tr>
+<tr><td>B7「昭和」の上の図形</td><td class="highlight-cell" style="font-family:monospace">=丸昭和</td></tr>
+<tr><td>D7「平成」の上の図形</td><td class="highlight-cell" style="font-family:monospace">=丸平成</td></tr>
+<tr><td>F7「令和」の上の図形</td><td class="highlight-cell" style="font-family:monospace">=丸令和</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠ ダブルクリック厳禁</strong><br>
+        ダブルクリックすると「テキスト編集モード」になり、数式バーではなく図形内部に入力されてしまいます。<br>
+        必ず<strong>1回クリック</strong>で選択状態にしてから数式バーを操作してください。<br><br>
+<strong>間違えたら：</strong>Esc キーで編集モードを抜ける &rarr; 図形の外をクリック &rarr; もう一度図形を1回クリック &rarr; 数式バーへ
+      </div>
+<!-- ===== STEP 8：テキストボックスのフォント調整 ===== -->
+<div class="step-grid">
+<div class="step-num">STEP 8</div>
+<div class="step-body">
+<strong>テキストボックスの場合のみ：フォントサイズを調整</strong><br><br>
+          テキストボックスは中に「&cir;」という文字が表示されるので、セルの文字を囲むくらいの大きさにフォントを拡大します。
+
+          <div class="setting-panel">
+<h5>フォントサイズの目安</h5>
+<div class="setting-row">
+<span class="setting-label">セルの文字</span>
+<span class="setting-value">11pt（標準）</span>
+</div>
+<div class="setting-row">
+<span class="setting-label">テキストボックス内の&cir;</span>
+<span class="setting-value"><strong>28～36pt</strong> 程度（文字を囲むサイズに調整）</span>
+</div>
+</div>
+<p style="font-size:.82em;color:#888;margin-top:6px">楕円の場合はこの手順は不要です（図形のサイズ＝&cir;の大きさなので、図形の大きさをドラッグで調整するだけ）。</p>
+</div>
+</div>
+</section>
+<!-- ================================================================ -->
+<!--  動作確認                                                         -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h3>動作確認</h3>
+<h4>▼ 性別欄</h4>
+<table class="compare-table">
+<thead><tr><th>入力シート B2</th><th>B5「男」の上の図形</th><th>D5「女」の上の図形</th></tr></thead>
+<tbody>
+<tr><td class="highlight-cell">男</td><td style="background:#e8f5e9;font-weight:700;color:#2e7d32;text-align:center">&cir;が出て「男」を囲む</td><td style="color:#ccc;text-align:center">透明（見えない）</td></tr>
+<tr><td class="highlight-cell">女</td><td style="color:#ccc;text-align:center">透明（見えない）</td><td style="background:#e8f5e9;font-weight:700;color:#2e7d32;text-align:center">&cir;が出て「女」を囲む</td></tr>
+</tbody>
+</table>
+<h4>▼ 生年月日欄</h4>
+<table class="compare-table">
+<thead><tr><th>入力シート B3</th><th>B7「昭和」の上</th><th>D7「平成」の上</th><th>F7「令和」の上</th></tr></thead>
+<tbody>
+<tr><td class="highlight-cell">昭和</td><td style="background:#e8f5e9;font-weight:700;color:#2e7d32;text-align:center">&cir;</td><td style="color:#ccc;text-align:center">-</td><td style="color:#ccc;text-align:center">-</td></tr>
+<tr><td class="highlight-cell">平成</td><td style="color:#ccc;text-align:center">-</td><td style="background:#e8f5e9;font-weight:700;color:#2e7d32;text-align:center">&cir;</td><td style="color:#ccc;text-align:center">-</td></tr>
+<tr><td class="highlight-cell">令和</td><td style="color:#ccc;text-align:center">-</td><td style="color:#ccc;text-align:center">-</td><td style="background:#e8f5e9;font-weight:700;color:#2e7d32;text-align:center">&cir;</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ================================================================ -->
+<!--  パフォーマンス・トラブル・比較                                    -->
+<!-- ================================================================ -->
+<section class="method-section">
+<h3>パフォーマンスの注意</h3>
+<div class="xdemo-note-warn" style="background:#fff3e0;border-left-color:#ff9800;">
+<strong>🔶 大量に使うとカクつく場合がある</strong><br>
+        IF式自体は軽いですが、Excelはセル編集のたびに全図形を再描画します。1シート10～30個なら問題なし。それ以上はシート分割を。
+      </div>
+</section>
+<section class="method-section">
+<h3>よくあるトラブル</h3>
+<table class="compare-table">
+<thead><tr><th>症状</th><th>対処</th></tr></thead>
+<tbody>
+<tr><td>&cir;ではなく「0」が出る</td><td>I2 を Delete で消すか <code>=""</code></td></tr>
+<tr><td>枠線・罫線が見える</td><td>図形「線なし」＋ 周辺セル白塗り・罫線なし（STEP 5・6）</td></tr>
+<tr><td>数式バーに入力できない</td><td>Esc &rarr; 1回クリックでやり直し（STEP 7）</td></tr>
+<tr><td>#NAME?</td><td>名前の管理で登録名を確認</td></tr>
+<tr><td>#REF!</td><td>日本語シート名を <code>'入力'!$B$2</code> と囲む</td></tr>
+<tr><td>印刷で&cir;が消える</td><td>サイズとプロパティ &rarr;「オブジェクトを印刷する」にチェック</td></tr>
+<tr><td>位置がズレる</td><td>サイズとプロパティ &rarr;「セルに合わせて移動やサイズ変更をしない」</td></tr>
+</tbody>
+</table>
+</section>
+<section class="method-section">
+<h3>他の方法との比較</h3>
+<table class="compare-table">
+<thead><tr><th>方法</th><th>VBA不要</th><th>文字を&cir;で囲む</th><th>引き継ぎやすさ</th></tr></thead>
+<tbody>
+<tr><td>セル内にIFで「&cir;」表示</td><td>&cir;</td><td>&times; サイズ・位置の自由が利かない</td><td>&cir;</td></tr>
+<tr><td>チェックボックス</td><td>&cir;</td><td>&times; 四角いデザイン</td><td>&cir;</td></tr>
+<tr><td>VBAで図形の表示/非表示</td><td>&times; .xlsm必須</td><td>&cir;</td><td>&xutri;</td></tr>
+<tr><td class="highlight-cell">本手法</td><td class="highlight-cell">&cir; .xlsxのまま</td><td class="highlight-cell">&cir; 自由な位置・大きさ</td><td>&xutri; 仕組みが見えにくい</td></tr>
+</tbody>
+</table>
+</section>
+<section class="legacy-section">
+<h3>バージョン互換性</h3>
+<p>Excel 97 以降すべてのバージョンで動作。使用する関数は IF のみ。</p>
+</section>
+</article>
+</main>
+<script src="../../script.js"></script>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+</body>
+</html>
+
+

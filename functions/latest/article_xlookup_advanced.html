@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>XLOOKUP応用編｜Excel &times; No VBA Lab</title>
+<meta content="XLOOKUPの応用編。戻り配列に複数列を指定するスピル展開や、近似一致・ワイルドカード検索などの高度な使い方を解説。" name="description">
+<meta content="XLOOKUP 応用, スピル 複数列 返す, XLOOKUP ワイルドカード, Excel 2021 XLOOKUP, VBA不要" name="keywords">
+<meta content="XLOOKUP応用編｜Excel &times; No VBA Lab" property="og:title">
+<meta content="XLOOKUPの応用編。戻り配列に複数列を指定するスピル展開や、近似一致・ワイルドカード検索などの高度な使い方を解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/latest/article_xlookup_advanced.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/latest/article_xlookup_advanced.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "XLOOKUP応用編",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "XLOOKUPの応用編。戻り配列に複数列を指定するスピル展開や、近似一致・ワイルドカード検索などの高度な使い方を解説。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-no-vba-lab.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-no-vba-lab.com/functions/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "XLOOKUP応用編",
+      "item": "https://excel-no-vba-lab.com/functions/latest/article_xlookup_advanced.html"
+    }
+  ]
+}</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#functions">関数</a><span>&gt;</span>
+<a href="article_xlookup_basic.html">XLOOKUPシリーズ</a><span>&gt;</span>
+<strong>応用編</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-365">365</span>
+<span class="badge badge-2021">2021～</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">XLOOKUP 応用編：複数列一括返却・高速化・後ろから検索</h1>
+</div>
+<!-- シリーズナビ -->
+<div class="series-nav">
+<h4>📚 XLOOKUPシリーズ</h4>
+<ul>
+<li><a href="article_xlookup_basic.html">① 基本編</a> &horbar; 構文・引数・動作イメージ</li>
+<li class="current">② 応用編（このページ）&horbar; 複数列返却・第5/6引数・後ろから検索</li>
+<li><a href="article_xlookup_vs.html">③ 比較編</a> &horbar; vs VLOOKUP・INDEX+MATCH の徹底比較</li>
+<li><a href="article_xlookup_multi.html">④ 多条件検索編</a> &horbar; XLOOKUPネストで複数条件</li>
+</ul>
+</div>
+<!-- =========================================================
+         【1】複数列一括返却（スピル展開）
+      ========================================================= -->
+<section class="method-section">
+<h3>【1】複数列を1本の数式で一気に返す（スピル展開）</h3>
+<p>通常の検索関数は「1つの値を返す」のが基本です。しかしXLOOKUPは、
+          第3引数（戻り配列）に<em>複数列の範囲</em>を指定するだけで、
+          ヒットした行の複数列を<strong>横並びに一気に展開（スピル）</strong>してくれます。</p>
+<!-- ① マスタ表 -->
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">① マスタ表（F〜I列）</div>
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col">F</td>
+<td class="xd-col">G</td>
+<td class="xd-col">H</td>
+<td class="xd-col">I</td>
+</tr>
+<tr>
+<td class="xd-row">1</td>
+<td class="xd-head">社員ID</td>
+<td class="xd-head">氏名</td>
+<td class="xd-head">部署</td>
+<td class="xd-head">役職</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="xd-hit"><strong>1001</strong></td>
+<td class="xd-hit">田中 太郎</td>
+<td class="xd-hit">営業部</td>
+<td class="xd-hit">主任</td>
+</tr>
+<tr>
+<td class="xd-row">3</td>
+<td class="xd-master">1002</td>
+<td class="xd-master">鈴木 花子</td>
+<td class="xd-master">総務部</td>
+<td class="xd-master">係長</td>
+</tr>
+<tr>
+<td class="xd-row">4</td>
+<td class="xd-master">1003</td>
+<td class="xd-master">佐藤 健</td>
+<td class="xd-master">開発部</td>
+<td class="xd-master">リーダー</td>
+</tr>
+</table></div>
+<div class="xdemo-note">
+            社員ID <strong>1001</strong> で検索。ヒット行（🟠 橙）のG列（氏名）・H列（部署）・I列（役職）の3列が返却対象。
+          </div>
+</div>
+<!-- ② XLOOKUP の数式 -->
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">② XLOOKUP &horbar; 数式を B2 に 1つだけ入力</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=XLOOKUP(A2, F:F, G:I, "未登録")</span>
+</div>
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col">A</td>
+<td class="xd-col">B</td>
+<td class="xd-col">C</td>
+<td class="xd-col">D</td>
+</tr>
+<tr>
+<td class="xd-row">1</td>
+<td class="xd-head">入力（社員ID）</td>
+<td class="xd-head">氏名</td>
+<td class="xd-head">部署</td>
+<td class="xd-head">役職</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="xd-key">1001</td>
+<td class="xd-formula">=XLOOKUP(A2, F:F, G:I, "未登録")</td>
+<td class="xd-data">（空）</td>
+<td class="xd-data">（空）</td>
+</tr>
+</table></div>
+<div class="xdemo-note">
+<span class="badge-f">数式</span> は B2 の <strong>1つだけ</strong>。
+            C2・D2 はまだ空。Enter を押すと&hellip;
+          </div>
+</div>
+<!-- ③ 結果 -->
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">③ 結果イメージ（スピル展開後）</div>
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col">A</td>
+<td class="xd-col">B</td>
+<td class="xd-col">C</td>
+<td class="xd-col">D</td>
+</tr>
+<tr>
+<td class="xd-row" style="font-size:0.7em;color:#888;"></td>
+<td class="xd-result-label">入力セル（A2）</td>
+<td class="xd-result-label">結果① 氏名</td>
+<td class="xd-result-label">結果② 部署</td>
+<td class="xd-result-label">結果③ 役職</td>
+</tr>
+<tr>
+<td class="xd-row">1</td>
+<td class="xd-head">入力（社員ID）</td>
+<td class="xd-head">氏名</td>
+<td class="xd-head">部署</td>
+<td class="xd-head">役職</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="xd-key">1001</td>
+<td class="xd-spill-origin">田中 太郎</td>
+<td class="xd-spill">営業部</td>
+<td class="xd-spill">主任</td>
+</tr>
+</table></div>
+<div class="xdemo-note-good">
+            ✅ <strong>数式 1本</strong> で 3列分が一気に展開。<br>
+<span class="badge-f">数式</span> B2（青枠）が起点。
+            C2・D2 は <span class="badge-s">スピル</span>（点線枠）で自動展開。<br>
+            検索IDを変えると <strong>3列すべてが連動して更新</strong>される。
+          </div>
+</div>
+<!-- ④ INDEX+MATCH との対比 -->
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">④ INDEX+MATCH &horbar; 3本の数式が必要</div>
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col">A</td>
+<td class="xd-col">B</td>
+<td class="xd-col">C</td>
+<td class="xd-col">D</td>
+</tr>
+<tr>
+<td class="xd-row">1</td>
+<td class="xd-head">入力（社員ID）</td>
+<td class="xd-head">氏名</td>
+<td class="xd-head">部署</td>
+<td class="xd-head">役職</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="xd-key">1001</td>
+<td class="xd-formula">=INDEX(G:G,MATCH(A2,F:F,0))</td>
+<td class="xd-formula-dup">=INDEX(H:H,MATCH(A2,F:F,0))</td>
+<td class="xd-formula-dup">=INDEX(I:I,MATCH(A2,F:F,0))</td>
+</tr>
+</table></div>
+<div class="xdemo-note-warn">
+            ⚠️ <code>MATCH(A2, F:F, 0)</code> の部分が <strong>3セルすべてに重複</strong>して登場する。<br>
+            検索列（F列）を変更する際は <strong>3か所すべてを修正</strong>しなければならない。
+          </div>
+</div>
+<!-- ⑤ 比較サマリー -->
+<div class="xdemo-wrap">
+<div class="xdemo-step-label">⑤ 比較サマリー（3列取得したい場合）</div>
+<div class="table-wrapper"><table class="formula-count-table"><caption>データテーブル</caption>
+<thead>
+<tr>
+<th scope="col">比較項目</th>
+<th scope="col">XLOOKUP</th>
+<th scope="col">INDEX+MATCH</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>必要な数式の本数</td>
+<td class="fc-good">✅ <strong>1本</strong></td>
+<td class="fc-bad">⚠️ <strong>3本</strong>（列数分）</td>
+</tr>
+<tr>
+<td>修正が必要な箇所</td>
+<td class="fc-good">✅ <strong>1か所</strong></td>
+<td class="fc-bad">⚠️ <strong>3か所</strong>（列数分）</td>
+</tr>
+<tr>
+<td>MATCH部分の重複</td>
+<td class="fc-good">✅ <strong>なし</strong></td>
+<td class="fc-bad">⚠️ <strong>3回重複</strong></td>
+</tr>
+<tr>
+<td>列追加時の対応</td>
+<td class="fc-good">✅ 戻り配列の範囲を広げるだけ</td>
+<td class="fc-bad">⚠️ 数式をもう1本追加が必要</td>
+</tr>
+<tr class="fc-row-speed">
+<td>⚡ 処理速度（大量データ時）</td>
+<td class="fc-good">✅ <strong>高速</strong><br>
+<span style="font-size:0.85em;font-weight:normal;">検索は1回のみ。複数列の返却は展開処理で完結。</span>
+</td>
+<td class="fc-bad">⚠️ <strong>遅くなりやすい</strong><br>
+<span style="font-size:0.85em;font-weight:normal;">MATCHが列数分だけ独立して実行される。</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="xdemo-note-tip">
+          💡 <strong>取得したい列が隣接していない場合（CHOOSECOLS）</strong><br>
+          XLOOKUPの戻り配列は<em>連続した範囲</em>である必要があります。「氏名（G列）と役職（I列）だけ」のように
+          <strong>列が飛んでいるケース</strong>では、<code>CHOOSECOLS</code> 関数と組み合わせることで対応できます。<br>
+<a href="article_choosecols.html">&rarr; CHOOSECOLSの詳細はこちら</a>
+</div>
+</section>
+<!-- =========================================================
+         【2】第5引数・第6引数
+      ========================================================= -->
+<section class="method-section">
+<h3>【2】第5引数・第6引数：一致モードと検索モード</h3>
+<p>XLOOKUPには省略可能な第5・第6引数があり、検索の動作を細かく制御できます。<br>
+          通常は省略（完全一致・先頭から線形検索）で問題ありませんが、
+          データの特性に応じて使い分けると大幅な高速化も可能です。</p>
+<h4>第5引数：一致モード（match_mode）</h4>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="arg-table"><caption>データテーブル</caption>
+<thead>
+<tr><th scope="col">値</th><th scope="col">意味</th></tr>
+</thead>
+<tbody>
+<tr class="arg-default">
+<td class="arg-val">0</td>
+<td><strong>完全一致（既定）</strong>　&horbar; 通常はこれを使う。一致しなければ #N/A または「見つからない場合」の値を返す。</td>
+</tr>
+<tr>
+<td class="arg-val">-1</td>
+<td>完全一致、なければ次に小さい値　&horbar; 価格帯テーブルなどの近似検索に</td>
+</tr>
+<tr>
+<td class="arg-val">1</td>
+<td>完全一致、なければ次に大きい値　&horbar; 同上（上方向の近似）</td>
+</tr>
+<tr>
+<td class="arg-val">2</td>
+<td>ワイルドカード一致　&horbar; <code>*</code>（任意の文字列）<code>?</code>（任意の1文字）<code>~</code>（エスケープ）が使える</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<h4>第6引数：検索モード（search_mode）</h4>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="arg-table"><caption>データテーブル</caption>
+<thead>
+<tr><th scope="col">値</th><th scope="col">意味</th></tr>
+</thead>
+<tbody>
+<tr class="arg-default">
+<td class="arg-val">1</td>
+<td><strong>先頭から末尾へ線形検索（既定）</strong>　&horbar; データ量が多いほど時間がかかる</td>
+</tr>
+<tr>
+<td class="arg-val">-1</td>
+<td>末尾から先頭へ線形検索　&horbar; 最新の履歴など「最後のヒット」を取得したいときに</td>
+</tr>
+<tr class="arg-binary">
+<td class="arg-val">2</td>
+<td>
+<strong>⚡ バイナリ検索（昇順ソート済みデータ向け）</strong><br>
+<span style="font-size:0.9em;font-weight:normal;">データが昇順に並んでいる場合に使用。大量データで劇的に高速化できる。</span>
+</td>
+</tr>
+<tr class="arg-binary">
+<td class="arg-val">-2</td>
+<td>
+<strong>⚡ バイナリ検索（降順ソート済みデータ向け）</strong><br>
+<span style="font-size:0.9em;font-weight:normal;">データが降順に並んでいる場合に使用。同様に高速。</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="xdemo-note-speed">
+<strong>⚡ 完全一致 &times; バイナリ検索（二分探索）の組み合わせ</strong><br>
+          VLOOKUPの完全一致（第4引数 <code>FALSE</code>）は「線形検索」のみ。高速なバイナリ検索（<code>TRUE</code>）は
+          <strong>「近似一致」になってしまい、見つからなかった場合に勝手に最近傍の値を返す</strong>という致命的な仕様があります。<br><br>
+          一方、<strong>XLOOKUPは「完全一致」と「バイナリ検索」を同時に両立</strong>できます。<br>
+          数万件のソート済みマスタに対して：
+          <div class="code-block mt-8" data-lang="excel">
+<span class="code-line">=XLOOKUP(A2, D:D, E:E, "未登録", 0, 2)</span>
+</div>
+<p class="code-comment" style="margin:4px 0 0;">第5引数 <code>0</code>（完全一致）、第6引数 <code>2</code>（バイナリ検索・昇順）。D列が昇順ソート済みであることが前提。</p>
+<span style="font-size:0.9em;color:#555;">⚠️ データが正しくソートされていない場合は誤った結果になるので注意。<br>
+            &rarr; 詳細な速度計測は <a href="../../index.html#others">速度カテゴリ</a> で解説。
+          </span>
+</div>
+<!-- SORT/SORTBY との組み合わせ -->
+<div class="xdemo-note-tip" style="margin-top:16px;">
+<strong>💡 SORT / SORTBY でソートを「関数が保証」する &horbar; バイナリ検索を安全に使う方法</strong><br>
+          バイナリ検索の最大のリスクは「<strong>手動でソートするのを忘れた</strong>・誰かがデータを追加してソート順が崩れた」というヒューマンエラーです。<br>
+        Excel 2021 / 2024 / Microsoft 365 などでは <strong>SORT関数・SORTBY関数</strong> を使うことで、<em>「常に昇順に並べた状態のデータ」を関数が動的に作り出し、
+          そこにXLOOKUPのバイナリ検索をかける</em>という組み合わせが可能になります。<br><br>
+<strong>【パターン①】SORT でキー列を昇順に並べてからXLOOKUP</strong><br>
+          元データ（A:B 列）がランダム順でも、SORT で並べ直した配列に対してXLOOKUPを適用する。
+          <div class="code-block mt-8" data-lang="excel">
+<span class="code-line">=XLOOKUP(検索値, SORT(A2:A1000), SORTBY(B2:B1000, A2:A1000), "未登録", 0, 2)</span>
+</div>
+<p class="code-comment" style="margin:4px 0 0;">
+<code>SORT(A2:A1000)</code>：A列を昇順に並べた配列（検索配列）<br>
+<code>SORTBY(B2:B1000, A2:A1000)</code>：B列をA列の並び順に合わせた配列（戻り配列）<br>
+            &rarr; 元データのソート順に関わらず、<strong>常に正しくバイナリ検索できる</strong>。
+          </p>
+<strong>【パターン②】SORTBY で複数列まとめて並べ替え（キーと戻り配列を同時に整合させる）</strong><br>
+<div class="code-block mt-8" data-lang="excel">
+<span class="code-line">=LET(
+  sorted, SORTBY(A2:C1000, A2:A1000, 1),
+  XLOOKUP(検索値, CHOOSECOLS(sorted,1), CHOOSECOLS(sorted,2,3), "未登録", 0, 2)
+)</span>
+</div>
+<p class="code-comment" style="margin:4px 0 0;">
+<code>SORTBY(A2:C1000, A2:A1000, 1)</code>：A〜C列全体をA列の昇順で並べた配列を生成<br>
+<code>CHOOSECOLS(sorted, 1)</code>：並べ替え済み配列の1列目（検索キー）<br>
+<code>CHOOSECOLS(sorted, 2, 3)</code>：並べ替え済み配列の2・3列目（戻り配列）<br>
+<code>LET</code> で配列を一度だけ計算して再利用 &rarr; <strong>計算コストを最小化</strong>
+</p>
+<strong>【まとめ：SORT/SORTBY + XLOOKUP バイナリ検索の利点】</strong>
+<ul style="margin:8px 0 0; padding-left:1.4em; line-height:1.9; font-size:0.95em;">
+<li>元データのソート状態に関わらず<strong>常に正しい結果</strong>が得られる（ヒューマンエラー排除）</li>
+<li>バイナリ検索の<strong>劇的な高速化</strong>をそのまま享受できる</li>
+<li>データ追加・更新が発生しても<strong>数式が自動で対応</strong>する</li>
+<li><code>LET</code> と組み合わせることでソート計算の重複を防げる</li>
+</ul>
+<span style="font-size:0.88em; color:#555;">
+            ⚠️ <strong>超大量データ時（目安：50万行以上）の注意と対処法</strong><br>
+            SORT/SORTBY を数式内に直接ネストすると、ブックが再計算されるたびに配列全体を並べ直します。
+            通常のデータ量では体感できませんが、<strong>50万行規模になって初めて速度差が感じられる</strong>ようになるイメージです。<br><br>
+<strong>✅ 実践的な解決策：作業シートにSORT済みデータを「1回だけ」出力しておく</strong><br>
+            別シート（例：<code>作業</code>シート）の空きセル（例：<code>A1</code>）に、一度だけSORTBYの結果を出力しておきます。
+          </span>
+<p class="code-comment-label">/* 作業シートのA1セルに入力（1回だけ）*/</p>
+<div class="code-block" data-lang="excel" style="margin-top:0; border-radius: 0 6px 6px 6px;">
+<span class="code-line">=SORTBY(マスタ!A2:C500000, マスタ!A2:A500000, 1)</span>
+</div>
+<span style="font-size:0.88em; color:#555;">
+            これで <code>作業!A1#</code>（スピル範囲）にソート済みのデータが展開されます。<br>
+            あとは各シートのXLOOKUPからそのスピル範囲を参照するだけです：
+          </span>
+<div class="code-block mt-8" data-lang="excel">
+<span class="code-line">=XLOOKUP(A2, 作業!A1#, CHOOSECOLS(作業!A1#, 2, 3), "未登録", 0, 2)</span>
+</div>
+<span style="font-size:0.88em; color:#555;">
+            こうすることでSORTBYの計算は<strong>作業シートが更新されたときの1回だけ</strong>に限定されます。<br>
+            XLOOKUPのバイナリ検索は、すでに整列済みのスピル範囲を読むだけなので<strong>高速かつ正確</strong>。<br>
+            元データに追記・変更があれば作業シートが自動更新されるため、手動でソートし直す手間もありません。<br><br>
+            &rarr; <a href="article_sort.html">SORT / SORTBY の詳細はこちら</a>
+</span>
+</div>
+</section>
+<!-- =========================================================
+         【3】末尾から逆順に検索する（第6引数 -1）
+      ========================================================= -->
+<section class="tips-section">
+<h3>【3】末尾から逆順に検索する（最新の履歴を取得）</h3>
+<p>同じ値が複数行に存在する場合、<strong>最後に登録されたデータ（最新の履歴）</strong>を取得したいケースがあります。<br>
+          第6引数に <code>-1</code> を指定すると、末尾から先頭に向かって検索します。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=XLOOKUP(A2, D:D, E:E, "未登録", 0, -1)</span>
+</div>
+<p class="code-comment">
+          第5引数 <code>0</code>（完全一致）、第6引数 <code>-1</code>（末尾から先頭へ）。<br>
+          D列に「1001」が複数行あった場合、一番下（最後）の行のE列を返す。
+        </p>
+<div class="xdemo-note">
+          ✅ VLOOKUPでは「最後のヒット」を取得することは非常に困難でしたが、XLOOKUPなら引数1つで解決します。
+        </div>
+</section>
+<!-- =========================================================
+         【4】INDEX+MATCHが最新Excelでも現役な理由
+      ========================================================= -->
+<section class="tips-section">
+<h3>【4】INDEX+MATCHが最新Excelでも現役な理由：行オフセット技</h3>
+<p>XLOOKUPが登場しても、INDEX+MATCHが完全に不要になったわけではありません。</p>
+<p>MATCHは「検索値が何行目にあるか」という<em>行番号（数値）</em>を返します。
+          この数値に <code>+1</code> や <code>-1</code> を足すことで、
+          <strong>ヒットした行の1行下・1行上のデータ</strong>を自在に取得できます。</p>
+<h4>例：D列で「商品A」を見つけ、その<strong>1行下</strong>のC列の値を取る</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=INDEX(C:C, MATCH("商品A", D:D, 0) + 1)</span>
+</div>
+<h4>例：D列で「商品A」を見つけ、その<strong>1行上</strong>のC列の値を取る</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=INDEX(C:C, MATCH("商品A", D:D, 0) - 1)</span>
+</div>
+<div class="xdemo-note-warn">
+          ⚠️ <strong>XLOOKUPやVLOOKUPにはこの発想がありません。</strong><br>
+          XLOOKUPは「ヒットした行そのもの」しか返せず、隣接行へのずらし取得はできません。
+          <em>「見つけた位置を起点に相対的にずらして取得したい」</em>ケースでは、
+          最新のMicrosoft 365やExcel 2024環境でもINDEX+MATCHの組み合わせが最適解です。
+        </div>
+</section>
+<!-- シリーズナビ（下部） -->
+<div class="series-nav" style="margin-top:40px;">
+<h4>📚 XLOOKUPシリーズ &horbar; 次のステップへ</h4>
+<ul>
+<li><a href="article_xlookup_basic.html">① 基本編</a> &horbar; 構文・引数・動作イメージ</li>
+<li class="current">② 応用編（このページ）</li>
+<li><a href="article_xlookup_vs.html">③ 比較編</a> &horbar; VLOOKUP・INDEX+MATCHとどう使い分けるか</li>
+<li><a href="article_xlookup_multi.html">④ 多条件検索編</a> &horbar; XLOOKUPネストで複数条件を検索</li>
+</ul>
+</div>
+<!-- 関連記事 -->
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_xmatch.html">XMATCH &horbar; MATCH関数との違いと使い分け</a></li>
+<li><a href="../old/article_index_match.html">INDEX + MATCH &horbar; 全バージョン対応の王道テクニック</a></li>
+<li><a href="article_choosecols.html">CHOOSECOLS / CHOOSEROWS &horbar; 離れた列の一括抽出</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+

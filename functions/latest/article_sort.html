@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>SORT / SORTBY関数（2021～）｜Excel &times; No VBA Lab</title>
+<meta content="ExcelのSORT/SORTBY関数（2021～）で数式だけで自動昇順・降順並べ替えを実現。複数条件ソートも対応。" name="description">
+<meta content="SORT 関数 Excel, SORTBY 使い方, 自動 並べ替え 関数, Excel 2021, スピル ソート" name="keywords">
+<meta content="SORT / SORTBY関数（2021～）｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのSORT/SORTBY関数（2021～）で数式だけで自動昇順・降順並べ替えを実現。複数条件ソートも対応。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/latest/article_sort.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/latest/article_sort.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "SORT / SORTBY関数（2021～）",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "ExcelのSORT/SORTBY関数（2021～）で数式だけで自動昇順・降順並べ替えを実現。複数条件ソートも対応。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-no-vba-lab.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-no-vba-lab.com/functions/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "SORT / SORTBY関数（2021～）",
+      "item": "https://excel-no-vba-lab.com/functions/latest/article_sort.html"
+    }
+  ]
+}</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">Excel × No VBA Lab</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#functions">関数</a><span>&gt;</span><strong>SORT / SORTBY</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-2021">2021～</span><span class="badge badge-365" style="margin-left:5px;">365</span></div>
+<h1 class="article-title">SORT / SORTBY：数式で動的に「並び替え」を実現する</h1>
+</div>
+<!-- ============================= -->
+<!-- やりたいこと -->
+<!-- ============================= -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>「データベースから抽出した結果を、売上の高い順（降順）に自動で並べたい」<br>
+        「わざわざデータ表にフィルターをかけて、手動で[昇順に並び替え]ボタンを押す作業をなくしたい」</p>
+</section>
+<!-- ============================= -->
+<!-- SORT 基本構文 -->
+<!-- ============================= -->
+<section class="method-section">
+<h3>新関数での解決法：SORT / SORTBY</h3>
+<p>SORT関数もまた、従来は手作業（またはマクロ）でしかできなかったアクションを「関数ベースで全自動化」した革命的なスピル関数の1つです。<br>
+        元データが更新されれば、抽出先の一覧も自動的に「常にソートされ直した状態」を保ちます。</p>
+<h4>SORT（配列の中の列番号を基準に並び替え）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(配列, [並び替えの基準列番号], [順序: 1昇順/-1降順], [列方向: TRUE/FALSE])</span>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(A2:E1000, 5, -1)</span>
+</div>
+<p class="code-comment">
+          意味：A2:E1000の範囲を、左から5番目の列（E列＝売上など）の値を基準にして「-1（降順＝大きい順）」に並び替える。
+        </p>
+<h4>SORTBY（配列「外」の範囲も含めて複数条件で並び替え）</h4>
+<p>SORT単体では「複数の列を基準にしたソート（第1キーは部署順、第2キーは売上順など）」がやりにくいですが、SORTBYを使えば自在です。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORTBY(配列, 基準配列1, [順序1], 基準配列2, [順序2], ...)</span>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORTBY(A2:E1000, B2:B1000, 1, E2:E1000, -1)</span>
+</div>
+<p class="code-comment">
+          意味：A2:E1000を、まず「B列（部署）の昇順」で並べ、次にその中で「E列（売上）の降順」で並べる。<br>
+          ※SORTBYは列番号での指定ではなく、範囲そのもの（<code>B2:B1000</code>など）で指定するのが特徴。
+        </p>
+<div class="xdemo-note">
+<strong>🔥 FILTER・UNIQUEとの合わせ技（THE・神コンボ）</strong><br>
+<code>=SORT(UNIQUE(A:A))</code>  （マスタ一覧をあいうえお順に）<br>
+<code>=TAKE(SORT(FILTER(A2:E100, B2:B100="東京"), 5, -1), 10)</code><br>
+          （東京のデータだけを抽出し、売上の高い順に並び替え、その上位10件だけを表示する）<br>
+          このように、関数をマトリョーシカのように入れ子（ネスト）にしていくことで、VBAで数十行書かざるを得なかった集計処理が1行で完結します。
+        </div>
+</section>
+<!-- ============================= -->
+<!-- SORT vs SORTBY 完全比較 -->
+<!-- ============================= -->
+<section class="method-section" id="sort-vs-sortby">
+<h2>🔍 SORT vs SORTBY &boxh;&boxh; どう使い分ける？</h2>
+<h3>① 2つの関数の引数を並べて比較</h3>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:680px;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-head" style="min-width:160px;">比較項目</td>
+<td class="xd-head" style="min-width:250px;">SORT</td>
+<td class="xd-head" style="min-width:250px;">SORTBY</td>
+</tr>
+<tr>
+<td class="text-left-bold">基準列の指定方法</td>
+<td>列「番号」で指定<br><code>=SORT(A:E, 3, -1)</code><br>&larr; 3列目で降順</td>
+<td>列「範囲」で指定<br><code>=SORTBY(A:E, C:C, -1)</code><br>&larr; C列で降順</td>
+</tr>
+<tr>
+<td class="text-left-bold">複数キーのソート</td>
+<td>配列定数で可能だが<br>やや書きにくい<br><code>=SORT(A:E, {3,5}, {1,-1})</code></td>
+<td>引数をペアで追加するだけ<br>直感的で読みやすい<br><code>=SORTBY(A:E, C:C, 1, E:E, -1)</code></td>
+</tr>
+<tr>
+<td class="text-left-bold">配列「外」の値でソート</td>
+<td>❌ 不可<br>（配列内の列しか基準にできない）</td>
+<td>✅ 可能<br>（別シートの列や計算式も基準にできる）</td>
+</tr>
+<tr>
+<td class="text-left-bold">計算値でソート<br>（文字数・月日など）</td>
+<td>❌ 不可</td>
+<td>✅ 可能<br><code>=SORTBY(A:B, LEN(A:A))</code></td>
+</tr>
+<tr>
+<td class="text-left-bold">カスタム順序でソート<br>（高・中・低 など）</td>
+<td>❌ 不可</td>
+<td>✅ 可能<br>MATCH/XMATCHと組み合わせ</td>
+</tr>
+<tr>
+<td class="text-left-bold">横方向（列方向）のソート</td>
+<td>第4引数 <code>TRUE</code> で明示指定</td>
+<td>基準配列の形状から自動判定</td>
+</tr>
+<tr>
+<td class="text-left-bold">列の追加・削除への耐性</td>
+<td style="background:#fff8e1;">弱い（列番号がズレる）</td>
+<td class="bg-e8f5e9">強い（範囲参照なのでズレない）</td>
+</tr>
+</table></div>
+</div>
+<div class="xdemo-note">
+<strong>💡 使い分けの結論</strong><br>
+          「単純な1列ソート」&rarr; SORT で十分（最も短く書ける）<br>
+          「複数キー / 計算値 / カスタム順序 / 配列外の基準」&rarr; SORTBY 一択
+        </div>
+</section>
+<!-- ============================= -->
+<!-- SORT 深掘り -->
+<!-- ============================= -->
+<section class="method-section" id="sort-deep">
+<h2>📘 SORT関数 &boxh;&boxh; 引数と挙動を深掘り</h2>
+<h3>② 全4引数の詳細</h3>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:640px;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-head">引数</td>
+<td class="xd-head">必須?</td>
+<td class="xd-head">説明</td>
+<td class="xd-head">既定値</td>
+</tr>
+<tr>
+<td><strong>配列</strong></td>
+<td>必須</td>
+<td class="text-left">ソート対象のセル範囲 or 配列</td>
+<td>&boxh;</td>
+</tr>
+<tr>
+<td><strong>sort_index</strong></td>
+<td>任意</td>
+<td class="text-left">何列目（横方向なら何行目）を基準にするか</td>
+<td>1（先頭列）</td>
+</tr>
+<tr>
+<td><strong>sort_order</strong></td>
+<td>任意</td>
+<td class="text-left">1 = 昇順（A&rarr;Z / 小&rarr;大）<br>-1 = 降順（Z&rarr;A / 大&rarr;小）</td>
+<td>1（昇順）</td>
+</tr>
+<tr>
+<td><strong>by_col</strong></td>
+<td>任意</td>
+<td class="text-left">TRUE = 列方向（横）にソート<br>FALSE = 行方向（縦）にソート</td>
+<td>FALSE（行方向）</td>
+</tr>
+</table></div>
+</div>
+<h3>③ 基本例：1列ソート（名前を五十音順に）</h3>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col"></td><td class="xd-col">D</td><td class="xd-col">E</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-head">名前</td><td class="xd-head">売上</td><td class="xd-row" style="background:#fff;"></td><td class="xd-head">名前</td><td class="xd-head">売上</td></tr>
+<tr><td class="xd-row">2</td><td>田中</td><td>500</td><td></td><td class="xd-spill-origin">伊藤</td><td class="xd-spill">180</td></tr>
+<tr><td class="xd-row">3</td><td>佐藤</td><td>320</td><td></td><td class="xd-spill">加藤</td><td class="xd-spill">210</td></tr>
+<tr><td class="xd-row">4</td><td>伊藤</td><td>180</td><td></td><td class="xd-spill">佐藤</td><td class="xd-spill">320</td></tr>
+<tr><td class="xd-row">5</td><td>山田</td><td>410</td><td></td><td class="xd-spill">田中</td><td class="xd-spill">500</td></tr>
+<tr><td class="xd-row">6</td><td>加藤</td><td>210</td><td></td><td class="xd-spill">山田</td><td class="xd-spill">410</td></tr>
+</table></div>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(A2:B6)</span>
+</div>
+<p class="code-comment">D2に入力 &rarr; D2:E6にスピル。引数省略で「1列目の昇順」。名前の五十音（文字コード）順に全列がまとめて並び替わります。</p>
+<h3>④ 売上の降順でソート</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(A2:B6, 2, -1)</span>
+</div>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">D</td><td class="xd-col">E</td></tr>
+<tr><td class="xd-row">2</td><td class="xd-spill-origin">田中</td><td class="xd-spill">500</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-spill">山田</td><td class="xd-spill">410</td></tr>
+<tr><td class="xd-row">4</td><td class="xd-spill">佐藤</td><td class="xd-spill">320</td></tr>
+<tr><td class="xd-row">5</td><td class="xd-spill">加藤</td><td class="xd-spill">210</td></tr>
+<tr><td class="xd-row">6</td><td class="xd-spill">伊藤</td><td class="xd-spill">180</td></tr>
+</table></div>
+</div>
+<p class="code-comment">2列目（売上）を基準に降順。ランキング表の自動生成に直結します。</p>
+<h3>⑤ 複数キーのソート（配列定数を使う方法）</h3>
+<p>SORTで複数列を基準にするには、sort_index と sort_order に <strong>配列定数 <code>{}</code></strong> を使います。</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col">C</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-head">部署</td><td class="xd-head">名前</td><td class="xd-head">売上</td></tr>
+<tr><td class="xd-row">2</td><td>営業</td><td>田中</td><td>500</td></tr>
+<tr><td class="xd-row">3</td><td>開発</td><td>佐藤</td><td>320</td></tr>
+<tr><td class="xd-row">4</td><td>営業</td><td>伊藤</td><td>180</td></tr>
+<tr><td class="xd-row">5</td><td>開発</td><td>山田</td><td>410</td></tr>
+<tr><td class="xd-row">6</td><td>営業</td><td>加藤</td><td>210</td></tr>
+</table></div>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(A2:C6, {1,3}, {1,-1})</span>
+</div>
+<p class="code-comment">第1キー：1列目（部署）を昇順 &rarr; 第2キー：3列目（売上）を降順。<br>結果：営業グループの中では売上の高い順、開発グループの中でも売上の高い順に並ぶ。</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">E</td><td class="xd-col">F</td><td class="xd-col">G</td><td style="border:none;background:#fff;font-size:0.75em;color:#888;text-align:left;padding-left:10px;">&larr; 結果</td></tr>
+<tr><td class="xd-row">2</td><td class="xd-spill-origin">営業</td><td class="xd-spill">田中</td><td class="xd-spill">500</td><td class="border-none"></td></tr>
+<tr><td class="xd-row">3</td><td class="xd-spill">営業</td><td class="xd-spill">加藤</td><td class="xd-spill">210</td><td class="border-none"></td></tr>
+<tr><td class="xd-row">4</td><td class="xd-spill">営業</td><td class="xd-spill">伊藤</td><td class="xd-spill">180</td><td class="border-none"></td></tr>
+<tr><td class="xd-row">5</td><td class="xd-spill">開発</td><td class="xd-spill">山田</td><td class="xd-spill">410</td><td class="border-none"></td></tr>
+<tr><td class="xd-row">6</td><td class="xd-spill">開発</td><td class="xd-spill">佐藤</td><td class="xd-spill">320</td><td class="border-none"></td></tr>
+</table></div>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ 配列定数 <code>{1,3}</code> と <code>{1,-1}</code> の対応</strong><br>
+<code>{1,3}</code> の「1」が部署列（昇順<code>1</code>）、「3」が売上列（降順<code>-1</code>）に対応。<br>
+          順序と基準が1対1で対応しているので、数が一致しないとエラーになります。
+        </div>
+</section>
+<!-- ============================= -->
+<!-- SORTBY 深掘り -->
+<!-- ============================= -->
+<section class="method-section" id="sortby-deep">
+<h2>📗 SORTBY関数 &boxh;&boxh; SORTにはできない技</h2>
+<h3>⑥ SORTBYの複数キーソート（より直感的）</h3>
+<p>上記と同じ「部署昇順 &rarr; 売上降順」を SORTBYで書くとこうなります。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORTBY(A2:C6, A2:A6, 1, C2:C6, -1)</span>
+</div>
+<p class="code-comment">配列定数ではなく「範囲, 順序」のペアを繰り返すだけ。列の追加・削除があっても列番号がズレないので保守性が高い。</p>
+<h3>⑦ 計算値でソート：文字数順</h3>
+<p>「名前の短い順に並べたい」など、データそのものにはない「計算した値」を基準にする場合、SORTBYの独壇場です。</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col"></td><td class="xd-col">C</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-head">国名</td><td></td><td class="xd-head">結果</td></tr>
+<tr><td class="xd-row">2</td><td>Japan</td><td></td><td class="xd-spill-origin">Cuba</td></tr>
+<tr><td class="xd-row">3</td><td>Australia</td><td></td><td class="xd-spill">Japan</td></tr>
+<tr><td class="xd-row">4</td><td>Cuba</td><td></td><td class="xd-spill">France</td></tr>
+<tr><td class="xd-row">5</td><td>France</td><td></td><td class="xd-spill">Australia</td></tr>
+</table></div>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORTBY(A2:A5, LEN(A2:A5))</span>
+</div>
+<p class="code-comment">LEN（文字数）の結果を基準にソート。Cuba(4) &rarr; Japan(5) &rarr; France(6) &rarr; Australia(9) の順になる。</p>
+<h3>⑧ カスタム順序ソート（高&rarr;中&rarr;低 など）</h3>
+<p>「高・中・低」のような独自の優先順位で並べたい場合、XMATCH（またはMATCH）で順位を数値化し、それを基準にSORTBYへ渡します。</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col"></td><td class="xd-col">D</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-head">タスク</td><td class="xd-head">優先度</td><td></td><td class="xd-head">順序マスタ</td></tr>
+<tr><td class="xd-row">2</td><td>レポート作成</td><td>低</td><td></td><td>高</td></tr>
+<tr><td class="xd-row">3</td><td>顧客対応</td><td>高</td><td></td><td>中</td></tr>
+<tr><td class="xd-row">4</td><td>資料整理</td><td>中</td><td></td><td>低</td></tr>
+<tr><td class="xd-row">5</td><td>見積提出</td><td>高</td><td></td><td></td></tr>
+</table></div>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORTBY(A2:B5, XMATCH(B2:B5, D2:D4))</span>
+</div>
+<p class="code-comment">XMATCH がマスタ内の位置番号（高=1, 中=2, 低=3）を返し、SORTBYがその数値順に並べる。<br>結果：顧客対応(高) &rarr; 見積提出(高) &rarr; 資料整理(中) &rarr; レポート作成(低)</p>
+<h3>⑨ ランダムシャッフル</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORTBY(A2:A10, RANDARRAY(ROWS(A2:A10)))</span>
+</div>
+<p class="code-comment">RANDARRAYが乱数を生成し、SORTBYがその乱数の小さい順に並べる &rarr; 毎回ランダムな順序になる。<br>抽選・座席シャッフルなどに便利。シートを再計算するたびに順序が変わります。</p>
+<h3>⑩ 日付の月日だけでソート（誕生日カレンダー）</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORTBY(A2:B10, TEXT(B2:B10, "mmdd"))</span>
+</div>
+<p class="code-comment">TEXT関数で月日だけを "0718" のような文字列に変換し、それを基準にソート。<br>年を無視した「カレンダー順」が実現できる。</p>
+</section>
+<!-- ============================= -->
+<!-- 安定ソートの解説 -->
+<!-- ============================= -->
+<section class="method-section" id="stable-sort">
+<h2>🔒 知っておくべき：安定ソート（Stable Sort）</h2>
+<p>SORT・SORTBYはどちらも<strong>「安定ソート」</strong>です。これは「ソート基準の値が同じ行は、元データでの並び順がそのまま維持される」ということを意味します。</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col"></td><td class="xd-col">D</td><td class="xd-col">E</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-head">名前</td><td class="xd-head">部署</td><td></td><td class="xd-head">名前</td><td class="xd-head">部署</td></tr>
+<tr><td class="xd-row">2</td><td>田中</td><td>営業</td><td></td><td class="xd-spill-origin">田中</td><td class="xd-spill">営業</td></tr>
+<tr><td class="xd-row">3</td><td>佐藤</td><td>開発</td><td></td><td class="xd-spill">伊藤</td><td class="xd-spill">営業</td></tr>
+<tr><td class="xd-row">4</td><td>伊藤</td><td>営業</td><td></td><td class="xd-spill">佐藤</td><td class="xd-spill">開発</td></tr>
+<tr><td class="xd-row">5</td><td>山田</td><td>開発</td><td></td><td class="xd-spill">山田</td><td class="xd-spill">開発</td></tr>
+</table></div>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(A2:B5, 2, 1)</span>
+</div>
+<p class="code-comment">部署の昇順でソート。営業が2人（田中・伊藤）いるが、元データの並び順（田中&rarr;伊藤）がそのまま維持される。<br>これが「安定ソート」。旧来の LARGE+INDEX+MATCH では実現が困難でした。</p>
+</section>
+<!-- ============================= -->
+<!-- 他関数との組み合わせ -->
+<!-- ============================= -->
+<section class="method-section" id="combo">
+<h2>🚀 他の関数との組み合わせ &boxh;&boxh; 実務の神コンボ集</h2>
+<p>SORT / SORTBY の真価は、他のスピル関数と組み合わせたときに発揮されます。ここからが本番です。</p>
+<!-- ----- コンボ1: FILTER + SORT ----- -->
+<h3>コンボ① FILTER + SORT：条件抽出 &rarr; 並び替え</h3>
+<p>最も使用頻度が高い鉄板の組み合わせ。FILTERで絞り込んだ結果を、そのままSORT（またはSORTBY）に渡します。</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col">C</td><td class="xd-col">D</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-head">地域</td><td class="xd-head">商品</td><td class="xd-head">売上</td><td class="xd-head">月</td></tr>
+<tr><td class="xd-row">2</td><td>東京</td><td>PC</td><td>500</td><td>4月</td></tr>
+<tr><td class="xd-row">3</td><td>大阪</td><td>モニター</td><td>200</td><td>4月</td></tr>
+<tr><td class="xd-row">4</td><td>東京</td><td>キーボード</td><td>80</td><td>5月</td></tr>
+<tr><td class="xd-row">5</td><td>東京</td><td>マウス</td><td>30</td><td>4月</td></tr>
+<tr><td class="xd-row">6</td><td>大阪</td><td>PC</td><td>450</td><td>5月</td></tr>
+<tr><td class="xd-row">7</td><td>東京</td><td>モニター</td><td>350</td><td>5月</td></tr>
+</table></div>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(FILTER(A2:D7, A2:A7="東京"), 3, -1)</span>
+</div>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">F</td><td class="xd-col">G</td><td class="xd-col">H</td><td class="xd-col">I</td><td style="border:none;background:#fff;font-size:0.75em;color:#888;text-align:left;padding-left:10px;">&larr; 結果</td></tr>
+<tr><td class="xd-row">2</td><td class="xd-spill-origin">東京</td><td class="xd-spill">PC</td><td class="xd-spill">500</td><td class="xd-spill">4月</td><td class="border-none"></td></tr>
+<tr><td class="xd-row">3</td><td class="xd-spill">東京</td><td class="xd-spill">モニター</td><td class="xd-spill">350</td><td class="xd-spill">5月</td><td class="border-none"></td></tr>
+<tr><td class="xd-row">4</td><td class="xd-spill">東京</td><td class="xd-spill">キーボード</td><td class="xd-spill">80</td><td class="xd-spill">5月</td><td class="border-none"></td></tr>
+<tr><td class="xd-row">5</td><td class="xd-spill">東京</td><td class="xd-spill">マウス</td><td class="xd-spill">30</td><td class="xd-spill">4月</td><td class="border-none"></td></tr>
+</table></div>
+</div>
+<p class="code-comment">FILTERで東京だけ抽出 &rarr; SORTで3列目（売上）の降順に並び替え。<br>元データが追加されても自動で再計算されます。</p>
+<div class="xdemo-note">
+<strong>💡 SORTBYでFILTER結果を並べる場合の注意</strong><br>
+          SORTBYの基準配列はFILTER後の配列と同じサイズでなければなりません。<br>
+<code>=SORTBY(FILTER(A2:D7, A2:A7="東京"), FILTER(C2:C7, A2:A7="東京"), -1)</code><br>
+          このように、基準配列にも同じFILTERを適用する必要があります。<br>
+          面倒な場合は <code>SORT(..., 列番号, 順序)</code> の方が簡潔です。
+        </div>
+<!-- ----- コンボ2: FILTER + SORT + TAKE ----- -->
+<h3>コンボ② FILTER + SORT + TAKE：Top N 抽出（上位&cir;件）</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TAKE(SORT(FILTER(A2:D7, A2:A7="東京"), 3, -1), 3)</span>
+</div>
+<p class="code-comment">東京のデータを売上降順に並べ、<strong>上位3件だけ</strong>を返す。<br>TAKEの第2引数が取得行数。マイナスにすると末尾から取得できます。</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">F</td><td class="xd-col">G</td><td class="xd-col">H</td><td class="xd-col">I</td></tr>
+<tr><td class="xd-row">2</td><td class="xd-spill-origin">東京</td><td class="xd-spill">PC</td><td class="xd-spill">500</td><td class="xd-spill">4月</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-spill">東京</td><td class="xd-spill">モニター</td><td class="xd-spill">350</td><td class="xd-spill">5月</td></tr>
+<tr><td class="xd-row">4</td><td class="xd-spill">東京</td><td class="xd-spill">キーボード</td><td class="xd-spill">80</td><td class="xd-spill">5月</td></tr>
+</table></div>
+</div>
+<!-- ----- コンボ3: UNIQUE + SORT ----- -->
+<h3>コンボ③ UNIQUE + SORT：重複排除 &rarr; 五十音順マスタ</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(UNIQUE(B2:B100))</span>
+</div>
+<p class="code-comment">B列から重複を除去し、昇順に並べる。<br>ドロップダウンリスト（入力規則）のソースや、集計用のマスタ一覧の自動生成に最適。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(UNIQUE(A2:C100), 3, -1)</span>
+</div>
+<p class="code-comment">複数列の組み合わせで重複排除し、3列目の降順でソート。</p>
+<!-- ----- コンボ4: XLOOKUP + SORT ----- -->
+<h3>コンボ④ XLOOKUP + SORT：検索結果をソートして表示</h3>
+<p>XLOOKUPが複数列を返す場合、その結果をさらにSORT / SORTBYで並べ替えるパターンです。</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col">C</td><td class="xd-col">D</td><td class="xd-col">E</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-head">社員ID</td><td class="xd-head">名前</td><td class="xd-head">4月</td><td class="xd-head">5月</td><td class="xd-head">6月</td></tr>
+<tr><td class="xd-row">2</td><td>E001</td><td>田中</td><td>120</td><td>150</td><td>180</td></tr>
+<tr><td class="xd-row">3</td><td>E002</td><td>佐藤</td><td>200</td><td>180</td><td>220</td></tr>
+<tr><td class="xd-row">4</td><td>E003</td><td>伊藤</td><td>90</td><td>110</td><td>100</td></tr>
+</table></div>
+</div>
+<p>「E002の月別売上を降順で見たい」場合：</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(XLOOKUP("E002", A2:A4, C2:E4), , -1, TRUE)</span>
+</div>
+<p class="code-comment">XLOOKUPで E002 の行（200, 180, 220）を横方向に取得。<br>SORTの第4引数 <code>TRUE</code> で横方向ソート &rarr; 220, 200, 180 の降順で返る。</p>
+<!-- ----- コンボ5: SORTBY + XLOOKUP ----- -->
+<h3>コンボ⑤ SORTBY + XLOOKUP：別テーブルの値を基準にソート</h3>
+<p>SORTBYの基準配列にXLOOKUPを入れると、「別テーブルにある値を基準にして、手元のテーブルを並べ替える」ことができます。</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td>
+<td class="xd-col" style="background:#fff;border:none;width:20px;"></td>
+<td class="xd-col">D</td><td class="xd-col">E</td>
+</tr>
+<tr>
+<td class="xd-row">1</td><td class="xd-head">商品ID</td><td class="xd-head">在庫数</td>
+<td class="border-none"></td>
+<td class="xd-head">商品ID</td><td class="xd-head">優先度</td>
+</tr>
+<tr>
+<td class="xd-row">2</td><td>P-101</td><td>25</td>
+<td class="border-none"></td>
+<td>P-101</td><td>3</td>
+</tr>
+<tr>
+<td class="xd-row">3</td><td>P-205</td><td>42</td>
+<td class="border-none"></td>
+<td>P-205</td><td>1</td>
+</tr>
+<tr>
+<td class="xd-row">4</td><td>P-312</td><td>150</td>
+<td class="border-none"></td>
+<td>P-312</td><td>2</td>
+</tr>
+</table></div>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORTBY(A2:B4, XLOOKUP(A2:A4, D2:D4, E2:E4))</span>
+</div>
+<p class="code-comment">XLOOKUPが各商品IDの優先度（1, 2, 3）を返し、SORTBYがその値で昇順ソート。<br>結果：P-205(優先度1) &rarr; P-312(優先度2) &rarr; P-101(優先度3) の順に並ぶ。<br>在庫テーブルに「優先度」列を追加しなくても、別テーブルの値で並べ替えられるのがポイント。</p>
+<!-- ----- コンボ6: FILTER + SORTBY + UNIQUE ----- -->
+<h3>コンボ⑥ FILTER + SORT + UNIQUE：フル・コンボ</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(UNIQUE(FILTER(A2:C100, B2:B100="営業")), 3, -1)</span>
+</div>
+<p class="code-comment">① FILTER で「営業」部門だけを抽出<br>② UNIQUE で重複行を排除<br>③ SORT で 3列目（売上）の降順に並べ替え<br>&rarr; 営業部門のユニークなデータが売上順で一覧になる。</p>
+<!-- ----- コンボ7: LET + SORT ----- -->
+<h3>コンボ⑦ LET + SORT：複雑な数式を読みやすく</h3>
+<p>ネストが深くなったら LET関数で中間結果に名前をつけると格段に読みやすくなります。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">    data,    A2:D100,</span>
+<span class="code-line">    filtered, FILTER(data, INDEX(data,,1)="東京"),</span>
+<span class="code-line">    sorted,   SORT(filtered, 3, -1),</span>
+<span class="code-line">    TAKE(sorted, 10)</span>
+<span class="code-line">)</span>
+</div>
+<p class="code-comment">LET関数で data &rarr; filtered &rarr; sorted と名前をつけて段階的に処理。<br>最終行の TAKE(sorted, 10) で上位10件を返す。<br>やっていることは「=TAKE(SORT(FILTER(...),3,-1),10)」と同じだが、読みやすさが段違い。</p>
+</section>
+<!-- ============================================ -->
+<!-- ▼ SORT × バイナリ検索 実践活用セクション ▼ -->
+<!-- ============================================ -->
+<section class="method-section" id="binary-search">
+<h2>⚡ SORTが切り拓く「バイナリ検索」&boxh;&boxh; 大規模データの速度革命</h2>
+<p>SORT関数の活用法は「見た目の並び替え」だけではありません。SORT で作ったソート済みデータを XLOOKUP や XMATCH の<strong>バイナリ検索モード</strong>に渡すことで、数万〜数十万行の検索を<strong>劇的に高速化</strong>できます。これは実務で最も見落とされがちな、しかし最もインパクトの大きい SORT の使い方です。</p>
+<!-- ----- 線形検索 vs バイナリ検索 ----- -->
+<h3>⑪ 線形検索 vs バイナリ検索 &boxh;&boxh; 何がどう違うのか</h3>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:640px;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-head" style="min-width:130px;">比較項目</td>
+<td class="xd-head" style="min-width:230px;">線形検索（デフォルト）</td>
+<td class="xd-head" style="min-width:230px;">バイナリ検索（search_mode=2）</td>
+</tr>
+<tr>
+<td class="text-left-bold">アルゴリズム</td>
+<td>先頭から1件ずつ順番にチェック</td>
+<td>中央で半分に分割 &rarr; 該当する半分をさらに半分&hellip; を繰り返す</td>
+</tr>
+<tr>
+<td class="text-left-bold">データのソート</td>
+<td class="bg-e8f5e9">不要</td>
+<td style="background:#fff8e1;"><strong>必須</strong>（昇順 or 降順）</td>
+</tr>
+<tr>
+<td class="text-left-bold">10万行の最悪ケース</td>
+<td style="background:#ffebee;"><strong>100,000回</strong> の比較</td>
+<td class="bg-e8f5e9"><strong>最大17回</strong> の比較</td>
+</tr>
+<tr>
+<td class="text-left-bold">100万行の最悪ケース</td>
+<td style="background:#ffebee;"><strong>1,000,000回</strong> の比較</td>
+<td class="bg-e8f5e9"><strong>最大20回</strong> の比較</td>
+</tr>
+<tr>
+<td class="text-left-bold">計算量（Big O）</td>
+<td>O(n) &boxh;&boxh; データ量に比例</td>
+<td>O(log n) &boxh;&boxh; データ量の対数</td>
+</tr>
+<tr>
+<td class="text-left-bold">体感速度</td>
+<td>数千行まではOK。万単位で重くなる</td>
+<td>100万行でも一瞬</td>
+</tr>
+</table></div>
+</div>
+<div class="xdemo-note-perf">
+<strong>🔥 衝撃の数字</strong><br>
+          100万行のデータから1件を探す場合、線形検索は最悪<strong>100万回</strong>の比較が必要です。<br>
+          バイナリ検索ならたった<strong>20回</strong>。これは約<strong>5万倍</strong>の差です。<br>
+          XLOOKUP数式を数百〜数千行にコピーしているシートでは、この差がシート全体の再計算時間に直結します。
+        </div>
+<!-- ----- XLOOKUP / XMATCH のバイナリ検索引数 ----- -->
+<h3>⑫ XLOOKUP / XMATCH でバイナリ検索を有効にする</h3>
+<p>どちらの関数も、最後の引数 <code>search_mode</code> に <code>2</code>（昇順）または <code>-2</code>（降順）を指定するだけです。</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:660px;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-head">関数</td>
+<td class="xd-head">通常（線形検索）</td>
+<td class="xd-head">バイナリ検索（昇順データ）</td>
+</tr>
+<tr>
+<td class="font-bold">XLOOKUP</td>
+<td><code>=XLOOKUP(値, 検索列, 戻り列)</code></td>
+<td><code>=XLOOKUP(値, 検索列, 戻り列, , 0, <strong class="color-red">2</strong>)</code></td>
+</tr>
+<tr>
+<td class="font-bold">XMATCH</td>
+<td><code>=XMATCH(値, 検索列)</code></td>
+<td><code>=XMATCH(値, 検索列, 0, <strong class="color-red">2</strong>)</code></td>
+</tr>
+</table></div>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ バイナリ検索の絶対条件</strong><br>
+          検索列のデータが<strong>正しくソートされていること</strong>。ソートされていない状態でバイナリ検索を使うと、<strong>エラーにならず間違った結果</strong>が返ります。見た目は正常なので発見が非常に困難です。
+        </div>
+<!-- ----- SORT × バイナリ検索の実践ワークフロー ----- -->
+<h3>⑬ 実践ワークフロー：SORT で作業シートを作り、バイナリ検索で爆速化</h3>
+<p>元データがソートされていないケースは実務で非常に多いです。「入力順」「更新順」などバラバラの並びが普通です。<br>
+        そんなときこそ <strong>SORT関数で「ソート済みの作業シート」を1回だけ自動生成</strong>し、以後のすべての検索をバイナリ検索で行うアーキテクチャが有効です。</p>
+<h4>ステップ1：作業シート「_sorted」にソート済みデータをスピル</h4>
+<div style="margin:1em 0; padding:14px 18px; background:#e8eaf6; border-left:4px solid #5c6bc0; border-radius:4px;">
+<strong style="color:#283593;">シート「_sorted」のA1セルに入力する数式（1つだけ）</strong>
+<div class="code-block mt-8" data-lang="excel">
+<span class="code-line">=SORT(rawData[#All], 1, 1)</span>
+</div>
+<p style="font-size:0.85em; margin:6px 0 0; line-height:1.7;">
+<code>rawData</code> はExcelテーブル名。1列目（例：商品ID）の昇順でソートされた全データが、作業シートにスピルで展開されます。<br>
+            元データが更新されるたびにこのシートも自動更新されるので、手動でソートし直す必要はありません。
+          </p>
+</div>
+<h4>ステップ2：検索シートからバイナリ検索で参照</h4>
+<div style="margin:1em 0; padding:14px 18px; background:#f1f8e9; border-left:4px solid #43a047; border-radius:4px;">
+<strong class="color-2e7d32">検索シートの各行に入力する数式</strong>
+<div class="code-block mt-8" data-lang="excel">
+<span class="code-line">=XLOOKUP(A2, _sorted!A:A, _sorted!C:C, "", 0, 2)</span>
+</div>
+<p style="font-size:0.85em; margin:6px 0 0; line-height:1.7;">
+<code>_sorted!A:A</code>（ソート済みの商品ID列）に対して、<code>search_mode = 2</code>（バイナリ検索・昇順）を指定。<br>
+            見つからない場合は空文字 <code>""</code> を返す。
+          </p>
+</div>
+<h4>構成図</h4>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:700px; font-size:0.82em;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-head" style="background:#e8eaf6; min-width:200px;">シート「rawData」<br>（元データ・未ソート）</td>
+<td style="border:none; background:#fff; font-size:1.3em; padding:0 16px;">&rarr;<br><span style="font-size:0.6em; color:#888;">SORT関数<br>（1回だけ）</span></td>
+<td class="xd-head" style="background:#c8e6c9; min-width:200px;">シート「_sorted」<br>（ソート済み・自動更新）</td>
+<td style="border:none; background:#fff; font-size:1.3em; padding:0 16px;">&rarr;<br><span style="font-size:0.6em; color:#888;">XLOOKUP<br>バイナリ検索</span></td>
+<td class="xd-head" style="background:#bbdefb; min-width:200px;">シート「検索結果」<br>（爆速で値を取得）</td>
+</tr>
+<tr>
+<td style="font-size:0.78em; text-align:left; padding:8px;">商品ID：P-312, P-101, P-510...<br>（入力順・バラバラ）</td>
+<td style="border:none; background:#fff;"></td>
+<td style="font-size:0.78em; text-align:left; padding:8px;">商品ID：P-101, P-205, P-312...<br>（昇順にソート済み）</td>
+<td style="border:none; background:#fff;"></td>
+<td style="font-size:0.78em; text-align:left; padding:8px;">XLOOKUP(..., 0, <strong class="color-red">2</strong>)<br>で各行を高速検索</td>
+</tr>
+</table></div>
+</div>
+<div class="xdemo-note">
+<strong>💡 なぜ「作業シート」なのか？</strong><br>
+          XLOOKUP の中に直接 SORT を入れる（<code>=XLOOKUP(A2, SORT(rawData[ID]), SORTBY(rawData[金額], rawData[ID]), "", 0, 2)</code>）ことも可能ですが、<strong>検索の数式1つごとにSORT計算が走る</strong>ため、数百行にコピーすると逆に遅くなる場合があります。<br>
+          作業シートに SORT を1回だけスピルさせ、その結果を参照する構成にすれば、ソート処理は1回きりで済みます。
+        </div>
+<!-- ----- INDEX + XMATCH パターン ----- -->
+<h3>⑭ INDEX + XMATCH でも同じ高速化が可能</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=INDEX(_sorted!C:C, XMATCH(A2, _sorted!A:A, 0, 2))</span>
+</div>
+<p class="code-comment">XMATCHの第4引数 <code>2</code> でバイナリ検索を有効化。XLOOKUPと同じ速度で動作する。<br>見つからない場合のハンドリングは IFNA で囲む：<br><code>=IFNA(INDEX(_sorted!C:C, XMATCH(A2, _sorted!A:A, 0, 2)), "")</code></p>
+<!-- ----- Self-Sorting Binary XLOOKUP ----- -->
+<h3>⑮ 応用：数式内で完結する「自己ソート型」バイナリ検索</h3>
+<p>作業シートを作りたくない場合、XLOOKUP の検索配列・戻り配列を数式内で直接ソートする方法もあります。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=XLOOKUP(</span>
+<span class="code-line">    A2,</span>
+<span class="code-line">    SORT(rawData[商品ID]),</span>
+<span class="code-line">    SORTBY(rawData[金額], rawData[商品ID]),</span>
+<span class="code-line">    "",</span>
+<span class="code-line">    0,</span>
+<span class="code-line">    2</span>
+<span class="code-line">)</span>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ 「自己ソート型」の注意点</strong><br>
+          検索列は <code>SORT(rawData[商品ID])</code> でソート、戻り列は <code>SORTBY(rawData[金額], rawData[商品ID])</code> で<strong>同じキーでソート</strong>しないと行がズレて誤った値が返ります。<br>
+          また、この数式を100行にコピーすると SORT / SORTBY が100回ずつ計算されるため、<strong>データが大きい場合は作業シート方式（⑬）の方が高速</strong>です。検索が少数（10件以下など）なら問題ありません。
+        </div>
+<!-- ----- LET で整理 ----- -->
+<h3>⑯ LETで読みやすくする</h3>
+<p>自己ソート型の数式はLETで整理すると可読性が大幅に向上します。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">    key,    rawData[商品ID],</span>
+<span class="code-line">    val,    rawData[金額],</span>
+<span class="code-line">    s_key,  SORT(key),</span>
+<span class="code-line">    s_val,  SORTBY(val, key),</span>
+<span class="code-line">    XLOOKUP(A2, s_key, s_val, "", 0, 2)</span>
+<span class="code-line">)</span>
+</div>
+<p class="code-comment">LETの中で中間変数を定義。s_key / s_val にソート済み配列を入れ、最終行のXLOOKUPでバイナリ検索。</p>
+<!-- ----- いつバイナリ検索を使うべきか ----- -->
+<h3>⑰ バイナリ検索を使うべきタイミング</h3>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:600px;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-head">状況</td>
+<td class="xd-head">推奨</td>
+<td class="xd-head">理由</td>
+</tr>
+<tr>
+<td class="text-left">データ数千行 &times; 検索数十回</td>
+<td class="bg-e8f5e9">線形検索で十分</td>
+<td style="text-align:left;font-size:0.82em;">体感差なし。設定の手間がもったいない</td>
+</tr>
+<tr>
+<td class="text-left">データ数万行 &times; 検索数百回</td>
+<td style="background:#fff8e1;"><strong>バイナリ検索を検討</strong></td>
+<td style="text-align:left;font-size:0.82em;">再計算で数秒〜十数秒かかり始める境界</td>
+</tr>
+<tr>
+<td class="text-left">データ10万行以上 &times; 検索数百〜数千回</td>
+<td style="background:#fce4ec;"><strong>バイナリ検索を強く推奨</strong></td>
+<td style="text-align:left;font-size:0.82em;">線形検索では「応答なし」が頻発するレベル</td>
+</tr>
+<tr>
+<td class="text-left">データが頻繁に更新される</td>
+<td class="bg-e8f5e9">作業シート方式（⑬）</td>
+<td style="text-align:left;font-size:0.82em;">SORT関数なら自動でソート維持。手動ソート不要</td>
+</tr>
+<tr>
+<td class="text-left">検索が1〜10件程度</td>
+<td class="bg-e8f5e9">自己ソート型（⑮）でOK</td>
+<td style="text-align:left;font-size:0.82em;">ソート計算の繰り返しが少ないので問題なし</td>
+</tr>
+</table></div>
+</div>
+<div class="xdemo-note">
+<strong>💡 SORT関数がバイナリ検索を「実用化」した</strong><br>
+          旧来のExcelでもバイナリ検索的な手法（MATCH関数の <code>match_type = 1</code>）は存在しました。しかし元データを手動でソートしておく必要があり、データが追加・更新されるたびにソートし直すのが現実的ではありませんでした。<br><br>
+          SORT関数の登場により、<strong>「ソート済みデータの自動維持」が数式だけで可能に</strong>なりました。これはバイナリ検索を「理論上使える」から<strong>「実務で使える」</strong>に変えた決定的な進歩です。<br><br>
+          SORT + XLOOKUP（バイナリ検索）の組み合わせは、大規模データを扱うExcelシートの計算速度を根本的に改善できる、覚えておくべきアーキテクチャパターンです。
+        </div>
+</section>
+<!-- ============================= -->
+<!-- エラーと注意点 -->
+<!-- ============================= -->
+<section class="method-section" id="errors">
+<h2>⚠️ よくあるエラーと注意点</h2>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:620px;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-head">エラー</td>
+<td class="xd-head">原因</td>
+<td class="xd-head">対処法</td>
+</tr>
+<tr>
+<td><strong>#SPILL!</strong></td>
+<td class="text-left">スピル先のセルに値が入っている</td>
+<td class="text-left">出力先を空にする</td>
+</tr>
+<tr>
+<td><strong>#VALUE!</strong></td>
+<td class="text-left">sort_index が範囲外 / SORTBYの基準配列サイズ不一致</td>
+<td class="text-left">列番号・配列サイズを確認</td>
+</tr>
+<tr>
+<td><strong>#CALC!</strong></td>
+<td class="text-left">FILTERの結果が0件（空配列）</td>
+<td class="text-left">FILTERの第3引数（if_empty）を設定：<br><code>FILTER(..., ..., "該当なし")</code></td>
+</tr>
+<tr>
+<td><strong>#REF!</strong></td>
+<td class="text-left">参照先のブックが閉じている</td>
+<td class="text-left">参照先ブックを開く</td>
+</tr>
+</table></div>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ ヘッダーを含めないこと</strong><br>
+          SORT / SORTBY はすべての行を「データ」として扱います。<code>A1:D100</code> のようにヘッダー行を含めると、ヘッダーもソート対象になり意図しない結果になります。<br>
+          必ず <code>A2:D100</code> のようにデータ行だけを指定してください。
+        </div>
+<div class="xdemo-note-warn">
+<strong>⚠️ 範囲の自動拡張について</strong><br>
+<code>=SORT(A2:D100, 3, -1)</code> のように固定範囲を指定すると、101行目以降にデータを追加しても反映されません。<br>
+      自動拡張させたい場合は<strong>Excelテーブル</strong>（Ctrl+T）を使うか、<code>TRIMRANGE</code> 関数（対応環境のみ）で動的範囲を作成してください。
+        </div>
+</section>
+<!-- ============================= -->
+<!-- 旧バージョンでの代替法 -->
+<!-- ============================= -->
+<section class="legacy-section">
+<h3>旧バージョンでの代替法（LARGE / RANK）</h3>
+<p>SORT登場以前、数式だけで「トップ10の表を自動更新させる」のは至難の業でした。</p>
+<div class="xdemo-note-warn">
+<strong>⚠️ 旧来の手法：LARGE関数で数値を取り、INDEX+MATCHで紐付け</strong><br>
+<code>=LARGE(売上範囲, ROW(A1))</code> で1位、2位の売上高を取り出し、それをキーにして <code>=INDEX(名前範囲, MATCH(1位の売上高, 売上範囲, 0))</code> とやって「誰の売上か」を照合・抽出する手法。
+        </div>
+<p>
+          この旧来手法には<strong>「同率1位（同じ売上高）の人が複数いると、数式が先に見つけた1人目の名前ばかりを重複して取得してしまう」</strong>という致命的な欠陥がありました。これを回避するためには「売上データの末尾に <code>+ROW()/100000</code> のように微小な行番号をわざと足して、無理やり数値を一意にずらす」といったトリッキーな細工（作業列）が必要不可欠でした。<br>
+<br>
+          現在のSORT関数を使えば、同率タイの順位も「元データの並び順」を維持して正しく全員分表示してくれます（安定ソート）。
+        </p>
+</section>
+<!-- ============================= -->
+<!-- まとめ -->
+<!-- ============================= -->
+<section class="method-section" id="summary">
+<h2>📌 まとめ：SORT / SORTBY 使い分けチャート</h2>
+<div style="margin:1em 0; padding:16px 20px; background:#f5f5f5; border-left:4px solid #78909c; border-radius:4px; line-height:2; font-size:0.9em;">
+<strong>Q. ソート基準は配列「内」の列？</strong><br>
+          　&boxvr; YES &rarr; 単一キー？ &rarr; <strong class="text-blue-dark">SORT(配列, 列番号, 順序)</strong><br>
+          　&boxvr; YES &rarr; 複数キー？ &rarr; <strong class="text-blue-dark">SORT(配列, {列1,列2}, {順1,順2})</strong> or <strong class="color-2e7d32">SORTBY</strong><br>
+          　&boxur; NO（配列外 / 計算値 / カスタム順序） &rarr; <strong class="color-2e7d32">SORTBY 一択</strong><br>
+<br>
+<strong>Q. 他の関数と組み合わせる？</strong><br>
+          　&boxvr; 条件抽出 &rarr; <strong>FILTER</strong> + SORT<br>
+          　&boxvr; 重複排除 &rarr; <strong>UNIQUE</strong> + SORT<br>
+          　&boxvr; 上位N件 &rarr; FILTER + SORT + <strong>TAKE</strong><br>
+          　&boxvr; 別テーブルの値で並べ替え &rarr; SORTBY + <strong>XLOOKUP</strong><br>
+          　&boxur; 数式が長い &rarr; <strong>LET</strong> で中間変数を定義して可読性UP<br>
+<br>
+<strong>Q. 大規模データの検索が遅い？</strong><br>
+          　&boxvr; 作業シートに <strong>SORT</strong> でソート済みデータを1回スピル<br>
+          　&boxur; <strong>XLOOKUP / XMATCH</strong> の search_mode = <strong class="color-red">2</strong> でバイナリ検索 &rarr; 爆速化
+        </div>
+<div class="xdemo-note">
+<strong>💡 最後に</strong><br>
+          SORT / SORTBY は「手作業の並び替え」を完全に関数化した、スピル時代を代表する関数です。FILTER・UNIQUE・TAKE・XLOOKUP・LET と組み合わせることで、従来はVBAで何十行も書いていた集計処理が<strong>たった1行の数式</strong>で完結します。<br><br>
+          さらに、SORT で作ったソート済みデータは XLOOKUP / XMATCH のバイナリ検索モードの「燃料」になります。大規模データの検索速度に悩んでいるなら、SORT + バイナリ検索のアーキテクチャを今日から試してみてください。
+        </div>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
+<li><a href="article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+<li><a href="article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
+<li><a href="article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

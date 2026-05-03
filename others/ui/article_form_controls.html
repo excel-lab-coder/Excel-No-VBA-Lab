@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>開発タブ＆フォームコントロール完全ガイド &horbar; スピンボタン&times;XLOOKUP でラベル印刷を自動化｜Excel &times; No VBA Lab</title>
+<link href="https://excel-no-vba-lab.com/others/ui/article_form_controls.html" rel="canonical">
+<meta content="開発タブ＆フォームコントロール完全ガイド &horbar; スピンボタン&times;XLOOKUP でラベル印刷を自動化｜Excel &times; No VBA Lab" property="og:title">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<meta content="Excelの開発タブを表示してスピンボタン・チェックボックス・スクロールバーなどのフォームコントロールを活用する方法を解説。スピンボタンとXLOOKUPを組み合わせてデータを5件ずつ切り替え、ラベル印刷と連携する実践テクニックを紹介します。" name="description">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    /* === 記事固有スタイル === */
+
+    /* 手順ステップ */
+    .steps { margin: 16px 0; }
+    .step-item { display: flex; gap: 14px; margin-bottom: 12px; align-items: flex-start; }
+    .step-num { flex-shrink: 0; width: 30px; height: 30px; background: #217346; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .85rem; }
+    .step-text { flex: 1; font-size: .9rem; line-height: 1.65; padding-top: 4px; }
+
+    /* リボン風モック */
+    .ribbon-mock { background: linear-gradient(180deg,#217346 0%,#185c37 100%); border-radius: 6px 6px 0 0; padding: 10px 16px 0; display: flex; gap: 32px; overflow-x: auto; }
+    .ribbon-tab { color: rgba(255,255,255,.7); font-size: .82rem; padding: 6px 12px 8px; cursor: pointer; border-radius: 4px 4px 0 0; white-space: nowrap; }
+    .ribbon-tab.active { background: #fff; color: #217346; font-weight: 700; }
+    .ribbon-body { border: 1px solid #c8e6c9; border-top: none; border-radius: 0 0 6px 6px; background: #fff; padding: 14px 18px; margin-bottom: 18px; }
+    .ribbon-group { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; margin-right: 20px; vertical-align: top; }
+    .ribbon-btn { border: 1px solid #ccc; background: #f8f8f8; border-radius: 4px; padding: 6px 10px; font-size: .78rem; cursor: default; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 52px; }
+    .ribbon-btn .btn-icon { font-size: 1.3rem; line-height: 1; }
+    .ribbon-btn.highlight { border-color: #217346; background: #e8f5e9; font-weight: 700; }
+    .ribbon-label { font-size: .65rem; color: #888; margin-top: 4px; }
+
+    /* フォームコントロール一覧カード */
+    .fc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin: 18px 0; }
+    .fc-card { border: 1px solid #ddd; border-radius: 8px; padding: 14px 16px; background: #fff; transition: box-shadow .15s; }
+    .fc-card:hover { box-shadow: 0 3px 10px rgba(0,0,0,.1); }
+    .fc-card.main { border-color: #217346; background: #f0faf0; }
+    .fc-card .fc-icon { font-size: 1.6rem; margin-bottom: 6px; }
+    .fc-card .fc-name { font-weight: 700; font-size: .92rem; margin-bottom: 4px; }
+    .fc-card .fc-desc { font-size: .8rem; color: #555; line-height: 1.55; }
+    .fc-card .fc-tag { display: inline-block; font-size: .62rem; background: #217346; color: #fff; border-radius: 10px; padding: 1px 8px; margin-bottom: 6px; }
+    .fc-card.main .fc-tag { background: #0078d4; }
+
+    /* スピンボタン デモ */
+    .spin-demo-box { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin: 18px 0; }
+    .spin-demo-label { font-size: .78rem; color: #555; margin-bottom: 8px; font-weight: 700; }
+    .spin-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .spin-cell { border: 2px solid #217346; background: #fff; border-radius: 6px 0 0 6px; padding: 8px 20px; font-size: 1.3rem; font-weight: 700; min-width: 64px; text-align: center; color: #1b5e20; }
+    .spin-buttons { display: flex; flex-direction: column; border: 1px solid #aaa; border-radius: 0 6px 6px 0; overflow: hidden; }
+    .spin-buttons button { background: #f0f0f0; border: none; padding: 3px 12px; cursor: pointer; font-size: .7rem; line-height: 1.4; transition: background .1s; }
+    .spin-buttons button:first-child { border-bottom: 1px solid #ccc; }
+    .spin-buttons button:hover { background: #c8e6c9; }
+    .spin-result { font-size: .88rem; color: #333; padding: 6px 14px; background: #fff; border: 1px solid #ddd; border-radius: 6px; min-width: 200px; }
+
+    /* Excel グリッド */
+    .excel-wrap { border: 1px solid #c8e6c9; border-radius: 6px; overflow: hidden; margin: 18px 0; }
+    .excel-header-bar { background: linear-gradient(180deg,#217346,#185c37); padding: 5px 14px; font-size: .75rem; color: rgba(255,255,255,.85); }
+    .excel-grid { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    .excel-grid th { background: #f0f0f0; font-weight: 600; color: #333; padding: 4px 8px; border: 1px solid #c8c8c8; text-align: center; min-width: 60px; }
+    .excel-grid td { border: 1px solid #c8c8c8; padding: 4px 8px; text-align: center; min-width: 60px; }
+    .excel-grid .row-num { background: #f0f0f0; font-weight: 600; color: #555; width: 32px; }
+    .formula-cell { background: #fffbe6; font-family: 'Consolas', monospace; font-size: .72rem; text-align: left !important; color: #6a1b9a; }
+    .highlight-cell { background: #e8f5e9; font-weight: 700; color: #1b5e20; }
+    .spin-cell-ref { background: #e3f2fd; font-weight: 700; color: #0d47a1; border: 2px solid #1976d2 !important; }
+
+    .formula-box .func { color: #89dceb; }
+    .formula-box .key  { color: #f38ba8; }
+    .formula-box .cmt  { color: #6c7086; font-style: italic; }
+
+    .toc { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 18px 24px; margin: 18px 0; }
+    .toc ul { list-style: none; padding: 0; margin: 0; }
+    .toc li { padding: 3px 0; }
+    .toc a { text-decoration: none; color: #0078d4; font-size: .88rem; }
+    .toc a:hover { text-decoration: underline; }
+
+    .badge-new { display: inline-block; font-size: .65rem; background: #d83b01; color: #fff; border-radius: 4px; padding: 1px 7px; vertical-align: middle; margin-left: 6px; }
+
+    @media (max-width: 640px) {
+      .fc-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"🎛️ 開発タブ＆フォームコントロール完全ガイド \u0026horbar; スピンボタン×XLOOKUP でラベル印刷を自動化","description":"Excelの開発タブを表示してスピンボタン・チェックボックス・スクロールバーなどのフォームコントロールを活用する方法を解説。スピンボタンとXLOOKUPを組み合わせてデータを5件ずつ切り替え、ラベル印刷と連携する実践テクニックを紹介します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/others/ui/article_form_controls.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span>
+<a href="../../index.html#others">小技</a><span>&gt;</span>
+<strong>フォームコントロール＆スピンボタン活用術</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">🎛️ 開発タブ＆フォームコントロール完全ガイド &horbar; スピンボタン&times;XLOOKUP でラベル印刷を自動化</h1>
+<p style="color:#555;margin-top:.4em">スピンボタンをワンクリックするだけで表示データが切り替わる。VBA不要・マウスだけで動く「インタラクティブExcel」の作り方。</p>
+</div>
+<!-- 目次 -->
+<div class="toc">
+<p><strong>目次</strong></p>
+<ul>
+<li><a href="#sec1">1. 「開発」タブを表示する方法</a></li>
+<li><a href="#sec2">2. フォームコントロール一覧 &horbar; 何ができるか</a></li>
+<li><a href="#sec3">3. スピンボタンの基本設定</a></li>
+<li><a href="#sec4">4. スピンボタン &times; XLOOKUP &horbar; データを5件ずつ切り替える</a></li>
+<li><a href="#sec5">5. ラベル印刷との組み合わせ &horbar; 実践レシピ</a></li>
+<li><a href="#sec6">6. チェックボックス・スクロールバーの活用例</a></li>
+<li><a href="#sec7">7. フォームコントロール vs ActiveXコントロール</a></li>
+<li><a href="#sec8">8. まとめ</a></li>
+</ul>
+</div>
+<!-- ===================== sec1 ===================== -->
+<h2 id="sec1"><span class="icon">⚙️</span> 1. 「開発」タブを表示する方法</h2>
+<p>フォームコントロールを使うには、まず<strong>「開発」タブ</strong>をリボンに表示させる必要があります。初期状態では非表示になっています。</p>
+<!-- リボン風モック -->
+<div class="ribbon-mock" id="ribbonMock">
+<div class="ribbon-tab" onclick="setActiveTab(0)">ホーム</div>
+<div class="ribbon-tab" onclick="setActiveTab(1)">挿入</div>
+<div class="ribbon-tab" onclick="setActiveTab(2)">ページレイアウト</div>
+<div class="ribbon-tab" onclick="setActiveTab(3)">数式</div>
+<div class="ribbon-tab" onclick="setActiveTab(4)">データ</div>
+<div class="ribbon-tab" onclick="setActiveTab(5)">校閲</div>
+<div class="ribbon-tab" onclick="setActiveTab(6)">表示</div>
+<div class="ribbon-tab active" id="devTab" onclick="setActiveTab(7)">開発 ✅</div>
+</div>
+<div class="ribbon-body">
+<div class="ribbon-group">
+<div class="ribbon-btn highlight">
+<span class="btn-icon">🧩</span>
+            挿入
+          </div>
+<div class="ribbon-label">コントロール</div>
+</div>
+<div class="ribbon-group">
+<div class="ribbon-btn">
+<span class="btn-icon">📄</span>
+            デザイン<br>モード
+          </div>
+<div class="ribbon-label">コントロール</div>
+</div>
+<div class="ribbon-group">
+<div class="ribbon-btn">
+<span class="btn-icon">📦</span>
+            アドイン
+          </div>
+<div class="ribbon-label">アドイン</div>
+</div>
+<div class="ribbon-group">
+<div class="ribbon-btn">
+<span class="btn-icon">🔐</span>
+            ブックの<br>保護
+          </div>
+<div class="ribbon-label">保護</div>
+</div>
+</div>
+<div class="steps">
+<div class="step-item">
+<div class="step-num">1</div>
+<div class="step-text">リボンの<strong>何もないところで右クリック</strong> &rarr; 「リボンのユーザー設定」を選択します。</div>
+</div>
+<div class="step-item">
+<div class="step-num">2</div>
+<div class="step-text">右側の「メインタブ」一覧の中に「<strong>開発</strong>」があります。チェックボックスをONにします。</div>
+</div>
+<div class="step-item">
+<div class="step-num">3</div>
+<div class="step-text">「OK」で閉じると、リボンに「開発」タブが追加されます。</div>
+</div>
+</div>
+<div class="xdemo-note-info">
+<strong>💡 もう一つの方法：</strong>「ファイル」&rarr;「オプション」&rarr;「リボンのユーザー設定」&rarr; 右側リストの「開発」にチェック &rarr; OK。
+      </div>
+<!-- ===================== sec2 ===================== -->
+<h2 id="sec2"><span class="icon">🧩</span> 2. フォームコントロール一覧 &horbar; 何ができるか</h2>
+<p>「開発」タブ &rarr; 「挿入」をクリックすると、<strong>フォームコントロール</strong>と<strong>ActiveXコントロール</strong>の2グループが表示されます。メインで使うのはフォームコントロールです。</p>
+<div class="fc-grid">
+<div class="fc-card main">
+<div class="fc-tag">⭐ メイン活用</div>
+<div class="fc-icon">🔼</div>
+<div class="fc-name">スピンボタン</div>
+<div class="fc-desc">▲▼クリックでリンクセルの数値を&plusmn;1（または指定した増分）ずつ変化させる。データ切り替えに最強。</div>
+</div>
+<div class="fc-card">
+<div class="fc-tag">よく使う</div>
+<div class="fc-icon">☑️</div>
+<div class="fc-name">チェックボックス</div>
+<div class="fc-desc">ON/OFFをリンクセルにTRUE/FALSEで返す。行の表示切り替えやIF条件の切り替えに。</div>
+</div>
+<div class="fc-card">
+<div class="fc-tag">よく使う</div>
+<div class="fc-icon">📊</div>
+<div class="fc-name">スクロールバー</div>
+<div class="fc-desc">横・縦どちらでも設置可能。スピンボタンと同じくリンクセルに数値を返す。幅広い範囲のスライド操作向き。</div>
+</div>
+<div class="fc-card">
+<div class="fc-tag">便利</div>
+<div class="fc-icon">🔘</div>
+<div class="fc-name">オプションボタン</div>
+<div class="fc-desc">グループの中から1つだけ選択。リンクセルに選択番号（1,2,3&hellip;）を返す。</div>
+</div>
+<div class="fc-card">
+<div class="fc-tag">便利</div>
+<div class="fc-icon">📋</div>
+<div class="fc-name">リストボックス</div>
+<div class="fc-desc">一覧から選択。リンクセルにリスト内の何番目かを返す。プルダウンより視認性が高い。</div>
+</div>
+<div class="fc-card">
+<div class="fc-tag">基本</div>
+<div class="fc-icon">🔽</div>
+<div class="fc-name">コンボボックス</div>
+<div class="fc-desc">ドロップダウン式選択。リスト外の入力も可能。データ入力補助に。</div>
+</div>
+<div class="fc-card">
+<div class="fc-tag">基本</div>
+<div class="fc-icon">🔲</div>
+<div class="fc-name">ボタン</div>
+<div class="fc-desc">クリックでマクロを実行。VBAありの場合に使用。VBA禁止環境では出番が少ない。</div>
+</div>
+<div class="fc-card">
+<div class="fc-tag">補助</div>
+<div class="fc-icon">🏷️</div>
+<div class="fc-name">ラベル</div>
+<div class="fc-desc">コントロールの説明文を付けるためのテキスト。見た目の整理に使う。</div>
+</div>
+</div>
+<div class="xdemo-note-info">
+<strong>共通の仕組み：</strong>フォームコントロールは内部的には「<strong>リンクするセル</strong>」に値を書き込みます。スピンボタンなら数値、チェックボックスならTRUE/FALSE。そのセルをXLOOKUPやIF関数で参照することで、マウスだけでシート全体が動的に変化します。
+      </div>
+<!-- ===================== sec3 ===================== -->
+<h2 id="sec3"><span class="icon">🔼</span> 3. スピンボタンの基本設定</h2>
+<p>スピンボタンは「▲▼」の2つのボタンからなる小さなコントロールです。配置後に<strong>右クリック &rarr; コントロールの書式設定</strong>で動作を細かく定義できます。</p>
+<div class="steps">
+<div class="step-item">
+<div class="step-num">1</div>
+<div class="step-text">「開発」タブ &rarr; 「挿入」&rarr; フォームコントロールの「スピンボタン」を選択し、シート上でドラッグして配置します。</div>
+</div>
+<div class="step-item">
+<div class="step-num">2</div>
+<div class="step-text">配置したスピンボタンを<strong>右クリック &rarr; 「コントロールの書式設定」</strong>を開きます。</div>
+</div>
+<div class="step-item">
+<div class="step-num">3</div>
+<div class="step-text">「コントロール」タブで以下を設定します。</div>
+</div>
+</div>
+<!-- 設定パラメータ表 -->
+<table class="format-table">
+<tr>
+<th>設定項目</th>
+<th>内容</th>
+<th>ラベル印刷（5件ずつ）の場合</th>
+</tr>
+<tr>
+<td><strong>現在値</strong></td>
+<td>初期値（ボタンを押す前の値）</td>
+<td style="color: #2e7d32; font-weight: bold;">1</td>
+</tr>
+<tr>
+<td><strong>最小値</strong></td>
+<td>▼を押しても下限を下回らない</td>
+<td style="color: #2e7d32; font-weight: bold;">1</td>
+</tr>
+<tr>
+<td><strong>最大値</strong></td>
+<td>▲を押しても上限を超えない</td>
+<td>データ件数に合わせて設定（例：96）</td>
+</tr>
+<tr>
+<td><strong>変化の増分</strong></td>
+<td>1回クリックで変化する量</td>
+<td style="color: #2e7d32; font-weight: bold;">5（5件まとめて切り替え）</td>
+</tr>
+<tr>
+<td><strong>リンクするセル</strong></td>
+<td>スピンボタンの値を書き込むセル</td>
+<td style="color: #2e7d32; font-weight: bold;">$Z$1（印刷範囲外の隅のセル）</td>
+</tr>
+</table>
+<!-- インタラクティブデモ -->
+<div class="spin-demo-box">
+<div class="spin-demo-label">▼ スピンボタン デモ（▲▼を押してZ1セルの値が変わる様子）</div>
+<div class="spin-row">
+<div style="font-size:.82rem;color:#555;font-weight:700;">Z1 セル：</div>
+<div class="spin-cell" id="spinVal">1</div>
+<div class="spin-buttons">
+<button onclick="changeSpin(5)">▲</button>
+<button onclick="changeSpin(-5)">▼</button>
+</div>
+<div style="font-size:.75rem;color:#888;">変化の増分 = 5</div>
+</div>
+<div style="margin-top:12px;">
+<div class="spin-result" id="spinResult">&rarr; XLOOKUPで検索する番号：<strong>1</strong>（1件目〜5件目を表示）</div>
+</div>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠ スピンボタンの注意点：</strong>スピンボタンを右クリックしないと「コントロールの書式設定」が出ません。左クリックすると値が変わってしまうため、設定時は必ず<strong>右クリック</strong>で操作してください。
+      </div>
+<!-- ===================== sec4 ===================== -->
+<h2 id="sec4"><span class="icon">🔗</span> 4. スピンボタン &times; XLOOKUP &horbar; データを5件ずつ切り替える</h2>
+<p>スピンボタンのリンクセル（Z1）の値をXLOOKUPの検索値として使うことで、<strong>ボタンを押すだけで表示データが自動切り替え</strong>になります。増分を5にすれば「1, 6, 11, 16&hellip;」と5件ずつ飛ばして表示できます。</p>
+<!-- フロー図 -->
+<div class="flow-box">
+<span class="text-center">スピンボタン<br><small>▲▼クリック</small></span>
+<div class="flow-arrow">&rarr;</div>
+<span class="text-center">Z1 セル<br><small>= 1, 6, 11 &hellip;</small></span>
+<div class="flow-arrow">&rarr;</div>
+<span class="text-center">XLOOKUP<br><small>Z1 を検索</small></span>
+<div class="flow-arrow">&rarr;</div>
+<span class="text-center">表示エリア更新<br><small>5件ぶん自動反映</small></span>
+<div class="flow-arrow">&rarr;</div>
+<span class="text-center">印刷（Ctrl+P）<br><small>Print_Area自動調整</small></span>
+</div>
+<h3>シートの構成例（宛先リスト + ラベルシート）</h3>
+<div class="excel-wrap">
+<div class="excel-header-bar">宛先リスト シート</div>
+<table class="excel-grid">
+<tr>
+<th></th><th>A</th><th>B（氏名）</th><th>C（郵便番号）</th><th>D（住所）</th>
+</tr>
+<tr><td class="row-num">1</td><td>No</td><td>氏名</td><td>郵便番号</td><td>住所</td></tr>
+<tr><td class="row-num">2</td><td>1</td><td>山田太郎</td><td>100-0001</td><td>東京都千代田区&hellip;</td></tr>
+<tr><td class="row-num">3</td><td>2</td><td>鈴木花子</td><td>530-0001</td><td>大阪府大阪市&hellip;</td></tr>
+<tr><td class="row-num">4</td><td>3</td><td>佐藤一郎</td><td>460-0001</td><td>愛知県名古屋市&hellip;</td></tr>
+<tr><td class="row-num" style="color:#aaa">&hellip;</td><td colspan="4" style="color:#aaa">（〜100件）</td></tr>
+</table>
+</div>
+<div class="excel-wrap">
+<div class="excel-header-bar">ラベル シート（Z1にスピンボタンを配置）</div>
+<table class="excel-grid">
+<tr>
+<th></th><th>A</th><th>B</th><th>C</th>
+<th style="color:#aaa">&hellip;</th>
+<th style="background:#e3f2fd;color:#0d47a1">Z（範囲外）</th>
+</tr>
+<tr>
+<td class="row-num">1</td>
+<td class="formula-cell" colspan="3">=XLOOKUP(<span style="color:#d32f2f">$Z$1</span>, 宛先リスト!$A:$A, 宛先リスト!$B:$B, "")</td>
+<td></td>
+<td class="spin-cell-ref">1<br><small>&larr; Z1（スピン）</small></td>
+</tr>
+<tr>
+<td class="row-num">2</td>
+<td class="formula-cell" colspan="3">=XLOOKUP(<span style="color:#d32f2f">$Z$1</span>, 宛先リスト!$A:$A, 宛先リスト!$C:$C, "")</td>
+<td></td>
+<td style="background:#eceff1;font-size:.7rem;color:#555">▲▼ スピンボタン<br>増分=5</td>
+</tr>
+<tr>
+<td class="row-num" colspan="6" style="background:#e8f5e9;text-align:center;font-size:.72rem;font-weight:700;color:#1b5e20">
+              &boxh;&boxh; 2件目（行6〜10）：XLOOKUPの検索値を Z1+1 に &boxh;&boxh;
+            </td>
+</tr>
+<tr>
+<td class="row-num">6</td>
+<td class="formula-cell" colspan="3">=XLOOKUP(<span style="color:#1565c0">$Z$1+1</span>, 宛先リスト!$A:$A, 宛先リスト!$B:$B, "")</td>
+<td></td><td></td>
+</tr>
+<tr>
+<td class="row-num" style="color:#aaa">&hellip;</td>
+<td colspan="5" style="color:#aaa;text-align:center;font-size:.75rem">（3件目は Z1+2、4件目は Z1+3、5件目は Z1+4）</td>
+</tr>
+</table>
+</div>
+<h3>基本数式（Z1 = 1 の時、1件目を取得）</h3>
+<div class="formula-box">
+<span class="cmt">' 1件目のラベル（Z1が1のとき &rarr; No=1のデータを取得）</span><br>
+<span class="cmt">' 氏名</span><br>
+=<span class="func">XLOOKUP</span>(<span class="key">$Z$1</span>, 宛先リスト!$A:$A, 宛先リスト!$B:$B, "")<br><br>
+<span class="cmt">' 郵便番号</span><br>
+=<span class="func">XLOOKUP</span>(<span class="key">$Z$1</span>, 宛先リスト!$A:$A, 宛先リスト!$C:$C, "")<br><br>
+<span class="cmt">' 住所</span><br>
+=<span class="func">XLOOKUP</span>(<span class="key">$Z$1</span>, 宛先リスト!$A:$A, 宛先リスト!$D:$D, "")
+      </div>
+<h3>2件目〜5件目は Z1+n で取得（5件ぶんのテンプレート）</h3>
+<div class="formula-box">
+<span class="cmt">' 件目番号 = Z1 + (n-1) で1〜5件目を取得</span><br>
+<span class="cmt">' 1件目 &rarr; $Z$1    （増分5でZ1=1&rarr;6&rarr;11&rarr;&hellip;と変化）</span><br>
+<span class="cmt">' 2件目 &rarr; $Z$1+1</span><br>
+<span class="cmt">' 3件目 &rarr; $Z$1+2</span><br>
+<span class="cmt">' 4件目 &rarr; $Z$1+3</span><br>
+<span class="cmt">' 5件目 &rarr; $Z$1+4</span><br><br>
+<span class="cmt">' Z1=1 のとき &rarr; No.1, 2, 3, 4, 5 を表示</span><br>
+<span class="cmt">' Z1=6 のとき &rarr; No.6, 7, 8, 9, 10 を表示</span><br>
+<span class="cmt">' Z1=11 のとき &rarr; No.11, 12, 13, 14, 15 を表示</span>
+</div>
+<div class="xdemo-note-good">
+<strong>✅ XLOOKUPのメリット：</strong>VLOOKUPと違い、<strong>検索列が左になくても使える</strong>のでデータ構成の制約がありません。またIFERRORを別途書かなくても第4引数で「見つからない場合の値」を指定できるため、データが尽きた欄が自動で空白になります。
+      </div>
+<!-- ===================== sec5 ===================== -->
+<h2 id="sec5"><span class="icon">🏷️</span> 5. ラベル印刷との組み合わせ &horbar; 実践レシピ</h2>
+<p>スピンボタン（増分5）＋ XLOOKUP ＋ Print_Area動的数式 を組み合わせると、<strong>ボタンを1回押すだけで5件ぶんのラベルを切り替えて連続印刷できる</strong>仕組みが完成します。</p>
+<h3>完成形のイメージ</h3>
+<div class="spin-demo-box">
+<div class="spin-demo-label">▼ ラベル切り替えデモ（▲▼ = 5件ずつ切り替え）</div>
+<div class="spin-row" style="margin-bottom:14px;">
+<div style="font-size:.82rem;color:#555;font-weight:700;">開始番号（Z1）：</div>
+<div class="spin-cell" id="spinVal2">1</div>
+<div class="spin-buttons">
+<button onclick="changeSpin2(5)">▲</button>
+<button onclick="changeSpin2(-5)">▼</button>
+</div>
+<kbd>▲</kbd> = 次の5件、<kbd>▼</kbd> = 前の5件
+        </div>
+<div id="labelPreview" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+<!-- JS で生成 -->
+</div>
+</div>
+<h3>スピンボタンの設定値（5件ずつラベル印刷）</h3>
+<table class="cmp-table">
+<tr><th>設定項目</th><th>値</th><th>理由</th></tr>
+<tr><td>現在値</td><td class="rec">1</td><td>最初は1件目から表示</td></tr>
+<tr><td>最小値</td><td class="rec">1</td><td>0以下にならないようにする</td></tr>
+<tr><td>最大値</td><td>96（100件の場合）</td><td>96+4=100 で最終5件に到達（5の倍数の最大値）</td></tr>
+<tr><td>変化の増分</td><td class="rec">5</td><td>1クリックで5件分スキップ</td></tr>
+<tr><td>リンクするセル</td><td class="rec">$Z$1</td><td>印刷エリア外（A列からZ列は通常遠い）に置いて印刷に含めない</td></tr>
+</table>
+<h3>Print_Area の動的数式（Print_Areaと組み合わせることで空白ページなし）</h3>
+<p>5件&times;5行=25行を1バッチとする場合の Print_Area 数式例です。名前の管理から設定します。</p>
+<div class="formula-box">
+<span class="cmt">' 5件&times;5行 = 25行を1印刷バッチとする場合</span><br>
+=ラベル!$A$1:<span class="func">INDEX</span>(ラベル!$A:$D,<br>
+&nbsp;&nbsp;<span class="func">MIN</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="func">XLOOKUP</span>(<span class="key">TRUE</span>, <span class="func">INDEX</span>(宛先リスト!$A:$A&lt;&gt;"",0),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="func">ROW</span>(宛先リスト!$A:$A),,0,-1) - ラベル!$Z$1 + 1) * 5,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;25<br>
+&nbsp;&nbsp;), 4)
+      </div>
+<div class="note-box">
+<strong>💡 実践フロー：</strong><br>
+        ① スピンボタンで Z1 = 1 に設定 &rarr; Ctrl+P で1〜5件目を印刷<br>
+        ② ▲ を1回クリックして Z1 = 6 &rarr; Ctrl+P で6〜10件目を印刷<br>
+        ③ 以降 ▲ を都度1回クリック &rarr; 5件ずつ連続印刷<br>
+        ④ データが5の倍数でない場合もXLOOKUPの第4引数""で空欄ラベルになり見た目はきれいに収まる
+      </div>
+<div class="note-box good">
+<strong>✅ このレシピが特に便利な理由：</strong>
+<ul style="margin:.4em 0 0;padding-left:1.4em;line-height:1.75;">
+<li>VBA・マクロなし、.xlsx のまま使える</li>
+<li>スピンボタンを1回クリック &rarr; 印刷、の2ステップだけ</li>
+<li>差し込み印刷が苦手な人に渡してもすぐ使える</li>
+<li>データ件数が変わっても Print_Area が自動調整</li>
+</ul>
+</div>
+<!-- ===================== sec6 ===================== -->
+<h2 id="sec6"><span class="icon">☑️</span> 6. チェックボックス・スクロールバーの活用例</h2>
+<h3>チェックボックス &horbar; 行を動的に表示/非表示する</h3>
+<p>チェックボックスのリンクセル（例：A1）には<code>TRUE</code>/<code>FALSE</code>が入ります。これをIF関数と組み合わせて行の表示切り替えができます。</p>
+<div class="excel-wrap">
+<div class="excel-header-bar">チェックボックス活用例</div>
+<table class="excel-grid">
+<tr><th></th><th>A（リンクセル）</th><th>B（表示内容）</th></tr>
+<tr>
+<td class="row-num">1</td>
+<td class="highlight-cell">TRUE（チェックON）</td>
+<td class="formula-cell">=IF($A$1, "オプションA を含む", "")</td>
+</tr>
+<tr>
+<td class="row-num">2</td>
+<td style="color:#aaa">FALSE（チェックOFF）</td>
+<td class="formula-cell">=IF($A$2, "オプションB を含む", "")</td>
+</tr>
+</table>
+</div>
+<div class="note-box tip">
+<strong>💡 活用アイデア：</strong>チェックボックスで「消費税を含む/含まない」「送料を加算する/しない」などの条件を切り替えて、合計金額セルを動的に変えることができます。VBA不要でインタラクティブな計算シートが作れます。
+      </div>
+<h3>スクロールバー &horbar; 感覚的な数値入力</h3>
+<p>スクロールバーはスピンボタンとほぼ同じ仕組みですが、<strong>ドラッグ</strong>で素早く大きく動かせるのが特徴です。0〜100の「達成率」や「割引率」などを直感的に設定するのに向いています。</p>
+<table class="cmp-table">
+<tr><th>コントロール</th><th>向いている用途</th><th>増分の操作方法</th></tr>
+<tr>
+<td><strong>スピンボタン</strong></td>
+<td>件数切り替え・ページ送り</td>
+<td>▲▼クリックで1回ずつ</td>
+</tr>
+<tr>
+<td><strong>スクロールバー</strong></td>
+<td>0〜100の比率・大きな範囲のスライド</td>
+<td>ドラッグで大きく移動可能</td>
+</tr>
+<tr>
+<td><strong>オプションボタン</strong></td>
+<td>「A案/B案/C案」の択一選択</td>
+<td>選ぶだけ（1/2/3&hellip;を返す）</td>
+</tr>
+</table>
+<!-- ===================== sec7 ===================== -->
+<h2 id="sec7"><span class="icon">⚖️</span> 7. フォームコントロール vs ActiveXコントロール</h2>
+<p>「挿入」を押すと上下2グループに分かれますが、<strong>実務ではフォームコントロールの使用を強く推奨</strong>します。</p>
+<table class="format-table">
+<tr>
+<th>比較項目</th>
+<th>フォームコントロール（推奨）</th>
+<th>ActiveXコントロール</th>
+</tr>
+<tr>
+<td>ファイル形式</td>
+<td style="color: #2e7d32; font-weight: bold;">.xlsx のまま使える</td>
+<td>内部的に追加データあり</td>
+</tr>
+<tr>
+<td>Mac / Web対応</td>
+<td style="color: #2e7d32; font-weight: bold;">比較的動作する</td>
+<td>Mac非対応が多い</td>
+</tr>
+<tr>
+<td>セキュリティ警告</td>
+<td style="color: #2e7d32; font-weight: bold;">基本的になし</td>
+<td>マクロ同様の警告が出ることも</td>
+</tr>
+<tr>
+<td>リンクセルへの出力</td>
+<td style="color: #2e7d32; font-weight: bold;">数値・TRUE/FALSE（シンプル）</td>
+<td>VBAでのイベント処理が必要なことも</td>
+</tr>
+<tr>
+<td>VBA連携</td>
+<td>マクロ名をボタンに割り当て可能</td>
+<td>イベント駆動で高度な連携可能</td>
+</tr>
+</table>
+<div class="xdemo-note-warn">
+<strong>⚠ ActiveXは基本的には使わない：</strong>VBA禁止環境では ActiveXコントロールにメリットがほぼありません。「開発タブ &rarr; 挿入」で表示される<strong>上段のフォームコントロール</strong>だけを使うのが安全です。
+      </div>
+<!-- ===================== sec8 ===================== -->
+<h2 id="sec8"><span class="icon">✅</span> 8. まとめ</h2>
+<div class="xdemo-note-good" style="font-size:.95em;">
+<strong>🎛️ フォームコントロール活用の3ポイント</strong><br><br>
+<strong>① 開発タブを出す：</strong>リボン右クリック &rarr; リボンのユーザー設定 &rarr; 「開発」にチェック &rarr; OK<br><br>
+<strong>② スピンボタン ＋ 増分5 ＋ XLOOKUP：</strong>▲▼クリックのたびにZ1が5ずつ変化 &rarr; XLOOKUPが Z1, Z1+1, &hellip;, Z1+4 を検索 &rarr; 5件ぶんのデータが一括切り替え<br><br>
+<strong>③ Print_Area の動的数式と組み合わせる：</strong>Ctrl+P を押すだけで「現在表示中の5件ぶん」だけが印刷される。空白ページゼロ、操作2ステップだけのラベル印刷が完成。<br><br>
+        その他チェックボックス・スクロールバーも「リンクセルに値を返す」同じ仕組み。IF・XLOOKUP・SUMIF などと組み合わせることで、<strong>マウスだけで動く動的シート</strong>が VBA 不要で作れます。
+      </div>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+<script>
+    // リボンモック
+    function setActiveTab(idx) {
+      const tabs = document.querySelectorAll('#ribbonMock .ribbon-tab');
+      tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
+    }
+
+    // スピンボタンデモ1（sec3）
+    let spinV = 1;
+    function changeSpin(d) {
+      spinV = Math.max(1, Math.min(96, spinV + d));
+      document.getElementById('spinVal').textContent = spinV;
+      const end = spinV + 4;
+      document.getElementById('spinResult').innerHTML =
+        '→ XLOOKUPで検索する番号：<strong>' + spinV + '</strong>（' + spinV + '件目〜' + end + '件目を表示）';
+    }
+
+    // ラベルデモデータ
+    const demoData = [
+      { name: '山田 太郎', zip: '100-0001', addr: '東京都千代田区丸の内1-1-1' },
+      { name: '鈴木 花子', zip: '530-0001', addr: '大阪府大阪市北区梅田2-2-2' },
+      { name: '佐藤 一郎', zip: '460-0001', addr: '愛知県名古屋市中区栄3-3-3' },
+      { name: '高橋 美咲', zip: '810-0001', addr: '福岡県福岡市中央区天神4-4-4' },
+      { name: '田中 健太', zip: '220-0001', addr: '神奈川県横浜市西区みなみ5-5-5' },
+      { name: '渡辺 裕子', zip: '060-0001', addr: '北海道札幌市中央区大通6-6-6' },
+      { name: '伊藤 誠',   zip: '980-0001', addr: '宮城県仙台市青葉区一番町7-7-7' },
+      { name: '中村 由美', zip: '700-0001', addr: '岡山県岡山市北区丸の内8-8-8' },
+      { name: '小林 大輔', zip: '600-0001', addr: '京都府京都市中京区烏丸9-9-9' },
+      { name: '加藤 陽子', zip: '650-0001', addr: '兵庫県神戸市中央区港島10-10' },
+    ];
+
+    let spinV2 = 1;
+
+    function renderLabels() {
+      const preview = document.getElementById('labelPreview');
+      preview.innerHTML = '';
+      for (let i = 0; i < 5; i++) {
+        const idx = spinV2 - 1 + i;
+        const d = demoData[idx % demoData.length];
+        const no = spinV2 + i;
+        const div = document.createElement('div');
+        div.style.cssText = 'border:1.5px dashed #a5d6a7;border-radius:6px;padding:10px 12px;background:#f1f8e9;font-size:.78rem;line-height:1.6;';
+        div.innerHTML = '<div style="font-size:.62rem;color:#888;font-weight:700;">No.' + no + '</div>' +
+          '<div style="font-size:.65rem;color:#555;">〒' + d.zip + '</div>' +
+          '<div style="font-size:.68rem;color:#333;">' + d.addr + '</div>' +
+          '<div style="font-weight:700;color:#1b5e20;font-size:.82rem;margin-top:2px;">' + d.name + '　様</div>';
+        preview.appendChild(div);
+      }
+      document.getElementById('spinVal2').textContent = spinV2;
+    }
+
+    function changeSpin2(d) {
+      spinV2 = Math.max(1, Math.min(96, spinV2 + d));
+      renderLabels();
+    }
+
+    renderLabels();
+  </script>
+</body>
+</html>
+
+

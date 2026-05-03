@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>電卓不要！ステータスバー（オートカルク）の最強活用術｜Excel &times; No VBA Lab</title>
+<meta content="Excelのステータスバー（オートカルク機能）を活用して数式なしで瞬時に合計・平均・件数を確認する最強活用術を解説。" name="description">
+<meta content="Excel ステータスバー, オートカルク 使い方, 合計 平均 件数 瞬時確認, Excel 電卓不要, VBA不要" name="keywords">
+<meta content="電卓不要！ステータスバー（オートカルク）の最強活用術｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Excelのステータスバー（オートカルク機能）を活用して数式なしで瞬時に合計・平均・件数を確認する最強活用術を解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/others/misc/article_statusbar.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    .xdemo-step-label { display: inline-block; font-size: 0.78em; font-weight: bold; color: #fff; background: #607d8b; padding: 2px 10px; border-radius: 10px; margin-bottom: 6px; }
+    
+    .screenshot-box { background: #f0f4f8; border: 1px solid #cfd8dc; padding: 15px; text-align: center; border-radius: 6px; margin: 15px 0; font-weight: bold; color: #37474f; font-size: 0.95em; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .statusbar-mock { background: #217346; color: white; display: flex; justify-content: flex-end; padding: 6px 15px; font-size: 0.85em; margin-top: 10px; border-radius: 0 0 4px 4px; gap: 20px;}
+    .statusbar-mock span { cursor: pointer; transition: background 0.2s;}
+    .statusbar-mock span:hover { background: rgba(255,255,255,0.2); }
+  </style>
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"🧮 関数不要の電卓代わり！「ステータスバー（オートカルク）」の最強活用術","description":"Excelのステータスバー（オートカルク機能）を活用して数式なしで瞬時に合計・平均・件数を確認する最強活用術を解説。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/others/misc/article_statusbar.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span>
+<a href="../../index.html#others">小技</a><span>&gt;</span>
+<strong>ステータスバー（オートカルク）活用術</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">🧮 関数不要の電卓代わり！「ステータスバー（オートカルク）」の最強活用術</h1>
+</div>
+<!-- =========================================================
+         【1】オートカルクとは何か？
+      ========================================================= -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> 態々（わざわざ）計算式を作るほどでもない時に</h2>
+<p>「この3つのセルの合計だけ、さっと知りたいな&hellip;」<br>
+        「この列にデータが何件入っているか、ちょっと数えたい」</p>
+<p>こんな時、わざわざ空いているセルを見つけて <code>=SUM(A1:A3)</code> などと関数を打ち込んだり、手元の電卓を叩いたりしていませんか？<br>
+        Excelには、セルを選択するだけで画面の<strong>右下（ステータスバー）</strong>に一瞬で計算結果を表示してくれる<strong>「オートカルク」</strong>という標準機能が備わっています。</p>
+<div class="screenshot-box" style="margin-top:20px;">
+          画面の一番下の緑色のバー（ステータスバー）に注目！
+          <div class="statusbar-mock">
+<span>平均: 35.5</span>
+<span>データの個数: 4</span>
+<span>数値の個数: 2</span>
+<span>合計: 71</span>
+</div>
+</div>
+</section>
+<!-- =========================================================
+         【2】まずは設定：右クリックで全部オンにする！
+      ========================================================= -->
+<section class="method-section">
+<h3>【設定編】右クリックで表示項目をフルカスタマイズ</h3>
+<p>デフォルト（初期設定）の状態では「平均」「データの個数」「合計」くらいしか表示されません。これを実務で最強のツールにするために、まずは設定を変えましょう。</p>
+<div class="step-box" style="background:#fffbe6; border-left:4px solid #fbc02d; padding:15px;">
+<h4 style="margin-top:0; color:#f57f17;"><span class="icon">⚙️</span> オートカルクの設定方法</h4>
+<ol>
+<li>Excel画面の右下にある緑色の帯（ステータスバー）の上で<strong>右クリック</strong>します。</li>
+<li>メニューがズラッと出てくるので、中間あたりにある計算項目にチェックを入れていきます。</li>
+<li>「平均」「データの個数」「数値の個数」「最小値」「最大値」「合計」の<strong>6つすべてにチェック（✔）</strong>を入れます。</li>
+</ol>
+</div>
+<p>これらすべてをオンにしておくことで、情報量が格段に上がり、関数を組む手間が大幅に省けます。</p>
+</section>
+<!-- =========================================================
+         【3】実務での具体的な活用法
+      ========================================================= -->
+<section class="tips-section">
+<h3>【実践編】実務で活きる3つのテクニック</h3>
+<h4>① 離れたセルの合計を瞬時に出す（Ctrl ＋ クリック）</h4>
+<p>連続した範囲（ドラッグ）だけでなく、離れたセルでも有効です。<br>
+        キーボードの <code>Ctrl</code> キーを押しながら「A社の売上セル」「C社の売上セル」「F社の売上セル」をポチ、ポチ、ポチと3箇所クリックしてみてください。<br>
+        瞬時に右下に「合計: 〇〇円」と表示されます。<strong>他人に口頭でザックリとした数字を伝えるとき</strong>や、自分の計算チェックなどに電卓代わりとして大活躍します。</p>
+<h4>② 「データの個数」と「数値の個数」の使い分け</h4>
+<p>設定で両方をオンにしたことで強力なチェックツールになります。</p>
+<ul>
+<li><strong>データの個数（COUNTA関数相当）：</strong> 空白以外の「文字」も「数字」も全て数えます。</li>
+<li><strong>数値の個数（COUNT関数相当）：</strong> 「数字」が入っているセルだけを数えます。</li>
+</ul>
+<p>例えば100行のデータをドラッグした際、右下に「データの個数: 100」「数値の個数: 98」と出た場合、<strong>「2箇所、数字じゃなくて文字（ハイフンなどの記号や文字列）が混入しているぞ！」</strong>と一発で異常に気づくことができます。</p>
+<h4>③ 最小値と最大値で異常値をあぶり出す</h4>
+<p>テストの点数や売上の列を選択した際、「最小値: -500」「最大値: 9999999」などと出た場合、「マイナスの売上？打ち間違いか？」とすぐに不整合に気づけます。<br>
+        並び替え（ソート）やMAX関数・MIN関数を使わずとも、ドラッグ一発で全体像を把握できるのが強みです。</p>
+</section>
+<!-- =========================================================
+         【4】最新Excelの神機能：クリックでコピー
+      ========================================================= -->
+<section class="method-section" style="background: #fcfcfc; border: 1px solid #eee; padding: 20px;">
+<h3>👑【最新機能】数値を「クリック」するだけでコピーされる！</h3>
+<p>比較的新しいExcel（Microsoft 365など）から、密かに超便利な神機能が追加されました。<br>
+        それは、<strong>ステータスバーに出た合計数などを「左クリック」するだけで、クリップボードにコピーされる</strong>という機能です。</p>
+<p>例えば、上司へのチャットやメールで「AプロジェクトとCプロジェクトの合算費用は〇〇円です」と報告したい時。</p>
+<ol>
+<li>該当のセルを2つ <code>Ctrl</code> ＋ ドラッグ で選択する</li>
+<li>右下に表示された <code>合計: 1,500,000</code> の部分を<strong>マウスで1回左クリック</strong>する</li>
+<li>チャットツールに戻って <code>Ctrl + V</code> (貼り付け) をする</li>
+</ol>
+<div class="xdemo-note-good">
+          ✅ <strong>もはや計算用の「作業セル」すら不要！</strong><br>
+          これまでは「どこかの空きセルにSUM関数を作って、結果の値をコピーして、用が済んだらそのSUM関数を消す」という無駄な作業をしていましたが、最新版ではこれが一切不要になりました。これぞまさに「VBA不要、関数すら不要」で業務を最速化する小技の極みです。
+        </div>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

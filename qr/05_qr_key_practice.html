@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>QRコード実践パターン集！Excel＆業務システムで即使える数式テンプレート10選｜Excel &times; No VBA Lab</title>
+<meta content="CHAR関数＋キー変換を組み合わせた実践QRコード数式テンプレート10選。Excel横入力・縦入力・セルスキップ・自動保存から、業務システムのNUM Enter確定・F5検索・PrintScreenまで現場で即コピペで使える。" name="description">
+<meta content="QRコード 実践パターン, Excel 自動入力 数式, バーコードリーダー テンプレート, CHAR関数 Tab Enter, キー変換 実践, NUM Enter 業務システム, QR 棚卸し, QR 検品" name="keywords">
+<meta content="QRコード実践パターン集！Excel＆業務システムで即使える数式テンプレート10選｜Excel &times; No VBA Lab" property="og:title">
+<meta content="CHAR関数＋キー変換を組み合わせた実践QRコード数式テンプレート10選。現場で即コピペで使える。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/qr/05_qr_key_practice.html" rel="canonical">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"QRコード実践パターン集！Excel＆業務システムで即使える数式テンプレート10選","description":"CHAR関数＋キー変換を組み合わせた実践QRコード数式テンプレート10選。Excel横入力・縦入力・セルスキップ・自動保存から、業務システムのNUM Enter確定・F5検索・PrintScreenまで現場で即コピペで使える。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/qr/05_qr_key_practice.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../index.html">ホーム</a><span>&gt;</span>
+<a href="../index.html#qr">QR Automation Lab</a><span>&gt;</span>
+<strong>実践パターン集</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="badge badge-maniac">QR連携/実践テンプレート/業務システム</span>
+</div>
+<h1 class="article-title">QRコード実践パターン集！<br>Excel＆業務システムで即使える数式テンプレート10選</h1>
+</div>
+<!-- ===== ゴール ===== -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> この記事で手に入るもの</h2>
+<p>①〜④で学んだ <strong>CHAR関数・Tab/Enter・キャラクター間ディレイ・キー変換</strong> を<strong>すべて組み合わせた実戦テンプレート</strong>を一挙公開します。</p>
+<p>在庫管理・検品・棚卸し・業務システム入力など、<strong>現場のシナリオごとに「コピペして即使える数式」</strong>を用意しました。自分の業務に近いパターンを見つけたら、セル番地を書き換えるだけでそのまま運用できます。</p>
+<ul>
+<li><strong>Excel向け 6パターン：</strong> 横入力・縦入力・セルスキップ・自動保存・追記入力・TEXTJOIN簡略化</li>
+<li><strong>業務システム向け 4パターン：</strong> NUM Enter確定・複数フィールド連続・F5検索起動・PrintScreenエビデンス</li>
+<li><strong>選び方ガイド：</strong> 「どのパターンを使えばいいか」が一発で分かる判定表</li>
+<li><strong>トラブル対処表：</strong> 動かないときの原因と参照先の完全リスト</li>
+</ul>
+<div class="xdemo-note-info"><strong>📝 補足:</strong> 本記事では改行コードとして <code>CHAR(10)</code>（LF）に統一して記載しています。環境やリーダーの設定によって Enter が効かない場合は、記事②を参照して <code>CHAR(13)</code>（CR）やリーダーのサフィックス設定を試してください。</div>
+</section>
+<!-- ===== 前提知識 ===== -->
+<section class="method-section">
+<h2>前提知識チェック</h2>
+<p>この記事は①〜④の内容を前提としています。初めての方は先にそちらをご確認ください。</p>
+<table class="format-table">
+<tr><th>記事</th><th>必要な知識</th><th>この記事との関係</th></tr>
+<tr><td class="text-center">① QRコード生成と基礎</td><td>CHAR関数・使える文字の種類</td><td>数式の中身を理解するために必須</td></tr>
+<tr><td class="text-center">② Tab・Enter埋め込み</td><td>Tab&rarr;Enterの動きと注意点</td><td>全パターンの土台</td></tr>
+<tr><td class="text-center">③ キャラクター間ディレイ</td><td>文字欠けを防ぐ設定</td><td>長い数式ほど必須</td></tr>
+<tr><td class="text-center">④ キー変換テクニック</td><td>CHAR で送れないキーを送る方法</td><td>トリガー文字（<span class="trigger-char">~</span> <span class="trigger-char">^</span> 等）の意味を理解するために必須</td></tr>
+</table>
+</section>
+<!-- ===== トリガー文字 早見表 ===== -->
+<section class="method-section">
+<h2>トリガー文字クイックリファレンス</h2>
+<p>以下のパターンで使用するトリガー文字の一覧です。④の記事で設定済みであることが前提です。</p>
+<table class="format-table">
+<tr><th>トリガー</th><th>変換先</th><th>用途</th><th>使用パターン</th></tr>
+<tr><td class="text-center"><span class="trigger-char">~</span></td><td>NUM Enter</td><td>業務システムの確定キー</td><td>⑦ ⑧ ⑨ ⑩</td></tr>
+<tr><td class="text-center"><span class="trigger-char">^</span></td><td>F2</td><td>Excelセル編集モード</td><td>⑥</td></tr>
+<tr><td class="text-center"><span class="trigger-char">`</span></td><td>&darr; (Down Arrow)</td><td>1行下に移動</td><td>（応用時）</td></tr>
+<tr><td class="text-center"><span class="trigger-char">{</span></td><td>F5</td><td>検索画面の起動</td><td>⑨</td></tr>
+<tr><td class="text-center"><span class="trigger-char">\</span></td><td>PageDown</td><td>次ページへ移動</td><td>（応用時）</td></tr>
+<tr><td class="text-center"><span class="trigger-char">|</span></td><td>PrintScreen</td><td>画面キャプチャ</td><td>⑩</td></tr>
+</table>
+</section>
+<!-- ========================================== -->
+<!-- ===== Excel向けパターン ===== -->
+<!-- ========================================== -->
+<section class="tips-section">
+<h2>Excel 向けパターン（① 〜 ⑥）</h2>
+<p>まずは Excel シートへの入力自動化パターンです。リーダーの初期設定（サフィックス＝None、ディレイ＝20ms）だけで動くものから順に紹介します。</p>
+<!-- ===== Pattern 1 ===== -->
+<h3>
+<span class="pattern-number">Pattern ①</span>
+          基本の横入力（2セル）
+          <span class="pattern-tag tag-excel">Excel</span>
+</h3>
+<div class="difficulty"><span class="star-on">&starf;</span><span class="star-off">&star;&star;&star;&star;</span></div>
+<div class="scenario-box">
+<strong>使用場面：</strong>商品コードをスキャン &rarr; 隣のセルに数量「1」を自動入力 &rarr; 次の行へ移動。日常の入庫・出庫記録に最適。
+        </div>
+<div class="flow-diagram">
+<span class="flow-step">A列: 商品コード</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Tab</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">B列: 数量 "1"</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Enter (次行A列へ)</span>
+</div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=A1 & CHAR(9) & "1" & CHAR(10)</code>
+</div>
+<div class="excel-grid">
+<table>
+<tr><th></th><th>A</th><th>B</th><th>C</th></tr>
+<tr><th>1</th><td class="cell-filled">PRD-001</td><td class="cell-filled">1</td><td></td></tr>
+<tr><th>2</th><td class="cell-cursor">▼次はここ</td><td></td><td></td></tr>
+</table>
+</div>
+<div class="xdemo-note-good">
+<strong>💡 数量を可変にする場合</strong><br>
+          数量を「1」固定でなく QR 生成元で変えたい場合は <code>=A1 & CHAR(9) & B1 & CHAR(10)</code> とします。B1 に数量を入力しておけばQRコードに反映されます。
+        </div>
+<hr class="pattern-divider">
+<!-- ===== Pattern 2 ===== -->
+<h3>
+<span class="pattern-number">Pattern ②</span>
+          横入力（4セル）&horbar; 棚卸し・検品
+          <span class="pattern-tag tag-excel">Excel</span>
+</h3>
+<div class="difficulty"><span class="star-on">&starf;&starf;</span><span class="star-off">&star;&star;&star;</span></div>
+<div class="scenario-box">
+<strong>使用場面：</strong>棚卸しリスト：品番 &rarr; 品名 &rarr; ロケーション &rarr; 数量を1スキャンで4セルに一括入力。
+        </div>
+<div class="flow-diagram">
+<span class="flow-step">A: 品番</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Tab</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">B: 品名</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Tab</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">C: ロケ</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Tab</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">D: 数量</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Enter</span>
+</div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=A1 & CHAR(9) & B1 & CHAR(9) & C1 & CHAR(9) & D1 & CHAR(10)</code>
+</div>
+<div class="excel-grid">
+<table>
+<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+<tr><th>1</th><td class="cell-filled">PRD-001</td><td class="cell-filled">BOLT-M8</td><td class="cell-filled">A-03-2</td><td class="cell-filled">150</td></tr>
+<tr><th>2</th><td class="cell-cursor">▼次はここ</td><td></td><td></td><td></td></tr>
+</table>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ 4セル以上の長文はディレイ必須</strong><br>
+          文字数が多くなるほどバッファオーバーフローのリスクが高まります。キャラクター間ディレイを <strong>20ms 以上</strong>に設定してください。&rarr; 記事③を参照。
+        </div>
+<hr class="pattern-divider">
+<!-- ===== Pattern 3 ===== -->
+<h3>
+<span class="pattern-number">Pattern ③</span>
+          セルスキップ入力 &horbar; 特定列を空欄にする
+          <span class="pattern-tag tag-excel">Excel</span>
+<span class="pattern-tag tag-advanced">応用</span>
+</h3>
+<div class="difficulty"><span class="star-on">&starf;&starf;</span><span class="star-off">&star;&star;&star;</span></div>
+<div class="scenario-box">
+<strong>使用場面：</strong>B列は手入力用（担当者名など）のため空けておき、A列・C列・D列だけをQRで入力。
+        </div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=A1 & CHAR(9) & CHAR(9) & C1 & CHAR(9) & D1 & CHAR(10)</code>
+</div>
+<div class="excel-grid">
+<table>
+<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+<tr><th>1</th><td class="cell-filled">PRD-001</td><td class="cell-skip">（空欄）</td><td class="cell-filled">A-03-2</td><td class="cell-filled">150</td></tr>
+<tr><th>2</th><td class="cell-cursor">▼次はここ</td><td></td><td></td><td></td></tr>
+</table>
+</div>
+<p>空の Tab を連続で送ることでスキップします。<strong>スキップしたい列の数だけ <code>CHAR(9)</code> を並べる</strong>のがコツです。2列スキップなら <code>CHAR(9) & CHAR(9) & CHAR(9)</code>（Tab 3回）です。</p>
+<hr class="pattern-divider">
+<!-- ===== Pattern 4 ===== -->
+<h3>
+<span class="pattern-number">Pattern ④</span>
+          縦入力 &horbar; 1列に複数行を入力
+          <span class="pattern-tag tag-excel">Excel</span>
+<span class="pattern-tag tag-advanced">応用</span>
+</h3>
+<div class="difficulty"><span class="star-on">&starf;&starf;&starf;</span><span class="star-off">&star;&star;</span></div>
+<div class="scenario-box">
+<strong>使用場面：</strong>A列に伝票番号や連番を縦に並べて入力。Excelの設定「Enterキーを押した後にセルを移動する &rarr; 下方向」が必須。
+        </div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=A1 & CHAR(10) & A2 & CHAR(10) & A3 & CHAR(10)</code>
+</div>
+<div class="excel-grid">
+<table>
+<tr><th></th><th>A</th></tr>
+<tr><th>1</th><td class="cell-filled">SLP-20260401</td></tr>
+<tr><th>2</th><td class="cell-filled">SLP-20260402</td></tr>
+<tr><th>3</th><td class="cell-filled">SLP-20260403</td></tr>
+<tr><th>4</th><td class="cell-cursor">▼次はここ</td></tr>
+</table>
+</div>
+<div class="xdemo-note-info">
+<strong>📝 ポイント</strong><br>
+          Tab を1回も使わず Enter のみで構成すると、カーソルは下方向へ移動し続けます。横移動が不要な場面で有効です。
+        </div>
+<hr class="pattern-divider">
+<!-- ===== Pattern 5 ===== -->
+<h3>
+<span class="pattern-number">Pattern ⑤</span>
+          横入力 ＋ 自動保存（Ctrl+S）
+          <span class="pattern-tag tag-excel">Excel</span>
+<span class="pattern-tag tag-advanced">応用</span>
+</h3>
+<div class="difficulty"><span class="star-on">&starf;&starf;&starf;</span><span class="star-off">&star;&star;</span></div>
+<div class="scenario-box">
+<strong>使用場面：</strong>倉庫でのハンドリング。スキャンごとにファイルを自動保存し、PCがフリーズしてもデータが消えない安心設計。ファイルは事前に一度保存済みであること。
+        </div>
+<div class="flow-diagram">
+<span class="flow-step">A: データ</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Tab</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">B: データ</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Enter</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Ctrl+S (保存)</span>
+</div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=A1 & CHAR(9) & B1 & CHAR(10) & CHAR(19)</code>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ CHAR(19) = Ctrl+S の注意点</strong><br>
+          ① ファイルが「新規（未保存）」の状態だと「名前を付けて保存」ダイアログが開いてしまいます。<strong>必ず事前に一度保存</strong>してください。<br>
+          ② Ctrl+S は USB-HID 対応リーダーで動作します。Bluetooth接続の一部リーダーでは送信できない場合があります。
+        </div>
+<hr class="pattern-divider">
+<!-- ===== Pattern 6 ===== -->
+<h3>
+<span class="pattern-number">Pattern ⑥</span>
+          セル編集モード起動（F2）＋ 追記入力
+          <span class="pattern-tag tag-excel">Excel</span>
+<span class="pattern-tag tag-expert">上級</span>
+</h3>
+<div class="difficulty"><span class="star-on">&starf;&starf;&starf;&starf;</span><span class="star-off">&star;</span></div>
+<div class="scenario-box">
+<strong>使用場面：</strong>既にデータが入っているセルの末尾にテキストを追記。備考欄に検品結果を追加するなど。<strong>④で設定した <span class="trigger-char">^</span> &rarr; F2 のキー変換が必須。</strong>
+</div>
+<div class="flow-diagram">
+<span class="flow-step">^ &rarr; F2 (編集モード)</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">追記テキスト</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">Enter (確定)</span>
+</div>
+<div class="conv-visual">
+<div class="cv-from">^ &rarr; F2（編集モード）</div>
+</div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>="^" & " / CHECKED " & TEXT(NOW(),"HH:MM") & CHAR(10)</code>
+</div>
+<p>スキャンすると、選択中のセルが編集モードになり、末尾に「 / CHECKED 14:30」のようなテキストが追記されます。</p>
+<div class="xdemo-note-danger">
+<strong>🔥 キー変換が未設定だと <code>^</code> がそのまま入力されます</strong><br>
+          F2 のキー変換は記事④で設定済みであることが前提です。変換が効いていない場合、セルに <code>^ / CHECKED 14:30</code> という文字列がそのまま入ってしまいます。
+        </div>
+</section>
+<!-- ========================================== -->
+<!-- ===== 業務システム向けパターン ===== -->
+<!-- ========================================== -->
+<section class="tips-section">
+<h2>業務システム向けパターン（⑦ 〜 ⑩）</h2>
+<p>業務システム（販売管理・生産管理・WMS など）は Excel とは異なり、<strong>テンキーEnter（NUM Enter）でないと確定できない</strong>ケースが圧倒的に多いです。以下のパターンでは、④で設定した <span class="trigger-char">~</span> &rarr; NUM Enter のキー変換を活用します。</p>
+<div class="xdemo-note-danger" style="border-left-color: #ff9800; background: #fff3e0;">
+<strong>🔥 リーダーのサフィックスは必ず「None（なし）」に！</strong><br>
+          サフィックスに CR（改行）が残っていると、数式内の <code>~</code>（NUM Enter） + サフィックスの CR で <strong>Enterが二重送信</strong>されます。フィールドが1つ飛ぶ・意図しない画面遷移が起きるなどの事故に直結します。
+        </div>
+<!-- ===== Pattern 7 ===== -->
+<h3>
+<span class="pattern-number">Pattern ⑦</span>
+          業務システム：1フィールド入力 ＋ NUM Enter 確定
+          <span class="pattern-tag tag-system">業務システム</span>
+</h3>
+<div class="difficulty"><span class="star-on">&starf;&starf;</span><span class="star-off">&star;&star;&star;</span></div>
+<div class="scenario-box">
+<strong>使用場面：</strong>販売管理システムの品番入力フィールドにスキャン &rarr; NUM Enter で確定 &rarr; 次のフィールドに自動遷移。
+        </div>
+<div class="conv-visual">
+<div class="cv-from">~ &rarr; NUM Enter</div>
+</div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=A1 & "~"</code>
+</div>
+<p>最もシンプルな業務システム向けパターンです。品番の後ろに <code>~</code> を付けるだけで、スキャンと同時にフィールドが確定されます。</p>
+<hr class="pattern-divider">
+<!-- ===== Pattern 8 ===== -->
+<h3>
+<span class="pattern-number">Pattern ⑧</span>
+          業務システム：複数フィールド連続入力
+          <span class="pattern-tag tag-system">業務システム</span>
+<span class="pattern-tag tag-advanced">応用</span>
+</h3>
+<div class="difficulty"><span class="star-on">&starf;&starf;&starf;</span><span class="star-off">&star;&star;</span></div>
+<div class="scenario-box">
+<strong>使用場面：</strong>「品番 &rarr; 確定 &rarr; 数量 &rarr; 確定 &rarr; ロケーション &rarr; 確定」を1スキャンで連続実行。3アクション分の手入力がゼロになる。
+        </div>
+<div class="flow-diagram">
+<span class="flow-step">品番</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">~ = NUM Enter</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">数量</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">~ = NUM Enter</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">ロケーション</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">~ = NUM Enter</span>
+</div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=A1 & "~" & B1 & "~" & C1 & "~"</code>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ システムの応答速度に注意</strong><br>
+          業務システムは画面遷移やサーバー応答に時間がかかることがあります。NUM Enter 後にシステムが次のフィールドに遷移する前にデータが送られてしまう場合は、<strong>キャラクター間ディレイを 50〜100ms に増加</strong>するか、<strong>Sleep（一時停止）を併用</strong>してください。&rarr; 記事③ / 記事⑥を参照。
+        </div>
+<hr class="pattern-divider">
+<!-- ===== Pattern 9 ===== -->
+<h3>
+<span class="pattern-number">Pattern ⑨</span>
+          業務システム：F5 検索起動 &rarr; 入力 &rarr; 確定
+          <span class="pattern-tag tag-system">業務システム</span>
+<span class="pattern-tag tag-expert">上級</span>
+</h3>
+<div class="difficulty"><span class="star-on">&starf;&starf;&starf;&starf;</span><span class="star-off">&star;</span></div>
+<div class="scenario-box">
+<strong>使用場面：</strong>業務システムで F5 = 検索画面起動。「検索起動 &rarr; 品番入力 &rarr; 確定」の3アクションを1スキャンに凝縮。
+        </div>
+<div class="conv-visual">
+<div class="cv-from">{ &rarr; F5（検索起動）</div>
+<div class="cv-from">~ &rarr; NUM Enter（確定）</div>
+</div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>="{" & A1 & "~"</code>
+</div>
+<div class="flow-diagram">
+<span class="flow-step">{ &rarr; F5 検索起動</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">品番データ入力</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">~ &rarr; NUM Enter 検索実行</span>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ 検索ダイアログの表示待ちが必要な場合</strong><br>
+          F5 押下後に検索ダイアログが表示されるまでに時間がかかるシステムでは、Sleep で <strong>1〜3秒</strong> の待機を挟む必要があります。Sleep が挟めない場合はキャラクター間ディレイを <strong>100ms以上</strong> に増やしてみてください。&rarr; 記事⑥を参照。
+        </div>
+<hr class="pattern-divider">
+<!-- ===== Pattern 10 ===== -->
+<h3>
+<span class="pattern-number">Pattern ⑩</span>
+          業務システム：入力 &rarr; 確定 &rarr; PrintScreen エビデンス取得
+          <span class="pattern-tag tag-system">業務システム</span>
+<span class="pattern-tag tag-expert">上級</span>
+</h3>
+<div class="difficulty"><span class="star-on">&starf;&starf;&starf;&starf;&starf;</span></div>
+<div class="scenario-box">
+<strong>使用場面：</strong>業務システムに入力 &rarr; 確定 &rarr; 表示された結果画面を PrintScreen でキャプチャ。検品エビデンスの自動取得に活用。
+        </div>
+<div class="conv-visual">
+<div class="cv-from">~ &rarr; NUM Enter（確定）</div>
+<div class="cv-from">| &rarr; PrintScreen（キャプチャ）</div>
+</div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=A1 & "~" & "|"</code>
+</div>
+<div class="flow-diagram">
+<span class="flow-step">品番入力</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">~ &rarr; NUM Enter</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">（Sleep 3〜5秒）</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">| &rarr; PrintScreen</span>
+</div>
+<div class="xdemo-note-danger">
+<strong>🔥 Sleep（待ち時間）が絶対に必要です</strong><br>
+          NUM Enter で確定してからシステムが結果画面を表示するまで数秒かかります。Sleep を挟まないと<strong>画面遷移前の状態がキャプチャされてしまい、エビデンスとして無意味</strong>になります。<strong>3〜5秒</strong>のSleep設定を記事⑥で確認してください。<br><br>
+          また、PrintScreen はクリップボードに画像を保存するだけです。ファイルとして自動保存するには Windows の「切り取り＆スケッチ」の設定や別途ツールが必要です。
+        </div>
+</section>
+<!-- ===== TEXTJOIN による簡略化 ===== -->
+<section class="method-section">
+<h2>ボーナス：TEXTJOIN で数式をスマートに書く</h2>
+<p>セル数が多い場合、<code>& CHAR(9) &</code> を何度も書くのは冗長でミスの元です。Excel 2019以降（Microsoft 365含む）で使える <strong>TEXTJOIN 関数</strong>で一気に簡略化できます。</p>
+<h3>Before：従来の書き方（6セル）</h3>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=A1&CHAR(9)&B1&CHAR(9)&C1&CHAR(9)&D1&CHAR(9)&E1&CHAR(9)&F1&CHAR(10)</code>
+</div>
+<h3>After：TEXTJOINで書き換え</h3>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=TEXTJOIN(CHAR(9),FALSE,A1:F1) & CHAR(10)</code>
+</div>
+<p>セル範囲を変えるだけで列数の増減に柔軟に対応できます。業務システム向けの NUM Enter 区切りも同様です：</p>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=TEXTJOIN("~",FALSE,A1:D1) & "~"</code>
+</div>
+<div class="xdemo-note-info">
+<strong>📝 TEXTJOIN の第2引数 <code>FALSE</code></strong><br>
+<code>FALSE</code> = 空セルも無視しない。QR入力では<strong>セルの位置</strong>が重要なので、空セルをスキップされると困ります。通常は <code>FALSE</code> を推奨します。
+        </div>
+</section>
+<!-- ===== パターン選択ガイド ===== -->
+<section class="method-section">
+<h2>パターン選択ガイド &horbar; 迷ったらここを見る</h2>
+<table class="key-table">
+<thead>
+<tr><th>あなたの状況</th><th>推奨パターン</th><th>備考</th></tr>
+</thead>
+<tbody>
+<tr><td>Excelに横方向（2〜4セル）で入力</td><td>① ② ③</td><td>Tab + Enter で完結。リーダー初期設定でOK</td></tr>
+<tr><td>Excelに縦方向（1列）で入力</td><td>④</td><td>Enter のみ。Tab 不要</td></tr>
+<tr><td>入力後にファイルを自動保存したい</td><td>⑤</td><td>Ctrl+S = CHAR(19)。ファイルの事前保存必須</td></tr>
+<tr><td>既存セルに追記したい</td><td>⑥</td><td>F2 キー変換が必要（④で設定）</td></tr>
+<tr><td>業務システム（NUM Enter が必要）</td><td>⑦ ⑧ ⑨ ⑩</td><td>~ &rarr; NUM Enter のキー変換が必須（④で設定）</td></tr>
+<tr><td>システムの画面遷移待ちが必要</td><td>⑧ ⑨ ⑩</td><td>ディレイ増加 or Sleep 併用</td></tr>
+<tr><td>エビデンス（画面キャプチャ）が必要</td><td>⑩</td><td>PrintScreen 変換 + Sleep 必須</td></tr>
+<tr><td>セル数が5以上で数式が長い</td><td>TEXTJOIN版</td><td>Excel 2019 以降で使用可能</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ===== リーダー設定チェックリスト ===== -->
+<section class="method-section">
+<h2>リーダー設定チェックリスト</h2>
+<p>各パターンを正常動作させるために必要なリーダー設定の一覧です。</p>
+<table class="key-table">
+<thead>
+<tr><th>設定項目</th><th>推奨値</th><th>対象パターン</th><th>参照記事</th></tr>
+</thead>
+<tbody>
+<tr><td>サフィックス</td><td><strong>None（なし）</strong></td><td>全パターン</td><td>②</td></tr>
+<tr><td>キャラクター間ディレイ</td><td><strong>20ms</strong>（長文は50ms〜）</td><td>全パターン（特に3セル以上）</td><td>③</td></tr>
+<tr><td>ファンクション間ディレイ</td><td><strong>50〜100ms</strong></td><td>Tab/Enter含む全パターン</td><td>③</td></tr>
+<tr><td>キー変換: ~ &rarr; NUM Enter</td><td>有効</td><td>⑦ ⑧ ⑨ ⑩</td><td>④</td></tr>
+<tr><td>キー変換: ^ &rarr; F2</td><td>有効</td><td>⑥</td><td>④</td></tr>
+<tr><td>キー変換: { &rarr; F5</td><td>有効</td><td>⑨</td><td>④</td></tr>
+<tr><td>キー変換: | &rarr; PrintScreen</td><td>有効</td><td>⑩</td><td>④</td></tr>
+<tr><td>Sleep（一時停止）</td><td>1〜5秒（システム応答に合わせて調整）</td><td>⑨ ⑩</td><td>⑥</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ===== トラブルシューティング ===== -->
+<section class="tips-section">
+<h2>動かない！と思ったらこの表を見る</h2>
+<table class="key-table">
+<thead>
+<tr><th>症状</th><th>原因</th><th>対処法</th><th>参照</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>文字が途中で欠ける</td>
+<td>バッファオーバーフロー</td>
+<td>キャラクター間ディレイを 20ms &rarr; 50ms に増加</td>
+<td>③</td>
+</tr>
+<tr>
+<td>Tab は効くが Enter が効かない</td>
+<td>CR/LF の不一致</td>
+<td><code>CHAR(10)</code> &rarr; <code>CHAR(13)</code> &rarr; <code>CHAR(13)&CHAR(10)</code> の順で試す</td>
+<td>②</td>
+</tr>
+<tr>
+<td>業務システムで Enter が効かない</td>
+<td>NUM Enter が必要</td>
+<td>キー変換で ~ &rarr; NUM Enter を設定</td>
+<td>④</td>
+</tr>
+<tr>
+<td>Enter が2回入って行が飛ぶ</td>
+<td>サフィックスの CR + 数式の CHAR で二重送信</td>
+<td>サフィックスを None に設定</td>
+<td>②</td>
+</tr>
+<tr>
+<td>F5 や F2 が <code>{</code> や <code>^</code> として入力される</td>
+<td>キー変換が未設定</td>
+<td>リーダーでキー変換を設定する</td>
+<td>④</td>
+</tr>
+<tr>
+<td>業務システムで次のフィールドに値が入らない</td>
+<td>画面遷移が遅くデータが先に送信されている</td>
+<td>ディレイ増加（50〜100ms）または Sleep を挟む</td>
+<td>③ / ⑥</td>
+</tr>
+<tr>
+<td>PrintScreen が遷移前の画面をキャプチャしてしまう</td>
+<td>Sleep 不足で画面描画が間に合っていない</td>
+<td>Sleep を 3〜5秒 に増加</td>
+<td>⑥</td>
+</tr>
+<tr>
+<td>QRコードが生成できない（文字数超過）</td>
+<td>255文字制限 or QR Version不足</td>
+<td>データを短くする / 高バージョンQR対応ツールを使う</td>
+<td>①</td>
+</tr>
+</tbody>
+</table>
+<div class="xdemo-note-good">
+<strong>💡 トラブル切り分けの順序</strong><br>
+<strong>① サフィックス確認（None か？）</strong> &rarr; <strong>② ディレイ確認（20ms 以上か？）</strong> &rarr; <strong>③ CR/LF 確認（CHAR(10) or CHAR(13)？）</strong> &rarr; <strong>④ キー変換確認（トリガー文字が登録されているか？）</strong><br>
+          多くの場合、①と②で解決します。
+        </div>
+</section>
+<!-- ===== まとめ ===== -->
+<section class="method-section" style="background:#f8f9fa; border-top: 2px solid #ddd;">
+<h2>まとめ：この記事で手に入ったもの</h2>
+<table class="format-table">
+<tr><th class="w-30">項目</th><th>内容</th></tr>
+<tr><td class="text-center">Excel 基本パターン</td><td>CHAR(9)=Tab と CHAR(10)=Enter の組み合わせで横・縦・スキップ入力が可能（①〜④）</td></tr>
+<tr><td class="text-center">Excel 応用パターン</td><td>Ctrl+S 自動保存（⑤）、F2 追記入力（⑥）でさらに効率化</td></tr>
+<tr><td class="text-center">業務システムパターン</td><td>NUM Enter キー変換で確定操作を自動化。1フィールド（⑦）〜 複数フィールド連続（⑧）〜 F5検索（⑨）〜 PrintScreen（⑩）</td></tr>
+<tr><td class="text-center">数式の簡略化</td><td>TEXTJOIN 関数で <code>& CHAR(9) &</code> の繰り返しを排除。5セル以上で特に有効</td></tr>
+<tr><td class="text-center">必須リーダー設定</td><td>サフィックス None、ディレイ 20ms以上、必要に応じてキー変換と Sleep</td></tr>
+<tr><td class="text-center">トラブル時の基本</td><td>「サフィックス &rarr; ディレイ &rarr; CR/LF &rarr; キー変換」の順にチェック</td></tr>
+</table>
+<div class="xdemo-note-good">
+<strong>💡 次のステップ</strong><br>
+<strong>業務システムで画面遷移の待ち時間が必要</strong> &rarr; 記事⑥「Sleep（一時停止）で処理完了を待つ」へ。<br>
+<strong>①〜⑤の設定をまとめて全体像を確認したい</strong> &rarr; 記事⑦「リーダー設定の全体像 &horbar; フルシステム構築ガイド」へ。<br>
+<strong>QRコード自体の生成方法をもっと詳しく知りたい</strong> &rarr; 記事①「バーコードコントロールでQRコード生成」に戻る。
+        </div>
+</section>
+<nav class="series-nav">
+<h3>📱 QR Automation Lab &horbar; 全記事一覧</h3>
+<p class="text-sm-gray">
+<span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
+    <span class="color-orange">🟠 応用</span>（④〜⑪）＝ さらに自動化を極める
+  </p>
+<ol>
+<li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでExcel一発入力 &horbar; Tab・Enter埋め込み</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ &horbar; 文字欠けを完全に防ぐ設定</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード &rarr; キー変換テクニック</a></li>
+<li class="current"><span class="lv-adv">[応用]</span> <strong>⑤ キー変換の実践シナリオ（この記事）</strong></li>
+<li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware.html">⑧ QRリーダーの選び方と接続方法</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 &horbar; 紙だけでPC間移行</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコード生成</a></li>
+</ol>
+</nav>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../script.js"></script>
+
+</body>
+</html>
+

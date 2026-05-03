@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>VLOOKUP完全ガイド &horbar; 基本から限界まで（全バージョン対応）｜Excel &times; No VBA Lab</title>
+<link href="https://excel-no-vba-lab.com/functions/old/article_vlookup.html" rel="canonical">
+<meta content="VLOOKUPの基本構文・よくあるエラー対処・列番号の落とし穴まで全解説。Excel 2016・2019でも完全動作。" name="description">
+<meta content="VLOOKUP, 使い方, エラー対処, Excel 2016, Excel 2019, VBA不要, 検索関数" name="keywords">
+<meta content="VLOOKUP完全ガイド &horbar; 基本から限界まで（全バージョン対応）｜Excel &times; No VBA Lab" property="og:title">
+<meta content="VLOOKUPの基本構文・よくあるエラー対処・列番号の落とし穴まで全解説。Excel 2016・2019でも完全動作。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/old/article_vlookup.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "VLOOKUP完全ガイド ― 基本から限界まで（全バージョン対応）",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "VLOOKUPの基本構文・よくあるエラー対処・列番号の落とし穴まで全解説。Excel 2016・2019でも完全動作。"
+}</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#old-excel">旧バージョン対応</a><span>&gt;</span>
+<strong>VLOOKUP完全ガイド</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="ver-badge ver-all">全バージョン対応</span>
+<span class="ver-badge ver-old">Excel 2016・2019</span>
+</div>
+<h1 class="article-title">VLOOKUP完全ガイド &horbar; 基本から「使ってはいけない場面」まで</h1>
+<p class="article-lead">Excelユーザーなら必ず知っておくべき検索関数の定番。XLOOKUP が使えない Excel 2016・2019 環境でも確実に活用でき、かつ「落とし穴」を把握することがプロへの第一歩。</p>
+</div>
+<!-- ============ 1. 基本構文 ============ -->
+<section class="method-section">
+<h2>💡 VLOOKUPの基本構文</h2>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=VLOOKUP(検索値, 検索範囲, 列番号, 検索方法)</span>
+</div>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<thead><tr><th scope="col">引数</th><th scope="col">役割</th><th scope="col">よくある値</th></tr></thead>
+<tbody>
+<tr><td><strong>検索値</strong></td><td>探したいキー（IDや名前など）</td><td>セル参照（例：A2）</td></tr>
+<tr><td><strong>検索範囲</strong></td><td>検索対象の表全体（左端列がキー列）</td><td>$D$2:$G$100（絶対参照推奨）</td></tr>
+<tr><td><strong>列番号</strong></td><td>検索範囲の左から何列目の値を返すか</td><td>2・3・4 など整数</td></tr>
+<tr><td><strong>検索方法</strong></td><td>FALSE=完全一致 / TRUE=近似一致</td><td>ほぼ常に <code>FALSE</code>（0）を使う</td></tr>
+</tbody>
+</table></div>
+<h3>基本例：社員IDから部署名を取得</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">// A2に社員ID、D列:G列にマスターテーブルがある場合</span>
+<span class="code-line">=VLOOKUP(A2, $D$2:$G$100, 3, FALSE)</span>
+</div>
+<div class="tip-box">
+        💡 <strong>検索範囲は必ず絶対参照（$）にする</strong><br>
+        数式を下にコピーしたとき範囲がずれないよう、<kbd>F4</kbd> キーで絶対参照に固定してください。<br>
+        例：<code>D2:G100</code> &rarr; 選択後 <kbd>F4</kbd> &rarr; <code>$D$2:$G$100</code>
+</div>
+</section>
+<!-- ============ 2. よくあるエラーと対処 ============ -->
+<section class="method-section">
+<h2>⚠️ よくあるエラーと対処法</h2>
+<h3>#N/A エラー &horbar; 最も多いトラブル</h3>
+<div class="warn-box">
+<strong>原因と対処チェックリスト</strong><br>
+        ✅ 検索値の前後に <strong>余分なスペース</strong> がない（<code>=TRIM(A2)</code> で確認）<br>
+        ✅ 検索値とキー列の <strong>データ型</strong> が一致している（数値 vs 文字列）<br>
+        ✅ 検索値がキー列の <strong>最左列</strong> にある（VLOOKUPはキー列より左側を返せない）<br>
+        ✅ 検索方法を <code>FALSE</code>（完全一致）にしている
+      </div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">// エラーを非表示にしたい場合（IFERROR で囲む）</span>
+<span class="code-line">=IFERROR(VLOOKUP(A2, $D$2:$G$100, 3, FALSE), "データなし")</span>
+</div>
+<h3>#REF! エラー &horbar; 列番号が範囲外</h3>
+<div class="warn-box">
+<strong>原因：</strong>第3引数の列番号が、検索範囲の列数を超えている。<br>
+        例：範囲が4列（D〜G）なのに列番号に <code>5</code> を指定 &rarr; #REF!<br>
+<strong>対処：</strong>COLUMNS関数で列数を確認してから列番号を設定する。
+      </div>
+</section>
+<!-- ============ 3. VLOOKUPの致命的な弱点 ============ -->
+<section class="method-section">
+<h2>🚫 VLOOKUPの「致命的な弱点」3つ</h2>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<thead><tr><th scope="col">弱点</th><th scope="col">具体的な問題</th><th scope="col">解決策</th></tr></thead>
+<tbody>
+<tr>
+<td><strong>①キー列より左側を返せない</strong></td>
+<td>商品名(C列)で検索して商品コード(A列)を取りたい &rarr; 不可</td>
+<td><a class="next-link" href="article_index_match.html">INDEX+MATCHを使う</a></td>
+</tr>
+<tr>
+<td><strong>②列の挿入・削除で壊れる</strong></td>
+<td>列番号を <code>3</code> と固定していると、列を追加した瞬間にズレる</td>
+<td>INDEX+MATCH は列挿入に強い</td>
+</tr>
+<tr>
+<td><strong>③大量データで遅い</strong></td>
+<td>1万行超でIFERRORを組み合わせると再計算が重くなる</td>
+<td>MATCH で位置取得・INDEX で値取得に分割するか XLOOKUPへ移行</td>
+</tr>
+</tbody>
+</table></div>
+<div class="tip-box">
+        📗 <strong>Excel 2016・2019ユーザーへ</strong><br>
+        VLOOKUPの弱点①②を解決するのが <a href="article_index_match.html">INDEX＋MATCH</a> です。<br>
+        特に「キー列より左を参照したい」「列の挿入でズレたくない」ケースでは INDEX+MATCH が必須です。
+      </div>
+</section>
+<!-- ============ 4. VLOOKUP vs 各関数 比較 ============ -->
+<section class="method-section">
+<h2>📊 バージョン別の最適な検索関数</h2>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<thead><tr><th scope="col">状況</th><th scope="col">Excel 2016・2019</th><th scope="col">Excel 2021・2024・365</th></tr></thead>
+<tbody>
+<tr>
+<td>右方向の単純な検索</td>
+<td><span class="semi">VLOOKUP（使えるが弱点あり）</span></td>
+<td><span class="ok">XLOOKUP（推奨）</span></td>
+</tr>
+<tr>
+<td>左方向の検索・列挿入に強い</td>
+<td><span class="ok">INDEX+MATCH（推奨）</span></td>
+<td><span class="ok">XLOOKUP</span></td>
+</tr>
+<tr>
+<td>複数条件の検索</td>
+<td><span class="semi">INDEX+MATCH+結合キー列</span></td>
+<td><span class="ok">XLOOKUP（配列で対応）</span></td>
+</tr>
+<tr>
+<td>複数行の抽出（全件取得）</td>
+<td><span class="ng">VLOOKUPでは不可</span><br><a href="article_countif_extract.html">FILTER代替テクニック</a></td>
+<td><span class="ok">FILTER関数（簡単）</span></td>
+</tr>
+</tbody>
+</table></div>
+</section>
+<!-- ============ 5. よく使う応用パターン ============ -->
+<section class="method-section">
+<h2>🔧 よく使う応用パターン</h2>
+<h3>① 複数列を同時に取得する（別々にVLOOKUPを書く）</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">// 氏名・部署・役職を同時に取得（列番号を変えて3つ書く）</span>
+<span class="code-line">B2: =VLOOKUP($A2, $マスタ.$A:$D, 2, FALSE)  // 氏名</span>
+<span class="code-line">C2: =VLOOKUP($A2, $マスタ.$A:$D, 3, FALSE)  // 部署</span>
+<span class="code-line">D2: =VLOOKUP($A2, $マスタ.$A:$D, 4, FALSE)  // 役職</span>
+</div>
+<div class="tip-box">
+        💡 検索値のセル（$A2）は列だけ固定（$A）、行は変動（2）にすると DOWN コピーが楽になります。
+      </div>
+<h3>② 別シートのマスターを参照する</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=VLOOKUP(A2, マスタ!$A:$D, 3, FALSE)</span>
+<span class="code-line">// または名前付き範囲を使う（可読性UP）</span>
+<span class="code-line">=VLOOKUP(A2, 社員マスタ, 3, FALSE)</span>
+</div>
+<h3>③ 近似一致（TRUE）の正しい使い方 &horbar; 等級判定</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">// 点数から評価を返す（テーブルは昇順に並べること！）</span>
+<span class="code-line">// A列:基準点（0,60,70,80,90）、B列:評価（D,C,B,A,S）</span>
+<span class="code-line">=VLOOKUP(得点, $A$1:$B$5, 2, TRUE)</span>
+</div>
+<div class="warn-box">
+        ⚠️ <strong>TRUE（近似一致）はテーブルを必ず昇順に並べる</strong><br>
+        並べ替えをしないと正しい結果が返りません。ほとんどの検索では <code>FALSE</code>（完全一致）を使いましょう。
+      </div>
+</section>
+<!-- ============ 次のステップ ============ -->
+<section class="method-section">
+<h2>📗 次のステップ（旧バージョン向け）</h2>
+<p>VLOOKUPの弱点を克服するには <strong>INDEX+MATCH</strong> への移行が最善策です。</p>
+<ul style="font-size:0.92em; line-height:2; padding-left:20px;">
+<li><a href="article_index_match.html">INDEX + MATCH &horbar; 左方向検索・列挿入に強い定番手法</a></li>
+<li><a href="article_index_match_multi.html">INDEX + MATCH + 結合キー列 &horbar; 複数条件検索</a></li>
+<li><a href="article_countif_extract.html">【FILTER代替】VBA不要・CSE不要の複数行抽出</a></li>
+<li><a href="article_iferror.html">IFERROR vs IFNA &horbar; #N/A エラーの正しい処理方法</a></li>
+</ul>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../latest/article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
+<li><a href="../latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+<li><a href="../latest/article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
+<li><a href="../latest/article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

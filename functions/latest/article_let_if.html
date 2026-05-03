@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>LET関数 深掘り①：VLOOKUPの重複評価を排除（2021～）｜Excel &times; No VBA Lab</title>
+<meta content="ExcelのLET＋IF関数の組み合わせで、複雑な条件分岐とエラーハンドリングを整理する高度テクニックを解説。" name="description">
+<meta content="LET IF 組み合わせ, Excel 数式 読みやすく, LET 条件分岐, Excel 2021 LET, 複雑数式 整理" name="keywords">
+<meta content="LET関数 深掘り①：VLOOKUPの重複評価を排除（2021～）｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのLET＋IF関数の組み合わせで、複雑な条件分岐とエラーハンドリングを整理する高度テクニックを解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/latest/article_let_if.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/latest/article_let_if.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "LET関数 深掘り①：VLOOKUPの重複評価を排除（2021～）",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "ExcelのLET＋IF関数の組み合わせで、複雑な条件分岐とエラーハンドリングを整理する高度テクニックを解説。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-no-vba-lab.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-no-vba-lab.com/functions/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "LET関数 深掘り①：VLOOKUPの重複評価を排除（2021～）",
+      "item": "https://excel-no-vba-lab.com/functions/latest/article_let_if.html"
+    }
+  ]
+}</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">Excel × No VBA Lab</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#functions">関数</a><span>&gt;</span><strong>LET 深掘り① VLOOKUP重複排除</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-2021">2021～</span></div>
+<h1 class="article-title">LET関数 深掘り①：VLOOKUPの重複評価を排除して速度を劇的改善</h1>
+</div>
+<!-- ===== やりたいこと ===== -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>1つのセルの中で「同じ VLOOKUP（または XLOOKUP）」が何度も登場する数式を書いてしまっていませんか？<br>
+      LET関数で検索結果を変数に1回だけ格納すれば、計算回数を激減させて体感速度が大幅に変わります。</p>
+</section>
+<!-- ===== 悪い例 ===== -->
+<section class="method-section">
+<h3>まず "よくあるダメな例" を見る</h3>
+<p>商品コード（A2）からマスタを引いて「商品名が空なら"未登録"、そうでなければ商品名＋単価を表示」という処理を考えます。</p>
+<span class="code-label">❌ VLOOKUPが3回重複</span>
+<div class="code-readonly">
+<span class="code-line">=IF(</span>
+<span class="code-line">  VLOOKUP(A2, マスタ!A:D, 2, FALSE) = "",</span>
+<span class="code-line">  "未登録",</span>
+<span class="code-line">  VLOOKUP(A2, マスタ!A:D, 2, FALSE)</span>
+<span class="code-line">    & "／" &</span>
+<span class="code-line">    TEXT(VLOOKUP(A2, マスタ!A:D, 3, FALSE), "#,##0") & "円"</span>
+<span class="code-line">)</span>
+</div>
+<p class="code-comment">この数式には VLOOKUP が <strong>3回</strong> 書かれています。<br>
+      Excel は数式内の各 VLOOKUP をそれぞれ独立に評価するため、マスタが10万行ならVLOOKUPの検索処理が3回&times;行数ぶん走ります。</p>
+<div class="xdemo-note-warn">
+<strong>⚠ なぜ遅い？</strong><br>
+        VLOOKUP / XLOOKUP は呼び出しのたびにマスタ範囲を先頭から走査します（完全一致の場合）。数式内に同じ検索を3回書くと、Excelは「同じ引数だから省略しよう」とは判断してくれません。3回とも律儀にフルスキャンします。これが1万行のシートに入っていれば、VLOOKUP の実行回数は <strong>3万回</strong> です。
+      </div>
+</section>
+<!-- ===== LETで改善 ===== -->
+<section class="method-section">
+<h3>LET で1回だけ検索する</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">  商品名, VLOOKUP(A2, マスタ!A:D, 2, FALSE),</span>
+<span class="code-line">  単価,   VLOOKUP(A2, マスタ!A:D, 3, FALSE),</span>
+<span class="code-line">  IF(商品名 = "", "未登録", 商品名 & "／" & TEXT(単価, "#,##0") & "円")</span>
+<span class="code-line">)</span>
+</div>
+<p class="code-comment">VLOOKUPが <strong>3回 &rarr; 2回</strong> に減りました。商品名の検索が1回で済むようになっています。<br>
+      さらに、変数名「商品名」「単価」のおかげで何をしている数式かが一目瞭然です。</p>
+<h3>XLOOKUP ならさらに1回で済む</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">  行, XLOOKUP(A2, マスタ!A:A, マスタ!B:D, ""),</span>
+<span class="code-line">  商品名, INDEX(行, 1),</span>
+<span class="code-line">  単価,   INDEX(行, 2),</span>
+<span class="code-line">  IF(商品名 = "", "未登録", 商品名 & "／" & TEXT(単価, "#,##0") & "円")</span>
+<span class="code-line">)</span>
+</div>
+<p class="code-comment">XLOOKUP は戻り値に複数列を指定できるため、検索自体が <strong>たった1回</strong> で完了します。LETの変数「行」にまとめて受け取り、INDEX で分解する構成です。</p>
+<div class="xdemo-note-perf">
+<strong>⚡ 速度比較の目安（10万行マスタ &times; 1万行の数式）</strong><br>
+        LETなし（VLOOKUP&times;3回）：再計算 約8～12秒<br>
+        LET使用（VLOOKUP&times;2回）：再計算 約5～8秒<br>
+        LET＋XLOOKUP（検索1回）：再計算 約2～4秒<br>
+        ※環境により異なりますが、検索回数にほぼ比例して速くなる傾向があります。
+      </div>
+</section>
+<!-- ===== 具体シナリオ ===== -->
+<section class="method-section">
+<h3>実務でよくあるシナリオ3選</h3>
+<div class="scenario-box">
+<h4>シナリオ①：「該当なし」の分岐 + 値の表示</h4>
+<p>VLOOKUPの結果が #N/A かどうかで分岐し、見つかった場合はその値を使う &boxh;&boxh; これは IFERROR の中にもう一度同じ VLOOKUP を書くパターンで頻出します。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(VLOOKUP(A2,マスタ!A:B,2,FALSE), "該当なし")</span>
+</div>
+<p class="code-comment">&uarr; これは実は1回しかVLOOKUPしていないので問題なし。IFERRORが評価を制御してくれます。<br>
+        ただし次のようにエラー時に別の検索をする場合は話が変わります。</p>
+<span class="code-label">❌ 正規マスタのVLOOKUPが2回重複</span>
+<div class="code-readonly">
+<span class="code-line">=IF(</span>
+<span class="code-line">    ISNA(VLOOKUP(A2, 正規マスタ!A:B, 2, FALSE)),</span>
+<span class="code-line">    VLOOKUP(A2, 旧マスタ!A:B, 2, FALSE),</span>
+<span class="code-line">    VLOOKUP(A2, 正規マスタ!A:B, 2, FALSE)</span>
+<span class="code-line">  )</span>
+</div>
+<span class="code-label-good">✅ LETで1回に</span>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">    正規, VLOOKUP(A2, 正規マスタ!A:B, 2, FALSE),</span>
+<span class="code-line">    IF(ISNA(正規), VLOOKUP(A2, 旧マスタ!A:B, 2, FALSE), 正規)</span>
+<span class="code-line">  )</span>
+</div>
+<p class="code-comment">正規マスタの VLOOKUP が2回&rarr;1回に。旧マスタ側は「正規で見つからなかったときだけ」評価されるので、LET内で先に実行する必要はありません（IFの遅延評価を活用）。</p>
+</div>
+<div class="scenario-box">
+<h4>シナリオ②：VLOOKUP結果を複数の計算に使う</h4>
+<p>単価を引いてきて、小計・消費税・合計の3列に使うケース。</p>
+<span class="code-label">❌ 3列すべてでVLOOKUPが重複</span>
+<div class="code-readonly">
+<span class="code-line">小計列: =VLOOKUP(A2,マスタ!A:C,3,FALSE)*B2</span>
+<span class="code-line">税額列: =VLOOKUP(A2,マスタ!A:C,3,FALSE)*B2*0.1</span>
+<span class="code-line">合計列: =VLOOKUP(A2,マスタ!A:C,3,FALSE)*B2*1.1</span>
+</div>
+<p class="code-comment">この場合、各列に1回ずつ計3回VLOOKUPが走ります。これは LET で1セルにまとめるより、ヘルパー列（作業列）に単価を1回だけ引いてくるほうが構成としてシンプルです。</p>
+<span class="code-label-good">✅ 作業列で1回だけ検索</span>
+<div class="code-readonly">
+<span class="code-line">作業列(C列): =VLOOKUP(A2, マスタ!A:C, 3, FALSE)  &larr; 1回だけ</span>
+<span class="code-line">小計列(D列): =C2*B2</span>
+<span class="code-line">税額列(E列): =D2*0.1</span>
+<span class="code-line">合計列(F列): =D2+E2</span>
+</div>
+<p class="code-comment">LETは「1つのセル内」での重複を排除するもの。複数セルにまたがる場合は作業列のほうが自然です。使い分けがポイント。</p>
+</div>
+<div class="scenario-box">
+<h4>シナリオ③：同一セル内で同じ検索を条件分岐に何度も使う</h4>
+<p>ランク判定のように、1つの検索結果を何段階ものIFで参照するケース。これがLETの最も効果的な場面です。</p>
+<span class="code-label">❌ VLOOKUPが3回重複</span>
+<div class="code-readonly">
+<span class="code-line">=IF(VLOOKUP(A2,集計!A:B,2,FALSE)&gt;=100,"S",</span>
+<span class="code-line">    IF(VLOOKUP(A2,集計!A:B,2,FALSE)&gt;=80,"A",</span>
+<span class="code-line">      IF(VLOOKUP(A2,集計!A:B,2,FALSE)&gt;=60,"B","C")))</span>
+</div>
+<span class="code-label-good">✅ LETで1回に</span>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">    点数, VLOOKUP(A2, 集計!A:B, 2, FALSE),</span>
+<span class="code-line">    IF(点数&gt;=100, "S", IF(点数&gt;=80, "A", IF(点数&gt;=60, "B", "C")))</span>
+<span class="code-line">  )</span>
+</div>
+<p class="code-comment">VLOOKUP 3回 &rarr; 1回。検索回数が1/3になります。IFのネストが深くても変数名のおかげで読みやすいのもメリットです。</p>
+</div>
+</section>
+<!-- ===== 比較表 ===== -->
+<section class="method-section">
+<h3>LET あり／なし 比較まとめ</h3>
+<div class="table-wrapper"><table class="comparison-table"><caption>データテーブル</caption>
+<thead>
+<tr><th scope="col">観点</th><th scope="col">LET なし</th><th scope="col">LET あり</th></tr>
+</thead>
+<tbody>
+<tr><td>VLOOKUP の評価回数</td><td>数式に書いた回数ぶん（3回書けば3回）</td><td class="highlight-cell">変数定義の1回だけ</td></tr>
+<tr><td>可読性</td><td>同じ長い関数が何度も出て読めない</td><td class="highlight-cell">変数名で意味が明確</td></tr>
+<tr><td>修正時のリスク</td><td>3箇所すべて修正が必要。1箇所忘れるとバグ</td><td class="highlight-cell">定義部分の1箇所を変更すれば全体に反映</td></tr>
+<tr><td>数式バーの長さ</td><td>長い（スクロールしないと全体が見えない）</td><td>やや長いが構造が明確</td></tr>
+<tr><td>計算速度（1万行目安）</td><td>VLOOKUP&times;3回&times;1万＝3万回の検索</td><td class="highlight-cell">VLOOKUP&times;1回&times;1万＝1万回の検索</td></tr>
+</tbody>
+</table></div>
+</section>
+<!-- ===== 注意点 ===== -->
+<section class="method-section">
+<h3>LET の注意点・落とし穴</h3>
+<div class="xdemo-note-warn">
+<strong>⚠ IFの遅延評価を意識する</strong><br>
+        LET の変数定義は上から順にすべて評価されます。つまり IF の TRUE側でしか使わない重い計算も、LETの変数に入れた時点で必ず実行されます。「条件によっては計算不要」なものは LET の変数にせず、IF の中に直接書くほうが速い場合があります。
+      </div>
+<div class="xdemo-note-warn">
+<strong>⚠ 変数名のルール</strong><br>
+        変数名にセル参照と紛らわしい名前（例：A1, R1C1）は使えません。日本語の変数名（例：売上, 税率）が使えるので、積極的に日本語で命名すると可読性が上がります。ただし関数名（SUM, IFなど）と同じ名前もNGです。
+      </div>
+<div class="xdemo-note-warn">
+<strong>⚠ LET で作業列が不要になるわけではない</strong><br>
+        シナリオ②で見たように、複数セルから同じ値を参照するなら作業列が正解です。LETは「1つのセル内の重複」を解消するもの。万能ではないことを理解して使い分けましょう。
+      </div>
+</section>
+<!-- ===== 旧バージョン ===== -->
+<section class="legacy-section">
+<h3>旧バージョンでの代替法</h3>
+<p>LETが使えない環境（Excel 2019以前、または更新チャネル・買い切り版・職場PCの管理設定などで未対応の環境）では、やはり作業列に VLOOKUP の結果を一度出力し、以降の計算はそのセルを参照する方式が最善です。1つのセル内で重複評価を防ぐ手段は LET 以外に存在しないため、作業列は「古い方法」ではなく「LETが使えないときの正攻法」です。</p>
+</section>
+<div class="series-nav" style="margin-top:40px; padding: 20px; background: #f0f4f8; border-radius: 8px;">
+<h4>LET関数 深掘りシリーズ</h4>
+<ul>
+<li><a href="article_let.html">① LET関数の基本とメリット</a></li>
+<li><a href="article_let_if.html">② 深掘り①：VLOOKUPの重複評価を排除</a></li>
+<li><a href="article_let_iferror.html">③ 深掘り②：SORT/SORTBYの重い処理を変数化</a></li>
+</ul>
+</div>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+

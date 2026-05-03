@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>旧ExcelでFILTER関数の代わりに複数抽出する方法｜Excel &times; No VBA Lab</title>
+<meta content="Excel 2019以前でもFILTER関数のように複数行抽出する方法を解説。VBA不要・CSE不要。COUNTIF、ROW+SMALL、AGGREGATE、上行参照方式、FIND/SEARCHによるあいまい検索まで比較。" name="description">
+<meta content="FILTER 代替, Excel 複数抽出, 旧Excel FILTER, AGGREGATE 抽出, INDEX SMALL, INDEX MATCH, FIND 抽出, SEARCH 抽出, あいまい検索, 部分一致, COUNTIF 重い, VBA不要, CSE不要" name="keywords">
+<meta content="旧ExcelでFILTER関数の代わりに複数抽出する方法｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Excel 2019以前でもFILTER関数のように複数行抽出する方法を解説。VBA不要・CSE不要。COUNTIF、ROW+SMALL、AGGREGATE、上行参照方式、FIND/SEARCHによるあいまい検索まで比較。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/old/article_countif_extract.html" property="og:url">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/old/article_countif_extract.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "旧ExcelでFILTER関数の代わりに複数抽出する方法",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "Excel 2019以前でもFILTER関数のように複数行抽出する方法を解説。VBA不要・CSE不要。COUNTIF、ROW+SMALL、AGGREGATE、上行参照方式、FIND/SEARCHによるあいまい検索まで比較。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-no-vba-lab.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-no-vba-lab.com/functions/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "旧ExcelでFILTER関数の代わりに複数抽出する方法",
+      "item": "https://excel-no-vba-lab.com/functions/old/article_countif_extract.html"
+    }
+  ]
+}</script>
+
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+  <a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#functions">関数</a><span>&gt;</span><strong>旧ExcelでFILTER代替</strong>
+</div>
+
+<article class="article-body">
+
+<div class="article-header">
+  <div class="article-meta">
+    <span class="badge badge-all">全ver対応</span>
+    <span style="display:inline-block;background:#e53935;color:#fff;font-size:.7em;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:5px;">CSE不要</span>
+    <span style="display:inline-block;background:#1976d2;color:#fff;font-size:.7em;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:5px;">VBA不要</span>
+  </div>
+  <h1 class="article-title">旧ExcelでFILTER関数の代わりに複数抽出する方法<br>&horbar; 分かりやすい方法から最速方式まで課題解決で解説</h1>
+</div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+
+<p>Excel 2021 / Microsoft 365 では、FILTER関数を使えば条件に合うデータをまとめて抽出できます。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">FILTER</div>
+<div class="formula-copy-code">=FILTER(A2:D1000,B2:B1000="営業部")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<p>しかし、Excel 2019以前の旧ExcelではFILTER関数が使えません。<br>
+この記事では、旧Excelでも <strong>VBA不要・Ctrl+Shift+Enter不要</strong> で、FILTER関数のように条件一致データを複数行抽出する方法を解説します。</p>
+
+<div class="xdemo-note">
+<strong>この記事の流れ：</strong><br>
+まず、分かりやすい <strong>COUNTIF方式</strong> から説明します。<br>
+COUNTIF方式は理解しやすい一方で、大量データでは重くなります。<br><br>
+そこから、<strong>COUNTIFをやめる方法</strong>、<strong>作業列を減らす方法</strong>、最後に <strong>最速の上行参照方式</strong> へ順番に改善していきます。<br><br>
+以前よく見かける <strong>COUNTIF + SMALL + INDEX</strong> は、COUNTIFとSMALLを重ねるだけで実務上のメリットが薄いため、この記事では方式として採用しません。
+</div>
+</section>
+
+<section class="method-section">
+<h3>先に結論：目的別のおすすめ</h3>
+
+<div class="choice-grid">
+<div class="choice-card warn">
+<span class="choice-card-label">小規模・分かりやすさ</span>
+<span class="choice-card-title">COUNTIF + INDEX + MATCH</span>
+<p>数百〜数千行程度なら動くことも多く、連番の考え方が分かりやすいです。<br>ただし大量データでは重くなりやすいです。</p>
+</div>
+
+<div class="choice-card good">
+<span class="choice-card-label">あいまい検索向き</span>
+<span class="choice-card-title">対象行だけROW<br>+ SMALL + INDEX</span>
+<p>COUNTIFを使わず、対象行だけ行番号を出します。<br>SEARCH/FINDを使った部分一致も分かりやすく作れます。</p>
+</div>
+
+<div class="choice-card light">
+<span class="choice-card-label">軽量化重視</span>
+<span class="choice-card-title">AGGREGATEで行番号<br>+ INDEX参照</span>
+<p>元データ側の作業列を増やさないため、ファイルサイズを小さくしやすいです。<br>行番号だけ出して各列はINDEX参照にします。</p>
+</div>
+
+<div class="choice-card best">
+<span class="choice-card-label">最速</span>
+<span class="choice-card-title">上行参照で連番<br>+ INDEX + MATCH</span>
+<p>COUNTIFもSMALLも使わないため、最速クラスです。<br>10万行級の住所録・顧客リスト・明細データでは本命です。</p>
+</div>
+</div>
+
+<div class="xdemo-note-warn">
+<strong>行数による目安：</strong><br>
+数百〜数千行程度なら、COUNTIF方式でも問題なく動くことが多いです。<br>
+1万行前後になると、ブックの数式量やPC性能によっては再計算の重さを感じることがあります。<br>
+住所録・顧客リスト・販売明細のように10万行以上になると、COUNTIFの範囲拡張が大きなボトルネックになりやすく、ROW方式・AGGREGATE方式・上行参照方式への切り替えを検討した方が安全です。
+</div>
+</section>
+
+<section class="method-section">
+<h3>サンプルデータ</h3>
+<p>以下の表から、部署が「営業部」の行だけを抽出します。</p>
+
+<div class="xdemo-wrap">
+<div class="table-wrapper">
+<table class="xdemo-table">
+<caption>元データ</caption>
+<tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col">C</td><td class="xd-col">D</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-head">名前</td><td class="xd-head">部署</td><td class="xd-head">売上</td><td class="xd-head">年齢</td></tr>
+<tr><td class="xd-row">2</td><td class="xd-master">田中</td><td class="xd-hit">営業部</td><td class="xd-master">120</td><td class="xd-master">28</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-master">佐藤</td><td class="xd-master">企画部</td><td class="xd-master">80</td><td class="xd-master">35</td></tr>
+<tr><td class="xd-row">4</td><td class="xd-master">鈴木</td><td class="xd-hit">営業部</td><td class="xd-master">200</td><td class="xd-master">42</td></tr>
+<tr><td class="xd-row">5</td><td class="xd-master">高橋</td><td class="xd-master">総務部</td><td class="xd-master">60</td><td class="xd-master">30</td></tr>
+<tr><td class="xd-row">6</td><td class="xd-master">伊藤</td><td class="xd-hit">営業部</td><td class="xd-master">150</td><td class="xd-master">25</td></tr>
+<tr><td class="xd-row">7</td><td class="xd-master">渡辺</td><td class="xd-master">企画部</td><td class="xd-master">90</td><td class="xd-master">38</td></tr>
+<tr><td class="xd-row">8</td><td class="xd-master">山本</td><td class="xd-master">総務部</td><td class="xd-master">45</td><td class="xd-master">50</td></tr>
+<tr><td class="xd-row">9</td><td class="xd-master">中村</td><td class="xd-hit">営業部</td><td class="xd-master">180</td><td class="xd-master">33</td></tr>
+<tr><td class="xd-row">10</td><td class="xd-master">小林</td><td class="xd-master">企画部</td><td class="xd-master">110</td><td class="xd-master">29</td></tr>
+</table>
+</div>
+</div>
+
+<p>抽出結果は、田中・鈴木・伊藤・中村の4行になります。</p>
+</section>
+
+<section class="method-section">
+<h3>抽出条件の作り方：完全一致・部分一致・あいまい検索</h3>
+
+<p>旧関数でFILTER代替を作る場合、重要なのは「条件式」の作り方です。<br>
+完全一致なら <code>B2="営業部"</code> で済みますが、部分一致やあいまい検索をしたい場合は、FIND関数やSEARCH関数を使います。</p>
+
+<table class="condition-table">
+<caption>条件式の使い分け</caption>
+<tr><th>やりたいこと</th><th>条件式の例</th><th>説明</th></tr>
+<tr><td>完全一致</td><td><code>B2="営業部"</code></td><td>B2セルが営業部と完全に一致する行だけを抽出します。</td></tr>
+<tr><td>部分一致<br>大文字小文字を区別する</td><td><code>ISNUMBER(FIND("営業",B2))</code></td><td>FINDは大文字小文字を区別します。</td></tr>
+<tr><td>部分一致<br>大文字小文字を区別しない</td><td><code>ISNUMBER(SEARCH("営業",B2))</code></td><td>SEARCHは大文字小文字を区別しません。</td></tr>
+<tr><td>検索語をセル参照にする</td><td><code>ISNUMBER(SEARCH($M$1,B2))</code></td><td>M1セルに入力した文字を含む行だけを抽出します。</td></tr>
+<tr><td>含まない行を抽出</td><td><code>NOT(ISNUMBER(SEARCH($M$1,B2)))</code></td><td>M1セルの文字を含まない行だけを抽出します。</td></tr>
+<tr><td>AND条件</td><td><code>(B2="営業部")*(C2&gt;=100)</code></td><td>部署が営業部、かつ売上が100以上の行だけを抽出します。</td></tr>
+<tr><td>OR条件</td><td><code>((B2="営業部")+(B2="企画部"))&gt;0</code></td><td>営業部または企画部の行を抽出します。</td></tr>
+<tr><td>部分一致 + 数値条件</td><td><code>ISNUMBER(SEARCH($M$1,B2))*(C2&gt;=100)</code></td><td>M1セルの文字を含み、かつ売上が100以上の行を抽出します。</td></tr>
+</table>
+
+<div class="xdemo-note">
+<strong>実務でのおすすめ：</strong><br>
+完全一致なら <code>=</code> でOKです。<br>
+「営業部」「営業一課」「法人営業」など、文字を含むデータをまとめて拾いたい場合は <code>SEARCH</code> または <code>FIND</code> を使います。<br><br>
+実務では、大文字小文字を区別しない <code>SEARCH</code> の方が扱いやすいことが多いです。
+</div>
+</section>
+
+<section class="method-section">
+<h3>方法比較：どれを使うべきか</h3>
+
+<p>ここでは、あえて「分かりやすいが重い方法」から「最速方式」へ並べています。<br>
+1つずつ問題点を解決していく流れで見ると、なぜ速くなるのかが分かりやすくなります。</p>
+
+<div class="wide-compare-wrap">
+<div class="compare-scroll">
+<table class="compare-table">
+<caption>旧ExcelでFILTER代替を作る方法の比較</caption>
+<tr>
+<th class="compare-row-head">比較項目</th>
+<th class="method-mid"><span class="method-title">方法1</span><span class="method-sub">COUNTIF<br>+ INDEX + MATCH</span></th>
+<th class="method-good"><span class="method-title">方法2</span><span class="method-sub">対象行だけROW<br>+ SMALL + INDEX</span></th>
+<th class="method-light"><span class="method-title">方法3</span><span class="method-sub">AGGREGATEで行番号<br>+ INDEX参照</span></th>
+<th class="method-best"><span class="method-title">方法4</span><span class="method-sub">上行参照で連番<br>+ INDEX + MATCH</span></th>
+</tr>
+<tr><td class="compare-row-head">位置づけ</td><td class="method-mid">分かりやすい基本形</td><td class="method-good">COUNTIFをやめる改善版</td><td class="method-light">作業列を減らす軽量版</td><td class="method-best">最速版</td></tr>
+<tr><td class="compare-row-head">おすすめ度</td><td class="method-mid"><span class="mark-mid">★★★☆☆</span><br>小規模なら可</td><td class="method-good"><span class="mark-good">★★★★☆</span><br>シンプルで高速</td><td class="method-light"><span class="mark-good">★★★★☆</span><br>軽量化に有効</td><td class="method-best"><span class="mark-good">★★★★★</span><br>大量データの本命</td></tr>
+<tr><td class="compare-row-head">速度</td><td class="method-mid">小規模なら可<br>大量では重い</td><td class="method-good">高速<br>COUNTIFを使わない</td><td class="method-light">中〜高速<br>行番号だけなら実用的</td><td class="method-best">最速<br>COUNTIFもSMALLも使わない</td></tr>
+<tr><td class="compare-row-head">作業列</td><td class="method-mid">元データ左側に必要</td><td class="method-good">元データ左側に必要</td><td class="method-light">元データ側は不要<br>抽出側左に行番号列</td><td class="method-best">元データ左側に必要</td></tr>
+<tr><td class="compare-row-head">ファイルサイズ</td><td class="method-mid">作業列1列分増える</td><td class="method-good">作業列1列分増える</td><td class="method-light"><span class="mark-good">小さくしやすい</span><br>元データ側に大量の作業列を持たない</td><td class="method-best">作業列1列分増える</td></tr>
+<tr><td class="compare-row-head">完全一致</td><td class="method-mid"><code>=IF(C2="営業部",COUNTIF($C$2:C2,"営業部"),"")</code></td><td class="method-good"><code>=IF(C2="営業部",ROW(),"")</code></td><td class="method-light"><code>ROW範囲/(部署範囲="営業部")</code></td><td class="method-best"><code>=IF(C3="営業部",A2+1,A2)</code></td></tr>
+<tr><td class="compare-row-head">あいまい検索</td><td class="method-mid">COUNTIFのワイルドカードで可能<br>ただし範囲拡張が重い</td><td class="method-good"><code>=IF(ISNUMBER(SEARCH($M$1,C2)),ROW(),"")</code></td><td class="method-light"><code>ROW範囲/ISNUMBER(SEARCH($M$1,部署範囲))</code></td><td class="method-best"><code>=IF(ISNUMBER(SEARCH($M$1,C3)),A2+1,A2)</code></td></tr>
+<tr><td class="compare-row-head">メリット</td><td class="method-mid">連番が分かりやすい<br>学習用に向く</td><td class="method-good">対象行だけROWで分かりやすい<br>あいまい検索に強い</td><td class="method-light">作業列が少ない<br>ファイルサイズを小さくしやすい</td><td class="method-best">最速クラス<br>大量データに強い</td></tr>
+<tr><td class="compare-row-head">デメリット</td><td class="method-mid">COUNTIFの範囲拡張が重い</td><td class="method-good">抽出側でSMALLを使う</td><td class="method-light">AGGREGATE式が長い<br>最速ではない</td><td class="method-best">作業列の番号の考え方が少し難しい</td></tr>
+<tr><td class="compare-row-head">向いている場面</td><td class="method-mid">小規模データ<br>仕組み説明</td><td class="method-good">あいまい検索<br>COUNTIF回避</td><td class="method-light">ファイル軽量化<br>元表を崩したくない</td><td class="method-best">10万行級の住所録・顧客リスト・明細</td></tr>
+</table>
+</div>
+</div>
+
+<p class="compare-note">※ PCでは比較表だけ横幅を広く使って表示します。スマホや幅の狭い画面では横にスクロールできます。</p>
+
+<div class="rec-banner">
+<strong>この記事の読み方：</strong><br>
+「動けばよい」「小規模データ」なら、COUNTIF方式でも十分な場合があります。<br>
+ただし、住所録・顧客データ・販売明細のように行数が増えるほど、COUNTIFの範囲拡張が重くなります。<br><br>
+そこから、ROW方式でCOUNTIFをやめる、AGGREGATEで作業列を減らす、最後に上行参照方式で最速化する、という順番で理解すると分かりやすいです。
+</div>
+</section>
+
+<section class="method-section">
+<h3><span class="speed-rank rank-rec">小規模向け</span>方法1：COUNTIF + INDEX + MATCH</h3>
+
+<table class="mini-procon">
+<tr><th>向いている</th><td class="best">小規模データ、学習用、仕組みを説明したい場合</td></tr>
+<tr><th>メリット</th><td class="pro">・考え方が分かりやすい<br>・条件に合う行だけに「1件目、2件目、3件目」と連番が出る<br>・数百〜数千行程度なら問題ないことも多い<br>・抽出側はINDEX + MATCHで比較的分かりやすい</td></tr>
+<tr><th>デメリット</th><td class="con">・COUNTIFの範囲拡張が重い<br>・行数が増えるほど急激に遅くなる<br>・10万行級では実務上かなり厳しくなることがある</td></tr>
+</table>
+
+<p>まずは一番分かりやすい方法です。<br>
+COUNTIFで「条件に合う行が何件目か」を作業列に出し、INDEX + MATCHで取り出します。</p>
+
+<h4><span class="step-badge">STEP 1</span> 作業列を左側に追加する</h4>
+
+<p>元データの左に作業列を追加します。<br>
+作業列A、名前B、部署C、売上D、年齢Eという配置にします。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">A2</div>
+<div class="formula-copy-code">=IF(C2="営業部",COUNTIF($C$2:C2,"営業部"),"")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+<div class="formula-copy-row">
+<div class="formula-copy-label">A3以降</div>
+<div class="formula-copy-code">=IF(C3="営業部",COUNTIF($C$2:C3,"営業部"),"")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<p>COUNTIF方式では、条件に合う行だけに「1件目、2件目、3件目」と番号が表示されます。</p>
+
+<table class="helper-display-table">
+<caption>COUNTIF方式：左側に作業列を表示</caption>
+<tr><th>行</th><th class="helper-left">A列：抽出番号</th><th>B列：名前</th><th>C列：部署</th><th>D列：売上</th><th>E列：年齢</th></tr>
+<tr class="hit-row"><td>2</td><td class="helper-left">1</td><td>田中</td><td class="data-hit">営業部</td><td>120</td><td>28</td></tr>
+<tr><td>3</td><td class="helper-left helper-blank"></td><td>佐藤</td><td>企画部</td><td>80</td><td>35</td></tr>
+<tr class="hit-row"><td>4</td><td class="helper-left">2</td><td>鈴木</td><td class="data-hit">営業部</td><td>200</td><td>42</td></tr>
+<tr><td>5</td><td class="helper-left helper-blank"></td><td>高橋</td><td>総務部</td><td>60</td><td>30</td></tr>
+<tr class="hit-row"><td>6</td><td class="helper-left">3</td><td>伊藤</td><td class="data-hit">営業部</td><td>150</td><td>25</td></tr>
+<tr><td>7</td><td class="helper-left helper-blank"></td><td>渡辺</td><td>企画部</td><td>90</td><td>38</td></tr>
+<tr><td>8</td><td class="helper-left helper-blank"></td><td>山本</td><td>総務部</td><td>45</td><td>50</td></tr>
+<tr class="hit-row"><td>9</td><td class="helper-left">4</td><td>中村</td><td class="data-hit">営業部</td><td>180</td><td>33</td></tr>
+<tr><td>10</td><td class="helper-left helper-blank"></td><td>小林</td><td>企画部</td><td>110</td><td>29</td></tr>
+</table>
+
+<p>部分一致で「営業」を含む行を対象にする場合は、COUNTIFのワイルドカードでも書けます。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">部分一致</div>
+<div class="formula-copy-code">=IF(COUNTIF(C2,"*営業*")&gt;0,COUNTIF($C$2:C2,"*営業*"),"")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<div class="xdemo-note-warn">
+<strong>ただし注意：</strong><br>
+ワイルドカードで部分一致はできますが、<code>COUNTIF($C$2:C2,"*営業*")</code> のように範囲が下へ広がる点は変わりません。<br>
+つまり、部分一致にしてもCOUNTIFの重さは残ります。
+</div>
+
+<h4><span class="step-badge">STEP 2</span> INDEX + MATCHで抽出する</h4>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row"><div class="formula-copy-label">名前</div><div class="formula-copy-code">=IFERROR(INDEX(B:B,MATCH(ROW(A1),A:A,0)),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">部署</div><div class="formula-copy-code">=IFERROR(INDEX(C:C,MATCH(ROW(A1),A:A,0)),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">売上</div><div class="formula-copy-code">=IFERROR(INDEX(D:D,MATCH(ROW(A1),A:A,0)),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">年齢</div><div class="formula-copy-code">=IFERROR(INDEX(E:E,MATCH(ROW(A1),A:A,0)),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+</div>
+
+<div class="xdemo-note">
+<strong>COUNTIF方式のメリット：</strong><br>
+この方式は、作業列に「1件目、2件目、3件目」と出るため、仕組みが非常に分かりやすいです。<br>
+小規模データでは十分実用的なこともあります。<br><br>
+ただし、大量データではCOUNTIFの範囲拡張がボトルネックになります。
+</div>
+</section>
+
+<section class="method-section">
+<h3><span class="speed-rank rank-fast">高速・シンプル</span>方法2：対象行だけROW + SMALL + INDEX</h3>
+
+<table class="mini-procon">
+<tr><th>向いている</th><td class="best">COUNTIFを避けたい場合、あいまい検索を分かりやすく作りたい場合、対象行だけを見える形にしたい場合</td></tr>
+<tr><th>メリット</th><td class="pro">・COUNTIFを使わない<br>・各行の判定だけなので作業列が軽い<br>・対象行だけROW番号が出るため見た目が分かりやすい<br>・FIND関数やSEARCH関数で部分一致にも対応しやすい</td></tr>
+<tr><th>デメリット</th><td class="con">・作業列が必要<br>・抽出側でSMALLを使う<br>・抽出列が多いとSMALLの回数が増える<br>・速度最優先なら上行参照方式に劣る</td></tr>
+</table>
+
+<p>COUNTIFが重いなら、まずCOUNTIFをやめます。<br>
+この方法では、作業列に「対象行なら実際の行番号、対象外なら空白」を出します。</p>
+
+<h4><span class="step-badge">STEP 1</span> 完全一致：対象行だけROWを出す</h4>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">A2以降</div>
+<div class="formula-copy-code">=IF(C2="営業部",ROW(),"")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<h4>部分一致・あいまい検索：SEARCHまたはFINDを使う</h4>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row"><div class="formula-copy-label">SEARCH</div><div class="formula-copy-code">=IF(ISNUMBER(SEARCH($M$1,C2)),ROW(),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">FIND</div><div class="formula-copy-code">=IF(ISNUMBER(FIND($M$1,C2)),ROW(),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">複数条件</div><div class="formula-copy-code">=IF(ISNUMBER(SEARCH("営業",C2))*(D2&gt;=100),ROW(),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+</div>
+
+<table class="helper-display-table">
+<caption>ROW方式：左側に作業列を表示</caption>
+<tr><th>行</th><th class="helper-left">A列：抽出行</th><th>B列：名前</th><th>C列：部署</th><th>D列：売上</th><th>E列：年齢</th></tr>
+<tr class="hit-row"><td>2</td><td class="helper-left">2</td><td>田中</td><td class="data-hit">営業部</td><td>120</td><td>28</td></tr>
+<tr><td>3</td><td class="helper-left helper-blank"></td><td>佐藤</td><td>企画部</td><td>80</td><td>35</td></tr>
+<tr class="hit-row"><td>4</td><td class="helper-left">4</td><td>鈴木</td><td class="data-hit">営業部</td><td>200</td><td>42</td></tr>
+<tr><td>5</td><td class="helper-left helper-blank"></td><td>高橋</td><td>総務部</td><td>60</td><td>30</td></tr>
+<tr class="hit-row"><td>6</td><td class="helper-left">6</td><td>伊藤</td><td class="data-hit">営業部</td><td>150</td><td>25</td></tr>
+<tr><td>7</td><td class="helper-left helper-blank"></td><td>渡辺</td><td>企画部</td><td>90</td><td>38</td></tr>
+<tr><td>8</td><td class="helper-left helper-blank"></td><td>山本</td><td>総務部</td><td>45</td><td>50</td></tr>
+<tr class="hit-row"><td>9</td><td class="helper-left">9</td><td>中村</td><td class="data-hit">営業部</td><td>180</td><td>33</td></tr>
+<tr><td>10</td><td class="helper-left helper-blank"></td><td>小林</td><td>企画部</td><td>110</td><td>29</td></tr>
+</table>
+
+<h4><span class="step-badge">STEP 2</span> SMALL + INDEXで抽出する</h4>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row"><div class="formula-copy-label">名前</div><div class="formula-copy-code">=IFERROR(INDEX(B:B,SMALL($A:$A,ROW(A1))),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">部署</div><div class="formula-copy-code">=IFERROR(INDEX(C:C,SMALL($A:$A,ROW(A1))),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">売上</div><div class="formula-copy-code">=IFERROR(INDEX(D:D,SMALL($A:$A,ROW(A1))),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">年齢</div><div class="formula-copy-code">=IFERROR(INDEX(E:E,SMALL($A:$A,ROW(A1))),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+</div>
+
+<div class="xdemo-note">
+<strong>なぜCOUNTIFより速くなりやすいのか：</strong><br>
+COUNTIF方式は、下の行へ行くほど参照範囲が広がります。<br>
+一方、このROW方式は、各行で「この行が対象かどうか」を判定するだけです。<br>
+そのため、作業列側の計算は非常に軽くなります。
+</div>
+</section>
+
+<section class="method-section">
+<h3><span class="speed-rank rank-rec">作業列少なめ</span>方法3：AGGREGATEで行番号だけ抽出 + INDEX</h3>
+
+<table class="mini-procon">
+<tr><th>向いている</th><td class="best">元データ側に作業列を追加したくない場合、ファイルサイズを小さくしたい場合、表の構造を崩したくない場合</td></tr>
+<tr><th>メリット</th><td class="pro">・元データ側に作業列が不要<br>・CSE不要で複数抽出できる<br>・行番号だけAGGREGATEで出せば計算回数を減らせる<br>・作業列が少ないためファイルサイズを小さくしやすい<br>・完全一致もあいまい検索も対応できる</td></tr>
+<tr><th>デメリット</th><td class="con">・AGGREGATEの数式が長い<br>・各列に直接AGGREGATEを書くと重い<br>・速度最優先では上行参照方式に劣る<br>・抽出側に行番号列は必要になる</td></tr>
+</table>
+
+<p>元データ側に作業列を追加したくない場合は、AGGREGATE関数を使います。<br>
+ただし、各列に直接AGGREGATEを書くと重くなりやすいため、<strong>まず行番号だけを出し、その行番号を各列で参照する</strong>のがおすすめです。</p>
+
+<div class="xdemo-note-green">
+<strong>AGGREGATE高速化と軽量化のコツ：</strong><br>
+AGGREGATEは便利ですが、各列に何度も書くと同じ条件判定を繰り返して重くなります。<br>
+そのため、まず1列だけで必要な行番号を出します。<br>
+名前・部署・売上・年齢は、その行番号を参照してINDEXで取り出します。<br><br>
+また、元データ側に大量の作業列数式を持たないため、<strong>ブックのファイルサイズを小さくしやすい</strong>というメリットもあります。
+</div>
+
+<h4><span class="step-badge">STEP 1</span> 抽出結果の左側に行番号列を作る</h4>
+
+<p>例として、元データはA:D、部署はB列にある前提です。<br>
+抽出結果側の左にG列を作り、G2セルに以下を入力して下へコピーします。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row"><div class="formula-copy-label">完全一致</div><div class="formula-copy-code">=IFERROR(AGGREGATE(15,6,ROW($B$2:$B$1000)/($B$2:$B$1000="営業部"),ROWS($G$2:G2)),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">SEARCH</div><div class="formula-copy-code">=IFERROR(AGGREGATE(15,6,ROW($B$2:$B$1000)/ISNUMBER(SEARCH($M$1,$B$2:$B$1000)),ROWS($G$2:G2)),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">FIND</div><div class="formula-copy-code">=IFERROR(AGGREGATE(15,6,ROW($B$2:$B$1000)/ISNUMBER(FIND($M$1,$B$2:$B$1000)),ROWS($G$2:G2)),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">複数条件</div><div class="formula-copy-code">=IFERROR(AGGREGATE(15,6,ROW($B$2:$B$1000)/(ISNUMBER(SEARCH("営業",$B$2:$B$1000))*($C$2:$C$1000&gt;=100)),ROWS($G$2:G2)),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+</div>
+
+<table class="helper-display-table">
+<caption>AGGREGATE方式：抽出結果の左側に行番号列を表示</caption>
+<tr><th class="helper-left">G列：抽出行番号</th><th class="result-col">H列：名前</th><th class="result-col">I列：部署</th><th class="result-col">J列：売上</th><th class="result-col">K列：年齢</th></tr>
+<tr><td class="helper-left">2</td><td>田中</td><td class="data-hit">営業部</td><td>120</td><td>28</td></tr>
+<tr><td class="helper-left">4</td><td>鈴木</td><td class="data-hit">営業部</td><td>200</td><td>42</td></tr>
+<tr><td class="helper-left">6</td><td>伊藤</td><td class="data-hit">営業部</td><td>150</td><td>25</td></tr>
+<tr><td class="helper-left">9</td><td>中村</td><td class="data-hit">営業部</td><td>180</td><td>33</td></tr>
+</table>
+
+<div class="xdemo-note">
+<strong>ROWS($G$2:G2) の意味：</strong><br>
+AGGREGATEの最後の引数は「何番目に小さい値を返すか」です。<br>
+<code>ROWS($G$2:G2)</code> はG2では1、G3では2、G4では3……と増えます。
+</div>
+
+<h4><span class="step-badge">STEP 2</span> 行番号を参照して各列を取り出す</h4>
+
+<p>G列には、表の中で何番目かではなく、<strong>実際のシート行番号</strong> が入ります。<br>
+そのため、取り出し側は列全体を参照するとズレません。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row"><div class="formula-copy-label">名前</div><div class="formula-copy-code">=IF($G2="","",INDEX(A:A,$G2))</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">部署</div><div class="formula-copy-code">=IF($G2="","",INDEX(B:B,$G2))</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">売上</div><div class="formula-copy-code">=IF($G2="","",INDEX(C:C,$G2))</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">年齢</div><div class="formula-copy-code">=IF($G2="","",INDEX(D:D,$G2))</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">横コピー用</div><div class="formula-copy-code">=IF($G2="","",INDEX($A:$D,$G2,COLUMNS($H:H)))</div><button class="formula-copy-btn" type="button">コピー</button></div>
+</div>
+
+<div class="xdemo-note-warn">
+<strong>行番号のズレに注意：</strong><br>
+このAGGREGATE式は、表の中で何番目かではなく、実際のシート行番号を返します。<br>
+そのため、<code>INDEX(A:A,$G2)</code> のように列全体を参照すればズレません。<br><br>
+一方、<code>INDEX(A2:A1000,$G2)</code> のようにデータ範囲だけを指定すると、G2の値が実際の行番号であるため、1行ずれることがあります。
+</div>
+
+<h4>範囲指定で取り出したい場合：相対番号方式</h4>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row"><div class="formula-copy-label">相対番号</div><div class="formula-copy-code">=IFERROR(AGGREGATE(15,6,(ROW($B$2:$B$1000)-ROW($B$2)+1)/ISNUMBER(SEARCH($M$1,$B$2:$B$1000)),ROWS($G$2:G2)),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">範囲INDEX</div><div class="formula-copy-code">=IF($G2="","",INDEX($A$2:$D$1000,$G2,COLUMNS($H:H)))</div><button class="formula-copy-btn" type="button">コピー</button></div>
+</div>
+
+<div class="xdemo-note-green">
+<strong>方法3の結論：</strong><br>
+AGGREGATE方式は最速ではありません。<br>
+しかし、元データ側に作業列を追加しなくてよいため、ファイルサイズを小さくしやすく、表の構造も崩しにくいです。
+</div>
+</section>
+
+<section class="method-section">
+<h3><span class="speed-rank rank-fast">最速</span>方法4：上行参照で連番 + INDEX + MATCH</h3>
+
+<table class="mini-procon">
+<tr><th>向いている</th><td class="best">大量データ、速度最優先、再計算を軽くしたいブック、10万行級の住所録・顧客リスト・明細データ</td></tr>
+<tr><th>メリット</th><td class="pro">・COUNTIFを使わない<br>・SMALLも使わない<br>・各行の計算が軽い<br>・抽出側もINDEX + MATCHで高速<br>・完全一致もあいまい検索も対応できる</td></tr>
+<tr><th>デメリット</th><td class="con">・作業列が必要<br>・条件外行にも番号が残る<br>・COUNTIF方式より連番の作り方が少し分かりにくい</td></tr>
+</table>
+
+<p>最後に、最速方式です。<br>
+COUNTIFもSMALLも使わず、作業列はすぐ上のセルだけを参照して連番を作ります。</p>
+
+<div class="xdemo-note-warn">
+<strong>最速ですが、少し分かりにくいです：</strong><br>
+COUNTIF方式は「何件目か」を数えるので分かりやすいです。<br>
+一方、上行参照方式は、条件に合わない行にも直前の番号が残ります。
+</div>
+
+<h4><span class="step-badge">STEP 1</span> 完全一致で作業列を作る</h4>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row"><div class="formula-copy-label">A2</div><div class="formula-copy-code">=IF(C2="営業部",1,0)</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">A3以降</div><div class="formula-copy-code">=IF(C3="営業部",A2+1,A2)</div><button class="formula-copy-btn" type="button">コピー</button></div>
+</div>
+
+<h4>部分一致・あいまい検索にする場合</h4>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row"><div class="formula-copy-label">A2 SEARCH</div><div class="formula-copy-code">=IF(ISNUMBER(SEARCH($M$1,C2)),1,0)</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">A3以降 SEARCH</div><div class="formula-copy-code">=IF(ISNUMBER(SEARCH($M$1,C3)),A2+1,A2)</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">A3以降 FIND</div><div class="formula-copy-code">=IF(ISNUMBER(FIND($M$1,C3)),A2+1,A2)</div><button class="formula-copy-btn" type="button">コピー</button></div>
+</div>
+
+<table class="helper-display-table">
+<caption>上行参照方式：左側に作業列を表示</caption>
+<tr><th>行</th><th class="helper-left">A列：連番</th><th>B列：名前</th><th>C列：部署</th><th>D列：売上</th><th>E列：年齢</th></tr>
+<tr class="hit-row"><td>2</td><td class="helper-left">1</td><td>田中</td><td class="data-hit">営業部</td><td>120</td><td>28</td></tr>
+<tr><td>3</td><td class="helper-left dup-row">1</td><td>佐藤</td><td>企画部</td><td>80</td><td>35</td></tr>
+<tr class="hit-row"><td>4</td><td class="helper-left">2</td><td>鈴木</td><td class="data-hit">営業部</td><td>200</td><td>42</td></tr>
+<tr><td>5</td><td class="helper-left dup-row">2</td><td>高橋</td><td>総務部</td><td>60</td><td>30</td></tr>
+<tr class="hit-row"><td>6</td><td class="helper-left">3</td><td>伊藤</td><td class="data-hit">営業部</td><td>150</td><td>25</td></tr>
+<tr><td>7</td><td class="helper-left dup-row">3</td><td>渡辺</td><td>企画部</td><td>90</td><td>38</td></tr>
+<tr><td>8</td><td class="helper-left dup-row">3</td><td>山本</td><td>総務部</td><td>45</td><td>50</td></tr>
+<tr class="hit-row"><td>9</td><td class="helper-left">4</td><td>中村</td><td class="data-hit">営業部</td><td>180</td><td>33</td></tr>
+<tr><td>10</td><td class="helper-left dup-row">4</td><td>小林</td><td>企画部</td><td>110</td><td>29</td></tr>
+</table>
+
+<div class="xdemo-note">
+<strong>条件外行にも番号が残る理由：</strong><br>
+営業部でない行は、すぐ上の番号をそのまま引き継ぎます。<br>
+MATCH関数は上から探して最初に見つかった位置を返すため問題ありません。<br>
+「2」を探せば、最初に2が出る4行目、つまり鈴木の行が取得されます。
+</div>
+
+<h4><span class="step-badge">STEP 2</span> INDEX + MATCHで抽出する</h4>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row"><div class="formula-copy-label">名前</div><div class="formula-copy-code">=IFERROR(INDEX(B:B,MATCH(ROW(A1),A:A,0)),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">部署</div><div class="formula-copy-code">=IFERROR(INDEX(C:C,MATCH(ROW(A1),A:A,0)),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">売上</div><div class="formula-copy-code">=IFERROR(INDEX(D:D,MATCH(ROW(A1),A:A,0)),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+<div class="formula-copy-row"><div class="formula-copy-label">年齢</div><div class="formula-copy-code">=IFERROR(INDEX(E:E,MATCH(ROW(A1),A:A,0)),"")</div><button class="formula-copy-btn" type="button">コピー</button></div>
+</div>
+
+<div class="xdemo-note-green">
+<strong>方法4の結論：</strong><br>
+速度最優先ならこの方法です。<br>
+COUNTIFもSMALLも使わないため、旧Excelで大量データを抽出する場合の本命です。<br>
+作業列の番号の考え方は少し難しいですが、一度理解すれば非常に強力です。
+</div>
+</section>
+
+<section class="method-section">
+<h3>なぜCOUNTIFが重いのか</h3>
+
+<p>COUNTIFで連番を作るとき、よく以下のような式を使います。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">COUNTIF</div>
+<div class="formula-copy-code">=COUNTIF($C$2:C2,"営業部")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<p>この式は、下へコピーするほど参照範囲が広がります。</p>
+
+<div class="table-wrapper">
+<table class="xdemo-table">
+<caption>COUNTIFの参照範囲</caption>
+<tr><td class="xd-head">行</td><td class="xd-head">数式</td><td class="xd-head">確認するセル数</td></tr>
+<tr><td class="xd-row">2</td><td class="xd-master">COUNTIF($C$2:C2,"営業部")</td><td class="xd-master">1</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-master">COUNTIF($C$2:C3,"営業部")</td><td class="xd-master">2</td></tr>
+<tr><td class="xd-row">4</td><td class="xd-master">COUNTIF($C$2:C4,"営業部")</td><td class="xd-master">3</td></tr>
+<tr><td class="xd-row">...</td><td class="xd-master">...</td><td class="xd-master">...</td></tr>
+<tr><td class="xd-row">10001</td><td class="xd-master">COUNTIF($C$2:C10001,"営業部")</td><td class="xd-master">10,000</td></tr>
+</table>
+</div>
+
+<p>
+1万行では、1 + 2 + 3 + ... + 10,000 で、約5,000万セル分を確認することになります。<br>
+このように、COUNTIFの範囲拡張は行数が増えるほど急激に重くなります。
+</p>
+
+<div class="xdemo-note-green">
+<strong>高速化の基本方針：</strong><br>
+大量データでは、COUNTIFで毎回数え直すのではなく、以下のどちらかにします。<br><br>
+
+・対象行だけROWで行番号を出す<br>
+・上行参照で前の結果を使う<br><br>
+
+どちらも各行の判定だけで済むため、COUNTIF方式より軽くなりやすいです。<br>
+あいまい検索をする場合も、SEARCH/FINDで各行を判定するだけの方が扱いやすくなります。
+</div>
+</section>
+
+<section class="method-section">
+<h3>最終的な使い分け</h3>
+
+<div class="choice-grid">
+
+<div class="choice-card warn">
+<span class="choice-card-label">小規模・分かりやすさ</span>
+<span class="choice-card-title">COUNTIF<br>+ INDEX + MATCH</span>
+<p>
+数百〜数千行程度なら十分使えることがあります。<br>
+連番が見えるため、仕組みを説明しやすいです。
+</p>
+</div>
+
+<div class="choice-card good">
+<span class="choice-card-label">あいまい検索向き</span>
+<span class="choice-card-title">対象行だけROW<br>+ SMALL + INDEX</span>
+<p>
+SEARCH/FINDで条件判定し、対象行だけROW番号を出します。<br>
+どの行がヒットしているか見やすく、シンプルです。
+</p>
+</div>
+
+<div class="choice-card light">
+<span class="choice-card-label">軽量化重視</span>
+<span class="choice-card-title">AGGREGATEで行番号<br>+ INDEX参照</span>
+<p>
+元データ側に作業列を追加したくない場合におすすめです。<br>
+作業列が少ないため、ファイルサイズを小さくしやすいです。
+</p>
+</div>
+
+<div class="choice-card best">
+<span class="choice-card-label">速度最優先</span>
+<span class="choice-card-title">上行参照で連番<br>+ INDEX + MATCH</span>
+<p>
+大量データではこれが本命です。<br>
+COUNTIFもSMALLも使わないため、再計算が重くなりにくいです。
+</p>
+</div>
+
+</div>
+
+<div class="rec-banner">
+<strong>結論：</strong><br>
+旧ExcelでFILTER関数の代わりに複数抽出するなら、まず <strong>COUNTIFの範囲拡張カウントを避ける</strong> のが重要です。<br><br>
+
+<strong>小規模・分かりやすさ：</strong>COUNTIF + INDEX + MATCH<br>
+<strong>あいまい検索を分かりやすく：</strong>対象行だけROW + SMALL + INDEX<br>
+<strong>軽量化重視：</strong>AGGREGATEで行番号だけ抽出 + INDEX参照<br>
+<strong>速度最優先：</strong>上行参照で連番 + INDEX + MATCH<br><br>
+
+COUNTIF方式は、連番の考え方が分かりやすいというメリットがあります。<br>
+ただし、住所録・顧客データ・販売明細のように行数が増えるほど、範囲拡張カウントが重くなります。<br><br>
+
+1万行程度なら環境によっては動くこともありますが、10万行級になるとCOUNTIF方式では再計算がかなり重くなることがあります。<br>
+その場合は、ROW方式・AGGREGATE方式・上行参照方式へ切り替えるのがおすすめです。
+</div>
+</section>
+
+<section class="legacy-section">
+<h3>FILTER関数が使えるならFILTERが最短</h3>
+
+<p>
+ここまで紹介した方法は、FILTER関数が使えない旧Excel向けの代替手段です。<br>
+Excel 2021 / Microsoft 365 が使える場合は、FILTER関数を使うのが最も簡単です。
+</p>
+
+<p>完全一致で「営業部」だけを抽出する場合は、FILTER関数なら以下の1本で済みます。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">完全一致</div>
+<div class="formula-copy-code">=FILTER(A2:D1000,B2:B1000="営業部")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<p>
+部分一致にしたい場合は、FILTER関数でもSEARCHを組み合わせられます。<br>
+例えば、B列に「営業」という文字を含む行だけを抽出する場合は以下です。
+</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">部分一致</div>
+<div class="formula-copy-code">=FILTER(A2:D1000,ISNUMBER(SEARCH("営業",B2:B1000)))</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<p>
+ただし、この記事で紹介した方法は、FILTER関数が使えない旧Excel向けです。<br>
+FILTER関数が使える環境では、基本的にはFILTER関数を使うのが最短です。
+</p>
+
+<a class="link-card" href="../latest/article_filter.html">
+<div class="link-card-title">FILTER関数（2021～）&horbar; 条件に合うすべてのデータを動的に一括抽出</div>
+<div class="link-card-desc">基本のAND/OR条件、数値の範囲指定、SEARCHを使った部分一致、CHOOSECOLSとの合わせ技など、FILTER関数の実践パターンを解説しています。</div>
+</a>
+</section>
+
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+<li><a href="../latest/article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
+<li><a href="../latest/article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
+<li><a href="../latest/article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+</ul>
+</section>
+
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

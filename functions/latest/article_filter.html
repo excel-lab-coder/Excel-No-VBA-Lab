@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>FILTER関数（2021～）｜Excel &times; No VBA Lab</title>
+<meta content="ExcelのFILTER関数（2021～）で複数件ヒットのデータをまとめて抽出する方法をVBA不要で解説。1行の数式で条件に合うデータ全件を自動展開。" name="description">
+<meta content="FILTER 関数 Excel, 複数行 抽出 VBA不要, FILTER 条件 複数, スピル 抽出, Excel 2021 関数" name="keywords">
+<meta content="FILTER関数（2021～）｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのFILTER関数（2021～）で複数件ヒットのデータをまとめて抽出する方法をVBA不要で解説。1行の数式で条件に合うデータ全件を自動展開。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/latest/article_filter.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "FILTER関数（2021～）",
+    "description": "ExcelのFILTER関数（2021～）で複数件ヒットのデータをまとめて抽出する方法をVBA不要で解説。1行の数式で条件に合うデータ全件を自動展開。",
+    "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-no-vba-lab.com/ogp.png"}},
+    "datePublished": "2023-10-01",
+    "dateModified": "2023-10-01"
+  }
+  </script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-no-vba-lab.com/"},
+      {"@type": "ListItem", "position": 2, "name": "関数", "item": "https://excel-no-vba-lab.com/#functions"},
+      {"@type": "ListItem", "position": 3, "name": "FILTER関数"}
+    ]
+  }
+  </script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">Excel × No VBA Lab</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#functions">関数</a><span>&gt;</span><strong>FILTER</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-2021">2021～</span><span class="badge badge-365" style="margin-left:5px;">365</span></div>
+<h1 class="article-title">FILTER：条件に合うすべてのデータを動的に一括抽出するスピルの王様</h1>
+</div>
+<!-- ========== やりたいこと ========== -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>「営業部のデータ<strong>だけ</strong>を全部抜き出したい」<br>
+        「売上100万以上の行<strong>だけ</strong>を別シートに自動一覧化させたい」<br>
+        1件だけ（XLOOKUP）ではなく、複数件該当するデータを全て引っ張ってきたい。</p>
+</section>
+<!-- ========== サンプルデータ ========== -->
+<section class="method-section">
+<h3>サンプルデータ（この記事で使う元テーブル）</h3>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col">C</td><td class="xd-col">D</td>
+</tr>
+<tr>
+<td class="xd-row">1</td><td class="xd-head">名前</td><td class="xd-head">部署</td><td class="xd-head">売上</td><td class="xd-head">年齢</td>
+</tr>
+<tr><td class="xd-row">2</td><td class="xd-master">田中</td><td class="xd-hit">営業部</td><td class="xd-master">120</td><td class="xd-master">28</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-master">佐藤</td><td class="xd-master">企画部</td><td class="xd-master">80</td><td class="xd-master">35</td></tr>
+<tr><td class="xd-row">4</td><td class="xd-master">鈴木</td><td class="xd-hit">営業部</td><td class="xd-master">200</td><td class="xd-master">42</td></tr>
+<tr><td class="xd-row">5</td><td class="xd-master">高橋</td><td class="xd-master">総務部</td><td class="xd-master">60</td><td class="xd-master">30</td></tr>
+<tr><td class="xd-row">6</td><td class="xd-master">伊藤</td><td class="xd-hit">営業部</td><td class="xd-master">150</td><td class="xd-master">25</td></tr>
+<tr><td class="xd-row">7</td><td class="xd-master">渡辺</td><td class="xd-master">企画部</td><td class="xd-master">90</td><td class="xd-master">38</td></tr>
+<tr><td class="xd-row">8</td><td class="xd-master">山本</td><td class="xd-master">総務部</td><td class="xd-master">45</td><td class="xd-master">50</td></tr>
+<tr><td class="xd-row">9</td><td class="xd-master">中村</td><td class="xd-hit">営業部</td><td class="xd-master">180</td><td class="xd-master">33</td></tr>
+<tr><td class="xd-row">10</td><td class="xd-master">小林</td><td class="xd-master">企画部</td><td class="xd-master">110</td><td class="xd-master">29</td></tr>
+</table></div>
+</div>
+<p>以下、すべてこのデータを使って説明します。B列のオレンジ色が「営業部」のヒット行です。</p>
+</section>
+<!-- ========== FILTER関数の基本 ========== -->
+<section class="method-section">
+<h3>新関数での解決法：FILTER関数での動的抽出</h3>
+<p>XLOOKUPが「1件見つけて終わり」なのに対し、FILTER関数は「条件を満たす<strong>すべての行と列（配列全体）</strong>」をガバッとスピル機能で展開してくれます。<br>
+        長年VBAマクロ（AutoFilterのコピペ処理）で作られてきた機能の多くを、この数式1つで駆逐できます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=FILTER(抽出したい配列, 含む条件, [空の場合])</span>
+</div>
+<h4>基本例：「営業部」だけ全行抽出</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=FILTER(A2:D10, B2:B10="営業部", "該当データなし")</span>
+</div>
+<p class="code-comment">
+          意味：A2からD10の中で、B列（部署）が「営業部」の行だけ全部抜き出す。<br>
+          数式を入力するのは左上の1セルだけでOK。下方向・右方向へ全データが自動展開（スピル）されます。
+        </p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td><td class="xd-col">F</td><td class="xd-col">G</td><td class="xd-col">H</td><td class="xd-col">I</td>
+</tr>
+<tr>
+<td class="xd-row">1</td><td class="xd-head">名前</td><td class="xd-head">部署</td><td class="xd-head">売上</td><td class="xd-head">年齢</td>
+</tr>
+<tr><td class="xd-row">2</td><td class="xd-spill-origin">田中</td><td class="xd-spill">営業部</td><td class="xd-spill">120</td><td class="xd-spill">28</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-spill">鈴木</td><td class="xd-spill">営業部</td><td class="xd-spill">200</td><td class="xd-spill">42</td></tr>
+<tr><td class="xd-row">4</td><td class="xd-spill">伊藤</td><td class="xd-spill">営業部</td><td class="xd-spill">150</td><td class="xd-spill">25</td></tr>
+<tr><td class="xd-row">5</td><td class="xd-spill">中村</td><td class="xd-spill">営業部</td><td class="xd-spill">180</td><td class="xd-spill">33</td></tr>
+</table></div>
+</div>
+<div class="xdemo-note-info">
+          F2セルに数式を1つ入れるだけで、4行&times;4列=16セルが一瞬で自動展開されます。
+        </div>
+</section>
+<!-- ========== FILTER 実践パターン集 ========== -->
+<section class="method-section">
+<h3>FILTER関数 実践パターン集</h3>
+<!-- パターン1: AND条件 -->
+<h4>パターン1：AND条件（「かつ」）&boxh;&boxh; 「*」で掛け算する</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=FILTER(A2:D10, (B2:B10="営業部") * (C2:C10&gt;=150), "該当なし")</span>
+</div>
+<p class="code-comment">「営業部」<strong>かつ</strong>「売上150以上」 &rarr; 鈴木(200)・伊藤(150)・中村(180) の3件</p>
+<div class="xdemo-note-info">
+<strong>なぜ「*」がANDになるのか？</strong><br>
+          条件式 <code>(B2:B10="営業部")</code> は各行ごとに TRUE(1) か FALSE(0) の配列を返します。<br>
+          2つの条件を <code>*</code> で掛けると「1&times;1＝1（両方TRUE）」だけが残り、「1&times;0＝0」や「0&times;0＝0」は除外されます。これがAND条件の仕組みです。
+        </div>
+<!-- パターン2: OR条件 -->
+<h4>パターン2：OR条件（「または」）&boxh;&boxh; 「+」で足し算する</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=FILTER(A2:D10, (B2:B10="営業部") + (B2:B10="企画部"), "該当なし")</span>
+</div>
+<p class="code-comment">「営業部」<strong>または</strong>「企画部」 &rarr; 営業部4件＋企画部3件 ＝ 計7件</p>
+<div class="xdemo-note-info">
+<strong>なぜ「+」がORになるのか？</strong><br>
+          足し算だと「1+0＝1」「0+1＝1」「1+1＝2」はいずれも0以外 &rarr; TRUE扱い。「0+0＝0」だけがFALSE。<br>
+          つまり「どちらか片方でもTRUEなら残る」＝OR条件になります。
+        </div>
+<!-- パターン3: 範囲指定 -->
+<h4>パターン3：数値の範囲指定 &boxh;&boxh;「1以上50以下」を抜き出す</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=FILTER(A2:D10, (D2:D10&gt;=25) * (D2:D10&lt;=35), "該当なし")</span>
+</div>
+<p class="code-comment">年齢（D列）が「25歳以上 かつ 35歳以下」の人だけ抽出</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td><td class="xd-col">F</td><td class="xd-col">G</td><td class="xd-col">H</td><td class="xd-col">I</td>
+</tr>
+<tr>
+<td class="xd-row">1</td><td class="xd-head">名前</td><td class="xd-head">部署</td><td class="xd-head">売上</td><td class="xd-head">年齢</td>
+</tr>
+<tr><td class="xd-row">2</td><td class="xd-spill-origin">田中</td><td class="xd-spill">営業部</td><td class="xd-spill">120</td><td class="xd-spill">28</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-spill">佐藤</td><td class="xd-spill">企画部</td><td class="xd-spill">80</td><td class="xd-spill">35</td></tr>
+<tr><td class="xd-row">4</td><td class="xd-spill">高橋</td><td class="xd-spill">総務部</td><td class="xd-spill">60</td><td class="xd-spill">30</td></tr>
+<tr><td class="xd-row">5</td><td class="xd-spill">伊藤</td><td class="xd-spill">営業部</td><td class="xd-spill">150</td><td class="xd-spill">25</td></tr>
+<tr><td class="xd-row">6</td><td class="xd-spill">中村</td><td class="xd-spill">営業部</td><td class="xd-spill">180</td><td class="xd-spill">33</td></tr>
+<tr><td class="xd-row">7</td><td class="xd-spill">小林</td><td class="xd-spill">企画部</td><td class="xd-spill">110</td><td class="xd-spill">29</td></tr>
+</table></div>
+</div>
+<div class="xdemo-note-info">
+<strong>応用：セル参照で動的に範囲を変える</strong><br>
+          F1セルに下限値、G1セルに上限値を入れておけば、<br>
+<code>=FILTER(A2:D10, (D2:D10&gt;=F1) * (D2:D10&lt;=G1), "該当なし")</code><br>
+          と書くだけで「スライダー感覚」で条件を切り替えられます。
+        </div>
+<!-- パターン4: ANDとORの合わせ技 -->
+<h4>パターン4：ANDとORの合わせ技</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=FILTER(A2:D10, ((B2:B10="営業部")+(B2:B10="企画部")) * (C2:C10&gt;=100), "該当なし")</span>
+</div>
+<p class="code-comment">（「営業部」<strong>または</strong>「企画部」）<strong>かつ</strong>「売上100以上」</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td><td class="xd-col">F</td><td class="xd-col">G</td><td class="xd-col">H</td><td class="xd-col">I</td>
+</tr>
+<tr>
+<td class="xd-row">1</td><td class="xd-head">名前</td><td class="xd-head">部署</td><td class="xd-head">売上</td><td class="xd-head">年齢</td>
+</tr>
+<tr><td class="xd-row">2</td><td class="xd-spill-origin">田中</td><td class="xd-spill">営業部</td><td class="xd-spill">120</td><td class="xd-spill">28</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-spill">鈴木</td><td class="xd-spill">営業部</td><td class="xd-spill">200</td><td class="xd-spill">42</td></tr>
+<tr><td class="xd-row">4</td><td class="xd-spill">伊藤</td><td class="xd-spill">営業部</td><td class="xd-spill">150</td><td class="xd-spill">25</td></tr>
+<tr><td class="xd-row">5</td><td class="xd-spill">中村</td><td class="xd-spill">営業部</td><td class="xd-spill">180</td><td class="xd-spill">33</td></tr>
+<tr><td class="xd-row">6</td><td class="xd-spill">小林</td><td class="xd-spill">企画部</td><td class="xd-spill">110</td><td class="xd-spill">29</td></tr>
+</table></div>
+</div>
+<div class="xdemo-note-info">
+<strong>読み方のコツ：</strong>OR部分を <code>( )</code> でひとかたまりにして、それ全体を <code>*</code> でAND結合する。<br>
+          「OR &rarr; 足し算(+)をカッコで囲む」「AND &rarr; カッコ同士を掛け算(*)」と覚えれば迷いません。
+        </div>
+<!-- パターン5: 特定列だけ抽出 -->
+<h4>パターン5：必要な列だけ選んで抽出</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=FILTER(CHOOSECOLS(A2:D10,1,3), B2:B10="営業部", "該当なし")</span>
+</div>
+<p class="code-comment">
+          CHOOSECOLS で「1列目（名前）と3列目（売上）」だけ取り出してから FILTER に渡す。<br>
+          全4列は不要で「名前と売上だけほしい」というときに便利です。
+        </p>
+</section>
+<!-- ========== 旧バージョンでの代替法 ========== -->
+<section class="legacy-section">
+<h3>旧バージョンでの代替法</h3>
+<p>FILTER関数が登場する前のExcelでは、「条件に合う複数行を全部抜き出す」ために、大きく2つの方法が取られていました。</p>
+<!-- ── 方法1: 配列数式（狂気） ── -->
+<h4>方法1：配列数式（CSE数式）&boxh;&boxh; 玄人向きだが激重</h4>
+<div class="xdemo-note-warn">
+<strong>⚠️ 旧来の狂気：INDEX + SMALL + IF + ROW</strong><br>
+          「一致する行の一覧を、上から詰めて表示する」ために、以下のような呪文を数十行〜数百行分コピーペーストしていました。
+        </div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">{=IFERROR(INDEX(A$2:A$1000, SMALL(IF($B$2:$B$1000="営業部", ROW($B$2:$B$1000)-ROW($B$2)+1), ROW(A1))), "")}</span>
+</div>
+<p>
+<strong>【解読】</strong><br>
+          1. IF関数で「営業部ならその相対行番号、違えばFALSE」という配列を作る。<br>
+          2. SMALL(配列, ROW(A1)) で、その配列の中から「1番目に小さい行番号（＝1件目のヒット）」を取得する。下にコピーすると ROW(A1)&rarr;ROW(A2)&rarr;&hellip; と増えていき、2件目・3件目と順番に取得される。<br>
+          3. 出た行番号を INDEX に渡して実際のデータを取得する。<br>
+          4. ヒット件数を超えるとSMALLがエラーになるので、IFERROR で空白に変換する。
+        </p>
+<div class="xdemo-note-warn">
+<strong>致命的な問題：計算爆発</strong><br>
+          この数式は<strong>1セルごとに全1000行を総当たりでチェック</strong>します。これを10列&times;1000行（計1万セル）にコピーペーストすると、<br>
+          「1000&times;1万＝<strong>1000万回</strong>」もの内部配列演算が走り、Excelが完全にフリーズして「計算中 0%...」から戻ってこなくなる原因でした。<br>
+          AGGREGATE関数の「15(SMALL)」を使った改良版もありますが、内部で配列を抱える重さは本質的に同じです。<br>
+          さらに、後任者がセルをダブルクリックして普通にEnterを押すと <code>{}</code> が外れて数式が壊れる事故（通称：CSE崩壊）も頻発しました。
+        </div>
+<!-- ── 方法2: 作業列方式（推奨） ── -->
+<h4>方法2：作業列方式（ROW関数）&boxh;&boxh; 軽量・安全・読みやすい</h4>
+<p>元の表の横に1列「作業列」を追加するだけで、配列数式の地獄から解放されます。<br>
+<strong>COUNTIFで連番を振る方式もありますが、COUNTIFは全行を対象にした範囲拡張カウントになるため行数が増えると重くなります。</strong>ここでは<strong>ROW関数</strong>を使い、各セルが自分の行番号だけを返す（他の行を参照しない）超軽量な方法を紹介します。</p>
+<h5>ステップ1：作業列に条件判定＋行番号を入れる</h5>
+<p>E列を作業列として使います。E2セルに以下を入力し、E10まで下へコピーします。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(B2="営業部", ROW(), "")</span>
+</div>
+<p class="code-comment">B列が「営業部」なら自分の行番号を表示。違えば空白。<br>
+        ROW() は自分の行番号を返すだけなので、他のセルを参照する計算負荷がゼロです。</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col">C</td><td class="xd-col">D</td><td class="xd-col">E（作業列）</td>
+</tr>
+<tr>
+<td class="xd-row">1</td><td class="xd-head">名前</td><td class="xd-head">部署</td><td class="xd-head">売上</td><td class="xd-head">年齢</td><td class="xd-head">判定</td>
+</tr>
+<tr><td class="xd-row">2</td><td class="xd-master">田中</td><td class="xd-hit">営業部</td><td class="xd-master">120</td><td class="xd-master">28</td><td class="xd-hit">2</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-master">佐藤</td><td class="xd-master">企画部</td><td class="xd-master">80</td><td class="xd-master">35</td><td class="xd-master"></td></tr>
+<tr><td class="xd-row">4</td><td class="xd-master">鈴木</td><td class="xd-hit">営業部</td><td class="xd-master">200</td><td class="xd-master">42</td><td class="xd-hit">4</td></tr>
+<tr><td class="xd-row">5</td><td class="xd-master">高橋</td><td class="xd-master">総務部</td><td class="xd-master">60</td><td class="xd-master">30</td><td class="xd-master"></td></tr>
+<tr><td class="xd-row">6</td><td class="xd-master">伊藤</td><td class="xd-hit">営業部</td><td class="xd-master">150</td><td class="xd-master">25</td><td class="xd-hit">6</td></tr>
+<tr><td class="xd-row">7</td><td class="xd-master">渡辺</td><td class="xd-master">企画部</td><td class="xd-master">90</td><td class="xd-master">38</td><td class="xd-master"></td></tr>
+<tr><td class="xd-row">8</td><td class="xd-master">山本</td><td class="xd-master">総務部</td><td class="xd-master">45</td><td class="xd-master">50</td><td class="xd-master"></td></tr>
+<tr><td class="xd-row">9</td><td class="xd-master">中村</td><td class="xd-hit">営業部</td><td class="xd-master">180</td><td class="xd-master">33</td><td class="xd-hit">9</td></tr>
+<tr><td class="xd-row">10</td><td class="xd-master">小林</td><td class="xd-master">企画部</td><td class="xd-master">110</td><td class="xd-master">29</td><td class="xd-master"></td></tr>
+</table></div>
+</div>
+<div class="xdemo-note">
+          E列に「2, 4, 6, 9」という行番号がポツポツと並びます。これが「営業部がいる行の住所録」です。
+        </div>
+<h5>ステップ2：抽出先にSMALL + INDEXで取り出す</h5>
+<p>抽出先（例えばG列）のG2セルに以下を入力し、下へコピーします。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(INDEX(A:A, SMALL(E:E, ROW(A1))), "")</span>
+</div>
+<p class="code-comment">
+          E列（作業列）にある行番号を SMALL で小さい順に取り出し、INDEX で A列のデータを取得。<br>
+          ROW(A1)=1 &rarr; 1番目に小さい行番号 &rarr; 2行目（田中）<br>
+          ROW(A2)=2 &rarr; 2番目に小さい行番号 &rarr; 4行目（鈴木）<br>
+          ROW(A3)=3 &rarr; 3番目に小さい行番号 &rarr; 6行目（伊藤）<br>
+          ROW(A4)=4 &rarr; 4番目に小さい行番号 &rarr; 9行目（中村）<br>
+          5番目以降はエラー &rarr; IFERROR で空白に。<br>
+<br>
+          B列〜D列も同様に <code>=IFERROR(INDEX(B:B, SMALL(E:E, ROW(A1))), "")</code> などと書いて横に並べます。
+        </p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td><td class="xd-col">G</td><td class="xd-col">H</td><td class="xd-col">I</td><td class="xd-col">J</td>
+</tr>
+<tr>
+<td class="xd-row">1</td><td class="xd-head">名前</td><td class="xd-head">部署</td><td class="xd-head">売上</td><td class="xd-head">年齢</td>
+</tr>
+<tr><td class="xd-row">2</td><td class="xd-spill-origin">田中</td><td class="xd-spill">営業部</td><td class="xd-spill">120</td><td class="xd-spill">28</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-spill">鈴木</td><td class="xd-spill">営業部</td><td class="xd-spill">200</td><td class="xd-spill">42</td></tr>
+<tr><td class="xd-row">4</td><td class="xd-spill">伊藤</td><td class="xd-spill">営業部</td><td class="xd-spill">150</td><td class="xd-spill">25</td></tr>
+<tr><td class="xd-row">5</td><td class="xd-spill">中村</td><td class="xd-spill">営業部</td><td class="xd-spill">180</td><td class="xd-spill">33</td></tr>
+</table></div>
+</div>
+<div class="xdemo-note-good">
+<strong>なぜROW()はCOUNTIFより軽いのか？</strong><br>
+<code>COUNTIF($B$2:B2,"営業部")</code> による連番方式は、セルをコピーするたびに<strong>範囲が1行ずつ拡張</strong>され、下の行ほど参照セル数が増えていきます（2行目は1セル、1000行目は999セルを数える）。合計すると約50万回のカウント処理が発生します。<br>
+          一方 <code>ROW()</code> は自分自身の行番号を返すだけで、<strong>他のセルを一切参照しません</strong>。どの行でも計算コストは一定（定数時間）です。<br>
+          1000行程度なら体感差はわずかですが、1万行・10万行になると<strong>COUNTIFの範囲拡張は目に見えて重くなる</strong>ので、最初からROW方式で作っておくのが安全です。
+        </div>
+<!-- ── COUNTIF方式との比較 ── -->
+<h5>参考：COUNTIF連番方式（非推奨）との違い</h5>
+<p>参考までに、COUNTIF連番方式の作業列はこう書きます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(B2="営業部", COUNTIF($B$2:B2,"営業部"), "")</span>
+</div>
+<p class="code-comment">
+          「ここまでに営業部が何回目か」を連番として出す方式。これを MATCH で検索して INDEX で取り出す組み合わせになります。<br>
+          動作はしますが、範囲拡張カウントにより大量データで重くなるため、ROW方式を推奨します。
+        </p>
+<!-- ── 比較表 ── -->
+<h4>3方式の比較</h4>
+<div class="table-wrapper"><table class="vs-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col"></th>
+<th scope="col">配列数式（CSE）</th>
+<th scope="col">作業列 + ROW（推奨）</th>
+<th scope="col">作業列 + COUNTIF</th>
+</tr>
+<tr>
+<td><strong>計算速度</strong></td>
+<td class="vs-bad">激重（爆発的に増大）</td>
+<td class="vs-good">超軽量（定数時間）</td>
+<td>中程度（範囲拡張で増大）</td>
+</tr>
+<tr>
+<td><strong>CSE必要</strong></td>
+<td class="vs-bad">必要（崩壊リスク大）</td>
+<td class="vs-good">不要</td>
+<td class="vs-good">不要</td>
+</tr>
+<tr>
+<td><strong>読みやすさ</strong></td>
+<td class="vs-bad">解読困難</td>
+<td class="vs-good">2段階で明快</td>
+<td>やや読みやすい</td>
+</tr>
+<tr>
+<td><strong>作業列</strong></td>
+<td class="vs-good">不要</td>
+<td>1列必要（非表示で対処可）</td>
+<td>1列必要（非表示で対処可）</td>
+</tr>
+<tr>
+<td><strong>1万行での体感</strong></td>
+<td class="vs-bad">フリーズ級</td>
+<td class="vs-good">一瞬</td>
+<td>数秒〜もっさり</td>
+</tr>
+</table></div>
+<!-- ── なぜVBAが多かったか ── -->
+<h4>それでもVBAが使われた理由</h4>
+<p>当時の実務で「VBAマクロが組まれるのが一般的」だった最大の理由は、<strong>「作業列を作ること（表の形を変えること）」を極端に嫌う上司やクライアントが多かった</strong>という、Excelの機能以外の人間的な事情です。<br>
+        「余計な列を見せるな」「元のフォーマットを崩すな」というルールの下では、作業列を非表示にしても「なぜ列が飛んでいるんだ」と指摘される現場が多く、結果として見た目を一切変えずに裏側で処理できるVBAに頼らざるを得ませんでした。<br>
+        作業列を1本追加して非表示にしてしまえば、実はVBAすら不要なケースが大半だったのです。</p>
+</section>
+<!-- ========== まとめ ========== -->
+<section class="method-section">
+<h3>まとめ</h3>
+<p>FILTER関数が使える環境（Excel 2021 / 2024 / Microsoft 365など）であれば、迷わずFILTER関数を使いましょう。数式1本、CSE不要、スピルで自動展開、条件変更も即反映。旧来の苦労がすべて過去のものになります。</p>
+<p>やむを得ず旧バージョン（Excel 2019以前）を使う場合は、配列数式の呪文に手を出すよりも、<strong>作業列＋ROW方式</strong>を使ってください。読みやすく、軽く、CSE崩壊の心配もありません。</p>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
+<li><a href="article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+<li><a href="article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
+<li><a href="article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+</ul>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div><p>&copy; Excel × No VBA Lab &horbar; コンテンツは随時追加中です</p></footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

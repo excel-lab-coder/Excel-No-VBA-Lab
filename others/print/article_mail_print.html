@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Excel 宛名1ページ1枚 案内文書印刷 &horbar; スピンボタン＋Print_Areaで差し込み印刷風｜Excel &times; No VBA Lab</title>
+<meta content="Excelだけで宛名差し込み印刷を実現。スピンボタン＋VLOOKUP＋Print_Areaで1ページ1件の案内文書を印刷する実務テクニック。VBA不要。" name="description">
+<meta content="Excel 差し込み印刷, 宛名印刷 VBA不要, スピンボタン VLOOKUP, Print_Area 動的, Excel Word不要" name="keywords">
+<meta content="Excel 宛名1ページ1枚 案内文書印刷 &horbar; スピンボタン＋Print_Areaで差し込み印刷風" property="og:title">
+<meta content="Excelだけで宛名差し込み印刷を実現。スピンボタン＋VLOOKUP＋Print_Areaで1ページ1件の案内文書を印刷する実務テクニック。VBA不要。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/others/print/article_mail_print.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<style>
+    .formula-box .tag{position:absolute;top:8px;right:12px;font-size:.65rem;background:#0078d4;color:#fff;padding:2px 10px;border-radius:4px}
+
+    .excel-wrap{border:1px solid #d0d0d0;border-radius:8px;overflow:hidden;margin:24px 0;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .excel-ribbon{background:linear-gradient(180deg,#217346 0%,#185c37 100%);padding:6px 16px;display:flex;align-items:center;gap:10px}
+    .excel-ribbon span{color:#fff;font-size:.75rem;opacity:.85}
+    .excel-ribbon .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .excel-ribbon .dot.r{background:#ff605c}.excel-ribbon .dot.y{background:#ffbd44}.excel-ribbon .dot.g{background:#00ca4e}
+    .sheet-tabs{display:flex;background:#e8e8e8;border-top:1px solid #c8c8c8}
+    .sheet-tab{padding:6px 18px;font-size:.78rem;cursor:pointer;border-right:1px solid #c8c8c8;background:#e8e8e8;transition:.15s}
+    .sheet-tab:hover{background:#f5f5f5}
+    .sheet-tab.active{background:#fff;font-weight:700;border-bottom:2px solid #217346}
+    .sheet-body{padding:0;background:#fff}
+    .sheet-panel{display:none;padding:20px}
+    .sheet-panel.active{display:block}
+
+    .excel-grid{width:100%;border-collapse:collapse;font-size:.78rem}
+    .excel-grid th,.excel-grid td{border:1px solid #c8c8c8;padding:4px 8px;text-align:center;min-width:56px}
+    .excel-grid th{background:#f0f0f0;font-weight:600;color:#333}
+    .excel-grid .row-num{background:#f0f0f0;font-weight:600;color:#555;width:36px}
+    .excel-grid .formula-cell{background:#fffbe6;font-family:monospace;font-size:.72rem;text-align:left}
+
+    .page-cards{display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;justify-content:center}
+    .page-card{width:200px;border:2px solid #999;border-radius:6px;background:#fff;padding:14px;box-shadow:1px 3px 8px rgba(0,0,0,.08);position:relative}
+    .page-card .pc-badge{position:absolute;top:-10px;right:-6px;background:#0078d4;color:#fff;font-size:.6rem;padding:2px 8px;border-radius:8px;font-weight:700}
+    .page-card .pc-title{font-size:.7rem;font-weight:700;color:#333;text-align:center;margin-bottom:8px;border-bottom:1px solid #e0e0e0;padding-bottom:6px}
+    .page-card .pc-line{font-size:.68rem;color:#555;line-height:1.5;margin:2px 0}
+    .page-card .pc-name{font-size:.85rem;font-weight:700;color:#1a7431;text-align:right;margin-top:6px}
+
+    .spin-demo{display:flex;align-items:center;gap:12px;background:#f5f5f5;padding:16px 20px;border-radius:8px;margin:16px 0}
+    .spin-btn{display:flex;flex-direction:column;gap:2px}
+    .spin-btn button{width:28px;height:20px;background:#e0e0e0;border:1px solid #aaa;cursor:pointer;font-size:.7rem;border-radius:3px}
+    .spin-btn button:hover{background:#ccc}
+    .spin-val{font-size:1.4rem;font-weight:700;color:#217346;background:#fff;border:2px solid #217346;padding:4px 16px;border-radius:6px;min-width:40px;text-align:center}
+    .spin-label{font-size:.82rem;color:#555}
+
+    .step-list{counter-reset:step;margin:16px 0}
+    .step-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start}
+    .step-num{flex-shrink:0;width:32px;height:32px;background:#217346;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem}
+    .step-text{flex:1;font-size:.88rem;line-height:1.6}
+
+  </style>
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Excel 宛名1ページ1枚 案内文書印刷 \u0026horbar; スピンボタン＋Print_Areaで差し込み印刷風","description":"Excelだけで宛名差し込み印刷を実現。スピンボタン＋VLOOKUP＋Print_Areaで1ページ1件の案内文書を印刷する実務テクニック。VBA不要。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/others/print/article_mail_print.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span><a href="../../index.html#others">小技</a><span>&gt;</span><strong>宛名1ページ1枚 案内文書印刷</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-all">全バージョン</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">Excel 宛名1ページ1枚 案内文書印刷 &horbar; スピンボタン＋Print_Areaで差し込み印刷風</h1>
+</div>
+<div class="toc">
+<p><strong>目次</strong></p>
+<ul>
+<li><a href="#s1">1. この記事でできること</a></li>
+<li><a href="#s2">2. シート構成</a></li>
+<li><a href="#s3">3. 案内文書テンプレートの作成</a></li>
+<li><a href="#s4">4. 宛先データを差し込む数式</a></li>
+<li><a href="#s5">5. スピンボタンの設置と設定</a></li>
+<li><a href="#s6">6. Print_Area に動的数式を設定する</a></li>
+<li><a href="#s7">7. バッチ印刷の操作フロー</a></li>
+<li><a href="#s8">8. ページプレビューのイメージ</a></li>
+<li><a href="#s9">9. Wordの差し込み印刷との比較</a></li>
+<li><a href="#s10">10. 注意点とトラブルシューティング</a></li>
+<li><a href="#s11">11. まとめ</a></li>
+</ul>
+</div>
+<!-- ===== s1 ===== -->
+<h2 id="s1">1. この記事でできること</h2>
+<p>「&cir;&cir;のご案内」のような定型文書に宛名・住所・敬称を自動差し替えし、1宛先＝1ページで印刷します。Excelのスピンボタン（フォームコントロール）で表示開始番号を切り替え、10件ずつ一括印刷する仕組みです。VBAマクロは使いません。</p>
+<p>Wordの差し込み印刷に不慣れな同僚に渡しても「スピンボタンを回して印刷を押すだけ」で作業が完了します。ただし、1件1ページ分のテンプレートを10件分（＝10ページ分）シート上に仕込むため、ファイルサイズが通常より大きくなります。また、数式（VLOOKUPの列番号やIFの条件）を間違えるとズレたまま大量印刷してしまうリスクがあるため、事前に印刷プレビューで全ページを確認してください。</p>
+<!-- ===== s2 ===== -->
+<h2 id="s2">2. シート構成</h2>
+<p>ブックには「案内文書」と「宛先リスト」の2シートを使います。</p>
+<div class="excel-wrap">
+<div class="excel-ribbon">
+<span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+<span>案内文書印刷.xlsx</span>
+</div>
+<div class="sheet-tabs" data-group="letter-sheets">
+<div class="sheet-tab active" onclick="switchSheet('letter-sheets','lt-doc')">案内文書</div>
+<div class="sheet-tab" onclick="switchSheet('letter-sheets','lt-list')">宛先リスト</div>
+</div>
+<div class="sheet-body">
+<!-- 案内文書 -->
+<div class="sheet-panel active" id="lt-doc">
+<p style="font-size:.82rem;color:#555;margin-bottom:10px">▼ 案内文書シートの構成（1ページ＝50行、10ページ分＝500行をテンプレート化）</p>
+<table class="excel-grid">
+<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td class="row-num">1</td><td colspan="5" style="text-align:left;font-size:.72rem">（日付・発信元ヘッダー）</td></tr>
+<tr><td class="row-num">2</td><td class="formula-cell" colspan="2">=VLOOKUP($Z$1, 宛先リスト!...)</td><td colspan="3" style="color:#999;font-size:.7rem">&larr; 会社名</td></tr>
+<tr><td class="row-num">3</td><td class="formula-cell" colspan="2">=VLOOKUP($Z$1, ...)</td><td colspan="3" style="color:#999;font-size:.7rem">&larr; 部署名</td></tr>
+<tr><td class="row-num">4</td><td class="formula-cell" colspan="2">=VLOOKUP($Z$1, ...) & " 様"</td><td colspan="3" style="color:#999;font-size:.7rem">&larr; 氏名＋様</td></tr>
+<tr><td class="row-num">5</td><td colspan="5"></td></tr>
+<tr><td class="row-num">6</td><td colspan="5" style="text-align:center;font-weight:700">&xcirc;&xcirc;のご案内</td></tr>
+<tr><td class="row-num">7-45</td><td colspan="5" style="color:#aaa;text-align:center">（案内文書の本文）</td></tr>
+<tr><td class="row-num">46-50</td><td colspan="5" style="color:#aaa;text-align:center">（余白・フッター）</td></tr>
+<tr><td class="row-num" style="background:#e6f4ea">51</td><td colspan="5" style="text-align:center;color:#34a853;font-size:.72rem;font-weight:700">&boxh;&boxh; 2件目テンプレート開始 &boxh;&boxh;</td></tr>
+<tr><td class="row-num">51</td><td class="formula-cell" colspan="2">=VLOOKUP($Z$1+1, ...)</td><td colspan="3" style="color:#999;font-size:.7rem">&larr; 2件目の会社名</td></tr>
+<tr><td class="row-num">&hellip;</td><td colspan="5" style="text-align:center;color:#aaa">（以降50行単位で繰り返し &times; 10件）</td></tr>
+<tr><td class="row-num">500</td><td colspan="5" style="text-align:center;color:#aaa">（10件目テンプレート終了）</td></tr>
+</table>
+<div class="xdemo-note-info">
+<strong>$Z$1 セル</strong>にスピンボタンを連動させます。Z1=1なら1〜10件目、Z1=11なら11〜20件目が表示されます。2件目のVLOOKUPは $Z$1+1、3件目は $Z$1+2 &hellip; 10件目は $Z$1+9 を検索値にします。
+            </div>
+</div>
+<!-- 宛先リスト -->
+<div class="sheet-panel" id="lt-list">
+<p style="font-size:.82rem;color:#555;margin-bottom:10px">▼ 宛先リスト</p>
+<table class="excel-grid">
+<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td class="row-num">1</td><td>No</td><td>氏名</td><td>会社名</td><td>部署名</td><td>敬称条件</td></tr>
+<tr><td class="row-num">2</td><td>1</td><td>山田太郎</td><td>株式会社ABC</td><td>営業部</td><td></td></tr>
+<tr><td class="row-num">3</td><td>2</td><td>鈴木花子</td><td>DEF株式会社</td><td>総務部</td><td></td></tr>
+<tr><td class="row-num">4</td><td>3</td><td>佐藤一郎</td><td>GHI商事</td><td>経理部</td><td></td></tr>
+<tr><td class="row-num">&hellip;</td><td colspan="5" style="text-align:center;color:#aaa">（データを追加）</td></tr>
+</table>
+</div>
+</div>
+</div>
+<!-- ===== s3 ===== -->
+<h2 id="s3">3. 案内文書テンプレートの作成</h2>
+<p>まず1件目のテンプレートを50行で作成します。1行目に日付と発信元、2〜4行目に宛名情報（数式で自動取得）、6行目にタイトル、7行目以降に本文を入力します。ページ設定で「50行＝1ページ」になるよう行の高さと余白を調整してください。</p>
+<div class="step-list">
+<div class="step-item">
+<div class="step-num">1</div>
+<div class="step-text">「ページレイアウト」&rarr;「ページ設定」で余白・用紙サイズを設定します。行の高さを調整して50行がちょうど1ページに収まるようにします（A4縦なら1行あたり約15ポイントが目安）。</div>
+</div>
+<div class="step-item">
+<div class="step-num">2</div>
+<div class="step-text">1件目（1〜50行）のテンプレートが完成したら、1〜50行をコピーして51行目に貼り付けます。これを10回繰り返して500行のテンプレートを作ります。</div>
+</div>
+<div class="step-item">
+<div class="step-num">3</div>
+<div class="step-text">各テンプレートの宛名数式だけを修正します。1件目は $Z$1、2件目は $Z$1+1、&hellip;、10件目は $Z$1+9 を使います（詳細は次のセクション）。</div>
+</div>
+</div>
+<!-- ===== s4 ===== -->
+<h2 id="s4">4. 宛先データを差し込む数式</h2>
+<p>各ページの宛名セルに入れる VLOOKUP 数式です。n件目のテンプレートでは検索値を <code>$Z$1 + (n-1)</code> にします。</p>
+<h3>1件目（1〜50行）の数式</h3>
+<div class="formula-box">
+<span class="tag">A2：会社名</span>
+=IFERROR(VLOOKUP($Z$1, 宛先リスト!$A:$E, 3, FALSE), "")
+      </div>
+<div class="formula-box">
+<span class="tag">A3：部署名</span>
+=IFERROR(VLOOKUP($Z$1, 宛先リスト!$A:$E, 4, FALSE), "")
+      </div>
+<div class="formula-box">
+<span class="tag">A4：氏名＋様</span>
+=IFERROR(VLOOKUP($Z$1, 宛先リスト!$A:$E, 2, FALSE) & "  様", "")
+      </div>
+<h3>2件目（51〜100行）の数式</h3>
+<div class="formula-box">
+<span class="tag">A52：会社名</span>
+=IFERROR(VLOOKUP($Z$1+1, 宛先リスト!$A:$E, 3, FALSE), "")
+      </div>
+<h3>n件目の一般形</h3>
+<div class="formula-box">
+<span class="tag">会社名の一般形</span>
+=IFERROR(VLOOKUP($Z$1+(n-1), 宛先リスト!$A:$E, 3, FALSE), "")
+
+※ n=1なら $Z$1, n=2なら $Z$1+1, ... n=10なら $Z$1+9
+      </div>
+<div class="xdemo-note-info">
+<strong>IF で条件分岐する例：</strong>宛先リストのE列に「御中」フラグがある場合、氏名の代わりに会社名＋御中と表示する数式：<br>
+<code>=IF(VLOOKUP($Z$1,宛先リスト!$A:$E,5,FALSE)="御中", VLOOKUP($Z$1,宛先リスト!$A:$E,3,FALSE)&"  御中", VLOOKUP($Z$1,宛先リスト!$A:$E,2,FALSE)&"  様")</code>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠ 数式ミスに注意：</strong>VLOOKUP の列番号（2=氏名、3=会社名、4=部署名）を間違えると、全ページで会社名と部署名が逆になるなどのミスが大量に発生します。テンプレートをコピーした後、必ず印刷プレビューで最初の数ページと最後のページを確認してください。
+      </div>
+<!-- ===== s5 ===== -->
+<h2 id="s5">5. スピンボタンの設置と設定</h2>
+<p>スピンボタン（フォームコントロール）を使い、Z1セルの値を切り替えます。</p>
+<div class="step-list">
+<div class="step-item">
+<div class="step-num">1</div>
+<div class="step-text">「開発」タブ &rarr;「挿入」&rarr; フォームコントロールの「スピンボタン」をクリックし、シート上にドラッグして配置します（Z1セル付近が望ましい）。</div>
+</div>
+<div class="step-item">
+<div class="step-num">2</div>
+<div class="step-text">配置したスピンボタンを右クリック &rarr;「コントロールの書式設定」を開きます。</div>
+</div>
+<div class="step-item">
+<div class="step-num">3</div>
+<div class="step-text">以下のように設定します：<br>
+            現在値：<strong>1</strong>、最小値：<strong>1</strong>、最大値：<strong>91</strong>（100件対応の場合）、変化の増分：<strong>10</strong>、リンクするセル：<strong>$Z$1</strong>
+</div>
+</div>
+<div class="step-item">
+<div class="step-num">4</div>
+<div class="step-text">「OK」で閉じます。スピンボタンを押すとZ1が1&rarr;11&rarr;21&rarr;&hellip;と変化し、それに連動して全ページの宛名が切り替わります。</div>
+</div>
+</div>
+<div class="spin-demo">
+<div class="spin-label">Z1 セルの値：</div>
+<div class="spin-val" id="spinVal">1</div>
+<div class="spin-btn">
+<button onclick="changeSpinVal(10)">▲</button>
+<button onclick="changeSpinVal(-10)">▼</button>
+</div>
+<div class="spin-label">&rarr; 表示される宛先：<strong id="spinRange">1件目 〜 10件目</strong></div>
+</div>
+<!-- ===== s6 ===== -->
+<h2 id="s6">6. Print_Area に動的数式を設定する</h2>
+<p>宛先リストのデータ件数に応じて、印刷範囲を自動調整します。Z1 の値から10件分（＝500行）を上限とし、実際にデータがある件数分だけに絞ります。</p>
+<h3>XLOOKUP 版（Microsoft 365 推奨）</h3>
+<div class="formula-box">
+<span class="tag">Print_Area 数式</span>
+=案内文書!$A$1:INDEX(
+  案内文書!$A:$E,
+  MIN(
+    (XLOOKUP(TRUE, INDEX(宛先リスト!$A:$A&lt;&gt;"",0),
+      ROW(宛先リスト!$A:$A), ,0,-1) - 1
+     - 案内文書!$Z$1 + 1) * 50,
+    500
+  ),
+  5
+)
+      </div>
+<p>宛先リストの最終データ番号から Z1 の開始番号を引き、表示件数を算出します。それに50を掛けて行数に変換し、500行（10ページ）を上限とします。例：データが25件でZ1=21なら、表示件数＝25-21+1＝5件、印刷範囲＝5&times;50＝250行（5ページ）。</p>
+<h3>COUNTA 版（シンプル版）</h3>
+<div class="formula-box">
+<span class="tag">Print_Area 数式</span>
+=案内文書!$A$1:INDEX(
+  案内文書!$A:$E,
+  MIN(
+    (COUNTA(宛先リスト!$A:$A) - 1 - 案内文書!$Z$1 + 1) * 50,
+    500
+  ),
+  5
+)
+      </div>
+<div class="xdemo-note-info">
+<strong>💡 もっと簡単な方法：</strong>データ件数が常に10の倍数（10件、20件、30件&hellip;）であれば、Print_Area は固定で <code>=案内文書!$A$1:$E$500</code> としてZ1だけ変えても問題ありません。空白ページが出ますが、Z1 を正しく設定すれば実害はありません。
+      </div>
+<!-- ===== s7 ===== -->
+<h2 id="s7">7. バッチ印刷の操作フロー</h2>
+<p>30件のデータを印刷する場合のフローです。</p>
+<div class="flow-box">
+<div class="flow-step">Z1 = 1<br>1〜10件目<br>&rarr; 印刷</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-step">Z1 = 11<br>11〜20件目<br>&rarr; 印刷</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-step">Z1 = 21<br>21〜30件目<br>&rarr; 印刷</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-step" style="background:#888">完了</div>
+</div>
+<div class="step-list">
+<div class="step-item">
+<div class="step-num">1</div>
+<div class="step-text">スピンボタンで Z1 = 1 にセットします（初期状態）。</div>
+</div>
+<div class="step-item">
+<div class="step-num">2</div>
+<div class="step-text"><kbd>Ctrl</kbd>+<kbd>P</kbd> で印刷プレビューを確認し、10ページに1〜10件目の宛名が正しく表示されていることを確認して印刷します。</div>
+</div>
+<div class="step-item">
+<div class="step-num">3</div>
+<div class="step-text">スピンボタンを1回クリックして Z1 = 11 にします。11〜20件目に切り替わったことを確認して印刷します。</div>
+</div>
+<div class="step-item">
+<div class="step-num">4</div>
+<div class="step-text">同様に Z1 = 21 にして 21〜30件目を印刷します。</div>
+</div>
+</div>
+<!-- ===== s8 ===== -->
+<h2 id="s8">8. ページプレビューのイメージ</h2>
+<p>Z1=1 のとき、10件の案内文書が10ページとして印刷されます。</p>
+<div class="page-cards">
+<div class="page-card">
+<span class="pc-badge">1ページ</span>
+<div class="pc-title">&xcirc;&xcirc;のご案内</div>
+<div class="pc-line">2026年3月22日</div>
+<div class="pc-line">株式会社ABC</div>
+<div class="pc-line">営業部</div>
+<div class="pc-name">山田太郎  様</div>
+</div>
+<div class="page-card">
+<span class="pc-badge">2ページ</span>
+<div class="pc-title">&xcirc;&xcirc;のご案内</div>
+<div class="pc-line">2026年3月22日</div>
+<div class="pc-line">DEF株式会社</div>
+<div class="pc-line">総務部</div>
+<div class="pc-name">鈴木花子  様</div>
+</div>
+<div class="page-card">
+<span class="pc-badge">3ページ</span>
+<div class="pc-title">&xcirc;&xcirc;のご案内</div>
+<div class="pc-line">2026年3月22日</div>
+<div class="pc-line">GHI商事</div>
+<div class="pc-line">経理部</div>
+<div class="pc-name">佐藤一郎  様</div>
+</div>
+<div class="page-card" style="opacity:.6">
+<span class="pc-badge">4〜10ページ</span>
+<div class="pc-title">&xcirc;&xcirc;のご案内</div>
+<div class="pc-line" style="color:#aaa">&hellip;以降同様</div>
+</div>
+</div>
+<!-- ===== s9 ===== -->
+<h2 id="s9">9. Wordの差し込み印刷との比較</h2>
+<table class="compare-table">
+<tr>
+<th></th>
+<th>Word 差し込み印刷</th>
+<th>この方法（Excel のみ）</th>
+</tr>
+<tr>
+<td>必要なソフト</td>
+<td>Word ＋ Excel（またはCSV）</td>
+<td>Excel のみ</td>
+</tr>
+<tr>
+<td>操作スキル</td>
+<td>差し込みフィールドの設定を理解する必要あり</td>
+<td>スピンボタンと印刷だけで操作可能</td>
+</tr>
+<tr>
+<td>他の人に渡して作業してもらう</td>
+<td>差し込み印刷の手順を教える必要がある</td>
+<td>「▲▼で番号を変えて印刷」だけ伝えればOK</td>
+</tr>
+<tr>
+<td>レイアウトの自由度</td>
+<td>高い（Word の書式機能が使える）</td>
+<td>Excel のセル幅・行高に依存</td>
+</tr>
+<tr>
+<td>ファイルサイズ</td>
+<td>テンプレート1ページ分で軽量</td>
+<td>10ページ分のテンプレートを仕込むため大きくなる</td>
+</tr>
+<tr>
+<td>一括印刷</td>
+<td>全件一括で可能</td>
+<td>10件ずつバッチ印刷（スピンボタン操作が必要）</td>
+</tr>
+</table>
+<!-- ===== s10 ===== -->
+<h2 id="s10">10. 注意点とトラブルシューティング</h2>
+<h3>Print_Area の数式が消える</h3>
+<p>「ページレイアウト」&rarr;「印刷範囲の設定」ボタンを押すと、名前の管理で設定した数式が静的な範囲に上書きされます。名前の管理からのみ操作してください。万が一のために数式をZ2セルなどにテキストとしてメモしておきましょう。</p>
+<h3>空白ページが印刷される</h3>
+<p>データが7件なのに10ページ印刷される場合、Print_Area の数式が正しく機能していません。名前の管理を開いて参照範囲にセクション6の数式が入っているか確認してください。</p>
+<h3>宛名が全ページ同じになる</h3>
+<p>すべてのテンプレートの検索値が $Z$1 のままになっている可能性があります。2件目は $Z$1+1、3件目は $Z$1+2 &hellip; となっているか確認してください。</p>
+<h3>スピンボタンが10ずつ動かない</h3>
+<p>「コントロールの書式設定」&rarr;「変化の増分」が1になっている可能性があります。10に変更してください。</p>
+<!-- ===== s11 ===== -->
+<h2 id="s11">11. まとめ</h2>
+<p>案内文書の宛名1ページ1枚印刷は、50行＝1ページのテンプレートを10件分用意し、スピンボタンで Z1 の値を切り替えることで10件ずつ差し替え印刷する手法です。Print_Area に動的数式を設定すればデータ件数に応じてページ数が自動調整されます。Wordの差し込み印刷を知らない人にも渡せる手軽さがメリットですが、テンプレートを仕込む分のファイルサイズ増加と、数式のセットアップミスが印刷事故につながる点には注意してください。</p>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+<script>
+    function switchSheet(group, targetId){
+      const wrap = document.querySelector('[data-group="'+group+'"]');
+      if(!wrap) return;
+      const tabs = wrap.querySelectorAll('.sheet-tab');
+      const panels = wrap.closest('.excel-wrap').querySelectorAll('.sheet-panel');
+      tabs.forEach(t=>t.classList.remove('active'));
+      panels.forEach(p=>p.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.getElementById(targetId).classList.add('active');
+    }
+    /* spin demo */
+    let spinV=1;
+    function changeSpinVal(d){
+      spinV=Math.max(1,Math.min(91,spinV+d));
+      document.getElementById('spinVal').textContent=spinV;
+      document.getElementById('spinRange').innerHTML=spinV+'件目 〜 '+(spinV+9)+'件目';
+    }
+  </script>
+</body>
+</html>
+
+

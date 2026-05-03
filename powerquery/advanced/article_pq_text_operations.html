@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="Power Queryでテキスト列を整形する方法を完全解説。トリム・クリーン・大文字小文字・値の置換・抽出（先頭/末尾/範囲/区切り文字）・列の分割・列のマージをGUI操作中心に、Before/After付きで丁寧に解説します。" name="description">
+<title>テキスト列を整形する &horbar; 書式・置換・トリム・抽出・分割・マージ｜Excel &times; No VBA Lab</title>
+<link href="https://excel-no-vba-lab.com/powerquery/advanced/article_pq_text_operations.html" rel="canonical">
+<meta content="テキスト列を整形する &horbar; 書式・置換・トリム・抽出・分割・マージ｜Excel &times; No VBA Lab" property="og:title">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"テキスト列を整形する \u0026horbar; 書式・置換・トリム・抽出・分割・マージ","description":"Power Queryでテキスト列を整形する方法を完全解説。トリム・クリーン・大文字小文字・値の置換・抽出（先頭/末尾/範囲/区切り文字）・列の分割・列のマージをGUI操作中心に、Before/After付きで丁寧に解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/advanced/article_pq_text_operations.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>テキスト列を整形する</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">テキスト列を整形する &horbar; 書式・置換・トリム・抽出・分割・マージ</h1>
+</div>
+<!-- ============================== -->
+<section id="goal">
+<h2>このページのゴール</h2>
+<p>Power Queryの「変換」タブと「列の追加」タブにあるテキスト操作機能を網羅的に理解し、「Excel関数でいうとどれに対応するか」を把握した上で、GUIだけで目的の加工ができるようになることです。</p>
+</section>
+<!-- ============================== -->
+<section id="tab-difference">
+<h2>大前提：「変換」タブ vs 「列の追加」タブ</h2>
+<p>テキスト操作のボタン（書式、抽出、分割など）は「変換」タブと「列の追加」タブの両方にあります。前ページでも触れましたが、この違いはテキスト操作で特に重要です。</p>
+<table class="ref-table">
+<thead><tr><th>タブ</th><th>動作</th><th>使いどころ</th></tr></thead>
+<tbody>
+<tr><td><strong>変換</strong></td><td>元の列のデータが書き換わる（上書き）</td><td>元データが不要で、変換後のデータだけ残したいとき</td></tr>
+<tr><td><strong>列の追加</strong></td><td>元の列はそのまま残り、新しい列が右端に追加される</td><td>元データを参照として残しておきたいとき、確認しながら作業したいとき</td></tr>
+</tbody>
+</table>
+<p>迷ったら<strong>「列の追加」タブで操作して、確認できたら元の列を削除する</strong>のが安全です。</p>
+</section>
+<!-- ============================== -->
+<section id="trim-clean">
+<h2>トリムとクリーン &horbar; 見えないゴミを取り除く</h2>
+<p>Excelの TRIM関数・CLEAN関数 に対応する機能です。データベースやWebから取り込んだデータには、目に見えない余計な空白や制御文字（改行コードなど）が含まれていることが非常に多く、これを放置すると VLOOKUP に相当するマージ操作で一致しない原因になります。</p>
+<h3>トリミング &horbar; 先頭と末尾の空白を除去</h3>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. 対象の列のヘッダーをクリックして選択します。<br>
+          2. <strong>変換 タブ &rarr; 書式 &rarr; トリミング</strong> をクリックします。<br>
+          3. 先頭と末尾の半角スペース・全角スペースが除去されます。</p>
+</div>
+<div class="before-after">
+<div>
+<p><strong>Before</strong></p>
+<table><thead><tr><th>氏名</th></tr></thead>
+<tbody>
+<tr><td>　田中 太郎　</td></tr>
+<tr><td> 佐藤　花子</td></tr>
+<tr><td>鈴木 一郎 </td></tr>
+</tbody></table>
+</div>
+<div>
+<p><strong>After（トリミング後）</strong></p>
+<table><thead><tr><th>氏名</th></tr></thead>
+<tbody>
+<tr><td>田中 太郎</td></tr>
+<tr><td>佐藤　花子</td></tr>
+<tr><td>鈴木 一郎</td></tr>
+</tbody></table>
+</div>
+</div>
+<div class="warning-box">
+<strong>注意：トリミングは先頭と末尾だけ</strong><br>
+          Excelの TRIM関数 は「単語間の連続スペースを1つにする」機能もありますが、Power Queryのトリミングは<strong>先頭と末尾の空白のみ</strong>を除去します。文字列の途中にある連続スペースを整理するには、「値の置換」で「  」（スペース2個）を「 」（スペース1個）に繰り返し置換する方法を使います。
+        </div>
+<h3>クリーン &horbar; 印刷できない制御文字を除去</h3>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. 対象の列のヘッダーをクリックして選択します。<br>
+          2. <strong>変換 タブ &rarr; 書式 &rarr; クリーニング</strong> をクリックします。<br>
+          3. 改行コード（CR/LF）やタブ文字など、ASCIIコード0〜31の制御文字が除去されます。</p>
+</div>
+<div class="tip-box">
+<strong>実務のコツ：トリム&rarr;クリーンの順番でセットで実行</strong><br>
+          テキスト列に対して「クリーニング &rarr; トリミング」の順で適用するのを定番にすると、ほとんどの「見えないゴミ」を一掃できます。取り込み直後のルーティンに加えてもよいくらい、使用頻度の高い操作です。
+        </div>
+</section>
+<!-- ============================== -->
+<section id="format">
+<h2>書式変換 &horbar; 大文字・小文字・その他</h2>
+<p>アルファベットの大文字・小文字を揃えたり、プレフィックス/サフィックスを追加したりする操作です。</p>
+<table class="ref-table">
+<thead><tr><th>GUI操作</th><th>Excel関数の対応</th><th>動作</th><th>例：入力 &rarr; 出力</th></tr></thead>
+<tbody>
+<tr><td>変換 &rarr; 書式 &rarr; <strong>小文字</strong></td><td>LOWER</td><td>すべてを小文字に</td><td>TOKYO &rarr; tokyo</td></tr>
+<tr><td>変換 &rarr; 書式 &rarr; <strong>大文字</strong></td><td>UPPER</td><td>すべてを大文字に</td><td>tokyo &rarr; TOKYO</td></tr>
+<tr><td>変換 &rarr; 書式 &rarr; <strong>各単語の先頭文字を大文字にする</strong></td><td>PROPER</td><td>各単語の先頭だけ大文字</td><td>john smith &rarr; John Smith</td></tr>
+<tr><td>変換 &rarr; 書式 &rarr; <strong>プレフィックスの追加</strong></td><td>"固定文字"&A1</td><td>先頭に固定文字列を追加</td><td>001 &rarr; ID-001</td></tr>
+<tr><td>変換 &rarr; 書式 &rarr; <strong>サフィックスの追加</strong></td><td>A1&"固定文字"</td><td>末尾に固定文字列を追加</td><td>report &rarr; report.pdf</td></tr>
+</tbody>
+</table>
+<div class="step-box">
+<h4>操作手順（例：プレフィックスの追加）</h4>
+<p>1. 対象の列のヘッダーをクリックして選択します。<br>
+          2. <strong>変換 タブ &rarr; 書式 &rarr; プレフィックスの追加</strong> をクリックします。<br>
+          3. ダイアログに追加したい文字列（例：「ID-」）を入力して「OK」。<br>
+          4. すべての行の先頭に「ID-」が追加されます。</p>
+</div>
+</section>
+<!-- ============================== -->
+<section id="replace">
+<h2>値の置換 &horbar; 文字列の検索と置き換え</h2>
+<p>ExcelのSUBSTITUTE関数に対応する機能です。ExcelのSUBSTITUTEと同様に、セル全体ではなく文字列の一部を置き換えます。</p>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. 対象の列のヘッダーをクリックして選択します。<br>
+          2. <strong>ホーム タブ &rarr; 値の置換</strong>（または右クリック &rarr;「値の置換」）をクリックします。<br>
+          3. 「検索する値」に元の文字列、「置換後」に新しい文字列を入力して「OK」。</p>
+</div>
+<h3>置換の実用パターン</h3>
+<table class="ref-table">
+<thead><tr><th>目的</th><th>検索する値</th><th>置換後</th><th>備考</th></tr></thead>
+<tbody>
+<tr><td>ハイフンを除去</td><td>-</td><td>（空欄）</td><td>電話番号「03-1234-5678」&rarr;「0312345678」</td></tr>
+<tr><td>表記の統一</td><td>（株）</td><td>株式会社</td><td>部分一致で置換される</td></tr>
+<tr><td>全角スペースを半角に</td><td>　（全角スペース）</td><td> （半角スペース）</td><td>見た目では区別しにくいので注意</td></tr>
+<tr><td>nullを特定の値に</td><td>null</td><td>（任意の値）</td><td>「詳細オプション」で「セル全体を照合する」にチェック</td></tr>
+</tbody>
+</table>
+<div class="warning-box">
+<strong>「値の置換」は部分一致がデフォルト</strong><br>
+          Power Queryの値の置換は<strong>部分一致</strong>で動作します。たとえば「東」を「西」に置換すると、「東京」が「西京」になります。セル全体が完全に一致する場合だけ置換したいときは、ダイアログの左下にある<strong>「詳細オプション」&rarr;「セル全体の内容を照合する」にチェック</strong>を入れてください。
+        </div>
+</section>
+<!-- ============================== -->
+<section id="extract">
+<h2>抽出 &horbar; 文字列の一部を取り出す</h2>
+<p>ExcelのLEFT・RIGHT・MID関数に相当する操作です。「変換」タブの「抽出」で実行すると元の列が書き換わり、「列の追加」タブの「テキストから抽出」で実行すると新しい列ができます。</p>
+<table class="ref-table">
+<thead><tr><th>メニュー</th><th>Excel関数の対応</th><th>パラメータ</th><th>例</th></tr></thead>
+<tbody>
+<tr>
+<td><strong>最初の文字</strong></td>
+<td>LEFT</td>
+<td>取り出す文字数</td>
+<td>「東京都新宿区」から3文字 &rarr;「東京都」</td>
+</tr>
+<tr>
+<td><strong>最後の文字</strong></td>
+<td>RIGHT</td>
+<td>取り出す文字数</td>
+<td>「ABC-001」から3文字 &rarr;「001」</td>
+</tr>
+<tr>
+<td><strong>範囲</strong></td>
+<td>MID</td>
+<td>開始インデックスと文字数</td>
+<td>「ABC-001-XY」のインデックス4から3文字 &rarr;「001」</td>
+</tr>
+<tr>
+<td><strong>区切り記号の前のテキスト</strong></td>
+<td>LEFT + FIND の組合せ</td>
+<td>区切り記号</td>
+<td>「田中-太郎」の「-」より前 &rarr;「田中」</td>
+</tr>
+<tr>
+<td><strong>区切り記号の後のテキスト</strong></td>
+<td>MID + FIND の組合せ</td>
+<td>区切り記号</td>
+<td>「田中-太郎」の「-」より後 &rarr;「太郎」</td>
+</tr>
+<tr>
+<td><strong>区切り記号の間のテキスト</strong></td>
+<td>複雑な関数の組合せ</td>
+<td>開始と終了の区切り記号</td>
+<td>「【重要】お知らせ」の「【」と「】」の間 &rarr;「重要」</td>
+</tr>
+<tr>
+<td><strong>長さ</strong></td>
+<td>LEN</td>
+<td>なし</td>
+<td>「Hello」&rarr; 5</td>
+</tr>
+</tbody>
+</table>
+<div class="step-box">
+<h4>操作手順（例：「範囲」で中間を取り出す）</h4>
+<p>1. 対象の列のヘッダーをクリックして選択します。<br>
+          2. <strong>変換 タブ &rarr; 抽出 &rarr; 範囲</strong> をクリックします。<br>
+          3. 「開始インデックス」と「文字数」を入力して「OK」。</p>
+</div>
+<div class="warning-box">
+<strong>最重要注意：開始インデックスは「0」始まり</strong><br>
+          ExcelのMID関数は1文字目を「1」と数えますが、Power Queryの「範囲」は<strong>0から数えます</strong>。「ABC-001」の「0」を取り出したい場合、Excelなら =MID(A1, 5, 1) ですが、Power Queryでは開始インデックス「4」です。最初は混乱しますが、必ず覚えてください。
+        </div>
+<h3>「抽出」と「分割」の使い分け</h3>
+<p>どちらも文字列の一部を取り出す操作ですが、目的が違います。<strong>「抽出」は1つの値だけを取り出す</strong>操作で、結果は1列です。<strong>「分割」は1つの列を複数の列に分ける</strong>操作です。「氏名」列から姓と名を別々の列にしたい場合は「分割」、商品コードの先頭3文字だけ欲しい場合は「抽出」を使います。</p>
+</section>
+<!-- ============================== -->
+<section id="split">
+<h2>列の分割 &horbar; 1つの列を複数に分ける</h2>
+<p>ExcelではLEFT + MID + FIND の複雑な組み合わせで行っていた「列の分割」が、Power QueryではGUIだけで完了します。</p>
+<h3>区切り文字で分割する</h3>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. 対象の列のヘッダーをクリックして選択します。<br>
+          2. <strong>ホーム タブ &rarr; 列の分割 &rarr; 区切り記号による分割</strong>（または変換タブからも可）をクリックします。<br>
+          3. 区切り記号を選択または入力します（カンマ、スペース、ハイフン、タブ、カスタムなど）。<br>
+          4. 「分割位置」を選択します：</p>
+<table class="ba-table">
+<thead><tr><th>選択肢</th><th>動作</th><th>例：「A-B-C」をハイフンで分割</th></tr></thead>
+<tbody>
+<tr><td><strong>左端の区切り記号</strong></td><td>最初に見つかった区切り文字で2列に分割</td><td>「A」「B-C」</td></tr>
+<tr><td><strong>右端の区切り記号</strong></td><td>最後に見つかった区切り文字で2列に分割</td><td>「A-B」「C」</td></tr>
+<tr><td><strong>出現する各区切り記号</strong></td><td>すべての区切り文字で分割</td><td>「A」「B」「C」</td></tr>
+</tbody>
+</table>
+<p>5. 「OK」をクリックすると、元の列が分割後の列に置き換わります。</p>
+</div>
+<h3>文字数で分割する</h3>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. 対象の列のヘッダーをクリックして選択します。<br>
+          2. <strong>ホーム タブ &rarr; 列の分割 &rarr; 文字数による分割</strong> をクリックします。<br>
+          3. 文字数を入力します（例：「3」）。<br>
+          4. 分割方法を選択します：</p>
+<table class="ba-table">
+<thead><tr><th>選択肢</th><th>動作</th><th>例：「ABCDEF」を3文字で分割</th></tr></thead>
+<tbody>
+<tr><td><strong>左端から1回</strong></td><td>左から指定文字数の位置で1回だけ分割</td><td>「ABC」「DEF」</td></tr>
+<tr><td><strong>右端から1回</strong></td><td>右から指定文字数の位置で1回だけ分割</td><td>「ABC」「DEF」</td></tr>
+<tr><td><strong>繰り返し</strong></td><td>指定文字数ごとに繰り返し分割</td><td>「ABC」「DEF」（6文字&divide;3=2列）</td></tr>
+</tbody>
+</table>
+<p>5. 「OK」をクリックします。</p>
+</div>
+<div class="tip-box">
+<strong>実務でよく使うパターン</strong><br>
+          固定長データ（銀行の振込データやCOBOLシステムの出力など）は「文字数で分割」&rarr;「繰り返し」が便利です。たとえば「銀行コード(4桁) + 支店コード(3桁) + 口座番号(7桁)」のような固定長は、4, 3, 7 で順に分割できます（ただし1回の操作では均一な文字数でしか分割できないため、不均一な場合は複数回に分けるか、「範囲」で抽出する方法を使います）。
+        </div>
+<div class="warning-box">
+<strong>分割後の列名と型に注意</strong><br>
+          分割すると自動的に「列名.1」「列名.2」のような列名が付きます。また、分割後の列のデータ型はすべて「テキスト」になります。数値として扱いたい列は型変更を忘れずに行ってください。
+        </div>
+<p>詳しくは &rarr; <a href="article_pq_split_column.html">列の分割 専用ページ</a></p>
+</section>
+<!-- ============================== -->
+<section id="merge-columns">
+<h2>列のマージ &horbar; 複数の列を1つに結合する</h2>
+<p>Excel の CONCATENATE関数 や & 演算子 に対応する操作です。姓と名を1列にまとめたり、年・月・日の列を結合して日付文字列にしたりする場面で使います。</p>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. 結合したい列を<strong>Ctrl+クリック</strong>で複数選択します（選択した順番に結合されます）。<br>
+          2. <strong>変換 タブ &rarr; 列のマージ</strong>（または列の追加タブの「列のマージ」）をクリックします。<br>
+          3. 区切り記号を選択します（スペース、カンマ、なし、カスタムなど）。<br>
+          4. 新しい列名を入力します（例：「氏名」）。<br>
+          5. 「OK」をクリックします。</p>
+</div>
+<div class="before-after">
+<div>
+<p><strong>Before</strong></p>
+<table><thead><tr><th>姓</th><th>名</th></tr></thead>
+<tbody>
+<tr><td>田中</td><td>太郎</td></tr>
+<tr><td>佐藤</td><td>花子</td></tr>
+</tbody></table>
+</div>
+<div>
+<p><strong>After（区切り記号：スペース）</strong></p>
+<table><thead><tr><th>氏名</th></tr></thead>
+<tbody>
+<tr><td>田中 太郎</td></tr>
+<tr><td>佐藤 花子</td></tr>
+</tbody></table>
+</div>
+</div>
+<div class="warning-box">
+<strong>「変換」タブのマージは元の列が消える</strong><br>
+          「変換」タブの「列のマージ」を実行すると、選択した複数の列が1つの列に<strong>置き換わります</strong>（元の列は消えます）。元の列を残したい場合は<strong>「列の追加」タブの「列のマージ」</strong>を使ってください。
+        </div>
+<div class="tip-box">
+<strong>数値型の列をマージする場合</strong><br>
+          マージ対象に数値型やBool型の列が含まれると、マージに失敗したりnullが出たりすることがあります。あらかじめ対象列のデータ型を<strong>テキスト型</strong>に変更してからマージしてください。
+        </div>
+</section>
+<!-- ============================== -->
+<section id="excel-comparison">
+<h2>Excel関数との対応まとめ</h2>
+<p>ここまでの内容を、Excel関数との対応表にまとめます。ブックマークしておくと便利です。</p>
+<table class="ref-table">
+<thead>
+<tr><th>Excel関数</th><th>Power Query GUI操作</th><th>M言語（参考）</th><th>注意点</th></tr>
+</thead>
+<tbody>
+<tr><td>TRIM</td><td>変換 &rarr; 書式 &rarr; トリミング</td><td>Text.Trim([列])</td><td>先頭末尾のみ。途中の連続空白は置換で</td></tr>
+<tr><td>CLEAN</td><td>変換 &rarr; 書式 &rarr; クリーニング</td><td>Text.Clean([列])</td><td>ASCII 0〜31の制御文字を除去</td></tr>
+<tr><td>UPPER</td><td>変換 &rarr; 書式 &rarr; 大文字</td><td>Text.Upper([列])</td><td>&horbar;</td></tr>
+<tr><td>LOWER</td><td>変換 &rarr; 書式 &rarr; 小文字</td><td>Text.Lower([列])</td><td>&horbar;</td></tr>
+<tr><td>PROPER</td><td>変換 &rarr; 書式 &rarr; 各単語の先頭&hellip;</td><td>Text.Proper([列])</td><td>&horbar;</td></tr>
+<tr><td>SUBSTITUTE</td><td>ホーム &rarr; 値の置換</td><td>Text.Replace([列],"旧","新")</td><td>部分一致がデフォルト</td></tr>
+<tr><td>LEFT</td><td>変換 &rarr; 抽出 &rarr; 最初の文字</td><td>Text.Start([列], n)</td><td>&horbar;</td></tr>
+<tr><td>RIGHT</td><td>変換 &rarr; 抽出 &rarr; 最後の文字</td><td>Text.End([列], n)</td><td>&horbar;</td></tr>
+<tr><td>MID</td><td>変換 &rarr; 抽出 &rarr; 範囲</td><td>Text.Middle([列], start, n)</td><td><strong>0始まり</strong></td></tr>
+<tr><td>LEN</td><td>変換 &rarr; 抽出 &rarr; 長さ</td><td>Text.Length([列])</td><td>&horbar;</td></tr>
+<tr><td>CONCATENATE / &</td><td>変換 &rarr; 列のマージ</td><td>Text.Combine({[列1],[列2]}, "区切")</td><td>数値列は先にテキスト型に変換</td></tr>
+</tbody>
+</table>
+</section>
+<!-- ============================== -->
+<section id="practice">
+<h2>実践例 &horbar; CSV住所録のクリーニング</h2>
+<p>あるCSVから取り込んだ住所録データを、テキスト操作だけで綺麗に整えてみましょう。</p>
+<h3>Before（取り込んだ生データ）</h3>
+<table class="ba-table">
+<thead><tr><th>氏名</th><th>電話番号</th><th>商品コード</th></tr></thead>
+<tbody>
+<tr><td>　たなか　たろう　</td><td>03-1234-5678</td><td>ABC-001-XY</td></tr>
+<tr><td>　さとう　はなこ</td><td>090-9876-5432</td><td>DEF-002-ZZ</td></tr>
+</tbody>
+</table>
+<h3>やりたいこと</h3>
+<p>氏名の前後の空白を除去し、各単語の先頭を大文字にしたい（今回はカタカナのためスキップ）。電話番号のハイフンを除去して数字だけにしたい。商品コードからカテゴリ部分（先頭3文字）と番号部分（中間3文字）を別列に取り出したい。</p>
+<h3>手順</h3>
+<div class="step-box">
+<h4>Step 1：氏名をトリミング</h4>
+<p>「氏名」列を選択 &rarr; <strong>変換 &rarr; 書式 &rarr; トリミング</strong></p>
+</div>
+<div class="step-box">
+<h4>Step 2：電話番号のハイフンを除去</h4>
+<p>「電話番号」列を選択 &rarr; <strong>ホーム &rarr; 値の置換</strong> &rarr; 検索「-」、置換後「」（空欄）</p>
+</div>
+<div class="step-box">
+<h4>Step 3：商品コードからカテゴリを抽出</h4>
+<p>「商品コード」列を選択 &rarr; <strong>列の追加 &rarr; テキストから抽出 &rarr; 最初の文字</strong> &rarr; 文字数「3」 &rarr; 列名を「カテゴリ」に変更</p>
+</div>
+<div class="step-box">
+<h4>Step 4：商品コードから番号を抽出</h4>
+<p>「商品コード」列を選択 &rarr; <strong>列の追加 &rarr; テキストから抽出 &rarr; 範囲</strong> &rarr; 開始インデックス「4」、文字数「3」 &rarr; 列名を「番号」に変更</p>
+</div>
+<h3>After（処理完了後）</h3>
+<table class="ba-table">
+<thead><tr><th>氏名</th><th>電話番号</th><th>商品コード</th><th>カテゴリ</th><th>番号</th></tr></thead>
+<tbody>
+<tr><td>たなか　たろう</td><td>0312345678</td><td>ABC-001-XY</td><td>ABC</td><td>001</td></tr>
+<tr><td>さとう　はなこ</td><td>09098765432</td><td>DEF-002-ZZ</td><td>DEF</td><td>002</td></tr>
+</tbody>
+</table>
+<p>適用したステップは4つだけ。このクエリを保存しておけば、次回以降は同じ形式のCSVを差し替えて「更新」するだけで同じ処理が自動適用されます。これがPower Queryの真価です。</p>
+</section>
+<!-- ============================== -->
+<section id="summary">
+<h2>まとめ</h2>
+<p>テキスト操作はPower Queryで最も使用頻度が高い変換カテゴリです。このページで紹介した操作を整理すると、大きく4つのグループに分けられます。</p>
+<p><strong>クリーニング系</strong>（トリミング・クリーニング）は、データを取り込んだ直後に必ず行う「衛生管理」。<strong>書式変換系</strong>（大文字・小文字・プレフィックス/サフィックス）は、表記の統一に使う。<strong>抽出・分割系</strong>（最初/最後/範囲の文字、区切り文字で分割、文字数で分割）は、1つの列から必要な情報を取り出す。<strong>結合系</strong>（列のマージ・値の置換）は、データを組み替えて使いやすい形にする。</p>
+<p>最も注意すべきは<strong>「範囲」の開始インデックスが0始まり</strong>という点と、<strong>「値の置換」は部分一致がデフォルト</strong>という点です。この2つさえ覚えておけば、テキスト操作で困ることはほとんどありません。</p>
+</section>
+<!-- ============================== -->
+<nav class="nav-series">
+<strong>パワークエリ GUIマスターシリーズ</strong>
+<a href="../basic/article_powerquery_intro.html">⓪ パワークエリとは</a>
+<a href="../basic/article_pq_editor_ui.html">① エディターの画面構成と「適用したステップ」</a>
+<a href="../basic/article_pq_first_steps.html">② 取り込んだ直後にやる5つの定番操作</a>
+<a class="current" href="article_pq_text_operations.html">③ テキスト列を整形する（このページ）</a>
+<a href="article_pq_row_operations.html">④ 行を操る &horbar; フィルター・並べ替え・重複削除・フィル</a>
+<a href="article_pq_add_columns.html">⑤ 新しい列を作る &horbar; 条件列・インデックス・カスタム列</a>
+<a href="article_pq_number_date.html">⑥ 数値と日付を扱う</a>
+</nav>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+

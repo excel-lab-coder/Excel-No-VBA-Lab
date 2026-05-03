@@ -1,0 +1,833 @@
+{
+  "articles": [
+    {
+      "category": "functions",
+      "subcategory": "modern_search",
+      "title": "XLOOKUP 基本編",
+      "url": "functions/latest/article_xlookup_basic.html",
+      "summary": "Excel 2021 / 2024 / Microsoft 365 で使える検索関数の決定版。VLOOKUPの弱点を克服。",
+      "level": 1,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_search",
+      "title": "XLOOKUP 応用編",
+      "url": "functions/latest/article_xlookup_advanced.html",
+      "summary": "第3引数（戻り配列）に複数列の範囲を指定するだけで、ヒットした行の複数列を横並びに一気に展開できます。",
+      "level": 3
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_search",
+      "title": "XLOOKUP ネスト（多条件検索）",
+      "url": "functions/latest/article_xlookup_multi.html",
+      "summary": "「店舗」と「商品名」など、複数条件の組み合わせが完全一致する行を探し出します。",
+      "level": 4
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_search",
+      "title": "XLOOKUP比較編：VLOOKUP・INDEX+MATCHとの使い分け",
+      "url": "functions/latest/article_xlookup_vs.html",
+      "summary": "VLOOKUPの弱点、INDEX+MATCHの強み、XLOOKUPの便利さを比較して使い分けます。",
+      "level": 2
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_search",
+      "title": "XMATCH関数",
+      "url": "functions/latest/article_xmatch.html",
+      "summary": "リストの中から特定の値を探し、それが上から何番目にあるかを安全・確実に取得します。",
+      "level": 2
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_search",
+      "title": "CHOOSECOLS関数 — 離れた列を自在に抽出",
+      "url": "functions/latest/article_choosecols.html",
+      "summary": "指定した配列から、必要な列番号だけを選んでスピル展開する関数です。",
+      "level": 3,
+      "tags": ["impact"],
+      "rarity_id": "choosecols"
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_search",
+      "title": "FILTER関数",
+      "url": "functions/latest/article_filter.html",
+      "summary": "条件に合うデータを複数件まとめて動的抽出します。抽出作業の自動化に非常に強力です。",
+      "level": 2,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_search",
+      "title": "UNIQUE関数",
+      "url": "functions/latest/article_unique.html",
+      "summary": "重複を消して一意リストを作成します。商品名・担当者・部署名などの一覧化に便利です。",
+      "level": 1,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_search",
+      "title": "SORT / SORTBY関数",
+      "url": "functions/latest/article_sort.html",
+      "summary": "抽出結果や一覧を、条件に応じて自動で並べ替えます。",
+      "level": 2
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_logic",
+      "title": "LET関数で可読性を上げる",
+      "url": "functions/latest/article_let.html",
+      "summary": "長大で読めない数式を変数名で整理し、同じ計算の繰り返しを減らして速度改善にもつなげます。",
+      "level": 3,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_logic",
+      "title": "IFS関数",
+      "url": "functions/latest/article_ifs.html",
+      "summary": "条件が多段階あるとき、IF関数のネスト地獄を避けて読みやすく分岐できます。",
+      "level": 1,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_logic",
+      "title": "LET + IF の複雑ロジック",
+      "url": "functions/latest/article_let_if.html",
+      "summary": "複雑なIF条件や結果値をLET関数の変数で整理し、見やすく・保守しやすくします。",
+      "level": 4
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_logic",
+      "title": "LET + IFERROR の効率的ハンドリング",
+      "url": "functions/latest/article_let_iferror.html",
+      "summary": "IFERRORの中で重い関数を2回書くのを避け、エラー時の分岐処理も整理します。",
+      "level": 4
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_logic",
+      "title": "SWITCH関数",
+      "url": "functions/latest/article_switch.html",
+      "summary": "特定の値に対して決まった結果を返す処理を、IFよりすっきり書けます。",
+      "level": 1
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_text",
+      "title": "TEXTSPLIT",
+      "url": "functions/latest/article_textsplit.html",
+      "summary": "カンマ区切りや区切り文字つきの文字列を、複数セルに一気に分割します。",
+      "level": 2,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_text",
+      "title": "TEXTJOIN",
+      "url": "functions/latest/article_textjoin.html",
+      "summary": "複数セルの文字列を、指定した区切り文字でまとめます。空白セルを無視する設定も可能です。",
+      "level": 1,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_text",
+      "title": "CONCAT vs CONCATENATE vs「&」徹底比較",
+      "url": "functions/latest/article_concat.html",
+      "summary": "Excelで文字列を結合する方法を比較し、実務でどれを使うべきか整理します。",
+      "level": 1
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_text",
+      "title": "TEXTBEFORE / TEXTAFTER関数",
+      "url": "functions/latest/article_textbefore.html",
+      "summary": "文字列から、特定の区切り文字の前後だけを抜き出します。",
+      "level": 2
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_date",
+      "title": "SEQUENCE で日付リスト自動生成",
+      "url": "functions/latest/article_sequence.html",
+      "summary": "日付一覧や連番リストを、1セルの数式だけで自動展開します。",
+      "level": 2
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_search",
+      "title": "INDEX + MATCH（全ver対象）",
+      "url": "functions/old/article_index_match.html",
+      "summary": "検索キーより左側にある列のデータを取得したい場合など、旧バージョンで強力な検索手法です。",
+      "level": 3,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_search",
+      "title": "INDEX + MATCH + 結合キー列",
+      "url": "functions/old/article_index_match_multi.html",
+      "summary": "複数条件の組み合わせで検索したいとき、旧Excelでも安定して実装できます。",
+      "level": 4
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_expert",
+      "title": "【FILTER代替】VBA不要・CSE不要の複数抽出",
+      "url": "functions/old/article_countif_extract.html",
+      "summary": "Excel 2016以前でも通常の関数だけでFILTERと同等の複数行抽出を実現します。",
+      "level": 7,
+      "tags": ["impact"],
+      "rarity_id": "filter_alt",
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_expert",
+      "title": "住所→郵便番号 逆引き（最長一致検索）",
+      "url": "functions/old/article_zip_reverse.html",
+      "summary": "郵便番号簿からINDEX+MATCH+MAX+LEFT+LENで最長一致検索を行う高度な関数テクニック。",
+      "level": 7,
+      "tags": ["impact"],
+      "rarity_id": "zip_reverse",
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_other",
+      "title": "IFERROR vs IFNA の使い分け",
+      "url": "functions/old/article_iferror.html",
+      "summary": "#N/Aだけを処理したいのか、他のエラーもまとめて処理したいのかで使い分けます。",
+      "level": 1,
+      "tags": ["impact"]
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_other",
+      "title": "ERROR.TYPE による分岐",
+      "url": "functions/old/article_errortype.html",
+      "summary": "セルのエラー種類によって表示メッセージや処理を変えたい場合に使います。",
+      "level": 2,
+      "tags": ["rare"]
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_other",
+      "title": "SUBSTITUTE 多段ネスト",
+      "url": "functions/old/article_substitute.html",
+      "summary": "複数の文字置換を一気に済ませたいときの定番テクニックです。",
+      "level": 3
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_other",
+      "title": "MID / MIDB関数 — 文字数やバイト数で文字列を抽出する",
+      "url": "functions/old/article_midb.html",
+      "summary": "文字列の途中から指定した分だけテキストを抜き出す関数です。",
+      "level": 2
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_other",
+      "title": "TEXT関数による和暦変換",
+      "url": "functions/old/article_text_date.html",
+      "summary": "日付を令和表記や省略形式に変換する表示テクニックです。",
+      "level": 2
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_other",
+      "title": "DATEDIFの注意点",
+      "url": "functions/old/article_datedif.html",
+      "summary": "年齢や勤続年数の計算で便利ですが、仕様に注意が必要な関数です。",
+      "level": 2
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_other",
+      "title": "【要注意】揮発性関数とは？激重Excel化を防ぐ",
+      "url": "functions/old/article_volatile.html",
+      "summary": "INDIRECT・OFFSETなどの揮発性関数による再計算負荷を理解し、重いブックを防ぎます。",
+      "level": 4,
+      "tags": ["impact"],
+      "rarity_id": "volatile"
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "basic",
+      "title": "パワークエリとは",
+      "url": "powerquery/basic/article_powerquery_intro.html",
+      "summary": "VBA・ワークシート関数と比較しながら、Power Queryの全体像を把握します。",
+      "level": 1,
+      "tags": ["prereq", "impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "basic",
+      "title": "パワークエリとは【補足編】",
+      "url": "powerquery/basic/article_powerquery_intro_deep.html",
+      "summary": "読み込み先の選択肢、パラメータクエリ、SharePoint連携などの発展的内容。",
+      "level": 2
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "basic",
+      "title": "Power Queryエディターの画面構成",
+      "url": "powerquery/basic/article_pq_editor_ui.html",
+      "summary": "エディターの5つのエリアの役割を解説し、どこを見れば何がわかるかを把握します。",
+      "level": 1,
+      "tags": ["prereq", "impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "basic",
+      "title": "Power Queryエディターの画面構成と「適用したステップ」",
+      "url": "powerquery/basic/article_pq_editor_ui_2.html",
+      "summary": "「適用したステップ」の読み方・戻し方・削除・途中挿入まで丁寧にカバーします。",
+      "level": 1
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "basic",
+      "title": "データ型の変換",
+      "url": "powerquery/basic/article_pq_data_type.html",
+      "summary": "型が正しくないと、計算・フィルター・並べ替えが意図通りに動きません。",
+      "level": 1,
+      "tags": ["prereq", "impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "basic",
+      "title": "取り込んだ直後にやる 5つの定番操作",
+      "url": "powerquery/basic/article_pq_first_steps.html",
+      "summary": "ヘッダー昇格・列の削除・列名変更・データ型変換・不要行の削除を解説します。",
+      "level": 1,
+      "tags": ["prereq", "impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "basic",
+      "title": "フィル（下方向・上方向）",
+      "url": "powerquery/basic/article_pq_fill.html",
+      "summary": "空白セル（null）を直前の値で自動的に埋める、帳票処理で重要な操作です。",
+      "level": 1,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "basic",
+      "title": "更新と管理 — 接続・エラー対策・設計パターン",
+      "url": "powerquery/basic/article_pq_management.html",
+      "summary": "更新方法、読み込み先の選び方、接続のみクエリの活用、エラー予防策をまとめて解説。",
+      "level": 2,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "pdf",
+      "title": "PDFからのデータ取り込み 概要",
+      "url": "powerquery/basic/article_pdf_overview.html",
+      "summary": "対応できるケースとできないケース、注意点を解説します。",
+      "level": 2
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "pdf",
+      "title": "PDFからのデータ取り込み 基本編",
+      "url": "powerquery/basic/article_pdf_powerquery_basic.html",
+      "summary": "Power QueryでPDFから取り込む基本的な手順をGUI操作中心に解説します。",
+      "level": 2,
+      "tags": ["impact"]
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "pdf",
+      "title": "PDFからのデータ取り込み 応用編",
+      "url": "powerquery/basic/article_pdf_powerquery_advanced.html",
+      "summary": "レイアウト崩れや文字化けなど、難しいケースへの対処法を解説します。",
+      "level": 4
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "pdf",
+      "title": "WordファイルからPower Queryでデータを取り込む",
+      "url": "powerquery/basic/article_pdf_word.html",
+      "summary": "Wordドキュメント内のテーブルをPower Queryで取り込む方法を解説します。",
+      "level": 2
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "transform",
+      "title": "データ取り込みパターン集 — CSV・Excel・PDF・Web・フォルダ",
+      "url": "powerquery/advanced/article_pq_import_patterns.html",
+      "summary": "Power Queryのデータ取り込みパターンをGUI操作で丁寧に解説します。",
+      "level": 2,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "transform",
+      "title": "列の削除・選択・並べ替え・名前変更",
+      "url": "powerquery/advanced/article_pq_column_delete.html",
+      "summary": "不要な列の削除と列名の整理。列に対する4つの基本操作を解説します。",
+      "level": 1,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "transform",
+      "title": "行を操る — フィルター・並べ替え・重複削除・フィル",
+      "url": "powerquery/advanced/article_pq_row_operations.html",
+      "summary": "Power Queryでの行操作を完全解説します。",
+      "level": 2,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "transform",
+      "title": "テキスト列を整形する — 書式・置換・トリム・抽出・分割・マージ",
+      "url": "powerquery/advanced/article_pq_text_operations.html",
+      "summary": "テキスト列を整形する方法をまとめて解説します。",
+      "level": 2
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "transform",
+      "title": "列の分割",
+      "url": "powerquery/advanced/article_pq_split_column.html",
+      "summary": "1列に複数の情報が入っているデータを、複数列に分割します。",
+      "level": 2
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "transform",
+      "title": "数値と日付を扱う — 丸め・統計・日付抽出・期間計算",
+      "url": "powerquery/advanced/article_pq_number_date.html",
+      "summary": "数値操作と日付操作をGUI中心に解説。Excel関数との対応表付き。",
+      "level": 3
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "transform",
+      "title": "新しい列を作る — 条件列・インデックス・カスタム列・例からの列",
+      "url": "powerquery/advanced/article_pq_add_columns.html",
+      "summary": "Power Queryで新しい列を追加する方法を完全解説します。",
+      "level": 3,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "transform",
+      "title": "集計とピボット — グループ化・ピボット・ピボット解除",
+      "url": "powerquery/advanced/article_pq_group_pivot.html",
+      "summary": "グループ化・ピボット・ピボット解除をGUI中心に徹底解説します。",
+      "level": 4
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "advanced",
+      "title": "テーブルの結合 — マージと追加",
+      "url": "powerquery/advanced/article_pq_merge_append.html",
+      "summary": "マージ（横方向）と追加（縦方向）を、結合型の違いから解説します。",
+      "level": 4,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "advanced",
+      "title": "パラメータクエリ — セルの値で結果を切り替える",
+      "url": "powerquery/advanced/article_pq_parameter_query.html",
+      "summary": "セル値をフィルター条件やファイルパスとして渡し、更新だけで結果を切り替えます。",
+      "level": 5,
+      "tags": ["impact"],
+      "rarity_id": "pq_parameter",
+      "is_highlight": true
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "advanced",
+      "title": "M言語入門",
+      "url": "powerquery/advanced/article_pq_m_language.html",
+      "summary": "Power QueryのバックエンドであるM言語の基本構文を理解します。",
+      "level": 7,
+      "rarity_id": "m_language"
+    },
+    {
+      "category": "cobol",
+      "subcategory": "intro",
+      "title": "扱っているデータはCOBOL固定長？見分け方と基礎知識",
+      "url": "cobol/intro/01_article_cobol_fixed.html",
+      "summary": "固定長データの正体と見分け方を解説します。まず自分のデータがCOBOL帳票なのか確認します。",
+      "level": 1,
+      "tags": ["prereq"],
+      "is_highlight": true
+    },
+    {
+      "category": "cobol",
+      "subcategory": "intro",
+      "title": "COBOL帳票処理の3大アプローチ：本当の難易度と完成時のメリット",
+      "url": "cobol/intro/02_article_cobol_approach.html",
+      "summary": "関数・Power Query・VBAなど、複数のアプローチを難易度と工数で比較します。",
+      "level": 1,
+      "tags": ["prereq"],
+      "is_highlight": true
+    },
+    {
+      "category": "cobol",
+      "subcategory": "formula",
+      "title": "COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）",
+      "url": "cobol/formula/01_article_cobol_basic.html",
+      "summary": "Excelの標準関数だけで、固定長データを列ごとに切り出し、使える表へ変換します。",
+      "level": 4,
+      "tags": ["impact"]
+    },
+    {
+      "category": "cobol",
+      "subcategory": "formula",
+      "title": "【関数応用編】不規則なCOBOL帳票の撃破（不要行除外・縦持ち展開）",
+      "url": "cobol/formula/02_article_cobol_advanced.html",
+      "summary": "不要なヘッダー行が混ざるデータや縦持ちデータを、関数だけで整形します。",
+      "level": 6,
+      "rarity_id": "cobol_advanced"
+    },
+    {
+      "category": "cobol",
+      "subcategory": "formula",
+      "title": "【関数超絶技巧編】凶悪COBOL帳票の撃破｜ヘッダー紐付け・フィルダウンをExcel関数で自動化",
+      "url": "cobol/formula/03_article_cobol_expert.html",
+      "summary": "COBOL帳票のヘッダー紐付け・フィルダウンを、Excel関数だけで自動化する上級テクニックです。",
+      "level": 8,
+      "tags": ["impact"],
+      "rarity_id": "cobol_expert",
+      "is_highlight": true
+    },
+    {
+      "category": "cobol",
+      "subcategory": "formula",
+      "title": "【不規則明細・完結編】行数がバラバラなデータの正規化展開",
+      "url": "cobol/formula/04_article_cobol_irregular.html",
+      "summary": "最凶の不規則帳票に、数式だけで立ち向かう完結編です。",
+      "level": 8,
+      "rarity_id": "cobol_irregular",
+      "is_highlight": true
+    },
+    {
+      "category": "cobol",
+      "subcategory": "pq",
+      "title": "【パワークエリ編】COBOL帳票データの不要行除去と一括結合",
+      "url": "cobol/pq/01_article_cobol_pq.html",
+      "summary": "Power Queryで不要行を除去し、複数ファイルの帳票データを一括整形します。",
+      "level": 3,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "cobol",
+      "subcategory": "pq",
+      "title": "【参考資料】パワークエリでCOBOL帳票を処理する全テクニック",
+      "url": "cobol/pq/02_article_cobol_pq3.html",
+      "summary": "Power Queryの標準機能だけで完結する処理パターンを網羅した参考資料です。",
+      "level": 4
+    },
+    {
+      "category": "cobol",
+      "subcategory": "pq",
+      "title": "【参考資料】M言語でMIDB相当の自作関数を作る",
+      "url": "cobol/pq/03_article_cobol_pq_midb_ref.html",
+      "summary": "Text.ToBinaryとBinary.Rangeを組み合わせ、バイト単位の切り出しを実現します。",
+      "level": 7,
+      "rarity_id": "cobol_pq_midb"
+    },
+    {
+      "category": "qr",
+      "subcategory": "input",
+    "title": "① Access搭載環境向けQRコード生成 — バーコードコントロールの使い方と2つの厳しい限界",
+      "url": "qr/01_qr_barcode_control.html",
+    "summary": "Access由来のバーコードコントロールをExcelから配置し、LinkedCellでセル連動するQRコードを生成. ExcelのみのPCでは使えない点、半角255文字・全角不可の限界も解説します.",
+      "level": 3,
+      "rarity_id": "qr_generate",
+      "is_highlight": true
+    },
+    {
+      "category": "qr",
+      "subcategory": "input",
+      "title": "② QRコード1回で複数セルに自動入力 — Tab・Enterの埋め込み実践ガイド",
+      "url": "qr/02_qr_tab_enter.html",
+      "summary": "CHAR(9)でTab、CHAR(13)でEnterを埋め込み、1回の読み取りで複数セルにデータを振り分けます。",
+      "level": 4,
+      "tags": ["impact"]
+    },
+    {
+      "category": "qr",
+      "subcategory": "input",
+      "title": "③ QRリーダーの読み取りが速すぎて文字が欠ける — キャラクター間ディレイで解決",
+      "url": "qr/03_qr_character_delay.html",
+      "summary": "文字欠け・セルずれを、キャラクター間ディレイの設定で解決します。推奨値はまず20msから。",
+      "level": 4
+    },
+    {
+      "category": "qr",
+      "subcategory": "input",
+      "title": "④ QRコードの中の1文字がキーボード操作に変わる — 文字→キー変換の仕組み",
+      "url": "qr/04_qr_key_conversion.html",
+      "summary": "「#」をF2に、「$」をEscに変換。QRリーダーを命令実行エンジンに変える概念の転換点です。",
+      "level": 5,
+      "tags": ["rare"]
+    },
+    {
+      "category": "qr",
+      "subcategory": "input",
+      "title": "⑤ QRコード1回で業務システムを操作する — 変換ルール実践編",
+      "url": "qr/05_qr_key_practice.html",
+      "summary": "在庫管理・イベント受付・既存データの部分更新など、実務シナリオでQRプログラムを設計します。",
+      "level": 6,
+      "tags": ["impact"]
+    },
+    {
+      "category": "qr",
+      "subcategory": "input",
+      "title": "⑥ QRコードの中に「待ち時間」を作る — スリープで画面遷移を待つ",
+      "url": "qr/06_qr_sleep.html",
+      "summary": "業務システムの画面遷移やWebフォームの応答を待ってから次の操作を実行します。",
+      "level": 6
+    },
+    {
+      "category": "qr",
+      "subcategory": "input",
+      "title": "⑦ QRコード1回で業務システムの全操作を完結させる — 6つの技術を統合した入力自動化システム",
+      "url": "qr/07_qr_full_system.html",
+      "summary": "メニュー選択→画面遷移→検索→待機→データ入力→登録。手作業をQR読み取り1回に圧縮します。",
+      "level": 7,
+      "tags": ["impact"],
+      "rarity_id": "qr_series",
+      "is_highlight": true
+    },
+    {
+      "category": "qr",
+      "subcategory": "transfer",
+      "title": "⑧ QRリーダーの選び方と接続方法",
+      "url": "qr/08_qr_hardware.html",
+      "summary": "筆者が検証した機種を中心に、選び方・USB-HID接続・設定方法まで解説します。",
+      "level": 5,
+      "rarity_id": "qr_hardware"
+    },
+    {
+      "category": "qr",
+      "subcategory": "transfer",
+      "title": "⑨ QRコードで閉域環境のデータ転送 — ネットワーク不要・紙だけでExcelデータを別PCに移す",
+      "url": "qr/09_qr_closed_transfer.html",
+      "summary": "USBメモリ禁止・ネット接続不可でも、紙のQRコードだけでデータ転送する方法を解説します。",
+      "level": 6,
+      "tags": ["impact"]
+    },
+    {
+      "category": "qr",
+      "subcategory": "transfer",
+      "title": "⑩ QRコードでシステム間データ移行 — 旧システムから新システムへ読み取るだけで引っ越し完了",
+      "url": "qr/10_qr_system_migration.html",
+      "summary": "APIもCSVインポートもない新システムに、QRリーダーでデータを流し込む移行手法です。",
+      "level": 7,
+      "tags": ["impact"]
+    },
+    {
+      "category": "qr",
+      "subcategory": "transfer",
+      "title": "⑪ VBA標準機能だけで全角QRコードを生成 — バーコードコントロール不要・UTF-8対応",
+      "url": "qr/11_qr_vba_generate.html",
+      "summary": "外部ライブラリ不要. ADODB.Stream＋ガロア体演算＋セル描画でQRコードを自力生成します.",
+      "level": 8,
+      "tags": ["rare"],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "speed",
+      "title": "Excelが遅い本当の原因 — メモリスワップと数式設計の関係",
+      "url": "others/speed/article_memory_swap.html",
+      "summary": "VLOOKUPをINDEX+MATCHに変えても遅いまま？RAM・SSD・32ビット制限・数式設計の考え方を解説します。",
+      "level": 4,
+      "tags": ["impact"]
+    },
+    {
+      "category": "others",
+      "subcategory": "speed",
+      "title": "検索関数の速度とメモリ効率",
+      "url": "others/speed/article_01_lookup_speed.html",
+      "summary": "VLOOKUP・INDEX+MATCH・XLOOKUPのメモリ消費の違いと、検索設計による高速化を解説します。",
+      "level": 5,
+      "tags": ["impact"],
+      "rarity_id": "speed_lookup",
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "speed",
+      "title": "数式の速度UPテクニック集",
+      "url": "others/speed/article_02_formula_techniques.html",
+      "summary": "数式の処理速度を劇的に引き上げる実践テクニック集です。",
+      "level": 6,
+      "tags": ["impact"],
+      "rarity_id": "speed_formula",
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "print",
+      "title": "【VBA完全不要】印刷範囲を自動で伸縮させる裏ワザ（名前の管理）",
+      "url": "others/print/article_print_area.html",
+      "summary": "データが増えたら印刷範囲も自動で広がり、空白行は印刷されないようにする方法です。",
+      "level": 4,
+      "tags": ["impact"],
+      "rarity_id": "print_area",
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "print",
+      "title": "Excel 10面ラベル印刷 — Print_Area数式で空白シールを自動除外",
+      "url": "others/print/article_label_print.html",
+      "summary": "データ件数に応じてPrint_Areaが自動伸縮。VBAもWordも不要でラベル印刷を制御します。",
+      "level": 4
+    },
+    {
+      "category": "others",
+      "subcategory": "print",
+      "title": "Excelシール残骸を活用 — 開始位置を指定して途中から印刷する方法",
+      "url": "others/print/article_label_scrap.html",
+      "summary": "使いかけのラベルシールを無駄なく活用する方法です。",
+      "level": 4,
+      "tags": ["rare"],
+      "rarity_id": "label_scrap"
+    },
+    {
+      "category": "others",
+      "subcategory": "print",
+      "title": "宛名1ページ1枚 案内文書インスタント印刷 — スピンボタン＋Print_Area",
+      "url": "others/print/article_mail_print.html",
+      "summary": "スピンボタン＋VLOOKUPで差し込み印刷をExcelだけで実現します。",
+      "level": 3
+    },
+    {
+      "category": "others",
+      "subcategory": "ui",
+      "title": "🎛️ 開発タブ＆フォームコントロール完全ガイド",
+      "url": "others/ui/article_form_controls.html",
+      "summary": "スピンボタンなどのフォームコントロールを使い、VBAなしで操作性を改善します。",
+      "level": 2,
+      "tags": ["impact"]
+    },
+    {
+      "category": "others",
+      "subcategory": "ui",
+      "title": "セルの文字を○で囲む 表示／非表示 — 名前の管理＋図形（VBA不要）",
+      "url": "others/ui/article_shape_circle.html",
+      "summary": "入力値に応じて図形の○を自動表示する、Excelの隠れた仕様を活用したテクニックです。",
+      "level": 6,
+      "rarity_id": "shape_circle",
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "misc",
+      "title": "実務で本当に使うショートカットキー厳選集",
+      "url": "others/misc/article_shortcuts.html",
+      "summary": "日常業務で本当に役立つExcelショートカットだけを厳選して紹介します。",
+      "level": 1,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "misc",
+      "title": "【保存版】ユーザー定義の表示形式＆TEXT関数 逆引き一覧",
+      "url": "others/misc/article_format.html",
+      "summary": "表示形式コードとTEXT関数の使い方を逆引きで整理します。",
+      "level": 2,
+      "tags": ["impact"]
+    },
+    {
+      "category": "others",
+      "subcategory": "misc",
+      "title": "電卓不要！ステータスバー（オートカルク）の最強活用術",
+      "url": "others/misc/article_statusbar.html",
+      "summary": "数式を立てずに合計・平均・件数を瞬時に確認できる機能を活用します。",
+      "level": 1
+    },
+    {
+      "category": "unlocked",
+      "subcategory": "vba",
+      "title": "UIA（UI Automation）で他アプリへ自動入力",
+      "url": "vba/article_vba_uia_automation.html",
+      "summary": "QRリーダーの代わりにVBAで直接Webシステムに入力。閉域環境ではQR、制限なし環境ではUIA、という使い分けです。<br><small>対応する本編：QR Automation Lab</small>",
+      "level": 7,
+      "tags": ["vba", "uia"],
+      "is_highlight": true
+    },
+    {
+      "category": "unlocked",
+      "subcategory": "vba",
+      "title": "VBAでフォルダ内ファイル一括処理",
+      "url": "vba/article_vba_file_rename.html",
+      "summary": "リネーム・移動・アーカイブなど、Power Queryだけでは届きにくいファイル操作を補完します。<br><small>対応する本編：パワークエリ「データ取り込みパターン集」</small>",
+      "level": 4,
+      "tags": ["vba"]
+    },
+    {
+      "category": "unlocked",
+      "subcategory": "vba",
+      "title": "VBAでWebスクレイピング — 動的ページからデータ取得",
+      "url": "unlocked/coming_soon.html?topic=vba_web_scraping",
+      "summary": "Power QueryのWeb取込では取れないJavaScriptレンダリングページのデータ取得を補完します。<br><small>対応する本編：パワークエリ「データ取り込みパターン集」</small>",
+      "level": 6,
+      "tags": ["vba", "web"],
+      "is_prep": true
+    },
+    {
+      "category": "unlocked",
+      "subcategory": "vba",
+      "title": "QRコード一括生成 VBA完全版",
+      "url": "unlocked/coming_soon.html?topic=vba_qr_generate",
+      "summary": "全角文字対応のQRコードをVBAだけで生成する完全コード。QR Automation Labの実装補完です。<br><small>対応する本編：QR Automation Lab 記事⑪</small>",
+      "level": 6,
+      "tags": ["vba", "qr"],
+      "is_prep": true
+    },
+    {
+      "category": "unlocked",
+      "subcategory": "vba",
+      "title": "本編で“あと一歩”だった処理のVBA補完集",
+      "url": "unlocked/coming_soon.html?topic=vba_supplement",
+      "summary": "関数・Power Queryで95%解決できるが、残り5%にVBAが必要だったケースをまとめます。<br><small>対応する本編：各関数記事・パワークエリ記事</small>",
+      "level": 5,
+      "tags": ["vba"],
+      "is_prep": true
+    }
+  ]
+}

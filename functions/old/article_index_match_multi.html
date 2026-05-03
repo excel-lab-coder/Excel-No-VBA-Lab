@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>INDEX + MATCH + 結合キー列｜Excel &times; No VBA Lab</title>
+<meta content="ExcelのINDEX+MATCH+結合キー列で複数条件の組み合わせ検索を実現する方法を旧バージョン対応で解説。" name="description">
+<meta content="INDEX MATCH 複数条件, 多条件 検索 Excel, 結合キー 列, VBA不要, Excel 2016 複数キー" name="keywords">
+<meta content="INDEX + MATCH + 結合キー列｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのINDEX+MATCH+結合キー列で複数条件の組み合わせ検索を実現する方法を旧バージョン対応で解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/old/article_index_match_multi.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/old/article_index_match_multi.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "INDEX + MATCH + 結合キー列",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "ExcelのINDEX+MATCH+結合キー列で複数条件の組み合わせ検索を実現する方法を旧バージョン対応で解説。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-no-vba-lab.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-no-vba-lab.com/functions/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "INDEX + MATCH + 結合キー列",
+      "item": "https://excel-no-vba-lab.com/functions/old/article_index_match_multi.html"
+    }
+  ]
+}</script>
+
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#functions">関数</a><span>&gt;</span>
+<strong>INDEX + MATCH + 結合キー列</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全ver</span>
+</div>
+<h1 class="article-title">INDEX + MATCH + 結合キー列：全バージョン対応の「旧来型・多条件検索」</h1>
+</div>
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>「店舗」と「商品名」など、複数の条件の組み合わせで検索したいが、XLOOKUPが使えない旧バージョンのExcel環境で確実に実装したい。</p>
+</section>
+<section class="legacy-section">
+<h3>全バージョン対応の王道テクニック</h3>
+<p>VLOOKUPや通常のMATCH関数は「1つの列」しか検索できません。そこで長年使われてきたのが、<strong>検索用の「結合キー列（合体させた列）」を新しく作ってしまい、それを検索対象にする</strong>という物理的なアプローチです。</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.75em;"><caption>データテーブル</caption>
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col" style="background:#ffcc80;">A (新規追加)</td>
+<td class="xd-col">B</td>
+<td class="xd-col">C</td>
+<td class="xd-col">D</td>
+</tr>
+<tr>
+<td class="xd-row">1</td>
+<td class="xd-head" style="background:#ffcc80;">結合キー</td>
+<td class="xd-head">店舗</td>
+<td class="xd-head">商品</td>
+<td class="xd-head">売上</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="xd-formula" style="background:#fff3e0;">東京PC</td>
+<td class="xd-master">東京</td>
+<td class="xd-master">PC</td>
+<td class="xd-master">150,000</td>
+</tr>
+<tr>
+<td class="xd-row">3</td>
+<td class="xd-formula" style="background:#fff3e0;">大阪PC</td>
+<td class="xd-master">大阪</td>
+<td class="xd-master">PC</td>
+<td class="xd-master">145,000</td>
+</tr>
+</table></div>
+<div class="xdemo-note">
+            マスタのA列に <code>=B2&C2</code> という数式を入れて、無理やり「1つの検索キー」にしてしまう方法。<br>
+            そして、検索側でも <code>=INDEX(D:D, MATCH("東京"&"PC", A:A, 0))</code> のように検索値を結合して当てに行きます。
+          </div>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ 「元データを汚す」という最大のデメリット</strong><br>
+          この方法は全バージョンのExcelで確実に動く反面、「関数を使うために元のマスタ表の構造を変えなければならない」「他システムからCSVでデータを落としてくるたびに列を追加する手間（マクロ不可環境での手作業）が発生する」という運用上の大きな弱点があります。<br>
+<br>
+          そのため、Excel365や2021以降が使える環境であれば、表を一切加工せずに済む <code>XLOOKUP(A2&B2, D:D&E:E, ...)</code> などの配列検索への移行が強く推奨されます。
+        </div>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../latest/article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
+<li><a href="../latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+<li><a href="../latest/article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
+<li><a href="../latest/article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+

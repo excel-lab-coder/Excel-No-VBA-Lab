@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="9" name="difficulty">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>【関数超絶技巧編】凶悪COBOL帳票の撃破｜ヘッダー紐付け・フィルダウンをExcel関数で自動化｜Excel &times; No VBA Lab</title>
+<meta content="COBOL帳票のヘッダー紐付け・フィルダウンを、Excel関数だけで自動化する超絶技巧。親情報を明細へ引き継ぎ、不規則帳票を1行データに整形します。" name="description">
+<meta content="COBOL帳票 ヘッダー紐付け, COBOL帳票 フィルダウン, Excel関数 自動化, 親情報 紐付け, 不規則明細 整形" name="keywords">
+<meta content="【関数超絶技巧編】凶悪COBOL帳票の撃破｜ヘッダー紐付け・フィルダウンをExcel関数で自動化｜Excel &times; No VBA Lab" property="og:title">
+<meta content="COBOL帳票のヘッダー紐付け・フィルダウンを、Excel関数だけで自動化する超絶技巧。親情報を明細へ引き継ぎ、不規則帳票を1行データに整形します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/cobol/formula/03_article_cobol_expert.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "【関数超絶技巧編】凶悪COBOL帳票の撃破｜ヘッダー紐付け・フィルダウンをExcel関数で自動化",
+    "description": "COBOL帳票のヘッダー紐付け・フィルダウンを、Excel関数だけで自動化する超絶技巧。親情報を明細へ引き継ぎ、不規則帳票を1行データに整形します。",
+    "author": {
+      "@type": "Organization",
+      "name": "Excel × No VBA Lab"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Excel × No VBA Lab",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://excel-no-vba-lab.com/ogp.png"
+      }
+    },
+    "datePublished": "2026-03-18",
+    "dateModified": "2026-05-03"
+  }
+  </script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-no-vba-lab.com/"},
+      {"@type": "ListItem", "position": 2, "name": "COBOL帳票処理", "item": "https://excel-no-vba-lab.com/#cobol"},
+      {"@type": "ListItem", "position": 3, "name": "関数超絶技巧編"}
+    ]
+  }
+  </script>
+
+<!-- ページ専用のテーブル微調整 CSS -->
+<style>
+/* === デモテーブル専用スタイル === */
+.demo-table-wrap {
+  overflow-x: auto;
+  margin: 16px 0 22px;
+  border-radius: 6px;
+  box-shadow: var(--shadow-sm);
+}
+.demo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  background: #fff;
+  table-layout: fixed;
+}
+.demo-table th,
+.demo-table td {
+  border: 1px solid #cfd8dc;
+  padding: 6px 8px;
+  vertical-align: middle;
+  word-break: break-word;
+  line-height: 1.4;
+}
+.demo-table thead th {
+  background: #eef5fb;
+  color: #1f3b57;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+.demo-table .row-num {
+  background: #fffde7;
+  text-align: center;
+  font-weight: 700;
+  width: 36px;
+  color: #6d4c41;
+}
+.demo-table .col-letter {
+  text-align: center;
+  font-weight: 700;
+  background: #f5f5f5;
+  color: #888;
+  font-size: 0.85rem;
+}
+.demo-table .col-letter.hot { color: #d32f2f; }
+.demo-table .col-letter.warm { color: #ef6c00; }
+
+/* 数式セル：黒背景＋等幅フォント */
+.demo-table .cell-formula {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.78rem;
+  background: #1e1e1e;
+  color: #ffe082;
+  padding: 5px 7px;
+  word-break: break-all;
+  line-height: 1.35;
+}
+.demo-table .cell-formula .result {
+  display: block;
+  margin-top: 3px;
+  padding-top: 3px;
+  border-top: 1px dashed #555;
+  color: #81d4fa;
+  font-size: 0.74rem;
+}
+
+/* 値セル：色分け */
+.demo-table .cell-parent {
+  background: #e3f2fd;
+  color: #0d47a1;
+  font-weight: 600;
+}
+.demo-table .cell-parent2 {
+  background: #e8f5e9;
+  color: #1b5e20;
+  font-weight: 600;
+}
+.demo-table .cell-detail {
+  background: #fffde7;
+  color: #5d4037;
+}
+.demo-table .cell-num-hit {
+  background: #fff3cd;
+  color: #c62828;
+  text-align: center;
+  font-weight: 800;
+}
+.demo-table .cell-num-zero {
+  background: #fafafa;
+  color: #999;
+  text-align: center;
+  font-weight: 700;
+}
+.demo-table .cell-num-keep {
+  background: #fff3e0;
+  color: #ef6c00;
+  text-align: center;
+  font-weight: 700;
+}
+.demo-table .cell-blank {
+  background: #fafafa;
+}
+.demo-table .cell-divider {
+  background: #fafafa;
+  color: #bdbdbd;
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: -0.05em;
+}
+
+/* キャプション */
+.demo-table-caption {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #455a64;
+  margin: 10px 0 6px;
+  padding-left: 10px;
+  border-left: 3px solid #90a4ae;
+}
+
+/* 列幅調整：6列の最終イメージ用 */
+.demo-table.layout-6 col.c-num    { width: 36px; }
+.demo-table.layout-6 col.c-data   { width: 22%; }
+.demo-table.layout-6 col.c-parent { width: 18%; }
+.demo-table.layout-6 col.c-no     { width: 8%; }
+.demo-table.layout-6 col.c-fld    { width: 17.3%; }
+
+/* 列幅調整：3列(A/B/C) */
+.demo-table.layout-3 col.c-num    { width: 36px; }
+.demo-table.layout-3 col.c-flag   { width: 22%; }
+.demo-table.layout-3 col.c-mid    { width: 28%; }
+.demo-table.layout-3 col.c-data   { width: 50%; }
+
+/* 列幅調整：4列(A/B/C/D) */
+.demo-table.layout-4 col.c-num    { width: 36px; }
+.demo-table.layout-4 col.c-flag   { width: 16%; }
+.demo-table.layout-4 col.c-fill   { width: 22%; }
+.demo-table.layout-4 col.c-data   { width: 45%; }
+
+@media (max-width: 768px) {
+  .demo-table { font-size: 0.74rem; }
+  .demo-table .cell-formula { font-size: 0.7rem; }
+}
+</style>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+  <div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#cobol">COBOLデータ整形</a><span>&gt;</span>
+<strong>関数超絶技巧編</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-maniac" style="background-color:#000;color:#fff;">難易度：&starf;&starf;&starf;&starf;&star;（超高度）</span>
+<span class="badge badge-all">全バージョン対応あり</span>
+<span class="badge badge-maniac">COBOL/マニアック</span>
+<span class="article-date">更新日: 2026-05-03</span>
+</div>
+<h1 class="article-title">【関数超絶技巧編】凶悪COBOL帳票の撃破｜ヘッダー紐付け・フィルダウンをExcel関数で自動化</h1>
+</div>
+<!-- ========== 目次 ========== -->
+<div class="toc-box">
+<h3>この記事の内容</h3>
+<ol>
+<li><a href="#sec-intro">Excel関数の限界に挑む「ラスボス」前哨戦</a></li>
+<li><a href="#sec-trial3">【試練3】親グループ情報をすべての明細に紐付ける</a></li>
+<li><a href="#sec-fusion">【完成形】親の紐付けと明細フラグの合わせ技</a></li>
+<li><a href="#sec-next">【さらに先へ】明細行の数が「完全にバラバラ」の真のラスボス</a></li>
+</ol>
+</div>
+<!-- ==========================================================
+         導入
+      ========================================================== -->
+<section class="goal-section" id="sec-intro">
+<h2><span class="icon">💡</span> Excel関数の限界に挑む「ラスボス」前哨戦</h2>
+<p><a href="02_article_cobol_advanced.html">【応用編】（基礎ロジック編）</a>では、「不要行の除外」と「2行固定の横展開」という基本の不規則帳票の倒し方を学びました。この応用編のテクニックに、今回解説する<strong>「上部にある会社名などの親データを、下にある明細行に引き継ぐ（紐付ける）」</strong>というフィルダウン処理を加えるだけで、実務で遭遇する大抵のCOBOL帳票は処理できるようになります。</p>
+<p>※ちなみに、この「上の行を下にコピーして埋める」作業は、<strong>パワークエリを使える環境であれば『下方向へコピー』という機能で一瞬で終わる</strong>ものです。しかし、関数しか使えない環境でこれを完全自動化するには、独特な思考回路（超絶技巧）が必要になります。</p>
+</section>
+<!-- ==========================================================
+         【試練3】親情報のフィルダウン（紐付け）
+      ========================================================== -->
+<section class="method-section" id="sec-trial3">
+<h2>【試練3】上の親グループ情報（会社名・部門など）をすべての明細に紐付ける</h2>
+<div class="code-readonly" data-lang="テキスト">
+<span class="code-line">■ 伝票番号：9001　取引先：㈱第一商事     &larr;（親グループ情報：ヘッダー行）</span>
+<span class="code-line">------------------------------------------</span>
+<span class="code-line">A 101 消しゴム 100                        &larr;（この行の横に「第一商事」と出したい）</span>
+<span class="code-line">A 102 えんぴつ 150                        &larr;（この行の横にも「第一商事」と出したい）</span>
+<span class="code-line">------------------------------------------</span>
+<span class="code-line">■ 伝票番号：9002　取引先：第二物産        &larr;（別の親グループ情報）</span>
+<span class="code-line">A 990 ノート 200                          &larr;（この行の横には「第二物産」と出したい）</span>
+</div>
+<p>データベースとして成立させるには、すべての明細行に対して「その親が誰なのか（どの会社・どの伝票の明細か）」というキーの列を持たせなければなりません。これを「紐付け」または「フィルダウン（空白埋め）」と呼びます。</p>
+<h3 style="color:#b71c1c;border-bottom:2px solid #ffcdd2;padding-bottom:5px;margin-top:30px;">【攻略法】貼付シートのA列で「自分自身の上のセル」を振り返って引き継ぐ</h3>
+<div class="attack-box">
+<h3 class="attack-title">伝統的で最強の空白埋め数式（全バージョン対応）</h3>
+<p>応用編で学んだ「3層シート構成」のうち、<strong>貼付シート側の作業列（A列など）</strong>に、これ専用の数式を仕込みます。ポイントは、「もし今の行がヘッダー行ならその文字を出し、<strong>そうでない（明細行やゴミ行の）場合は、一つ上の自分の作業列（A列）の値をそのまま参照して引き継ぐ</strong>」という、数式によるバケツリレーです。</p>
+<p class="code-label">貼付シート!A2セル（会社名引継ぎ列）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(MIDB(B2,1,2)="■", B2, A1)</span>
+</div>
+<div class="xdemo-wrap" style="margin-top:15px;margin-bottom:20px;">
+<div class="xdemo-step-label">貼付シート側のイメージ（下にコピーしていくと自動で下の行へ浸透する）</div>
+<table class="xdemo-table" style="width:100%;max-width:680px;">
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col" style="color:#d32f2f;">A</td>
+<td class="xd-col">B</td>
+</tr>
+<tr>
+<td class="xd-row">1</td>
+<td class="xd-head">会社名の引継ぎ列</td>
+<td class="xd-head">貼り付けたデータ</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="xd-formula" style="background:#e3f2fd;color:#1565c0;">=IF(MIDB(B2,1,2)="■", B2, A1)<br><span class="font-sm-normal-gray">結果: ■...第一商事</span></td>
+<td class="xd-data"><strong class="text-blue-dark">■ 伝票番号：9001　取引先：㈱第一商事</strong></td>
+</tr>
+<tr>
+<td class="xd-row">3</td>
+<td class="xd-formula theme-red">=IF(MIDB(B3,1,2)="■", B3, A2)<br><span class="font-sm-normal-gray">結果: ■...第一商事 (A2を参照)</span></td>
+<td class="xd-data" style="color:#999;text-align:center;">------------------------------------------</td>
+</tr>
+<tr>
+<td class="xd-row">4</td>
+<td class="xd-formula theme-red">=IF(MIDB(B4,1,2)="■", B4, A3)<br><span class="font-sm-normal-gray">結果: ■...第一商事 (A3を参照)</span></td>
+<td class="xd-data">A 101 消しゴム 100</td>
+</tr>
+<tr>
+<td class="xd-row">5</td>
+<td class="xd-formula theme-red">=IF(MIDB(B5,1,2)="■", B5, A4)<br><span class="font-sm-normal-gray">結果: ■...第一商事 (A4を参照)</span></td>
+<td class="xd-data">A 102 えんぴつ 150</td>
+</tr>
+<tr>
+<td class="xd-row">6</td>
+<td class="xd-formula" style="background:#e8f5e9;color:#2e7d32;">=IF(MIDB(B6,1,2)="■", B6, A5)<br><span class="font-sm-normal-gray">結果: ■...第二物産 (新データに切替)</span></td>
+<td class="xd-data"><strong class="color-2e7d32">■ 伝票番号：9002　取引先：第二物産</strong></td>
+</tr>
+<tr>
+<td class="xd-row">7</td>
+<td class="xd-formula theme-red">=IF(MIDB(B7,1,2)="■", B7, A6)<br><span class="font-sm-normal-gray">結果: ■...第二物産 (A6を参照)</span></td>
+<td class="xd-data">A 990 ノート 200</td>
+</tr>
+</table>
+</div>
+<p>関数が <code>A1</code>、<code>A2</code>&hellip; と計算していく過程において、「もし親行ならB列から取得し直す、親でなければ一つ上のA列（＝自分がさっき保持した親情報）をそのまま下に流す」という仕組みです。これこそが実務で脈々と使われてきた<strong>最強の「関数フィルダウン」</strong>の手法です。あとは抽出シート側で、明細をワープさせた隣の列でこのA列の作業列を拾ってくれば、全てのデータに共通の会社名が紐付きます。</p>
+<div class="xdemo-note-good">
+<strong>対応環境向け：SCAN関数でスピル展開</strong><br>
+            Excel 2024 / Microsoft 365 など <code>SCAN</code> 関数が使える環境では、上から下へ値を記憶しながらスピル展開させる次世代の力技も可能です。
+          </div>
+<p class="code-label-good">SCAN関数版（対応環境）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SCAN("", B:B, LAMBDA(a,v, IF(MIDB(v,1,2)="■", v, a)))</span>
+</div>
+</div>
+</section>
+<!-- ==========================================================
+         【合わせ技】親情報と明細フラグの融合
+      ========================================================== -->
+<section class="method-section" id="sec-fusion">
+<h2>【完成形】「親の紐付け」と「明細フラグ（ROW）」の合わせ技で1行のデータに仕上げる</h2>
+<p>ここまで学んだ「不要行の行取り（ROWフラグ）」と、今回の「親情報のフィルダウン（空白埋め）」を組み合わせることで、複雑な帳票が完璧な1行のデータベースとして一発展開されます。</p>
+<div class="attack-box">
+<h3 class="attack-title">貼付シートに「フラグ」と「フィルダウン」の2つの作業列を持つ</h3>
+<p>実務では、貼付シート側に作業列を2つ（A列とB列など）設けて、それぞれの役割を分担させます。判定フラグとなる列を一番左（A列）に置くのが、視認性も高く、抽出関数でキーとする際にも一番自然な配置です。</p>
+<p class="code-label">貼付シート!A列（明細行フラグ）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(MIDB(C2,5,1)="-", ROW(), "")</span>
+</div>
+<p class="code-label">貼付シート!B列（親情報引継ぎ）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(MIDB(C2,1,2)="■", C2, B1)</span>
+</div>
+<div class="xdemo-wrap" style="margin-top:15px;margin-bottom:20px;">
+<div class="xdemo-step-label">貼付シート側の最終イメージ（C列に生データを貼る）</div>
+<table class="xdemo-table" style="width:100%;max-width:780px;">
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col" style="color:#d32f2f;">A</td>
+<td class="xd-col" style="color:#d32f2f;">B</td>
+<td class="xd-col">C</td>
+</tr>
+<tr>
+<td class="xd-row">1</td>
+<td class="xd-head">明細フラグ(ROW)</td>
+<td class="xd-head">親情報引継ぎ</td>
+<td class="xd-head">貼り付けたデータ</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="xd-data"></td>
+<td class="xd-data" style="background:#e3f2fd;color:#1565c0;">■...第一商事</td>
+<td class="xd-data"><strong class="text-blue-dark">■ 伝票番号：9001　取引先：㈱第一商事</strong></td>
+</tr>
+<tr>
+<td class="xd-row">3</td>
+<td class="xd-data"></td>
+<td class="xd-data theme-red">■...第一商事</td>
+<td class="xd-data" style="color:#999;text-align:center;">------------------------------------------</td>
+</tr>
+<tr>
+<td class="xd-row">4</td>
+<td class="xd-master" style="color:#d32f2f;font-weight:700;text-align:center;">4</td>
+<td class="xd-data theme-red">■...第一商事</td>
+<td class="xd-data">A 101 消しゴム 100</td>
+</tr>
+<tr>
+<td class="xd-row">5</td>
+<td class="xd-master" style="color:#d32f2f;font-weight:700;text-align:center;">5</td>
+<td class="xd-data theme-red">■...第一商事</td>
+<td class="xd-data">A 102 えんぴつ 150</td>
+</tr>
+<tr>
+<td class="xd-row">6</td>
+<td class="xd-data"></td>
+<td class="xd-data" style="background:#e8f5e9;color:#2e7d32;">■...第二物産</td>
+<td class="xd-data"><strong class="color-2e7d32">■ 伝票番号：9002　取引先：第二物産</strong></td>
+</tr>
+<tr>
+<td class="xd-row">7</td>
+<td class="xd-master" style="color:#d32f2f;font-weight:700;text-align:center;">7</td>
+<td class="xd-data theme-red">■...第二物産</td>
+<td class="xd-data">A 990 ノート 200</td>
+</tr>
+</table>
+</div>
+<p>このように、「明細行にだけ行番号が入った列（A列）」と「親情報がすべての行に浸透した列（B列）」の2つの武器が揃いました。あとはこのフラグを元に、次のように別シート（抽出シート）で仕上げを行います。</p>
+</div>
+<div class="attack-box">
+<h3 class="attack-title">抽出シートへ「明細生データ」と「親情報」をワープさせ、D列以降のMIDBで切る</h3>
+<p>抽出シートのA列に「明細の生データ（貼付シートのC列）」を、B列に「親情報（貼付シートのB列）」を抽出します。<strong>ここで初めて <code>FILTER</code> 関数や <code>INDEX + SMALL</code> 関数を使って、「貼付シートA列のフラグ」をキーに明細行だけを吸い上げます。</strong></p>
+<p class="code-label-good">解法1：FILTER関数（Excel 2021 / 2024 / Microsoft 365 など）</p>
+<p class="code-label">抽出!A2（明細）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=FILTER(貼付!C:C, 貼付!A:A&lt;&gt;"")</span>
+</div>
+<p class="code-label">抽出!B2（親情報）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=FILTER(貼付!B:B, 貼付!A:A&lt;&gt;"")</span>
+</div>
+<p class="code-label-good">解法2：INDEX+SMALL（全バージョン対応）</p>
+<p class="code-label">抽出!A2（明細）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(INDEX(貼付!C:C, SMALL(貼付!A:A, ROW(A1))), "")</span>
+</div>
+<p class="code-label">抽出!B2（親情報）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(INDEX(貼付!B:B, SMALL(貼付!A:A, ROW(A1))), "")</span>
+</div>
+<div class="xdemo-note-warn">
+<strong>INDEX+SMALL方式で IFERROR が必須な理由</strong><br>
+            INDEX+SMALL方式では、数式を明細の件数よりも多くの行にコピーした場合、SMALLが参照できる値を失い <code>#NUM!</code> エラーになります。<code>IFERROR</code> で囲んで空文字 <code>""</code> を返すことで、データがない行を空白にして見た目を綺麗に保ちます。一方、FILTER関数はスピルで必要な行数だけ自動展開されるため、この処理は不要です。
+          </div>
+<!-- 速度チューニング -->
+<h3 style="color:#ef6c00;border-bottom:2px solid #ffe0b2;padding-bottom:5px;margin-top:30px;">【速度チューニング】INDEX+SMALLが遅い場合の奥の手 &horbar; MATCH方式</h3>
+<p>上記の <code>INDEX+SMALL</code> 方式はシンプルで分かりやすいのですが、実は<strong>SMALL関数は内部的にデータ全体をソート（並べ替え）してからk番目を探す</strong>という処理を行っています。そのため、貼付シートの行数が数万行を超えてくると、抽出シートの各行で毎回ソートが走り、<strong>体感的に目に見えて遅くなる</strong>ことがあります。</p>
+<p>この速度問題を根本から解決するのが、<strong>貼付シートA列のフラグをROW（行番号）ではなく「連番（1, 2, 3&hellip;）」にして、抽出シート側では SMALL の代わりに MATCH 関数で行位置を取得する</strong>方式です。</p>
+<p class="code-label">貼付シート!A列（連番フラグに変更）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(MIDB(C2,5,1)="-", A1+1, A1)</span>
+</div>
+<div class="code-readonly" data-lang="補足">
+<span class="code-line">※明細行に来たら+1、それ以外はそのまま維持。A1の初期値は0。</span>
+</div>
+<p class="code-label">抽出シート!A2（MATCH方式で抽出）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(INDEX(貼付!C:C, MATCH(ROW(A1), 貼付!A:A, 0)), "")</span>
+</div>
+<p class="code-label">抽出シート!B2（親情報をMATCH方式で抽出）</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(INDEX(貼付!B:B, MATCH(ROW(A1), 貼付!A:A, 0)), "")</span>
+</div>
+<div class="xdemo-wrap" style="margin-top:15px;margin-bottom:20px;">
+<div class="xdemo-step-label">連番フラグ方式のイメージ（貼付シート A列が連番に変わる）</div>
+<table class="xdemo-table" style="width:100%;max-width:780px;">
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col" style="color:#ef6c00;">A</td>
+<td class="xd-col" style="color:#d32f2f;">B</td>
+<td class="xd-col">C</td>
+</tr>
+<tr>
+<td class="xd-row">1</td>
+<td class="xd-head">連番フラグ</td>
+<td class="xd-head">親情報引継ぎ</td>
+<td class="xd-head">貼り付けたデータ</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="xd-data" style="background:#fff3e0;color:#ef6c00;text-align:center;font-weight:700;">0</td>
+<td class="xd-data" style="background:#e3f2fd;color:#1565c0;">■...第一商事</td>
+<td class="xd-data"><strong class="text-blue-dark">■ 伝票番号：9001　取引先：㈱第一商事</strong></td>
+</tr>
+<tr>
+<td class="xd-row">3</td>
+<td class="xd-data" style="background:#fff3e0;color:#ef6c00;text-align:center;font-weight:700;">0</td>
+<td class="xd-data theme-red">■...第一商事</td>
+<td class="xd-data" style="color:#999;text-align:center;">------------------------------------------</td>
+</tr>
+<tr>
+<td class="xd-row">4</td>
+<td class="xd-data" style="background:#fff9c4;color:#d32f2f;text-align:center;font-weight:700;">1</td>
+<td class="xd-data theme-red">■...第一商事</td>
+<td class="xd-data">A 101 消しゴム 100</td>
+</tr>
+<tr>
+<td class="xd-row">5</td>
+<td class="xd-data" style="background:#fff9c4;color:#d32f2f;text-align:center;font-weight:700;">2</td>
+<td class="xd-data theme-red">■...第一商事</td>
+<td class="xd-data">A 102 えんぴつ 150</td>
+</tr>
+<tr>
+<td class="xd-row">6</td>
+<td class="xd-data" style="background:#fff3e0;color:#ef6c00;text-align:center;font-weight:700;">2</td>
+<td class="xd-data" style="background:#e8f5e9;color:#2e7d32;">■...第二物産</td>
+<td class="xd-data"><strong class="color-2e7d32">■ 伝票番号：9002　取引先：第二物産</strong></td>
+</tr>
+<tr>
+<td class="xd-row">7</td>
+<td class="xd-data" style="background:#fff9c4;color:#d32f2f;text-align:center;font-weight:700;">3</td>
+<td class="xd-data theme-red">■...第二物産</td>
+<td class="xd-data">A 990 ノート 200</td>
+</tr>
+</table>
+</div>
+<div class="xdemo-note-good">
+<strong>なぜMATCH方式が爆速なのか？</strong><br>
+            SMALL関数は呼ばれるたびにA列全体の中からk番目に小さい値を探す（＝毎回ソートに近い処理を行う）ため、行数が増えるほど急激に遅くなります。一方、MATCH関数は「指定した値がA列の何行目にあるか？」を探すだけの<strong>単純な検索処理</strong>です。連番（1, 2, 3&hellip;）であれば各値がA列に1つしか存在しないため、見つかった瞬間に処理が完了します。この差がデータ量が大きくなるほど如実に表れ、<strong>数万行規模のデータでは体感で数倍～数十倍の速度差</strong>になることがあります。
+          </div>
+<div class="xdemo-note-warn">
+<strong>ただし、連番フラグの作り方で悩む方が多いのも事実です。</strong><br>
+            上の <code>=IF(MIDB(C2,5,1)="-", A1+1, A1)</code> のような「条件を満たしたら+1、そうでなければ維持」という数式は、慣れないとイメージしにくいかもしれません。まずは分かりやすい <strong>ROW + SMALL 方式で組んでみて、速度的に問題が出たときの切り札</strong>としてこのMATCH方式を覚えておくのがおすすめです。
+          </div>
+<div class="xdemo-wrap" style="margin-top:15px;margin-bottom:20px;">
+<div class="xdemo-step-label">抽出シート側の最終イメージ（A列・B列に生データを抽出し、D列以降でMIDBにより各フィールドに分解）</div>
+<table class="xdemo-table" style="width:100%;max-width:1100px;">
+<tr>
+<td class="xd-col"></td>
+<td class="xd-col text-blue-dark">A</td>
+<td class="xd-col text-blue-dark">B</td>
+<td class="xd-col" style="color:#888;">C</td>
+<td class="xd-col" style="color:#f57f17;">D</td>
+<td class="xd-col" style="color:#f57f17;">E</td>
+<td class="xd-col" style="color:#f57f17;">F</td>
+</tr>
+<tr>
+<td class="xd-row">1</td>
+<td class="xd-head">明細データ (&larr;貼付C列)</td>
+<td class="xd-head">親情報 (&larr;貼付B列)</td>
+<td class="xd-head">No.</td>
+<td class="xd-head">会社名 (MIDB)</td>
+<td class="xd-head">商品名 (MIDB)</td>
+<td class="xd-head">金額 (MIDB)</td>
+</tr>
+<tr>
+<td class="xd-row">2</td>
+<td class="bg-e8f5e9">A 101 消しゴム 100</td>
+<td class="xd-data" style="background:#e3f2fd;color:#1565c0;">■...㈱第一商事</td>
+<td class="xd-data" style="background:#f5f5f5;color:#888;text-align:center;font-weight:700;">1</td>
+<td class="xd-formula" style="background:#fff9c4;color:#d84315;">=TRIM(MIDB(B2,21,20))<br><span class="font-sm-normal-gray">結果: ㈱第一商事</span></td>
+<td class="xd-formula" style="background:#fff9c4;color:#d84315;">=TRIM(MIDB(A2,11,8))<br><span class="font-sm-normal-gray">結果: 消しゴム</span></td>
+<td class="xd-formula" style="background:#fff9c4;color:#d84315;">=MIDB(A2,20,5)*1<br><span class="font-sm-normal-gray">結果: 100</span></td>
+</tr>
+<tr>
+<td class="xd-row">3</td>
+<td class="bg-e8f5e9">A 102 えんぴつ 150</td>
+<td class="xd-data" style="background:#e3f2fd;color:#1565c0;">■...㈱第一商事</td>
+<td class="xd-data" style="background:#f5f5f5;color:#888;text-align:center;font-weight:700;">2</td>
+<td class="xd-formula" style="background:#fff9c4;color:#d84315;">=TRIM(MIDB(B3,21,20))<br><span class="font-sm-normal-gray">結果: ㈱第一商事</span></td>
+<td class="xd-formula" style="background:#fff9c4;color:#d84315;">=TRIM(MIDB(A3,11,8))<br><span class="font-sm-normal-gray">結果: えんぴつ</span></td>
+<td class="xd-formula" style="background:#fff9c4;color:#d84315;">=MIDB(A3,20,5)*1<br><span class="font-sm-normal-gray">結果: 150</span></td>
+</tr>
+<tr>
+<td class="xd-row">4</td>
+<td class="bg-e8f5e9">A 990 ノート 200</td>
+<td class="xd-data" style="background:#e3f2fd;color:#2e7d32;">■...第二物産</td>
+<td class="xd-data" style="background:#f5f5f5;color:#888;text-align:center;font-weight:700;">3</td>
+<td class="xd-formula" style="background:#fff9c4;color:#d84315;">=TRIM(MIDB(B4,21,20))<br><span class="font-sm-normal-gray">結果: 第二物産</span></td>
+<td class="xd-formula" style="background:#fff9c4;color:#d84315;">=TRIM(MIDB(A4,11,8))<br><span class="font-sm-normal-gray">結果: ノート</span></td>
+<td class="xd-formula" style="background:#fff9c4;color:#d84315;">=MIDB(A4,20,5)*1<br><span class="font-sm-normal-gray">結果: 200</span></td>
+</tr>
+</table>
+</div>
+<div class="xdemo-note-info">
+<strong>列の役割まとめ</strong><br>
+<strong>A列</strong> &hellip; 貼付シートのC列（明細の生データ）をそのまま抽出。E列・F列のMIDBの参照元。<br>
+<strong>B列</strong> &hellip; 貼付シートのB列（親情報引継ぎ列）をそのまま抽出。D列のMIDBの参照元。<br>
+<strong>C列</strong> &hellip; 連番（No.）。「今何件目の明細か」を目視で確認するための目印。<code>=ROW()-1</code> 等で入れる。<br>
+<strong>D列</strong> &hellip; B列（親情報）からMIDBで会社名だけを切り出す。<br>
+<strong>E列</strong> &hellip; A列（明細データ）からMIDBで商品名を切り出す。<br>
+<strong>F列</strong> &hellip; A列（明細データ）からMIDBで金額を切り出し、<code>*1</code> で数値化する。
+          </div>
+<h3 style="color:#b71c1c;border-bottom:2px solid #ffcdd2;padding-bottom:5px;margin-top:30px;">なぜ「貼付シート」ではなく「抽出シート」でMIDBを使うのか？</h3>
+<p>この構成にしている理由は、<strong>速度・効率・シンプルさ</strong>の3点に集約されます。</p>
+<p>実務で扱うCOBOL帳票の貼付シートは、ヘッダー行・罫線行・空白行・合計行などのゴミ行を含めると<strong>10万行～30万行に膨れ上がる</strong>ことが珍しくありません。この貼付シートにMIDBやTRIMなどの文字列操作関数を直接埋め込むと、最終的に不要となるゴミ行に対しても毎回すべての関数が再計算されます。これが数十万行&times;複数列に及ぶと、<strong>再計算のたびにExcelの動作が極端に重くなり、最悪の場合フリーズや応答なしに陥ります。</strong></p>
+<p>一方、本記事の方式では、貼付シート側の作業列はIF関数とROW関数という<strong>極めて軽い数式だけ</strong>に留めておき、重い文字列操作（MIDB・TRIM等）は<strong>抽出シート側で「必要な明細行だけ」に対して実行</strong>します。</p>
+<p>例えば、貼付シートが30万行あってもそのうち有効な明細行が5,000行であれば、MIDBが計算されるのはたった5,000回です。30万回と5,000回では、計算負荷に<strong>60倍もの差</strong>が生まれます。</p>
+<div class="xdemo-note-danger">
+<strong>やってはいけないパターン</strong><br>
+            貼付シートのC列の隣（D列・E列&hellip;）に直接 <code>=TRIM(MIDB(C2,11,8))</code> のような数式を30万行分入れること。ゴミ行も含めてすべて計算されるため、動作が致命的に重くなります。
+          </div>
+<div class="xdemo-note-good">
+<strong>本記事の方式のメリット</strong><br>
+            ① 貼付シートの作業列は IF + ROW だけなので<strong>数十万行あっても軽い</strong><br>
+            ② 抽出シートのA列・B列で必要な明細行だけを綺麗に吸い上げる<br>
+            ③ 吸い上げた後の<strong>必要な行だけ</strong>にMIDB・TRIMで整形するので<strong>計算回数が最小限</strong><br>
+            ④ 「抽出&rarr;整形」の流れが一方向なので、数式の構成が<strong>シンプルで読みやすい</strong>
+</div>
+<p style="margin-top:15px;">つまり、<strong>「貼付シートでは仕分けだけ。重い整形処理は抽出シートで、必要な行だけに行う」</strong>という役割分担こそが、大量データでもExcelをフリーズさせずに正確なデータベースを完成させる最大のポイントです。</p>
+</div>
+</section>
+<!-- ==========================================================
+         次のステップへ
+      ========================================================== -->
+<section class="method-section" id="sec-next">
+<h2>【さらに先へ】明細行の数が「完全にバラバラ」の真のラスボス</h2>
+<p>ここまでマスターすれば大抵の帳票は怖くありませんが、世の中には「ある伝票は明細が1行、別の伝票は3行&hellip;」という、<strong>1レコードの行数が完全に不規則な真のラスボス帳票</strong>が存在します。このような「もう算数（WRAPROWS等）での折り返しすら通用しない」限界の帳票を、関数だけで正規化してデータベース化する究極のパイプライン思想については、別ページの <a href="04_article_cobol_irregular.html" style="color:#d32f2f;font-weight:bold;text-decoration:underline;">【関数限界突破編】完全不規則明細の正規化展開</a> で解説します。</p>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ(Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab — 制限環境こそが最高の教師。</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

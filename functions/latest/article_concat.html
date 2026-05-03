@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>CONCAT vs CONCATENATE vs 「&」 徹底比較｜Excel &times; No VBA Lab</title>
+<meta content="ExcelのCONCAT・CONCATENATE・& 演算子を徹底比較。現在推奨されるCONCAT/TEXTJOINの使い方と旧関数との違いをわかりやすく解説。" name="description">
+<meta content="CONCAT 関数, CONCATENATE 比較, Excel 文字列結合, & 演算子, TEXTJOIN, VBA不要" name="keywords">
+<meta content="CONCAT vs CONCATENATE vs 「&」 徹底比較｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのCONCAT・CONCATENATE・& 演算子を徹底比較。現在推奨されるCONCAT/TEXTJOINの使い方と旧関数との違いをわかりやすく解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/latest/article_concat.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-no-vba-lab.com/functions/latest/article_concat.html" property="og:url">
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "CONCAT vs CONCATENATE vs 「&」 徹底比較",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "ExcelのCONCAT・CONCATENATE・& 演算子を徹底比較。現在推奨されるCONCAT/TEXTJOINの使い方と旧関数との違いをわかりやすく解説。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-no-vba-lab.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-no-vba-lab.com/functions/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "CONCAT vs CONCATENATE vs 「&」 徹底比較",
+      "item": "https://excel-no-vba-lab.com/functions/latest/article_concat.html"
+    }
+  ]
+}</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">Excel × No VBA Lab</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#functions">関数</a><span>&gt;</span>
+<strong>CONCAT vs CONCATENATE</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="badge badge-2019">2019～最適</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">CONCAT vs CONCATENATE vs 「&」 &horbar; 結合の歴史と正しい使い分け</h1>
+</div>
+<!-- =========================================================
+         結論・比較表
+      ========================================================= -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> 結論：実務での使い分け方</h2>
+<p>Excelで文字列をくっつける（結合する）方法は主に3つあります。かつては <code>CONCATENATE</code> が主流でしたが、現在では <strong><code>&</code>（アンパサンド）</strong> または <strong><code>CONCAT</code></strong>（あるいはさらに高度な <code>TEXTJOIN</code>）を使うのが基本です。</p>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">手法</th>
+<th scope="col">構文・書き方</th>
+<th scope="col">特徴・評価</th>
+<th scope="col">「範囲」の一括指定</th>
+</tr>
+<tr>
+<td><strong><code>&</code> 演算子</strong></td>
+<td><code>=A1 & B1 & C1</code></td>
+<td class="good">最も早くて直感的。2〜3個の結合ならこれ一択。関数名も不要</td>
+<td class="bad">不可（A1:A5等は使えない）</td>
+</tr>
+<tr>
+<td><strong>CONCAT 関数</strong><br><span style="font-size: 0.8em; color: #777;">(Excel 2019以降)</span></td>
+<td><code>=CONCAT(A1:A5)</code><br><code>=CONCAT(A1, "-", B1)</code></td>
+<td class="good">CONCATENATEの完全上位互換。大量のセル範囲を一瞬で結合できる</td>
+<td class="good">可能（一括でくっつけられる）</td>
+</tr>
+<tr>
+<td><strong>TEXTJOIN 関数</strong><br><span style="font-size: 0.8em; color: #777;">(Excel 2019以降)</span></td>
+<td><code>=TEXTJOIN(",",TRUE,A1:A5)</code></td>
+<td class="good">区切り文字＋空白セル除外が可能。最も高機能な結合関数</td>
+<td class="good">可能</td>
+</tr>
+<tr>
+<td><strong>CONCATENATE 関数</strong><br><span style="font-size: 0.8em; color: #777;">(旧バージョン互換)</span></td>
+<td><code>=CONCATENATE(A1, B1, C1)</code></td>
+<td class="neutral">2019以降では <code>CONCAT</code> に完全に置き換えられた。<code>&</code> でも同じことができるため、新規に使う理由は薄い</td>
+<td class="bad">不可（1個ずつカンマでつなぐ）</td>
+</tr>
+</table></div>
+</section>
+<!-- =========================================================
+         【1】一番楽なのは「&」（アンパサンド）
+      ========================================================= -->
+<section class="method-section">
+<h3>【1】基本はコレ！「&」演算子で結合する</h3>
+<p>「姓」と「名」をつなぐなど、2〜3個のセルや固定文字をつなぐだけなら、関数を使う必要は全くありません。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=A2 & B2</span>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=A2 & "　" & B2</span>
+</div>
+<p class="code-comment">間に全角スペースを入れて結合する例。</p>
+<p><strong>メリット：</strong> 関数名を入力する手間がなく、<code>=入力</code> 中に直感的にセルをクリックしながら <code>&</code> を挟むだけで作れます。他の関数の中に組み込む（ネストする）際も、数式がシンプルで読みやすくなります。</p>
+<p><strong>デメリット：</strong> 結合するセルが「10個」「20個」と増えていくと、<code>=A1&A2&A3&A4&A5...</code> と書き続けるのが大変になります。また、セル範囲（A1:A10）を一括で指定することはできません。</p>
+<div class="xdemo-note">
+<strong>💡 数値や日付を結合するときの注意</strong><br>
+<code>&</code> で数値セルを結合すると、表示形式が無視されてExcel内部のシリアル値がそのまま文字列化されます。たとえば日付セル（2026/4/8）を <code>&</code> で結合すると <code>"46114"</code> のような数値になります。これは <code>CONCATENATE</code> や <code>CONCAT</code> でも同じ挙動です。日付や通貨をフォーマット付きで結合したい場合は <code>TEXT</code> 関数を併用してください。
+          <div class="code-block mt-8" data-lang="excel">
+<span class="code-line">=TEXT(A2, "yyyy/mm/dd") & " 納品"</span>
+</div>
+</div>
+</section>
+<!-- =========================================================
+         【2】CONCATENATE の正しい評価
+      ========================================================= -->
+<section class="method-section">
+<h3>【2】CONCATENATE は本当に「価値なし」なのか？</h3>
+<p>ネット上には「CONCATENATEは完全に不要」という極端な記述もありますが、公平に評価すると以下のようになります。</p>
+<h4>CONCATENATEの弱点</h4>
+<span class="code-label">❌ 範囲を一括指定できない</span>
+<div class="code-readonly">
+<span class="code-line">=CONCATENATE(A1:A5)   &larr; 期待どおりに動かない（動的配列対応環境ではスピルする）</span>
+<span class="code-line"></span>
+<span class="code-line">=CONCATENATE(A1, A2, A3, A4, A5)   &larr; こう書く必要がある</span>
+</div>
+<p class="code-comment">「A1からA5まで一括で結合」ができないのが最大の弱点。セルが増えるほど記述が冗長になります。</p>
+<h4>CONCATENATEに残された存在意義</h4>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">場面</th>
+<th scope="col">CONCATENATEの評価</th>
+<th scope="col">代替手段</th>
+</tr>
+<tr>
+<td><strong>Excel 2016 以前</strong>との互換性が必要なブック</td>
+<td class="neutral">CONCAT / TEXTJOIN が使えないため、関数で結合するなら唯一の選択肢</td>
+<td><code>&</code> 演算子で代替可能（全バージョンで動作）</td>
+</tr>
+<tr>
+<td>Google Sheets との<strong>双方向互換</strong></td>
+<td class="neutral">Google Sheets では CONCATENATE が標準関数として広く使われている</td>
+<td>Google Sheets も <code>&</code> に対応。CONCAT も使用可能</td>
+</tr>
+<tr>
+<td><strong>引数が明確に区切られる</strong>点を好む場合</td>
+<td class="neutral">関数の括弧内でカンマ区切りされるため、長い数式で視認性が良いと感じる人もいる</td>
+<td>好みの問題。<code>&</code> でも十分に読める</td>
+</tr>
+</table></div>
+<div class="xdemo-note">
+<strong>💡 結論：CONCATENATEは「積極的に使う理由がない」関数</strong><br>
+          完全に無価値というわけではなく、旧バージョン互換という存在意義は残っています。しかし、<code>&</code> 演算子は全バージョンで動作し、範囲の一括結合が不要な場面では CONCATENATE と全く同じことができます。Excel 2019 以降なら CONCAT が完全上位互換です。つまり「CONCATENATE でなければできないこと」は存在しないため、新規に数式を書く際にあえて選ぶ理由はありません。既存のブックに入っているものを慌てて書き換える必要もありません。
+        </div>
+<div class="xdemo-note-warn">
+⚠️ <strong>動的配列対応環境でのスピル動作に注意</strong><br>
+Microsoft 365 や Excel 2021/2024 などの動的配列対応環境では <code>=CONCATENATE(A1:A5)</code> と書くとエラーではなく<strong>スピル展開</strong>（各セルの値がそれぞれ別のセルに出力される）になる場合があります。これは「A1〜A5を1つに結合する」動作ではなく、配列の各要素が個別に返される動作です。意図した結合にはなりません。
+        </div>
+</section>
+<!-- =========================================================
+         【3】現代の救世主「CONCAT」
+      ========================================================= -->
+<section class="tips-section">
+<h3>【3】「範囲を一気に結合」できる CONCAT 関数</h3>
+<p>Excel 2019 以降で使える <strong><code>CONCAT</code></strong> 関数は、CONCATENATE の弱点を完全に克服した後継関数です。</p>
+<p>最大のメリットは <strong>セル範囲（A1:A10など）をドラッグして一括指定できる</strong> ことです。</p>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em; margin-bottom: 5px;"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-data">東京</td><td class="xd-data">品川</td></tr>
+<tr><td class="xd-row">2</td><td class="xd-data">都</td><td class="xd-data">県</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-data">港</td><td class="xd-data">市</td></tr>
+<tr><td class="xd-row">4</td><td class="xd-data">区</td><td class="xd-data">町</td></tr>
+<tr><td class="xd-row">5</td><td class="xd-data">芝</td><td class="xd-data">村</td></tr>
+</table></div>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=CONCAT(A1:A5)</span>
+</div>
+<p class="code-comment">結果： <code>東京都港区芝</code> &horbar; A1〜A5の5セルが区切り文字なしで一気に結合されます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=CONCAT(A1:B3)</span>
+</div>
+<p class="code-comment">結果： <code>東京品川都県港市</code> &horbar; 2次元の範囲は「左から右、上から下」の順で結合されます。</p>
+<p>これまで <code>=A1&A2&A3&A4&A5</code> と書いていたものが、<code>=CONCAT(A1:A5)</code> だけで済むようになりました。</p>
+<h4>CONCAT の注意点</h4>
+<div class="xdemo-note-warn">
+          ⚠️ <strong>区切り文字を入れられない</strong><br>
+          CONCAT は「ただベタッとくっつける」だけです。セル間にカンマやスラッシュを挟みたい場合は、次のセクションの <code>TEXTJOIN</code> を使うか、<code>&</code> で手動で挟む必要があります。
+        </div>
+<div class="xdemo-note-warn">
+          ⚠️ <strong>空白セルも結合される</strong><br>
+          範囲内に空白セルがあっても無視されず、「何もない文字列（""）」としてそのまま結合されます。空白を除外したい場合は TEXTJOIN の第2引数を使います。
+        </div>
+</section>
+<!-- =========================================================
+         【4】さらに上の「TEXTJOIN」
+      ========================================================= -->
+<section class="tips-section">
+<h3>【4】最も高機能な結合関数：TEXTJOIN</h3>
+<p>CONCAT は「ただベタッとくっつける」だけですが、実務では<strong>「カンマ区切りで結合したい」「空白のセルは無視して結合したい」</strong>という要望がよく出ます。これを完璧に叶えるのが <strong><code>TEXTJOIN</code></strong> 関数です。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXTJOIN(",", TRUE, A1:A5)</span>
+</div>
+<p class="code-comment">第1引数：区切り文字（カンマ、スラッシュ、スペース等）<br>第2引数：空白セルを無視するか（TRUE＝無視 / FALSE＝含める）<br>第3引数：結合する範囲</p>
+<h4>CONCAT との違いを具体例で比較</h4>
+<div class="xdemo-wrap">
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em; margin-bottom:5px;"><caption>データテーブル</caption>
+<tr><td class="xd-col"></td><td class="xd-col">A</td></tr>
+<tr><td class="xd-row">1</td><td class="xd-data">りんご</td></tr>
+<tr><td class="xd-row">2</td><td class="xd-data">みかん</td></tr>
+<tr><td class="xd-row">3</td><td class="xd-data">（空白）</td></tr>
+<tr><td class="xd-row">4</td><td class="xd-data">バナナ</td></tr>
+</table></div>
+</div>
+<span class="code-label-neutral">CONCAT の場合（区切りなし・空白も含む）</span>
+<div class="code-readonly">
+<span class="code-line">=CONCAT(A1:A4)        &rarr; "りんごみかんバナナ"</span>
+<span class="code-line">                         空白セルは無視されるが区切り文字もない</span>
+</div>
+<span class="code-label-good">✅ TEXTJOIN の場合（カンマ区切り・空白除外）</span>
+<div class="code-readonly">
+<span class="code-line">=TEXTJOIN(",", TRUE, A1:A4)   &rarr; "りんご,みかん,バナナ"</span>
+<span class="code-line">                                 空白セル（A3）がきれいに除外される</span>
+</div>
+<div class="xdemo-note-good">
+          ✅ <strong>TEXTJOINの詳しい使い方は別記事へ！</strong><br>
+<a href="article_textjoin.html">TEXTJOIN関数の詳細ページ</a> では、IF や FILTER との組み合わせで条件に合うものだけを結合するなど、より高度なテキスト生成テクニックを解説しています。
+        </div>
+</section>
+<!-- =========================================================
+         【5】実務パターン集
+      ========================================================= -->
+<section class="method-section">
+<h3>【5】実務パターン集：場面ごとの最適解</h3>
+<div class="scenario-box">
+<h4>パターン① 姓＋名の結合 &rarr; <code>&</code> が最適</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=A2 & " " & B2</span>
+</div>
+<p>2セルの結合に関数を持ち出す必要はありません。最もシンプルな <code>&</code> が正解です。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン② 住所の結合（都道府県＋市区町村＋番地） &rarr; <code>&</code> が最適</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=A2 & B2 & C2</span>
+</div>
+<p>3つ程度なら <code>&</code> で十分です。区切り文字も不要な場面が多いでしょう。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン③ 日付＋時刻のフォーマット結合 &rarr; <code>&</code> + <code>TEXT</code></h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(A2,"yyyy年m月d日") & " " & TEXT(B2,"h:mm")</span>
+</div>
+<p>日付や時刻は <code>TEXT</code> で表示形式を指定してから結合します。これは CONCAT でも CONCATENATE でも同じです。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン④ 縦に並んだ20個のセルを一気に結合 &rarr; <code>CONCAT</code> が最適</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=CONCAT(A1:A20)</span>
+</div>
+<p><code>&</code> で20個つなぐのは現実的ではありません。範囲指定ができる CONCAT の出番です。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑤ タグやカテゴリをカンマ区切りで結合 &rarr; <code>TEXTJOIN</code> が最適</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXTJOIN(", ", TRUE, A1:A10)</span>
+</div>
+<p>区切り文字が必要で、空白セルを除外したい場面では TEXTJOIN 一択です。</p>
+</div>
+<div class="scenario-box">
+<h4>パターン⑥ 条件に合うデータだけを結合 &rarr; <code>TEXTJOIN</code> + <code>IF</code></h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXTJOIN(", ", TRUE, IF(B1:B10="合格", A1:A10, ""))</span>
+</div>
+<p class="code-comment">Ctrl+Shift+Enter（旧バージョン）または自動スピル（動的配列対応環境）で確定。B列が「合格」の行だけ、A列の値をカンマ区切りで結合します。</p>
+</div>
+</section>
+<!-- =========================================================
+         【6】4つの手法 総合比較表
+      ========================================================= -->
+<section class="method-section">
+<h3>【6】総合比較表</h3>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr>
+<th scope="col">比較項目</th>
+<th scope="col"><code>&</code> 演算子</th>
+<th scope="col">CONCAT</th>
+<th scope="col">TEXTJOIN</th>
+<th scope="col">CONCATENATE</th>
+</tr>
+<tr>
+<td><strong>範囲の一括指定</strong></td>
+<td class="bad">不可</td>
+<td class="good">可能</td>
+<td class="good">可能</td>
+<td class="bad">不可</td>
+</tr>
+<tr>
+<td><strong>区切り文字</strong></td>
+<td class="neutral">手動で挟む</td>
+<td class="bad">不可</td>
+<td class="good">第1引数で指定</td>
+<td class="neutral">手動で挟む</td>
+</tr>
+<tr>
+<td><strong>空白セルの除外</strong></td>
+<td class="bad">不可</td>
+<td class="bad">不可</td>
+<td class="good">第2引数で制御</td>
+<td class="bad">不可</td>
+</tr>
+<tr>
+<td><strong>数式の短さ（2〜3個結合）</strong></td>
+<td class="good">最も短い</td>
+<td class="neutral">やや冗長</td>
+<td class="neutral">冗長</td>
+<td class="bad">関数名が長い</td>
+</tr>
+<tr>
+<td><strong>数式の短さ（10個以上結合）</strong></td>
+<td class="bad">非常に長くなる</td>
+<td class="good">範囲指定で短い</td>
+<td class="good">範囲指定で短い</td>
+<td class="bad">非常に長くなる</td>
+</tr>
+<tr>
+<td><strong>ネストのしやすさ</strong></td>
+<td class="good">最も自然</td>
+<td class="neutral">普通</td>
+<td class="neutral">普通</td>
+<td class="bad">関数名が長く読みにくい</td>
+</tr>
+<tr>
+<td><strong>日付・数値の自動フォーマット</strong></td>
+<td class="text-center" colspan="4">いずれもシリアル値がそのまま文字列化される。<code>TEXT</code> 関数との併用が必要</td>
+</tr>
+<tr>
+<td><strong>パフォーマンス</strong></td>
+<td class="good">最も軽い</td>
+<td class="good">軽い</td>
+<td class="neutral">やや重い（空白判定あり）</td>
+<td class="good">軽い</td>
+</tr>
+</table></div>
+</section>
+<!-- =========================================================
+         【7】判断フローチャート
+      ========================================================= -->
+<section class="goal-section">
+<h2><span class="icon">📋</span> どの結合方法を使う？ 判断フロー</h2>
+<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<tr><th scope="col">質問</th><th scope="col">答え</th><th scope="col">最適な手法</th></tr>
+<tr><td>結合するセルは何個？</td><td><strong>2〜3個</strong></td><td class="good"><code>&</code> 演算子</td></tr>
+<tr><td>結合するセルは何個？</td><td><strong>4個以上（範囲で指定したい）</strong></td><td>&rarr; 次の質問へ</td></tr>
+<tr><td>区切り文字は必要？</td><td><strong>不要</strong>（ベタ結合でOK）</td><td class="good">CONCAT</td></tr>
+<tr><td>区切り文字は必要？</td><td><strong>必要</strong>（カンマ、スラッシュ等）</td><td class="good">TEXTJOIN</td></tr>
+<tr><td>空白セルを除外したい？</td><td><strong>はい</strong></td><td class="good">TEXTJOIN（第2引数 TRUE）</td></tr>
+<tr><td>Excel 2016以前との互換性が必要？</td><td><strong>はい</strong></td><td class="neutral"><code>&</code> 演算子（全バージョン対応）</td></tr>
+</table></div>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
+<li><a href="article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+<li><a href="article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
+<li><a href="article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

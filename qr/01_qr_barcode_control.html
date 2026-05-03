@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>① QRコードでExcel一発入力｜QR Automation Lab｜Excel &times; No VBA Lab</title>
+<meta content="ExcelのCHAR関数でTab・Enterを埋め込み、QRスキャン1回で複数セルに一発入力。使える文字種＆CHARコード資料付き。VBA不要。閉域環境・RPA不可の現場で威力を発揮。" name="description">
+<meta content="QRコード,Excel,CHAR関数,Tab,Enter,自動入力,VBA不要,バーコードコントロール,ASCII,閉域環境,RPA代替" name="keywords">
+<link href="https://excel-no-vba-lab.com/qr/01_qr_barcode_control.html" rel="canonical">
+<meta content="article" property="og:type">
+<meta content="① QRコードでExcel一発入力 &horbar; Tab・Enterで複数セル自動入力｜QR Automation Lab" property="og:title">
+<meta content="CHAR(9)でTab、CHAR(13)でEnter。スキャン1回で複数セルに自動入力する仕組みを解説。閉域環境・RPA不可の現場向け。" property="og:description">
+<meta content="https://excel-no-vba-lab.com/qr/01_qr_barcode_control.html" property="og:url">
+<meta content="https://excel-no-vba-lab.com/image/hero_ogp.png" property="og:image">
+<meta content="QR Automation Lab｜Excel &times; No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="summary_large_image" name="twitter:card">
+<meta content="① QRコードでExcel一発入力 &horbar; Tab・Enterで複数セル自動入力｜QR Automation Lab" name="twitter:title">
+<meta content="CHAR関数でTab・Enterを埋め込むだけ。スキャン1回でExcel複数セルに自動入力。閉域環境で威力を発揮。" name="twitter:description">
+<meta content="https://excel-no-vba-lab.com/image/hero_ogp.png" name="twitter:image">
+<meta content="index, follow" name="robots">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Article",
+  "headline":"① QRコードでExcel一発入力 ― スキャンだけで複数セルに自動入力",
+  "description":"CHAR関数でTab・EnterをQRコードに埋め込み、VBAなしでExcel入力を自動化する方法。使える文字種の資料付き。閉域環境・RPA不可の現場向け。",
+  "image":"https://excel-no-vba-lab.com/ogp.png",
+  "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
+  "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-no-vba-lab.com/ogp.png"}},
+  "datePublished":"2026-04-17",
+  "dateModified":"2026-04-23",
+  "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/qr/01_qr_barcode_control.html"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://excel-no-vba-lab.com/"},
+    {"@type":"ListItem","position":2,"name":"QR Automation Lab","item":"https://excel-no-vba-lab.com/qr/"},
+    {"@type":"ListItem","position":3,"name":"① QRコードでExcel一発入力"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"HowTo",
+  "name":"QRコードでExcelの複数セルに自動入力する方法",
+  "step":[
+    {"@type":"HowToStep","position":1,"name":"バーコードコントロールの挿入","text":"Microsoft Barcode Control が利用できる環境で、開発タブ → 挿入 → ActiveXコントロール → Microsoft Barcode Control を配置し、スタイルを11 – QRコードに設定する。"},
+    {"@type":"HowToStep","position":2,"name":"LinkedCellの設定","text":"コントロールのプロパティで LinkedCell にQRデータ用セル（例：E1）を指定する。"},
+    {"@type":"HowToStep","position":3,"name":"CHAR関数でTab・Enterを埋め込む","text":"=A1 & CHAR(9) & B1 & CHAR(9) & C1 & CHAR(13) のようにCHAR(9)でTab、CHAR(13)でEnterを埋め込む。"},
+    {"@type":"HowToStep","position":4,"name":"スキャンして自動入力を確認","text":"QRリーダーで読み取り、複数セルにデータが自動で振り分けられることを確認する。"}
+  ]
+}
+</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../index.html">ホーム</a><span>&gt;</span>
+<a href="../index.html#qr">QR Automation Lab</a><span>&gt;</span>
+<strong>① QRコードでExcel一発入力</strong>
+</div>
+<!-- ===== メインコンテンツ ===== -->
+<article class="article-body">
+<!-- ===== 記事ヘッダー ===== -->
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="badge badge-maniac">QR Automation Lab ① ／ 基本</span>
+</div>
+<h1 class="article-title">QRコードでExcel一発入力<br><small>&horbar; Tab・Enterを埋め込んでスキャン1回で複数セル自動入力</small></h1>
+<p style="color:#666;font-size:.88rem;">最終更新: 2026-04-23 ｜ 読了目安: 10分</p>
+</div>
+<!-- ========================================== -->
+<!-- 動画セクション（YouTube埋め込み用プレースホルダー） -->
+<!-- ========================================== -->
+<section class="method-section" style="padding-top:8px;padding-bottom:8px;">
+<video src="../video/qr_01_complete_demo_captioned.mp4?v=20260502031714" autoplay loop muted playsinline controls poster="../image/hero_qr.webp" style="width:100%; border-radius:8px; border:1px solid #ddd;"></video>
+<p class="text-sm-gray" style="text-align:center; margin-top:8px;">【完成イメージ】スキャン1回で、受付番号から生年月日までの入力、画面スクロール、登録完了待ちまでをすべて自動化します。</p>
+</section>
+<!-- ========================================== -->
+<!-- このシリーズが生まれた背景 -->
+<!-- ========================================== -->
+<div class="origin-box">
+<h3>🔧 このシリーズが生まれた背景</h3>
+<p>
+    このQR Automation Labは、<strong>VBA禁止・ネットワーク接続なし・USBメモリ持ち込み不可</strong>という三重の制約がある環境で、それでもデータ入力を自動化する方法を模索した結果生まれました。
+  </p>
+<p>
+    本来であればVBAでWebシステムを直接操作する（スクレイピング）か、RPAでUI自動化するのが正攻法です。しかしそれらがすべて封じられた環境では、残された武器は<strong>USBポートとQRリーダー</strong>だけでした。QRリーダーはPCからは「キーボード」として認識されるため、VBAもRPAもドライバも不要。この特性を最大限に活かして体系化したのが本シリーズです。
+  </p>
+<p style="font-size:.85rem;color:#888;margin-bottom:8px;">
+    ※ RPAやスクレイピングが使える環境であれば、そちらの方が機能的に優れています。本シリーズは<strong>それらが使えない現場のための手法</strong>です。「RPAの代替」ではなく「RPAが届かない場所で使える手段」として位置づけています。
+  </p>
+<div class="xdemo-note-warn" style="margin-top: 15px;">
+<strong>⚠️ 検証機材と環境依存について（重要）</strong><br>
+    本シリーズで解説する「USB-HID接続によるキーボードエミュレーション」の基本概念はどのスキャナでも共通ですが、後半（記事④以降）で解説する<strong>「文字間ディレイの詳細制御」「キー変換」「テンキーEnterへの置換」「Sleep的発想」などの高度な設定は、メーカーや機種によってできること・できないことが大きく異なります。</strong><br>
+    本サイトの検証は主に <strong>Opticon（オプトエレクトロニクス）製</strong> の業務用スキャナを基準に行っています。安価な海外製スキャナ等では高度な設定マニュアルが公開されておらず、本シリーズの手法が完全には再現できない場合がありますので、導入時は機種選定にご注意ください。
+  </div>
+</div>
+<!-- ========================================== -->
+<!-- ゴール -->
+<!-- ========================================== -->
+<section class="goal-section">
+<h2><span class="icon">🔥</span> QRコード &times; CHAR関数 でExcelがこう変わる</h2>
+<p>
+    QRリーダーは<strong>超高速キーボード</strong>です。文字だけでなく <span class="code-inline">Tab</span> <span class="code-inline">Enter</span> といった<strong>キー操作</strong>もQRコードに埋め込めます。
+    つまりスキャン1回で「データ入力 &rarr; セル移動 &rarr; 次の行に改行」まで全自動にできます。
+  </p>
+<h3>こんなシーンで使えます</h3>
+<div class="usecase-grid">
+<div class="usecase-card">
+<div class="icon">📦</div>
+<h4>在庫・検品</h4>
+<p>商品コード＋数量＋棚番が1スキャンで3セルに入力</p>
+</div>
+<div class="usecase-card">
+<div class="icon">🪪</div>
+<h4>社員証・出退勤</h4>
+<p>社員番号＋氏名＋部署を読み取って一発記録</p>
+</div>
+<div class="usecase-card">
+<div class="icon">📋</div>
+<h4>点検・保守記録</h4>
+<p>機器ID＋日付＋ステータスをスキャンで入力</p>
+</div>
+<div class="usecase-card">
+<div class="icon">🏥</div>
+<h4>受付・イベント</h4>
+<p>来場者情報をスキャンで即入力、次の行へ自動移動</p>
+</div>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ QRコード入力は「最終手段」です：</strong>ネットワーク接続、ファイル共有、クリップボード転送、RPA、スクレイピングなど他の手段が使える環境であれば、そちらを優先してください。QRコード入力が真に威力を発揮するのは、それらの手段がすべて使えない閉域環境・VBA禁止環境・RPA未導入環境に限られます。ただしその制約下では、<strong>ソフトのインストールもライセンスも不要で即日導入できる唯一の自動化手段</strong>です。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- RPAとの棲み分け -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>📊 RPAとの棲み分け &horbar; いつQRリーダーを選ぶべきか</h2>
+<p>QRリーダーによる入力自動化は、RPAの下位互換ではありません。それぞれ得意な場面が異なります。</p>
+<table class="format-table">
+<tr><th>場面</th><th>RPA</th><th>QRリーダー</th></tr>
+<tr><td>同じフォームに100件連続入力</td><td class="text-center"><strong>◎ 得意</strong></td><td class="text-center">&cir; 可能（連続スキャン）</td></tr>
+<tr><td>処理票を1枚ずつ別画面に転記</td><td class="text-center">&xutri; シナリオが複雑化</td><td class="text-center"><strong>◎ 得意</strong></td></tr>
+<tr><td>コピー＆ペースト禁止環境</td><td class="text-center">&xutri; 制約を受ける場合あり</td><td class="text-center"><strong>◎ 物理経路で回避</strong></td></tr>
+<tr><td>閉域・オフライン環境</td><td class="text-center">✕ インストール困難</td><td class="text-center"><strong>◎ USBを挿すだけ</strong></td></tr>
+<tr><td>ライセンス費用</td><td class="text-center">年間数十万〜数百万円</td><td class="text-center"><strong>リーダー1台 数万円（買い切り）</strong></td></tr>
+<tr><td>導入までの期間</td><td class="text-center">数週間〜数ヶ月</td><td class="text-center"><strong>即日</strong></td></tr>
+<tr><td>複雑な条件分岐がある自動化</td><td class="text-center"><strong>◎ 得意</strong></td><td class="text-center">✕ 不向き</td></tr>
+<tr><td>イレギュラー発生時の制御</td><td class="text-center">&xutri; 停止・復旧にシナリオ設計が必要</td><td class="text-center">&cir; 次のQRをスキャンしなければ止まる</td></tr>
+</table>
+<div class="xdemo-note-good">
+<strong>✅ まとめ：</strong>RPAが導入できる環境ではRPAを使ってください。QRリーダーは「RPAが届かない場所」で威力を発揮します。処理票の転記、閉域環境でのデータ入力、コピペ禁止環境での文書転送など、RPAではカバーしきれない場面が本シリーズの守備範囲です。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- ロードマップ -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>📚 学習ロードマップ</h2>
+<p>「QR Automation Lab」は段階的に学べる構成です。まず基本3記事をマスターすれば実務で使えます。</p>
+<div class="roadmap">
+<div class="roadmap-card roadmap-basic">
+<h4>🔵 基本レベル（①〜③）</h4>
+<ul>
+<li><strong>① この記事</strong> &horbar; QR生成 ＋ Tab・Enter埋め込み</li>
+<li>② Tab・Enter埋め込みの詳細と実践パターン</li>
+<li>③ キャラクター間ディレイ設定（文字欠け防止）</li>
+</ul>
+<p style="font-size:.85rem;margin-top:8px;">&rarr; ここまでで実務投入OK</p>
+</div>
+<div class="roadmap-card roadmap-adv">
+<h4>🟠 応用レベル（④〜⑪）</h4>
+<ul>
+<li>④〜⑥ キー変換・実践シナリオ・Sleep制御</li>
+<li>⑦ フルシステム統合（22手作業&rarr;8秒）</li>
+<li>⑧〜⑪ 全角対応・閉域転送・システム移行</li>
+</ul>
+<p style="font-size:.85rem;margin-top:8px;">&rarr; より高度な自動化に挑戦</p>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- STEP 1：バーコードコントロール -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>STEP 1：バーコードコントロールでQRコードを作る</h2>
+<p>ExcelのバージョンやOffice構成によっては、開発用のQRコード生成機能（Microsoft Barcode Control）が利用できる場合があります。以下の手順で確認・設置します。</p>
+<div class="xdemo-note-warn">
+<strong>⚠️ 先に環境確認：</strong> Microsoft Barcode Control はExcel単体の標準機能ではなく、主に<strong>Accessに同梱されるActiveXコントロール</strong>です。Excelの開発タブから呼び出せる場合がありますが、PCにAccess、または同コントロールを含むOffice構成が入っていない場合は一覧に表示されません。さらに2026年現在、<strong>Microsoft 365（旧Office 365表記の環境を含む）や Office 2024 ではActiveXコントロールが初期設定で表示・作成できない</strong>ことがあります。ただし、Excelの「トラストセンター」設定でActiveXを許可すると表示できる場合もあります。まずは一覧に出るか、設定で有効化できるかを確認してください。職場PCで管理者ポリシーにより完全に無効化されている場合や、Access由来の部品が入っていない場合は、この方式は使えません。
+  </div>
+<table class="format-table">
+<tr><th style="width:15%">手順</th><th>操作</th></tr>
+<tr><td class="text-center">1</td><td><strong>開発タブ &rarr; 挿入 &rarr; ActiveXコントロール &rarr; 「コントロールの選択」</strong>をクリック</td></tr>
+<tr><td class="text-center">2</td><td>一覧から <strong>Microsoft Barcode Control 16.0</strong>（数字は環境に依存）を探して選択し、シート上に配置。<br><span style="color:#d32f2f; font-size:0.85em;">※リストに存在しない場合は、まずExcelのActiveX設定とOffice構成を確認してください。設定で表示できる場合もありますが、ExcelのみのPCや職場ポリシーでActiveXが完全に無効化されている環境では使えません。</span></td></tr>
+<tr><td class="text-center">3</td><td>コントロールを右クリック &rarr; <strong>Microsoft Barcode Control オブジェクト &rarr; プロパティ</strong></td></tr>
+<tr><td class="text-center">4</td><td>スタイルを <strong>「11 &ndash; QRコード」</strong> に変更してOK</td></tr>
+<tr><td class="text-center">5</td><td>コントロールのプロパティウィンドウで <strong>LinkedCell</strong> に QRデータ用セル（例：<span class="code-inline">E1</span>）を指定</td></tr>
+</table>
+<div class="xdemo-note-good">
+<strong>✅ ポイント:</strong> LinkedCell のセルに文字列を入れると、即座にQRコードが更新されます。数式の結果でもOKです。
+  </div>
+<div class="xdemo-note-warn">
+<strong>⚠️ 知っておくべき制限:</strong> このコントロールは<strong>半角英数・記号・制御文字のみ</strong>対応（最大255文字）。全角（日本語）は文字化けします。ただし業務コードは通常半角なので実用上は十分。全角が必要な場合は <a href="11_qr_vba_generate.html">⑪ 全角QR生成</a> を参照。使える文字の詳細は<a href="#appendix">ページ下部の資料</a>にまとめています。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- ★ STEP 2：メイン ― Tab・Enter埋め込み ★ -->
+<!-- ========================================== -->
+<section class="tips-section">
+<h2>🎯 STEP 2：Tab・Enterを埋め込んで複数セルに自動入力させる</h2>
+<p>
+    ここがこの記事のメインです。QRコードに<strong>文字データだけでなくキー操作を仕込む</strong>ことで、スキャン1回で「入力&rarr;セル移動&rarr;改行」が全自動になります。使うのはExcelの <span class="code-inline">CHAR関数</span> だけ。
+  </p>
+<h3>覚えるのはたった2つ</h3>
+<table class="format-table">
+<tr><th>関数</th><th>送信されるキー</th><th>Excelでの動き</th></tr>
+<tr>
+<td class="text-center"><span class="code-inline">CHAR(9)</span></td>
+<td class="text-center">Tab</td>
+<td><strong>右のセルに移動</strong>。横方向にデータを並べるときに使う</td>
+</tr>
+<tr>
+<td class="text-center"><span class="code-inline">CHAR(10)</span></td>
+<td class="text-center">Enter（LF）</td>
+<td><strong>次の行に移動</strong>。Tabで移動していた場合は最初のTab列に戻る</td>
+</tr>
+<tr>
+<td class="text-center"><span class="code-inline">CHAR(13)</span></td>
+<td class="text-center">Enter（CR）</td>
+<td><strong>次の行に移動</strong>（代替）。CHAR(10)で動かない場合に試す</td>
+</tr>
+</table>
+<div class="xdemo-note-good">
+<strong>✅ まずはこれだけ:</strong> <span class="code-inline">CHAR(9)</span> = Tab（横移動）と <span class="code-inline">CHAR(10)</span> = Enter（改行）。この2つだけで8割の自動入力が実現できます。
+  </div>
+<!-- ===== 数式パターン ===== -->
+<h3>よく使う数式パターン</h3>
+<h4>パターン① &horbar; 1項目を入力して次の行へ</h4>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+    =A1 & CHAR(10)
+  </div>
+<p>データ入力 &rarr; Enter（次の行へ）。最もシンプルな形。</p>
+<h4>パターン② &horbar; 2項目を横に入力して次の行へ</h4>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+    =A1 & CHAR(9) & B1 & CHAR(10)
+  </div>
+<p>A列データ &rarr; <kbd>Tab</kbd> &rarr; B列データ &rarr; <kbd>Enter</kbd>（次の行のA列に戻る）。</p>
+<h4>パターン③ &horbar; 4項目を横に入力して次の行へ（在庫管理の定番）</h4>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+    =A1 & CHAR(9) & B1 & CHAR(9) & C1 & CHAR(9) & D1 & CHAR(10)
+  </div>
+<p>A〜D列に4項目入力 &rarr; Enter。商品コード・品名・数量・棚番のように横並びで入力するパターン。</p>
+<h4>パターン④ &horbar; 入力して自動保存まで完結（応用）</h4>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+    =A1 & CHAR(9) & B1 & CHAR(10) & CHAR(19)
+  </div>
+<p>2項目入力 &rarr; Enter &rarr; <kbd>Ctrl+S</kbd>（上書き保存）。末尾の <span class="code-inline">CHAR(19)</span> は Ctrl+S として送信されます（USB-HIDモードのリーダーが必要）。この記事の「Saveパターン」はシリーズ内の独立した番号付けで、記事⑤の「Pattern ⑥」とは別物です。</p>
+<h4>パターン⑤ &horbar; 日付・時刻付きデータ（応用）</h4>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+    =A1 & CHAR(9) & TEXT(NOW(),"YYYY/MM/DD") & CHAR(9) & TEXT(NOW(),"HH:MM") & CHAR(9) & B1 & CHAR(10)
+  </div>
+<p>ID &rarr; Tab &rarr; 日付 &rarr; Tab &rarr; 時刻 &rarr; Tab &rarr; ステータス &rarr; Enter。タイムスタンプを自動埋め込み。</p>
+<!-- ===== フロー図 ===== -->
+<h3>データの流れ（パターン③の場合）</h3>
+<div class="flow-box">
+<span class="flow-step step-item">A列データ</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-key">Tab</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-item">B列データ</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-key">Tab</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-item">C列データ</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-key">Tab</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-item">D列データ</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-key">Enter &crarr;</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-item">次の行A列 &checkmark;</span>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 追加：CHAR(10)・CHAR(13)・NUMEnterの違い -->
+<!-- ========================================== -->
+<section class="method-section" id="enter-difference">
+<h2>🔍 CHAR(10)・CHAR(13)・NUMEnterの違い</h2>
+
+<p>
+  QRリーダーで業務システムを操作するとき、よく混同されるのが
+  <span class="code-inline">CHAR(10)</span>、
+  <span class="code-inline">CHAR(13)</span>、
+  そしてテンキー側のEnterである <strong>NUMEnter</strong> です。
+</p>
+
+<p>
+  どれも一見「Enterっぽい動き」をしますが、実際には意味が異なります。
+  特に業務システム、Webフォーム、端末エミュレータ、古い基幹システムでは、
+  この違いが原因で「入力は入るのに検索・登録が実行されない」ということがあります。
+</p>
+
+<div class="xdemo-note-good">
+<strong>✅ まず結論：</strong><br>
+業務システムで「検索」「登録」「確定」をさせたい場合は、まず
+<span class="code-inline">CHAR(13)</span> を試します。<br>
+備考欄などに「改行」を入れたい場合は <span class="code-inline">CHAR(10)</span>、
+テンキーEnter指定のシステムでは、ExcelのCHAR関数ではなく
+<strong>QRリーダー側のサフィックス設定やキー変換設定</strong>でNUMEnterを送信します。
+</div>
+
+<h3>3種類のEnter系入力の比較</h3>
+
+<table class="format-table">
+<thead>
+<tr>
+<th>項目</th>
+<th><span class="code-inline">CHAR(10)</span></th>
+<th><span class="code-inline">CHAR(13)</span></th>
+<th><span class="code-inline">CHAR(13)&amp;CHAR(10)</span></th>
+<th>NUMEnter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>正体</strong></td>
+<td>LF<br>Line Feed</td>
+<td>CR<br>Carriage Return</td>
+<td>CR+LF</td>
+<td>テンキー側のEnterキー</td>
+</tr>
+<tr>
+<td><strong>意味</strong></td>
+<td>行送り・改行</td>
+<td>復帰・Enter相当</td>
+<td>Windows系の改行表現</td>
+<td>物理キーとしてのテンキーEnter</td>
+</tr>
+<tr>
+<td><strong>Excel式で出せるか</strong></td>
+<td class="text-center">○</td>
+<td class="text-center">○</td>
+<td class="text-center">○</td>
+<td class="text-center">×<br>基本不可</td>
+</tr>
+<tr>
+<td><strong>検索実行</strong></td>
+<td class="text-center">△</td>
+<td class="text-center"><strong>◎</strong></td>
+<td class="text-center">○〜△</td>
+<td class="text-center"><strong>◎の場合あり</strong></td>
+</tr>
+<tr>
+<td><strong>登録ボタン押下</strong></td>
+<td class="text-center">△</td>
+<td class="text-center"><strong>◎</strong></td>
+<td class="text-center">○〜△</td>
+<td class="text-center"><strong>◎の場合あり</strong></td>
+</tr>
+<tr>
+<td><strong>複数行入力欄での改行</strong></td>
+<td class="text-center"><strong>◎</strong></td>
+<td class="text-center">△</td>
+<td class="text-center"><strong>◎</strong></td>
+<td class="text-center">×</td>
+</tr>
+<tr>
+<td><strong>業務システム操作での主用途</strong></td>
+<td>備考欄・メモ欄の改行</td>
+<td>検索・確定・登録・送信</td>
+<td>Windows系改行、特殊な改行処理</td>
+<td>テンキーEnter指定の確定・登録</td>
+</tr>
+<tr>
+<td><strong>注意点</strong></td>
+<td>確定にならず、単なる改行や無反応になる場合がある</td>
+<td>最もEnter扱いされやすいが、システム依存</td>
+<td>Enterが2回押されたように扱われる場合がある</td>
+<td>CHAR関数ではなく、QRリーダー側の設定が必要</td>
+</tr>
+</tbody>
+</table>
+
+<h3>CHAR(10) は「改行」寄り</h3>
+
+<p>
+  <span class="code-inline">CHAR(10)</span> は LF、つまり Line Feed です。
+  業務システムでは、備考欄やコメント欄などの複数行入力エリアで
+  「改行」として使える場合があります。
+</p>
+
+<div class="formula-box">
+  ="1行目" &amp; CHAR(10) &amp; "2行目"
+</div>
+
+<p>
+  ただし、1行入力欄や検索欄では、<span class="code-inline">CHAR(10)</span> が
+  検索・登録の実行として扱われないことがあります。
+  「Enterを入れたつもりなのに画面が進まない」場合は、
+  <span class="code-inline">CHAR(13)</span> を試してください。
+</p>
+
+<h3>CHAR(13) は「確定・検索・登録」寄り</h3>
+
+<p>
+  <span class="code-inline">CHAR(13)</span> は CR、つまり Carriage Return です。
+  業務システム操作では、実用上もっとも Enter キーに近い動きをすることが多く、
+  検索実行、入力確定、登録ボタン押下、確認ダイアログのOKなどに使われます。
+</p>
+
+<div class="formula-box">
+  =A1 &amp; CHAR(13)
+</div>
+
+<p>
+  上記の式では、受付番号や管理番号を入力したあとに Enter を送るイメージです。
+</p>
+
+<div class="xdemo-note-good">
+<strong>✅ 業務システムではまずこれ：</strong><br>
+検索・登録・確定をさせたい場合は、最初に
+<span class="code-inline">CHAR(13)</span> を試すのが実務的です。
+</div>
+
+<h3>CHAR(13)&amp;CHAR(10) は CR+LF</h3>
+
+<p>
+  <span class="code-inline">CHAR(13)&amp;CHAR(10)</span> は CR+LF です。
+  Windows系のテキストでは、改行を CR+LF で表すことがあります。
+</p>
+
+<div class="formula-box">
+  ="1行目" &amp; CHAR(13) &amp; CHAR(10) &amp; "2行目"
+</div>
+
+<p>
+  複数行の備考欄やメモ欄では自然な改行として扱われる場合があります。
+  ただし、業務システムの入力画面では、CRとLFがそれぞれ処理され、
+  結果的に「Enterが2回押された」ように動く場合があります。
+</p>
+
+<div class="xdemo-note-warn">
+<strong>⚠️ 注意：</strong>
+<span class="code-inline">CHAR(13)&amp;CHAR(10)</span> は便利ですが、
+登録画面や確認ダイアログ付近で使うと、意図せず2回Enterが送られたような動作になる場合があります。
+本番投入前に必ずテストしてください。
+</div>
+
+<h3>NUMEnter は CHAR関数では基本出せない</h3>
+
+<p>
+  NUMEnter は、テンキー側の Enter キーです。
+  通常のEnterと同じように扱われることもありますが、業務システムによっては
+  通常EnterとNUMEnterを別のキーとして判定している場合があります。
+</p>
+
+<p>
+  特に、端末エミュレータ、医療系システム、物流系システム、古い基幹システムでは、
+  次のような使い分けがされていることがあります。
+</p>
+
+<table class="format-table">
+<thead>
+<tr>
+<th>キー</th>
+<th>業務システムでの扱い例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>通常Enter</td>
+<td>改行、次項目へ移動、入力確定のみ</td>
+</tr>
+<tr>
+<td>NUMEnter</td>
+<td>検索実行、登録確定、送信、次画面へ進む</td>
+</tr>
+</tbody>
+</table>
+
+<div class="xdemo-note-danger">
+<strong>⚠️ 重要：</strong><br>
+<span class="code-inline">CHAR(13)</span> は Enter 相当として扱われることがありますが、
+<strong>NUMEnterそのものではありません。</strong><br>
+テンキーEnterを明示的に送りたい場合は、ExcelのCHAR関数ではなく、
+QRリーダー側の「サフィックス」「ターミネータ」「キー変換」などの設定で
+<strong>Keypad Enter / NUMEnter</strong> を送信する必要があります。
+</div>
+
+<h3>業務システムでの検証順</h3>
+
+<p>
+  Enter系の動作が安定しない場合は、次の順番で検証すると原因を切り分けやすくなります。
+</p>
+
+<table class="format-table">
+<thead>
+<tr>
+<th>順番</th>
+<th>試す内容</th>
+<th>Excel式・設定例</th>
+<th>確認すること</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="text-center">1</td>
+<td>CRを試す</td>
+<td><span class="code-inline">=A1 &amp; CHAR(13)</span></td>
+<td>検索・登録・確定が実行されるか</td>
+</tr>
+<tr>
+<td class="text-center">2</td>
+<td>LFを試す</td>
+<td><span class="code-inline">=A1 &amp; CHAR(10)</span></td>
+<td>改行または確定として扱われるか</td>
+</tr>
+<tr>
+<td class="text-center">3</td>
+<td>CR+LFを試す</td>
+<td><span class="code-inline">=A1 &amp; CHAR(13) &amp; CHAR(10)</span></td>
+<td>改行・確定が安定するか。二重Enterにならないか</td>
+</tr>
+<tr>
+<td class="text-center">4</td>
+<td>リーダー側のサフィックスを変更</td>
+<td>CR / LF / CR+LF / Enter / NUMEnter</td>
+<td>業務システムが要求しているEnter種別を確認する</td>
+</tr>
+<tr>
+<td class="text-center">5</td>
+<td>キー変換を使う</td>
+<td>特定文字をNUMEnterへ変換</td>
+<td>テンキーEnter指定の画面で確定できるか</td>
+</tr>
+</tbody>
+</table>
+
+<h3>実務での使い分け</h3>
+
+<table class="format-table">
+<thead>
+<tr>
+<th>やりたいこと</th>
+<th>おすすめ</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>番号を入力して検索する</td>
+<td><span class="code-inline">CHAR(13)</span></td>
+<td><span class="code-inline">=A1 &amp; CHAR(13)</span></td>
+</tr>
+<tr>
+<td>登録ボタンを押す</td>
+<td><span class="code-inline">CHAR(13)</span></td>
+<td><span class="code-inline">=A1 &amp; CHAR(9) &amp; CHAR(13)</span></td>
+</tr>
+<tr>
+<td>備考欄に複数行で入力する</td>
+<td><span class="code-inline">CHAR(10)</span> または CR+LF</td>
+<td><span class="code-inline">=A1 &amp; CHAR(10) &amp; B1</span></td>
+</tr>
+<tr>
+<td>テンキーEnterでしか確定しない画面を操作する</td>
+<td>QRリーダー側でNUMEnter送信</td>
+<td>サフィックス：NUMEnter / Keypad Enter</td>
+</tr>
+<tr>
+<td>Enter後に確認OKまで押す</td>
+<td>原則QRを分ける</td>
+<td>QR① 登録 → 目視確認 → QR② Enter</td>
+</tr>
+</tbody>
+</table>
+
+<div class="xdemo-note-warn">
+<strong>⚠️ 画面遷移をまたぐEnterは慎重に：</strong><br>
+QRリーダーは、基本的にQR内の文字列を最後まで一気に送信します。
+検索後の画面表示や登録後の確認ダイアログ表示を待たずに次のEnterが送られると、
+意図しない画面で確定処理が走る可能性があります。<br>
+画面遷移や確認ダイアログをまたぐ場合は、QRを分ける設計が安全です。
+</div>
+
+<div class="xdemo-note-good">
+<strong>✅ まとめ：</strong><br>
+<span class="code-inline">CHAR(10)</span> は「改行」寄り、<br>
+<span class="code-inline">CHAR(13)</span> は「検索・登録・確定」寄り、<br>
+NUMEnter は「テンキーEnter指定の業務システム向け」で、CHAR関数ではなくQRリーダー側の設定で送るものです。
+</div>
+
+</section>
+<!-- ========================================== -->
+<!-- 注意点 -->
+<!-- ========================================== -->
+<section class="tips-section">
+<h2>⚡ 知っておくべき5つのポイント</h2>
+<div class="xdemo-note-danger">
+<strong>⓪ 途中で止められない &horbar; 最も重要な制約</strong><br>
+    QRリーダーは基本的に、1枚のQRに含まれる全文字列を一気に最後まで送信し切る前提で設計されています。<strong>機種や設定（トリガーモードやバッファ挙動など）にもよりますが、基本的には送信中に「ずれた」と気づいても途中でキャンセルできないものと考えて設計してください。</strong>1つのフィールドがずれると、そこからの入力が連鎖的にずれるリスクがあります。対策として、1QRあたりのデータ量を短く保つこと、本番前に必ず数件のテストスキャンを行うことが不可欠です。Excelへの入力であればCtrl+Z（元に戻す）が効きますが、業務システムへの入力はUndoできない場合がほとんどなので、テスト環境での事前検証を徹底してください。
+  </div>
+<div class="xdemo-note-warn">
+<strong>① 全角文字は使えない（でも実務には困らない）</strong><br>
+    バーコードコントロールは半角英数・ASCII文字のみ。氏名は <span class="code-inline">TANAKA TARO</span>、部署は <span class="code-inline">EIGYO</span> のようにローマ字やコードに変換すればOK。詳しくは<a href="#appendix">ページ下部の資料</a>を参照。全角が必要な場合は <a href="11_qr_vba_generate.html">⑪ 全角QR生成</a> へ。
+  </div>
+<div class="xdemo-note-warn">
+<strong>② 1つのQRに入るのは最大255文字</strong><br>
+    1レコード30文字なら約8レコード分。それ以上は <a href="09_qr_closed_transfer.html">⑨ 閉域転送</a> で分割方法を解説しています。
+  </div>
+<div class="xdemo-note-danger">
+<strong>③ Enterが効かない場合がある</strong><br>
+<span class="code-inline">CHAR(10)</span>（LF）で動かない場合は <span class="code-inline">CHAR(13)</span>（CR）を試してください。リーダーの設定で「サフィックス: CR」「サフィックス: CR+LF」を選べる機種もあります。
+  </div>
+<div class="xdemo-note-danger">
+<strong>④ 文字が欠ける（飛ぶ）場合 &horbar; 最重要</strong><br>
+    QRリーダーの送信速度がExcelの処理速度を超えると文字欠けが発生します。&rarr; <a href="03_qr_character_delay.html">③ キャラクター間ディレイ</a> で<strong>確実に解決</strong>できます。基本レベルで一番大事な設定。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- Ctrl+S 補足 -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>💡 パターン④ Ctrl+S自動保存の補足</h2>
+<p>末尾に <span class="code-inline">CHAR(19)</span>（Ctrl+S）を付ける場合の動作条件です。</p>
+<table class="key-table">
+<tr><th>条件</th><th>説明</th></tr>
+<tr><td>ファイルが既に保存済み</td><td>新規ブックだと「名前を付けて保存」ダイアログが開いてしまう。事前に一度保存しておく</td></tr>
+<tr><td>USB-HIDモードのリーダー</td><td>制御文字をキーボードショートカットとして送信できる必要がある</td></tr>
+<tr><td>Enter後のタイミング</td><td>Enter確定直後にCtrl+Sが飛ぶため、PCが遅い場合はSleep（<a href="06_qr_sleep.html">⑥</a>で解説）を挟む</td></tr>
+</table>
+</section>
+<!-- ========================================== -->
+<!-- まとめ -->
+<!-- ========================================== -->
+<section class="method-section">
+<h2>📝 この記事で学んだこと</h2>
+<table class="format-table">
+<tr><th>項目</th><th>内容</th></tr>
+<tr><td>位置づけ</td><td>QRリーダー入力は<strong>RPAが届かない場所で使える最終手段</strong>。VBA禁止・閉域環境・RPA未導入の現場で即日導入可能</td></tr>
+<tr><td>QRコード生成</td><td>バーコードコントロール &rarr; スタイル「11 &ndash; QRコード」&rarr; LinkedCell で完成</td></tr>
+<tr><td>Tab の埋め込み</td><td><span class="code-inline">CHAR(9)</span> &rarr; 右のセルに移動</td></tr>
+<tr><td>Enter の埋め込み</td><td><span class="code-inline">CHAR(13)</span> または <span class="code-inline">CHAR(10)</span> &rarr; 次の行に移動</td></tr>
+<tr><td>自動保存（応用）</td><td><span class="code-inline">CHAR(19)</span> &rarr; Ctrl+S（USB-HIDリーダー必須）</td></tr>
+<tr><td>制限</td><td>半角のみ・最大255文字・<strong>送信中に止められない（テスト必須）</strong></td></tr>
+<tr><td>最重要設定</td><td>文字欠け対策 &rarr; 次の記事③ キャラクター間ディレイ</td></tr>
+</table>
+</section>
+<!-- ========================================== -->
+<!-- ★ 付録：文字種 & CHARコード資料 ★ -->
+<!-- ========================================== -->
+<section class="appendix-section" id="appendix">
+<h2>📎 付録：QRコードに入れられる文字 ＆ CHARコード資料</h2>
+<p>バーコードコントロールで生成するQRコードに入れられる文字と、CHAR関数で利用できるコードの一覧資料です。</p>
+<!-- ===== 使える／使えない一覧 ===== -->
+<h3>使える文字・使えない文字</h3>
+<table class="charmap-table">
+<thead>
+<tr><th>文字の種類</th><th>例</th><th>使える？</th><th>補足</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>半角数字</strong></td>
+<td><span class="code-inline">0 1 2 &hellip; 9</span></td>
+<td class="ok">◎ 使える</td>
+<td>商品コード・数量・日付（20260417）など最もよく使う</td>
+</tr>
+<tr>
+<td><strong>半角英字（大文字）</strong></td>
+<td><span class="code-inline">A B C &hellip; Z</span></td>
+<td class="ok">◎ 使える</td>
+<td>型番・部署コード・ステータス（OK, NG）など</td>
+</tr>
+<tr>
+<td><strong>半角英字（小文字）</strong></td>
+<td><span class="code-inline">a b c &hellip; z</span></td>
+<td class="ok">◎ 使える</td>
+<td>業務コードは大文字が多いが小文字も問題なく入る</td>
+</tr>
+<tr>
+<td><strong>半角記号（33種）</strong></td>
+<td><span class="code-inline">! " # $ % & ' ( ) * + , - . / : ; &lt; = &gt; ? @ [ \ ] ^ _ ` { | } ~</span></td>
+<td class="ok">◎ 使える</td>
+<td>日付区切り（- /）、CSV区切り（,）、メールアドレス（@）など</td>
+</tr>
+<tr>
+<td><strong>半角スペース</strong></td>
+<td><span class="code-inline">（空白）</span></td>
+<td class="ok">◎ 使える</td>
+<td>CHAR(32)。データ内の区切りに（セル区切りにはTabを推奨）</td>
+</tr>
+<tr>
+<td><strong>制御文字</strong></td>
+<td><span class="code-inline">Tab Enter ESC</span> など</td>
+<td class="ok">◎ 使える</td>
+<td>CHAR(1)〜CHAR(31), CHAR(127)。本記事STEP 2のメインテーマ</td>
+</tr>
+<tr>
+<td><strong>ローマ字（半角で書いた日本語）</strong></td>
+<td><span class="code-inline">TANAKA</span> <span class="code-inline">TOKYO</span></td>
+<td class="ok">◎ 使える</td>
+<td>氏名・地名をローマ字にすれば問題なし</td>
+</tr>
+<tr class="bg-red-light">
+<td><strong>全角ひらがな</strong></td>
+<td>あいうえお</td>
+<td class="ng">✕ 使えない</td>
+<td rowspan="4" style="vertical-align:middle">バーコードコントロールはASCII（1バイト文字）のみ対応。全角は文字化け。<br>&rarr; <a href="11_qr_vba_generate.html">⑪ 全角QR生成</a> を参照</td>
+</tr>
+<tr class="bg-red-light"><td><strong>全角カタカナ</strong></td><td>アイウエオ</td><td class="ng">✕ 使えない</td></tr>
+<tr class="bg-red-light"><td><strong>漢字</strong></td><td>田中 東京</td><td class="ng">✕ 使えない</td></tr>
+<tr class="bg-red-light"><td><strong>全角数字・全角英字</strong></td><td>０１２ ＡＢＣ</td><td class="ng">✕ 使えない</td></tr>
+<tr style="background:#fff8e1">
+<td><strong>半角カタカナ</strong></td>
+<td>ｱｲｳｴｵ</td>
+<td class="color-orange">&xutri; 非推奨</td>
+<td>Shift_JIS環境では一部動くが文字化けリスク高。使わないのが安全</td>
+</tr>
+</tbody>
+</table>
+<!-- ===== 実務変換例 ===== -->
+<h3>実務での使い分け &horbar; こう入れればOK</h3>
+<table class="format-table">
+<thead>
+<tr><th>入力したい情報</th><th>全角のまま</th><th>QR用に変換</th></tr>
+</thead>
+<tbody>
+<tr><td>社員番号</td><td>&horbar;（元から半角）</td><td><span class="code-inline">EMP-00451</span></td></tr>
+<tr><td>氏名</td><td>田中 太郎</td><td><span class="code-inline">TANAKA TARO</span></td></tr>
+<tr><td>部署名</td><td>営業部</td><td><span class="code-inline">EIGYO</span> または <span class="code-inline">SALES</span></td></tr>
+<tr><td>商品コード</td><td>&horbar;（元から半角）</td><td><span class="code-inline">A-2345-BK</span></td></tr>
+<tr><td>日付</td><td>２０２６年４月１７日</td><td><span class="code-inline">2026/04/17</span> または <span class="code-inline">20260417</span></td></tr>
+<tr><td>数量</td><td>５０個</td><td><span class="code-inline">50</span></td></tr>
+<tr><td>ステータス</td><td>合格 / 不合格</td><td><span class="code-inline">OK</span> / <span class="code-inline">NG</span></td></tr>
+<tr><td>棚番</td><td>Ａ棚３段目</td><td><span class="code-inline">A-3</span></td></tr>
+<tr><td>電話番号</td><td>&horbar;（元から半角）</td><td><span class="code-inline">03-1234-5678</span></td></tr>
+<tr><td>メールアドレス</td><td>&horbar;（元から半角）</td><td><span class="code-inline">tanaka@example.com</span></td></tr>
+</tbody>
+</table>
+<!-- ===== ビジュアル文字マップ ===== -->
+<h3>ビジュアル文字マップ（ASCII 32〜126 &horbar; QRに入る全95文字）</h3>
+<div class="legend-bar">
+<span><span class="legend-swatch" style="background:#c8e6c9"></span> 数字</span>
+<span><span class="legend-swatch" style="background:#bbdefb"></span> 英大文字</span>
+<span><span class="legend-swatch" style="background:#d1c4e9"></span> 英小文字</span>
+<span><span class="legend-swatch" style="background:#fff9c4"></span> 記号</span>
+<span><span class="legend-swatch" style="background:#f5f5f5;border:1px dashed #bbb"></span> スペース</span>
+</div>
+<div class="charmap-grid">
+<div class="charmap-cell cm-space"><span class="ch">&blank;</span><span class="num">32</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">!</span><span class="num">33</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">"</span><span class="num">34</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">#</span><span class="num">35</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">$</span><span class="num">36</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">%</span><span class="num">37</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">&</span><span class="num">38</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">'</span><span class="num">39</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">(</span><span class="num">40</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">)</span><span class="num">41</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">*</span><span class="num">42</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">+</span><span class="num">43</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">,</span><span class="num">44</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">-</span><span class="num">45</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">.</span><span class="num">46</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">/</span><span class="num">47</span></div>
+<div class="charmap-cell cm-digit"><span class="ch">0</span><span class="num">48</span></div>
+<div class="charmap-cell cm-digit"><span class="ch">1</span><span class="num">49</span></div>
+<div class="charmap-cell cm-digit"><span class="ch">2</span><span class="num">50</span></div>
+<div class="charmap-cell cm-digit"><span class="ch">3</span><span class="num">51</span></div>
+<div class="charmap-cell cm-digit"><span class="ch">4</span><span class="num">52</span></div>
+<div class="charmap-cell cm-digit"><span class="ch">5</span><span class="num">53</span></div>
+<div class="charmap-cell cm-digit"><span class="ch">6</span><span class="num">54</span></div>
+<div class="charmap-cell cm-digit"><span class="ch">7</span><span class="num">55</span></div>
+<div class="charmap-cell cm-digit"><span class="ch">8</span><span class="num">56</span></div>
+<div class="charmap-cell cm-digit"><span class="ch">9</span><span class="num">57</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">:</span><span class="num">58</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">;</span><span class="num">59</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">&lt;</span><span class="num">60</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">=</span><span class="num">61</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">&gt;</span><span class="num">62</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">?</span><span class="num">63</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">@</span><span class="num">64</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">A</span><span class="num">65</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">B</span><span class="num">66</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">C</span><span class="num">67</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">D</span><span class="num">68</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">E</span><span class="num">69</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">F</span><span class="num">70</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">G</span><span class="num">71</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">H</span><span class="num">72</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">I</span><span class="num">73</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">J</span><span class="num">74</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">K</span><span class="num">75</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">L</span><span class="num">76</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">M</span><span class="num">77</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">N</span><span class="num">78</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">O</span><span class="num">79</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">P</span><span class="num">80</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">Q</span><span class="num">81</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">R</span><span class="num">82</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">S</span><span class="num">83</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">T</span><span class="num">84</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">U</span><span class="num">85</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">V</span><span class="num">86</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">W</span><span class="num">87</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">X</span><span class="num">88</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">Y</span><span class="num">89</span></div>
+<div class="charmap-cell cm-upper"><span class="ch">Z</span><span class="num">90</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">[</span><span class="num">91</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">\</span><span class="num">92</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">]</span><span class="num">93</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">^</span><span class="num">94</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">_</span><span class="num">95</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">`</span><span class="num">96</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">a</span><span class="num">97</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">b</span><span class="num">98</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">c</span><span class="num">99</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">d</span><span class="num">100</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">e</span><span class="num">101</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">f</span><span class="num">102</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">g</span><span class="num">103</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">h</span><span class="num">104</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">i</span><span class="num">105</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">j</span><span class="num">106</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">k</span><span class="num">107</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">l</span><span class="num">108</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">m</span><span class="num">109</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">n</span><span class="num">110</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">o</span><span class="num">111</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">p</span><span class="num">112</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">q</span><span class="num">113</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">r</span><span class="num">114</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">s</span><span class="num">115</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">t</span><span class="num">116</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">u</span><span class="num">117</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">v</span><span class="num">118</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">w</span><span class="num">119</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">x</span><span class="num">120</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">y</span><span class="num">121</span></div>
+<div class="charmap-cell cm-lower"><span class="ch">z</span><span class="num">122</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">{</span><span class="num">123</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">|</span><span class="num">124</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">}</span><span class="num">125</span></div>
+<div class="charmap-cell cm-symbol"><span class="ch">~</span><span class="num">126</span></div>
+</div>
+<!-- ===== Ctrl系 CHARコード一覧 ===== -->
+<h3>Ctrl系ショートカット CHARコード一覧</h3>
+<p>ASCII制御文字 <span class="code-inline">CHAR(1)</span>〜<span class="code-inline">CHAR(26)</span> は USB-HIDリーダーで Ctrl+A 〜 Ctrl+Z として送信されます。</p>
+<table class="char-table">
+<thead>
+<tr><th>CHAR関数</th><th>キー操作</th><th>Excelでの動作</th><th>レベル</th></tr>
+</thead>
+<tbody>
+<tr><td><span class="code-inline">CHAR(1)</span></td><td>Ctrl+A</td><td>全セル選択</td><td><span class="badge-adv">応用</span></td></tr>
+<tr><td><span class="code-inline">CHAR(3)</span></td><td>Ctrl+C</td><td>コピー</td><td><span class="badge-adv">応用</span></td></tr>
+<tr><td><span class="code-inline">CHAR(4)</span></td><td>Ctrl+D</td><td>フィルダウン</td><td><span class="badge-adv">応用</span></td></tr>
+<tr><td><span class="code-inline">CHAR(6)</span></td><td>Ctrl+F</td><td>検索ダイアログ</td><td><span class="badge-adv">応用</span></td></tr>
+<tr><td><span class="code-inline">CHAR(7)</span></td><td>Ctrl+G</td><td>ジャンプダイアログ</td><td><span class="badge-adv">応用</span></td></tr>
+<tr><td><span class="code-inline">CHAR(8)</span></td><td>Backspace</td><td>セル内容削除&rarr;編集モード</td><td><span class="badge-adv">応用</span></td></tr>
+<tr><td><span class="code-inline">CHAR(16)</span></td><td>Ctrl+P</td><td>印刷ダイアログ</td><td><span class="badge-exp">上級</span></td></tr>
+<tr><td><span class="code-inline">CHAR(19)</span></td><td>Ctrl+S</td><td><strong>上書き保存</strong></td><td><span class="badge-adv">応用</span></td></tr>
+<tr><td><span class="code-inline">CHAR(22)</span></td><td>Ctrl+V</td><td>貼り付け</td><td><span class="badge-adv">応用</span></td></tr>
+<tr><td><span class="code-inline">CHAR(23)</span></td><td>Ctrl+W</td><td>ブックを閉じる</td><td><span class="badge-exp">上級</span></td></tr>
+<tr><td><span class="code-inline">CHAR(24)</span></td><td>Ctrl+X</td><td>切り取り</td><td><span class="badge-adv">応用</span></td></tr>
+<tr><td><span class="code-inline">CHAR(25)</span></td><td>Ctrl+Y</td><td>やり直し（Redo）</td><td><span class="badge-adv">応用</span></td></tr>
+<tr><td><span class="code-inline">CHAR(26)</span></td><td>Ctrl+Z</td><td>元に戻す（Undo）</td><td><span class="badge-adv">応用</span></td></tr>
+<tr><td><span class="code-inline">CHAR(27)</span></td><td>ESC</td><td>編集キャンセル</td><td><span class="badge-adv">応用</span></td></tr>
+<tr><td><span class="code-inline">CHAR(127)</span></td><td>DEL</td><td>Delete キー送信</td><td><span class="badge-exp">上級</span></td></tr>
+</tbody>
+</table>
+<!-- ===== 記号用途 ===== -->
+<h3>よく使う記号と用途</h3>
+<table class="char-table">
+<thead>
+<tr><th>CHAR関数</th><th>文字</th><th>実務での使い方</th></tr>
+</thead>
+<tbody>
+<tr><td><span class="code-inline">CHAR(33)</span></td><td>!</td><td>⑥ Sleep制御文字の例として使用（業務データに「!」が含まれる場合は別の文字を選ぶ&rarr;記事⑥参照）</td></tr>
+<tr><td><span class="code-inline">CHAR(35)</span></td><td>#</td><td>管理番号（#001, #002&hellip;）</td></tr>
+<tr><td><span class="code-inline">CHAR(44)</span></td><td>,</td><td>CSV区切り</td></tr>
+<tr><td><span class="code-inline">CHAR(45)</span></td><td>-</td><td>日付（2026-04-17）、電話番号、型番</td></tr>
+<tr><td><span class="code-inline">CHAR(46)</span></td><td>.</td><td>小数点、IPアドレス</td></tr>
+<tr><td><span class="code-inline">CHAR(47)</span></td><td>/</td><td>日付（2026/04/17）</td></tr>
+<tr><td><span class="code-inline">CHAR(58)</span></td><td>:</td><td>時刻（14:30:00）</td></tr>
+<tr><td><span class="code-inline">CHAR(64)</span></td><td>@</td><td>メールアドレス</td></tr>
+<tr><td><span class="code-inline">CHAR(95)</span></td><td>_</td><td>ファイル名・ID（WH_A3_001）</td></tr>
+<tr><td><span class="code-inline">CHAR(124)</span></td><td>|</td><td>独自区切り文字</td></tr>
+</tbody>
+</table>
+<div class="xdemo-note-warn">
+<strong>⚠️ Ctrl系コードの注意:</strong> CHAR(1)〜CHAR(26)の動作はQRリーダーの機種・設定に依存します。USB-HIDモード（キーボードエミュレーション）対応リーダーが必要です。購入前に「ASCII制御文字の送信対応」を確認してください。
+  </div>
+</section>
+<!-- ========================================== -->
+<!-- シリーズナビ -->
+<!-- ========================================== -->
+<nav class="series-nav">
+<h3>📱 QR Automation Lab &horbar; 全記事一覧</h3>
+<p class="text-sm-gray">
+<span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
+    <span class="color-orange">🟠 応用</span>（④〜⑪）＝ さらに自動化を極める
+  </p>
+<ol>
+<li class="current"><span class="lv-basic">[基本]</span> <strong>① QRコードでExcel一発入力 &horbar; Tab・Enter埋め込み（この記事）</strong></li>
+<li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ &horbar; 文字欠けを完全に防ぐ設定</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード &rarr; キー変換テクニック</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware.html">⑧ QRリーダーの選び方と接続方法</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 &horbar; 紙だけでPC間移行</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコード生成</a></li>
+</ol>
+</nav>
+</article>
+</main>
+<!-- ===== フッター ===== -->
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../script.js"></script>
+
+</body>
+</html>

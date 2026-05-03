@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="パワークエリのフォルダ取り込みでは届かない「ファイルのリネーム・移動・アーカイブ」など、VBAを用いたフォルダ内ファイル一括処理の手法を解説します。" name="description">
+<meta content="VBA, ファイルリネーム, フォルダ処理, 一括処理, FSO" name="keywords">
+<meta content="VBAでフォルダ内ファイル一括処理｜Excel &times; No VBA Lab" property="og:title">
+<meta content="パワークエリのフォルダ取り込みでは届かない「ファイルのリネーム・移動・アーカイブ」など、VBAを用いたフォルダ内ファイル一括処理の手法を解説します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/vba/article_vba_file_rename.html" rel="canonical">
+<title>VBAでフォルダ内ファイル一括処理｜Excel &times; No VBA Lab</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"VBAでフォルダ内ファイル一括処理・リネーム・アーカイブ","description":"パワークエリのフォルダ取り込みでは届かない「ファイルのリネーム・移動・アーカイブ」など、VBAを用いたフォルダ内ファイル一括処理の手法を解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/vba/article_vba_file_rename.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../index.html">ホーム</a><span>&rsaquo;</span><a href="../unlocked/index.html">制限解除ラボ</a><span>&rsaquo;</span><strong>ファイル一括処理（リネーム）</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-all">VBA OK</span><span class="article-date">更新日: 2026-04-24</span></div>
+<h1 class="article-title">VBAでフォルダ内ファイル一括処理・リネーム・アーカイブ</h1>
+</div>
+<div class="vba-box">
+<strong>💡 本編（VBAなし）との位置づけ</strong>
+<p>「複数ファイルの中身のデータを結合する」だけであればVBAは不要です。代替手法は &rarr; <a href="../powerquery/advanced/article_pq_import_patterns.html">パワークエリ「データ取り込みパターン集」</a> を使用してください。本記事は、ファイル自体の「移動」「名前変更」を行うための手法です。</p>
+</div>
+<section>
+<h2>1. パワークエリの限界とFileSystemObject (FSO)</h2>
+<p>パワークエリの「フォルダーから」取り込みは、大量のCSVやExcelファイルのデータを一気に結合する際に強力ですが、<strong>「ファイル自体をリネームする」「処理が終わったファイルを別フォルダに移動（アーカイブ）する」といったファイルシステムへの干渉はできません。</strong><br>
+        業務フローとして「処理済みファイルは別フォルダへ退避する」ルールがある場合、VBAの <code>FileSystemObject</code> (FSO) が最も確実で安全な選択肢となります。標準の <code>Name</code> ステートメントや <code>Dir</code> 関数は古い仕様であり、Unicode文字の扱いや別ドライブへの移動でエラーを起こしやすいため、現代の実務ではFSO一択です。</p>
+</section>
+<section>
+<h2>2. 実践：Excelリストに基づく一括リネーム（FSO版）</h2>
+<p>A列に「現在のファイル名」、B列に「新しいファイル名」を入力したリスト（シート名：リネームリスト）を用意し、一気にリネームする堅牢なコードです。上書きエラーやファイル欠損を事前に検知します。</p>
+<div class="code-readonly">
+<span class="code-line">Sub FSO_ファイル一括リネーム()</span>
+<span class="code-line">    Dim ws As Worksheet</span>
+<span class="code-line">    Dim i As Long, lastRow As Long</span>
+<span class="code-line">    Dim folderPath As String</span>
+<span class="code-line">    Dim oldPath As String, newPath As String</span>
+<span class="code-line">    Dim fso As Object</span>
+<span class="code-line">    Dim successCount As Long, errorCount As Long</span>
+<span class="code-line"> </span>
+<span class="code-line">    Set ws = ThisWorkbook.Sheets("リネームリスト")</span>
+<span class="code-line">    Set fso = CreateObject("Scripting.FileSystemObject")</span>
+<span class="code-line"> </span>
+<span class="code-line">    folderPath = ThisWorkbook.Path & "\TargetFolder\" ' 処理対象フォルダ</span>
+<span class="code-line">    lastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row</span>
+<span class="code-line"> </span>
+<span class="code-line">    For i = 2 To lastRow</span>
+<span class="code-line">        oldPath = fso.BuildPath(folderPath, ws.Cells(i, 1).Value)</span>
+<span class="code-line">        newPath = fso.BuildPath(folderPath, ws.Cells(i, 2).Value)</span>
+<span class="code-line"> </span>
+<span class="code-line">        ' リネームの安全性チェック</span>
+<span class="code-line">        If Not fso.FileExists(oldPath) Then</span>
+<span class="code-line">            ws.Cells(i, 3).Value = "エラー：元ファイルなし"</span>
+<span class="code-line">            errorCount = errorCount + 1</span>
+<span class="code-line">        ElseIf fso.FileExists(newPath) Then</span>
+<span class="code-line">            ws.Cells(i, 3).Value = "エラー：同名ファイルが存在"</span>
+<span class="code-line">            errorCount = errorCount + 1</span>
+<span class="code-line">        Else</span>
+<span class="code-line">            ' FSOによるリネーム（ファイルのNameプロパティを利用）</span>
+<span class="code-line">            On Error Resume Next</span>
+<span class="code-line">            fso.GetFile(oldPath).Name = ws.Cells(i, 2).Value</span>
+<span class="code-line">            If Err.Number = 0 Then</span>
+<span class="code-line">                ws.Cells(i, 3).Value = "完了"</span>
+<span class="code-line">                successCount = successCount + 1</span>
+<span class="code-line">            Else</span>
+<span class="code-line">                ws.Cells(i, 3).Value = "エラー：ファイル使用中など"</span>
+<span class="code-line">            End If</span>
+<span class="code-line">            On Error GoTo 0</span>
+<span class="code-line">        End If</span>
+<span class="code-line">    Next i</span>
+<span class="code-line"> </span>
+<span class="code-line">    Set fso = Nothing</span>
+<span class="code-line">    MsgBox "処理完了" & vbCrLf & "成功: " & successCount & "件" & vbCrLf & "失敗: " & errorCount & "件", vbInformation</span>
+<span class="code-line">End Sub</span>
+</div>
+</section>
+<section>
+<h2>3. 処理済みファイルのアーカイブ（日付別フォルダへ移動）</h2>
+<p>パワークエリでデータを読み込んだ後、使用したCSVファイルを「YYYYMM」形式のアーカイブフォルダに自動で移動させるルーチンです。</p>
+<div class="code-readonly">
+<span class="code-line">Sub 処理済ファイル_アーカイブ()</span>
+<span class="code-line">    Dim fso As Object</span>
+<span class="code-line">    Dim sourceFolder As String, archiveRoot As String, targetFolder As String</span>
+<span class="code-line">    Dim f As Object, folderObj As Object</span>
+<span class="code-line">    Dim yyyymm As String</span>
+<span class="code-line"> </span>
+<span class="code-line">    Set fso = CreateObject("Scripting.FileSystemObject")</span>
+<span class="code-line">    sourceFolder = ThisWorkbook.Path & "\ImportData\"</span>
+<span class="code-line">    archiveRoot = ThisWorkbook.Path & "\Archive\"</span>
+<span class="code-line"> </span>
+<span class="code-line">    ' 今月のフォルダ名を生成（例：202604）</span>
+<span class="code-line">    yyyymm = Format(Date, "yyyymm")</span>
+<span class="code-line">    targetFolder = fso.BuildPath(archiveRoot, yyyymm)</span>
+<span class="code-line"> </span>
+<span class="code-line">    ' アーカイブのルート、および月別フォルダが存在しなければ作成</span>
+<span class="code-line">    If Not fso.FolderExists(archiveRoot) Then fso.CreateFolder archiveRoot</span>
+<span class="code-line">    If Not fso.FolderExists(targetFolder) Then fso.CreateFolder targetFolder</span>
+<span class="code-line"> </span>
+<span class="code-line">    Set folderObj = fso.GetFolder(sourceFolder)</span>
+<span class="code-line"> </span>
+<span class="code-line">    ' フォルダ内の全CSVを移動</span>
+<span class="code-line">    For Each f In folderObj.Files</span>
+<span class="code-line">        If LCase(fso.GetExtensionName(f.Name)) = "csv" Then</span>
+<span class="code-line">            ' 移動先に同名ファイルがある場合は上書き（True指定）できる Copy を使い、その後削除</span>
+<span class="code-line">            ' ※ MoveFile は上書きできないため安全ですが、業務要件により選択してください</span>
+<span class="code-line">            fso.CopyFile f.Path, fso.BuildPath(targetFolder, f.Name), True</span>
+<span class="code-line">            f.Delete</span>
+<span class="code-line">        End If</span>
+<span class="code-line">    Next f</span>
+<span class="code-line"> </span>
+<span class="code-line">    Set fso = Nothing</span>
+<span class="code-line">    MsgBox "CSVファイルのアーカイブが完了しました。", vbInformation</span>
+<span class="code-line">End Sub</span>
+</div>
+<div class="tip-box">
+<strong>実務でのポイント：</strong> <code>MoveFile</code> は移動先に同名ファイルが存在するとエラーになります。日次処理で再実行の可能性がある場合、<code>CopyFile (Overwrite:=True)</code> してから <code>Delete</code> する手法がトラブルになりにくい運用方法です。
+        </div>
+</section>
+<section>
+<h2>4. サブフォルダも含む再帰処理</h2>
+<p>対象フォルダの中にさらにサブフォルダがある場合、再帰的に全てのファイルを処理するパターンです。月別フォルダの中にあるCSVを一括でリネームしたい場合などに使います。</p>
+<div class="code-readonly">
+<span class="code-line">Sub 再帰的ファイル一覧取得(folderPath As String, result As Collection)</span>
+<span class="code-line">    Dim fso As Object, folder As Object, subFolder As Object, f As Object</span>
+<span class="code-line">    Set fso = CreateObject("Scripting.FileSystemObject")</span>
+<span class="code-line">    Set folder = fso.GetFolder(folderPath)</span>
+<span class="code-line"> </span>
+<span class="code-line">    ' 現在のフォルダ内のファイルを収集</span>
+<span class="code-line">    For Each f In folder.Files</span>
+<span class="code-line">        result.Add f.Path</span>
+<span class="code-line">    Next f</span>
+<span class="code-line"> </span>
+<span class="code-line">    ' サブフォルダに対して再帰呼び出し</span>
+<span class="code-line">    For Each subFolder In folder.SubFolders</span>
+<span class="code-line">        再帰的ファイル一覧取得 subFolder.Path, result</span>
+<span class="code-line">    Next subFolder</span>
+<span class="code-line">End Sub</span>
+<span class="code-line"></span>
+<span class="code-line">' --- 使用例 ---</span>
+<span class="code-line">Sub テスト_再帰取得()</span>
+<span class="code-line">    Dim files As New Collection</span>
+<span class="code-line">    再帰的ファイル一覧取得 ThisWorkbook.Path & "\TargetFolder", files</span>
+<span class="code-line"> </span>
+<span class="code-line">    Dim i As Long</span>
+<span class="code-line">    For i = 1 To files.Count</span>
+<span class="code-line">        Debug.Print files(i)</span>
+<span class="code-line">    Next i</span>
+<span class="code-line">    MsgBox files.Count & "件のファイルが見つかりました。", vbInformation</span>
+<span class="code-line">End Sub</span>
+</div>
+</section>
+<section>
+<h2>5. パワークエリとの使い分けまとめ</h2>
+<div class="table-responsive">
+<table class="vba-compare-table">
+<thead>
+<tr>
+<th>やりたいこと</th>
+<th>パワークエリ（本編）</th>
+<th>VBA FSO（この記事）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>複数CSVのデータを結合</td>
+<td>✅ フォルダー取込で一発</td>
+<td>不要（PQを使うべき）</td>
+</tr>
+<tr>
+<td>ファイルのリネーム</td>
+<td>❌ 不可能</td>
+<td><strong>✅ FSO.GetFile.Name</strong></td>
+</tr>
+<tr>
+<td>処理済ファイルを別フォルダに移動</td>
+<td>❌ 不可能</td>
+<td><strong>✅ FSO.MoveFile / CopyFile</strong></td>
+</tr>
+<tr>
+<td>サブフォルダの再帰的探索</td>
+<td>&xutri; フォルダー取込のみ</td>
+<td><strong>✅ 再帰関数で自在に</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section>
+<h2>6. 関連記事</h2>
+<ul class="related-articles">
+<li><a href="../powerquery/advanced/article_pq_import_patterns.html">🔄 データ取り込みパターン集（本編）</a></li>
+<li><a href="article_vba_uia_automation.html">🤖 UIA（UI Automation）で他アプリへ自動入力</a></li>
+<li><a href="../unlocked/index.html">🔓 制限解除ラボ トップに戻る</a></li>
+</ul>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>
+
+

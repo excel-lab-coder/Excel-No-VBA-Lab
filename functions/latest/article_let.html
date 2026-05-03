@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>LET関数で可読性を上げる（2021～）｜Excel &times; No VBA Lab</title>
+<meta content="ExcelのLET関数（2021～）で長大な数式を変数化して可読性・速度を改善。同じ部分式の繰り返しを排除する実践テクニック。" name="description">
+<meta content="LET 関数 Excel, 数式 変数 可読性, LET 計算速度, Excel 2021 関数, VBA不要 数式" name="keywords">
+<meta content="LET関数で可読性を上げる（2021～）｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのLET関数（2021～）で長大な数式を変数化して可読性・速度を改善。同じ部分式の繰り返しを排除する実践テクニック。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/functions/latest/article_let.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "LET関数で可読性を上げる（2021～）",
+    "description": "ExcelのLET関数（2021～）で長大な数式を変数化して可読性・速度を改善。同じ部分式の繰り返しを排除する実践テクニック。",
+    "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-no-vba-lab.com/ogp.png"}},
+    "datePublished": "2023-10-01",
+    "dateModified": "2023-10-01"
+  }
+  </script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-no-vba-lab.com/"},
+      {"@type": "ListItem", "position": 2, "name": "関数", "item": "https://excel-no-vba-lab.com/#functions"},
+      {"@type": "ListItem", "position": 3, "name": "LET関数"}
+    ]
+  }
+  </script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">Excel × No VBA Lab</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#functions">関数</a><span>&gt;</span><strong>LET関数</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-2021">2021～</span></div>
+<h1 class="article-title">LET関数：数式に「変数」を導入して可読性と速度を劇的に改善</h1>
+</div>
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>長大で読めない数式を「変数名」で整理したい。同じ部分式が何度も出てくる数式の計算速度を上げたい。</p>
+</section>
+<section class="method-section">
+<h3>LET関数の基本構造</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(変数名1, 値1, 変数名2, 値2, ..., 最終計算式)</span>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">  税率, 0.1,</span>
+<span class="code-line">  小計, B2*C2,</span>
+<span class="code-line">  小計 + 小計 * 税率</span>
+<span class="code-line">)</span>
+</div>
+<p class="code-comment">意味：「税率」「小計」という名前を定義し、最後の行で使っている。<br>同じ計算（B2*C2）を2回書く必要がなくなり、Excelも内部で1回しか計算しない。</p>
+<div class="xdemo-note-info">
+<strong>🔥 LETの真価：パフォーマンス向上</strong><br>
+        LETを使わないと同じ部分式が複数回評価されます。例えば <code>XLOOKUP(...)</code> を3回使う数式では、LETで1回だけ評価して変数に入れれば計算量が1/3になります。大量行での速度差は歴然です。
+      </div>
+</section>
+<section class="legacy-section">
+<h3>旧バージョンでの代替法</h3>
+<p>LETがない環境では、中間計算の結果を「ヘルパー列（作業列）」に出力し、それを参照する方式にするしかありません。数式の可読性のためだけにシートに列が増えるのが欠点ですが、パフォーマンス面では同等に有効です。</p>
+</section>
+<div class="series-nav" style="margin-top:40px; padding: 20px; background: #f0f4f8; border-radius: 8px;">
+<h4>LET関数 深掘りシリーズ</h4>
+<ul>
+<li><a href="article_let.html">① LET関数の基本とメリット</a></li>
+<li><a href="article_let_if.html">② 深掘り①：VLOOKUPの重複評価を排除</a></li>
+<li><a href="article_let_iferror.html">③ 深掘り②：SORT/SORTBYの重い処理を変数化</a></li>
+</ul>
+</div>
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
+

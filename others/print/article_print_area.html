@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>印刷範囲を数式で自動可変にする方法｜Excel &times; No VBA Lab</title>
+<meta content="ExcelでVBA完全不要の印刷範囲を自動伸縮させる裏ワザ。名前の管理と数式でデータ量に応じてPrint_Areaが自動で広がる仕組みを解説。" name="description">
+<meta content="印刷範囲 自動 Excel, Print_Area 数式 名前の管理, VBA不要 印刷, 印刷範囲 自動拡張, Excel 印刷 自動化" name="keywords">
+<meta content="印刷範囲を数式で自動可変にする方法｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelでVBA完全不要の印刷範囲を自動伸縮させる裏ワザ。名前の管理と数式でデータ量に応じてPrint_Areaが自動で広がる仕組みを解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/others/print/article_print_area.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    .formula-box .comment{color:#6c7086;font-style:italic}
+    .formula-box .func{color:#89dceb}
+    .formula-box .keyword{color:#f38ba8}
+    .compare-table .rec{color:#2e7d32;font-weight:700}
+    .compare-table .dep{color:#c62828;font-weight:700}
+    .compare-table .ok{color:#1565c0;font-weight:700}
+    .excel-wrap{border:2px solid #217346;border-radius:6px;overflow:hidden;margin:1.2em 0;background:#fff}
+    .excel-sheet{display:none}
+    .excel-sheet.active{display:block}
+    .excel-sheet table{width:100%;border-collapse:collapse;font-size:.84rem}
+    .excel-sheet th{background:#217346;color:#fff;padding:.4em .7em;font-weight:700;text-align:center;min-width:2.2em;font-size:.8rem}
+    .excel-sheet td{border:1px solid #c8e6c9;padding:.4em .7em}
+    .excel-sheet tr:nth-child(even) td{background:#f6fbf4}
+    .cell-formula{background:#fff8e1;font-family:Consolas,monospace;font-size:.78rem;color:#6a1b9a}
+    .sheet-tab-bar{display:flex;gap:0;background:#d6d6d6;padding:3px 6px 0;border-top:1px solid #bbb}
+    .sheet-tab{padding:5px 16px;font-size:.78rem;border-radius:6px 6px 0 0;background:#e0e0e0;color:#555;cursor:pointer;border:1px solid #bbb;border-bottom:none;margin-right:2px;transition:all .15s;user-select:none}
+    .sheet-tab:hover{background:#f5f5f5}
+    .sheet-tab.active{background:#fff;color:#1b5e20;font-weight:700;border-color:#bbb;position:relative}
+    .sheet-tab.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:#fff}
+    .page-cards{display:flex;flex-wrap:wrap;gap:12px;margin:1em 0}
+    .print-page-card{border:2px solid #217346;border-radius:8px;padding:.9em 1.1em;min-width:170px;flex:1;position:relative;background:#fff}
+    .print-page-card.noprint{border-color:#bbb;background:#fafafa;opacity:.45}
+    .print-page-card.noprint::after{content:"印刷されない";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-12deg);font-size:1rem;color:#e53935;font-weight:700}
+    .page-label{position:absolute;top:-11px;left:14px;background:#217346;color:#fff;font-size:.7rem;padding:2px 12px;border-radius:12px;white-space:nowrap}
+    .print-page-card.noprint .page-label{background:#999}
+    .spin-demo{display:inline-flex;align-items:center;gap:0;margin:.8em 0}
+    .spin-demo .cell-label{font-size:.85rem;margin-right:10px;color:#555;font-weight:700}
+    .spin-demo .cell{border:2px solid #217346;padding:7px 22px;font-weight:700;font-size:1.15rem;min-width:56px;text-align:center;background:#fff;border-radius:6px 0 0 6px}
+    .spin-demo .spin-btns{display:flex;flex-direction:column;border:1px solid #888;border-radius:0 6px 6px 0;overflow:hidden}
+    .spin-demo .spin-btns button{background:#f0f0f0;border:none;padding:2px 10px;font-size:.7rem;cursor:pointer;line-height:1.3;transition:background .12s}
+    .spin-demo .spin-btns button:first-child{border-bottom:1px solid #ccc}
+    .spin-demo .spin-btns button:hover{background:#c8e6c9}
+    .spin-demo .spin-hint{font-size:.82rem;margin-left:14px;color:#777}
+    .batch-flow{display:flex;align-items:center;gap:8px;margin:1em 0;flex-wrap:wrap}
+    .batch-item{border:2px solid #217346;border-radius:8px;padding:.5em .8em;background:#f1f8e9;text-align:center;min-width:110px;font-size:.82rem}
+    .batch-item.inactive{border-color:#ccc;background:#fafafa;color:#aaa}
+    .batch-arrow{font-size:1.3rem;color:#43a047;flex-shrink:0}
+    .a4-paper-row{display:flex;gap:24px;margin:1.2em 0;flex-wrap:wrap;justify-content:center}
+    .a4-paper{background:#fff;border:1px solid #bbb;border-radius:4px;box-shadow:2px 3px 12px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.04);padding:18px 16px 14px;width:280px;flex-shrink:0;position:relative}
+    .a4-paper.no-print{opacity:.38;border-style:dashed;border-color:#aaa}
+    .a4-paper-title{position:absolute;top:-12px;left:12px;background:#217346;color:#fff;font-size:.7rem;padding:2px 14px;border-radius:12px;white-space:nowrap;font-weight:700}
+    .a4-paper.no-print .a4-paper-title{background:#999}
+    .a4-paper-subtitle{text-align:center;font-size:.72rem;color:#888;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid #eee}
+    .a4-paper .label-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+    .a4-paper .label-face{border:1px dashed #a5d6a7;padding:6px 7px;font-size:.7rem;line-height:1.45;position:relative;min-height:38px;display:flex;flex-direction:column;justify-content:center}
+    .a4-paper .label-face.has-data{background:#f1f8e9}
+    .a4-paper .label-face.empty{background:#fafafa;color:#bbb;text-align:center;font-style:italic}
+    .a4-paper .label-face .face-no{position:absolute;top:1px;right:4px;font-size:.58rem;color:#aaa;font-weight:700}
+    .a4-paper .label-face .lbl-name{font-weight:700;color:#1b5e20;font-size:.76rem}
+    .a4-paper .label-face .lbl-addr{color:#555;font-size:.66rem}
+    .a4-paper .label-face .lbl-zip{color:#888;font-size:.62rem}
+    .a4-no-print-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-18deg);font-size:1.15rem;color:#e53935;font-weight:700;white-space:nowrap;pointer-events:none;text-shadow:0 0 6px #fff,0 0 6px #fff}
+    .steps{counter-reset:step-counter;margin:1.2em 0}
+    .step-item{position:relative;padding:0 0 1em 3.2em;margin-bottom:.2em}
+    .step-item::before{counter-increment:step-counter;content:counter(step-counter);position:absolute;left:0;top:0;width:2.2em;height:2.2em;background:linear-gradient(135deg,#2e7d32,#43a047);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.88rem}
+    @media(max-width:640px){
+      .page-cards{flex-direction:column}
+      .batch-flow{flex-direction:column;align-items:stretch}
+      .batch-arrow{transform:rotate(90deg);text-align:center}
+      .a4-paper-row{flex-direction:column;align-items:center}
+      .a4-paper{width:95%}
+    }
+  </style>
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"🖨️ Excelの印刷範囲を数式で自動可変にする方法","description":"ExcelでVBA完全不要の印刷範囲を自動伸縮させる裏ワザ。名前の管理と数式でデータ量に応じてPrint_Areaが自動で広がる仕組みを解説。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/others/print/article_print_area.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span>
+<a href="../../index.html#others">小技</a><span>&gt;</span>
+<strong>印刷範囲を数式で自動可変にする方法</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">🖨️ Excelの印刷範囲を数式で自動可変にする方法</h1>
+<p style="color:#555;margin-top:.3em">Print_Area &times; 数式で"データがある所まで"を自動認識させるテクニック</p>
+</div>
+<!-- ======================================================= -->
+<!-- はじめに -->
+<!-- ======================================================= -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> はじめに &horbar; 固定の印刷範囲が起こす問題</h2>
+<p>Excelで印刷範囲を手動設定していると、データの増減に追従できず「空白ページが大量に出る」「最新データが切れる」といった問題が頻発します。</p>
+<p>本記事では<strong>Print_Area（印刷範囲の名前定義）に数式を直接入力</strong>して、常に"最終データのある行まで"を印刷範囲にする方法を解説します。さらに、この仕組みを応用した<strong>案内文書の差し込み印刷風テクニック</strong>や<strong>ラベル印刷の無駄紙削減</strong>も詳しく紹介します。</p>
+</section>
+<!-- ======================================================= -->
+<!-- 基本手順 -->
+<!-- ======================================================= -->
+<section class="method-section">
+<h2>基本：Print_Area に数式を入れる手順</h2>
+<p>ここでは「売上一覧」シートの A〜E列にデータがあり、3行目からデータが始まる場合を例にします。</p>
+<div class="excel-wrap" id="ex-basic">
+<div class="excel-sheet active" data-sheet="売上一覧">
+<table>
+<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td><strong>1</strong></td><td colspan="5" style="text-align:center;font-weight:700;background:#e8f5e9">売上一覧レポート</td></tr>
+<tr><td><strong>2</strong></td><td>No</td><td>日付</td><td>商品名</td><td>数量</td><td>金額</td></tr>
+<tr><td><strong>3</strong></td><td>1</td><td>2025/01/05</td><td>ウィジェットA</td><td>10</td><td>&yen;5,000</td></tr>
+<tr><td><strong>4</strong></td><td>2</td><td>2025/01/06</td><td>ウィジェットB</td><td>5</td><td>&yen;3,200</td></tr>
+<tr><td><strong>5</strong></td><td>3</td><td>2025/01/07</td><td>ガジェットC</td><td>20</td><td>&yen;12,000</td></tr>
+<tr><td><strong>6</strong></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
+</div>
+<div class="sheet-tab-bar">
+<span class="sheet-tab active" onclick="switchSheet(this,'ex-basic')">売上一覧</span>
+</div>
+</div>
+<div class="steps">
+<div class="step-item"><strong>［数式］タブ &rarr; ［名前の管理］</strong>を開きます。</div>
+<div class="step-item">一覧から <code>Print_Area</code>（スコープ：売上一覧）を選択。存在しない場合は先に「ページレイアウト &rarr; 印刷範囲の設定」で仮の範囲を設定。</div>
+<div class="step-item"><strong>「参照範囲」欄</strong>に下記いずれかの数式を直接入力 &rarr; Enter &rarr; 閉じる。</div>
+</div>
+</section>
+<!-- ======================================================= -->
+<!-- 数式バリエーション -->
+<!-- ======================================================= -->
+<section class="tips-section">
+<h2>数式バリエーション（3種）</h2>
+<h3>① XLOOKUP + INDEX版（Microsoft 365 推奨）</h3>
+<div class="formula-box"><span class="func">=売上一覧!$A$3:INDEX(売上一覧!$A:$E,<br>　　XLOOKUP(TRUE,INDEX(売上一覧!$B:$B&lt;&gt;"",0),<br>　　ROW(売上一覧!$B:$B),,0,-1),5)</span></div>
+<p>B列を下から検索して最後の非空白セルの行番号を取得し、A3からその行のE列までを範囲とします。XLOOKUPの第5引数 <code>-1</code>（逆方向検索）がポイントです。</p>
+<h3>② INDEX + COUNTA版（旧バージョン推奨）</h3>
+<div class="formula-box"><span class="func">=売上一覧!$A$3:INDEX(売上一覧!$A:$E,<br>　　COUNTA(売上一覧!$B:$B)+2, 5)</span></div>
+<p>COUNTAでB列の入力済みセル数を数え、ヘッダー行分を加算（+2）して最終行を算出。<strong>揮発性関数を使わない</strong>ため再計算負荷が軽く済みます。</p>
+<div class="xdemo-note-info">
+<strong>💡 +2 の計算根拠：</strong>データ開始行が3行目（＝ヘッダー2行）の場合、COUNTAはヘッダーも数えるため結果的にそのまま最終行番号に。開始行が1行目なら+0、5行目なら+4。
+        </div>
+<h3>③ OFFSET + COUNTA版（非推奨）</h3>
+<div class="formula-box"><span class="comment">' 非推奨：揮発性関数のため再計算コストが高い</span><br><span class="func">=OFFSET(売上一覧!$A$3, 0, 0,<br>　　COUNTA(売上一覧!$B:$B), 5)</span></div>
+<p>OFFSETは<strong>揮発性関数</strong>のため非推奨。INDEX+COUNTAで同じ結果が得られます。</p>
+<table class="compare-table">
+<tr><th>項目</th><th>① XLOOKUP+INDEX</th><th>② INDEX+COUNTA</th><th>③ OFFSET+COUNTA</th></tr>
+<tr><td>対応バージョン</td><td>365 / 2021以降</td><td>2007以降すべて</td><td>2007以降すべて</td></tr>
+<tr><td>揮発性</td><td class="rec">なし</td><td class="rec">なし</td><td class="dep">あり（非推奨）</td></tr>
+<tr><td>空白行の扱い</td><td class="rec">途中空白に強い</td><td>途中空白に弱い</td><td>途中空白に弱い</td></tr>
+<tr><td>評価</td><td class="rec">&starf;&starf;&starf; 推奨</td><td class="ok">&starf;&starf;&star; 旧版向け</td><td class="dep">&starf;&star;&star; 非推奨</td></tr>
+</table>
+</section>
+<!-- ======================================================= -->
+<!-- 落とし穴 -->
+<!-- ======================================================= -->
+<section class="method-section">
+<h2>⚠️ 最大の落とし穴 &horbar; 名前の管理の罠</h2>
+<p>Print_Areaに数式を入れた後でも、<strong>「ページレイアウト &rarr; 印刷範囲の設定」を実行すると数式が上書き</strong>されます。</p>
+<div class="xdemo-note-danger">
+<strong>⚠️ 絶対にやってはいけないこと：</strong>数式設定後に「印刷範囲の設定」ボタンを押す &rarr; 数式が消えて固定範囲に戻ります。変更は必ず「名前の管理」から。
+        </div>
+<div class="xdemo-note-warn">
+<strong>💡 保険策：</strong>設定した数式は、印刷範囲外の離れたセル（例：Z1）などにテキストとして残しておきましょう。先頭にアポストロフィ <code>'</code> を付ければ計算されず文字列として保存できます。万が一消えても、そこからコピーして名前の管理に貼り直すだけで復旧できます。
+        </div>
+</section>
+<!-- ======================================================= -->
+<!-- 活用例①：案内文書 -->
+<!-- ======================================================= -->
+<section class="method-section">
+<h2>📄 活用例①：案内文書の差し込み印刷をExcelだけで実現</h2>
+<p>Wordの差し込み印刷やVBAを使わなくても、<strong>Excelの数式とスピンボタンだけ</strong>で差し込み印刷を実現できます。IF関数で条件分岐を埋め込めば宛先ごとに文面を変える管理もでき、<strong>Excelならではの柔軟さ</strong>を最大限に活かせます。</p>
+<div class="xdemo-note-good">
+<strong>💡 メリット：</strong>VBA不要・Word連携不要。Excelの基本機能だけで差し込み印刷とほぼ同等のことが実現。10枚/50枚単位のバッチ印刷で数百件もスムーズに処理可能。さらに、<strong>Wordの差し込み印刷の操作を知らない人にファイルを渡しても</strong>、スピンボタンを押して印刷するだけなので誰でも使えます。「差し込み印刷のやり方を教える」手間がなくなるのも大きな利点です。
+        </div>
+<h3>宛先リストシートの構成</h3>
+<p>宛先データを管理するシートを用意します。A列に連番（検索キー）を入れておくのがポイントです。</p>
+<div class="excel-wrap" id="ex-addr">
+<div class="excel-sheet active" data-sheet="宛先リスト">
+<table>
+<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+<tr><td><strong>1</strong></td><td><strong>No</strong></td><td><strong>氏名</strong></td><td><strong>住所</strong></td><td><strong>部署</strong></td></tr>
+<tr><td><strong>2</strong></td><td>1</td><td>田中 太郎</td><td>東京都千代田区&hellip;</td><td>営業部</td></tr>
+<tr><td><strong>3</strong></td><td>2</td><td>鈴木 花子</td><td>大阪府大阪市&hellip;</td><td>総務部</td></tr>
+<tr><td><strong>4</strong></td><td>3</td><td>佐藤 一郎</td><td>愛知県名古屋市&hellip;</td><td>営業部</td></tr>
+<tr><td><strong>5</strong></td><td>4</td><td>高橋 美咲</td><td>福岡県福岡市&hellip;</td><td>企画部</td></tr>
+<tr><td><strong>6</strong></td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr>
+<tr><td><strong>101</strong></td><td>100</td><td>山田 次郎</td><td>北海道札幌市&hellip;</td><td>開発部</td></tr>
+</table>
+</div>
+<div class="sheet-tab-bar">
+<span class="sheet-tab active" onclick="switchSheet(this,'ex-addr')">宛先リスト</span>
+</div>
+</div>
+<h3>案内文書シートの構成 &horbar; スピンボタン＋縦並べテンプレート</h3>
+<p><strong>テンプレートを10通分縦に並べ</strong>、<strong>印刷範囲外のZ列に置いたスピンボタン</strong>で開始番号を制御。1回押すだけで10件ずつ切り替え印刷できます。</p>
+<div class="excel-wrap" id="ex-mail">
+<div class="excel-sheet active" data-sheet="案内文書">
+<table>
+<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th style="background:#455a64;color:#fff">&hellip;</th><th style="background:#37474f;color:#e0e0e0">Z（範囲外）</th></tr>
+<tr><td><strong>1</strong></td><td colspan="4" style="text-align:center;font-weight:700;background:#e8f5e9">【1通目】ご案内</td><td></td><td style="background:#eceff1"><strong>開始No ▶ <span style="color:#d32f2f">1</span></strong></td></tr>
+<tr><td><strong>2</strong></td><td class="cell-formula" colspan="4">=IFERROR(VLOOKUP(<strong>$Z$1</strong>, 宛先リスト!$A:$D, 2, FALSE) & " 様", "")</td><td></td><td style="background:#eceff1;font-size:.72rem">&uarr; スピンボタン(+10)</td></tr>
+<tr><td><strong>3</strong></td><td colspan="4">拝啓 時下ますます&hellip;（本文テンプレート）</td><td></td><td></td></tr>
+<tr><td class="color-999">&hellip;</td><td class="color-999" colspan="4">（50行分のテンプレート）</td><td></td><td></td></tr>
+<tr><td><strong>50</strong></td><td colspan="4">敬具</td><td></td><td></td></tr>
+<tr><td style="background:#fff3e0"><strong>51</strong></td><td colspan="4" style="background:#fff3e0;text-align:center;font-weight:700">【2通目】ご案内</td><td></td><td></td></tr>
+<tr><td style="background:#fff3e0"><strong>52</strong></td><td class="cell-formula" colspan="4" style="background:#fff3e0">=IFERROR(VLOOKUP(<strong>$Z$1+1</strong>, &hellip;) & " 様", "")</td><td></td><td></td></tr>
+<tr><td class="color-999">&hellip;</td><td class="color-999" colspan="4">&hellip;</td><td></td><td></td></tr>
+<tr><td style="background:#e3f2fd"><strong>451</strong></td><td colspan="4" style="background:#e3f2fd;text-align:center;font-weight:700">【10通目】ご案内</td><td></td><td></td></tr>
+<tr><td style="background:#e3f2fd"><strong>452</strong></td><td class="cell-formula" colspan="4" style="background:#e3f2fd">=IFERROR(VLOOKUP(<strong>$Z$1+9</strong>, &hellip;) & " 様", "")</td><td></td><td></td></tr>
+<tr><td class="color-999">&hellip;</td><td class="color-999" colspan="4">&hellip;</td><td></td><td></td></tr>
+<tr><td><strong>500</strong></td><td colspan="4">敬具</td><td></td><td></td></tr>
+</table>
+</div>
+<div class="excel-sheet" data-sheet="宛先リスト">
+<table>
+<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+<tr><td><strong>1</strong></td><td><strong>No</strong></td><td><strong>氏名</strong></td><td><strong>住所</strong></td><td><strong>部署</strong></td></tr>
+<tr><td><strong>2</strong></td><td>1</td><td>田中 太郎</td><td>東京都千代田区&hellip;</td><td>営業部</td></tr>
+<tr><td><strong>3</strong></td><td>2</td><td>鈴木 花子</td><td>大阪府大阪市&hellip;</td><td>総務部</td></tr>
+<tr><td class="color-999">&hellip;</td><td class="color-999">&hellip;</td><td class="color-999">&hellip;</td><td class="color-999">&hellip;</td><td class="color-999">&hellip;</td></tr>
+<tr><td><strong>101</strong></td><td>100</td><td>山田 次郎</td><td>北海道札幌市&hellip;</td><td>開発部</td></tr>
+</table>
+</div>
+<div class="sheet-tab-bar">
+<span class="sheet-tab active" onclick="switchSheet(this,'ex-mail')">案内文書</span>
+<span class="sheet-tab" onclick="switchSheet(this,'ex-mail')">宛先リスト</span>
+</div>
+</div>
+<!-- スピンボタン -->
+<h4>スピンボタンの設定</h4>
+<div class="spin-demo">
+<span class="cell-label">Z1 :</span>
+<div class="cell" id="spinVal">1</div>
+<div class="spin-btns">
+<button onclick="document.getElementById('spinVal').textContent=Math.min(parseInt(document.getElementById('spinVal').textContent)+10,91)">▲</button>
+<button onclick="document.getElementById('spinVal').textContent=Math.max(parseInt(document.getElementById('spinVal').textContent)-10,1)">▼</button>
+</div>
+<span class="spin-hint">&larr; ▲▼ を押してみてください（+10 / -10）</span>
+</div>
+<div class="steps">
+<div class="step-item"><strong>［開発］タブ &rarr; ［挿入］&rarr; フォームコントロール「スピンボタン」</strong>をZ1付近に配置。</div>
+<div class="step-item">右クリック &rarr; <strong>「コントロールの書式設定」</strong>を開く。</div>
+<div class="step-item"><strong>リンクするセル：$Z$1</strong>、最小値：<strong>1</strong>、最大値：<strong>宛先の最大件数</strong>、増分：<strong>10</strong>。</div>
+</div>
+<div class="xdemo-note-warn">
+<strong>💡 増分の調整：</strong>10枚ずつなら増分<strong>10</strong>、50枚ずつなら増分<strong>50</strong>。テンプレート枚数と増分を揃えてください。
+        </div>
+<!-- 宛名数式 -->
+<h4>各テンプレートの宛名セル数式</h4>
+<div class="formula-box">
+<span class="comment">' 1通目</span><br>
+<span class="func">=IFERROR(VLOOKUP(<span class="keyword">$Z$1</span>, 宛先リスト!$A:$D, 2, FALSE) & " 様", "")</span><br><br>
+<span class="comment">' 2通目</span><br>
+<span class="func">=IFERROR(VLOOKUP(<span class="keyword">$Z$1+1</span>, 宛先リスト!$A:$D, 2, FALSE) & " 様", "")</span><br><br>
+<span class="comment">' 3通目 ～ 10通目（+2, +3, &hellip; +9 と続く）</span><br>
+<span class="func">=IFERROR(VLOOKUP(<span class="keyword">$Z$1+9</span>, 宛先リスト!$A:$D, 2, FALSE) & " 様", "")</span>
+</div>
+<div class="xdemo-note-info">
+<strong>💡 IFERROR が重要：</strong>データが尽きた通は宛名が空白になり、Print_Areaの数式で自動的に印刷範囲外に。
+        </div>
+<!-- バッチ印刷 -->
+<h4>動作イメージ：10件ずつバッチ印刷</h4>
+<div class="batch-flow">
+<div class="batch-item">Z1 = <strong>1</strong><br>No.1〜10</div>
+<div class="batch-arrow">▶</div>
+<div class="batch-item">Z1 = <strong>11</strong><br>No.11〜20</div>
+<div class="batch-arrow">▶</div>
+<div class="batch-item">Z1 = <strong>21</strong><br>No.21〜30</div>
+<div class="batch-arrow">▶</div>
+<div class="batch-item inactive">&hellip;</div>
+<div class="batch-arrow">▶</div>
+<div class="batch-item">Z1 = <strong>91</strong><br>No.91〜100</div>
+</div>
+<!-- 印刷プレビュー -->
+<h4>印刷プレビューのイメージ（Z1 = 1 の場合）</h4>
+<div class="page-cards">
+<div class="print-page-card">
+<span class="page-label">1ページ目</span>
+<p style="margin:.8em 0 .2em"><strong>ご案内</strong></p>
+<p>田中 太郎 様</p>
+<p style="font-size:.82rem;color:#666">拝啓 時下ますます&hellip;敬具</p>
+</div>
+<div class="print-page-card">
+<span class="page-label">2ページ目</span>
+<p style="margin:.8em 0 .2em"><strong>ご案内</strong></p>
+<p>鈴木 花子 様</p>
+<p style="font-size:.82rem;color:#666">拝啓 時下ますます&hellip;敬具</p>
+</div>
+<div class="print-page-card">
+<span class="page-label">3ページ目</span>
+<p style="margin:.8em 0 .2em"><strong>ご案内</strong></p>
+<p>佐藤 一郎 様</p>
+<p style="font-size:.82rem;color:#666">拝啓 時下ますます&hellip;敬具</p>
+</div>
+</div>
+<div class="page-cards">
+<div class="print-page-card" style="flex:0 0 auto;min-width:100px">
+<span class="page-label">&hellip;</span>
+<p style="text-align:center;color:#999;margin:1em 0">4〜9通目</p>
+</div>
+<div class="print-page-card">
+<span class="page-label">10ページ目</span>
+<p style="margin:.8em 0 .2em"><strong>ご案内</strong></p>
+<p>山田 花子 様</p>
+<p style="font-size:.82rem;color:#666">拝啓 時下ますます&hellip;敬具</p>
+</div>
+<div class="print-page-card noprint" style="flex:0 0 auto;min-width:140px">
+<span class="page-label">11ページ目以降</span>
+<p style="margin:1.5em 0;text-align:center;font-size:.85rem">データなし</p>
+</div>
+</div>
+<!-- Print_Area -->
+<h4>案内文書シートの Print_Area 数式</h4>
+<div class="formula-box">
+<span class="comment">' XLOOKUP版（365推奨）</span><br>
+<span class="func">=案内文書!$A$1:INDEX(案内文書!$A:$D,<br>　　CEILING(XLOOKUP(TRUE,INDEX(案内文書!$B:$B&lt;&gt;"",0),<br>　　ROW(案内文書!$B:$B),,0,-1), 50), 4)</span><br><br>
+<span class="comment">' INDEX+COUNTA版（旧バージョン向け）</span><br>
+<span class="func">=案内文書!$A$1:INDEX(案内文書!$A:$D,<br>　　CEILING(COUNTA(案内文書!$B:$B), 50), 4)</span>
+</div>
+<!-- IF活用 -->
+<h4>IF関数で条件分岐 &horbar; Excelならではの柔軟さ</h4>
+<div class="formula-box">
+<span class="comment">' 部署が「営業部」なら特別な案内文を表示</span><br>
+<span class="func">=IF(VLOOKUP($Z$1, 宛先リスト!$A:$D, 4, FALSE)="営業部",<br>　　"営業部向け特別キャンペーンのご案内",<br>　　"新サービス開始のご案内")</span>
+</div>
+<div class="xdemo-note-good">
+<strong>🎯 これがかなり便利な理由：</strong>VBA不要で差し込み印刷を再現。IF・VLOOKUP・XLOOKUPで文面・金額・条件を宛先ごとに細かく制御可能。Excelのよさを最大限に活かした印刷ができます。
+        </div>
+<!-- ===== メリット・デメリット ===== -->
+<h4>この方式のメリットとデメリット</h4>
+<table class="compare-table">
+<tr><th>比較項目</th><th>Word差し込み印刷</th><th>Excel VBA</th><th>本方式（数式＋スピンボタン）</th></tr>
+<tr><td>セットアップ</td><td>中（Word+Excel連携）</td><td>高（コード知識が必要）</td><td class="rec">低（数式のみ）</td></tr>
+<tr><td>条件分岐</td><td>低（IFフィールドが煩雑）</td><td class="rec">高（何でもできる）</td><td class="ok">高（IF/VLOOKUP等）</td></tr>
+<tr><td>大量印刷</td><td class="rec">一括で楽</td><td class="rec">一括で楽</td><td class="ok">10件/50件ずつバッチ</td></tr>
+<tr><td>環境依存</td><td>Wordが必要</td><td>マクロ有効ブック</td><td class="rec">Excelのみ</td></tr>
+<tr><td>他の人に渡して<br>作業してもらう</td><td class="dep">差し込み印刷の操作を<br>教える必要あり</td><td class="dep">マクロへの抵抗感・<br>セキュリティ警告あり</td><td class="rec">スピンボタンを押して<br>印刷するだけ（誰でも可）</td></tr>
+<tr><td>ファイルサイズ</td><td class="rec">テンプレートは1ページ分</td><td class="rec">テンプレートは1ページ分</td><td class="dep">テンプレートを複数ページ分<br>並べるため大きくなる</td></tr>
+</table>
+<div class="xdemo-note-danger">
+<strong>⚠️ 数式の仕込みミスに注意：</strong>各テンプレートの数式（VLOOKUPの検索値 +0, +1, +2&hellip;や参照列番号）を手作業でコピー・修正して仕込むため、<strong>どこか1箇所でも間違えると、間違った宛先や内容のまま印刷されてしまいます。</strong>Wordの差し込み印刷やVBAならデータソースと1対1で自動マッピングされるためこの種のミスは起きにくいですが、本方式では<strong>完成後に必ず全テンプレートの出力内容を確認（印刷プレビューでチェック）</strong>してから運用してください。
+        </div>
+<div class="xdemo-note-warn">
+<strong>💡 ファイルサイズ対策：</strong>10通分（500行）程度ならファイルサイズはほとんど問題になりませんが、50通分（2,500行）以上になると数MBに膨らむこともあります。不要な書式設定を減らす、テンプレート部分に画像を貼り込みすぎない、などの工夫でサイズを抑えましょう。
+        </div>
+</section>
+<!-- ======================================================= -->
+<!-- 活用例②：ラベル印刷 -->
+<!-- ======================================================= -->
+<section class="tips-section">
+<h2>🏷️ 活用例②：ラベル印刷で無駄な空白を印刷しない</h2>
+<p>市販の<strong>10面ラベルシール</strong>（A4用紙1枚にラベルが10面印刷されている用紙）を使う場合、データが15件なら<strong>シール2枚目の5面目まで</strong>で印刷を止め、データがないシール3枚目は印刷したくない&horbar;&horbar;というのは自然な要求です。</p>
+<h3>考え方：シール1枚＝1ページ単位で印刷範囲を切る</h3>
+<p>1面あたり5行 &times; 10面 = 50行で1ページ（＝シール1枚分）。個々のラベル単位ではなく<strong>ページ単位（50行区切り）</strong>で印刷範囲を決定します。あるページ内にデータが1件でもあればそのシール全体を印刷し、データが1件もないページは対象外にします。</p>
+<div class="xdemo-note-info">
+<strong>💡 ポイント：</strong>「シール用紙1枚 ＝ 1ページ」単位で考える。データがあるシールは印刷、ないシールは印刷しない。ページ内で空いたラベルは次回の印刷に再利用できます。
+        </div>
+<!-- A4用紙風10面シール -->
+<h3>10面ラベルシールの構成イメージ</h3>
+<p>実際のA4ラベルシール用紙を模したイメージです。左右に並べて比較できます。</p>
+<div class="a4-paper-row">
+<div class="a4-paper">
+<span class="a4-paper-title">シール1枚目（1ページ目）</span>
+<div class="a4-paper-subtitle">データ10件 &rarr; 全面使用 ✅</div>
+<div class="label-grid">
+<div class="label-face has-data"><span class="face-no">面1</span><span class="lbl-zip">〒100-0001</span><span class="lbl-addr">東京都千代田区&hellip;</span><span class="lbl-name">田中 太郎 様</span></div>
+<div class="label-face has-data"><span class="face-no">面2</span><span class="lbl-zip">〒530-0001</span><span class="lbl-addr">大阪府大阪市&hellip;</span><span class="lbl-name">鈴木 花子 様</span></div>
+<div class="label-face has-data"><span class="face-no">面3</span><span class="lbl-zip">〒460-0001</span><span class="lbl-addr">愛知県名古屋市&hellip;</span><span class="lbl-name">佐藤 一郎 様</span></div>
+<div class="label-face has-data"><span class="face-no">面4</span><span class="lbl-zip">〒812-0001</span><span class="lbl-addr">福岡県福岡市&hellip;</span><span class="lbl-name">高橋 美咲 様</span></div>
+<div class="label-face has-data"><span class="face-no">面5</span><span class="lbl-zip">〒220-0001</span><span class="lbl-addr">神奈川県横浜市&hellip;</span><span class="lbl-name">伊藤 健太 様</span></div>
+<div class="label-face has-data"><span class="face-no">面6</span><span class="lbl-zip">〒060-0001</span><span class="lbl-addr">北海道札幌市&hellip;</span><span class="lbl-name">渡辺 二郎 様</span></div>
+<div class="label-face has-data"><span class="face-no">面7</span><span class="lbl-zip">〒980-0001</span><span class="lbl-addr">宮城県仙台市&hellip;</span><span class="lbl-name">山本 三郎 様</span></div>
+<div class="label-face has-data"><span class="face-no">面8</span><span class="lbl-zip">〒700-0001</span><span class="lbl-addr">岡山県岡山市&hellip;</span><span class="lbl-name">中村 美紀 様</span></div>
+<div class="label-face has-data"><span class="face-no">面9</span><span class="lbl-zip">〒760-0001</span><span class="lbl-addr">香川県高松市&hellip;</span><span class="lbl-name">小林 四郎 様</span></div>
+<div class="label-face has-data"><span class="face-no">面10</span><span class="lbl-zip">〒900-0001</span><span class="lbl-addr">沖縄県那覇市&hellip;</span><span class="lbl-name">加藤 五郎 様</span></div>
+</div>
+</div>
+<div class="a4-paper">
+<span class="a4-paper-title">シール2枚目（2ページ目）</span>
+<div class="a4-paper-subtitle">データ5件＋空白5面 ✅ 印刷される</div>
+<div class="label-grid">
+<div class="label-face has-data"><span class="face-no">面1</span><span class="lbl-zip">〒330-0001</span><span class="lbl-addr">埼玉県さいたま市&hellip;</span><span class="lbl-name">吉田 六郎 様</span></div>
+<div class="label-face has-data"><span class="face-no">面2</span><span class="lbl-zip">〒260-0001</span><span class="lbl-addr">千葉県千葉市&hellip;</span><span class="lbl-name">松本 七子 様</span></div>
+<div class="label-face has-data"><span class="face-no">面3</span><span class="lbl-zip">〒950-0001</span><span class="lbl-addr">新潟県新潟市&hellip;</span><span class="lbl-name">井上 八郎 様</span></div>
+<div class="label-face has-data"><span class="face-no">面4</span><span class="lbl-zip">〒420-0001</span><span class="lbl-addr">静岡県静岡市&hellip;</span><span class="lbl-name">木村 九子 様</span></div>
+<div class="label-face has-data"><span class="face-no">面5</span><span class="lbl-zip">〒600-0001</span><span class="lbl-addr">京都府京都市&hellip;</span><span class="lbl-name">林 十郎 様</span></div>
+<div class="label-face empty"><span class="face-no">面6</span>次回使用可</div>
+<div class="label-face empty"><span class="face-no">面7</span>次回使用可</div>
+<div class="label-face empty"><span class="face-no">面8</span>次回使用可</div>
+<div class="label-face empty"><span class="face-no">面9</span>次回使用可</div>
+<div class="label-face empty"><span class="face-no">面10</span>次回使用可</div>
+</div>
+</div>
+</div>
+<div class="a4-paper-row">
+<div class="a4-paper no-print">
+<span class="a4-paper-title">シール3枚目（3ページ目）</span>
+<div class="a4-paper-subtitle">データなし &rarr; 印刷対象外</div>
+<div class="label-grid">
+<div class="label-face empty"><span class="face-no">面1</span></div>
+<div class="label-face empty"><span class="face-no">面2</span></div>
+<div class="label-face empty"><span class="face-no">面3</span></div>
+<div class="label-face empty"><span class="face-no">面4</span></div>
+<div class="label-face empty"><span class="face-no">面5</span></div>
+<div class="label-face empty"><span class="face-no">面6</span></div>
+<div class="label-face empty"><span class="face-no">面7</span></div>
+<div class="label-face empty"><span class="face-no">面8</span></div>
+<div class="label-face empty"><span class="face-no">面9</span></div>
+<div class="label-face empty"><span class="face-no">面10</span></div>
+</div>
+<div class="a4-no-print-overlay">🚫 印刷されない（用紙の無駄ゼロ）</div>
+</div>
+</div>
+<!-- Excel上の構成 -->
+<h3>ラベルシートの Excel 上の構成</h3>
+<p>上のシールイメージをExcel上ではこのように構成します。タブをクリックして宛先リストも確認できます。</p>
+<div class="excel-wrap" id="ex-label">
+<div class="excel-sheet active" data-sheet="ラベル">
+<table>
+<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr>
+<tr><td colspan="7" style="background:#e8f5e9;text-align:center;font-weight:700;font-size:.78rem;padding:4px">&boxh;&boxh; シール1枚目（1ページ目：1〜50行）&boxh;&boxh;</td></tr>
+<tr><td><strong>1</strong></td><td class="bg-e8f5e9">〒100-0001</td><td class="bg-e8f5e9">東京都千代田区&hellip;</td><td class="bg-e8f5e9">田中 太郎 様</td><td class="bg-e8f5e9">〒530-0001</td><td class="bg-e8f5e9">大阪府大阪市&hellip;</td><td class="bg-e8f5e9">鈴木 花子 様</td></tr>
+<tr><td style="color:#aaa">2〜5</td><td colspan="3" style="color:#aaa;text-align:center;font-size:.78rem">（面1 の残り行）</td><td colspan="3" style="color:#aaa;text-align:center;font-size:.78rem">（面2 の残り行）</td></tr>
+<tr><td><strong>6</strong></td><td class="bg-e8f5e9">〒460-0001</td><td class="bg-e8f5e9">愛知県名古屋市&hellip;</td><td class="bg-e8f5e9">佐藤 一郎 様</td><td class="bg-e8f5e9">〒812-0001</td><td class="bg-e8f5e9">福岡県福岡市&hellip;</td><td class="bg-e8f5e9">高橋 美咲 様</td></tr>
+<tr><td style="color:#aaa">7〜10</td><td colspan="3" style="color:#aaa;text-align:center;font-size:.78rem">（面3）</td><td colspan="3" style="color:#aaa;text-align:center;font-size:.78rem">（面4）</td></tr>
+<tr><td class="color-999">&hellip;</td><td colspan="6" style="color:#999;text-align:center;font-size:.78rem">面5〜面10（同様に左右で2面ずつ配置）</td></tr>
+<tr><td style="color:#aaa">46〜50</td><td colspan="6" style="color:#aaa;text-align:center;font-size:.78rem;border-bottom:3px solid #217346">&larr; <strong>1ページ目ここまで（シール1枚分＝50行）</strong></td></tr>
+<tr><td colspan="7" style="background:#e3f2fd;text-align:center;font-weight:700;font-size:.78rem;padding:4px">&boxh;&boxh; シール2枚目（2ページ目：51〜100行）&boxh;&boxh;</td></tr>
+<tr><td><strong>51</strong></td><td>〒330-0001</td><td>埼玉県さいたま市&hellip;</td><td>吉田 六郎 様</td><td>〒260-0001</td><td>千葉県千葉市&hellip;</td><td>松本 七子 様</td></tr>
+<tr><td class="color-999">&hellip;</td><td colspan="6" style="color:#999;text-align:center;font-size:.78rem">面3〜面5にデータあり / 面6〜10は空白</td></tr>
+<tr><td><strong>75</strong></td><td>〒600-0001</td><td>京都府京都市&hellip;</td><td>林 十郎 様</td><td colspan="3" style="color:#e53935;text-align:center;font-size:.78rem">&larr; 最終データ（面5）</td></tr>
+<tr><td style="color:#bbb">76〜100</td><td colspan="6" style="color:#bbb;text-align:center;font-size:.78rem">（空白面：同じシール内なので印刷される）</td></tr>
+<tr><td colspan="7" style="background:#fce4ec;text-align:center;font-weight:700;font-size:.78rem;padding:4px;color:#c62828">&boxh;&boxh; シール3枚目（101行〜）&horbar; データなし &rarr; 印刷されない &boxh;&boxh;</td></tr>
+</table>
+</div>
+<div class="excel-sheet" data-sheet="宛先リスト">
+<table>
+<tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+<tr><td><strong>1</strong></td><td><strong>No</strong></td><td><strong>氏名</strong></td><td><strong>住所</strong></td><td><strong>郵便番号</strong></td></tr>
+<tr><td><strong>2</strong></td><td>1</td><td>田中 太郎</td><td>東京都千代田区&hellip;</td><td>〒100-0001</td></tr>
+<tr><td><strong>3</strong></td><td>2</td><td>鈴木 花子</td><td>大阪府大阪市&hellip;</td><td>〒530-0001</td></tr>
+<tr><td class="color-999">&hellip;</td><td class="color-999">&hellip;</td><td class="color-999">&hellip;</td><td class="color-999">&hellip;</td><td class="color-999">&hellip;</td></tr>
+<tr><td><strong>16</strong></td><td>15</td><td>林 十郎</td><td>京都府京都市&hellip;</td><td>〒600-0001</td></tr>
+</table>
+</div>
+<div class="sheet-tab-bar">
+<span class="sheet-tab active" onclick="switchSheet(this,'ex-label')">ラベル</span>
+<span class="sheet-tab" onclick="switchSheet(this,'ex-label')">宛先リスト</span>
+</div>
+</div>
+<h3>データ件数と印刷範囲の対応</h3>
+<table class="compare-table">
+<tr>
+<th>データ件数</th>
+<th>最終データ行</th>
+<th>CEILING<br>(最終行, 50)</th>
+<th>印刷されるA4用紙<br>（＝シール）の枚数</th>
+<th>Print_Areaに<br>設定される範囲</th>
+</tr>
+<tr><td>5件</td><td>15行目</td><td>50</td><td>1枚</td><td>$A$1:$F$50</td></tr>
+<tr><td>10件</td><td>25行目</td><td>50</td><td>1枚</td><td>$A$1:$F$50</td></tr>
+<tr><td>15件</td><td>40行目</td><td>50</td><td>1枚</td><td>$A$1:$F$50</td></tr>
+<tr><td>20件</td><td>50行目</td><td>50</td><td>1枚</td><td>$A$1:$F$50</td></tr>
+<tr><td>21件</td><td>55行目</td><td>100</td><td class="rec">2枚</td><td>$A$1:$F$100</td></tr>
+<tr><td>30件</td><td>75行目</td><td>100</td><td class="rec">2枚</td><td>$A$1:$F$100</td></tr>
+</table>
+<h3>ラベルシートの Print_Area 数式</h3>
+<div class="formula-box">
+<span class="comment">' XLOOKUP版（365推奨）</span><br>
+<span class="func">=ラベル!$A$1:INDEX(ラベル!$A:$F,<br>　　CEILING(XLOOKUP(TRUE,INDEX(ラベル!$A:$A&lt;&gt;"",0),<br>　　ROW(ラベル!$A:$A),,0,-1), 50), 6)</span><br><br>
+<span class="comment">' INDEX+COUNTA版（旧バージョン向け）</span><br>
+<span class="func">=ラベル!$A$1:INDEX(ラベル!$A:$F,<br>　　CEILING(COUNTA(ラベル!$A:$A), 50), 6)</span>
+</div>
+<div class="xdemo-note-warn">
+<strong>💡 ラベル用紙の活用：</strong>上から順に詰めて使うので、ページ内の残り空白ラベルはそのまま印刷されます。シールは再度プリンタにセットすれば残りの面から使えます。
+        </div>
+<div class="xdemo-note-info">
+<strong>💡 レイアウトが異なる場合：</strong>2列&times;5行の10面を例にしましたが、1列&times;10行や3列&times;4行でも考え方は同じ。1ページの行数に合わせてCEILINGの第2引数を調整するだけです。
+        </div>
+</section>
+<!-- ======================================================= -->
+<!-- 応用カスタマイズ -->
+<!-- ======================================================= -->
+<section class="method-section">
+<h2>応用カスタマイズ</h2>
+<h3>列数を動的に変える</h3>
+<p>最終列もデータに応じて変えたい場合は、INDEXの列番号部分にもCOUNTAを組み合わせます。</p>
+<h3>CEILINGでページ単位に切り上げ</h3>
+<p>案内文書やラベル印刷のように「ページ単位」で印刷範囲を決めたい場合は <code>CEILING(最終行, 50)</code>。</p>
+<h3>複数シートへの一括適用</h3>
+<p>同じ構造のシートが複数ある場合は、各シートのPrint_Areaをそれぞれ名前の管理から設定。シート名部分だけ変えれば同じ数式が使えます。</p>
+</section>
+<!-- ======================================================= -->
+<!-- トラブルシューティング -->
+<!-- ======================================================= -->
+<section class="tips-section">
+<h2>トラブルシューティング</h2>
+<h3>「印刷範囲の設定」を押して数式が消えた</h3>
+<p>離れたセルに残しておいたバックアップの数式をコピーし、名前の管理でPrint_Areaの参照範囲に貼り付けて復旧。バックアップがない場合は本記事の数式を参考に再設定してください。</p>
+<h3>印刷プレビューで範囲がおかしい</h3>
+<p>名前の管理でPrint_Areaの参照範囲が数式になっているか確認。固定範囲なら数式が上書きされています。</p>
+<h3>#REF! や #VALUE! エラー</h3>
+<p>数式内のシート名と実際のシート名が一致しているか確認。スペースを含む場合はシングルクォートで囲む。</p>
+<h3>COUNTAで途中空白がある場合のずれ</h3>
+<p>XLOOKUP版（①）を使用するか、データ途中に空白を作らない運用を徹底。</p>
+</section>
+<!-- ======================================================= -->
+<!-- まとめ -->
+<!-- ======================================================= -->
+<section class="goal-section">
+<h2>まとめ</h2>
+<div class="xdemo-note-good" style="font-size:.95em">
+<strong>✅ Print_Area &times; 数式 の3つの活用パターン</strong><br><br>
+<strong>① 基本：</strong>データの最終行まで自動で印刷範囲を調整。空白ページの排除・データ切れの防止。<br><br>
+<strong>② 案内文書：</strong>スピンボタン＋VLOOKUP＋縦並べテンプレートで差し込み印刷をExcelだけで実現。Wordの差し込み印刷を知らない人に渡しても「スピンボタンを押して印刷するだけ」で使えるのが大きな利点。ただし、テンプレートを複数ページ並べるためファイルサイズが大きくなる点と、数式の仕込みミスがそのまま印刷ミスにつながる点には注意。<br><br>
+<strong>③ ラベル印刷：</strong>CEILINGでシール1枚（＝1ページ）単位に切り上げ。データがあるシールだけ印刷し、空白シールは自動除外で用紙の無駄ゼロ。<br><br>
+          ※ 設定した数式は離れたセルにテキストとして残しておくと、誤操作で消えた時もすぐ復旧できます。
+        </div>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+<script>
+  function switchSheet(tab, wrapId) {
+    var wrap = document.getElementById(wrapId);
+    if (!wrap) return;
+    var sheetName = tab.textContent.trim();
+    var tabs = wrap.querySelectorAll('.sheet-tab');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+    tab.classList.add('active');
+    var sheets = wrap.querySelectorAll('.excel-sheet');
+    for (var j = 0; j < sheets.length; j++) {
+      sheets[j].classList.toggle('active', sheets[j].getAttribute('data-sheet') === sheetName);
+    }
+  }
+  </script>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

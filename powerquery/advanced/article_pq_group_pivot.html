@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="Power Queryのグループ化（カテゴリ別集計）、ピボット（縦&rarr;横変換）、ピボット解除（横&rarr;縦変換）をGUI中心に徹底解説。INDEX+INT+MOD式の代替も紹介。" name="description">
+<meta content="パワークエリ, Power Query, Excel パワークエリ, VBA不要, Excel実務" name="keywords">
+<meta content="集計とピボット &horbar; グループ化・ピボット・ピボット解除｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power Queryのグループ化（カテゴリ別集計）、ピボット（縦&rarr;横変換）、ピボット解除（横&rarr;縦変換）をGUI中心に徹底解説。INDEX+INT+MOD式の代替も紹介。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/advanced/article_pq_group_pivot.html" rel="canonical">
+<title>集計とピボット &horbar; グループ化・ピボット・ピボット解除｜Excel &times; No VBA Lab</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"集計とピボット \u0026horbar; グループ化・ピボット・ピボット解除","description":"Power Queryのグループ化（カテゴリ別集計）、ピボット（縦→横変換）、ピボット解除（横→縦変換）をGUI中心に徹底解説。INDEX+INT+MOD式の代替も紹介。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/advanced/article_pq_group_pivot.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>集計とピボット</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
+<h1 class="article-title">集計とピボット &horbar; グループ化・ピボット・ピボット解除</h1>
+</div>
+<section id="goal">
+<h2>このページのゴール</h2>
+<p>Power Queryの3大データ形状変換機能 &horbar;「グループ化」「ピボット列」「ピボット列の解除」&horbar; を理解し、縦持ちデータ（トランザクション形式）と横持ちデータ（クロス集計形式）を自在に変換できるようになることです。</p>
+</section>
+<!-- ==================== グループ化 ==================== -->
+<section id="groupby">
+<h2>グループ化 &horbar; カテゴリ別に集計する</h2>
+<p>ExcelのSUMIFS / COUNTIFS関数をテーブル全体に適用するイメージです。ピボットテーブルの「行ラベル＋値」と同じ結果を、Power Query内で作れます。</p>
+<h3>サンプルデータ</h3>
+<table class="ba-table">
+<thead><tr><th>部署</th><th>商品</th><th>売上</th></tr></thead>
+<tbody>
+<tr><td>営業部</td><td>A</td><td>100000</td></tr>
+<tr><td>営業部</td><td>B</td><td>50000</td></tr>
+<tr><td>経理部</td><td>A</td><td>30000</td></tr>
+<tr><td>営業部</td><td>A</td><td>80000</td></tr>
+<tr><td>経理部</td><td>B</td><td>20000</td></tr>
+</tbody>
+</table>
+<h3>基本グループ化（1列でグループ化・1列を集計）</h3>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. <strong>変換 タブ &rarr; グループ化</strong> をクリックします。<br>
+          2. 「基本」タブのまま設定します：<br>
+          ・グループ化の列：<strong>部署</strong><br>
+          ・新しい列名：<strong>売上合計</strong><br>
+          ・操作：<strong>合計</strong><br>
+          ・列：<strong>売上</strong><br>
+          3. 「OK」をクリック。</p>
+</div>
+<h3>結果</h3>
+<table class="ba-table">
+<thead><tr><th>部署</th><th>売上合計</th></tr></thead>
+<tbody>
+<tr><td>営業部</td><td>230000</td></tr>
+<tr><td>経理部</td><td>50000</td></tr>
+</tbody>
+</table>
+<h3>詳細グループ化（複数列でグループ化・複数の集計）</h3>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. グループ化ダイアログで<strong>「詳細」</strong>タブに切り替えます。<br>
+          2. 「グループ化の追加」ボタンで列を増やします：部署、商品<br>
+          3. 「集計の追加」ボタンで集計を増やします：<br>
+          ・売上合計（操作：合計、列：売上）<br>
+          ・件数（操作：行のカウント）<br>
+          4. 「OK」をクリック。</p>
+</div>
+<h3>結果</h3>
+<table class="ba-table">
+<thead><tr><th>部署</th><th>商品</th><th>売上合計</th><th>件数</th></tr></thead>
+<tbody>
+<tr><td>営業部</td><td>A</td><td>180000</td><td>2</td></tr>
+<tr><td>営業部</td><td>B</td><td>50000</td><td>1</td></tr>
+<tr><td>経理部</td><td>A</td><td>30000</td><td>1</td></tr>
+<tr><td>経理部</td><td>B</td><td>20000</td><td>1</td></tr>
+</tbody>
+</table>
+<h3>選べる集計操作</h3>
+<table class="ref-table">
+<thead><tr><th>操作</th><th>Excel関数相当</th></tr></thead>
+<tbody>
+<tr><td>合計</td><td>SUM</td></tr>
+<tr><td>平均</td><td>AVERAGE</td></tr>
+<tr><td>中央値</td><td>MEDIAN</td></tr>
+<tr><td>最小</td><td>MIN</td></tr>
+<tr><td>最大</td><td>MAX</td></tr>
+<tr><td>行のカウント</td><td>COUNTA</td></tr>
+<tr><td>個別の値のカウント</td><td>（ユニークカウント）</td></tr>
+<tr><td>すべての行</td><td>&horbar;（グループごとにテーブルをネストする高度な操作）</td></tr>
+</tbody>
+</table>
+<div class="tip-box">
+<strong>「すべての行」は上級テクニック</strong><br>
+          集計操作で「すべての行」を選ぶと、グループごとの全行がテーブルとして1セルに格納されます。これを展開したり、M関数で加工したりすることで「グループ内の最大値の行だけ取り出す」「グループ内で連番を振る」などの高度な処理が可能です。M言語編で詳しく扱います。
+        </div>
+</section>
+<!-- ==================== ピボット列 ==================== -->
+<section id="pivot">
+<h2>ピボット列 &horbar; 縦持ちデータを横持ちに変換する</h2>
+<p>グループ化で得た縦持ちの集計結果を、クロス集計表（横持ち）の形に変えたいときに使います。</p>
+<h3>サンプル（Before）</h3>
+<table class="ba-table">
+<thead><tr><th>部署</th><th>月</th><th>売上</th></tr></thead>
+<tbody>
+<tr><td>営業部</td><td>1月</td><td>500000</td></tr>
+<tr><td>営業部</td><td>2月</td><td>600000</td></tr>
+<tr><td>経理部</td><td>1月</td><td>200000</td></tr>
+<tr><td>経理部</td><td>2月</td><td>250000</td></tr>
+</tbody>
+</table>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. 横に展開したい列（「月」列）のヘッダーをクリックして選択します。<br>
+          2. <strong>変換 タブ &rarr; ピボット列</strong> をクリックします。<br>
+          3. 「値列」で集計する数値の列（「売上」）を選択します。<br>
+          4. 「詳細オプション」で集計関数を選びます（合計、カウント、最小、最大、平均、集計しない）。通常は<strong>「合計」</strong>。<br>
+          5. 「OK」をクリック。</p>
+</div>
+<h3>結果（After）</h3>
+<table class="ba-table">
+<thead><tr><th>部署</th><th>1月</th><th>2月</th></tr></thead>
+<tbody>
+<tr><td>営業部</td><td>500000</td><td>600000</td></tr>
+<tr><td>経理部</td><td>200000</td><td>250000</td></tr>
+</tbody>
+</table>
+<div class="warning-box">
+<strong>「集計しない」を選ぶ場面</strong><br>
+          同じキーの組み合わせに対して値が1つだけの場合（たとえばアンケートの回答を縦&rarr;横に変えるとき）は、「詳細オプション &rarr; 値の集計関数 &rarr; 集計しない」を選択します。複数値があるのに「集計しない」を選ぶとエラーになります。
+        </div>
+</section>
+<!-- ==================== ピボット解除 ==================== -->
+<section id="unpivot">
+<h2>ピボット解除 &horbar; 横持ちデータを縦持ちに変換する</h2>
+<p>これはピボット列の逆操作です。実務では横に月が並んだクロス集計表を受け取ることが多く、これを分析しやすい縦持ちデータに変換する場面で活躍します。Excelの関数だけでこれをやろうとすると INDEX + INT + MOD の難解な式が必要でしたが、Power Queryなら数クリックです。</p>
+<h3>サンプル（Before &horbar; よくある月別クロス集計）</h3>
+<table class="ba-table">
+<thead><tr><th>商品</th><th>1月</th><th>2月</th><th>3月</th></tr></thead>
+<tbody>
+<tr><td>商品A</td><td>100</td><td>150</td><td>120</td></tr>
+<tr><td>商品B</td><td>80</td><td>90</td><td>110</td></tr>
+</tbody>
+</table>
+<div class="step-box">
+<h4>操作手順（方法1：列を選んで「列のピボット解除」）</h4>
+<p>1. ピボット解除したい列（「1月」「2月」「3月」）をCtrl+クリックで選択します。<br>
+          2. <strong>変換 タブ &rarr; 列のピボット解除</strong> をクリックします。<br>
+          3. 選択した列が2つの列「属性」（元の列名）と「値」（元のデータ）に変換されます。</p>
+</div>
+<div class="step-box">
+<h4>操作手順（方法2：固定列を選んで「その他の列のピボット解除」）&starf;おすすめ</h4>
+<p>1. ピボット解除<strong>しない</strong>列（「商品」列）をクリックして選択します。<br>
+          2. <strong>変換 タブ &rarr; 列のピボット解除 &rarr; その他の列のピボット解除</strong> をクリックします。<br>
+          3. 「商品」以外のすべての列がピボット解除されます。</p>
+</div>
+<h3>結果（After）</h3>
+<table class="ba-table">
+<thead><tr><th>商品</th><th>属性</th><th>値</th></tr></thead>
+<tbody>
+<tr><td>商品A</td><td>1月</td><td>100</td></tr>
+<tr><td>商品A</td><td>2月</td><td>150</td></tr>
+<tr><td>商品A</td><td>3月</td><td>120</td></tr>
+<tr><td>商品B</td><td>1月</td><td>80</td></tr>
+<tr><td>商品B</td><td>2月</td><td>90</td></tr>
+<tr><td>商品B</td><td>3月</td><td>110</td></tr>
+</tbody>
+</table>
+<p>あとは「属性」を「月」、「値」を「売上」に列名変更するだけで、きれいな縦持ちデータの完成です。</p>
+<div class="tip-box">
+<strong>「その他の列のピボット解除」を使う理由</strong><br>
+          方法2のほうが将来の変更に強いです。たとえば元データに「4月」列が追加されても、固定列（商品）以外をすべてピボット解除するため、クエリの修正が不要です。方法1だと「4月」を手動で選び直す必要があります。
+        </div>
+<div class="warning-box">
+<strong>INDEX + INT + MOD 式との比較</strong><br>
+          Excelの関数だけでクロス集計を縦持ちに変換する場合、<code>=INDEX($B$2:$D$3, INT((ROW()-2)/3)+1, MOD(ROW()-2,3)+1)</code> のような式が必要です。列が増えるたびに式の修正が必要で、行数の計算も煩雑です。Power Queryの「ピボット解除」なら、列が増減しても「更新」するだけで自動対応します。
+        </div>
+</section>
+<!-- ==================== 実践例 ==================== -->
+<section id="practice">
+<h2>実践例 &horbar; 月別クロス表を受け取ってピボットテーブル用に整形</h2>
+<div class="step-box">
+<h4>Step 1：ピボット解除</h4>
+<p>「商品」列を選択 &rarr; 変換 &rarr; その他の列のピボット解除</p>
+</div>
+<div class="step-box">
+<h4>Step 2：列名変更</h4>
+<p>「属性」&rarr;「月」、「値」&rarr;「売上」</p>
+</div>
+<div class="step-box">
+<h4>Step 3：グループ化で商品別合計を確認</h4>
+<p>変換 &rarr; グループ化 &rarr; グループ列「商品」&rarr; 集計「売上合計（合計、売上）」</p>
+</div>
+<p>たった3ステップで、横持ちのクロス表を縦持ちに変換し、さらに商品別の合計まで出せました。</p>
+</section>
+<section id="summary">
+<h2>まとめ</h2>
+<p><strong>グループ化</strong>はSUMIFS的な集計をテーブル全体に適用する操作で、「詳細」モードなら複数キー&times;複数集計も可能です。<strong>ピボット列</strong>は縦持ちデータを横持ちに変換し、<strong>ピボット解除</strong>は横持ちを縦持ちに戻します。特にピボット解除では「その他の列のピボット解除」を使うことで、列の増減に自動対応できます。これら3機能を組み合わせれば、Excel上でのデータ形状変換の悩みはほぼ解消されます。</p>
+</section>
+<nav class="nav-series">
+<strong>パワークエリ 応用編シリーズ</strong>
+<a href="../basic/article_powerquery_intro.html">⓪ パワークエリとは</a>
+<a href="article_pq_merge_append.html">⑦ テーブルの結合 &horbar; マージと追加</a>
+<a class="current" href="article_pq_group_pivot.html">⑧ 集計とピボット（このページ）</a>
+<a href="article_pq_import_patterns.html">⑨ データ取り込みパターン集</a>
+<a href="article_pq_parameter_query.html">⑩ パラメータクエリ</a>
+<a href="../basic/article_pq_management.html">⑪ 更新と管理</a>
+</nav>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+

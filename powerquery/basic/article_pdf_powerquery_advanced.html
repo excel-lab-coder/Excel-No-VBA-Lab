@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>パワークエリでPDFを取り込む &horbar; 実践・進化編｜Excel &times; No VBA Lab</title>
+<meta content="Power QueryでPDF取り込みの難ケース（レイアウト崩れ・文字化け）への対処法を応用編として解説。" name="description">
+<meta content="パワークエリ PDF 応用, Power Query PDF 文字化け, PDF 取り込み 対処, VBA不要, Excel パワークエリ" name="keywords">
+<meta content="パワークエリでPDFを取り込む &horbar; 実践・進化編｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power QueryでPDF取り込みの難ケース（レイアウト崩れ・文字化け）への対処法を応用編として解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-no-vba-lab.com/powerquery/basic/article_pdf_powerquery_advanced.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    .format-table{border-collapse:collapse;font-size:.9em;margin:20px 0;width:100%;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+    .format-table th,.format-table td{border:1px solid #ddd;padding:12px 15px;text-align:left}
+    .format-table th{background-color:#607d8b;color:#fff;text-align:center;font-weight:700}
+    .xdemo-note{font-size:.85em;color:#444;margin-top:10px;padding:10px 15px;background:#f5f8ff;border-left:4px solid #90caf9;line-height:1.75}
+    .xdemo-note-good{font-size:.85em;color:#444;margin-top:10px;padding:10px 15px;background:#e8f5e9;border-left:4px solid #66bb6a;line-height:1.75}
+    .xdemo-note-warn{font-size:.85em;color:#444;margin-top:10px;padding:10px 15px;background:#fff8e1;border-left:4px solid #ffc107;line-height:1.75}
+    .xdemo-note-fire{font-size:.85em;color:#444;margin-top:10px;padding:10px 15px;background:#fce4ec;border-left:4px solid #e53935;line-height:1.75}
+    .toc-box{background:#f5f8ff;border:1px solid #c5cae9;border-radius:8px;padding:18px 24px;margin:24px 0}
+    .toc-box h3{margin:0 0 10px;font-size:1em;color:#1565c0}
+    .toc-box ol{margin:0;padding-left:1.4em;line-height:2}
+    .toc-box a{text-decoration:none;color:#1565c0}
+    .toc-box a:hover{text-decoration:underline}
+    .scenario-box{background:#f9fbe7;border:1px solid #c5e1a5;border-radius:8px;padding:18px 22px;margin:20px 0}
+    .scenario-box h4{margin:0 0 8px;color:#558b2f}
+    .diff-table{border-collapse:collapse;font-size:.88em;margin:20px 0;width:100%;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+    .diff-table th,.diff-table td{border:1px solid #ddd;padding:11px 14px;text-align:center}
+    .diff-table th{background-color:#455a64;color:#fff;font-weight:700}
+    .diff-table .col-item{text-align:left;font-weight:700}
+    .diff-ok{color:#2e7d32;font-weight:700}
+    .diff-ng{color:#c62828;font-weight:700}
+
+    .flow-box{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0;padding:16px;background:#f8f9fa;border-radius:8px}
+    .flow-step{padding:10px 16px;border-radius:6px;font-size:.8rem;font-weight:600;text-align:center;min-width:80px;color:#fff}
+    .flow-step.pdf{background:#c62828}
+    .flow-step.pq{background:#6a1b9a}
+    .flow-step.excel{background:#217346}
+    .flow-step.folder{background:#1565c0}
+    .flow-arrow{font-size:1.2rem;color:#888}
+
+    .nav-link-box{display:flex;gap:16px;background:#f5f8ff;border:1px solid #c5cae9;border-radius:8px;padding:16px 20px;margin:20px 0;flex-wrap:wrap}
+    .nav-link-box a{color:#1565c0}
+
+    @media(max-width:700px){
+      .flow-box{justify-content:center}
+      .nav-link-box{flex-direction:column}
+    }
+  </style>
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"パワークエリでPDFを取り込む \u0026horbar; 実践・進化編\u0026horbar; 複数テーブル結合・フォルダー一括処理・M言語制御・不規則PDF対応まで全網羅 \u0026horbar;","description":"Power QueryでPDF取り込みの難ケース（レイアウト崩れ・文字化け）への対処法を応用編として解説。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-no-vba-lab.com/powerquery/basic/article_pdf_powerquery_advanced.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span>
+<a href="article_pdf_overview.html">PDF取得テクニック</a><span>&gt;</span>
+<strong>パワークエリ実践・進化編</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Excel 2019〜</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">パワークエリでPDFを取り込む &horbar; 実践・進化編<br><span style="font-size:.55em;font-weight:400;color:#666;">&horbar; 複数テーブル結合・フォルダー一括処理・M言語制御・不規則PDF対応まで全網羅 &horbar;</span></h1>
+</div>
+<!-- ========== 目次 ========== -->
+<div class="toc-box">
+<h3>この記事の内容</h3>
+<ol>
+<li><a href="#sec-position">この記事の位置づけ</a></li>
+<li><a href="#sec-combine">テクニック① 複数テーブルの自動結合</a></li>
+<li><a href="#sec-pagespan">テクニック② ページまたぎの表を1つに統合</a></li>
+<li><a href="#sec-folder">テクニック③ フォルダー内の複数PDFを一括取り込み</a></li>
+<li><a href="#sec-mlang">テクニック④ M言語で取り込みを細かく制御する</a></li>
+<li><a href="#sec-param">テクニック⑤ パラメータクエリでファイルパスを動的に変更</a></li>
+<li><a href="#sec-irregular">テクニック⑥ 不規則なPDFへの対応パターン</a></li>
+<li><a href="#sec-history">パワークエリPDFコネクタの進化の歴史</a></li>
+<li><a href="#sec-limit">パワークエリの限界と代替手段</a></li>
+<li><a href="#sec-summary">まとめ</a></li>
+</ol>
+</div>
+<!-- ==========================================================
+         【1】この記事の位置づけ
+      ========================================================== -->
+<section class="goal-section" id="sec-position">
+<h2><span class="icon">💡</span> この記事の位置づけ</h2>
+<p>この記事は<a href="article_pdf_powerquery_basic.html">パワークエリ基本編</a>の続きです。基本編では単一テーブルの取り込みと基本整形を扱いました。この実践編では、複数テーブルの結合、フォルダー一括処理、M言語による高度な制御、不規則なPDFへの対応パターンなど、実務で遭遇する複雑なケースを取り上げます。</p>
+</section>
+<!-- ==========================================================
+         【2】テクニック① 複数テーブルの自動結合
+      ========================================================== -->
+<section class="method-section" id="sec-combine">
+<h2>【2】テクニック① 複数テーブルの自動結合</h2>
+<div class="scenario-box">
+<h4>シナリオ：1つのPDFに3ページ分の同じ構造の表がある</h4>
+<p style="margin:8px 0 0;font-size:.88em">月次レポートPDFで、1ページ目に1月の売上、2ページ目に2月、3ページ目に3月のデータが入っている場合、ナビゲーターには Table001・Table002・Table003 が表示されます。これらを1つのテーブルに統合します。</p>
+</div>
+<p><strong>STEP 1</strong> &mdash; ナビゲーターで3つのテーブルすべてにチェックを入れ、「データの変換」をクリック。</p>
+<p><strong>STEP 2</strong> &mdash; パワークエリエディターの左側に3つのクエリが表示される。Table001をクリックして選択状態にする。</p>
+<p><strong>STEP 3</strong> &mdash; 「ホーム」タブ &rarr;「<strong>クエリの追加</strong>」&rarr;「<strong>クエリの追加（3つ以上）</strong>」を選択。</p>
+<p><strong>STEP 4</strong> &mdash; Table002とTable003を「追加するテーブル」に移動して「OK」。3つのテーブルが縦方向に連結される。</p>
+<p><strong>STEP 5</strong> &mdash; 重複するヘッダー行（2ページ目・3ページ目の先頭にある列名行）をフィルターで除去する。例：「日付」列のフィルターで値が「日付」というテキストの行を除外。</p>
+<p><strong>STEP 6</strong> &mdash; 「閉じて読み込む」で1つの統合テーブルとしてExcelに出力。</p>
+</section>
+<!-- ==========================================================
+         【3】テクニック② ページまたぎの統合
+      ========================================================== -->
+<section class="method-section" id="sec-pagespan">
+<h2>【3】テクニック② ページまたぎの表を1つに統合</h2>
+<p>パワークエリのPDFコネクタは、ページの区切りで表を分割して検出することがあります。テクニック①と同じ「クエリの追加」で結合しますが、注意点があります。</p>
+<div class="xdemo-note-warn">
+<strong>ページまたぎの注意</strong><br>
+          ページの境界で行が分割されることがあります（1行のデータが前半と後半で別の行になる）。結合後に「行数が元のPDFと一致しているか」「最後のデータ行が正しいか」を必ず確認してください。
+        </div>
+<p>パワークエリの最新版（Microsoft 365の2023年以降の更新）では、同一構造の連続テーブルを自動的に1つのテーブルとして検出する改善が入っています。ナビゲーターで Table001 だけが表示され、すべてのページのデータが含まれているケースが増えています。</p>
+</section>
+<!-- ==========================================================
+         【4】テクニック③ フォルダー一括取り込み
+      ========================================================== -->
+<section class="method-section" id="sec-folder">
+<h2>【4】テクニック③ フォルダー内の複数PDFを一括取り込み</h2>
+<div class="scenario-box">
+<h4>シナリオ：月ごとの請求書PDF（12ファイル）を一括で取り込む</h4>
+</div>
+<div class="flow-box">
+<div class="flow-step folder">フォルダー<br>12個のPDF</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-step pq">パワークエリ<br>一括読み込み</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-step pq">結合＆整形</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-step excel">Excel<br>年間データ</div>
+</div>
+<p><strong>STEP 1</strong> &mdash; 12個のPDFファイルを1つのフォルダーにまとめます（例：<code>C:\請求書\2026\</code>）。ファイル名は何でもOKですが、すべて同じ表構造であることが前提です。</p>
+<p><strong>STEP 2</strong> &mdash; 「データ」&rarr;「データの取得」&rarr;「<strong>ファイルから</strong>」&rarr;「<strong>フォルダーから</strong>」を選択。フォルダーパスを指定して「OK」。</p>
+<p><strong>STEP 3</strong> &mdash; フォルダー内のファイル一覧が表示される。「<strong>データの結合と変換</strong>」をクリック。</p>
+<p><strong>STEP 4</strong> &mdash; 「ファイルの結合」ダイアログで、サンプルファイルのテーブル（例：Table001）を選択して「OK」。</p>
+<p><strong>STEP 5</strong> &mdash; パワークエリが自動的に12ファイルすべての Table001 を結合し、「Source.Name」列にファイル名が追加される。</p>
+<p><strong>STEP 6</strong> &mdash; パワークエリエディターで Source.Name 列からファイル名（＝月）を抽出する列を追加し、不要な列を削除して「閉じて読み込む」。</p>
+<div class="xdemo-note-good">
+<strong>新しいPDFが追加されたとき</strong><br>
+          フォルダーに13ヶ月目のPDFを追加して「すべて更新」を押すだけで、自動的に新しいファイルも含めて再結合されます。
+        </div>
+</section>
+<!-- ==========================================================
+         【5】テクニック④ M言語での制御
+      ========================================================== -->
+<section class="method-section" id="sec-mlang">
+<h2>【5】テクニック④ M言語で取り込みを細かく制御する</h2>
+<p>パワークエリの操作はすべてM言語（Power Query Formula Language）として記録されます。「詳細エディター」でM言語を直接編集すると、GUIでは設定しにくい高度な制御が可能になります。</p>
+<h3>5-1. PDFから特定のテーブルだけを取得するMコード</h3>
+<p class="code-label">M言語（特定テーブル取得）</p>
+<div class="code-block" data-lang="M">
+<span class="code-line">let</span>
+<span class="code-line">    // PDFファイルを読み込み</span>
+<span class="code-line">    Source = Pdf.Tables(</span>
+<span class="code-line">        File.Contents("C:\データ\売上レポート.pdf")</span>
+<span class="code-line">    ),</span>
+<span class="code-line">    // Table002だけを取得</span>
+<span class="code-line">    TargetTable = Source{[Id="Table002"]}[Data],</span>
+<span class="code-line">    // 1行目をヘッダーに</span>
+<span class="code-line">    PromotedHeaders = Table.PromoteHeaders(TargetTable, [PromoteAllScalars=true]),</span>
+<span class="code-line">    // データ型を設定</span>
+<span class="code-line">    ChangedType = Table.TransformColumnTypes(PromotedHeaders, {</span>
+<span class="code-line">        {"日付", type date},</span>
+<span class="code-line">        {"金額", type number}</span>
+<span class="code-line">    })</span>
+<span class="code-line">in</span>
+<span class="code-line">    ChangedType</span>
+</div>
+<h3>5-2. 全テーブルを自動結合するMコード</h3>
+<p class="code-label">M言語（全テーブル自動結合）</p>
+<div class="code-block" data-lang="M">
+<span class="code-line">let</span>
+<span class="code-line">    Source = Pdf.Tables(</span>
+<span class="code-line">        File.Contents("C:\データ\売上レポート.pdf")</span>
+<span class="code-line">    ),</span>
+<span class="code-line">    // Tableで始まるIDだけをフィルター</span>
+<span class="code-line">    FilteredTables = Table.SelectRows(Source,</span>
+<span class="code-line">        each Text.StartsWith([Id], "Table")</span>
+<span class="code-line">    ),</span>
+<span class="code-line">    // Data列（各テーブルの中身）をすべて結合</span>
+<span class="code-line">    CombinedData = Table.Combine(FilteredTables[Data]),</span>
+<span class="code-line">    // ヘッダー昇格</span>
+<span class="code-line">    PromotedHeaders = Table.PromoteHeaders(CombinedData, [PromoteAllScalars=true]),</span>
+<span class="code-line">    // ヘッダー行の重複を除去</span>
+<span class="code-line">    RemovedDuplicateHeaders = Table.SelectRows(PromotedHeaders,</span>
+<span class="code-line">        each [日付] &lt;&gt; "日付"</span>
+<span class="code-line">    )</span>
+<span class="code-line">in</span>
+<span class="code-line">    RemovedDuplicateHeaders</span>
+</div>
+<div class="xdemo-note">
+<strong>Mコードの確認・編集方法</strong><br>
+          パワークエリエディターで「ホーム」&rarr;「<strong>詳細エディター</strong>」をクリックすると、現在のクエリのMコードが表示されます。直接編集して「完了」を押すと反映されます。
+        </div>
+</section>
+<!-- ==========================================================
+         【6】テクニック⑤ パラメータクエリ
+      ========================================================== -->
+<section class="method-section" id="sec-param">
+<h2>【6】テクニック⑤ パラメータクエリでファイルパスを動的に変更</h2>
+<p>取り込むPDFファイルのパスをExcelのセルから読み取るようにすると、ファイルを切り替えるたびにMコードを編集する必要がなくなります。</p>
+<p><strong>STEP 1</strong> &mdash; Excelシートのセル（例：A1）にPDFファイルのフルパスを入力します：<code>C:\データ\売上レポート_2026Q1.pdf</code></p>
+<p><strong>STEP 2</strong> &mdash; A1セルを含む範囲をテーブル化し、名前を「設定テーブル」にします。</p>
+<p><strong>STEP 3</strong> &mdash; パワークエリで新しい空のクエリを作成し、詳細エディターで以下のMコードを入力します：</p>
+<p class="code-label">M言語（パラメータクエリ）</p>
+<div class="code-block" data-lang="M">
+<span class="code-line">let</span>
+<span class="code-line">    // Excelの設定テーブルからファイルパスを取得</span>
+<span class="code-line">    設定 = Excel.CurrentWorkbook(){[Name="設定テーブル"]}[Content],</span>
+<span class="code-line">    ファイルパス = 設定{0}[パス],</span>
+<span class="code-line">    // 取得したパスでPDFを読み込み</span>
+<span class="code-line">    Source = Pdf.Tables(File.Contents(ファイルパス)),</span>
+<span class="code-line">    TargetTable = Source{[Id="Table001"]}[Data],</span>
+<span class="code-line">    PromotedHeaders = Table.PromoteHeaders(TargetTable)</span>
+<span class="code-line">in</span>
+<span class="code-line">    PromotedHeaders</span>
+</div>
+<p>これでExcelのA1セルのパスを変更して「すべて更新」を押すだけで、異なるPDFファイルを同じ加工フローで取り込めます。四半期ごとのレポートPDFを処理する場合などに便利です。</p>
+</section>
+<!-- ==========================================================
+         【7】テクニック⑥ 不規則なPDFへの対応パターン
+      ========================================================== -->
+<section class="method-section" id="sec-irregular">
+<h2>【7】テクニック⑥ 不規則なPDFへの対応パターン</h2>
+<h3>パターンA：テーブルの上にタイトル行がある</h3>
+<p>PDFの表の上に「&cir;&cir;株式会社 売上明細」のようなタイトルが入っていると、それがテーブルの1行目として取り込まれます。パワークエリエディターで「行の削除」&rarr;「先頭の行の削除」&rarr; 行数=1 としてタイトル行を除去した後、「1行目をヘッダーとして使用」を適用します。</p>
+<h3>パターンB：合計行・小計行が混在する</h3>
+<p>表の途中に「小計」行や末尾に「合計」行がある場合、データ行と混在して取り込まれます。フィルターで特定のキーワード（「小計」「合計」「計」）を含む行を除外します。</p>
+<div class="code-readonly" data-lang="パワークエリ">
+<span class="code-line">列「品名」のフィルター &rarr; テキストフィルター &rarr; 「次を含まない」&rarr;「合計」</span>
+<span class="code-line">同様に「小計」「計」も除外</span>
+</div>
+<h3>パターンC：横長の表が列落ちする</h3>
+<p>A4横向きの広い表が、PDF変換時に右端の列が切れて別テーブルとして検出されることがあります。この場合は「クエリのマージ」（横結合）で結合します。Table001とTable002を共通キー列（行番号や日付）で左外部結合し、1つのワイドテーブルにします。</p>
+<h3>パターンD：表が検出されず Page のみ</h3>
+<p>罫線のないテキスト整列のテーブルは Table として検出されないことがあります。Page を取り込んで以下の手順で整形します。</p>
+<p><strong>STEP 1</strong> &mdash; Page001 を選択して「データの変換」でパワークエリエディターを開く。Column1 に全テキストが1列で入っている状態。</p>
+<p><strong>STEP 2</strong> &mdash; 「変換」タブ &rarr;「列の分割」&rarr;「区切り記号による分割」&rarr; 区切り記号に「スペース」を選択。ただし複数スペースでの区切りが必要な場合は「詳細設定オプション」&rarr;「特殊文字を使用した分割」で連続スペース（2つ以上）を指定する。</p>
+<p><strong>STEP 3</strong> &mdash; 分割後の列数が元のPDFと一致しているか確認。列が多すぎる場合は不要列を削除、少なすぎる場合は区切り条件を「固定幅」に変えて再試行する。</p>
+<p><strong>STEP 4</strong> &mdash; 表の前後にあるタイトル行・フッター行をフィルターで除去し、1行目をヘッダーに昇格させる。</p>
+<div class="xdemo-note-good">
+<strong>固定幅分割のコツ</strong><br>
+          官公庁の統計PDFなど「各列が固定文字数で揃えられている」場合は、「列の分割」&rarr;「文字数による分割」で各列の文字数を指定すると正確に分割できます。最初の数行を目視確認して文字数を数えてください。
+        </div>
+</section>
+<!-- ==========================================================
+         【8】PDFコネクタの進化の歴史
+      ========================================================== -->
+<section class="method-section" id="sec-history">
+<h2>【8】パワークエリPDFコネクタの進化の歴史</h2>
+<p>パワークエリのPDFコネクタは登場以来、継続的に改善されてきました。バージョンによる精度や機能の違いを知っておくと、トラブルシューティングに役立ちます。</p>
+<table class="format-table">
+<tr>
+<th style="width:15%">時期</th>
+<th class="w-25">バージョン</th>
+<th style="width:60%">主な変化・改善点</th>
+</tr>
+<tr>
+<td>2019年</td>
+<td>Excel 2019 / 365 初期</td>
+<td>PDFコネクタ初搭載。罫線のある表のテーブル検出に対応。日本語PDFでの文字化けが一部発生。</td>
+</tr>
+<tr>
+<td>2020年前半</td>
+<td>365 月次更新</td>
+<td>テーブル検出アルゴリズムが改善され、罫線のない表でも空白パターンから列を推定する精度が向上。</td>
+</tr>
+<tr>
+<td>2020年後半</td>
+<td>365 月次更新</td>
+<td>ナビゲーターUIが改善。テーブルとページの区別が視覚的にわかりやすくなった。複数テーブル選択のチェックボックスが追加。</td>
+</tr>
+<tr>
+<td>2021年</td>
+<td>365 月次更新</td>
+<td>ページまたぎの表の検出が改善。連続する同一構造の表を1つの Table として統合するケースが増加。</td>
+</tr>
+<tr>
+<td>2022年</td>
+<td>365 月次更新</td>
+<td>Pdf.Tables 関数のオプションパラメータが拡充。M言語からテーブル検出の挙動を制御しやすくなった。</td>
+</tr>
+<tr>
+<td>2023年</td>
+<td>365 月次更新</td>
+<td>日本語帳票（請求書・見積書など縦書き混在レイアウト）への対応精度が向上したとの報告あり。</td>
+</tr>
+<tr>
+<td>2024年〜</td>
+<td>365 最新版</td>
+<td>Copilot（AI アシスト）との連携が進み、パワークエリの操作を自然言語で指示する機能が段階的に追加されている。</td>
+</tr>
+</table>
+<div class="xdemo-note">
+<strong>バージョンの確認方法</strong><br>
+          Excelで「ファイル」&rarr;「アカウント」&rarr;「Excel のバージョン情報」でビルド番号を確認できます。Microsoft 365は自動更新のため、常に最新のPDFコネクタが利用可能です。Excel 2019は購入時のバージョンから更新されないため、PDFコネクタの精度は初期版のままです。
+        </div>
+</section>
+<!-- ==========================================================
+         【9】パワークエリの限界と代替手段
+      ========================================================== -->
+<section class="method-section" id="sec-limit">
+<h2>【9】パワークエリの限界と代替手段</h2>
+<p>パワークエリはPDFデータ取得の最有力手段ですが、万能ではありません。以下のケースでは別の手段を検討する必要があります。</p>
+<table class="diff-table">
+<tr><th style="width:22%">ケース</th><th style="width:38%">パワークエリの状況</th><th style="width:40%">代替手段</th></tr>
+<tr>
+<td class="col-item">画像PDF（スキャン文書）</td>
+<td><span class="diff-ng">テキスト情報がないため取り込み不可</span></td>
+<td class="text-left">Adobe Acrobat ProのOCR &rarr; テキストPDFに変換してからパワークエリで取り込み。または Google ドキュメントのOCR機能。</td>
+</tr>
+<tr>
+<td class="col-item">パスワード保護されたPDF</td>
+<td><span class="diff-ng">開けないため取り込み不可</span></td>
+<td class="text-left">パスワードを入力してAdobe Readerで開き、「印刷」&rarr;「Microsoft Print to PDF」で無保護PDFとして再保存。</td>
+</tr>
+<tr>
+<td class="col-item">極めて複雑なレイアウト</td>
+<td>テーブル検出が大幅にズレる</td>
+<td class="text-left">Adobe Acrobat Pro の「Excelにエクスポート」、またはPython（tabula-py、camelot）での取り込み。</td>
+</tr>
+<tr>
+<td class="col-item">数百ページの大量PDF</td>
+<td>処理が非常に遅くなる場合がある</td>
+<td class="text-left">PDFを事前にページ分割してから処理。またはPython/Rスクリプトでバッチ処理。</td>
+</tr>
+<tr>
+<td class="col-item">Excel 2016 以前の環境</td>
+<td><span class="diff-ng">PDFコネクタ非搭載</span></td>
+<td class="text-left"><a href="article_pdf_word.html">Word経由の変換</a>を使用。</td>
+</tr>
+</table>
+</section>
+<!-- ==========================================================
+         【10】まとめ
+      ========================================================== -->
+<section class="goal-section" id="sec-summary" style="margin-top:40px;background:linear-gradient(135deg,#f5f8ff 0%,#e8eaf6 100%);border-radius:10px;padding:24px;">
+<h2><span class="icon">📝</span> まとめ</h2>
+<p>パワークエリのPDFコネクタは、Excel 2019/Microsoft 365で使えるPDFデータ取得の決定版です。基本編で扱った単一テーブルの取り込みに加え、この実践編では以下のテクニックを紹介しました。</p>
+<p>複数テーブルの自動結合（クエリの追加）、ページまたぎの表の統合、フォルダー内の複数PDFの一括取り込み（フォルダーから）、M言語による特定テーブルの指定や全テーブルの自動結合、パラメータクエリによるファイルパスの動的切り替え、そして不規則なPDF（タイトル行混在、合計行、横長の表、テーブル未検出）への対応パターンです。</p>
+<p>PDFコネクタは2019年の初搭載から継続的に改善されており、特にMicrosoft 365では最新の検出アルゴリズムが自動適用されます。ただし、画像PDFやパスワード保護PDF、極端に複雑なレイアウトには対応できないため、これらのケースではOCR処理やサードパーティツールとの組み合わせが必要になります。</p>
+<h3>テクニック早見表</h3>
+<table class="diff-table">
+<tr><th class="w-30">テクニック</th><th style="width:45%">用途</th><th class="w-25">操作レベル</th></tr>
+<tr><td class="col-item">① 複数テーブル結合</td><td class="text-left">ページ別のテーブルを1つに統合</td><td>基本</td></tr>
+<tr><td class="col-item">② ページまたぎ統合</td><td class="text-left">ページ境界で分割された表を結合</td><td>基本</td></tr>
+<tr><td class="col-item">③ フォルダー一括取り込み</td><td class="text-left">月次PDFなど複数ファイルの一括処理</td><td>中級</td></tr>
+<tr><td class="col-item">④ M言語での制御</td><td class="text-left">特定テーブルの指定、自動結合ロジック</td><td>中級〜上級</td></tr>
+<tr><td class="col-item">⑤ パラメータクエリ</td><td class="text-left">ファイルパスの動的切り替え</td><td>中級</td></tr>
+<tr><td class="col-item">⑥ 不規則PDF対応</td><td class="text-left">テーブル未検出、タイトル行、合計行の処理</td><td>中級〜上級</td></tr>
+</table>
+<h3>M言語リファレンス</h3>
+<table class="diff-table">
+<tr><th style="width:45%">M関数</th><th style="width:55%">用途</th></tr>
+<tr><td class="col-item" style="font-family:Consolas,'Courier New',monospace;font-size:.85em">Pdf.Tables(binary)</td><td class="text-left">PDFのバイナリからテーブル一覧を取得</td></tr>
+<tr><td class="col-item" style="font-family:Consolas,'Courier New',monospace;font-size:.85em">File.Contents(path)</td><td class="text-left">ファイルパスからバイナリを取得</td></tr>
+<tr><td class="col-item" style="font-family:Consolas,'Courier New',monospace;font-size:.85em">Table.Combine(tables)</td><td class="text-left">複数テーブルを縦結合</td></tr>
+<tr><td class="col-item" style="font-family:Consolas,'Courier New',monospace;font-size:.85em">Table.PromoteHeaders(table)</td><td class="text-left">1行目をヘッダーに昇格</td></tr>
+<tr><td class="col-item" style="font-family:Consolas,'Courier New',monospace;font-size:.85em">Table.SelectRows(table, condition)</td><td class="text-left">行のフィルター</td></tr>
+<tr><td class="col-item" style="font-family:Consolas,'Courier New',monospace;font-size:.85em">Table.TransformColumnTypes(table, types)</td><td class="text-left">データ型の変更</td></tr>
+<tr><td class="col-item" style="font-family:Consolas,'Courier New',monospace;font-size:.85em">Text.StartsWith(text, prefix)</td><td class="text-left">テキストの前方一致判定</td></tr>
+<tr><td class="col-item" style="font-family:Consolas,'Courier New',monospace;font-size:.85em">Excel.CurrentWorkbook()</td><td class="text-left">現在のブック内のテーブルを取得</td></tr>
+</table>
+<div class="nav-link-box" style="margin-top:20px">
+<a href="article_pdf_overview.html">PDFデータ取得テクニック全体像</a> ｜
+          <a href="article_pdf_word.html">Word変換（旧式）</a> ｜
+          <a href="article_pdf_powerquery_basic.html">パワークエリ基本編</a>
+</div>
+</section>
+<p>パワークエリの基本操作は &rarr; <a href="article_pq_first_steps.html">GUIマスターシリーズ①〜⑥</a><br>応用操作は &rarr; <a href="../advanced/article_pq_merge_append.html">応用編⑦〜⑪</a></p>
+</article>
+</main>
+<footer class="site-footer">
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
+
+
