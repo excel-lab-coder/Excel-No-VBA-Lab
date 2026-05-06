@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>⑧ QRリーダーの選び方と接続方法｜QR Automation Lab｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="筆者が実際に検証したオプトエレクトロニクスOPI-3601・ALX-3601・L-46Xの3機種を中心に、Zebra DS2208で筆者が確認した範囲の特徴も補足しながら、QRリーダーの選び方・USB-HID接続・設定方法・価格帯別ガイド・購入チェックリストまで解説。" name="description">
+<meta content="QRリーダー,バーコードリーダー,OPI-3601,ALX-3601,L-46X,オプトエレクトロニクス,Zebra DS2208,USB-HID,選び方,接続方法,キー変換,UniversalConfig,123Scan,Sleep設定,Pause設定,OCR,漢字出力" name="keywords">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/08_qr_hardware.html" rel="canonical">
+
+<meta content="article" property="og:type">
+<meta content="⑧ QRリーダーの選び方と接続方法 &horbar; 検証済み機種＆メーカー別特徴ガイド｜QR Automation Lab" property="og:title">
+<meta content="OPI-3601・ALX-3601・L-46Xの3機種を中心に検証。Zebra DS2208で筆者が確認した範囲の特徴も補足。USB-HIDの仕組みから購入前チェックまで。" property="og:description">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/08_qr_hardware.html" property="og:url">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+
+<meta content="summary_large_image" name="twitter:card">
+<meta content="⑧ QRリーダーの選び方と接続方法｜QR Automation Lab" name="twitter:title">
+<meta content="OPI-3601・ALX-3601・L-46Xの3機種を中心に検証。Zebra DS2208で筆者が確認した範囲の特徴も補足。" name="twitter:description">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" name="twitter:image">
+<meta content="index, follow" name="robots">
+
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Article",
+  "headline":"⑧ QRリーダーの選び方と接続方法 ― 検証済み機種＆メーカー別特徴ガイド",
+  "description":"筆者が実際に検証したOPI-3601・ALX-3601・L-46Xを中心に、Zebra DS2208で筆者が確認した範囲の特徴も補足しながらQRリーダーの選び方・接続・設定を解説。",
+  "image":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png",
+  "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
+  "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
+  "datePublished":"2026-04-18",
+  "dateModified":"2026-05-06",
+  "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/08_qr_hardware.html"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type":"ListItem","position":2,"name":"QR Automation Lab","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/"},
+    {"@type":"ListItem","position":3,"name":"⑧ QRリーダーの選び方と接続"}
+  ]
+}
+</script>
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../index.html">ホーム</a><span>&gt;</span>
+<a href="../index.html#qr">QR Automation Lab</a><span>&gt;</span>
+<strong>⑧ QRリーダーの選び方と接続方法</strong>
+</div>
+
+<article class="article-body">
+
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="badge badge-maniac">QR Automation Lab ⑧ ／ 応用</span>
+</div>
+<h1 class="article-title">QRリーダーの選び方と接続方法<br><small>&horbar; 検証済み機種 ＆ メーカー別特徴ガイド</small></h1>
+<p style="color:#666;font-size:.88rem;">最終更新: 2026-05-06 ｜ 読了目安: 12分</p>
+</div>
+
+<section class="goal-section">
+<h2><span class="icon">🔥</span> この記事で分かること</h2>
+<p>
+記事①〜⑦で「QRコードに何を埋め込み、リーダーをどう設定するか」を学びました。<br>
+この記事では<strong>「どのQRリーダーを選べばいいのか」「どう接続するのか」「メーカーごとに何が違うのか」</strong>を、筆者が実際に使った機種をベースに整理します。
+</p>
+
+<div class="xdemo-note-danger">
+<strong>⚠️ 本シリーズの検証環境について &horbar; 正直にお伝えします</strong><br>
+本シリーズで紹介しているサフィックス設定・キャラクター間ディレイ・キー変換・Sleepなどの主要検証は、
+<strong>オプトエレクトロニクス社（Opticon）の以下3機種</strong>を中心に行っています。<br>
+<strong>① OPI-3601</strong> ／
+<strong>② ALX-3601</strong> ／
+<strong>③ L-46X</strong><br><br>
+
+オプトエレクトロニクス系は細かい制御ができますが、特に<strong>Sleep（一時停止）設定は難しい</strong>です。
+筆者自身、Sleep設定を理解して実務で安定させるまでに<strong>半年ぐらい</strong>かかりました。<br><br>
+
+一方、<strong>Zebra DS2208</strong> については、筆者が確認した限りでは、USB-HID入力・123Scan・ADFによる設定が分かりやすく、
+固定順序の入力制御、Tab / Enter / Pause系の定型処理は組みやすい印象です。<br>
+画面遷移や処理待ちは <strong>Pause / Sleep 相当の待機を入れれば多くの場合は対応しやすい</strong>ですが、
+<strong>1文字ごとの送信速度そのものを細かく遅くしたい場合</strong>は対応に困る場面があります。
+キャラクター間ディレイは抑えられる速度に限界があり、<strong>オプトエレクトロニクス系に比べると高速寄りになりやすい</strong>印象です。<br><br>
+
+また、固定順序を前提にした設定は、<strong>人数や件数が変わる可変データでは使いにくい場面</strong>があります。<br>
+例えば「5名分を想定した入力設定」で、最後だけ3名分しかデータがない場合、余ったTabやEnter、Pause処理によって入力欄がずれたり、エラーになる可能性があります。
+筆者が調べている限りでは、このような可変件数への柔軟な対応は難しそうです。
+他にも方法はあるかもしれませんが、本記事では未確認です。<br><br>
+
+<strong>Honeywell Xenon 1900g</strong> は今後チェック・検証予定です。
+一方で、Keyence・デンソーウェーブなどは筆者未所有・未検証のため、本記事では参考情報にとどめます。
+現時点では詳細検証や別記事化までは予定していません。
+</div>
+
+<h3>こんな疑問を解決します</h3>
+<div class="usecase-grid">
+<div class="usecase-card">
+<div class="icon">🛒</div>
+<h4>何を選べばいい？</h4>
+<p>検証済み機種とメーカー別の考え方</p>
+</div>
+<div class="usecase-card">
+<div class="icon">🔌</div>
+<h4>どうやって繋ぐ？</h4>
+<p>USB挿すだけで使えるUSB-HID接続</p>
+</div>
+<div class="usecase-card">
+<div class="icon">⚙️</div>
+<h4>設定はどこから？</h4>
+<p>メニューバーコード方式と設定ツール</p>
+</div>
+<div class="usecase-card">
+<div class="icon">🏷️</div>
+<h4>Zebraはどう扱う？</h4>
+<p>123Scan / ADFで設定しやすいが可変データは注意</p>
+</div>
+</div>
+</section>
+
+<section class="method-section">
+<h2>STEP 1：USB-HIDの仕組み &horbar; QRリーダーは「超高速キーボード」</h2>
+<p>
+USB-HID（Human Interface Device）キーボードエミュレーションとは、QRリーダーをPCに接続すると<strong>「キーボードとして認識される」</strong>仕組みです。
+読み取ったQRコードの文字列を、人間がキーボードで超高速タイプしたのと同じ形でPCへ送信します。
+</p>
+
+<div class="flow-box">
+<span class="flow-step step-item">QRコード</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-key">QRリーダーが読取</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-key">USB-HID送信</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-item">PC（キーボード入力として受信）</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-ok">Excel / Webシステム / 業務アプリに入力 &checkmark;</span>
+</div>
+
+<h3>USB-HIDのメリット</h3>
+<table class="format-table">
+<tr><th style="width:8%">#</th><th class="w-25">メリット</th><th>説明</th></tr>
+<tr><td class="text-center">1</td><td><strong>ドライバ不要</strong></td><td>OS標準のHIDドライバで動作。USBを挿した瞬間から使える</td></tr>
+<tr><td class="text-center">2</td><td><strong>アプリ不問</strong></td><td>キーボード入力を受け付けるアプリなら何でも対応</td></tr>
+<tr><td class="text-center">3</td><td><strong>VBA不要</strong></td><td>受信プログラムが不要。マクロ禁止環境でも使える</td></tr>
+<tr><td class="text-center">4</td><td><strong>管理者権限不要</strong></td><td>ソフトインストール不要で使えることが多い</td></tr>
+</table>
+
+<h3>USB-HID vs USB-COM vs RS-232C</h3>
+<table class="format-table">
+<tr><th>項目</th><th>USB-HID</th><th>USB-COM</th><th>RS-232C</th></tr>
+<tr><td>PC側の認識</td><td><strong>キーボード</strong></td><td>COMポート</td><td>COMポート</td></tr>
+<tr><td>ドライバ</td><td><strong>不要</strong></td><td>必要な場合あり</td><td>必要な場合あり</td></tr>
+<tr><td>受信プログラム</td><td><strong>不要</strong></td><td>必要</td><td>必要</td></tr>
+<tr><td>本シリーズで使う？</td><td><strong>✔ これを使う</strong></td><td>✘</td><td>✘</td></tr>
+<tr><td>用途</td><td>Excel・Webシステム・業務システムへの直接入力</td><td>独自アプリで受信処理する場合</td><td>組み込み機器・専用機器向け</td></tr>
+</table>
+
+<div class="xdemo-note-warn">
+<strong>⚠️ USB-COMモードに注意:</strong>
+OPI-3601 / ALX-3601 / L-46X はUSB-HIDとUSB-COMの両方に対応しています。
+本シリーズでは<strong>USB-HID</strong>を使います。
+購入時・設定時にUSB-HID接続で使える状態か確認してください。
+</div>
+</section>
+
+<section class="tips-section">
+<h2>🎯 STEP 2：筆者検証済み3機種の比較</h2>
+<p>
+以下3機種は、オプトエレクトロニクス系のリーダーです。
+ALX-3601はアルフ社のOEM版ですが、OPI-3601と近い感覚で扱えます。
+本シリーズの設定手順は、主にこの3機種を前提にしています。
+</p>
+
+<div class="xdemo-note-info">
+<strong>ℹ️ Zebra DS2208について:</strong><br>
+Zebra DS2208は、この3機種とは別枠です。<br>
+筆者が確認した範囲では、USB-HID入力・123Scan・ADFによる設定はかなり分かりやすく、
+固定順序の入力制御やTab / Enter / Pauseを含む定型処理は自由に組みやすい印象です。<br>
+ただし、本シリーズの中心検証機ではないため、下の比較表では<strong>参考列</strong>として掲載します。
+</div>
+
+<div class="compare-grid">
+<div class="compare-card card-main">
+<span class="card-badge">メイン検証機</span>
+<h4>🔵 OPI-3601</h4>
+<ul>
+<li><strong>メーカー：</strong>オプトエレクトロニクス</li>
+<li><strong>接続：</strong>USB-HID / USB-COM / RS-232C</li>
+<li><strong>漢字直接出力：</strong>対応</li>
+<li><strong>OCR：</strong>非対応</li>
+<li><strong>価格：</strong>約35,000〜45,000円</li>
+<li><strong>特徴：</strong>本シリーズのメイン検証機。基本設定からSleep検証まで使用</li>
+</ul>
+</div>
+
+<div class="compare-card card-compat">
+<span class="card-badge">互換モデル</span>
+<h4>🟢 ALX-3601</h4>
+<ul>
+<li><strong>メーカー：</strong>アルフ（OEM元はオプトエレクトロニクス）</li>
+<li><strong>接続：</strong>USB-HID / USB-COM / RS-232C</li>
+<li><strong>漢字直接出力：</strong>対応</li>
+<li><strong>OCR：</strong>非対応</li>
+<li><strong>価格：</strong>約47,000円</li>
+<li><strong>特徴：</strong>OPI-3601と近い設定感。ケーブルが長めで扱いやすい</li>
+</ul>
+</div>
+
+<div class="compare-card card-upper">
+<span class="card-badge">OCR対応</span>
+<h4>🟠 L-46X</h4>
+<ul>
+<li><strong>メーカー：</strong>オプトエレクトロニクス</li>
+<li><strong>接続：</strong>USB-HID / USB-COM / RS-232C</li>
+<li><strong>漢字直接出力：</strong>対応</li>
+<li><strong>OCR：</strong>対応（OCR-A/B・パスポート等）</li>
+<li><strong>価格：</strong>約50,000〜57,000円</li>
+<li><strong>特徴：</strong>QR入力に加えて、数字・OCR読取も必要な場合の候補</li>
+</ul>
+</div>
+</div>
+
+<div class="xdemo-note-good">
+<strong>✅ 選び方の目安:</strong>
+QRコード中心ならOPI-3601 / ALX-3601で十分な場面が多いです。
+数字や帳票、パスポートなどのOCR読取も考える場合はL-46Xが候補になります。
+</div>
+
+<div class="xdemo-note-warn">
+<strong>⚠️ オプト系のSleep設定について:</strong>
+OPI-3601 / ALX-3601 / L-46X は細かい制御ができる一方、Sleep設定は簡単ではありません。
+筆者は、Sleepの考え方・マーカー・待機時間・Webシステム側の反応速度を合わせ込むまでに半年ぐらいかかりました。
+「できることは多いが、設定習得には時間が必要」という前提で見てください。
+</div>
+
+<h3>必要な機能だけで見る比較表</h3>
+<table class="spec-table">
+<thead>
+<tr>
+<th>項目</th>
+<th>OPI-3601</th>
+<th>ALX-3601</th>
+<th>L-46X</th>
+<th>Zebra DS2208<br><span class="note-small">※筆者確認範囲</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>位置づけ</td>
+<td>本シリーズのメイン検証機</td>
+<td>OPI-3601互換モデル</td>
+<td>OCR対応の上位候補</td>
+<td>固定工程向けの参考機</td>
+</tr>
+<tr>
+<td>QRコード読取</td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+</tr>
+<tr>
+<td>USB-HID入力</td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+</tr>
+<tr>
+<td>漢字直接出力</td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+<td class="partial">&xutri;<br><span class="note-small">要確認</span></td>
+</tr>
+<tr>
+<td>OCR読取</td>
+<td class="ng">✘</td>
+<td class="ng">✘</td>
+<td class="ok">✔</td>
+<td class="ng">✘<br><span class="note-small">通常用途ではOCR目的ではない</span></td>
+</tr>
+<tr>
+<td>サフィックス変更</td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+<td class="partial">&xutri;<br><span class="note-small">多分問題ないが、本記事では詳細未確認</span></td>
+</tr>
+<tr>
+<td>キャラクター間ディレイ</td>
+<td class="ok">✔<br><span class="note-small">段階調整。遅めにも寄せやすい</span></td>
+<td class="ok">✔<br><span class="note-small">段階調整。遅めにも寄せやすい</span></td>
+<td class="ok">✔<br><span class="note-small">調整可能</span></td>
+<td class="partial">&xutri;<br><span class="note-small">Keystroke Delay系。1文字ごとに大きく遅くしたい場合は限界があり、オプトに比べると高速寄り</span></td>
+</tr>
+<tr>
+<td>Tab / Enter制御</td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+<td class="ok">✔<br><span class="note-small">固定順序では扱いやすい印象</span></td>
+</tr>
+<tr>
+<td>Sleep / Pause</td>
+<td class="ok">✔<br><span class="note-small">設定難</span></td>
+<td class="ok">✔<br><span class="note-small">設定難</span></td>
+<td class="ok">✔<br><span class="note-small">設定難</span></td>
+<td class="partial">&xutri;<br><span class="note-small">固定Pauseは扱いやすい。画面遷移待ちは多くの場合これで対応しやすい</span></td>
+</tr>
+<tr>
+<td>固定順序の入力</td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+<td class="ok">✔<br><span class="note-small">123Scan / ADFでかなり自由に設定しやすい</span></td>
+</tr>
+<tr>
+<td>可変データへの対応</td>
+<td class="ok">✔<br><span class="note-small">工夫しやすい</span></td>
+<td class="ok">✔<br><span class="note-small">工夫しやすい</span></td>
+<td class="ok">✔<br><span class="note-small">工夫しやすい</span></td>
+<td class="partial">&xutri;<br><span class="note-small">調べている限り難しそう。5名想定で最後3名など、件数が変わる処理は注意</span></td>
+</tr>
+<tr>
+<td>設定ツール</td>
+<td>UniversalConfig</td>
+<td>Universal Menu Tool2D系</td>
+<td>UniversalConfig</td>
+<td><strong>123Scan / ADF</strong><br><span class="note-small">ほとんどこれで自由に設定しやすい印象</span></td>
+</tr>
+<tr>
+<td>価格目安</td>
+<td>約35,000〜45,000円</td>
+<td>約47,000円</td>
+<td>約50,000〜57,000円</td>
+<td>約15,000〜30,000円前後<br><span class="note-small">販売時期・構成により変動</span></td>
+</tr>
+<tr>
+<td>向いている用途</td>
+<td>QR入力の基本検証</td>
+<td>QR入力の実務運用</td>
+<td>QR入力 + OCR読取</td>
+<td>固定フォーム・固定順序のWeb入力</td>
+</tr>
+<tr>
+<td>注意点</td>
+<td>Sleep設定は難しい</td>
+<td>Sleep設定は難しい</td>
+<td>Sleep設定は難しい</td>
+<td>Sleep / Pauseで多くは対応しやすいが、1文字ごとに遅くしたい場合と可変件数では注意</td>
+</tr>
+</tbody>
+</table>
+
+<div class="xdemo-note-info">
+<strong>ℹ️ Zebra DS2208の見方:</strong><br>
+Zebra DS2208は、固定された入力順序に対して、Tab / Enter / Pause を組み合わせる用途では分かりやすい印象です。
+設定は123Scan / ADFを中心に進められ、固定工程であればかなり自由に組みやすいと感じました。<br><br>
+
+画面遷移や検索待ちのような「途中で少し待つ」処理は、Sleep / Pause 相当の待機を使えば、ほとんどの場合は大きな問題になりにくいと思います。<br>
+ただし、<strong>キャラクター間ディレイとして1文字1文字の送信自体を大きく遅くしたい場合</strong>は対応に困る場面があります。
+オプトエレクトロニクス系ほど遅く抑えられない場面があり、重いWeb画面では送信が速すぎる可能性があります。<br><br>
+
+また、5名分を前提にした設定で最後だけ3名分になるような<strong>可変データ</strong>では、余ったTabやEnterによって入力欄がずれる可能性があります。
+筆者が調べている限りでは、このような可変件数への対応は難しそうです。<br>
+このため、固定フォームには向きますが、人数や件数が毎回変わる処理では、事前検証が必要です。
+</div>
+</section>
+
+<section class="method-section">
+<h2>STEP 3：本シリーズの設定項目 ＆ 各機種の対応状況</h2>
+
+<div class="xdemo-note-info">
+<strong>ℹ️ OPI-3601 / ALX-3601の扱い:</strong><br>
+ALX-3601はOPI-3601と近いハードウェア構成・設定感で扱えるため、この表では<strong>OPI-3601 / ALX-3601</strong>として1列にまとめます。<br>
+Zebra DS2208は本シリーズの主検証機ではありませんが、筆者が確認した範囲の参考情報として同じ表に入れています。
+</div>
+
+<table class="spec-table">
+<thead>
+<tr>
+<th>設定項目</th>
+<th>関連記事</th>
+<th>OPI-3601 / ALX-3601</th>
+<th>L-46X</th>
+<th>Zebra DS2208<br><span class="note-small">※筆者確認範囲</span></th>
+<th>補足</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>サフィックス変更</td>
+<td><a href="02_qr_tab_enter.html">②</a></td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+<td class="partial">&xutri;<br><span class="note-small">多分問題ないが詳細未確認</span></td>
+<td>余計なEnterを防ぐため重要。Zebraも固定工程で使う場合はNone / Enter / Tabの切り替えを実機確認する</td>
+</tr>
+<tr>
+<td>キャラクター間ディレイ</td>
+<td><a href="03_qr_character_delay.html">③</a></td>
+<td class="ok">✔<br><span class="note-small">遅めに調整しやすい</span></td>
+<td class="ok">✔<br><span class="note-small">調整可能</span></td>
+<td class="partial">&xutri;<br><span class="note-small">Keystroke Delay系。大きく遅くする用途は注意</span></td>
+<td>文字欠け対策。Zebraはオプト系より高速寄りになりやすく、重いWeb画面ではPauseやQR分割も検討</td>
+</tr>
+<tr>
+<td>キー変換</td>
+<td><a href="04_qr_key_conversion.html">④</a></td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+<td class="ok">✔<br><span class="note-small">ADFで固定順序入力は組みやすい印象</span></td>
+<td>Tab / Enter / 特殊キー制御。Zebraは固定フォーム・固定順序では扱いやすい</td>
+</tr>
+<tr>
+<td>Sleep / Pause（一時停止）</td>
+<td><a href="06_qr_sleep.html">⑥</a></td>
+<td class="ok">✔<br><span class="note-small">設定難</span></td>
+<td class="ok">✔<br><span class="note-small">設定難</span></td>
+<td class="partial">&xutri;<br><span class="note-small">固定Pauseは扱いやすい印象</span></td>
+<td>画面遷移待ちに使う。オプト系は細かく作れるが難度高め。Zebraは固定的な待機処理なら組みやすい</td>
+</tr>
+<tr>
+<td>固定順序の入力</td>
+<td><a href="05_qr_key_practice.html">⑤</a></td>
+<td class="ok">✔</td>
+<td class="ok">✔</td>
+<td class="ok">✔<br><span class="note-small">123Scan / ADFで組みやすい</span></td>
+<td>入力欄の順番が固定されている業務では、Zebraも有力候補</td>
+</tr>
+<tr>
+<td>可変データへの対応</td>
+<td><a href="06_qr_sleep.html">⑥</a></td>
+<td class="ok">✔<br><span class="note-small">工夫しやすい</span></td>
+<td class="ok">✔<br><span class="note-small">工夫しやすい</span></td>
+<td class="partial">&xutri;<br><span class="note-small">固定順序前提では注意</span></td>
+<td>5名想定で最後だけ3名など、件数が変わる場合はZebraでは余ったTab / Enter / Pauseでずれる可能性がある</td>
+</tr>
+<tr>
+<td>OCR読取</td>
+<td>&horbar;</td>
+<td class="ng">✘</td>
+<td class="ok">✔</td>
+<td class="ng">✘<br><span class="note-small">通常用途ではOCR目的ではない</span></td>
+<td>数字・OCR帳票・パスポート等も読むならL-46Xが候補</td>
+</tr>
+<tr>
+<td>設定ツール</td>
+<td>&horbar;</td>
+<td>UniversalConfig / Universal Menu Tool系</td>
+<td>UniversalConfig</td>
+<td>123Scan / ADF</td>
+<td>オプト系は細かい制御向き。Zebraは固定工程をGUIで組み立てやすい印象</td>
+</tr>
+</tbody>
+</table>
+
+<div class="xdemo-note-info">
+<strong>ℹ️ キー変換の補足:</strong><br>
+オプトエレクトロニクスでは、直接制御キャラクタ入力や設定ツールを使って、Tab / Enter / 特殊キー相当の制御を組み立てます。
+ただし、Sleepまで組み合わせると設定が複雑になるため、段階的な検証が必要です。<br><br>
+Zebra DS2208は、筆者が確認した範囲では123Scan / ADFで固定順序の入力を組みやすい一方、可変件数や1文字ごとの大きな低速化では注意が必要です。
+</div>
+</section>
+
+<section class="method-section">
+<h2>STEP 4：オプトエレクトロニクスの設定方法</h2>
+
+<h3>方法A：メニューバーコード</h3>
+<div class="flow-box">
+<span class="flow-step step-key">開始（SET）読取</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-item">設定バーコード読取</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-key">終了（END）読取</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-ok">設定完了 &checkmark;</span>
+</div>
+
+<table class="key-table">
+<tr><th>設定内容</th><th>用途</th></tr>
+<tr><td>キーボード言語：日本語</td><td>記号化けを防ぐ</td></tr>
+<tr><td>サフィックス変更</td><td>余計なEnterを消す</td></tr>
+<tr><td>キャラクター間ディレイ</td><td>文字欠けを防ぐ</td></tr>
+<tr><td>QR Code 読取許可</td><td>QR読取が無効になった場合の復旧</td></tr>
+</table>
+
+<h3>方法B：UniversalConfig</h3>
+<table class="format-table">
+<tr><th>機能</th><th>説明</th></tr>
+<tr><td>メニューコード作成</td><td>設定用バーコード画像を作成して、USB-HIDモードでも読み取り設定できる</td></tr>
+<tr><td>キー変換設定</td><td>Tab / Enter / 特殊キー相当の制御を組み立てる</td></tr>
+<tr><td>データ編集設定</td><td>複数コード読取や出力編集を設定する</td></tr>
+<tr><td>高度設定</td><td>Sleepなど複雑な制御を詰める場合に使用</td></tr>
+</table>
+
+<div class="xdemo-note-warn">
+<strong>⚠️ UniversalConfigでのSleep設定について:</strong>
+基本設定は比較的進めやすいですが、Sleepやキー変換を組み合わせると一気に難しくなります。
+設定を変更したら、必ず「何を変えたか」をメモし、短いテストQRで1つずつ確認してください。
+</div>
+
+<h3>マニュアル・ツールの入手先</h3>
+<table class="format-table">
+<tr><th>機種</th><th>ドキュメント</th><th>入手先</th></tr>
+<tr><td>OPI-3601</td><td>カタログ / ユーザーズマニュアル</td><td><a href="https://www.opto.co.jp/products/handy_scanner/OPI-3601.html" rel="noopener" target="_blank">公式製品ページ</a></td></tr>
+<tr><td>ALX-3601</td><td>パンフレット / ユーザーズガイド / メニューブック</td><td><a href="https://www.alf-net.co.jp/products/barcode-reader/2d-barcode-reader/2d-wired/alx-3601/" rel="noopener" target="_blank">アルフ製品ページ</a></td></tr>
+<tr><td>L-46X</td><td>カタログ / ユーザーズマニュアル / データ編集説明書</td><td><a href="https://www.opto.co.jp/products/handy_scanner/L-46X.html" rel="noopener" target="_blank">公式製品ページ</a></td></tr>
+<tr><td>共通ツール</td><td>UniversalConfig / 関連ツール</td><td><a href="https://www.opto.co.jp/products/tool/tool_download.html" rel="noopener" target="_blank">ツールDLページ</a></td></tr>
+</table>
+</section>
+
+<section class="tips-section">
+<h2>🎯 STEP 5：接続手順</h2>
+
+<div class="flow-box">
+<span class="flow-step step-item">① USBをPCに接続</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-key">② メモ帳を開く</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-item">③ QRを読み取る</span>
+<span class="step-arrow">&rarr;</span>
+<span class="flow-step step-ok">④ 文字入力されれば完了 &checkmark;</span>
+</div>
+
+<div class="xdemo-note-good">
+<strong>✅ なぜ最初にメモ帳？</strong>
+最もシンプルなテキスト入力環境で、ショートカット干渉やセル移動の問題がありません。
+まずメモ帳で正常入力確認し、その後にExcelやWebシステムで確認するのが安全です。
+</div>
+
+<h3>接続直後に確認すること</h3>
+<table class="format-table">
+<tr><th>設定項目</th><th>確認内容</th><th>理由</th></tr>
+<tr><td>インターフェース</td><td>USB-HIDになっているか</td><td>本シリーズはキーボード入力として使うため</td></tr>
+<tr><td>キーボード言語</td><td>日本語配列になっているか</td><td>記号化けを防ぐため</td></tr>
+<tr><td>サフィックス</td><td>余計なEnterが付いていないか</td><td>入力欄ずれを防ぐため</td></tr>
+<tr><td>キャラクター間ディレイ</td><td>文字欠けしない速度か</td><td>Webシステム側の処理速度に合わせるため</td></tr>
+</table>
+</section>
+
+<section class="method-section">
+<h2>STEP 6：価格帯別リーダーガイド</h2>
+
+<div class="xdemo-note-warn">
+<strong>⚠️ この表の注意点:</strong>
+安価品・中価格帯の内容は一般的な傾向です。
+業務用欄は、主に筆者がオプトエレクトロニクス系で確認した内容を基準にしています。
+Zebra DS2208については、筆者が確認した範囲で補足しています。
+</div>
+
+<table class="spec-table">
+<thead>
+<tr><th>項目</th><th>安価品<br>2,000〜5,000円</th><th>中価格帯<br>8,000〜15,000円</th><th>業務用<br>15,000〜50,000円+</th></tr>
+</thead>
+<tbody>
+<tr><td>QRコード読取</td><td class="ok">✔</td><td class="ok">✔</td><td class="ok">✔</td></tr>
+<tr><td>USB-HID対応</td><td class="ok">✔ 多い</td><td class="ok">✔</td><td class="ok">✔</td></tr>
+<tr><td>サフィックス変更</td><td class="partial">&xutri; 機種次第</td><td class="ok">✔ 多い</td><td class="ok">✔</td></tr>
+<tr><td>キャラクター間ディレイ</td><td class="ng">✘ ない場合が多い</td><td class="partial">&xutri; 機種次第</td><td class="partial">&xutri; 機種差あり。オプトは遅め調整しやすく、Zebraは1文字ごとの遅延を大きく取りにくい可能性あり</td></tr>
+<tr><td>キー変換</td><td class="ng">✘</td><td class="partial">&xutri; 限定的</td><td class="ok">✔ 機種により対応</td></tr>
+<tr><td>Sleep / Pause</td><td class="ng">✘</td><td class="ng">✘〜&xutri;</td><td class="partial">&xutri; 機種・方式により差が大きい</td></tr>
+<tr><td>本番業務での安心感</td><td class="ng">低い</td><td class="partial">用途次第</td><td class="ok">高い</td></tr>
+</tbody>
+</table>
+
+<div class="xdemo-note-danger">
+<strong>⚠️ 安価品の落とし穴</strong><br>
+サフィックスをNoneにできない、ディレイ設定がない、キー変換できない、Sleep / Pauseがない、といった制限がある場合があります。
+単純読取なら使えても、Webシステム入力の自動化では不安定になることがあります。
+</div>
+</section>
+
+<section class="method-section">
+<h2>STEP 7：接続方式の選び方</h2>
+
+<table class="format-table">
+<tr><th>項目</th><th>USB有線</th><th>Bluetooth</th><th>2.4GHz無線ドングル</th></tr>
+<tr><td>安定性</td><td><strong>高い</strong></td><td>環境に左右される</td><td>比較的高い</td></tr>
+<tr><td>遅延</td><td>少ない</td><td>出る場合あり</td><td>少ない</td></tr>
+<tr><td>バッテリー</td><td>不要</td><td>必要</td><td>必要</td></tr>
+<tr><td>本シリーズでの推奨</td><td><strong>最推奨</strong></td><td>未検証</td><td>安定確認できれば可</td></tr>
+</table>
+
+<div class="xdemo-note-good">
+<strong>✅ 迷ったらUSB有線。</strong>
+ディレイやSleepのタイミングが重要な場合、無線の遅延や復帰待ちがトラブル要因になることがあります。
+</div>
+</section>
+
+<section class="method-section">
+<h2>STEP 8：他メーカーのリーダーについて</h2>
+
+<div class="xdemo-note-danger">
+<strong>⚠️ 重要：他メーカー情報の扱いについて</strong><br>
+オプトエレクトロニクス3機種は本シリーズの主検証機として動作確認済みです。<br>
+Zebraについては <strong>DS2208で筆者が確認した範囲</strong> を記載していますが、Zebra全機種で同じ動作を確認したものではありません。<br>
+Honeywellについては、<strong>Xenon 1900gを今後チェック・検証予定</strong>です。<br>
+Keyence・デンソーウェーブなども、本記事執筆時点では筆者未所有・未検証です。
+そのため、本記事では詳細な機能評価は行わず、代表的な業務用メーカーとしての参考紹介にとどめます。<br><br>
+
+特にキー変換とSleep / Pauseはメーカーごとに実装方法が異なる可能性があります。
+購入前に、実際に使う画面・QRデータ例・必要なキー操作をメーカーまたは代理店へ伝えて確認してください。
+</div>
+
+<h3>Zebra（ゼブラ / 旧Motorola）DS2208 の特徴 &horbar; 筆者が確認した範囲</h3>
+<div class="xdemo-note-info">
+<strong>✅ Zebra DS2208は123Scan / ADFで設定しやすい</strong><br>
+Zebra DS2208は、筆者が確認した限りでは、USB-HID入力・123Scan・ADFを使った設定がかなり分かりやすいです。
+固定順序の入力、Tab / Enter / Pause を使って「決まった順番で入力欄を移動する」用途では、オプトのSleep設定より短時間で形にしやすい印象でした。<br><br>
+特に123Scan / ADFは、固定工程を作る場合にはほとんどこれで自由に設定しやすい印象です。
+</div>
+
+<div class="xdemo-note-warn">
+<strong>⚠️ Zebraの注意点1：Sleep / Pauseで多くは対応できるが、1文字ごとの低速化は注意</strong><br>
+画面遷移、検索待ち、登録処理待ちのように「途中で一定時間待つ」処理は、Sleep / Pause 相当の待機を入れれば、ほとんどの場合は大きな問題になりにくいと思います。<br>
+ただし、<strong>1文字1文字の送信そのものを大きく遅くしたい場合</strong>は注意が必要です。
+Zebra DS2208にもKeystroke Delay系の調整はありますが、筆者の印象では、抑えられる速度に限界があります。
+オプトエレクトロニクス系に比べると、どうしても<strong>送信が高速寄り</strong>になりやすいです。<br><br>
+軽い画面や固定フォームでは問題になりにくい一方、重いWebシステム、Tab移動後に反応が遅い画面、Enter後に検索や登録処理が走る画面では、
+文字欠けや入力欄ずれが出ないか確認が必要です。
+</div>
+
+<div class="xdemo-note-warn">
+<strong>⚠️ Zebraの注意点2：可変データでは対応が難しい可能性</strong><br>
+Zebraは固定順序の定型入力には強い一方、人数や件数が変わる処理では注意が必要です。<br>
+例えば、5名分の入力を想定したQRやADF設定で、最後のデータだけ3名分しかない場合、
+残り2名分に相当するTab / Enter / Pause処理が残り、入力欄がずれたり、Webシステム側でエラーになる可能性があります。<br><br>
+筆者が調べている限りでは、このような<strong>可変件数・可変人数への柔軟な対応は難しそう</strong>です。
+他に回避方法があるかもしれませんが、本記事では未確認です。
+少なくとも、オプト系で使っているような <code>!</code> / <code>?</code> を使った反復Sleepマーカー方式が、
+Zebraで同じように使えるかは確認できていません。
+</div>
+
+<div class="xdemo-note-info">
+<strong>ℹ️ Zebraのサフィックス変更について:</strong><br>
+サフィックス変更は多分問題なく可能だと思われますが、本記事では細かいパターンまでは未確認です。
+固定工程で使う場合でも、読み取り後に余計なEnterが入らないか、None / Enter / Tab の切り替えが想定通りかを実機で確認してください。
+</div>
+
+<h3>オプトエレクトロニクスとZebraの違い</h3>
+<table class="format-table">
+<tr><th>比較項目</th><th>オプトエレクトロニクス</th><th>Zebra DS2208</th></tr>
+<tr>
+<td>得意な方向</td>
+<td>細かく作り込む。キー変換・Sleep・ディレイを組み合わせて複雑な動作を作る。</td>
+<td>123Scan / ADFで固定順序の入力、Tab / Enter / Pause を使った定型処理をかなり自由に組みやすい。</td>
+</tr>
+<tr>
+<td>キャラクター間ディレイ</td>
+<td>段階調整で遅めにも寄せやすい。重いWeb画面に合わせ込みやすい。</td>
+<td>Keystroke Delay系の調整はあるが、1文字ごとに大きく遅くする用途では限界があり、オプトに比べると高速寄りになりやすい。</td>
+</tr>
+<tr>
+<td>Sleep / Pause</td>
+<td>Sleep設定は可能だが難しい。筆者は半年ぐらい試行錯誤。</td>
+<td>固定的なPauseは比較的簡単に感じた。画面遷移や処理待ちは多くの場合こちらで対応しやすい。</td>
+</tr>
+<tr>
+<td>可変データ</td>
+<td>工夫次第で可変長データに対応しやすい。</td>
+<td>固定順序前提だと、5名想定で最後3名などのケースでずれやエラーが出る可能性がある。調べている限り対応は難しそう。</td>
+</tr>
+<tr>
+<td>設定ツール</td>
+<td>UniversalConfig、メニューバーコード。</td>
+<td>123Scan、ADF。固定工程ではほとんどこれで自由に設定しやすい印象。</td>
+</tr>
+<tr>
+<td>注意点</td>
+<td>設定が複雑になりやすい。特にSleep設定が難しい。</td>
+<td>DS2208で筆者が確認した範囲の記載。Zebra全機種・全設定の保証ではない。</td>
+</tr>
+</table>
+
+<h3>主要メーカー参考一覧</h3>
+<table class="spec-table">
+<thead>
+<tr><th>メーカー</th><th>代表機種</th><th>特徴</th><th>検証状況</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>オプトエレクトロニクス</strong></td>
+<td>OPI-3601 / ALX-3601 / L-46X</td>
+<td>
+サフィックス・ディレイ・キー変換・Sleepを本シリーズで検証。
+細かく作れるが、Sleep設定は難しい。
+</td>
+<td class="ok"><strong>検証済み</strong></td>
+</tr>
+<tr>
+<td><strong>Zebra（旧Motorola）</strong></td>
+<td>DS2208 など</td>
+<td>
+123Scan / ADFにより、固定順序入力、Tab / Enter / Pauseの定型処理を自由に設定しやすい印象。
+画面遷移待ちはSleep / Pauseで多くの場合対応しやすいが、1文字ごとの送信を大きく遅くしたい場合は限界がある。
+また、可変件数・可変人数の処理では注意。
+</td>
+<td class="partial"><strong>DS2208で筆者確認範囲あり</strong></td>
+</tr>
+<tr>
+<td><strong>Honeywell</strong></td>
+<td>Xenon 1900g / Voyager / Granit など</td>
+<td>
+Data FormatterやIntercharacter Delayなど高度な設定機能が期待できる。
+</td>
+<td class="ng">Xenon 1900gを今後検証予定</td>
+</tr>
+<tr>
+<td><strong>Keyence</strong></td>
+<td>HR / SR / BTシリーズ など</td>
+<td>
+産業用途に強く、GUI設定ツールやサポートに期待できる。
+</td>
+<td class="ng">未検証。本記事では参考紹介のみ</td>
+</tr>
+<tr>
+<td><strong>デンソーウェーブ</strong></td>
+<td>AT / GT / QKシリーズ など</td>
+<td>
+QRコードの発明元。業務・物流用途で使われることが多い。
+</td>
+<td class="ng">未検証。本記事では参考紹介のみ</td>
+</tr>
+<tr>
+<td><strong>低価格品</strong></td>
+<td>各社</td>
+<td>
+単純読取は可能な場合があるが、ディレイ・キー変換・Sleepが弱いことが多い。
+</td>
+<td class="ng">本番業務では非推奨</td>
+</tr>
+</tbody>
+</table>
+
+<div class="xdemo-note-info">
+<strong>ℹ️ 今後の予定:</strong>
+Honeywell Xenon 1900gの検証後、結果を追記予定です。
+Keyence・デンソーウェーブなどは現時点では未検証のため、本記事では参考紹介にとどめます。
+</div>
+</section>
+
+<section class="tips-section">
+<h2>🎯 STEP 9：購入前チェックリスト</h2>
+
+<table class="check-table">
+<tr><th>#</th><th>チェック項目</th><th>確認内容</th><th>重要度</th></tr>
+<tr><td>1</td><td>USB-HID対応か？</td><td>キーボード入力として使えるか</td><td>必須</td></tr>
+<tr><td>2</td><td>QRコード読取対応か？</td><td>2次元コード対応か</td><td>必須</td></tr>
+<tr><td>3</td><td>サフィックス変更可能か？</td><td>余計なEnterを消せるか。Zebra DS2208は多分問題ないが詳細未確認</td><td>必須</td></tr>
+<tr><td>4</td><td>キャラクター間ディレイがあるか？</td><td>文字欠け対策ができるか。Zebraはオプトほど1文字ごとに遅く抑えられない可能性あり</td><td>高</td></tr>
+<tr><td>5</td><td>キー変換対応か？</td><td>Tab / Enter / 特殊キー制御ができるか</td><td>中〜高</td></tr>
+<tr><td>6</td><td>Sleep / Pause対応か？</td><td>画面遷移待ちを作れるか</td><td>中〜高</td></tr>
+<tr><td>7</td><td>漢字出力が必要か？</td><td>日本語データを直接扱うか</td><td>用途次第</td></tr>
+<tr><td>8</td><td>OCRが必要か？</td><td>数字・帳票・パスポート等を読むか</td><td>用途次第</td></tr>
+<tr><td>9</td><td>有線USBで使えるか？</td><td>安定運用できるか</td><td>高</td></tr>
+<tr><td>10</td><td>設定ツール・マニュアルがあるか？</td><td>現場で復旧できるか。Zebraは123Scan / ADF、オプトはUniversalConfig</td><td>高</td></tr>
+</table>
+</section>
+
+<section class="method-section">
+<h2>STEP 10：よくある失敗パターンと解決策</h2>
+
+<table class="format-table">
+<tr><th>#</th><th>症状</th><th>原因</th><th>解決策</th><th>関連</th></tr>
+<tr><td>1</td><td>文字が化ける</td><td>キーボード言語がUS配列</td><td>日本語キーボード設定に変更</td><td>&horbar;</td></tr>
+<tr><td>2</td><td>余計なEnterが入る</td><td>サフィックスがCRのまま</td><td>サフィックスをNoneに変更。Zebraも多分問題ないが実機確認する</td><td><a href="02_qr_tab_enter.html">②</a></td></tr>
+<tr><td>3</td><td>長いQRで文字が消える</td><td>ディレイが速すぎる</td><td>キャラクター間ディレイを調整。Zebraで1文字ごとの低速化に限界がある場合は、Sleep / PauseやQR分割も検討</td><td><a href="03_qr_character_delay.html">③</a></td></tr>
+<tr><td>4</td><td>Tab後に次の文字が欠ける</td><td>画面側のフォーカス移動が追いついていない</td><td>PauseでTab後の待機を入れる。1文字ごとのディレイで解決しにくい場合はQR分割も検討</td><td><a href="03_qr_character_delay.html">③</a></td></tr>
+<tr><td>5</td><td>Sleepが効かない</td><td>設定方式やマーカーが合っていない</td><td>短いテストQRで1つずつ確認。オプト系は設定記録を残す</td><td><a href="06_qr_sleep.html">⑥</a></td></tr>
+<tr><td>6</td><td>Zebraで可変件数の最後だけ失敗する</td><td>固定順序設定に対してデータ件数が少ない</td><td>固定件数単位に揃える、QRを分ける、または別方式を検討。筆者が調べている限りでは可変対応は難しそう</td><td>&horbar;</td></tr>
+<tr><td>7</td><td>設定が分からなくなった</td><td>複数設定で混乱</td><td>初期化手順と設定記録を残しておく</td><td>&horbar;</td></tr>
+</table>
+</section>
+
+<section class="method-section">
+<h2>STEP 11：メーカー別の考え方まとめ</h2>
+
+<table class="format-table">
+<tr><th>メーカー</th><th>向いている考え方</th><th>注意点</th></tr>
+<tr>
+<td><strong>オプトエレクトロニクス</strong></td>
+<td>
+細かく作り込む方向に向いています。
+キャラクター間ディレイ、キー変換、Sleepを組み合わせて、複雑なWebシステム入力にも対応しやすいです。
+</td>
+<td>
+Sleep設定は難しいです。
+筆者は安定して理解・運用できるまで半年ぐらいかかりました。
+</td>
+</tr>
+<tr>
+<td><strong>Zebra</strong></td>
+<td>
+固定順序の入力に向いています。
+123ScanやADFを使い、Tab / Enter / Pauseを含む定型入力をかなり自由に組みやすい印象です。
+画面遷移や処理待ちは、Pause / Sleep相当の待機で多くの場合対応しやすいです。
+</td>
+<td>
+キャラクター間ディレイとして、1文字1文字を大きく遅くしたい場合は対応に困る場面があります。
+また、可変人数・可変件数では注意が必要です。
+5名想定で最後だけ3名などの場合、余った制御で入力欄ずれやエラーが出る可能性があります。
+</td>
+</tr>
+<tr>
+<td><strong>Honeywell</strong></td>
+<td>
+Data FormatterやIntercharacter Delayなど、高度な設定機能が期待できます。
+</td>
+<td>
+本記事執筆時点では未検証です。
+Honeywellについては、Xenon 1900gのみ今後チェック・検証予定です。
+</td>
+</tr>
+<tr>
+<td><strong>Keyence / Denso Wave</strong></td>
+<td>
+産業用途・物流用途で強く、設定ツールやサポート面に期待できます。
+</td>
+<td>
+本シリーズでは未検証です。
+現時点では詳細検証やメーカー別記事化までは予定していません。
+</td>
+</tr>
+<tr>
+<td><strong>安価なノーブランド品</strong></td>
+<td>
+単純なQR読み取り、検証用途、個人用途。
+</td>
+<td>
+ディレイ、サフィックス、キー変換、Sleep / Pauseが弱いことが多く、本番業務では推奨しません。
+</td>
+</tr>
+</table>
+</section>
+
+<section class="method-section">
+<h2>📝 この記事で学んだこと</h2>
+
+<table class="format-table">
+<tr><th>項目</th><th>内容</th></tr>
+<tr><td>接続方式</td><td>USB-HID（キーボードエミュレーション）。ドライバ不要・VBA不要</td></tr>
+<tr><td>筆者検証済み機種</td><td><strong>OPI-3601 / ALX-3601 / L-46X</strong>（オプトエレクトロニクス系）</td></tr>
+<tr>
+<td>オプト系の特徴</td>
+<td>
+細かい制御ができ、Sleep・キー変換・ディレイを組み合わせやすい。
+ただしSleep設定は難しく、筆者は安定化まで半年ぐらい試行錯誤した。
+</td>
+</tr>
+<tr>
+<td>Zebraの特徴</td>
+<td>
+DS2208について、筆者が確認した範囲では123Scan / ADFで固定順序入力をかなり自由に設定しやすい印象。
+Sleep / Pauseを使えば画面遷移待ちはほとんど問題になりにくいが、キャラクター間ディレイとして1文字ごとの送信を大きく遅くしたい場合は対応に困る場面がある。
+また、可変人数・可変件数への対応は、調べている限り難しそう。
+</td>
+</tr>
+<tr>
+<td>Honeywellの予定</td>
+<td>
+Xenon 1900gを今後チェック・検証予定。
+</td>
+</tr>
+<tr>
+<td>メーカー別記事</td>
+<td>
+Honeywell Xenon 1900gは今後検証予定。Keyence・デンソーウェーブなどは未検証のため、本記事では参考紹介のみ。
+</td>
+</tr>
+<tr><td>OCRが必要な場合</td><td><strong>L-46X</strong>が候補</td></tr>
+<tr><td>安価品の注意</td><td>サフィックスNone・ディレイ・キー変換・Sleep / Pauseが非対応の場合あり</td></tr>
+<tr><td>接続後の次ステップ</td><td>&rarr; <a href="07_qr_full_system.html">⑦ フルシステム構築</a>で設定全体を確認</td></tr>
+</table>
+</section>
+
+<nav class="series-nav">
+<h3>📱 QR Automation Lab &horbar; 全記事一覧</h3>
+<p class="text-sm-gray">
+<span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
+<span class="color-orange">🟠 応用</span>（④〜⑪）＝ さらに自動化を極める
+</p>
+<ol>
+<li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化 &horbar; Tab・Enter埋め込み</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ &horbar; 文字欠けを防ぐ設定</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード &rarr; キー変換テクニック</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
+<li class="current"><span class="lv-adv">[応用]</span> <strong>⑧ QRリーダーの選び方と接続方法（この記事）</strong></li>
+<li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 &horbar; 紙だけでPC間移行</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
+<li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコード生成</a></li>
+</ol>
+</nav>
+
+<section class="qr-safety-note" aria-labelledby="qr-safety-title">
+<h2 id="qr-safety-title">QRリーダー連携の運用注意</h2>
+<p>
+QRリーダーは多くの場合、PCにはキーボード入力として認識されます。
+Tab、Enter、ファンクションキー、待機時間を組み合わせると登録・更新・削除などの操作まで進められるため、実務投入前の検証手順を必ず固定してください。
+</p>
+<ul>
+<li>本番データではなく、架空データと検証用画面で読み取り順、入力欄移動、登録操作を確認する。</li>
+<li>個人情報、認証情報、機密コードをQRにそのまま埋め込まない。</li>
+<li>設定バーコード、初期化手順、復旧手順を保存し、誰が変更したかを記録する。</li>
+<li>キー変換や待機時間を変更した後は、対象外の画面がアクティブな状態で誤送信されないか確認する。</li>
+<li>Webシステムで使う場合は、最初の入力欄にフォーカスが合っていることを必ず確認する。</li>
+<li>Sleep / Pause を使う場合は、PC性能・ブラウザ・ネットワーク状態によって必要な待機時間が変わるため、本番環境で連続テストする。</li>
+<li>Zebra DS2208など、1文字ごとのディレイを遅くする限界がある機種では、長いQRや重いWeb画面でSleep / PauseやQR分割も検討する。</li>
+<li>複数台のQRリーダーを使う場合は、同じ設定になっているかを設定記録表で管理する。</li>
+</ul>
+</section>
+
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong>
+      <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a>
+      <a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a>
+      <a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a>
+      <a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a>
+      <a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a>
+    </p>
+  </div>
+
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+  </div>
+
+  <p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+
+<script src="../script.js"></script>
+</body>
+</html>
