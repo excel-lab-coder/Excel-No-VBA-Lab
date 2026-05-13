@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>QRコードにSleep（一時停止）を埋め込む！業務システムの画面遷移・印刷待ちを自動化｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="QRコードリーダーのSleep（一時停止）機能で業務システムの画面遷移待ち・帳票出力待ち・PrintScreen待ちを自動化。ディレイとの違い、設定方法、Optoelectronics・Zebra・Honeywellでの考え方を解説。OPI-3601、ALX-3601、L-46Xで動作確認済み、Zebra DS2208で一部確認、Honeywell Xenon 1900GではData Formatterによる待機処理を検証済み。 Excel QRコード作成、Excel QRリーダー連携、バーコードリーダー入力自動化を探している方向け。" name="description">
+<meta content="QRコード Sleep, バーコードリーダー 一時停止, 業務システム 画面遷移 待ち時間, QR 印刷待ち, Sleep Delay 違い, QR PrintScreen 待機, Optoelectronics, Opticon, OPI-3601, ALX-3601, L-46X, Zebra DS2208, Honeywell, Excel QRコード, Excel QRリーダー, Excel バーコードリーダー, QRコード Excel入力, QRリーダー Excel入力, バーコードリーダー Excel入力, Excel QRコード 作成, QRコード 自動入力 Excel, Webシステム QRリーダー, 業務システム バーコードリーダー" name="keywords">
+<meta content="QRコードにSleep（一時停止）を埋め込む！業務システムの画面遷移・印刷待ちを自動化｜Excel &times; No VBA Lab" property="og:title">
+<meta content="QRリーダーのSleep機能で業務システムの画面遷移待ち・帳票出力待ち・PrintScreenの待機を自動化する方法を解説。Optoelectronics・Zebra・Honeywellの違いも整理。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/06_qr_sleep_revised_honeywell.html" rel="canonical">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"QRコードに Sleep（一時停止）を埋め込む！業務システムの画面遷移・印刷待ちを自動化","description":"QRコードリーダーのSleep（一時停止）機能で業務システムの画面遷移待ち・帳票出力待ち・PrintScreen待ちを自動化。ディレイとの違い、設定方法、Optoelectronics・Zebra・Honeywellでの考え方を解説。OPI-3601、ALX-3601、L-46Xで動作確認済み、Zebra DS2208で一部確認、Honeywell Xenon 1900GではData Formatterによる待機処理を検証済み。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/06_qr_sleep_revised_honeywell.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../index.html">ホーム</a><span>&gt;</span>
+<a href="../index.html#qr">QR Automation Lab</a><span>&gt;</span>
+<strong>Sleep（一時停止）</strong>
+</div>
+
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="badge badge-maniac">QR連携/Sleep/業務システム自動化</span>
+</div>
+<h1 class="article-title">QRコードに Sleep（一時停止）を埋め込む！<br>業務システムの画面遷移・印刷待ちを自動化</h1>
+<p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
+</div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> この記事で「できるようになること」</h2>
+<p>記事⑤の実践パターンで、こんな壁にぶつかりませんでしたか？</p>
+<ul>
+<li>業務システムで NUM Enter を送ったのに、<strong>画面遷移が終わる前に次のデータが送られてしまう</strong></li>
+<li>PrintScreen を送ったのに、<strong>まだ前の画面のままキャプチャされてしまう</strong></li>
+<li>帳票の印刷ボタンを押した後、<strong>用紙が出てくるまで次の操作を待ちたい</strong></li>
+</ul>
+<p>これらはすべて<strong>「QRリーダーの送信速度が、システムの処理速度より速すぎる」</strong>ことが原因です。</p>
+<p><strong>Sleep（一時停止）</strong>は、QRリーダーのデータ送信を<strong>「秒」単位で一時停止</strong>させる機能です。③のキャラクター間ディレイ（ミリ秒単位の微調整）とは別物で、<strong>「システムが処理を完了するまでじっと待つ」</strong>ために使います。</p>
+
+<div class="xdemo-note-warn">
+<strong>⚠️ 本記事の Sleep 記号方式はメーカー共通仕様ではありません</strong><br>
+本記事で説明する <code>!</code>、<code>?</code> のような Sleep 表現は、主に<strong>オプトエレクトロニクス社（Opticon）製リーダーでの運用</strong>を前提にしています。
+<strong>OPI-3601、ALX-3601、L-46X の3機種では動作確認済み</strong>ですが、Zebra や Honeywell でも同じ記法でそのまま動作するとは限りません。
+</div>
+
+<div class="xdemo-note-info">
+<strong>📝 追記：現時点の検証状況</strong><br>
+本記事の初期公開時点では Honeywell は未検証でしたが、その後 <strong>Honeywell Xenon 1900G</strong> で Data Formatter を使った待機処理を検証しました。
+<code>Search</code>、<code>Send</code>、<code>Delay</code>、<code>Suppress</code> を組み合わせることで、<code>!</code> の前まで送信し、待機し、<code>!</code> を削除して後続データを送るような処理は作れることを確認しています。<br>
+ただし、Opticon のように <code>!</code> が出るたび逐次 Sleep する方式とは考え方が異なります。Honeywell は何回分まで処理するかを事前に組む設計になりやすく、さらに紙の設定QRだけで現場配布・復元できるかは正式確認が必要です。
+</div>
+</section>
+
+<section class="method-section">
+<h2>STEP 1：ディレイと Sleep の違いを正しく理解する</h2>
+<p>③で学んだ「キャラクター間ディレイ」と今回の「Sleep」は、名前こそ似ていますが<strong>目的・単位・使い所がまったく違います</strong>。ここを混同すると設定を間違えます。</p>
+<p>なお、ディレイの最適値はPC性能、入力先アプリ、業務システムの応答速度、IME状態、ネットワーク状況によって変わります。そのため、本記事では「この値なら必ず安全」とは断定せず、<strong>実際の画面でテストしながら少しずつ遅くする</strong>前提で説明します。</p>
+
+<table class="vs-table">
+<tr>
+<th class="col-item">比較項目</th>
+<th class="col-delay">③ キャラクター間ディレイ</th>
+<th class="col-sleep">⑥ Sleep（一時停止）</th>
+</tr>
+<tr>
+<td><strong>単位</strong></td>
+<td><strong>ミリ秒</strong>（ms）<br>数ms〜数百ms程度の細かい調整</td>
+<td><strong>秒</strong>（s）<br>1秒 / 3秒 / 5秒 / 10秒 など</td>
+</tr>
+<tr>
+<td><strong>挿入位置</strong></td>
+<td>全文字の間に<strong>均等</strong>に入る<br>（リーダーの全体設定）</td>
+<td>QRコード内の<strong>任意の位置</strong>に<br>ピンポイントで入れる</td>
+</tr>
+<tr>
+<td><strong>解決する問題</strong></td>
+<td>PCや入力先アプリが追いつかず、<strong>文字が欠ける・順番が崩れる</strong></td>
+<td>業務システムの画面遷移・印刷・サーバー応答が<strong>間に合わない</strong></td>
+</tr>
+<tr>
+<td><strong>典型的な考え方</strong></td>
+<td>文字欠けしない範囲まで、環境に合わせて少しずつ遅くする</td>
+<td>画面遷移や印刷完了など、処理が終わるまで秒単位で待つ</td>
+</tr>
+<tr>
+<td><strong>主な使用場面</strong></td>
+<td>Excel入力、Webフォーム、全角文字入力、長文入力</td>
+<td>業務システム、帳票印刷、画面キャプチャ、画面遷移待ち</td>
+</tr>
+<tr>
+<td><strong>Excel での必要性</strong></td>
+<td><strong>必要になることが多い</strong>。特に複数セル入力や全角入力では重要。</td>
+<td><strong>通常は不要</strong>。Excelは応答が速いため、基本はディレイで調整。</td>
+</tr>
+</table>
+
+<div class="xdemo-note-info">
+<strong>📝 一言でまとめると</strong><br>
+<strong>ディレイ</strong> ＝ 文字と文字の間の「小さな間」。文字欠け防止。<br>
+<strong>Sleep</strong> ＝ 操作と操作の間の「大きな待ち」。システムの処理完了待ち。<br>
+目的が違うため、業務システム連携では<strong>両方を併用する</strong>考え方が基本です。
+</div>
+</section>
+
+<section class="method-section">
+<h2>STEP 2：Sleep が本当に必要な場面</h2>
+<p>Sleep は「秒」単位で送信を止める重い機能です。不必要な場面で使うとスキャンのたびに数秒止まり、現場のストレスになります。<strong>本当に必要な場面だけで使ってください。</strong></p>
+
+<table class="format-table">
+<tr>
+<th>使用場面</th>
+<th>何を待つのか</th>
+<th>Sleep 時間の考え方</th>
+<th>具体例</th>
+</tr>
+<tr>
+<td><strong>業務システムの画面遷移</strong></td>
+<td>NUM Enter 後にサーバーが応答して次の画面に切り替わるまで</td>
+<td>実測値に余裕を足して設定</td>
+<td>販売管理システムで品番確定後に詳細画面が開くまでの待ち</td>
+</tr>
+<tr>
+<td><strong>帳票・用紙の印刷出力</strong></td>
+<td>印刷ボタン押下後にプリンターが用紙を排出するまで</td>
+<td>プリンターの実動作に合わせる</td>
+<td>受注伝票の印刷完了を待ってから次の受注を入力開始</td>
+</tr>
+<tr>
+<td><strong>PrintScreen（画面キャプチャ）</strong></td>
+<td>操作後に結果画面が完全に描画されるまで</td>
+<td>描画完了までを実測して設定</td>
+<td>検品結果画面をキャプチャしてエビデンスとして保全</td>
+</tr>
+<tr>
+<td><strong>ダイアログの表示待ち</strong></td>
+<td>F5 等でダイアログが開くまで</td>
+<td>表示が完了するまで待つ</td>
+<td>検索ダイアログが表示されてから品番を入力開始</td>
+</tr>
+<tr>
+<td><strong>Alt+Tab 等の画面切替</strong></td>
+<td>ウィンドウのフォーカスが切り替わるまで</td>
+<td>切替完了を確認できる時間を取る</td>
+<td>Excelから業務システムに切り替えてから入力開始</td>
+</tr>
+</table>
+
+<div class="xdemo-note-warn">
+<strong>⚠️ Excel の通常入力には Sleep は不要です</strong><br>
+Excel のセル入力は PC のローカル処理なので比較的速く完了します。「Excel で文字が欠ける」問題は Sleep ではなく<strong>キャラクター間ディレイ（③）で解決</strong>してください。Sleep を使うのは業務システム・印刷・画面キャプチャなど、<strong>「秒単位の待ちが発生する場面」だけ</strong>です。
+</div>
+</section>
+
+<section class="method-section">
+<h2>STEP 3：Sleep の仕組み &horbar; QRコードのどこに入れるのか</h2>
+<p>Sleep はリーダーの機能です。QRコード内に<strong>「ここで一時停止しろ」という信号</strong>を埋め込み、リーダーがそれを読み取ったときに指定秒数だけ送信を止めます。</p>
+
+<h3>仕組みのイメージ</h3>
+<p>以下は「品番入力 &rarr; NUM Enter &rarr; <strong>3秒待機</strong> &rarr; PrintScreen」の流れです。</p>
+
+<div class="timeline">
+<div class="timeline-item">
+<div class="tl-time">0.0秒 〜 0.3秒</div>
+リーダーが QR を読み取り、品番データ「PRD-001」を1文字ずつ PC に送信
+</div>
+<div class="timeline-item">
+<div class="tl-time">0.3秒</div>
+トリガー文字 <span class="trigger-char">~</span> を検出 &rarr; NUM Enter のスキャンコードを送信（業務システムが確定処理を開始）
+</div>
+<div class="timeline-item sleep-item">
+<div class="tl-time">0.3秒 〜 3.3秒 【Sleep 3秒】</div>
+<strong>リーダーが送信を完全停止。</strong>この間に業務システムがサーバーと通信し、結果画面を描画する。
+</div>
+<div class="timeline-item">
+<div class="tl-time">3.3秒</div>
+Sleep 終了。トリガー文字 <span class="trigger-char">|</span> を検出 &rarr; PrintScreen のスキャンコードを送信（結果画面がキャプチャされる）
+</div>
+</div>
+
+<div class="flow-diagram">
+<span class="flow-step">品番送信</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">~ &rarr; NUM Enter</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-sleep">💤 Sleep 3秒</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">| &rarr; PrintScreen</span>
+</div>
+
+<div class="xdemo-note-good" style="border-left:6px solid #e53935; background:#fff5f5;">
+<strong>🎬 ここから下が動画デモです</strong><br>
+下の枠は動画です。環境によっては自動再生されます。キー変換と Sleep によって、画面操作を待機している様子を確認できます。
+自動再生されない場合や一時停止している場合は、動画内の再生ボタンを押してください。
+</div>
+
+<div style="margin:18px 0 8px; padding:12px; border:2px solid #e53935; border-radius:10px; background:#fff;">
+<p style="font-weight:700; color:#c62828; margin:0 0 10px; text-align:center;">▶ 動画デモ：Sleep による待機とキー変換の動作例</p>
+<video src="../video/qr_06_sleep_demo_captioned.mp4?v=20260502031704" autoplay loop muted playsinline controls poster="../image/hero_qr-1024.webp" style="width:100%; border-radius:8px; border:1px solid #ddd;"></video>
+</div>
+
+<p class="text-sm-gray" style="text-align:center; margin-top:8px;">【Sleepとキー変換の活用】PageDownキーへの変換で画面をスクロールし、Sleep機能でシステムの登録処理を待機しています。</p>
+
+<div class="xdemo-note-info">
+<strong>📝 Sleep 中、リーダーはどうなっている？</strong><br>
+Sleep 中はリーダーの LED が点滅するなどの表示がある機種もありますが、<strong>PC側には一切何も送信されません</strong>。Sleep が終わると残りのデータの送信を自動的に再開します。Sleep中に次の読み取りを受け付けるかどうかは機種・読み取りモードによって異なります。
+</div>
+</section>
+
+<section class="tips-section">
+<h2>STEP 4：リーダーへの Sleep 設定方法</h2>
+<p>Sleep の設定方法は大きく分けて<strong>2つのアプローチ</strong>があります。リーダーのメーカー・機種によって対応が異なります。</p>
+
+<h3>方式A：トリガー文字 + キー変換で Sleep を埋め込む</h3>
+<p>④のキー変換と同じ要領で、特定のトリガー文字を「Sleep ○秒」に変換する方式です。QRコード内の任意の位置に Sleep を挿入できる柔軟性が最大の利点です。</p>
+
+<div class="conv-visual">
+<div class="cv-from">! &rarr; Sleep 1秒</div>
+<div class="cv-from">? &rarr; Sleep 5秒</div>
+<div class="cv-from">?!! &rarr; Sleep 7秒</div>
+<div class="cv-from">?? &rarr; Sleep 10秒</div>
+</div>
+
+<div class="xdemo-note-info">
+<strong>📝 1秒用と5秒用を分けると時間調整しやすい</strong><br>
+例えば <code>!</code> を1秒、<code>?</code> を5秒に割り当てておくと、
+<code>!</code> = 1秒、<code>!!</code> = 2秒、<code>?</code> = 5秒、<code>?!!</code> = 7秒、<code>??</code> = 10秒のように組み合わせて調整できます。
+1秒単位で細かく伸ばす場面と、5秒単位で大きく待つ場面を分けられるため、実務ではかなり扱いやすくなります。
+</div>
+
+<div class="xdemo-note-warn">
+<strong>⚠️ この表記は主にオプトエレクトロニクス方式の説明です</strong><br>
+<code>!</code> = 1秒、<code>?</code> = 5秒のように記号ごとに Sleep 時間を割り当て、必要に応じて組み合わせる考え方は、本記事ではオプトエレクトロニクス社（Opticon）製リーダーを前提にしています。Zebra や Honeywell で同じ記法が使えるとは限りません。
+</div>
+
+<div class="xdemo-note-warn">
+<strong>⚠️ トリガー文字の選択に注意</strong><br>
+Sleep のトリガー文字もデータに含まれない文字を選んでください。上の例では <code>!</code> と <code>?</code> を使っていますが、業務データにこれらの記号が含まれる場合は別の文字に変更が必要です。
+</div>
+
+<h3>方式B：リーダーの設定メニューで「Inter-function Delay」として設定</h3>
+<p>Tab / Enter などの制御文字（ファンクションキー）を送信した後に自動的に一定時間待つ方式です。「制御文字の後は常に待つ」という全体設定になるため、Sleep を入れる位置を細かく選ぶ用途には向きません。</p>
+
+<table class="format-table">
+<tr><th>方式</th><th>柔軟性</th><th>設定の簡単さ</th><th>対応の考え方</th></tr>
+<tr>
+<td class="text-center"><strong>A：トリガー文字</strong></td>
+<td>QRコード内の任意の位置に挿入可能。待ち位置を細かく制御しやすい。</td>
+<td>キー変換・データ編集設定が必要</td>
+<td>機種・メーカーごとに実装方式が異なる。実機確認が必要。</td>
+</tr>
+<tr>
+<td class="text-center"><strong>B：Inter-function Delay</strong></td>
+<td>制御文字の後に一律で挿入される。位置は選びにくい。</td>
+<td>設定用バーコードや設定ツールで指定できることが多い</td>
+<td>Tab / Enter 後に毎回待つような単純な用途向き。</td>
+</tr>
+</table>
+
+<div class="xdemo-note-good">
+<strong>💡 推奨：単純な待ちは方式B、細かい待ちは方式A</strong><br>
+「Enter の後に毎回待つ」だけなら方式Bで足りることがあります。一方、「住所の途中だけ待つ」「処理ごとに待ち時間を変える」「可変長データの途中に休憩マーカーを入れる」場合は方式Aのような考え方が必要になります。
+</div>
+
+<h3>メーカー別の設定概要</h3>
+
+<div class="xdemo-note-warn">
+<strong>⚠️ 本記事の Sleep 例はメーカー共通仕様ではありません</strong><br>
+本記事で説明している <code>!</code>、<code>?</code> のような Sleep 表現は、主に<strong>オプトエレクトロニクス社（Opticon）製リーダーでの運用を前提</strong>にしています。
+OPI-3601、ALX-3601、L-46X では動作確認済みですが、Zebra・Honeywell では同じ記法でそのまま動くとは限りません。
+</div>
+
+<div class="maker-section">
+<h4 style="font-size:1.35em; line-height:1.5; font-weight:700; color:#1b5e20; border-left:6px solid #43a047; padding-left:10px;">
+オプトの場合：Optoelectronics（オプトエレクトロニクス / Opticon）<br>
+<span style="font-size:0.82em; color:#2e7d32; font-weight:700;">
+動作確認済み機種：<br>
+① OPI-3601（メイン検証機）<br>
+② ALX-3601（OEM機種・OPI-3601の互換品）<br>
+③ L-46X（OCR機能付き上位モデル・数字等のOCR読取可能）
+</span>
+</h4>
+<ul>
+<li><strong>本記事の中心例です。上記3機種で動作確認済みです。</strong></li>
+<li>QRコード内に Sleep 用の記号を入れ、その位置で一時停止させる運用を想定しています。</li>
+<li><code>!</code> = Sleep 1秒、<code>?</code> = Sleep 5秒のように、複数の記号に別々の待ち時間を割り当てると、時間調整の融通がかなり利きます。</li>
+<li>例えば <code>!</code> だけなら1秒、<code>!!</code> なら2秒、<code>?</code> なら5秒、<code>?!!</code> なら7秒、<code>??</code> なら10秒のように、短い待ちと長い待ちを組み合わせて作れます。</li>
+<li><code>!</code> や <code>?</code> を Sleep 用の予約文字として使う場合、<strong>通常データ側でその記号を使わなければ、他の文字は基本的にそのまま利用できます。</strong> 実務データで感嘆符や疑問符を使う場面が少ない場合は、運用しやすい方式です。</li>
+<li>可変長データの途中に休憩マーカーを入れやすく、住所・備考・長い名称など、長さが毎回変わるデータに向いています。</li>
+<li><strong>基本設定でキャラクター間ディレイを約20段階で調整できる</strong>ため、Sleep だけでなく、全体の入力速度をかなり遅くすることも可能です。</li>
+<li>注意点として、Sleep に使う記号は実データで使いにくくなります。業務データ内に同じ記号が出る場合は、別の記号を使うか、QR生成側でチェックが必要です。</li>
+</ul>
+</div>
+
+<div class="maker-section">
+<h4 style="font-size:1.35em; line-height:1.5; font-weight:700; color:#0d47a1; border-left:6px solid #1976d2; padding-left:10px;">Zebraの場合：Zebra（ゼブラ）&horbar; DS / LI / LS シリーズなど</h4>
+<ul>
+<li><strong>Zebra DS2208 ではチェック済みです。</strong>ただし、他の DS / LI / LS シリーズでも同じ挙動になるかは未確認です。</li>
+<li>Zebra は、123Scan や ADF（Advanced Data Formatting）により、キー送信・Pause・データ整形をかなり細かく設定できます。</li>
+<li>特に、<strong>1名ずつ、1レコードずつ、完全に固定された入力工程</strong>には強い印象です。</li>
+<li>「この位置で Tab」「この位置で Enter」「この位置で Pause」「この順番でキーを送る」といった、固定項目・固定順序・固定位置の仕組みにはかなり向いています。</li>
+<li>一方で、可変長データや、休憩マーカーの個数が毎回変わるデータには注意が必要です。</li>
+<li>例えば、5名ずつ処理する前提で設定した場合に、最後だけ3名分になるようなケースや、<code>!</code>、<code>?</code> の組み合わせで Sleep 時間を変える方式は、設定が難しい、またはエラーになる可能性があります。</li>
+<li>また、Zebra で ADF やキー送信・Pause を細かく作り込むと、<strong>そのQRリーダーが実質的にその業務フロー専用の設定になる</strong>面があります。別用途でも使うリーダーの場合は、設定の切り替え・初期化手順・予備機の管理を事前に決めておくと安全です。</li>
+<li>このような<strong>固定人数から外れるケース</strong>や、<strong>可変回数の Sleep マーカー</strong>を Zebra で安定して処理したい場合は、メーカーや販売店へ具体的なデータ例を示し、対応できる設定方法があるか確認しておくと安全です。</li>
+<li>なお、Zebra もキャラクター間ディレイは設定できますが、調整幅は比較的少なめです。全角長文を大きく低速化して送る用途では、実機検証を強くおすすめします。</li>
+</ul>
+</div>
+
+<div class="maker-section">
+<h4 style="font-size:1.35em; line-height:1.5; font-weight:700; color:#4a148c; border-left:6px solid #8e24aa; padding-left:10px;">Honeywellの場合：Honeywell（ハネウェル）&horbar; Xenon / Voyager / Granit シリーズなど</h4>
+<ul>
+<li><strong>追記：Honeywell Xenon 1900G で一部検証済みです。</strong> Data Formatter を使い、<code>!</code> の前まで送る、待機する、<code>!</code> を削除する、残りを送る、という処理は確認できました。</li>
+<li>Honeywell は、<strong>Delay の細かさと低速化の自由度が非常に大きい</strong>点が強みです。古い業務システム、Citrix、RDP、RemoteApp、COBOL系画面など、入力が速すぎると崩れる環境では有力な候補になります。</li>
+<li>また、検証範囲では、<code>!</code> の数が完全に一致しない場合でも、後続データをそのまま送れる場面がありました。Zebraよりも「残りを流す」方向の柔軟性がある可能性があります。</li>
+<li>ただし、Honeywell は基本的に <strong>Search / Send / Delay / Suppress などを組み合わせてルールを作る方式</strong>です。Opticon のように <code>!</code> が来るたび毎回同じ Sleep を実行する、というストリーム変換型とは違います。</li>
+<li>そのため、<code>!</code> を5回分、10回分のように先にルール化しておけば、一定範囲ではOpticonに近いことを実現できる可能性があります。一方で、可変回数が多い場合や汎用テンプレートとして横展開する場合は、設定が複雑になりやすいです。</li>
+<li>自力でData Formatterを組める担当者がいるなら、個別案件ではかなり強い機種です。問題は機能不足ではなく、<strong>設定難易度と、紙の設定QRだけで現場配布・復元できるか</strong>です。</li>
+<li>EZConfigには設定バーコード生成機能がありますが、高度なData Formatterを紙の設定QRとして確実に配布・復元できるかは、現時点では正式確認が必要です。設定ツールを持ち込めない閉鎖環境では、この点が実運用上の大きな課題になります。</li>
+<li>本記事の <code>!</code>、<code>?</code> 方式をそのまま適用するのではなく、Honeywellでは <code>Search</code>、<code>Send</code>、<code>Delay</code>、<code>Suppress</code> を使って同等動作を作る、と考えた方が近いです。</li>
+</ul>
+</div>
+
+<div class="xdemo-note-good">
+<strong>💡 Honeywellの位置づけ</strong><br>
+Honeywellは「できない機種」というより、<strong>設定ツールとData Formatterを使いこなせる人向けの高機能機</strong>と考える方が近いです。
+個別案件として作り込むなら、Opticonに近い物理RPA的な動作を狙える可能性があります。<br>
+一方で、現場に紙の設定QRだけを渡して復旧・横展開する運用では、設定QR化と復元性の確認が重要になります。
+</div>
+
+<div class="xdemo-note-info">
+<strong>📝 その他メーカーについて</strong><br>
+Keyence、Denso Wave、低価格リーダーなど、上記3社以外は本記事では未検証です。
+Pause、Delay、Data Editing 系の機能があっても、本記事の Sleep 記号方式と同じ動作をするとは限りません。
+</div>
+</section>
+
+<section class="tips-section">
+<h2>STEP 5：Sleep を使った実践パターン</h2>
+<p>⑤の実践パターンに Sleep を組み込んだ応用例です。ここでは、Sleep のトリガー文字を <code>!</code> = 1秒、<code>?</code> = 5秒として、必要な秒数分組み合わせる方式で記述します。</p>
+
+<div class="xdemo-note-warn">
+<strong>⚠️ この記法は主にオプトエレクトロニクス方式の説明です</strong><br>
+<code>!</code> = 1秒、<code>?</code> = 5秒のように記号を組み合わせる考え方は、本記事ではオプトエレクトロニクス社（Opticon）製リーダーを前提にしています。
+OPI-3601、ALX-3601、L-46X では動作確認済みですが、Zebra や Honeywell で同じ記法が使えるとは限りません。
+</div>
+
+<h3>
+<span class="pattern-number">Sleep A</span>
+入力 &rarr; 確定 &rarr; <strong>3秒待ち</strong> &rarr; PrintScreen
+<span class="pattern-tag tag-evidence">エビデンス</span>
+</h3>
+<div class="difficulty"><span class="star-on">&starf;&starf;&starf;&starf;</span><span class="star-off">&star;</span></div>
+<div class="scenario-box">
+<strong>使用場面：</strong>業務システムに品番を入力・確定 &rarr; 結果画面が描画されるのを待ってから PrintScreen でキャプチャ。検品エビデンスの自動取得。
+</div>
+<div class="flow-diagram">
+<span class="flow-step">品番</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">~ &rarr; NUM Enter</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-sleep">💤 !!! = Sleep 3秒</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">| &rarr; PrintScreen</span>
+</div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=A1 & "~" & "!!!" & "|"</code>
+</div>
+<div class="conv-visual">
+<div class="cv-from">~ &rarr; NUM Enter</div>
+<div class="cv-from">! &rarr; Sleep 1秒（&times;3）</div>
+<div class="cv-from">| &rarr; PrintScreen</div>
+</div>
+<div class="xdemo-note-good">
+<strong>💡 待ち時間は実測で決める</strong><br>
+サーバーの応答が遅い時間帯は <code>?</code>（5秒）や <code>?!!</code>（7秒）のように増やします。逆に、レスポンスが安定して速い環境なら <code>!!</code>（2秒）など短くできる場合もあります。必ず実際の画面で検証してください。
+</div>
+
+<hr class="pattern-divider">
+
+<h3>
+<span class="pattern-number">Sleep B</span>
+F5 検索起動 &rarr; <strong>2秒待ち</strong> &rarr; 入力 &rarr; 確定
+<span class="pattern-tag tag-system">業務システム</span>
+</h3>
+<div class="difficulty"><span class="star-on">&starf;&starf;&starf;&starf;</span><span class="star-off">&star;</span></div>
+<div class="scenario-box">
+<strong>使用場面：</strong>業務システムで F5 キーを押して検索ダイアログを開く &rarr; ダイアログの表示完了を待つ &rarr; 品番を入力 &rarr; NUM Enter で検索実行。
+</div>
+<div class="flow-diagram">
+<span class="flow-step">{ &rarr; F5 検索起動</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-sleep">💤 !! = Sleep 2秒</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">品番入力</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">~ &rarr; NUM Enter</span>
+</div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>="{" & "!!" & A1 & "~"</code>
+</div>
+<p>F5 を押した直後にデータを送ると、ダイアログが開く前に文字列が前の画面に入力されてしまいます。Sleep でダイアログが完全に表示されるのを待ちます。</p>
+
+<hr class="pattern-divider">
+
+<h3>
+<span class="pattern-number">Sleep C</span>
+入力 &rarr; 確定 &rarr; <strong>印刷待ち</strong> &rarr; 次の入力開始
+<span class="pattern-tag tag-print">印刷待ち</span>
+</h3>
+<div class="difficulty"><span class="star-on">&starf;&starf;&starf;</span><span class="star-off">&star;&star;</span></div>
+<div class="scenario-box">
+<strong>使用場面：</strong>受注システムで受注データを確定すると自動的に伝票が印刷される。印刷完了（用紙排出）を待ってから、次の受注入力に進む。
+</div>
+<div class="flow-diagram">
+<span class="flow-step">受注データ</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">~ &rarr; NUM Enter（確定＆印刷開始）</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-sleep">💤 ? = Sleep 5秒</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">次の受注データ</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">~ &rarr; NUM Enter</span>
+</div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=A1 & "~" & "?" & B1 & "~"</code>
+</div>
+<div class="xdemo-note-warn">
+<strong>⚠️ 印刷待ちの秒数はプリンターに依存</strong><br>
+レーザープリンタ、ドットインパクトプリンタ、複合機などで印刷完了までの時間は大きく変わります。5秒で足りない場合は <code>?!!</code>（7秒）や <code>??</code>（10秒）のように組み合わせて調整してください。
+</div>
+
+<hr class="pattern-divider">
+
+<h3>
+<span class="pattern-number">Sleep D</span>
+複数フィールド入力（各フィールド間で待機）
+<span class="pattern-tag tag-system">業務システム</span>
+</h3>
+<div class="difficulty"><span class="star-on">&starf;&starf;&starf;&starf;&starf;</span></div>
+<div class="scenario-box">
+<strong>使用場面：</strong>レスポンスが遅い業務システムで「品番入力 &rarr; 確定 &rarr; 待機 &rarr; 数量入力 &rarr; 確定 &rarr; 待機 &rarr; ロケーション入力 &rarr; 確定」。フィールド遷移のたびにサーバー通信が走るシステム。
+</div>
+<div class="flow-diagram">
+<span class="flow-step">品番</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">~ Enter</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-sleep">💤 !!! = 3秒</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">数量</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">~ Enter</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-sleep">💤 ? = 5秒</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">ロケ</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">~ Enter</span>
+</div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=A1 & "~" & "!!!" & B1 & "~" & "?" & C1 & "~"</code>
+</div>
+<div class="xdemo-note-danger">
+<strong>🔥 全体の所要時間に注意</strong><br>
+Sleep を多用すると、スキャン完了まで数秒以上かかります。現場でスキャンしてから何秒も反応がないと「壊れた？」と思われるため、<strong>事前に作業者へ「スキャン後は送信完了まで待つ」ことを周知</strong>しておくことが重要です。
+</div>
+
+<hr class="pattern-divider">
+
+<h3>
+<span class="pattern-number">Sleep E</span>
+画面切替（Alt+Tab）&rarr; <strong>待ち</strong> &rarr; 入力
+<span class="pattern-tag tag-system">業務システム</span>
+</h3>
+<div class="difficulty"><span class="star-on">&starf;&starf;&starf;&starf;</span><span class="star-off">&star;</span></div>
+<div class="scenario-box">
+<strong>使用場面：</strong>Excel で QR を生成し、読み取り先は別ウィンドウの業務システム。Alt+Tab でウィンドウを切り替えてからデータを入力。フォーカス移動のタイミングを Sleep で確保。
+</div>
+<div class="flow-diagram">
+<span class="flow-step">Alt+Tab（ウィンドウ切替）</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-sleep">💤 ! = Sleep 1秒</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">品番入力</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">~ &rarr; NUM Enter</span>
+</div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=CHAR(1) & "!" & A1 & "~"</code>
+</div>
+<div class="xdemo-note-info">
+<strong>📝 CHAR(1) = Ctrl+A ではなく Alt+Tab？</strong><br>
+Alt+Tab はキー変換で送る必要があります（④で設定）。上の数式は説明のための簡略表記です。実際には Alt+Tab の組み合わせキーをトリガー文字に割り当て、その後に Sleep を挟みます。修飾キーの組み合わせ送信に対応した上位機種が必要です。
+</div>
+</section>
+
+<section class="method-section">
+<h2>STEP 6：Sleep の最適値を決める手順</h2>
+<p>Sleep の秒数は「長すぎると遅い、短すぎると失敗」のジレンマがあります。以下の手順で最適値を見つけてください。</p>
+<ol>
+<li><strong>手動で操作し、ストップウォッチで計測する</strong><br>実際に業務システムを手動で操作し、「確定ボタンを押してから次の画面が完全に表示されるまで」の時間を複数回計測します。</li>
+<li style="margin-top:12px;"><strong>最大値に余裕を足した値を Sleep に設定</strong><br>計測値の中で一番遅かった時間を基準にし、少し余裕を足して Sleep を設定します。</li>
+<li style="margin-top:12px;"><strong>QRをスキャンして連続テスト</strong><br>連続で成功すれば OK。1回でも失敗したら Sleep を追加してやり直します。</li>
+<li style="margin-top:12px;"><strong>ピーク時間帯でも再テスト</strong><br>業務システムは時間帯によってレスポンスが変動します。最も遅くなる時間帯（昼休み明け、月末締めなど）でテストしてください。</li>
+</ol>
+<div class="xdemo-note-good">
+<strong>💡 「少し長め」が正解</strong><br>
+1スキャンあたりの待ち時間を削りすぎて失敗するよりも、<strong>確実に動く値を優先</strong>してください。特に登録・更新・印刷を伴う業務では、安全側に倒す方が実務向きです。
+</div>
+</section>
+
+<section class="method-section">
+<h2>注意：ディレイと Sleep は「両方設定する」が正解</h2>
+<p>Sleep を設定したからといってディレイが不要になるわけではありません。<strong>両方を併用する</strong>のが正しい設定です。</p>
+
+<table class="format-table">
+<tr><th>設定項目</th><th>役割</th><th>考え方</th></tr>
+<tr>
+<td class="text-center"><strong>キャラクター間ディレイ</strong></td>
+<td>文字と文字の間の微小な間。文字欠け防止。</td>
+<td>入力先の処理速度に合わせて調整。全角文字や長文では長めにすることがあります。</td>
+</tr>
+<tr>
+<td class="text-center"><strong>ファンクション間ディレイ</strong></td>
+<td>Tab / Enter などの制御文字の後の間。画面やセル移動の処理時間を確保。</td>
+<td>Tab や Enter 後に入力位置がずれる場合に調整します。</td>
+</tr>
+<tr>
+<td class="text-center"><strong>Sleep</strong></td>
+<td>特定の操作後の大きな待ち。業務システムの画面遷移・印刷を待つ。</td>
+<td>手動操作で処理時間を測り、最大値に余裕を足して設定します。</td>
+</tr>
+</table>
+
+<div class="flow-diagram">
+<span class="flow-step">P</span>
+<span class="flow-arrow"><small>小さな間</small> &rarr;</span>
+<span class="flow-step">R</span>
+<span class="flow-arrow"><small>小さな間</small> &rarr;</span>
+<span class="flow-step">D</span>
+<span class="flow-arrow"><small>小さな間</small> &rarr;</span>
+<span class="flow-step">-</span>
+<span class="flow-arrow"><small>小さな間</small> &rarr;</span>
+<span class="flow-step">0</span>
+<span class="flow-arrow"><small>小さな間</small> &rarr;</span>
+<span class="flow-step">0</span>
+<span class="flow-arrow"><small>小さな間</small> &rarr;</span>
+<span class="flow-step">1</span>
+<span class="flow-arrow"><small>制御文字後の間</small> &rarr;</span>
+<span class="flow-step">~ Enter</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-sleep">💤 Sleep</span>
+<span class="flow-arrow">&rarr;</span>
+<span class="flow-step">| PrtSc</span>
+</div>
+<p style="font-size:0.85em; color:#666; text-align:center;">文字間＝キャラクター間ディレイ、制御文字後＝ファンクション間ディレイ、操作間＝Sleep</p>
+</section>
+
+<section class="tips-section">
+<h2>深掘り：Sleep が使えないリーダーの場合</h2>
+<p>Sleep 機能そのものが使えない場合は、まずリーダーにどの待機系設定があるかを確認します。低価格リーダーでは、Sleep だけでなくキャラクター間ディレイやファンクション間ディレイも弱い、または存在しない場合があります。</p>
+
+<h3>代替①：待機系の設定があるか確認する</h3>
+<p>キャラクター間ディレイや Inter-function Delay を持つ機種であれば、疑似的に待ち時間を作れる場合があります。ただしキャラクター間ディレイは<strong>全文字の送信が遅くなる</strong>ため、画面遷移や印刷完了の待ちをピンポイントで作る用途には向きません。</p>
+
+<h3>代替②：業務用リーダーに買い替える</h3>
+<p>Sleep が必要な現場は、そもそもリーダーに高い機能が求められる環境です。本記事で扱っている Optoelectronics、Zebra、Honeywell など、Pause / Delay / Data Formatting 系の設定ができる業務用リーダーを検討してください。長期的にはコストパフォーマンスが高いです。</p>
+
+<div class="xdemo-note-danger" style="border-left-color: #ff9800; background: #fff3e0;">
+<strong>🔥 正直に言うと&hellip;</strong><br>
+Sleep が必要な業務フローを安価なリーダーで無理やり回すのは、現場のストレスを増やすだけです。「Sleep 対応の業務用リーダーへの投資」は、作業者の時間単価を考えれば<strong>すぐに元が取れる投資</strong>です。
+</div>
+</section>
+
+<section class="method-section">
+<h2>Sleep 関連のトラブルシューティング</h2>
+<table class="key-table">
+<thead>
+<tr><th>症状</th><th>原因</th><th>対処法</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>Sleep 後のデータが前の画面に入力されている</td>
+<td>Sleep の秒数が足りない（画面遷移が完了していない）</td>
+<td>Sleep を追加して再テスト</td>
+</tr>
+<tr>
+<td>Sleep が効かない（全く待機しない）</td>
+<td>Sleep のトリガー文字が変換設定されていない</td>
+<td>リーダーのキー変換テーブルを確認。方式Bの場合は Inter-function Delay の値を確認</td>
+</tr>
+<tr>
+<td>Sleep が効かない（<code>!</code> や <code>?</code> がそのまま入力される）</td>
+<td>トリガー文字がキー変換ではなく文字として送信されている</td>
+<td>キー変換設定を再確認。設定後にリーダーを再起動</td>
+</tr>
+<tr>
+<td>Sleep 中にリーダーが次のQRを読み取ってしまう</td>
+<td>リーダーの連続読み取りモードが有効、またはSleep中の読み取り仕様による</td>
+<td>「トリガーモード」に変更。Sleep中の挙動を機種マニュアルで確認</td>
+</tr>
+<tr>
+<td>Sleep が異常に長い（設定より長く止まる）</td>
+<td>ディレイや他の待機設定も加算されている可能性</td>
+<td>キャラクター間ディレイ、ファンクション間ディレイ、Sleep の設定を分けて確認</td>
+</tr>
+<tr>
+<td>時間帯によって成功率が変わる</td>
+<td>サーバー負荷でシステムの応答速度が変動</td>
+<td>最も遅い時間帯に合わせて Sleep を設定。余裕を持った値にする</td>
+</tr>
+<tr>
+<td>Zebraで可変人数や可変マーカーがうまく動かない</td>
+<td>固定ルール前提の設定に対して、データ件数やマーカー数が変化している</td>
+<td>1名ずつ・1レコードずつに分ける、または可変回数処理が可能かメーカーへ確認</td>
+</tr>
+</tbody>
+</table>
+</section>
+
+<section class="method-section" style="background:#f8f9fa; border-top: 2px solid #ddd;">
+<h2>まとめ</h2>
+<table class="format-table">
+<tr><th class="w-30">項目</th><th>内容</th></tr>
+<tr>
+<td class="text-center">Sleep とは</td>
+<td>QRリーダーのデータ送信を<strong>「秒」単位で一時停止</strong>する機能。業務システムの処理完了を待つために使う。</td>
+</tr>
+<tr>
+<td class="text-center">ディレイとの違い</td>
+<td>ディレイ＝ミリ秒単位・全文字に均等・文字欠け防止。Sleep＝秒単位・任意位置・処理完了待ち。目的が違うため、<strong>両方を併用する</strong>考え方が基本。</td>
+</tr>
+<tr>
+<td class="text-center">本記事の方式</td>
+<td><code>!</code> = 1秒、<code>?</code> = 5秒のような Sleep 記号方式は、主に<strong>オプトエレクトロニクス社（Opticon）製リーダーの運用を前提</strong>にした説明。OPI-3601、ALX-3601、L-46X では動作確認済み。</td>
+</tr>
+<tr>
+<td class="text-center">オプトの場合</td>
+<td>動作確認済み機種は OPI-3601 / ALX-3601 / L-46X。可変長データの途中に Sleep マーカーを入れる運用に向いている。<code>!</code> を1秒、<code>?</code> を5秒にすると、<code>?!!</code> = 7秒、<code>??</code> = 10秒のように柔軟に待ち時間を作れる。予約文字を通常データで使わなければ、他の文字は基本的にそのまま使える。基本設定でキャラクター間ディレイを約20段階調整できるため、全体をかなり遅く送ることも可能。</td>
+</tr>
+<tr>
+<td class="text-center">Zebraの場合</td>
+<td>Zebra DS2208 ではチェック済み。ただし、他の DS / LI / LS シリーズでも同じ挙動になるかは未確認。1名ずつ、1レコードずつ、完全に固定された入力工程に強い。一方、5名ずつの最後だけ3名分になるような可変パターンや、<code>!</code>・<code>?</code> の組み合わせによる反復 Sleep 方式は難しい可能性がある。細かく設定すると、その業務専用のQRリーダー設定になりやすい点にも注意。</td>
+</tr>
+<tr>
+<td class="text-center">Honeywellの場合</td>
+<td><strong>Xenon 1900Gで一部検証済み。</strong>Data Formatter の Search / Send / Delay / Suppress を組み合わせることで、<code>!</code> の前まで送信、待機、<code>!</code> 削除、後続データ送信のような処理は確認済み。Delayを細かく、かなり遅く設定できる点は大きな強み。ただし、Opticonのような逐次Sleep方式ではなく、何回分まで処理するかを事前に組む設計になりやすい。紙の設定QRだけで配布・復元できるかは正式確認が必要。</td>
+</tr>
+<tr>
+<td class="text-center">その他メーカー</td>
+<td>Keyence、Denso Wave、低価格リーダーなどは本記事では未検証。Pause / Delay 機能があっても、同じ方式で動くとは限らない。</td>
+</tr>
+<tr>
+<td class="text-center">最適値の決め方</td>
+<td>手動操作で処理時間を計測し、最大値に余裕を足して設定する。ピーク時間帯でも必ず再テストする。</td>
+</tr>
+</table>
+
+<div class="xdemo-note-good">
+<strong>💡 次のステップ</strong><br>
+<strong>①〜⑥の設定をまとめて全体像を確認したい</strong> &rarr; 記事⑦「リーダー設定の全体像 &horbar; フルシステム構築ガイド」へ。<br>
+<strong>特定のパターンが動かない</strong> &rarr; 記事⑤「実践パターン集」のトラブルシューティング表へ戻る。<br>
+<strong>そもそもリーダーをどう選べばいいのか分からない</strong> &rarr; 記事⑧「QRリーダーの選び方と接続方法」へ。
+</div>
+</section>
+    <nav class="series-nav">
+      <h3>📱 QR Automation Lab ― 全17記事一覧</h3>
+      <p class="text-sm-gray">
+        <span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
+        <span class="color-orange">🟠 応用</span>（④〜⑰）＝ さらに自動化を極める
+      </p>
+
+      <ol>
+        <li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
+        <li class="current"><span class="lv-adv">[応用]</span> <strong>⑥ Sleep（一時停止）で処理完了を待つ（この記事）</strong></li>
+        <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコード生成</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="12_qr_existing_reader_check.html">⑫ 会社にあるQRリーダーでまず試す</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="13_qr_reader_design_philosophy_current_research_v5.html">⑬ QRリーダーの設計思想比較</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="14_qr_zebra_adf_variable_pause_revised_ranked.html">⑭ Zebra 123Scan / ADF検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
+      </ol>
+    </nav>
+
+<section class="qr-safety-note" aria-labelledby="qr-safety-title">
+<h2 id="qr-safety-title">QRリーダー連携の運用注意</h2>
+<p>QRリーダーは多くの場合、PCにはキーボード入力として認識されます。Tab、Enter、ファンクションキー、待機時間を組み合わせると登録・更新・削除などの操作まで進められるため、実務投入前の検証手順を必ず固定してください。</p>
+<ul>
+<li>本番データではなく、架空データと検証用画面で読み取り順、セル移動、登録操作を確認する。</li>
+<li>個人情報、認証情報、機密コードをQRにそのまま埋め込まない。必要な場合は最小限のIDに置き換える。</li>
+<li>設定バーコード、初期化手順、復旧手順を保存し、誰が変更したかを記録する。</li>
+<li>キー変換や待機時間を変更した後は、Excel以外の画面がアクティブな状態で誤送信されないか確認する。</li>
+</ul>
+</section>
+
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="site-footer-trust" aria-label="運営情報と検証方針">
+<p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+<p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+<p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong>
+      <a href="https://www.opto.co.jp/products/tool/tool_download.html" rel="noopener" target="_blank">Opticon 設定ツール / UniversalConfig</a>
+      <a href="https://www.opto.co.jp/products/handy_scanner/OPI-3601.html" rel="noopener" target="_blank">OPI-3601 公式製品ページ</a>
+      <a href="https://www.opto.co.jp/products/handy_scanner/L-46X.html" rel="noopener" target="_blank">L-46X 公式製品ページ</a>
+      <a href="https://www.opto.co.jp/products/tool/manual_download/instruction_kanjioutput.html" rel="noopener" target="_blank">漢字出力インストラクション</a>
+      <a href="https://www.alf-net.co.jp/products/barcode-reader/2d-barcode-reader/2d-wired/alx-3601/" rel="noopener" target="_blank">ALX-3601 製品ページ</a>
+      <a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a>
+    </p>
+</div>
+
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+
+<script src="../script.js"></script>
+
+</body>
+</html>

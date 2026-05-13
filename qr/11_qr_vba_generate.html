@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>⑪ VBA標準機能でQRコード生成｜QR Automation Lab｜Excel &times; No VBA Lab</title>
+<title>⑪ 全角QR生成の設計メモ｜VBA完全版コードは後日公開検討｜QR Automation Lab｜Excel &times; No VBA Lab</title>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
 <script>
@@ -14,19 +14,19 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="外部ライブラリ不要。VBA標準機能だけで日本語（全角文字）を含むQRコードを生成する方法を完全解説。文字コード（UTF-8/Shift-JIS）の合わせ方、ADODB.StreamでのUTF-8変換コードまで。 Excel QRコード作成、Excel QRリーダー連携、バーコードリーダー入力自動化を探している方向け。" name="description">
+<meta content="全角QRコード生成を検討するための設計メモ。現時点では完全なVBA生成コードは掲載せず、文字コード（UTF-8/Shift-JIS）、リーダー設定、検証項目、既存ライブラリ活用方針を整理します。完全版コードは後日公開を検討中です。" name="description">
 <meta content="QRコード, 全角, 漢字, VBA, ADODB.Stream, 閉域環境, データ移行, Excel, Excel QRコード, Excel QRリーダー, Excel バーコードリーダー, QRコード Excel入力, QRリーダー Excel入力, バーコードリーダー Excel入力, Excel QRコード 作成, QRコード 自動入力 Excel, Webシステム QRリーダー, 業務システム バーコードリーダー" name="keywords">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html" rel="canonical">
 <meta content="article" property="og:type">
-<meta content="⑪ VBA標準機能だけで全角QRコード生成！閉域環境で漢字をQRに｜QR Automation Lab" property="og:title">
-<meta content="外部ライブラリ不要。VBA標準機能のみで日本語QRコード生成。文字コードの合わせ方とVBA実装コードまで完全解説。" property="og:description">
+<meta content="⑪ 全角QR生成の設計メモ｜VBA完全版コードは後日公開検討｜QR Automation Lab" property="og:title">
+<meta content="完全なVBA生成コードは現時点では未掲載。全角QR生成に必要な文字コード、リーダー設定、検証項目、既存ライブラリ活用方針を整理します。" property="og:description">
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html" property="og:url">
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
 <meta content="Excel &times; No VBA Lab" property="og:site_name">
 <meta content="ja_JP" property="og:locale">
 <meta content="summary_large_image" name="twitter:card">
-<meta content="⑪ VBA標準機能だけで全角QRコード生成｜QR Automation Lab" name="twitter:title">
-<meta content="外部ライブラリ不要。VBA標準機能のみで全角QR生成。文字コードの合わせ方と実装まで完全解説。" name="twitter:description">
+<meta content="⑪ 全角QR生成の設計メモ｜QR Automation Lab" name="twitter:title">
+<meta content="完全なVBA生成コードは後日公開を検討中。まず文字コード、読み取り設定、検証方針を整理します。" name="twitter:description">
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" name="twitter:image">
 <meta content="index, follow" name="robots">
 <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -40,13 +40,13 @@
 {
   "@context":"https://schema.org",
   "@type":"Article",
-  "headline":"⑪ VBA標準機能だけで全角QRコード生成！閉域環境で漢字・ひらがなをQRコードにする完全ガイド",
-  "description":"外部ライブラリ不要。VBA標準機能だけで日本語QRコードを生成する方法と文字コードの合わせ方を完全解説。",
+  "headline":"⑪ 全角QR生成の設計メモ｜VBA完全版コードは後日公開検討",
+  "description":"現時点では完全なVBA生成コードは掲載せず、全角QR生成に必要な文字コード、リーダー設定、検証項目、既存ライブラリ活用方針を整理します。",
   "image":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png",
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
   "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
   "datePublished":"2026-04-17",
-  "dateModified":"2026-04-23",
+  "dateModified":"2026-05-12",
   "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html"}
 }
 </script>
@@ -57,7 +57,7 @@
   "itemListElement":[
     {"@type":"ListItem","position":1,"name":"Home","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
     {"@type":"ListItem","position":2,"name":"QR Automation Lab","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/"},
-    {"@type":"ListItem","position":3,"name":"⑪ VBA標準機能で全角QR生成"}
+    {"@type":"ListItem","position":3,"name":"⑪ 全角QR生成の設計メモ"}
   ]
 }
 </script>
@@ -81,7 +81,7 @@
 <div class="breadcrumb">
 <a href="../index.html">ホーム</a><span>&gt;</span>
 <a href="../index.html#qr">QR Automation Lab</a><span>&gt;</span>
-<strong>⑪ VBA標準機能で全角QR生成</strong>
+<strong>⑪ 全角QR生成の設計メモ</strong>
 </div>
 <!-- ===== メインコンテンツ ===== -->
 <article class="article-body">
@@ -89,17 +89,17 @@
 <div class="article-header">
 <div class="article-meta">
 <span class="badge badge-all">全バージョン</span>
-<span class="badge badge-maniac">QR Automation Lab ⑪ ／ 応用・本命</span>
+<span class="badge badge-maniac">QR Automation Lab ⑪ ／ 技術検証メモ</span>
 </div>
-<h1 class="article-title">VBA標準機能だけで全角QRコード生成<br><small>&horbar; 閉域環境でも漢字・ひらがなをQRコードにする完全ガイド</small></h1>
-<p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
-<p style="color:#666;font-size:.88rem;">最終更新: 2026-04-23 ｜ 読了目安: 15分 ｜ 前提: <a href="09_qr_closed_transfer.html">⑨ 閉域環境データ転送</a>、<a href="10_qr_system_migration.html">⑩ システム間データ移行</a></p>
+<h1 class="article-title">全角QR生成の設計メモ<br><small>&horbar; VBA完全版コードは後日公開を検討中</small></h1>
+<p class="article-summary" data-seo-lead="true">この記事は、全角文字を含むQRコード生成を検討するための技術整理です。現時点では完成済みのVBA生成コードを掲載せず、文字コード、読み取り側設定、検証項目、既存ライブラリ活用の判断基準をまとめます。</p>
+<p style="color:#666;font-size:.88rem;">最終更新: 2026-05-12 ｜ 読了目安: 15分 ｜ 前提: <a href="09_qr_closed_transfer.html">⑨ 閉域環境データ転送</a>、<a href="10_qr_system_migration.html">⑩ システム間データ移行</a></p>
 </div>
 <!-- ========================================== -->
 <!-- 冒頭ボックス（課題2対応：ライブラリ優先の案内に変更） -->
 <!-- ========================================== -->
 <div class="breakthrough-box">
-<h3>💡 全角QRコード &horbar; まずライブラリ活用を検討し、不可なら本記事の手法へ</h3>
+<h3>💡 全角QRコード &horbar; まずライブラリ活用を検討し、完全版VBAコードは後日公開を検討</h3>
 <p>
     記事⑨⑩では、Excelから呼び出せる場合があるバーコードコントロール（ActiveX）を使ったQR転送を解説しました。しかしこのコントロールは主に<strong>Accessに同梱される部品</strong>で、Excelだけしか入っていないPCでは表示されない場合があります。さらに2026年現在、Microsoft 365 / Office 2024ではActiveXが初期設定で表示・作成できないことがありますが、トラストセンター設定で許可すると使える場合もあります。職場PCでは管理者ポリシーにより完全に無効化されていることもあるため、まず設定と一覧を確認してください。加えて、使える環境であっても<strong>半角英数字・記号しか格納できません</strong>。実務データの大半は漢字・ひらがな・カタカナ（全角文字）を含むため、バーコードコントロールだけではデータ移行にほぼ使えません。
   </p>
@@ -111,58 +111,24 @@
     GitHub上の <a href="https://github.com/yas78/QRCodeLibVBA" target="_blank">QRCodeLibVBA</a> や <a href="https://github.com/JonasHeidelberg/barcode-vba-macro-only" target="_blank">barcode-vba-macro-only</a>（santarou6氏の全角対応パッチ適用版）を .bas ファイルとしてUSBメモリ等で持ち込み、VBEにインポートする方法です。実装済みのコードを活用するため、開発・テスト工数が大幅に少なく、バグリスクも低くなります。<strong>ライブラリの持ち込みが許可される環境であれば、まずこの方法を検討してください。</strong>
 </p>
 <p>
-<strong>アプローチ②：VBA標準機能のみで自力実装する（本記事）</strong><br>
-    外部ファイルの持ち込み自体がセキュリティポリシーで禁止されている「完全閉域環境」では、ライブラリを搬入できません。そのような場合に限り、Excelに標準搭載されているVBA機能だけでQRを生成するのが本記事の手法です。ADODB.Stream（Windows標準コンポーネント）による文字コード変換、ガロア体演算によるリード・ソロモン符号、セル描画によるマトリクス出力 &horbar;&horbar; すべてをVBAコード内で完結させます。実装難易度は高くなりますが、<strong>バーコードコントロール、外部ライブラリ、インターネット接続が不要</strong>という点が唯一の強みです。
+<strong>アプローチ②：VBA標準機能のみで自力実装する（後日公開を検討）</strong><br>
+    外部ファイルの持ち込み自体がセキュリティポリシーで禁止されている「完全閉域環境」では、ライブラリを搬入できません。そのような場合に限り、Excelに標準搭載されているVBA機能だけでQRを生成する案が候補になります。ADODB.Stream（Windows標準コンポーネント）による文字コード変換、ガロア体演算によるリード・ソロモン符号、セル描画によるマトリクス出力をすべてVBA内で組む必要があります。<strong>ただし、現時点では完成済みの動作保証できるVBAコードは本記事に掲載していません。</strong>完全版コードは、検証が整った段階で後日公開を検討します。
   </p>
-<div class="xdemo-note-good">
-<strong>✅ 判断基準：</strong>「.bas ファイルをUSBで持ち込めるか？」をまず確認してください。持ち込めるなら &rarr; アプローチ①（ライブラリ活用）。持ち込めないなら &rarr; アプローチ②（本記事の手法）。多くの閉域環境では、申請手続きを経ればファイル持ち込みが可能な場合もあります。手続きを検討する価値は十分にあります。
+<div class="xdemo-note-warn">
+<strong>⚠️ 現時点の位置づけ：</strong>本記事は「完成コード配布ページ」ではなく、全角QRをVBAで作る場合に必要な設計要素を整理する検討メモです。すぐに実務投入する場合は、既存ライブラリの持ち込み申請や、検証済みコードの利用を優先してください。
   </div>
 </div>
-<!-- ========================================== -->
-<!-- VBA実装：ADODB.StreamによるUTF-8エンコード -->
-<!-- ========================================== -->
 <section class="tips-section">
-<h2>💻 実装編：VBAで文字列をUTF-8のバイト配列に変換する</h2>
+<h2>💻 実装コードについて：完全版はまだ掲載しない</h2>
 <p>
-    全角QR生成の心臓部となるのが、文字列をUTF-8（またはShift-JIS）のバイト列に変換する処理です。外部ライブラリが使えない閉域環境では、Windows標準の <code>ADODB.Stream</code> を使用して変換を行います。
+    VBAで全角QRを生成するには、文字列のバイト列化だけでなく、QRコード規格に沿ったモード選択、ビット列化、誤り訂正コード生成、マスク選択、形式情報、マトリクス配置、セル描画まで必要です。文字コード変換だけを載せると「このコードだけでQRが作れる」と誤解されやすいため、現時点では部分コードの掲載を控えます。
   </p>
-<div class="formula-box">
-<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-<code>' --- 文字列をUTF-8のバイト配列に変換する関数 ---
-Function ConvertToUTF8(ByVal text As String) As Byte()
-    Dim stream As Object
-    Set stream = CreateObject("ADODB.Stream")
-    
-    With stream
-        .Type = 2          ' adTypeText (テキストモード)
-        .Charset = "UTF-8" ' &starf;ここを "Shift_JIS" に変えればShift-JISになる
-        .Open
-        .WriteText text
-        
-        ' バイトモードに変更してデータを読み直す
-        .Position = 0
-        .Type = 1          ' adTypeBinary (バイナリモード)
-        
-        ' BOM（EF BB BF の3バイト）を読み飛ばす
-        .Position = 3
-        
-        Dim bytes() As Byte
-        bytes = .Read
-        .Close
-    End With
-    
-    ConvertToUTF8 = bytes
-    Set stream = Nothing
-End Function</code>
-</div>
-<div class="xdemo-note-good">
-<strong>✅ BOM（Byte Order Mark）のスキップが必須：</strong><br>
-    ADODB.Stream でUTF-8変換すると、ファイルの先頭に必ず 3バイトのBOM（<code>EF BB BF</code>）が付加されます。QRコードのデータ領域にこのBOMを含めると、リーダーで読み取った際に「ゴミ文字」として出力されてしまう場合があるため、<code>.Position = 3</code> としてBOMを読み飛ばす処理が不可欠です。
-  </div>
 <div class="xdemo-note-info">
-<strong>ℹ️ この後の処理について：</strong><br>
-    この関数で取得したバイト配列（<code>Byte()</code>）を、JIS X 0510 に基づきビット列に変換し、リード・ソロモン符号（ガロア体演算）を付加してマトリクスに配置していくのがVBAでの全体実装になります。<br>
-    完全なVBAソースコードは数百行に及ぶため、自作が困難な場合は、前述の <a href="https://qiita.com/santarou6/items/d623417ea8ba33756108" target="_blank">santarou6氏のオープンソース実装</a> や <a href="https://qiita.com/Parshyu/items/4c2bafb0eb24a14cc1fb" target="_blank">Parshyu氏のコード</a> をテキストファイルとして閉域環境へ持ち込み、VBEに貼り付けて活用することを推奨します。
+<strong>ℹ️ 後日公開を検討している内容：</strong><br>
+    公開する場合は、UTF-8 / Shift-JIS の選択、BOM除去、リード・ソロモン符号、セル描画、読み取り検証用データ、失敗時の確認手順まで含めた一式にします。単なる断片コードではなく、実機で検証できる形に整えてから公開する方針です。
+  </div>
+<div class="xdemo-note-good">
+<strong>✅ いま実務で使う場合：</strong>既に公開・検証されている <a href="https://github.com/yas78/QRCodeLibVBA" target="_blank" rel="noopener">QRCodeLibVBA</a> や、全角対応の参考実装を .bas として持ち込めるかを先に確認してください。閉域環境でも、申請手続きによりコード持ち込みが許可される場合があります。
   </div>
 </section>
 <!-- ========================================== -->
@@ -173,8 +139,8 @@ End Function</code>
 <p>この記事を読み終えると、以下を理解・実践できるようになります。</p>
 <ul>
 <li>なぜバーコードコントロールでは全角が使えないのか、その<strong>技術的理由</strong></li>
-<li>ライブラリ活用（推奨）とVBA標準機能のみ（本記事）の<strong>使い分け判断基準</strong></li>
-<li>VBA標準機能だけで全角QRを生成する<strong>処理の全体像</strong></li>
+<li>ライブラリ活用（推奨）とVBA標準機能のみで自作する場合の<strong>使い分け判断基準</strong></li>
+<li>VBA完全版コードを作る場合に必要な<strong>処理の全体像</strong></li>
 <li>QR作成時の文字コード（UTF-8 / Shift-JIS）選択が<strong>リーダー設定・出力先アプリとどう連動するか</strong></li>
 <li>データベース移行・住所録入力・処理票転記・定型文入力など、<strong>現場での具体的な活用パターン</strong></li>
 <li>全角QR運用で起きる<strong>トラブルの原因と対処法</strong></li>
@@ -198,17 +164,17 @@ End Function</code>
     インターネットに接続できない閉域ネットワーク・スタンドアロンPCでは、Pythonの <span class="code-inline">qrcode</span> ライブラリやnpmパッケージをインストールすることが難しく、外部DLLの持ち込みもセキュリティポリシーで禁止されている場合がほとんどです。
   </p>
 <p>
-    ただし、<strong>すべての閉域環境でファイル持ち込みが完全に不可能とは限りません</strong>。申請手続きを経てUSBメモリからの .bas ファイルインポートが許可されるケースも多くあります。その場合は、実装済みライブラリの活用が圧倒的に効率的です。本記事のVBA標準機能のみによる実装は、それすらできない「完全閉域」環境を想定した最終手段です。
+    ただし、<strong>すべての閉域環境でファイル持ち込みが完全に不可能とは限りません</strong>。申請手続きを経てUSBメモリからの .bas ファイルインポートが許可されるケースも多くあります。その場合は、実装済みライブラリの活用が圧倒的に効率的です。VBA標準機能のみでの自作は、それすらできない「完全閉域」環境を想定した最終手段であり、完成版コードは後日公開を検討します。
   </p>
 <table class="format-table">
 <tr><th>方式</th><th>全角</th><th>外部DLL</th><th>ネット</th><th>難易度</th><th>閉域向き</th><th>推奨度</th></tr>
 <tr><td>バーコードコントロール（記事⑨⑩）</td><td class="text-center">✕ 不可</td><td class="text-center">不要</td><td class="text-center">不要</td><td class="text-center">低</td><td class="text-center">&xutri; 半角のみ</td><td class="text-center">半角なら&cir;</td></tr>
 <tr><td>Python qrcodeライブラリ</td><td class="text-center">&cir;</td><td class="text-center">pip install必要</td><td class="text-center">要</td><td class="text-center">中</td><td class="text-center">✕</td><td class="text-center">開放環境向け</td></tr>
 <tr style="background:#e3f2fd;font-weight:bold"><td>VBA＋外部ライブラリ（QRCodeLibVBA等）</td><td class="text-center">&cir;</td><td class="text-center">.basインポート</td><td class="text-center">初回要</td><td class="text-center">中</td><td class="text-center">&cir;</td><td class="text-center">◎ 第一推奨</td></tr>
-<tr class="bg-e8f5e9"><td>VBA標準機能のみ（本記事）</td><td class="text-center">&cir;</td><td class="text-center">不要</td><td class="text-center">不要</td><td class="text-center">高</td><td class="text-center">◎</td><td class="text-center">&cir; 最終手段</td></tr>
+<tr class="bg-e8f5e9"><td>VBA標準機能のみ（後日公開検討）</td><td class="text-center">&cir;</td><td class="text-center">不要</td><td class="text-center">不要</td><td class="text-center">高</td><td class="text-center">◎</td><td class="text-center">&cir; 最終手段</td></tr>
 </table>
 <div class="xdemo-note-good">
-<strong>✅ まずライブラリ持ち込みを検討：</strong>GitHub上の <a href="https://github.com/yas78/QRCodeLibVBA" target="_blank">QRCodeLibVBA</a> や <a href="https://github.com/JonasHeidelberg/barcode-vba-macro-only" target="_blank">barcode-vba-macro-only</a>（santarou6氏の全角対応パッチ適用版）を .bas ファイルで持ち込めれば、実装は大幅に楽になり、テスト工数もバグリスクも格段に減ります。<strong>持ち込み申請が通る可能性があるなら、まずそちらを試してください。</strong>本記事の手法は、それが不可能な場合の最終手段です。
+<strong>✅ まずライブラリ持ち込みを検討：</strong>GitHub上の <a href="https://github.com/yas78/QRCodeLibVBA" target="_blank">QRCodeLibVBA</a> や <a href="https://github.com/JonasHeidelberg/barcode-vba-macro-only" target="_blank">barcode-vba-macro-only</a>（santarou6氏の全角対応パッチ適用版）を .bas ファイルで持ち込めれば、実装は大幅に楽になり、テスト工数もバグリスクも格段に減ります。<strong>持ち込み申請が通る可能性があるなら、まずそちらを試してください。</strong>VBA標準機能のみの完全版は、それが不可能な場合の最終手段として後日公開を検討します。
   </div>
 </section>
 <!-- ========================================== -->
@@ -332,7 +298,7 @@ End Function</code>
 <!-- VBA処理の全体像 -->
 <!-- ========================================== -->
 <section class="method-section">
-<h2>📐 VBA標準機能のみでQRを生成する &boxh; 処理の全体像</h2>
+<h2>📐 VBA完全版コードを作る場合の処理全体像</h2>
 <div class="flow-box">
 <span class="flow-step step-item">① 入力文字列</span>
 <span class="step-arrow">&rarr;</span>
@@ -363,7 +329,7 @@ End Function</code>
 <strong>🔥 ステップ②が文字コードの分岐点です。</strong>ADODB.Stream の Charset に <span class="code-inline">"UTF-8"</span> を指定すればUTF-8のQRが、<span class="code-inline">"Shift_JIS"</span> を指定すればShift-JISのQRが生成されます。ここで選んだ文字コードに合わせて、リーダー側の文字コード設定も必ず変更してください。
   </div>
 <p>
-    処理全体はVBA標準機能（ADODB.Stream、配列演算、セル操作）のみで構成でき、外部参照設定は ADODB（Microsoft ActiveX Data Objects）のみです。ADODBはWindows標準搭載コンポーネントであり、追加インストールは不要です。
+    理論上は、処理全体をVBA標準機能（ADODB.Stream、配列演算、セル操作）だけで構成できます。ただし、QR規格の実装・誤り訂正・マスク選択まで含めると検証範囲が広いため、本記事では完成コードとしては掲載していません。
   </p>
 <div class="xdemo-note-good">
 <strong>✅ 参考実装：</strong>VBAのみでQRコードを生成するオープンソース実装として、<a href="https://qiita.com/santarou6/items/d623417ea8ba33756108" target="_blank">santarou6氏の全角対応版</a>（MITライセンス、Jiri Gabriel氏の barcode-vba-macro-only がベース）や、<a href="https://qiita.com/Parshyu/items/4c2bafb0eb24a14cc1fb" target="_blank">Parshyu氏のBMP出力版</a>が公開されています。ライブラリを持ち込める環境では <a href="https://github.com/yas78/QRCodeLibVBA" target="_blank">QRCodeLibVBA</a> も選択肢です。
@@ -723,9 +689,9 @@ QR入力で手入力ミスを減らし、バリデーションで異常値や不
 <h2>📝 まとめ</h2>
 <table class="format-table">
 <tr><th>項目</th><th>内容</th></tr>
-<tr><td>解決した課題</td><td>バーコードコントロールでは不可能だった全角文字（漢字・ひらがな・カタカナ）のQRコード生成</td></tr>
-<tr><td>推奨アプローチ</td><td><strong>第一推奨：ライブラリ（QRCodeLibVBA等）を .bas で持ち込んで活用。</strong>持ち込み不可の完全閉域環境に限り、VBA標準機能のみで実装（本記事の手法）。</td></tr>
-<tr><td>方式（本記事）</td><td>VBA標準機能のみ（ADODB.Stream＋GF(256) RS符号＋セル描画）。外部ライブラリ不要。</td></tr>
+<tr><td>整理した課題</td><td>バーコードコントロールでは扱いにくい全角文字（漢字・ひらがな・カタカナ）のQRコード生成を、閉域環境でどう検討するか</td></tr>
+<tr><td>推奨アプローチ</td><td><strong>第一推奨：ライブラリ（QRCodeLibVBA等）を .bas で持ち込んで活用。</strong>持ち込み不可の完全閉域環境に限り、VBA標準機能のみの自作を検討する。</td></tr>
+<tr><td>完全版コード</td><td>現時点では未掲載。ADODB.Stream、GF(256) RS符号、マトリクス配置、セル描画、実機読み取り検証まで含めて後日公開を検討。</td></tr>
 <tr><td>文字コードの鉄則</td><td><strong>QR作成時の文字コード ＝ リーダーの文字コード設定 ＝ 出力先アプリの文字コード</strong>。UTF-8推奨。</td></tr>
 <tr><td>アプリ別の文字コード</td><td>Word・Web＝UTF-8対応。メモ帳＝Win10 1903+はUTF-8。Excel内部はUTF-16LE（VBAで変換）。</td></tr>
 <tr><td>読み取り信頼性</td><td>手入力由来の打ち間違い・桁抜け・変換ミスを大幅に減らせる。ただし、実運用上の信頼性はQR生成実装、リーダー機種、印刷品質、文字コード設定、出力先アプリに依存するため、導入時の照合テストと業務システム側のバリデーションを併用する</td></tr>
@@ -765,26 +731,33 @@ QR入力で手入力ミスを減らし、バリデーションで異常値や不
 <!-- ========================================== -->
 <!-- シリーズナビ -->
 <!-- ========================================== -->
-<nav class="series-nav">
-<h3>📱 QR Automation Lab &horbar; 全記事一覧</h3>
-<p class="text-sm-gray">
-<span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
-    <span class="color-orange">🟠 応用</span>（④〜⑪）＝ さらに自動化を極める
-  </p>
-<ol>
-<li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでExcel一発入力 &horbar; Tab・Enter埋め込み</a></li>
-<li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
-<li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ &horbar; 文字欠けを完全に防ぐ設定</a></li>
-<li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード &rarr; キー変換テクニック</a></li>
-<li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
-<li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
-<li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
-<li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware.html">⑧ QRリーダーの選び方と接続方法</a></li>
-<li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 &horbar; 紙だけでPC間移行</a></li>
-<li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
-<li class="current"><span class="lv-adv">[応用]</span> <strong>⑪ VBA標準機能だけで全角QRコード生成（この記事）</strong></li>
-</ol>
-</nav>
+    <nav class="series-nav">
+      <h3>📱 QR Automation Lab ― 全17記事一覧</h3>
+      <p class="text-sm-gray">
+        <span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
+        <span class="color-orange">🟠 応用</span>（④〜⑰）＝ さらに自動化を極める
+      </p>
+
+      <ol>
+        <li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
+        <li class="current"><span class="lv-adv">[応用]</span> <strong>⑪ 全角QR生成の設計メモ（この記事）</strong></li>
+        <li><span class="lv-adv">[応用]</span> <a href="12_qr_existing_reader_check.html">⑫ 会社にあるQRリーダーでまず試す</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="13_qr_reader_design_philosophy_current_research_v5.html">⑬ QRリーダーの設計思想比較</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="14_qr_zebra_adf_variable_pause_revised_ranked.html">⑭ Zebra 123Scan / ADF検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
+      </ol>
+    </nav>
 <section class="qr-safety-note" aria-labelledby="qr-safety-title">
 <h2 id="qr-safety-title">QRリーダー連携の運用注意</h2>
 <p>QRリーダーは多くの場合、PCにはキーボード入力として認識されます。Tab、Enter、ファンクションキー、待機時間を組み合わせると登録・更新・削除などの操作まで進められるため、実務投入前の検証手順を必ず固定してください。</p>
@@ -803,7 +776,14 @@ QR入力で手入力ミスを減らし、バリデーションで異常値や不
     <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
-    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a></p>
+    <p class="site-footer-links"><strong>公式参照:</strong>
+      <a href="https://www.opto.co.jp/products/tool/tool_download.html" rel="noopener" target="_blank">Opticon 設定ツール / UniversalConfig</a>
+      <a href="https://www.opto.co.jp/products/handy_scanner/OPI-3601.html" rel="noopener" target="_blank">OPI-3601 公式製品ページ</a>
+      <a href="https://www.opto.co.jp/products/handy_scanner/L-46X.html" rel="noopener" target="_blank">L-46X 公式製品ページ</a>
+      <a href="https://www.opto.co.jp/products/tool/manual_download/instruction_kanjioutput.html" rel="noopener" target="_blank">漢字出力インストラクション</a>
+      <a href="https://www.alf-net.co.jp/products/barcode-reader/2d-barcode-reader/2d-wired/alx-3601/" rel="noopener" target="_blank">ALX-3601 製品ページ</a>
+      <a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a>
+    </p>
   </div>
 <div class="footer-contact-wrap">
 <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>

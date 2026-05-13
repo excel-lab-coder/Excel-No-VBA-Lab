@@ -4,10 +4,10 @@
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<meta content="Power Queryのデータ取り込みパターン（CSV・Excelブック・PDF・Webページ・フォルダ一括）をGUI操作で丁寧に解説。文字化け対策やフォルダ結合の仕組みも詳説。" name="description">
+<meta content="Power Queryのデータ取り込みパターン（CSV・Excelブック・PDF・Webページ・フォルダ一括）をGUI操作で解説。VBAやマクロが使えないExcel環境の代替手段として、文字化け対策やフォルダ結合の仕組みも詳説。" name="description">
 <meta content="パワークエリ, Power Query, Excel パワークエリ, VBA不要, Excel実務" name="keywords">
 <meta content="データ取り込みパターン集 &horbar; CSV・Excel・PDF・Web・フォルダ｜Excel &times; No VBA Lab" property="og:title">
-<meta content="Power Queryのデータ取り込みパターン（CSV・Excelブック・PDF・Webページ・フォルダ一括）をGUI操作で丁寧に解説。文字化け対策やフォルダ結合の仕組みも詳説。" property="og:description">
+<meta content="Power Queryのデータ取り込みパターン（CSV・Excelブック・PDF・Webページ・フォルダ一括）をGUI操作で解説。VBAやマクロが使えないExcel環境の代替手段として、文字化け対策やフォルダ結合の仕組みも詳説。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
@@ -32,7 +32,7 @@
 
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"データ取り込みパターン集 \u0026horbar; CSV・Excel・PDF・Web・フォルダ","description":"Power Queryのデータ取り込みパターン（CSV・Excelブック・PDF・Webページ・フォルダ一括）をGUI操作で丁寧に解説。文字化け対策やフォルダ結合の仕組みも詳説。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_import_patterns.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"データ取り込みパターン集 \u0026horbar; CSV・Excel・PDF・Web・フォルダ","description":"Power Queryのデータ取り込みパターン（CSV・Excelブック・PDF・Webページ・フォルダ一括）をGUI操作で解説。VBAやマクロが使えないExcel環境の代替手段として、文字化け対策やフォルダ結合の仕組みも詳説。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_import_patterns.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -49,7 +49,7 @@
 <div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
 <h1 class="article-title">データ取り込みパターン集 &horbar; CSV・Excel・PDF・Web・フォルダ</h1>
 </div>
-<section id="goal"><h2>このページのゴール</h2><p>Power Queryで頻出するデータソース5種類について、GUIの手順と注意点を網羅し、「何を取り込むときにどのメニューを選べばよいか」を迷わなくなることです。</p></section>
+<section id="goal"><h2>このページのゴール</h2><p>Power Queryで頻出するデータソース5種類について、GUIの手順と注意点を網羅し、「何を取り込むときにどのメニューを選べばよいか」を迷わなくなることです。</p><p>会社でVBAやマクロが禁止されている場合でも、CSV取込、データ整形、複数ファイル結合はPower Query（パワークエリ）で代替できることが多いです。</p></section>
 <!-- ==================== CSV ==================== -->
 <section id="csv">
 <h2>CSVファイルの取り込み</h2>
@@ -174,7 +174,7 @@
 </tbody>
 </table>
 </section>
-<section id="summary"><h2>まとめ</h2><p>データ取り込みは Power Query の出発点です。CSVの文字化けは「文字コードの指定」、Excelブックは「テーブル名で取り込む」、PDFは「テキストベースのみ可能」、フォルダは「サンプルファイルの変換で共通処理を定義」&horbar; この4つの原則を覚えておけば、取り込みで困ることはほぼなくなります。</p></section>
+<section id="summary"><h2>まとめ</h2><p>データ取り込みは Power Query の出発点です。CSVの文字化けは「文字コードの指定」、Excelブックは「テーブル名で取り込む」、PDFは「テキストベースのみ可能」、フォルダは「サンプルファイルの変換で共通処理を定義」&horbar; この4つの原則を覚えておけば、取り込みで困ることはほぼなくなります。VBAが使えない環境では、まずこの範囲をPower Queryで代替できないか確認するのが安全です。</p></section>
 <nav class="nav-series">
 <strong>パワークエリ 応用編シリーズ</strong>
 <a href="../basic/article_powerquery_intro.html">⓪ パワークエリとは</a>
@@ -201,5 +201,4 @@
 <script src="../../script.js"></script>
 </body>
 </html>
-
 

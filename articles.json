@@ -271,9 +271,9 @@
     {
       "category": "powerquery",
       "subcategory": "basic",
-      "title": "パワークエリとは",
+      "title": "Power QueryとVBAの違い",
       "url": "powerquery/basic/article_powerquery_intro.html",
-      "summary": "VBA・ワークシート関数と比較しながら、Power Queryの全体像を把握します。",
+      "summary": "VBAやマクロが使えないExcel環境で、Power Queryが代替できる作業と使い分けを把握します。",
       "level": 1,
       "tags": ["prereq", "impact"],
       "is_highlight": true
@@ -382,7 +382,7 @@
       "subcategory": "transform",
       "title": "データ取り込みパターン集 — CSV・Excel・PDF・Web・フォルダ",
       "url": "powerquery/advanced/article_pq_import_patterns.html",
-      "summary": "Power Queryのデータ取り込みパターンをGUI操作で丁寧に解説します。",
+      "summary": "VBA・マクロ禁止環境の代替手段として、Power Queryのデータ取り込みパターンを解説します。",
       "level": 2,
       "tags": ["impact"],
       "is_highlight": true
@@ -454,7 +454,7 @@
       "subcategory": "advanced",
       "title": "テーブルの結合 — マージと追加",
       "url": "powerquery/advanced/article_pq_merge_append.html",
-      "summary": "マージ（横方向）と追加（縦方向）を、結合型の違いから解説します。",
+      "summary": "VBAが使えないExcel環境で、マージ（横方向）と追加（縦方向）を代替手段として使い分けます。",
       "level": 4,
       "tags": ["impact"],
       "is_highlight": true
@@ -494,7 +494,7 @@
       "subcategory": "intro",
       "title": "COBOL帳票処理の3大アプローチ：本当の難易度と完成時のメリット",
       "url": "cobol/intro/02_article_cobol_approach.html",
-      "summary": "関数・Power Query・VBAなど、複数のアプローチを難易度と工数で比較します。",
+      "summary": "VBA禁止・マクロ禁止環境で困ったときの代替手段として、関数・Power Query・VBAを比較します。",
       "level": 1,
       "tags": ["prereq"],
       "is_highlight": true
@@ -543,7 +543,7 @@
       "subcategory": "pq",
       "title": "【パワークエリ編】COBOL帳票データの不要行除去と一括結合",
       "url": "cobol/pq/01_article_cobol_pq.html",
-      "summary": "Power Queryで不要行を除去し、複数ファイルの帳票データを一括整形します。",
+      "summary": "マクロ禁止環境でも、Power Queryで不要行除去と複数ファイルの帳票データ一括整形を狙います。",
       "level": 3,
       "tags": ["impact"],
       "is_highlight": true
@@ -568,9 +568,9 @@
     {
       "category": "qr",
       "subcategory": "input",
-    "title": "① Access搭載環境向けQRコード生成 — バーコードコントロールの使い方と2つの厳しい限界",
+      "title": "① QRコードでWebシステム入力を自動化 — Excelで作ったQRにTab・Enterを埋め込む",
       "url": "qr/01_qr_barcode_control.html",
-    "summary": "Access由来のバーコードコントロールをExcelから配置し、LinkedCellでセル連動するQRコードを生成. ExcelのみのPCでは使えない点、半角255文字・全角不可の限界も解説します.",
+      "summary": "ExcelでQR用データを作り、QRリーダーをキーボード入力として使う基本。Tab・Enterを組み合わせたWebシステム入力の入口です。",
       "level": 3,
       "rarity_id": "qr_generate",
       "is_highlight": true
@@ -580,7 +580,7 @@
       "subcategory": "input",
       "title": "② QRコード1回で複数セルに自動入力 — Tab・Enterの埋め込み実践ガイド",
       "url": "qr/02_qr_tab_enter.html",
-      "summary": "CHAR(9)でTab、CHAR(13)でEnterを埋め込み、1回の読み取りで複数セルにデータを振り分けます。",
+      "summary": "VBA・マクロ禁止環境でも、Tab/Enterを埋め込んだQRで複数セル入力を減らします。",
       "level": 4,
       "tags": ["impact"]
     },
@@ -614,7 +614,7 @@
       "category": "qr",
       "subcategory": "input",
       "title": "⑥ QRコードの中に「待ち時間」を作る — スリープで画面遷移を待つ",
-      "url": "qr/06_qr_sleep.html",
+      "url": "qr/06_qr_sleep_revised_honeywell.html",
       "summary": "業務システムの画面遷移やWebフォームの応答を待ってから次の操作を実行します。",
       "level": 6
     },
@@ -623,7 +623,7 @@
       "subcategory": "input",
       "title": "⑦ QRコード1回で業務システムの全操作を完結させる — 6つの技術を統合した入力自動化システム",
       "url": "qr/07_qr_full_system.html",
-      "summary": "メニュー選択→画面遷移→検索→待機→データ入力→登録。手作業をQR読み取り1回に圧縮します。",
+      "summary": "VBA・マクロ禁止でPower Queryが届かない画面入力を、QR読み取り1回に圧縮します。",
       "level": 7,
       "tags": ["impact"],
       "rarity_id": "qr_series",
@@ -633,7 +633,7 @@
       "category": "qr",
       "subcategory": "transfer",
       "title": "⑧ QRリーダーの選び方と接続方法",
-      "url": "qr/08_qr_hardware.html",
+      "url": "qr/08_qr_hardware_revised_honeywell.html",
       "summary": "筆者が検証した機種を中心に、選び方・USB-HID接続・設定方法まで解説します。",
       "level": 5,
       "rarity_id": "qr_hardware"
@@ -652,18 +652,76 @@
       "subcategory": "transfer",
       "title": "⑩ QRコードでシステム間データ移行 — 旧システムから新システムへ読み取るだけで引っ越し完了",
       "url": "qr/10_qr_system_migration.html",
-      "summary": "APIもCSVインポートもない新システムに、QRリーダーでデータを流し込む移行手法です。",
+      "summary": "APIもCSVインポートもなく、VBA・マクロも禁止された新システムへQRリーダーで流し込む移行手法です。",
       "level": 7,
       "tags": ["impact"]
     },
     {
       "category": "qr",
       "subcategory": "transfer",
-      "title": "⑪ VBA標準機能だけで全角QRコードを生成 — バーコードコントロール不要・UTF-8対応",
+      "title": "⑪ 全角QR生成の設計メモ — VBA完全版コードは後日公開検討",
       "url": "qr/11_qr_vba_generate.html",
-      "summary": "外部ライブラリ不要. ADODB.Stream＋ガロア体演算＋セル描画でQRコードを自力生成します.",
+      "summary": "現時点では完成コードは未掲載。文字コード、リーダー設定、検証項目、既存ライブラリ活用方針を整理します。",
       "level": 8,
       "tags": ["rare"],
+      "is_highlight": true
+    },
+    {
+      "category": "qr",
+      "subcategory": "reader_check",
+      "title": "⑫ 会社にあるQRリーダーでまず試す — メモ帳・Excel・Webシステムで安全確認",
+      "url": "qr/12_qr_existing_reader_check.html",
+      "summary": "本番機をいきなり変えず、余剰機・予備機・検証用機器でTab、Enter、ディレイ、Sleepの効き方を順番に確認します。",
+      "level": 5,
+      "tags": ["impact"]
+    },
+    {
+      "category": "qr",
+      "subcategory": "reader_check",
+      "title": "⑬ QRリーダーの設計思想比較 — Zebra・Honeywell・Opticonを物理RPA用途で見る",
+      "url": "qr/13_qr_reader_design_philosophy_current_research_v5.html",
+      "summary": "読み取り性能だけでなく、入力制御エンジンとしての考え方、設定難易度、現場配備時の向き不向きを比較します。",
+      "level": 7,
+      "rarity_id": "qr_hardware"
+    },
+    {
+      "category": "qr",
+      "subcategory": "reader_check",
+      "title": "⑭ Zebra 123Scan / ADF検証メモ — 区切り文字・ポーズ・可変件数の注意点",
+      "url": "qr/14_qr_zebra_adf_variable_pause_revised_ranked.html",
+      "summary": "Zebra 123Scan / ADFで、区切り文字やPauseを使った入力制御を検証。固定回数では扱いやすい一方、可変件数ではExcel側の設計が重要になります。",
+      "level": 7,
+      "tags": ["impact"]
+    },
+    {
+      "category": "qr",
+      "subcategory": "reader_check",
+      "title": "⑮ Honeywell EZConfig / Data Formatter検証メモ — NumEnter・ポーズ・設定紙展開の注意点",
+      "url": "qr/15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html",
+      "summary": "Honeywell Data Formatterで、制御記号、Delay、NumEnterを検証。NumEnterは Control Characters ではなく Key Strokes 側で扱う点が重要です。",
+      "level": 7,
+      "tags": ["impact"],
+      "rarity_id": "qr_hardware"
+    },
+    {
+      "category": "qr",
+      "subcategory": "reader_check",
+      "title": "⑯ Opticon / UniversalConfig実機検証メモ — ストリーミング方式・Sleep・キー変換",
+      "url": "qr/16_qr_opticon_universalconfig_streaming_control.html",
+      "summary": "OPI-3601 / ALX-3601 / L-46Xで、サフィックスNone、Sleep、キー変換、NumEnter、設定保存・復元を整理。設定は難しい一方、設定後は非常に使いやすい構成です。",
+      "level": 7,
+      "tags": ["impact"],
+      "rarity_id": "qr_hardware"
+    },
+    {
+      "category": "qr",
+      "subcategory": "reader_check",
+      "title": "⑰ QR自動入力におすすめのQRリーダーはどれ？ — Opticon・Zebra・Honeywell比較",
+      "url": "qr/17_qr_reader_recommendation_opticon_zebra_honeywell.html",
+      "summary": "ExcelでQRコードを作り、業務システムへ自動入力する用途で3メーカーを比較。TabやEnterはCHAR関数、NumEnterやPauseは設定しやすさ、紙の設定バーコード運用まで含めて選び方を整理します。",
+      "level": 7,
+      "tags": ["impact"],
+      "rarity_id": "qr_hardware",
       "is_highlight": true
     },
     {
@@ -785,7 +843,7 @@
       "subcategory": "vba",
       "title": "UIA（UI Automation）で他アプリへ自動入力",
       "url": "vba/article_vba_uia_automation.html",
-      "summary": "QRリーダーの代わりにVBAで直接Webシステムに入力。閉域環境ではQR、制限なし環境ではUIA、という使い分けです。<br><small>対応する本編：QR Automation Lab</small>",
+      "summary": "QRリーダーの代わりにVBAで直接Webシステムに入力。VBA禁止・マクロ禁止環境ではQR、制限なし環境ではUIA、という使い分けです。<br><small>対応する本編：VBAなしでWebシステム入力を自動化する方法</small>",
       "level": 7,
       "tags": ["vba", "uia"],
       "is_highlight": true
@@ -814,7 +872,7 @@
       "subcategory": "vba",
       "title": "QRコード一括生成 VBA完全版",
       "url": "unlocked/coming_soon.html?topic=vba_qr_generate",
-      "summary": "全角文字対応のQRコードをVBAだけで生成する完全コード。QR Automation Labの実装補完です。<br><small>対応する本編：QR Automation Lab 記事⑪</small>",
+      "summary": "全角文字対応のQRコードをVBAだけで生成する完全版コードは準備中です。公開時は記事⑪の設計メモを補完します。<br><small>対応する本編：QR Automation Lab 記事⑪</small>",
       "level": 6,
       "tags": ["vba", "qr"],
       "is_prep": true

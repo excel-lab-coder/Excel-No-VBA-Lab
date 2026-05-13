@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+<title>⑬ QRリーダーの設計思想比較｜【Zebra】・【Honeywell】・【Opticon】を物理RPA用途で見る｜QR Automation Lab｜Excel × No VBA Lab</title>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+
+<meta name="description" content="QRリーダーを物理RPA・ソフトレス入力自動化の視点で見たときの、Zebra・Honeywell・Opticonの設計思想の違いを現時点の実機検証ベースで整理。ZebraとHoneywellは同系統のルールベース型だが、厳密性・柔軟性・設定難易度に差があり、Opticonは入力ストリーム変換型に近い特徴があります。">
+<meta name="keywords" content="QRリーダー,バーコードリーダー,Zebra,Honeywell,Opticon,物理RPA,QR Automation Lab,Excel,入力自動化,キー変換,Sleep,Pause,ディレイ,Data Formatter,ADF,Prefix,Suffix,USB-HID,閉鎖環境,VBAなし,RPA禁止">
+
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/13_qr_reader_design_philosophy_current_research_v5.html" rel="canonical">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="⑬ QRリーダーの設計思想比較｜【Zebra】・【Honeywell】・【Opticon】を物理RPA用途で見る">
+<meta property="og:description" content="Zebra・Honeywell・Opticonを、読み取り性能ではなく入力制御エンジンとして比較。ZebraとHoneywellは同系統、Opticonは別ベクトルという視点で整理します。">
+<meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/13_qr_reader_design_philosophy_current_research_v5.html">
+<meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<meta property="og:site_name" content="Excel × No VBA Lab">
+<meta property="og:locale" content="ja_JP">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="⑬ QRリーダーの設計思想比較｜Zebra・Honeywell・Opticon">
+<meta name="twitter:description" content="QRリーダーを物理RPA・入力制御装置として見たときの3メーカーの違いを整理します。">
+<meta name="twitter:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+
+<meta name="robots" content="index, follow">
+
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Article",
+  "headline":"⑬ QRリーダーの設計思想比較｜【Zebra】・【Honeywell】・【Opticon】を物理RPA用途で見る",
+  "description":"QRリーダーを物理RPA・ソフトレス入力自動化の視点で見たときの、Zebra・Honeywell・Opticonの設計思想の違いを整理します。",
+  "image":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png",
+  "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
+  "publisher":{
+    "@type":"Organization",
+    "name":"Excel × No VBA Lab",
+    "logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}
+  },
+  "datePublished":"2026-05-09",
+  "dateModified":"2026-05-09",
+  "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/13_qr_reader_design_philosophy_current_research_v5.html"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type":"ListItem","position":2,"name":"QR Automation Lab","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/"},
+    {"@type":"ListItem","position":3,"name":"⑬ QRリーダーの設計思想比較"}
+  ]
+}
+</script>
+
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel × No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+
+  <div class="breadcrumb">
+    <a href="../index.html">ホーム</a><span>&gt;</span>
+    <a href="../index.html#qr">QR Automation Lab</a><span>&gt;</span>
+    <strong>⑬ QRリーダーの設計思想比較</strong>
+  </div>
+
+  <!-- ===== メインコンテンツ ===== -->
+  <article class="article-body">
+
+    <!-- ===== 記事ヘッダー ===== -->
+    <div class="article-header">
+      <div class="article-meta">
+        <span class="badge badge-all">全バージョン</span>
+        <span class="badge badge-maniac">QR Automation Lab ⑬ ／ メーカー比較・設計思想</span>
+      </div>
+
+      <h1 class="article-title">
+        QRリーダーの設計思想比較<br>
+        <small><span class="maker-compare-line"><span class="maker-name maker-zebra">Zebra</span><span class="maker-name maker-honeywell">Honeywell</span><span class="maker-name maker-opticon">Opticon</span></span><span class="maker-topic">物理RPA用途で見るメーカー比較</span></small>
+      </h1>
+
+      <p class="article-summary" data-seo-lead="true">
+        QRリーダーは、単にバーコードやQRコードを読む機器として比較されることが多いです。
+        しかし、QRコード内にTab、Enter、待機、キー変換、制御文字削除を組み込むと、
+        QRリーダーは<strong>キーボード入力を制御する装置</strong>として使える可能性があります。
+      </p>
+
+      <p class="article-summary">
+        この視点で見ると、Zebra、Honeywell、Opticonはかなり性格が違います。
+        特に、ZebraとHoneywellは同じルールベース型に近い一方で、
+        厳密性・柔軟性・設定難易度に違いがあります。
+        Opticonはそこからさらに別ベクトルで、入力ストリーム変換型に近い特徴を持っているように見えます。
+      </p>
+
+      <p class="article-summary">
+        なお、この記事の比較は<strong>現時点の実機検証・調査範囲に基づく暫定整理</strong>です。
+        ZebraやHoneywellは機能が多く、ADFやData Formatterの組み方次第で、ここで難しいとした処理を別方法で実現できる可能性があります。
+        もし別機種・別設定で実現できた例があれば、問い合わせから情報をいただけると助かります。
+      </p>
+
+      <p class="text-sm-gray">最終更新: 2026-05-09 ｜ 読了目安: 17分</p>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ゴール -->
+    <!-- ========================================== -->
+    <section class="goal-section">
+      <h2><span class="icon">🔥</span> この記事で分かること</h2>
+
+      <p>
+        この記事では、QRリーダーを読み取り性能ではなく、
+        <strong>入力制御エンジン</strong>として見た場合のメーカー差を整理します。
+      </p>
+
+      <div class="usecase-grid">
+        <div class="usecase-card">
+          <div class="icon">🧭</div>
+          <h4>設計思想の違い</h4>
+          <p>Zebra、Honeywell、Opticonを、入力制御の考え方で比較します。</p>
+        </div>
+        <div class="usecase-card">
+          <div class="icon">🏭</div>
+          <h4>用途ごとの向き不向き</h4>
+          <p>倉庫・検品・POS向きと、物理RPA向きの違いを整理します。</p>
+        </div>
+        <div class="usecase-card">
+          <div class="icon">🧩</div>
+          <h4>ZebraとHoneywellの違い</h4>
+          <p>同系統の機能に見える2社の差を、厳密性と柔軟性から説明します。</p>
+        </div>
+        <div class="usecase-card">
+          <div class="icon">⚙️</div>
+          <h4>Opticonの別ベクトル性</h4>
+          <p>制御文字が来たらその場で処理する、ストリーム変換型の強みを考えます。</p>
+        </div>
+      </div>
+
+      <div class="xdemo-note-warn">
+        <strong>この記事の前提：</strong><br>
+        ここでの比較は、一般的な読み取り性能の比較ではありません。
+        QRコード内の制御文字、待機、キー変換、キャラクター間ディレイ、設定QR、閉鎖環境での運用を含め、
+        <strong>QRリーダーを物理RPAとして使う場合</strong>の見方です。<br>
+        また、「難しい」「汎用化しにくい」という表現は、現時点で試した設定・機種・ツールでの整理です。
+        ZebraやHoneywellは機能が多いため、別のADF設定、Data Formatter設定、設定コードの組み方で改善できる可能性があります。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 目次 -->
+    <!-- ========================================== -->
+    <section class="method-section">
+      <h2>目次</h2>
+      <ol>
+        <li><a href="#not-reader-comparison">これは読み取り性能の比較ではない</a></li>
+        <li><a href="#current-scope">現時点の調査範囲と情報募集</a></li>
+        <li><a href="#three-types">3メーカーを一言で分ける</a></li>
+        <li><a href="#zebra-honeywell-same-family">ZebraとHoneywellは同系統のルールベース型</a></li>
+        <li><a href="#zebra">Zebra：厳密性と標準化を重視する設計</a></li>
+        <li><a href="#honeywell">Honeywell：高機能なルールベース型だが、Zebraより柔軟</a></li>
+        <li><a href="#zebra-honeywell-diff">ZebraとHoneywellの具体的な違い</a></li>
+        <li><a href="#opticon">Opticon：入力ストリーム変換型に近い別ベクトル</a></li>
+        <li><a href="#philosophy-deep">設計思想を深掘りする</a></li>
+        <li><a href="#usecase">用途別の向き不向き</a></li>
+        <li><a href="#business-value">この違いが業務改善で重要になる理由</a></li>
+        <li><a href="#summary">まとめ</a></li>
+      </ol>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 1 -->
+    <!-- ========================================== -->
+    <section id="not-reader-comparison" class="method-section">
+      <h2>1. これは読み取り性能の比較ではない</h2>
+
+      <p>
+        一般的なQRリーダー比較では、読み取り速度、読み取り距離、読取精度、耐久性、価格、保証、対応コードなどが重視されます。
+        もちろん、これらは業務用機器として重要です。
+      </p>
+
+      <p>
+        しかし、QRリーダーをExcel入力や業務システム入力の自動化に使う場合、
+        それだけでは足りません。
+      </p>
+
+      <div class="xdemo-note-good">
+        <strong>物理RPA用途で見るポイント</strong><br>
+        QRリーダーを「読む機械」ではなく、
+        <strong>キーボード入力をどう制御できるか</strong>で見ると、
+        メーカーごとの特徴がかなり違って見えてきます。
+      </div>
+
+      <p>
+        たとえば、次のような処理ができるかどうかです。
+      </p>
+
+      <ul>
+        <li>読み取った後にEnterやTabを送る</li>
+        <li>通常EnterではなくNumEnterを送る</li>
+        <li>QRデータの途中で数秒待機する</li>
+        <li>特定文字を削除する</li>
+        <li>特定文字をTab、Enter、Fキーなどに変換する</li>
+        <li>入力が速すぎる場合にキャラクター間ディレイを入れる</li>
+        <li>QR内の制御記号が複数回出ても処理できる</li>
+        <li>設定QRだけで現場復旧できる</li>
+      </ul>
+
+      <p>
+        この観点で見ると、Zebra、Honeywell、Opticonは単なるスペック差ではなく、
+        <strong>入力制御の設計思想</strong>が違います。
+      </p>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 現時点の調査範囲 -->
+    <!-- ========================================== -->
+    <section id="current-scope" class="method-section">
+      <h2>2. 現時点の調査範囲と情報募集</h2>
+
+      <p>
+        この記事は、現時点で確認できた実機検証と設定ツール上の挙動をもとにした整理です。
+        そのため、ここで「難しい」「汎用化しにくい」と書いている箇所は、
+        <strong>そのメーカーで絶対に不可能という意味ではありません</strong>。
+      </p>
+
+      <p>
+        特にZebraとHoneywellは機能が多く、ADFやData Formatterの設定をさらに深く組めば、
+        ここで難しいとした処理を別の方法で実現できる可能性があります。
+        Honeywellも、たとえば「!」による待機を5回分・10回分のように先に作り込めば、
+        個別案件としては十分対応できる場面があります。
+      </p>
+
+      <div class="xdemo-note-info">
+        <strong>この記事のスタンス：</strong><br>
+        現時点では、汎用的に使いやすいのはOpticon寄り、個別案件で強いのはHoneywell、
+        標準化・検品用途に強いのはZebra、という見方をしています。<br>
+        ただし、別の設定方法や別機種でより良い方法がある場合は、ぜひ問い合わせから教えてください。
+        実機結果が増えれば、この記事も更新していく前提です。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 3 -->
+    <!-- ========================================== -->
+    <section id="three-types" class="method-section">
+      <h2>3. 3メーカーを一言で分ける</h2>
+
+      <p>
+        物理RPA用途で見ると、3メーカーは次のように分けられます。
+      </p>
+
+      <table class="format-table">
+        <thead>
+          <tr>
+            <th class="maker-cell" style="white-space: nowrap;">メーカー</th>
+            <th>設計思想の印象</th>
+            <th>一言でいうと</th>
+            <th>物理RPA用途での見方</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="maker-cell" style="white-space: nowrap;">Zebra</td>
+            <td>厳密なルールベース型</td>
+            <td>標準化された業務を安全に処理するリーダー</td>
+            <td>倉庫・検品・POSのように、想定外を止めたい用途に強い</td>
+          </tr>
+          <tr>
+            <td class="maker-cell" style="white-space: nowrap;">Honeywell</td>
+            <td>高機能なルールベース型</td>
+            <td>複雑なデータ整形ができる高機能リーダー</td>
+            <td>Zebraより柔軟だが、設定が難しく、現場配布は要検証</td>
+          </tr>
+          <tr>
+            <td class="maker-cell" style="white-space: nowrap;">Opticon</td>
+            <td>入力ストリーム変換型に近い</td>
+            <td>入力文字列を制御しやすい物理RPA向きリーダー</td>
+            <td>制御文字をQR内に入れて、その場で待機やキー変換をさせやすい</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        ここで重要なのは、ZebraとHoneywellはまったく別物ではなく、
+        どちらも基本的には<strong>条件やルールを先に作って処理するタイプ</strong>に見えることです。
+      </p>
+
+      <p>
+        ただし、同じルールベース型でも、Zebraは厳密性が強く、Honeywellは処理できる幅が広い印象です。
+        一方でOpticonは、QR内の文字を左から順番に読みながら、特定文字が来たらその場で変換するような考え方に近く、
+        別ベクトルの使いやすさがあります。
+      </p>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 3 -->
+    <!-- ========================================== -->
+    <section id="zebra-honeywell-same-family" class="method-section">
+      <h2>4. ZebraとHoneywellは同系統のルールベース型</h2>
+
+      <p>
+        ZebraとHoneywellは、細かい設定画面や用語は違いますが、物理RPA用途で見ると同じ系統に見えます。
+      </p>
+
+      <div class="flow-box">
+        <span class="flow-step step-item">条件を決める</span>
+        <span class="step-arrow">&rarr;</span>
+        <span class="flow-step step-key">対象文字を探す</span>
+        <span class="step-arrow">&rarr;</span>
+        <span class="flow-step step-item">削除・送信・待機する</span>
+        <span class="step-arrow">&rarr;</span>
+        <span class="flow-step step-ok">結果を出力する</span>
+      </div>
+
+      <p>
+        つまり、基本的には次のような考え方です。
+      </p>
+
+      <pre><code>この条件に合うデータなら
+この位置まで送る
+この文字を消す
+ここで待つ
+残りを送る</code></pre>
+
+      <p>
+        この方式は、固定された業務データには強いです。
+        たとえば、商品コード、数量、棚番、ロット番号の順番が必ず決まっている場合、
+        その形式に合わせてルールを作れば安定します。
+      </p>
+
+      <p>
+        しかし、物理RPA用途では弱点もあります。
+      </p>
+
+      <ul>
+        <li>制御記号が何回出るか分からない</li>
+        <li>入力件数が毎回変わる</li>
+        <li>画面待ちが場所によって変わる</li>
+        <li>途中の項目がある場合とない場合がある</li>
+        <li>制御記号が足りない場合にどう動くかが重要になる</li>
+      </ul>
+
+      <p>
+        このような可変要素が増えると、ZebraとHoneywellの差が見えてきます。
+      </p>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 4 -->
+    <!-- ========================================== -->
+    <section id="zebra" class="method-section">
+      <h2>5. Zebra：厳密性と標準化を重視する設計</h2>
+
+      <p>
+        Zebraは、倉庫、検品、POS、物流などの現場で強い機種です。
+        この用途では、QRリーダーに求められるのは柔軟な自動化よりも、
+        <strong>間違ったデータを止めること</strong>です。
+      </p>
+
+      <div class="xdemo-note-good">
+        <strong>Zebraが向く考え方：</strong><br>
+        想定されたフォーマットに合っているデータだけを処理する。
+        想定外のデータは止める、通さない、エラーにする。
+      </div>
+
+      <p>
+        たとえば、倉庫で次のような入力を行うとします。
+      </p>
+
+      <pre><code>商品コード
+数量
+棚番
+ロット番号</code></pre>
+
+      <p>
+        この順番が崩れているのに、リーダーが残りデータをそのまま流してしまうと、
+        数量が棚番欄に入ったり、棚番がロット番号欄に入ったりする危険があります。
+      </p>
+
+      <p>
+        その意味では、Zebraの厳密さは欠点ではなく、倉庫・検品・POSでは強みです。
+      </p>
+
+      <table class="format-table">
+        <thead>
+          <tr>
+            <th>強み</th>
+            <th>説明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>設定が比較的分かりやすい</td>
+            <td>一般的なEnter、Tab、Suffix、Prefix、ADF設定に入りやすい</td>
+          </tr>
+          <tr>
+            <td>管理用途に強い</td>
+            <td>大規模展開、標準化、倉庫・POS用途と相性が良い</td>
+          </tr>
+          <tr>
+            <td>想定外を止めやすい</td>
+            <td>誤入力防止、検品、棚卸、トレーサビリティ用途で安全側に働く</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        一方で、物理RPA用途では、厳密さがそのまま弱点になることがあります。
+        QR内の「!」の数が合わない、項目数が変わる、途中待機が可変になる、といった場合に、
+        ルールから外れた後の処理が硬くなりやすいからです。
+      </p>
+
+      <div class="xdemo-note-warn">
+        <strong>物理RPA用途で起きやすい例：</strong><br>
+        たとえば、1つのQRコードに最大5件分の入力データを入れる設計にしたとします。
+        通常は「データ → ! → データ → !」のように、区切りや待機用の制御記号が決まった回数だけ出てくる前提でルールを作ります。
+        しかし実際の業務では、5件入る日もあれば、3件しか入らない日もあります。
+        このとき、Zebraのように厳密なルール一致を前提にすると、
+        「5回分あるはずの ! が3回分しかない」ことで、後続処理が想定外になったり、エラー扱いになったりする可能性があります。
+      </div>
+
+      <p>
+        数式側で不足分のダミー記号を入れる、空データを作って5件分にそろえる、
+        待機用の <code>!</code>、Tab用の <code>CHAR(9)</code>、NumEnter用の <code>/</code> のように役割を分けておく、といった回避策は考えられます。
+        ただし、その場合はQR生成側の数式も複雑になり、
+        「本当に入力したいデータ」と「リーダーのルールを成立させるためのダミーデータ」が混ざります。
+      </p>
+
+      <p>
+        そのため、Zebraは固定フォーマットの入力には強い一方で、
+        データ件数や待機回数が毎回変わる物理RPA用途では、
+        かなり丁寧にQR生成側の設計を合わせる必要があります。
+        これは欠点というより、Zebraが「想定外を安全に止める」方向の設計に寄っているためです。
+      </p>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 5 -->
+    <!-- ========================================== -->
+    <section id="honeywell" class="method-section">
+      <h2>6. Honeywell：高機能なルールベース型だが、Zebraより柔軟</h2>
+
+      <p>
+        Honeywellも基本的にはルールベース型です。
+        ただし、Data Formatterを深く使うと、Zebraよりも柔軟な処理ができる場面があります。
+      </p>
+
+      <p>
+        たとえば、次のような処理を組み立てられます。
+      </p>
+
+      <pre><code>! の前まで送る
+↓
+約5秒待機する
+↓
+! を削除する
+↓
+残りを送る</code></pre>
+
+      <p>
+        Honeywellでは、Search、Send、Delay、Suppressなどを組み合わせることで、
+        QR内の制御文字を見つけて、待機、削除、後続データ送信まで行えます。
+      </p>
+
+      <div class="xdemo-note-info">
+        <strong>Honeywellの重要な特徴：</strong><br>
+        Zebraよりも「見つかった部分だけ処理し、残りを流す」ような動きができる場面があります。
+        そのため、可変件数や制御記号数のズレに対して、Zebraより現場寄りに動く可能性があります。
+      </div>
+
+      <p>
+        また、Honeywellはキャラクター間ディレイやDelayの設定幅も広く、
+        入力先が遅い環境に合わせやすいのも強みです。
+      </p>
+
+      <ul>
+        <li>古い業務システム</li>
+        <li>COBOL系画面</li>
+        <li>Citrix</li>
+        <li>RDP</li>
+        <li>RemoteApp</li>
+        <li>Java系業務画面</li>
+        <li>重いWEBシステム</li>
+      </ul>
+
+      <p>
+        このような環境では、入力が速すぎると文字欠けやフォーカスずれが起きることがあります。
+        Honeywellは、そこに合わせてかなり低速にすることもできるため、
+        入力制御装置としての性能はかなり高いです。
+      </p>
+
+      <div class="xdemo-note-warn">
+        <strong>ただし、Honeywellは設定難易度と配布方法が課題：</strong><br>
+        GUIで設定しているように見えて、実態はSearch、Send、Suppress、Delayなどの命令を組み立てる感覚に近いです。
+        そのため、個別に自力で設定を組める人がいる場合は、Opticonに近いことを実現できる可能性があります。<br>
+        たとえば「!」による待機を5回分まで使うなら、その回数分の処理をあらかじめ組んでおくことで対応できる可能性があります。
+        ただしこれは、標準設定として広く使うというより、業務画面や入力順に合わせて作る個別設定に近くなります。<br>
+        さらに大きな問題は、高度なData Formatter設定を<strong>紙の設定QRだけで安定して配布・復元できるか</strong>です。
+        設定ツールが手元にある担当者が個別調整するなら強い一方で、現場に紙QRだけを渡して復旧させる運用は、正式確認が必要です。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 6 -->
+    <!-- ========================================== -->
+    <section id="zebra-honeywell-diff" class="method-section">
+      <h2>7. ZebraとHoneywellの具体的な違い</h2>
+
+      <p>
+        ZebraとHoneywellは同系統のルールベース型ですが、実運用ではかなり違いがあります。
+        簡単にまとめると、Zebraは<strong>設定が比較的分かりやすく、想定外を止めやすい</strong>方向、
+        Honeywellは<strong>設定は難しいが、ディレイ調整と後続データ処理の柔軟性が大きい</strong>方向です。
+      </p>
+
+      <div class="xdemo-note-good">
+        <strong>ZebraとHoneywellの違いを簡単に言うと：</strong><br>
+        Honeywellで大きいのは、<strong>ディレイをかなり細かく、極端に遅くも設定できる</strong>ことと、
+        「!」などの制御文字の回数が想定と完全一致しない場合でも、<strong>後ろのデータをそのまま処理できる場合がある</strong>ことです。
+        そのため、物理RPA用途ではZebraより粘り強く動かせる可能性があります。
+        ただし、設定手順はZebraより難しく、標準化よりも個別調整向きです。
+      </div>
+
+      <table class="format-table">
+        <thead>
+          <tr>
+            <th>比較項目</th>
+            <th class="maker-cell" style="white-space: nowrap;">Zebra</th>
+            <th class="maker-cell" style="white-space: nowrap;">Honeywell</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>基本思想</td>
+            <td>厳密なルール一致を重視</td>
+            <td>ルールベースだが、Zebraより柔軟に動く場面がある</td>
+          </tr>
+          <tr>
+            <td>向いている業務</td>
+            <td>倉庫、検品、POS、標準化された入力</td>
+            <td>古い業務画面、入力調整、複雑なデータ整形</td>
+          </tr>
+          <tr>
+            <td>設定の分かりやすさ</td>
+            <td>比較的分かりやすい</td>
+            <td>かなり分かりにくい。命令を組む感覚に近い</td>
+          </tr>
+          <tr>
+            <td>可変データへの耐性</td>
+            <td>想定外になると崩れやすい</td>
+            <td>残りデータを流してくれる場合があり、Zebraより強い可能性</td>
+          </tr>
+          <tr class="emphasis-row">
+            <td><strong>ディレイ調整</strong></td>
+            <td>選択肢が比較的限定されることがある</td>
+            <td><strong>かなり細かく、極端に遅くも設定できる</strong></td>
+          </tr>
+          <tr>
+            <td>途中待機</td>
+            <td>ADFを深く使えば可能性はあるが、厳密な設計になりやすい</td>
+            <td>Data FormatterでSearch、Delay、Suppress、Sendを組める</td>
+          </tr>
+          <tr>
+            <td>設定QR配布</td>
+            <td>標準設定は比較的扱いやすい。高度ADFは要検証だが、設定QRで配布できる可能性は高い</td>
+            <td>設定QRを作る機能自体はあるが、現時点の検証では高度FormatterのQR化・復元が安定しなかった。設定ツールが手元にない現場で紙QRだけで復旧させる運用は要検証</td>
+          </tr>
+          <tr>
+            <td>物理RPA適性</td>
+            <td>固定フォーマットなら可能。可変には硬い</td>
+            <td>個別に自力設定できる人がいればかなり強い。Opticonに近いことも狙えるが、制御記号の回数・順序を先に決める必要があり、紙QRだけでの横展開は要検証</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="xdemo-note-good">
+        <strong>ディレイ調整は大きな差になりやすいポイントです。</strong><br>
+        物理RPA用途では、単に「読めるか」だけでなく、入力先の画面が受け取れる速度まで落とせるかが重要になります。
+        特に古い基幹システム、Citrix、RDP、RemoteApp、WEB画面などでは、入力が速すぎると文字欠けやフォーカスずれが起きることがあります。
+        その点で、Honeywellのように<strong>かなり細かく、極端に低速にも寄せられる</strong>機種は、Zebraとの差が出やすい部分です。
+      </div>
+
+      <div class="xdemo-note-warn">
+        <strong>設定QR配布は、Honeywell側の大きな検証ポイントです。</strong><br>
+        Zebraはおそらく設定QRでの配布・復元がしやすく、Opticonは設定QRでの配布・復元がかなり確実に使える印象です。
+        一方でHoneywellは、設定QRを生成する機能自体はありますが、現時点の検証では高度なData Formatter設定をQRコードとして印刷し、
+        それだけで別環境に安定復元するところまではうまく確認できていません。<br>
+        つまりHoneywellの問題は「機能が弱い」ことではなく、<strong>その高度設定を紙の設定QRだけで現場配布できるか</strong>です。
+        設定ツールが使える担当者が個別に作り込むなら、かなり高度な物理RPA設定も狙えます。
+        ただし、設定ツールが手元にない現場で、紙QRだけを読ませて復旧・横展開する運用は、正式確認までは慎重に見る必要があります。
+      </div>
+
+      <p>
+        かなり単純化すると、Zebraは<strong>業務を標準化して安全に止める</strong>方向,
+        Honeywellは<strong>複雑な入力を工夫して通す</strong>方向に見えます。
+      </p>
+
+      <p>
+        どちらも物理RPA的な使い方がまったく不可能というわけではありません。
+        ただし、QR内に出てくる制御記号の回数や順番をある程度決め打ちして、
+        その回数分のルールを先に作る必要が出やすいため、汎用テンプレートとして自由に使うには難しさがあります。
+        特にHoneywellは「!」を5回分まで処理する、10回分まで処理する、というように先に作れば対応できる可能性があります。
+        さらに、設定を自力で組める人が個別案件として作り込むなら、Opticonに近い運用を狙える可能性もあります。
+        ただし、その場合も標準設定として広く配るというより、業務画面や入力順に合わせた個別設定に近い扱いになります。
+        一番の確認点は、完成した高度設定を紙の設定QRだけで別個体や現場へ安定復元できるかです。
+        なお、これは現時点で試した範囲の整理であり、ZebraやHoneywellに別の実装方法がないと断定するものではありません。
+      </p>
+
+      <div class="xdemo-note-good">
+        <strong>整理：</strong><br>
+        ZebraとHoneywellは同じルールベース型に近いですが、
+        Zebraは「合わなければ止める」思想が強く、
+        Honeywellは「できるだけ加工して流す」方向に寄せられる印象です。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 7 -->
+    <!-- ========================================== -->
+    <section id="opticon" class="method-section">
+      <h2>8. Opticon：入力ストリーム変換型に近い別ベクトル</h2>
+
+      <p>
+        Opticonは、ZebraやHoneywellとは別のベクトルに見えます。
+        物理RPA用途で強く感じるのは、制御文字が来たらその場で動くような、
+        <strong>入力ストリーム変換型</strong>に近い点です。
+      </p>
+
+      <pre><code>文字列を左から順番に読む
+↓
+! が来たら待機
+/ が来たらNumEnter
+} が来たらPageDown
+{ が来たらPageUp
+Tabや通常EnterはCHAR(9) / CHAR(13)を優先
+↓
+また次の文字へ進む</code></pre>
+
+      <p>
+        この方式が使える場合、QRコード側が簡易スクリプトになります。
+        最初に「! は待機」「/ はNumEnter」のように、CHAR関数で作りにくいキーだけを設定しておけば、
+        あとはExcelなどで <code>CHAR(9)</code> と専用記号を組み合わせるだけで、入力順や待機位置をかなり柔軟に作れます。
+      </p>
+
+      <pre><code>=A2 &amp; CHAR(9) &amp; B2 &amp; "!" &amp; C2 &amp; "/"</code></pre>
+
+      <p>
+        たとえば上のようなQRを読ませると、次のような動作を狙えます。
+      </p>
+
+      <ol>
+        <li>202605010001 を入力する</li>
+        <li>CHAR(9)でTab移動する</li>
+        <li>100001 を入力する</li>
+        <li>! で待機する</li>
+        <li>19800412 を入力する</li>
+        <li>/ でNumEnter確定する</li>
+      </ol>
+
+      <p>
+        これができると、待機回数や画面操作をQRコード側で調整できます。
+      </p>
+
+      <pre><code>!        → 待機
+/        → NumEnter
+CHAR(9)  → Tab
+CHAR(13) → 通常Enter</code></pre>
+
+      <p>
+        ここが、Opticonが物理RPA向きに見える最大の理由です。
+        HoneywellやZebraでは、制御文字が何回出るかを事前に想定して、
+        その回数分のルールを作る必要がある場合があります。
+      </p>
+
+      <p>
+        一方でOpticonが逐次処理的に動くなら、QR側の記号数で調整できるため、
+        現場の可変データに合わせやすくなります。
+      </p>
+
+      <p>
+        たとえば最初に「! は待機」「/ はNumEnter」「} はPageDown」のように、
+        CHAR関数で扱いにくい制御文字だけをQRリーダー側に設定しておけば、あとはExcel側でそれらを自由に組み合わせられます。
+        この形にできると、業務ごとにリーダー設定を大きく作り直すのではなく、
+        Excelで作るQR文字列を変えるだけで入力手順を調整しやすくなります。
+      </p>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 8 -->
+    <!-- ========================================== -->
+    <section id="philosophy-deep" class="method-section">
+      <h2>9. 設計思想を深掘りする</h2>
+
+      <p>
+        3メーカーの違いは、機能の有無だけではなく、
+        <strong>何を安全と考えているか</strong>の違いにも見えます。
+      </p>
+
+      <h3>9-1. Zebraは「想定外を止める」安全</h3>
+
+      <p>
+        Zebraは、想定フォーマットから外れた入力を止める方向と相性が良いです。
+        倉庫や検品では、この考え方が安全です。
+      </p>
+
+      <pre><code>想定と違う
+↓
+止める
+↓
+人が確認する</code></pre>
+
+      <p>
+        これは、誤登録や誤出荷を避ける現場では非常に重要です。
+        間違ったデータを無理に流すより、止まってくれた方が安全だからです。
+      </p>
+
+      <h3>9-2. Honeywellは「加工して通す」安全</h3>
+
+      <p>
+        Honeywellは、Data Formatterを使って複雑な加工ができます。
+        想定外を完全に止めるというより、設定次第では見つかった部分を処理し、
+        残りを流すような運用も可能に見えます。
+      </p>
+
+      <pre><code>制御文字を見つける
+↓
+必要な処理をする
+↓
+残りは流す</code></pre>
+
+      <p>
+        これは、古い業務画面や可変データを扱う現場では有利です。
+        自力でData Formatterを組める人がいるなら、かなり柔軟な入力自動化を作れる可能性があります。
+        ただし、設定が複雑になるため、設計ミスをすると何も出ない、途中で止まる、余計な文字が出る、ということも起きます。
+        また、完成した高度設定を紙の設定QRだけで現場に配れるかは、別途検証が必要です。
+      </p>
+
+      <h3>9-3. Opticonは「流れてきた命令をその場で実行する」安全</h3>
+
+      <p>
+        Opticonは、QR内の制御記号を使って入力を調整しやすい方向に見えます。
+        これは、QRコードを単なるデータではなく、<strong>入力手順を含むデータ</strong>として扱う考え方です。
+      </p>
+
+      <pre><code>データ
+制御記号
+データ
+制御記号
+データ</code></pre>
+
+      <p>
+        この方式では、現場側でQR内の記号を増減することで、待機やキー操作を調整できます。
+        物理RPA用途では非常に強いですが、設定ルールを理解せずに使うと、
+        QR内の記号が実際のキー操作になるため注意も必要です。
+      </p>
+
+      <h3>9-4. 3社の思想を入力フローで比較する</h3>
+
+      <table class="format-table">
+        <thead>
+          <tr>
+            <th>観点</th>
+            <th class="maker-cell" style="white-space: nowrap;">Zebra</th>
+            <th class="maker-cell" style="white-space: nowrap;">Honeywell</th>
+            <th class="maker-cell" style="white-space: nowrap;">Opticon</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>データの見方</td>
+            <td>決まった形式の入力データ</td>
+            <td>加工対象の入力データ</td>
+            <td>データと命令が混ざった入力ストリーム</td>
+          </tr>
+          <tr>
+            <td>安全の考え方</td>
+            <td>合わなければ止める</td>
+            <td>加工して通す</td>
+            <td>制御記号をその場で実行する</td>
+          </tr>
+          <tr>
+            <td>得意な入力</td>
+            <td>固定フォーマット</td>
+            <td>複雑だが設計済みのフォーマット</td>
+            <td>可変長・可変待機・QR内制御</td>
+          </tr>
+          <tr>
+            <td>崩れやすい場面</td>
+            <td>項目数や制御記号数が変わる場合</td>
+            <td>設定順序やポインタ制御を誤った場合</td>
+            <td>制御記号の意味を現場が理解していない場合</td>
+          </tr>
+          <tr>
+            <td>汎用化のしやすさ</td>
+            <td>固定フォーマット前提なら標準化しやすいが、QR内制御の汎用利用は難しい</td>
+            <td>複数回分のルールを先に作れば使える可能性はあるが、案件ごとの設計になりやすい</td>
+            <td>制御文字ルールを決めておけば、Excel側で自由に組み合わせやすい</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="xdemo-note-info">
+        <strong>汎用利用で差が出るポイント：</strong><br>
+        ZebraとHoneywellは、制御記号を何回処理するか、どの順番で処理するかをあらかじめ設計する考え方になりやすいです。
+        そのため、固定パターンや個別案件では使えますが、現場がExcel側で自由に組み合わせて使う用途では難しくなります。<br>
+        Opticonのように、あらかじめ数種類の制御文字だけを設定し、QR側で自由に並べられる形にできれば、
+        Excelで作ったQR文字列の中で自由に組み合わせやすく、物理RPA用の汎用テンプレートとして扱いやすくなります。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 9 -->
+    <!-- ========================================== -->
+    <section id="usecase" class="method-section">
+      <h2>10. 用途別の向き不向き</h2>
+
+      <table class="format-table">
+        <thead>
+          <tr>
+            <th>用途</th>
+            <th>向きやすいメーカー</th>
+            <th>理由</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>レジ・POS</td>
+            <td class="maker-cell" style="white-space: nowrap;">Zebra</td>
+            <td>誤入力防止、標準化、大量展開、サポート性が重要なため</td>
+          </tr>
+          <tr>
+            <td>倉庫・検品・棚卸</td>
+            <td class="maker-cell" style="white-space: nowrap;">Zebra</td>
+            <td>想定外データを止める設計が安全側に働くため</td>
+          </tr>
+          <tr>
+            <td>古い基幹システムへの入力</td>
+            <td>Honeywell / Opticon</td>
+            <td>低速入力、待機、Tab、Enter、NumEnterの調整が必要になりやすいため</td>
+          </tr>
+          <tr>
+            <td>閉鎖環境・RPA禁止環境</td>
+            <td class="maker-cell" style="white-space: nowrap;">Opticon</td>
+            <td>設定QRと制御文字運用が安定すれば、PCソフトなしで配布しやすいため</td>
+          </tr>
+          <tr>
+            <td>個別の複雑なデータ整形</td>
+            <td class="maker-cell" style="white-space: nowrap;">Honeywell</td>
+            <td>Data FormatterでSearch、Send、Delay、Suppressなどを細かく組めるため</td>
+          </tr>
+          <tr>
+            <td>QR内記号による物理RPA</td>
+            <td>Opticon / Honeywell</td>
+            <td>待機、キー変換、制御文字削除を使えるため。ただし汎用性はOpticon寄り</td>
+          </tr>
+          <tr>
+            <td>設定を簡単に説明したい一般用途</td>
+            <td class="maker-cell" style="white-space: nowrap;">Zebra</td>
+            <td>一般的な設定画面や運用説明がしやすいため</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="xdemo-note-info">
+        <strong>現時点の整理：</strong><br>
+        Zebraは標準化・検品向き、Honeywellは高機能な個別案件向き、Opticonは物理RPA・QR内制御向きという見方ができます。
+        ただし、これは現時点の調査・実験範囲での整理です。
+        ZebraやHoneywellは機能が多く、別の設定方法でより良い運用ができる可能性があります。
+        実際の可否は機種・ファームウェア・接続方式・設定内容によって変わるため、必ず実機で確認します。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 10 -->
+    <!-- ========================================== -->
+    <section id="business-value" class="method-section">
+      <h2>11. この違いが業務改善で重要になる理由</h2>
+
+      <p>
+        この比較は、単なる機種選定ではありません。
+        ソフトを入れられない現場で、入力作業をどう短縮するかに直結します。
+      </p>
+
+      <p>
+        たとえば、次のような環境では通常のRPAやVBAが使えないことがあります。
+      </p>
+
+      <ul>
+        <li>官公庁系の閉鎖環境</li>
+        <li>病院・医療系の制限端末</li>
+        <li>工場の検査入力端末</li>
+        <li>金融・保険のバックオフィス</li>
+        <li>Citrix、RDP、RemoteApp上の業務システム</li>
+        <li>CSV取込やAPIがない古い基幹システム</li>
+        <li>Excelにはデータがあるが、最後は人が画面入力している業務</li>
+      </ul>
+
+      <p>
+        このような現場では、QRリーダーがキーボードとして動くことが大きな意味を持ちます。
+      </p>
+
+      <pre><code>Excelで入力データを作る
+↓
+QRコードを生成する
+↓
+QR内にTab・Enter・待機・制御記号を入れる
+↓
+QRリーダーで業務画面に入力する</code></pre>
+
+      <p>
+        この流れが作れると、システム改修をせず、RPAソフトも入れずに、
+        入力作業を短縮できる可能性があります。
+      </p>
+
+      <div class="xdemo-note-good">
+        <strong>重要なのは、機能ではなく組み合わせです。</strong><br>
+        Enter、Tab、ディレイ、Sleep、キー変換、Excel QR生成は、それぞれ単体では珍しくありません。
+        しかし、それらをつないで、現場の入力業務を短縮する仕組みにするところに価値があります。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 11 -->
+    <!-- ========================================== -->
+    <section id="summary" class="method-section">
+      <h2>11. まとめ</h2>
+
+      <p>
+        QRリーダーを物理RPA用途で見ると、Zebra、Honeywell、Opticonは次のように整理できます。
+      </p>
+
+      <table class="format-table">
+        <thead>
+          <tr>
+            <th class="maker-cell" style="white-space: nowrap;">メーカー</th>
+            <th>まとめ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="maker-cell" style="white-space: nowrap;">Zebra</td>
+            <td>厳密なルールベース型。倉庫・検品・POSなど、想定外を止めたい業務に強い。</td>
+          </tr>
+          <tr>
+            <td class="maker-cell" style="white-space: nowrap;">Honeywell</td>
+            <td>高機能なルールベース型。Zebraと同系統だが、より柔軟に加工して通せる可能性がある。</td>
+          </tr>
+          <tr>
+            <td class="maker-cell" style="white-space: nowrap;">Opticon</td>
+            <td>入力ストリーム変換型に近い。制御文字をQR内に入れて、待機やキー変換をその場で実行する用途に向く可能性が高い。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        ZebraとHoneywellは同系統ですが、Zebraは標準化と厳密性、Honeywellは高機能な加工と柔軟性に寄っています。
+        Opticonはそこからさらに別方向で、QR内制御文字を使った入力自動化に向いているように見えます。
+        ただし、ZebraやHoneywellも機能が多いため、現時点で難しいと見える処理でも、別の設定方法で実現できる余地はあります。
+      </p>
+
+      <div class="xdemo-note-good">
+        <strong>結論：</strong><br>
+        物理RPA用途では、単純な読み取り性能ではなく、
+        <strong>制御文字をどう扱えるか、待機をどう入れられるか、可変データにどう耐えるか、設定を現場配布できるか</strong>
+        が重要になります。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 関連記事 -->
+    <!-- ========================================== -->
+    <section class="method-section">
+      <h2>関連するQR Automation Labの記事</h2>
+
+      <table class="format-table">
+        <thead>
+          <tr>
+            <th>記事</th>
+            <th>内容</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></td>
+            <td>QRリーダーをキーボード入力として使う基本</td>
+          </tr>
+          <tr>
+            <td><a href="03_qr_character_delay.html">③ キャラクター間ディレイ</a></td>
+            <td>入力が速すぎて文字が抜ける場合の対策</td>
+          </tr>
+          <tr>
+            <td><a href="04_qr_key_conversion.html">④ キー変換テクニック</a></td>
+            <td>特定記号をEnter、Fキー、テンキーEnterなどに変換する考え方</td>
+          </tr>
+          <tr>
+            <td><a href="06_qr_sleep_revised_honeywell.html">⑥ Sleepで画面遷移を待つ</a></td>
+            <td>検索・登録・印刷などの待ち時間に対応する考え方</td>
+          </tr>
+          <tr>
+            <td><a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダー選定と接続</a></td>
+            <td>機種選定、接続方式、設定機能の見方</td>
+          </tr>
+          <tr>
+            <td><a href="12_qr_existing_reader_check.html">⑫ 会社にあるQRリーダーでまず試す</a></td>
+            <td>既存機種で安全に試すための導入前チェック</td>
+          </tr>
+          <tr>
+            <td><a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証</a></td>
+            <td>Opticon系のストリーミング方式、Sleep、キー変換を単独で整理</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- シリーズナビ -->
+    <!-- ========================================== -->
+    <nav class="series-nav">
+      <h3>📱 QR Automation Lab ― 全17記事一覧</h3>
+      <p class="text-sm-gray">
+        <span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
+        <span class="color-orange">🟠 応用</span>（④〜⑰）＝ さらに自動化を極める
+      </p>
+
+      <ol>
+        <li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコード生成</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="12_qr_existing_reader_check.html">⑫ 会社にあるQRリーダーでまず試す</a></li>
+        <li class="current"><span class="lv-adv">[応用]</span> <strong>⑬ QRリーダーの設計思想比較（この記事）</strong></li>
+        <li><span class="lv-adv">[応用]</span> <a href="14_qr_zebra_adf_variable_pause_revised_ranked.html">⑭ Zebra 123Scan / ADF検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
+      </ol>
+    </nav>
+
+    <!-- ========================================== -->
+    <!-- 共通注意 -->
+    <!-- ========================================== -->
+    <section class="qr-safety-note" aria-labelledby="qr-safety-title">
+      <h2 id="qr-safety-title">QRリーダー連携の運用注意</h2>
+
+      <p>
+        QRリーダーは多くの場合、PCにはキーボード入力として認識されます。
+        Tab、Enter、ファンクションキー、待機時間を組み合わせると、
+        登録・更新・削除などの操作まで進められるため、実務投入前の検証手順を必ず固定してください。
+      </p>
+
+      <ul>
+        <li>本番データではなく、架空データと検証用画面で読み取り順、セル移動、登録操作を確認する。</li>
+        <li>個人情報、認証情報、機密コードをQRにそのまま埋め込まない。必要な場合は最小限のIDに置き換える。</li>
+        <li>設定バーコード、初期化手順、復旧手順を保存し、誰が見ても元に戻せる状態にしておく。</li>
+        <li>本番機ではなく、余剰機・予備機・検証用機器で先に動作確認する。</li>
+        <li>機種・ファームウェア・接続方式によって動作が異なるため、メーカー名だけで判断しない。</li>
+      </ul>
+    </section>
+
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong>
+      <a href="https://www.opto.co.jp/products/tool/tool_download.html" rel="noopener" target="_blank">Opticon 設定ツール / UniversalConfig</a>
+      <a href="https://www.opto.co.jp/products/handy_scanner/OPI-3601.html" rel="noopener" target="_blank">OPI-3601 公式製品ページ</a>
+      <a href="https://www.opto.co.jp/products/handy_scanner/L-46X.html" rel="noopener" target="_blank">L-46X 公式製品ページ</a>
+      <a href="https://www.opto.co.jp/products/tool/manual_download/instruction_kanjioutput.html" rel="noopener" target="_blank">漢字出力インストラクション</a>
+      <a href="https://www.alf-net.co.jp/products/barcode-reader/2d-barcode-reader/2d-wired/alx-3601/" rel="noopener" target="_blank">ALX-3601 製品ページ</a>
+      <a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a>
+    </p>
+  </div>
+
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+  </div>
+
+  <p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress');
+  if (!bar) return;
+  function update(){
+    var doc = document.documentElement;
+    var scrollTop = doc.scrollTop || document.body.scrollTop;
+    var scrollHeight = doc.scrollHeight - doc.clientHeight;
+    var progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+    bar.style.width = progress + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
+
+</body>
+</html>

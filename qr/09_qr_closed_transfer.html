@@ -100,7 +100,7 @@
 <!-- ===== 機種限定告知 ===== -->
 <div class="xdemo-note-danger">
 <strong>🔥 機種限定の解説です</strong><br>
-        本シリーズで動作確認しているのは<strong>オプトエレクトロニクス社の OPI-3601、ALX-3601（互換品）、L-46X</strong> の3機種のみです。Honeywell・Zebra・キーエンス・デンソーウェーブなど他メーカーで同じ手順が使えるかは筆者には分かりません。特にサフィックスOFF・キャラクタ間ディレイ・制御文字のキー変換などの対応状況は未検証です。他メーカーをご使用の方はメーカーのマニュアルまたはサポートに直接ご確認ください。
+        本記事の具体的な設定バーコードと検証結果は、<strong>オプトエレクトロニクス社の OPI-3601、ALX-3601（互換品）、L-46X</strong> の3機種を中心にしています。サフィックスOFF、キャラクタ間ディレイ、制御文字のキー変換は Zebra や Honeywell など主要メーカーでも対応できる場合がありますが、設定名・設定ツール・紙バーコードで復元できる範囲はメーカーごとに異なります。他メーカーで実施する場合は、本記事のバーコードをそのまま使わず、各メーカーのマニュアル、123Scan、EZConfig などで同等設定を作ってください。
       </div>
 <!-- ===== 全角文字の現実と希望（離脱防止セクション） ===== -->
 <section class="goal-section">
@@ -108,10 +108,10 @@
 <p>閉域環境でのQR転送を検討するとき、多くの方がまず気になるのは<strong>「日本語（全角文字）は転送できるのか？」</strong>でしょう。結論から言います。</p>
 <div class="xdemo-note-good">
 <strong>💡 全角文字を含むQRコードは作れます</strong><br>
-          QRコード自体は日本語（漢字・ひらがな・カタカナ）を格納できます。問題は「どうやってQRを生成するか」だけです。Excelのバーコードコントロール（ActiveX）では半角しか扱えませんが、<strong>VBAで自力生成すれば全角QRは作成可能</strong>です。
+          QRコード自体は日本語（漢字・ひらがな・カタカナ）を格納できます。問題は「どうやってQRを生成するか」だけです。Excelのバーコードコントロール（ActiveX）では半角しか扱えませんが、<strong>VBAで自力生成する設計は可能</strong>です（完成コードは記事⑪で後日公開検討）。
         </div>
 <h3>閉域環境での現実的な選択肢</h3>
-<p>閉域環境ではインターネットに接続できないため、外部ライブラリ（Pythonのqrcodeモジュール等）を後からインストールすることが困難です。そのため、<strong>VBA標準機能だけでQRコードを自力生成する方法</strong>が最も現実的な選択肢になります。</p>
+<p>閉域環境ではインターネットに接続できないため、外部ライブラリ（Pythonのqrcodeモジュール等）を後からインストールすることが困難です。そのため、<strong>VBA標準機能だけでQRコードを自力生成する設計</strong>が候補になります。ただし実装難度は高く、記事⑪では現時点で設計メモとして整理しています。</p>
 <table class="method-choice-table">
 <thead>
 <tr><th>QR生成方法</th><th>全角</th><th>外部ライブラリ</th><th>閉域環境</th><th>難易度</th><th>解説</th></tr>
@@ -131,7 +131,7 @@
 <td class="text-center-green-bold">不要</td>
 <td class="text-center-green-bold">&cir; 最適</td>
 <td class="text-center">&starf;&starf;&starf;</td>
-<td class="text-center">記事⑪</td>
+<td class="text-center">記事⑪<br><small>設計メモ</small></td>
 </tr>
 <tr>
 <td>VBA＋外部DLL／ライブラリ</td>
@@ -139,7 +139,7 @@
 <td style="text-align:center;color:#c62828">必要</td>
 <td style="text-align:center;color:#c62828">&xutri; 事前持込要</td>
 <td class="text-center">&starf;&starf;&star;</td>
-<td class="text-center">記事⑪</td>
+<td class="text-center">記事⑪<br><small>設計メモ</small></td>
 </tr>
 <tr>
 <td>Python（qrcode等）</td>
@@ -147,34 +147,34 @@
 <td style="text-align:center;color:#c62828">必要</td>
 <td style="text-align:center;color:#c62828">✕ 導入困難</td>
 <td class="text-center">&starf;&starf;&star;</td>
-<td class="text-center">記事⑪</td>
+<td class="text-center">記事⑪<br><small>設計メモ</small></td>
 </tr>
 </tbody>
 </table>
 <div class="xdemo-note-info">
-<strong>📝 VBA標準機能のみの生成方式とは</strong><br>
-          Windowsに最初から入っている <span class="code-inline">ADODB.Stream</span> でUTF-8変換し、VBAでリード・ソロモン符号（誤り訂正）やQRマトリクスの構築を自力で計算し、Excelのセル塗りつぶしでQRコードを描画する方式です。DLLもネット接続も不要で、閉域環境のPCにExcelさえあれば動作します。<strong>ただし実装は高難度</strong>です（ガロア体の多項式演算、ジグザグのデータ埋め込み、マスクパターン最適化など）。記事⑪で詳しく解説しています。
+<strong>📝 VBA標準機能のみで生成する設計とは</strong><br>
+          Windowsに最初から入っている <span class="code-inline">ADODB.Stream</span> でUTF-8変換し、VBAでリード・ソロモン符号（誤り訂正）やQRマトリクスの構築を自力で計算し、Excelのセル塗りつぶしでQRコードを描画する考え方です。DLLもネット接続も不要で、閉域環境のPCにExcelさえあれば動かせる可能性があります。<strong>ただし実装は高難度</strong>です（ガロア体の多項式演算、ジグザグのデータ埋め込み、マスクパターン最適化など）。記事⑪では設計メモとして整理しています。
         </div>
 <p>ただし、<strong>全角QRの「読み取り」にも制約があります</strong>。一般的なQRリーダーのキーボードエミュレーション（USB HID）モードでは全角文字を正しくExcelに入力できない機種が多く存在します（※OPI-3601等の一部機種は「漢字直接出力」に対応していますが、標準設定では文字化けするリーダーが多数派です）。全角データの受信には<strong>USB COMモード（シリアル通信）＋受信側VBA</strong>が必要で、送信側・受信側ともにVBAが動く環境であることが前提になります。</p>
 <h3>本記事の位置づけ</h3>
 <p>以上を踏まえ、本記事では<strong>バーコードコントロール（半角のみ）＋ キーボードエミュレーション方式</strong>での閉域転送手順を解説します。ただしバーコードコントロールはExcel単体の標準機能ではなく、主に<strong>Accessに同梱されるActiveXコントロール</strong>です。送信側PCにAccess、または同コントロールを含むOffice構成が入っていない場合、Excelの一覧に表示されません。加えて2026年現在、Microsoft 365 / Office 2024では初期設定でActiveXが表示・作成できないことがありますが、トラストセンター設定で許可すると表示できる場合もあります。職場PCでは管理者ポリシーでブロックされることもあるため、まず設定と一覧を確認してください。</p>
-<p>全角文字を含むデータを転送したい場合は、先に<a href="11_qr_vba_generate.html"><strong>記事⑪「VBA標準機能だけで全角QR生成」</strong></a>をお読みください。</p>
+<p>全角文字を含むデータを転送したい場合は、先に<a href="11_qr_vba_generate.html"><strong>記事⑪「全角QR生成の設計メモ」</strong></a>をお読みください。</p>
 <h3>自分のデータはどちらに該当する？</h3>
-<table class="key-table">
+<table class="key-table transfer-choice-table">
 <thead>
 <tr><th>データの例</th><th>文字種</th><th>本記事</th><th>記事⑪</th></tr>
 </thead>
 <tbody>
-<tr><td>PRD-001, 50, A-12, 2026-04-17</td><td>半角のみ</td><td class="text-center-green-bold">&cir;</td><td style="text-align:center;color:#2e7d32">&cir;</td></tr>
-<tr><td>SN-20250401-0023, 12.45, OK</td><td>半角のみ</td><td class="text-center-green-bold">&cir;</td><td style="text-align:center;color:#2e7d32">&cir;</td></tr>
-<tr><td>192.168.1.100, ERR-0042</td><td>半角のみ</td><td class="text-center-green-bold">&cir;</td><td style="text-align:center;color:#2e7d32">&cir;</td></tr>
-<tr><td>山田太郎, 品質管理課, 東京都&hellip;</td><td>全角あり</td><td style="text-align:center;color:#c62828;font-weight:bold">✕</td><td class="text-center-green-bold">&cir;</td></tr>
-<tr><td>ステンレスボルト M8, 納品時要連絡</td><td>全角あり</td><td style="text-align:center;color:#c62828;font-weight:bold">✕</td><td class="text-center-green-bold">&cir;</td></tr>
+<tr><td>PRD-001, 50, A-12, 2026-04-17</td><td>半角のみ</td><td class="choice-symbol choice-ok">&cir;</td><td class="choice-symbol choice-ok">&cir;</td></tr>
+<tr><td>SN-20250401-0023, 12.45, OK</td><td>半角のみ</td><td class="choice-symbol choice-ok">&cir;</td><td class="choice-symbol choice-ok">&cir;</td></tr>
+<tr><td>192.168.1.100, ERR-0042</td><td>半角のみ</td><td class="choice-symbol choice-ok">&cir;</td><td class="choice-symbol choice-ok">&cir;</td></tr>
+<tr><td>山田太郎, 品質管理課, 東京都&hellip;</td><td>全角あり</td><td class="choice-symbol choice-ng">✕</td><td class="choice-symbol choice-ok">&cir;</td></tr>
+<tr><td>ステンレスボルト M8, 納品時要連絡</td><td>全角あり</td><td class="choice-symbol choice-ng">✕</td><td class="choice-symbol choice-ok">&cir;</td></tr>
 </tbody>
 </table>
 <div class="xdemo-note-warn">
 <strong>⚠️ 現実的なアドバイス</strong><br>
-          日本の業務データの多くは全角文字を含みます。半角のみで完結するデータ（コード・数値・日付だけの管理台帳等）であれば本記事の方法がシンプルで最適ですが、そうでなければ記事⑪のVBA自力生成方式を検討してください。<strong>半角列のみQRで転送し、全角列は受信側でVLOOKUP等のマスタ参照で補完する</strong>という折衷案も有効です。
+          日本の業務データの多くは全角文字を含みます。半角のみで完結するデータ（コード・数値・日付だけの管理台帳等）であれば本記事の方法がシンプルで最適ですが、そうでなければ記事⑪の設計メモを確認してください。<strong>半角列のみQRで転送し、全角列は受信側でVLOOKUP等のマスタ参照で補完する</strong>という折衷案も有効です。
         </div>
 </section>
 <!-- ===== ゴール ===== -->
@@ -261,12 +261,12 @@
 <tr><td>Tab／Enter埋め込み</td><td>CHAR(9)でTab、CHAR(13)でEnterを埋め込む数式を理解していること</td><td>②</td></tr>
 <tr><td>サフィックス設定</td><td>リーダーのサフィックスを<strong>None（なし）</strong>に設定済み</td><td>②</td></tr>
 <tr><td>キャラクタ間ディレイ</td><td>5〜20ms に設定済み（大量文字の文字抜け防止）</td><td>③</td></tr>
-<tr><td>半角文字制限</td><td>バーコードコントロールは半角文字のみQRに変換可能（全角は記事⑪で対応）</td><td>⑧⑪</td></tr>
+<tr><td>半角文字制限</td><td>バーコードコントロールは半角文字のみQRに変換可能（全角は記事⑪で設計方針を確認）</td><td>⑧⑪</td></tr>
 </tbody>
 </table>
 <div class="xdemo-note-warn">
 <strong>⚠️ 全角文字を含むデータは本記事の方法では転送できません</strong><br>
-          バーコードコントロール（ActiveX）は半角英数字・半角記号（ASCII範囲）のみ正しくQRに変換できます。全角を含むデータを転送したい場合は、<strong>記事⑪のVBA標準機能のみの方式</strong>をお読みください。閉域環境ではライブラリの追加インストールが困難なため、外部依存なしのVBA自力生成が現実的な選択になります。
+          バーコードコントロール（ActiveX）は半角英数字・半角記号（ASCII範囲）のみ正しくQRに変換できます。全角を含むデータを転送したい場合は、<strong>記事⑪の設計メモ</strong>を確認してください。完全版コードは後日公開検討のため、実運用では十分な検証が必要です。
         </div>
 </section>
 <!-- ===== 受信側リーダー設定 ===== -->
@@ -514,7 +514,7 @@ QR枚数:   =ROUNDUP(LEN(F1)/255, 0)     &rarr; 21</pre>
 <strong>📝 もしこのシナリオのデータに「製品名（日本語）」列があったら？</strong><br>
           例えば「ステンレスボルトM8」のような全角文字を含む列があった場合、選択肢は2つです。<br>
 <strong>①</strong> 全角列を除外し、半角データ（コード・数値・日付）のみをQR転送。全角データは受信側でVLOOKUP等のマスタ参照で補完する。<br>
-<strong>②</strong> 記事⑪のVBA標準機能のみ方式で全角対応QRを生成し、USB COMモード＋受信側VBAで読み取る。閉域環境では外部ライブラリの追加が困難なため、ADODB.Stream＋リード・ソロモン符号のVBA自力実装が基本パターンになります。
+<strong>②</strong> 記事⑪の設計メモを参考に、VBA標準機能のみで全角対応QRを生成する方針を検討する。完全版コードは後日公開検討のため、実装時はUSB COMモード＋受信側VBAまで含めて検証が必要です。
         </div>
 </section>
 <!-- ===== トラブルシューティング ===== -->
@@ -526,7 +526,7 @@ QR枚数:   =ROUNDUP(LEN(F1)/255, 0)     &rarr; 21</pre>
 <tr><td>列がずれる</td><td>Tab（CHAR(9)）の数が合っていない</td><td>送信側E列の数式を確認</td><td>②</td></tr>
 <tr><td>余計な改行が入る</td><td>リーダーのサフィックスがON</td><td>SET &rarr; RY（サフィックスなし）&rarr; END</td><td>②</td></tr>
 <tr><td>QRが生成されない</td><td>LinkedCellの文字数が255超</td><td><span class="code-inline">=LEN()</span>で確認し分割を見直す</td><td>①</td></tr>
-<tr><td>全角文字が文字化け</td><td>バーコードコントロールの半角制限</td><td>全角列を除外するか記事⑪のVBA自力生成方式を使う</td><td>⑪</td></tr>
+<tr><td>全角文字が文字化け</td><td>バーコードコントロールの半角制限</td><td>全角列を除外するか記事⑪の設計メモを確認する</td><td>⑪</td></tr>
 <tr><td>読み取り順序を間違えた</td><td>通し番号を確認しなかった</td><td>受信側データをクリアしQR-001から再読み取り</td><td>&horbar;</td></tr>
 <tr><td>件数が少ない</td><td>QRの読み漏れ</td><td>COUNTAで確認し、不足分のQRを特定して再読み取り</td><td>&horbar;</td></tr>
 <tr><td>件数が多い</td><td>同じQRを重複読み取り</td><td>重複行を削除。通し番号で正しい範囲だけ残す</td><td>&horbar;</td></tr>
@@ -556,14 +556,14 @@ QR枚数:   =ROUNDUP(LEN(F1)/255, 0)     &rarr; 21</pre>
 <h2>この記事で学んだこと &horbar; まとめ</h2>
 <table class="format-table">
 <tr><th>項目</th><th>内容</th></tr>
-<tr><td>全角文字の対応</td><td>バーコードコントロールは半角のみ。全角にはVBA標準機能のみでの自力生成＋USB COM受信が必要（記事⑪）。閉域環境ではライブラリ追加が困難なため、ライブラリなしVBAが現実的</td></tr>
+<tr><td>全角文字の対応</td><td>バーコードコントロールは半角のみ。全角にはVBA標準機能のみでの自力生成＋USB COM受信が必要になるため、記事⑪で設計方針を確認する。完全版コードは後日公開検討</td></tr>
 <tr><td>閉域環境とは</td><td>ネットワーク・USB等が使えない隔離されたIT環境</td></tr>
 <tr><td>QR転送の原理</td><td>Excel &rarr; QR文字列 &rarr; 紙に印刷 &rarr; 物理運搬 &rarr; 別PCでリーダー読取 &rarr; Excelに自動入力</td></tr>
 <tr><td>1QRの上限</td><td>半角255文字（バーコードコントロールの制限）</td></tr>
 <tr><td>送信側の数式</td><td>CHAR(9)でTab、CHAR(13)でEnter &rarr; TEXTJOIN連結 &rarr; MID 255文字分割</td></tr>
 <tr><td>必要QR枚数</td><td><span class="code-inline">=ROUNDUP(LEN(全連結セル)/255, 0)</span></td></tr>
-<tr><td>受信側リーダー設定</td><td>サフィックスOFF（RY）、ディレイ5〜10ms（LB）、日本語キーボード（PM）</td></tr>
-<tr><td>検証済みリーダー</td><td>OPI-3601、ALX-3601、L-46X（オプトエレクトロニクス社）</td></tr>
+<tr><td>受信側リーダー設定</td><td>サフィックスOFF、ディレイ5〜10ms前後、日本語キーボード。OPI系では RY / LB / PM を使用</td></tr>
+<tr><td>本記事の実機検証</td><td>OPI-3601、ALX-3601、L-46X（オプトエレクトロニクス社）。Zebra / Honeywell は本記事のバーコードを流用せず、各ツールで同等設定を作成して確認する</td></tr>
 <tr><td>読み取り速度</td><td>1枚 約1.6〜3秒 &rarr; 21枚（150件）で約1分</td></tr>
 <tr><td>制約</td><td>半角文字のみ（全角は記事⑪参照）。QR 100枚超は紙管理が煩雑</td></tr>
 <tr><td>セキュリティ</td><td>紙＝物理的データ持ち出し。情報セキュリティ担当者に事前確認必須</td></tr>
@@ -589,32 +589,39 @@ QR枚数:   =ROUNDUP(LEN(F1)/255, 0)     &rarr; 21</pre>
 </div>
 <div class="xdemo-note-good">
 <strong>💡 次のステップ</strong><br>
-<strong>全角文字を含むQRを閉域環境で生成・転送したい</strong> &rarr; 記事⑪「VBA標準機能だけで全角QR生成」へ。外部ライブラリなしの実装方法を解説しています。<br>
+<strong>全角文字を含むQRを閉域環境で生成・転送したい</strong> &rarr; 記事⑪「全角QR生成の設計メモ」へ。完全版コードは後日公開検討ですが、外部ライブラリなしで考える場合の設計方針を整理しています。<br>
 <strong>異なるシステム間でデータを移行したい</strong> &rarr; 記事⑩「システム間データ移行」へ。<br>
 <strong>リーダーの選び方を知りたい</strong> &rarr; 記事⑧「QRリーダーの選び方と接続方法」へ。<br>
 <strong>もう一度基礎に戻りたい</strong> &rarr; 記事①「QR生成と基礎」へ。
         </div>
 </section>
-<nav class="series-nav">
-<h3>📱 QR Automation Lab &horbar; 全記事一覧</h3>
-<p class="text-sm-gray">
-<span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
-    <span class="color-orange">🟠 応用</span>（④〜⑪）＝ さらに自動化を極める
-  </p>
-<ol>
-<li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでExcel一発入力 &horbar; Tab・Enter埋め込み</a></li>
-<li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
-<li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ &horbar; 文字欠けを完全に防ぐ設定</a></li>
-<li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード &rarr; キー変換テクニック</a></li>
-<li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
-<li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
-<li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
-<li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware.html">⑧ QRリーダーの選び方と接続方法</a></li>
-<li class="current"><span class="lv-adv">[応用]</span> <strong>⑨ 閉域環境のデータ転送 &horbar; 紙だけでPC間移行（この記事）</strong></li>
-<li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
-<li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコード生成</a></li>
-</ol>
-</nav>
+    <nav class="series-nav">
+      <h3>📱 QR Automation Lab ― 全17記事一覧</h3>
+      <p class="text-sm-gray">
+        <span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
+        <span class="color-orange">🟠 応用</span>（④〜⑰）＝ さらに自動化を極める
+      </p>
+
+      <ol>
+        <li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
+        <li class="current"><span class="lv-adv">[応用]</span> <strong>⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行（この記事）</strong></li>
+        <li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ 全角QR生成の設計メモ（完成コード未掲載）</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="12_qr_existing_reader_check.html">⑫ 会社にあるQRリーダーでまず試す</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="13_qr_reader_design_philosophy_current_research_v5.html">⑬ QRリーダーの設計思想比較</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="14_qr_zebra_adf_variable_pause_revised_ranked.html">⑭ Zebra 123Scan / ADF検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
+      </ol>
+    </nav>
 <section class="qr-safety-note" aria-labelledby="qr-safety-title">
 <h2 id="qr-safety-title">QRリーダー連携の運用注意</h2>
 <p>QRリーダーは多くの場合、PCにはキーボード入力として認識されます。Tab、Enter、ファンクションキー、待機時間を組み合わせると登録・更新・削除などの操作まで進められるため、実務投入前の検証手順を必ず固定してください。</p>
@@ -632,7 +639,14 @@ QR枚数:   =ROUNDUP(LEN(F1)/255, 0)     &rarr; 21</pre>
     <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
-    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a></p>
+    <p class="site-footer-links"><strong>公式参照:</strong>
+      <a href="https://www.opto.co.jp/products/tool/tool_download.html" rel="noopener" target="_blank">Opticon 設定ツール / UniversalConfig</a>
+      <a href="https://www.opto.co.jp/products/handy_scanner/OPI-3601.html" rel="noopener" target="_blank">OPI-3601 公式製品ページ</a>
+      <a href="https://www.opto.co.jp/products/handy_scanner/L-46X.html" rel="noopener" target="_blank">L-46X 公式製品ページ</a>
+      <a href="https://www.opto.co.jp/products/tool/manual_download/instruction_kanjioutput.html" rel="noopener" target="_blank">漢字出力インストラクション</a>
+      <a href="https://www.alf-net.co.jp/products/barcode-reader/2d-barcode-reader/2d-wired/alx-3601/" rel="noopener" target="_blank">ALX-3601 製品ページ</a>
+      <a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a>
+    </p>
   </div>
 <div class="footer-contact-wrap">
 <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>

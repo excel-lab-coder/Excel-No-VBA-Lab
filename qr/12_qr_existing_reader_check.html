@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+<title>⑫ 会社にあるQRリーダーでまず試す｜メモ帳・Excel・WEBシステムで安全確認｜QR Automation Lab｜Excel × No VBA Lab</title>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+
+<meta name="description" content="会社にあるQRリーダーを使って、メモ帳・Excel・WEBシステムで安全に簡易テストする方法を解説。本番工程で使用中のQRリーダーを変更するリスク、予備機・余剰機・検証用機器を使う重要性、キー変換・文字間ディレイ・Sleep/Pause確認まで整理します。">
+<meta name="keywords" content="QRリーダー,バーコードリーダー,Excel,エクセル,メモ帳,WEBシステム,自動入力,QRコード,キー変換,Sleep,Pause,文字間ディレイ,Tab,Enter,テンキーEnter,VBAなし,業務自動化,USB-HID,QRリーダー Excel入力,QRリーダー Webシステム">
+
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/12_qr_existing_reader_check.html" rel="canonical">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="⑫ 会社にあるQRリーダーでまず試す｜メモ帳・Excel・WEBシステムで安全確認｜QR Automation Lab">
+<meta property="og:description" content="既存QRリーダーを使う前に、メモ帳・Excel・WEBシステムで安全に確認する方法。本番機ではなく、余剰機・予備機・検証用機器を使う重要性を解説します。">
+<meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/12_qr_existing_reader_check.html">
+<meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<meta property="og:site_name" content="Excel × No VBA Lab">
+<meta property="og:locale" content="ja_JP">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="⑫ 会社にあるQRリーダーでまず試す｜安全確認チェック">
+<meta name="twitter:description" content="メモ帳・Excel・WEBシステムでQRリーダーを安全に確認。本番機ではなく余剰機・予備機・検証用機器を使う重要性を解説。">
+<meta name="twitter:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+
+<meta name="robots" content="index, follow">
+
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Article",
+  "headline":"⑫ 会社にあるQRリーダーでまず試す｜メモ帳・Excel・WEBシステムで安全確認",
+  "description":"会社にあるQRリーダーを使って、メモ帳・Excel・WEBシステムで安全に簡易テストする方法を解説。本番工程で使用中のQRリーダーを変更するリスク、予備機・余剰機・検証用機器を使う重要性、キー変換・文字間ディレイ・Sleep/Pause確認まで整理します。",
+  "image":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png",
+  "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
+  "publisher":{
+    "@type":"Organization",
+    "name":"Excel × No VBA Lab",
+    "logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}
+  },
+  "datePublished":"2026-05-09",
+  "dateModified":"2026-05-09",
+  "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/12_qr_existing_reader_check.html"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type":"ListItem","position":2,"name":"QR Automation Lab","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/"},
+    {"@type":"ListItem","position":3,"name":"⑫ 会社にあるQRリーダーでまず試す"}
+  ]
+}
+</script>
+
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel × No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+
+  <div class="breadcrumb">
+    <a href="../index.html">ホーム</a><span>&gt;</span>
+    <a href="../index.html#qr">QR Automation Lab</a><span>&gt;</span>
+    <strong>⑫ 会社にあるQRリーダーでまず試す</strong>
+  </div>
+
+  <!-- ===== メインコンテンツ ===== -->
+  <article class="article-body">
+
+    <!-- ===== 記事ヘッダー ===== -->
+    <div class="article-header">
+      <div class="article-meta">
+        <span class="badge badge-all">全バージョン</span>
+        <span class="badge badge-maniac">QR Automation Lab ⑫ ／ 導入前チェック</span>
+      </div>
+
+      <h1 class="article-title">
+        会社にあるQRリーダーでまず試す<br>
+        <small>― メモ帳・Excel・WEBシステムで安全確認する導入前チェック</small>
+      </h1>
+
+      <p class="article-summary" data-seo-lead="true">
+        QRリーダーを使った自動入力は、いきなり新しい機器を購入しなくても、
+        会社にあるQRリーダーで簡単に試せる場合があります。
+        ただし、社内にあるQRリーダーは未設定とは限りません。
+        本社・管理部門・情報システム部門・現場向けに、すでに特殊設定されている可能性があります。
+      </p>
+
+      <p class="article-summary">
+        そのため最初に重要なのは、<strong>「設定を変更して動くか」ではなく、
+        「安全に試せる機器か」</strong>です。
+        最も安全なのは、本番工程で現在使っていない
+        <strong>予備機・余剰機・検証用機器</strong>を使うことです。
+      </p>
+
+      <p style="color:#666;font-size:.88rem;">最終更新: 2026-05-09 ｜ 読了目安: 12分</p>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ゴール -->
+    <!-- ========================================== -->
+    <section class="goal-section">
+      <h2><span class="icon">🔥</span> この記事で分かること</h2>
+
+      <p>
+        この記事では、会社にあるQRリーダーを使って、
+        <strong>メモ帳・Excel・WEBシステム</strong>で簡易テストする方法を整理します。
+        さらに、本番工程で使用中のQRリーダーを設定変更する危険性と、
+        余剰機・予備機・検証用機器を使う重要性を解説します。
+      </p>
+
+      <div class="xdemo-note-danger">
+        <strong>⚠️ 最も安全な方法</strong><br>
+        既存機種を使う場合は、
+        <strong>本番工程で現在使っていない予備機・余剰機・検証用機器</strong>
+        を使うのが安全です。<br>
+        元の工程に戻す予定のあるQRリーダーを変更する場合は、
+        <strong>必ず元の設定に戻せる状態を作ってから</strong>行います。
+      </div>
+
+      <div class="xdemo-note-warn">
+        <strong>重要：</strong>
+        QR自動入力では、設定を変えると便利な機能が使える場合があります。
+        しかし実務では、<strong>「設定で動くか」よりも「安全に試せる機器か」</strong>の方が重要です。
+        余っているQRリーダー、使っていないQRリーダー、検証専用にできるQRリーダーがあるなら、
+        まずそれを使うのが理想です。
+      </div>
+
+      <h3>この記事の対象</h3>
+      <div class="usecase-grid">
+        <div class="usecase-card">
+          <div class="icon">📝</div>
+          <h4>メモ帳テスト</h4>
+          <p>QRリーダーが実際に何を送っているかを最初に確認します。</p>
+        </div>
+        <div class="usecase-card">
+          <div class="icon">📊</div>
+          <h4>Excelテスト</h4>
+          <p>セル入力、Tab移動、Enter移動、文字欠けを確認します。</p>
+        </div>
+        <div class="usecase-card">
+          <div class="icon">🌐</div>
+          <h4>WEBシステムテスト</h4>
+          <p>項目移動、検索、登録、画面遷移待ちの有無を確認します。</p>
+        </div>
+        <div class="usecase-card">
+          <div class="icon">🛡️</div>
+          <h4>安全確認</h4>
+          <p>本番機を変更せず、余剰機・予備機・検証機で試す考え方を整理します。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 目次 -->
+    <!-- ========================================== -->
+    <section class="method-section">
+      <h2>目次</h2>
+      <ol>
+        <li><a href="#why-existing">なぜ会社にあるQRリーダーで先に試すのか</a></li>
+        <li><a href="#priority-safety">最優先は「使っていない機器」で試すこと</a></li>
+        <li><a href="#existing-settings">既存機種に入っている特殊設定の注意点</a></li>
+        <li><a href="#test-flow">安全なテスト順序：メモ帳 → Excel → WEBシステム</a></li>
+        <li><a href="#notepad-test">メモ帳で行う基本テスト</a></li>
+        <li><a href="#excel-test">Excelで行う入力テスト</a></li>
+        <li><a href="#web-test">WEBシステムで行う簡易テスト</a></li>
+        <li><a href="#checklist">確認チェックリスト</a></li>
+        <li><a href="#decision">結果別の判断方法</a></li>
+        <li><a href="#maker">メーカー別の見方</a></li>
+        <li><a href="#approval">社内説明・購入申請に使える文例</a></li>
+        <li><a href="#production-safety">本番投入前の注意点</a></li>
+        <li><a href="#summary">まとめ</a></li>
+      </ol>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 1 -->
+    <!-- ========================================== -->
+    <section id="why-existing" class="method-section">
+      <h2>1. なぜ会社にあるQRリーダーで先に試すのか</h2>
+
+      <p>
+        QRリーダーによる自動入力は、実際に見せると効果が伝わりやすい改善です。
+        たとえば、QRコードを1回読むだけで、品番・数量・担当者・日付が順番に入力されると、
+        手入力の手間や入力ミスの削減が直感的にわかります。
+      </p>
+
+      <p>
+        しかし、最初から新しいQRリーダーを購入しようとすると、
+        社内では次のように確認されることがあります。
+      </p>
+
+      <ul>
+        <li>本当に効果があるのか</li>
+        <li>今あるQRリーダーではできないのか</li>
+        <li>Excel入力だけなら既存機種で十分ではないのか</li>
+        <li>WEBシステムでも使えるのか</li>
+        <li>なぜ新しい機種が必要なのか</li>
+        <li>本番業務に影響しないのか</li>
+      </ul>
+
+      <p>
+        そこで、まずは会社にあるQRリーダーで小さく試します。
+        メモ帳、Excel、テスト用WEB画面などで簡易確認を行い、
+        「できること」と「できないこと」を分けておくと、
+        後から対応機種を購入する説明がしやすくなります。
+      </p>
+
+      <div class="xdemo-note-good">
+        <strong>✅ 社内説明で強いポイント</strong><br>
+        「既存機種でここまではできた。しかし、文字欠け対策・キー変換・Sleep/Pause・画面遷移待ちが必要なため、
+        対応機種が必要です」と説明できると、単なる機器購入ではなく、
+        <strong>検証結果に基づく改善提案</strong>になります。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 2 -->
+    <!-- ========================================== -->
+    <section id="priority-safety" class="tips-section">
+      <h2>🎯 2. 最優先は「使っていない機器」で試すこと</h2>
+
+      <p>
+        QR自動入力では、Tab、Enter、キー変換、文字間ディレイ、Sleep/Pauseなどの設定が関係します。
+        これらは便利ですが、既存業務の設定を壊す可能性もあります。
+      </p>
+
+      <p>
+        そのため、最初の判断基準は
+        <strong>「このQRリーダーは設定変更しても業務に影響しないか」</strong>
+        です。
+      </p>
+
+      <table class="format-table">
+        <thead>
+          <tr>
+            <th>機器の状態</th>
+            <th>検証に使ってよいか</th>
+            <th>理由</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>余っているQRリーダー</td>
+            <td><strong>◎ 最も理想</strong></td>
+            <td>元工程への影響が少なく、失敗してもリスクが低い</td>
+          </tr>
+          <tr>
+            <td>予備機</td>
+            <td><strong>◎ 条件付きで安全</strong></td>
+            <td>本番で使っていないなら検証向き。ただし元設定の記録は必要</td>
+          </tr>
+          <tr>
+            <td>検証用として管理部門から借りた機器</td>
+            <td><strong>◎ 安全</strong></td>
+            <td>検証目的が明確で、戻し方を確認しやすい</td>
+          </tr>
+          <tr>
+            <td>本番工程で現在使用中の機器</td>
+            <td><strong>× 原則避ける</strong></td>
+            <td>設定変更により元業務で事故が起きる可能性がある</td>
+          </tr>
+          <tr>
+            <td>本社・管理部門が配布した機器</td>
+            <td><strong>△ 要確認</strong></td>
+            <td>特殊設定や標準設定が入っている可能性がある</td>
+          </tr>
+          <tr>
+            <td>元の工程に戻す予定の機器</td>
+            <td><strong>△ 慎重に</strong></td>
+            <td>戻し方、元設定、変更履歴を残してからでないと危険</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="xdemo-note-danger">
+        <strong>⚠️ ここが最重要：余っているQRリーダーが理想</strong><br>
+        キー変換ができるか、Sleepができるか、Excelで動くかを確認する前に、
+        <strong>本番業務へ影響しない機器かどうか</strong>を確認してください。<br>
+        余っているQRリーダー、使っていないQRリーダー、検証専用にできるQRリーダーがあるなら、
+        まずそれを使うのが最も安全です。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 3 -->
+    <!-- ========================================== -->
+    <section id="existing-settings" class="method-section">
+      <h2>3. 既存機種に入っている特殊設定の注意点</h2>
+
+      <p>
+        社内にあるQRリーダーは、購入時の初期状態とは限りません。
+        本社、情報システム部門、管理部門、設備担当、現場責任者などが、
+        すでに業務用に設定している可能性があります。
+      </p>
+
+      <p>
+        特に注意すべき設定は次の通りです。
+      </p>
+
+      <table class="format-table">
+        <thead>
+          <tr>
+            <th>設定項目</th>
+            <th>内容</th>
+            <th>変更した場合のリスク</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>サフィックス</td>
+            <td>読取後にEnterやTabを自動送信する設定</td>
+            <td>元工程で改行されない、または余計なEnterが入る</td>
+          </tr>
+          <tr>
+            <td>プレフィックス</td>
+            <td>読取前に固定文字やキーを付ける設定</td>
+            <td>想定外の文字が入力される</td>
+          </tr>
+          <tr>
+            <td>キー変換</td>
+            <td>特定文字をEnter、Fキー、テンキーEnterなどに変換する設定</td>
+            <td>記号を読んだだけで画面操作が発生する</td>
+          </tr>
+          <tr>
+            <td>文字間ディレイ</td>
+            <td>1文字ずつ送る間隔を空ける設定</td>
+            <td>入力速度が変わり、既存システムの操作感が変わる</td>
+          </tr>
+          <tr>
+            <td>Function Delay</td>
+            <td>TabやEnterなど機能キーの前後に待ち時間を入れる設定</td>
+            <td>画面遷移や入力タイミングが変わり、元の操作と合わなくなる</td>
+          </tr>
+          <tr>
+            <td>Sleep / Pause</td>
+            <td>読取データの途中で数秒待機する設定</td>
+            <td>既存業務で入力が遅くなったり、途中で止まったように見える</td>
+          </tr>
+          <tr>
+            <td>キーボード配列</td>
+            <td>日本語キーボード、英語キーボードなどの設定</td>
+            <td>記号や英数字が違う文字として入力される</td>
+          </tr>
+          <tr>
+            <td>読取対象コード</td>
+            <td>QR、Code128、JAN、DataMatrixなどの有効・無効設定</td>
+            <td>元工程で読めていたコードが読めなくなる</td>
+          </tr>
+          <tr>
+            <td>読取モード</td>
+            <td>連続読取、単発読取、トリガー読取など</td>
+            <td>現場での操作方法が変わる</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="xdemo-note-danger">
+        <strong>⚠️ 初期化にも注意</strong><br>
+        「よくわからないから初期化する」という対応は危険です。
+        初期化すると、元々入っていたサフィックス、キー変換、文字間ディレイ、読取コード設定などが消える可能性があります。<br>
+        特に本社や管理部門が配布したQRリーダーは、標準設定が決まっている場合があります。
+        自分で初期化・再設定してしまうと、元の工程に戻したときに同じ動きを再現できなくなる可能性があります。
+      </div>
+
+      <h3>設定変更前に最低限残しておきたい記録</h3>
+
+      <table class="check-table">
+        <thead>
+          <tr>
+            <th>記録項目</th>
+            <th>記録内容</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>メーカー・型番</td>
+            <td>例：Opticon OPI-3601、Zebra DS2208 など</td>
+          </tr>
+          <tr>
+            <td>シリアル番号・管理番号</td>
+            <td>同じ機種が複数ある場合に取り違えないため</td>
+          </tr>
+          <tr>
+            <td>使用部署・元工程</td>
+            <td>どの業務で使っていた機器か</td>
+          </tr>
+          <tr>
+            <td>現在の読み取り結果</td>
+            <td>メモ帳に読み取った結果を保存しておく</td>
+          </tr>
+          <tr>
+            <td>読取後の動き</td>
+            <td>Enterが入る、Tabで移動する、何も付かない、など</td>
+          </tr>
+          <tr>
+            <td>特殊なキー動作</td>
+            <td>特定記号でFキー、テンキーEnter、Escなどが出るか</td>
+          </tr>
+          <tr>
+            <td>変更した設定</td>
+            <td>何を、いつ、誰が変更したか</td>
+          </tr>
+          <tr>
+            <td>戻し方</td>
+            <td>元に戻す設定バーコード、設定ファイル、手順書の場所</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="xdemo-note-info">
+        <strong>ℹ️ 2台ある場合の確認</strong><br>
+        同じ型番のQRリーダーが2台ある場合は、変更前に同じQRコードを読ませて、
+        メモ帳で出力結果を比較しておくと安全です。
+        2台の動きが同じなら、片方を検証用、片方を比較用として残せます。
+        ただし、同じ型番でも設定が違うことはあるため、型番だけで判断しないようにします。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 4 -->
+    <!-- ========================================== -->
+    <section id="test-flow" class="tips-section">
+      <h2>🎯 4. 安全なテスト順序：メモ帳 → Excel → WEBシステム</h2>
+
+      <p>
+        QRリーダーの確認は、いきなり本番システムで行わないでください。
+        入力先が本番システムの場合、誤登録、誤更新、誤送信、誤印刷などにつながる可能性があります。
+      </p>
+
+      <div class="flow-box">
+        <span class="flow-step step-item">① 余剰機・予備機を選ぶ</span>
+        <span class="step-arrow">&rarr;</span>
+        <span class="flow-step step-key">② メモ帳で確認</span>
+        <span class="step-arrow">&rarr;</span>
+        <span class="flow-step step-item">③ Excelで確認</span>
+        <span class="step-arrow">&rarr;</span>
+        <span class="flow-step step-key">④ WEBテスト画面で確認</span>
+        <span class="step-arrow">&rarr;</span>
+        <span class="flow-step step-ok">⑤ 本番前に10回以上確認</span>
+      </div>
+
+      <ol>
+        <li>本番で使っていないQRリーダーを選ぶ</li>
+        <li>変更前の読み取り結果をメモ帳で保存する</li>
+        <li>メモ帳で文字そのものを確認する</li>
+        <li>Excelでセル移動やTab、Enterを確認する</li>
+        <li>テスト用WEB画面や検証環境で入力順を確認する</li>
+        <li>本番相当の画面では、必ずダミーデータで確認する</li>
+        <li>連続10回以上、同じ結果になるか確認する</li>
+      </ol>
+
+      <div class="xdemo-note-good">
+        <strong>✅ なぜ最初にメモ帳？</strong><br>
+        メモ帳は、QRリーダーから実際に何が送られているかを確認しやすい入力先です。
+        ExcelやWEBシステムでは、TabやEnterが画面操作として処理されるため、
+        文字として見えないことがあります。
+        まずメモ帳で確認し、その後にExcelやWEBシステムへ進むと、原因の切り分けがしやすくなります。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 5 -->
+    <!-- ========================================== -->
+    <section id="notepad-test" class="method-section">
+      <h2>5. メモ帳で行う基本テスト</h2>
+
+      <p>
+        最初の確認は、Windowsのメモ帳など、単純なテキスト入力画面で行います。
+        この段階では、Excel関数やWEBシステムの動きではなく、
+        QRリーダーから送られる文字列そのものを確認します。
+      </p>
+
+      <h3>テスト1：単純な文字列を読む</h3>
+
+      <p>まず、次のような単純なQRコードを作成して読み取ります。</p>
+
+      <pre><code>ABC123</code></pre>
+
+      <table class="check-table">
+        <thead>
+          <tr>
+            <th>確認項目</th>
+            <th>見るポイント</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>文字が正しく入力されるか</td>
+            <td>ABC123がそのまま入力されるか</td>
+          </tr>
+          <tr>
+            <td>読取後に自動で改行されるか</td>
+            <td>サフィックスEnterが入っている可能性がある</td>
+          </tr>
+          <tr>
+            <td>読取後に余計な空白が入らないか</td>
+            <td>プレフィックス・サフィックス設定を疑う</td>
+          </tr>
+          <tr>
+            <td>同じQRを何度読んでも同じ結果になるか</td>
+            <td>最低10回程度確認する</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>テスト2：日本語を含む文字列を読む</h3>
+
+      <pre><code>品番A001</code></pre>
+
+      <p>
+        日本語を含む場合、QRコード生成側、QRリーダー側、入力先の文字コードやキーボード設定の影響を受けることがあります。
+        文字化けする場合は、いきなり本番で使わず、英数字だけで運用できるかも検討します。
+      </p>
+
+      <h3>テスト3：記号を含む文字列を読む</h3>
+
+      <pre><code>A001-05_2026/05/09</code></pre>
+
+      <p>
+        記号はキーボード配列の影響を受けやすい部分です。
+        特に、英語キーボード設定と日本語キーボード設定が合っていない場合、
+        記号が別の文字になることがあります。
+      </p>
+
+      <h3>テスト4：TabやEnter相当の動きを確認する</h3>
+
+      <p>
+        QRコード内にTabやEnterを含める、またはQRリーダーのサフィックスでEnterを付ける場合、
+        メモ帳では改行やカーソル移動として現れます。
+      </p>
+
+      <pre><code>品番A001	10
+担当者A</code></pre>
+
+      <p>
+        上のように、品番、数量、担当者が分かれて出る場合、
+        QRコード内にTabや改行が含まれている可能性があります。
+      </p>
+
+      <div class="xdemo-note-info">
+        <strong>ℹ️ メモ帳で保存しておくとよいもの</strong><br>
+        変更前の読取結果、変更後の読取結果、読取後にEnterが入るかどうか、
+        Tabが文字として見えない場合の入力位置の変化、
+        特殊記号を読んだときに画面操作が起きないかを保存しておくと、
+        後から設定変更の影響を比較しやすくなります。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 6 -->
+    <!-- ========================================== -->
+    <section id="excel-test" class="method-section">
+      <h2>6. Excelで行う入力テスト</h2>
+
+      <p>
+        メモ帳で問題がなければ、次にExcelで確認します。
+        Excelでは、TabやEnterによってセルが移動するため、
+        QR自動入力の効果を実感しやすくなります。
+      </p>
+
+      <h3>テスト1：1セルに入力する</h3>
+
+      <ol>
+        <li>Excelを開く</li>
+        <li>A1セルを選択する</li>
+        <li>QRコードを読み取る</li>
+        <li>A1に正しく入力されるか確認する</li>
+        <li>読取後にどのセルへ移動するか確認する</li>
+      </ol>
+
+      <table class="format-table">
+        <thead>
+          <tr>
+            <th>読取後の動き</th>
+            <th>考えられる設定</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A1に入力されたまま</td>
+            <td>サフィックスなし、または入力後キーなし</td>
+          </tr>
+          <tr>
+            <td>A2へ移動</td>
+            <td>Enterが送られている可能性</td>
+          </tr>
+          <tr>
+            <td>B1へ移動</td>
+            <td>Tabが送られている可能性</td>
+          </tr>
+          <tr>
+            <td>2行下へ移動</td>
+            <td>QR内Enterとリーダー側サフィックスEnterが重複している可能性</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>テスト2：複数セルへ入力する</h3>
+
+      <p>
+        次のように、品番、数量、担当者を順番に入力するQR文字列を考えます。
+      </p>
+
+      <pre><code>品番A001[TAB]10[TAB]担当者A[ENTER]</code></pre>
+
+      <p>
+        Excel関数でQR用文字列を作る場合は、次のような考え方になります。
+      </p>
+
+      <pre><code>=A2&amp;CHAR(9)&amp;B2&amp;CHAR(9)&amp;C2&amp;CHAR(13)</code></pre>
+
+      <table class="format-table">
+        <thead>
+          <tr>
+            <th>要素</th>
+            <th>意味</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A2</td>
+            <td>品番</td>
+          </tr>
+          <tr>
+            <td>CHAR(9)</td>
+            <td>Tab相当</td>
+          </tr>
+          <tr>
+            <td>B2</td>
+            <td>数量</td>
+          </tr>
+          <tr>
+            <td>CHAR(9)</td>
+            <td>Tab相当</td>
+          </tr>
+          <tr>
+            <td>C2</td>
+            <td>担当者</td>
+          </tr>
+          <tr>
+            <td>CHAR(13)</td>
+            <td>Enter相当として使う場合がある</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="xdemo-note-warn">
+        <strong>⚠️ CHAR(10) と CHAR(13) の扱いに注意</strong><br>
+        QR生成方法や読み取り先によっては、CHAR(10)とCHAR(13)の扱いが異なる場合があります。
+        Excel、メモ帳、WEBシステムで同じ動きになるとは限りません。
+      </div>
+
+      <h3>テスト3：長い文字列で文字欠けを確認する</h3>
+
+      <p>
+        古いPC、重いExcelファイル、WEBシステム、仮想環境では、
+        QRリーダーの入力速度に画面側が追いつかず、文字欠けが起きることがあります。
+      </p>
+
+      <pre><code>A001-B002-C003-D004-E005-F006-G007-H008-I009-J010</code></pre>
+
+      <p>
+        このような少し長い文字列を10回以上読み取り、
+        毎回同じ文字数で入力されるか確認します。
+      </p>
+
+      <div class="xdemo-note-good">
+        <strong>✅ 文字欠けが出た場合</strong><br>
+        文字欠けが出る場合は、QRリーダー側で文字間ディレイを設定できる機種か確認します。
+        目安としては20ms程度から試し、重い画面では30〜50ms程度が必要になることがあります。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 7 -->
+    <!-- ========================================== -->
+    <section id="web-test" class="method-section">
+      <h2>7. WEBシステムで行う簡易テスト</h2>
+
+      <p>
+        Excelで動いた後は、WEBシステムに近い画面で簡易テストを行います。
+        ただし、最初から本番システムに入力するのは避けてください。
+      </p>
+
+      <div class="xdemo-note-danger">
+        <strong>⚠️ 本番WEBシステムでいきなり試さない</strong><br>
+        WEBシステムでは、Enterキーで検索、登録、更新、送信、印刷などが実行される場合があります。
+        QRリーダーの設定によっては、読取直後に意図せず処理が進むことがあります。<br>
+        まずは検証環境、テスト画面、ダミーデータ、または登録処理のない入力フォームで確認してください。
+      </div>
+
+      <h3>簡易WEBテストの例</h3>
+
+      <p>
+        テスト用のHTMLフォームや社内の検証環境で、次のような項目を用意します。
+      </p>
+
+      <ul>
+        <li>品番</li>
+        <li>数量</li>
+        <li>担当者</li>
+        <li>備考</li>
+        <li>検索ボタン、または確認ボタン</li>
+      </ul>
+
+      <p>
+        QRコードを読み取ったときに、Tabで次の項目へ移動するか、
+        Enterで検索や登録が走ってしまわないかを確認します。
+      </p>
+
+      <h3>WEBシステムで確認するポイント</h3>
+
+      <table class="check-table">
+        <thead>
+          <tr>
+            <th>確認項目</th>
+            <th>見るポイント</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>入力欄の移動</td>
+            <td>Tabで想定通り次の項目へ移動するか</td>
+          </tr>
+          <tr>
+            <td>Enterの動き</td>
+            <td>検索・登録・送信が意図せず実行されないか</td>
+          </tr>
+          <tr>
+            <td>テンキーEnterの必要性</td>
+            <td>通常Enterでは反応せず、テンキーEnterが必要な画面か</td>
+          </tr>
+          <tr>
+            <td>画面遷移待ち</td>
+            <td>検索後の画面表示を待たないと次入力が失敗しないか</td>
+          </tr>
+          <tr>
+            <td>文字欠け</td>
+            <td>重い画面で入力が途中で抜けないか</td>
+          </tr>
+          <tr>
+            <td>フォーカス</td>
+            <td>読み取り前に正しい入力欄が選択されているか</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>WEBシステムでSleep/Pauseが必要になる例</h3>
+
+      <p>
+        たとえば、次のような流れでは、QRリーダー側のSleepやPauseが必要になる場合があります。
+      </p>
+
+      <ol>
+        <li>品番を入力する</li>
+        <li>Enterで検索する</li>
+        <li>検索結果の表示を待つ</li>
+        <li>数量欄へ移動する</li>
+        <li>数量を入力する</li>
+        <li>登録ボタンへ移動する</li>
+      </ol>
+
+      <p>
+        人間なら検索結果が表示されるまで待てますが、
+        QRリーダーは基本的に一気に文字を送ります。
+        そのため、途中で画面遷移がある場合は、SleepやPauseによる待機が必要になることがあります。
+      </p>
+
+      <div class="xdemo-note-warn">
+        <strong>⚠️ WEBシステムではExcelより条件が厳しい</strong><br>
+        Excelでうまくいっても、WEBシステムではうまくいかないことがあります。
+        画面遷移、通信待ち、入力チェック、フォーカス移動、Enterの扱いがあるためです。
+        そのため、メモ帳 → Excel → WEBテスト画面 → 本番相当検証、の順で段階的に確認します。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 8 -->
+    <!-- ========================================== -->
+    <section id="checklist" class="tips-section">
+      <h2>🎯 8. 確認チェックリスト</h2>
+
+      <p>
+        既存QRリーダーを使って確認するときは、次の表を使って結果を整理します。
+        社内説明や購入申請にも使いやすくなります。
+      </p>
+
+      <table class="check-table">
+        <thead>
+          <tr>
+            <th>分類</th>
+            <th>確認項目</th>
+            <th>結果</th>
+            <th>メモ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>安全</td>
+            <td>本番工程で現在使っていない機器である</td>
+            <td>OK / NG</td>
+            <td>NGの場合は設定変更しない</td>
+          </tr>
+          <tr>
+            <td>安全</td>
+            <td>余剰機・予備機・検証用機器である</td>
+            <td>OK / NG</td>
+            <td>OKなら最も安全に検証しやすい</td>
+          </tr>
+          <tr>
+            <td>安全</td>
+            <td>元工程に戻す予定がない、または戻し方が明確</td>
+            <td>OK / NG</td>
+            <td>戻す予定がある場合は元設定の記録が必須</td>
+          </tr>
+          <tr>
+            <td>安全</td>
+            <td>変更前のメモ帳出力を保存した</td>
+            <td>OK / NG</td>
+            <td>設定変更前後の比較に使う</td>
+          </tr>
+          <tr>
+            <td>安全</td>
+            <td>同じ機種が2台ある場合、動作比較した</td>
+            <td>OK / NG / 対象外</td>
+            <td>比較用の1台を残せると安全</td>
+          </tr>
+          <tr>
+            <td>メモ帳</td>
+            <td>英数字が正しく入力される</td>
+            <td>OK / NG</td>
+            <td>例：ABC123</td>
+          </tr>
+          <tr>
+            <td>メモ帳</td>
+            <td>日本語が文字化けしない</td>
+            <td>OK / NG</td>
+            <td>必要に応じて英数字運用も検討</td>
+          </tr>
+          <tr>
+            <td>メモ帳</td>
+            <td>記号が正しく入力される</td>
+            <td>OK / NG</td>
+            <td>キーボード配列の影響を確認</td>
+          </tr>
+          <tr>
+            <td>Excel</td>
+            <td>1セルに正しく入力される</td>
+            <td>OK / NG</td>
+            <td>基本動作の確認</td>
+          </tr>
+          <tr>
+            <td>Excel</td>
+            <td>Tabで右のセルへ移動できる</td>
+            <td>OK / NG</td>
+            <td>複数項目入力に必要</td>
+          </tr>
+          <tr>
+            <td>Excel</td>
+            <td>Enterで次行へ移動できる</td>
+            <td>OK / NG</td>
+            <td>連続入力に必要</td>
+          </tr>
+          <tr>
+            <td>Excel</td>
+            <td>長い文字列で文字欠けしない</td>
+            <td>OK / NG</td>
+            <td>10回以上確認</td>
+          </tr>
+          <tr>
+            <td>WEB</td>
+            <td>Tab順が想定通り</td>
+            <td>OK / NG</td>
+            <td>項目移動を確認</td>
+          </tr>
+          <tr>
+            <td>WEB</td>
+            <td>Enterで意図しない登録・送信が起きない</td>
+            <td>OK / NG</td>
+            <td>検証環境で確認</td>
+          </tr>
+          <tr>
+            <td>WEB</td>
+            <td>画面遷移待ちが必要か確認した</td>
+            <td>OK / NG</td>
+            <td>必要ならSleep/Pause対応機種を検討</td>
+          </tr>
+          <tr>
+            <td>高度機能</td>
+            <td>キー変換が必要か確認した</td>
+            <td>OK / NG</td>
+            <td>テンキーEnter、Fキー、Escなど</td>
+          </tr>
+          <tr>
+            <td>高度機能</td>
+            <td>文字間ディレイ設定が必要か確認した</td>
+            <td>OK / NG</td>
+            <td>文字欠け対策</td>
+          </tr>
+          <tr>
+            <td>高度機能</td>
+            <td>Sleep/Pauseが必要か確認した</td>
+            <td>OK / NG</td>
+            <td>画面遷移や印刷待ちに必要</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 9 -->
+    <!-- ========================================== -->
+    <section id="decision" class="method-section">
+      <h2>9. 結果別の判断方法</h2>
+
+      <p>
+        テスト結果によって、既存機種で進められるか、新しい機種が必要かを判断します。
+      </p>
+
+      <table class="format-table">
+        <thead>
+          <tr>
+            <th>テスト結果</th>
+            <th>判断</th>
+            <th>次の対応</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>メモ帳・Excelで単純入力できた</td>
+            <td>基本入力は可能</td>
+            <td>Excel入力支援や簡単な転記から試す</td>
+          </tr>
+          <tr>
+            <td>Tab / Enter でセル移動できた</td>
+            <td>複数項目入力に使える可能性あり</td>
+            <td>入力順の決まった作業で検証する</td>
+          </tr>
+          <tr>
+            <td>長い文字列で文字欠けする</td>
+            <td>文字間ディレイが必要</td>
+            <td>既存機種で設定可能か確認。難しければ対応機種を検討</td>
+          </tr>
+          <tr>
+            <td>WEBシステムでEnterが効かない</td>
+            <td>通常Enterではなく別キーが必要な可能性</td>
+            <td>テンキーEnterやFキーなどのキー変換を検討</td>
+          </tr>
+          <tr>
+            <td>検索後すぐ次の入力に失敗する</td>
+            <td>画面遷移待ちが必要</td>
+            <td>Sleep/Pause対応機種を検討</td>
+          </tr>
+          <tr>
+            <td>フローごとに待ち時間が違う</td>
+            <td>固定Pauseだけでは不足する可能性</td>
+            <td>可変SleepやQR内制御ができる機種を検討</td>
+          </tr>
+          <tr>
+            <td>既存機種の設定変更が危険</td>
+            <td>検証機として使わない方がよい</td>
+            <td>余剰機、検証機、または新規購入機で試す</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="xdemo-note-good">
+        <strong>✅ 購入理由は「高機能だから」ではなく「既存機種で不足が確認できたから」</strong><br>
+        社内で新しいQRリーダーを購入する場合、
+        「高機能な機種が欲しい」だけでは説明が弱くなります。
+        しかし、既存機種でメモ帳・Excel・WEBシステムの簡易テストを行い、
+        文字欠け、Enter不一致、画面遷移待ち、設定変更リスクなどを確認しておけば、
+        「この機能が必要だから対応機種が必要」と説明できます。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 10 -->
+    <!-- ========================================== -->
+    <section id="maker" class="method-section">
+      <h2>10. メーカー別の見方</h2>
+
+      <p>
+        QRリーダーはメーカーや機種によって、設定のしやすさ、キー変換、文字間ディレイ、Sleep/Pause対応が異なります。
+        ここでは、検討時の見方を簡単に整理します。
+      </p>
+
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>メーカー・分類</th>
+            <th>特徴</th>
+            <th>向いている用途</th>
+            <th>注意点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Opticon / オプトエレクトロニクス</td>
+            <td>柔軟な設定ができる機種がある</td>
+            <td>キー変換、可変Sleep、高度なQR自動入力</td>
+            <td>設定方法の発見や管理が難しい場合がある</td>
+          </tr>
+          <tr>
+            <td>Zebra</td>
+            <td>123ScanやADFで設定しやすい</td>
+            <td>固定フロー、決まった待ち時間、標準化された運用</td>
+            <td>Pauseが固定的な運用になりやすく、QRごとの可変制御は要確認</td>
+          </tr>
+          <tr>
+            <td>Honeywell</td>
+            <td>Data FormatterやDelay系の設定を持つ機種がある</td>
+            <td>企業利用、Delay制御、標準的な入力自動化</td>
+            <td>機種ごとの仕様確認が必要</td>
+          </tr>
+          <tr>
+            <td>DENSO WAVE</td>
+            <td>国内現場で使われることが多い</td>
+            <td>製造・物流・現場システム連携</td>
+            <td>Excel自動入力用途では機種別の確認が必要</td>
+          </tr>
+          <tr>
+            <td>KEYENCE</td>
+            <td>産業用途で高信頼</td>
+            <td>設備連携、製造ライン、堅牢な現場運用</td>
+            <td>Excelだけの簡易用途には過剰な場合がある</td>
+          </tr>
+          <tr>
+            <td>安価な汎用QRリーダー</td>
+            <td>単純入力はしやすい</td>
+            <td>メモ帳・Excelへの単純入力</td>
+            <td>キー変換、Sleep、細かいディレイ設定は弱い場合が多い</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="xdemo-note-info">
+        <strong>ℹ️ 既存機種で試す意味</strong><br>
+        自社にあるQRリーダーで試すと、
+        「単純入力だけなら今の機種で十分」
+        「WEBシステムではSleep/Pauseが必要」
+        「テンキーEnterが必要」
+        「文字欠け対策が必要」
+        といった判断ができます。
+        この結果があると、対応機種を購入する際の説明がかなりしやすくなります。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 11 -->
+    <!-- ========================================== -->
+    <section id="approval" class="method-section">
+      <h2>11. 社内説明・購入申請に使える文例</h2>
+
+      <p>
+        既存機種で簡易テストを行った後は、結果を整理して社内説明に使います。
+        以下は文例です。
+      </p>
+
+      <h3>文例1：既存機種で効果が確認できた場合</h3>
+
+      <div class="xdemo-note-info">
+        既存のQRリーダーを使用し、メモ帳およびExcelで簡易検証を行った結果、
+        QRコード読取による文字入力、Tabによる項目移動、Enterによる次行移動が可能であることを確認しました。
+        これにより、手入力作業の一部をQR読取に置き換えられる見込みがあります。
+      </div>
+
+      <h3>文例2：WEBシステムでは追加機能が必要だった場合</h3>
+
+      <div class="xdemo-note-info">
+        一方で、WEBシステム上では検索後の画面表示待ちが発生するため、
+        QRリーダーから一括入力すると次項目への入力が早すぎて失敗するケースがありました。
+        そのため、画面遷移待ちに対応するSleep/Pause機能、または入力間隔を調整する文字間ディレイ機能を持つ機種が必要です。
+      </div>
+
+      <h3>文例3：既存機種の設定変更が危険な場合</h3>
+
+      <div class="xdemo-note-warn">
+        現在社内にあるQRリーダーは、既存工程向けにサフィックスや読取後Enterなどの設定が入っている可能性があります。
+        本番工程で使用中の機器を変更すると、元業務に影響する恐れがあるため、
+        余剰機または検証用機器での確認を前提とします。
+        元工程へ戻す可能性がある機器については、変更前の設定内容と復元手順を記録した上で対応します。
+      </div>
+
+      <h3>文例4：新規購入を申請する場合</h3>
+
+      <div class="xdemo-note-good">
+        既存QRリーダーでの検証により、QR読取による入力省力化の効果は確認できました。
+        ただし、実運用では文字欠け対策、キー変換、画面遷移待ちへの対応が必要であり、
+        現行機種では設定変更リスクまたは機能不足があります。
+        そのため、検証用および本番展開用として、文字間ディレイ、キー変換、Sleep/Pause設定に対応したQRリーダーの導入を申請します。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 12 -->
+    <!-- ========================================== -->
+    <section id="production-safety" class="tips-section">
+      <h2>🎯 12. 本番投入前の注意点</h2>
+
+      <p>
+        QRリーダーによる自動入力は便利ですが、本番投入前には必ず安全確認を行います。
+      </p>
+
+      <table class="check-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>確認内容</th>
+            <th>理由</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>本番データではなくダミーデータで確認する</td>
+            <td>誤登録・誤更新を防ぐため</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>本番工程で使用中のQRリーダーを無断で設定変更しない</td>
+            <td>元業務の事故を防ぐため</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>余剰機・予備機・検証用機器で先に試す</td>
+            <td>最もリスクが低いため</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>元工程に戻す機器は、変更前の状態を記録する</td>
+            <td>元に戻せなくなる事故を防ぐため</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>設定変更した内容を記録する</td>
+            <td>誰が何を変えたか追跡できるようにするため</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>復元手順、設定バーコード、設定ファイルの場所を残す</td>
+            <td>復旧できる状態を作るため</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>同じQRを10回以上読み、毎回同じ結果になるか確認する</td>
+            <td>偶然成功ではなく、安定動作を確認するため</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>WEBシステムでは登録・送信・印刷が勝手に実行されないか確認する</td>
+            <td>Enterやキー変換による誤操作を防ぐため</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>QRコードにパスワードや個人情報を入れない</td>
+            <td>情報漏えいを防ぐため</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>印刷したQRコードは管理し、不要になったら破棄する</td>
+            <td>紙経由の情報漏えいを防ぐため</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="xdemo-note-danger">
+        <strong>⚠️ 本番機の設定変更は最後の手段</strong><br>
+        本番工程で使っているQRリーダーを変更するのは、最後の手段です。
+        まずは余っている機器、使っていない機器、検証専用機で確認してください。<br>
+        どうしても本番機を変更する場合は、元の設定内容、変更内容、復元方法、確認者を記録し、
+        元工程で再利用しても問題ない状態に戻せるようにしてから行います。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 13 -->
+    <!-- ========================================== -->
+    <section id="summary" class="method-section">
+      <h2>13. まとめ</h2>
+
+      <p>
+        QRリーダーによるExcel入力やWEBシステム入力は、既存機種でも簡単な確認ができます。
+        ただし、最初に重視すべきなのは、機能確認よりも安全確認です。
+      </p>
+
+      <table class="format-table">
+        <thead>
+          <tr>
+            <th>重要ポイント</th>
+            <th>内容</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>最初の確認先</td>
+            <td>まずはメモ帳で、QRリーダーが何を送っているか確認する</td>
+          </tr>
+          <tr>
+            <td>次の確認先</td>
+            <td>Excelで、Tab・Enter・複数セル入力を確認する</td>
+          </tr>
+          <tr>
+            <td>WEBシステム確認</td>
+            <td>検証環境やダミーデータで簡易テストする</td>
+          </tr>
+          <tr>
+            <td>本番機の扱い</td>
+            <td>本番工程で使用中のQRリーダーは、原則として設定変更しない</td>
+          </tr>
+          <tr>
+            <td>最も安全な機器</td>
+            <td>余っているQRリーダー・予備機・検証用機器を使うこと</td>
+          </tr>
+          <tr>
+            <td>元工程に戻す機器</td>
+            <td>必ず元に戻せる状態を作ってから変更する</td>
+          </tr>
+          <tr>
+            <td>高度機能</td>
+            <td>キー変換、文字間ディレイ、Sleep/Pauseは便利だが、既存設定を壊すリスクもある</td>
+          </tr>
+          <tr>
+            <td>社内説明</td>
+            <td>既存機種で試した結果は、対応機種購入の説明材料になる</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="xdemo-note-good">
+        <strong>✅ 最後に</strong><br>
+        QR自動入力は、うまく使うとExcel入力だけでなく、WEBシステムや業務システムの入力補助にも応用できます。
+        しかし、設定変更による事故を避けるため、
+        <strong>「余っている機器で小さく試す」</strong>ことから始めるのが最も安全です。
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 関連記事 -->
+    <!-- ========================================== -->
+    <section class="method-section">
+      <h2>関連するQR Automation Labの記事</h2>
+
+      <table class="format-table">
+        <thead>
+          <tr>
+            <th>記事</th>
+            <th>内容</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="01_qr_barcode_control.html"> ① QRコードでWebシステム入力を自動化</a></td>
+            <td>QRリーダーをキーボード入力として使う基本</td>
+          </tr>
+          <tr>
+            <td><a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細</a></td>
+            <td>複数項目を順番に入力する基本</td>
+          </tr>
+          <tr>
+            <td><a href="03_qr_character_delay.html">③ キャラクター間ディレイ</a></td>
+            <td>入力が速すぎて文字が抜ける場合の対策</td>
+          </tr>
+          <tr>
+            <td><a href="04_qr_key_conversion.html">④ キー変換テクニック</a></td>
+            <td>特定記号をEnter、Fキー、テンキーEnterなどに変換する考え方</td>
+          </tr>
+          <tr>
+            <td><a href="06_qr_sleep_revised_honeywell.html">⑥ Sleepで画面遷移を待つ</a></td>
+            <td>検索・登録・印刷などの待ち時間に対応する考え方</td>
+          </tr>
+          <tr>
+            <td><a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダー選定と接続</a></td>
+            <td>機種選定、接続方式、設定機能の見方</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- シリーズナビ -->
+    <!-- ========================================== -->
+    <nav class="series-nav">
+      <h3>📱 QR Automation Lab ― 全17記事一覧</h3>
+      <p class="text-sm-gray">
+        <span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
+        <span class="color-orange">🟠 応用</span>（④〜⑰）＝ さらに自動化を極める
+      </p>
+
+      <ol>
+        <li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコード生成</a></li>
+        <li class="current"><span class="lv-adv">[応用]</span> <strong>⑫ 会社にあるQRリーダーでまず試す（この記事）</strong></li>
+        <li><span class="lv-adv">[応用]</span> <a href="13_qr_reader_design_philosophy_current_research_v5.html">⑬ QRリーダーの設計思想比較</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="14_qr_zebra_adf_variable_pause_revised_ranked.html">⑭ Zebra 123Scan / ADF検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
+      </ol>
+    </nav>
+
+    <!-- ========================================== -->
+    <!-- 共通注意 -->
+    <!-- ========================================== -->
+    <section class="qr-safety-note" aria-labelledby="qr-safety-title">
+      <h2 id="qr-safety-title">QRリーダー連携の運用注意</h2>
+
+      <p>
+        QRリーダーは多くの場合、PCにはキーボード入力として認識されます。
+        Tab、Enter、ファンクションキー、待機時間を組み合わせると、
+        登録・更新・削除などの操作まで進められるため、実務投入前の検証手順を必ず固定してください。
+      </p>
+
+      <ul>
+        <li>本番データではなく、架空データと検証用画面で読み取り順、セル移動、登録操作を確認する。</li>
+        <li>個人情報、認証情報、機密コードをQRにそのまま埋め込まない。必要な場合は最小限のIDに置き換える。</li>
+        <li>設定バーコード、初期化手順、復旧手順を保存し、誰が見ても元に戻せる状態にしておく。</li>
+        <li>本番機ではなく、余剰機・予備機・検証用機器で先に動作確認する。</li>
+        <li>機種・ファームウェア・接続方式によって動作が異なるため、メーカー名だけで判断しない。</li>
+      </ul>
+    </section>
+
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong>
+      <a href="https://www.opto.co.jp/products/tool/tool_download.html" rel="noopener" target="_blank">Opticon 設定ツール / UniversalConfig</a>
+      <a href="https://www.opto.co.jp/products/handy_scanner/OPI-3601.html" rel="noopener" target="_blank">OPI-3601 公式製品ページ</a>
+      <a href="https://www.opto.co.jp/products/handy_scanner/L-46X.html" rel="noopener" target="_blank">L-46X 公式製品ページ</a>
+      <a href="https://www.opto.co.jp/products/tool/manual_download/instruction_kanjioutput.html" rel="noopener" target="_blank">漢字出力インストラクション</a>
+      <a href="https://www.alf-net.co.jp/products/barcode-reader/2d-barcode-reader/2d-wired/alx-3601/" rel="noopener" target="_blank">ALX-3601 製品ページ</a>
+      <a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a>
+    </p>
+  </div>
+
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+  </div>
+
+  <p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress');
+  if (!bar) return;
+  function update(){
+    var doc = document.documentElement;
+    var scrollTop = doc.scrollTop || document.body.scrollTop;
+    var scrollHeight = doc.scrollHeight - doc.clientHeight;
+    var progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+    bar.style.width = progress + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
+
+</body>
+</html>

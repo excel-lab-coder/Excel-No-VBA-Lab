@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>パワークエリとは｜Excel &times; No VBA Lab</title>
+<title>Power QueryとVBAの違い｜パワークエリで代替できるExcel作業｜Excel &times; No VBA Lab</title>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
 <script>
@@ -14,10 +14,10 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="パワークエリとは何かをVBA・ワークシート関数と徹底比較。初心者向けに全体像をわかりやすく解説。まずこの1ページで理解できる入門記事。" name="description">
-<meta content="パワークエリ とは, Power Query 入門, VBA パワークエリ 違い, Excel データ整形 自動化, VBA不要" name="keywords">
-<meta content="パワークエリとは｜Excel &times; No VBA Lab" property="og:title">
-<meta content="パワークエリとは何かをVBA・ワークシート関数と徹底比較。初心者向けに全体像をわかりやすく解説。まずこの1ページで理解できる入門記事。" property="og:description">
+<meta content="Power Query（パワークエリ）とVBAの違い、使い分け、VBAが使えないExcel環境で代替できる作業を解説。マクロ禁止でもCSV取込・データ整形・複数ファイル結合を自動化する考え方が分かります。" name="description">
+<meta content="パワークエリ とは, Power Query 入門, VBA Power Query 違い, VBA パワークエリ 違い, Power Query VBA 使い分け, パワークエリ VBA 代替, VBA 禁止 Power Query, マクロ 禁止 代替" name="keywords">
+<meta content="Power QueryとVBAの違い｜パワークエリで代替できるExcel作業｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power Query（パワークエリ）とVBAの違い、使い分け、VBAが使えないExcel環境で代替できる作業を解説。マクロ禁止でもCSV取込・データ整形・複数ファイル結合を自動化する考え方が分かります。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
@@ -30,7 +30,7 @@
 
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"パワークエリとは \u0026horbar; VBA・関数との決定的な違いを理解する","description":"パワークエリとは何かをVBA・ワークシート関数と徹底比較。初心者向けに全体像をわかりやすく解説。まずこの1ページで理解できる入門記事。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_powerquery_intro.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Power QueryとVBAの違い \u0026horbar; パワークエリで代替できるExcel作業","description":"Power Query（パワークエリ）とVBAの違い、使い分け、VBAが使えないExcel環境で代替できる作業を解説。マクロ禁止でもCSV取込・データ整形・複数ファイル結合を自動化する考え方が分かります。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_powerquery_intro.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -41,14 +41,14 @@
 </div></div></header>
 
 <main class="main-content article-layout" id="main-content">
-<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>パワークエリとは</strong></div>
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>Power QueryとVBAの違い</strong></div>
 <article class="article-body">
 <div class="article-header">
 <div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
-<h1 class="article-title">パワークエリとは &horbar; VBA・関数との決定的な違いを理解する</h1>
+<h1 class="article-title">Power QueryとVBAの違い &horbar; パワークエリで代替できる作業・できない作業</h1>
 </div>
 <div class="series-nav"><h4>📚 パワークエリシリーズ</h4><ul>
-<li class="current">① パワークエリとは（このページ）</li>
+<li class="current">① Power QueryとVBAの違い（このページ）</li>
 <li><a href="article_powerquery_intro_deep.html">① 補足編</a> &horbar; データモデル・パラメータクエリ・SharePoint連携・知られていない理由</li>
 <li><a href="article_pq_editor_ui.html">② 基本編</a> &horbar; 取得&rarr;変換&rarr;読込の3ステップ</li>
 <li><a href="../advanced/article_pq_merge_append.html">③ 応用編</a> &horbar; 結合・追加・ピボット解除・フォルダ一括取込</li>
@@ -60,6 +60,7 @@
 <p>「パワークエリって結局なに？」「VBAや関数とどう違うの？」「覚える価値あるの？」&horbar;&horbar;
         この記事では、パワークエリの正体をVBA・ワークシート関数と徹底比較しながら、メリット・デメリットの両面を解説します。
         まずこの1ページで全体像を把握し、データモデルやパラメータクエリなどの深掘りは<a href="article_powerquery_intro_deep.html">補足編</a>で紹介しています。</p>
+<p>VBAが使えない、マクロが禁止されている会社のExcel環境で、Power Queryを代替手段として使える場面と、VBAに任せるべき場面も整理します。</p>
 </section>
 <!-- ===== パワークエリとは ===== -->
 <section class="method-section">
@@ -82,7 +83,7 @@
 <!-- ===== VBA・関数との比較（核心） ===== -->
 <section class="method-section">
 <h3>VBA・ワークシート関数・パワークエリ &horbar; 何がどう違うのか？</h3>
-<p>パワークエリはVBAの代替でも関数の上位互換でもなく、<strong>「データを整形して表にする」ことに特化したツール</strong>です。
+<p>パワークエリはVBAの完全な代替でも関数の上位互換でもなく、<strong>「データを整形して表にする」ことに特化したツール</strong>です。
         3つは<strong>競合ではなく補完の関係</strong>にあります。</p>
 <div style="overflow-x:auto;">
 <table class="pq-compare-table">
@@ -113,7 +114,7 @@
 <!-- ===== 用途別マトリクス ===== -->
 <section class="method-section">
 <h3>用途別：どのツールを使うべき？</h3>
-<div style="overflow-x:auto;">
+<div class="pq-matrix-wrap">
 <table class="pq-matrix-table">
 <thead><tr><th>やりたいこと</th><th>PQ</th><th>VBA</th><th>関数</th></tr></thead>
 <tbody>
@@ -191,7 +192,7 @@
 <div class="pq-card pq-card-merit"><h4>✅ 1. コード不要 &horbar; GUI操作で入門レベルの7割をカバー</h4><p>列削除・型変換・フィルタ・並べ替え・結合&hellip;すべてがマウス操作だけ。VBAのようなプログラミング知識は不要です。</p></div>
 <div class="pq-card pq-card-merit"><h4>✅ 2. 再現性 &horbar; 「更新」1クリックで繰り返し実行</h4><p>手順がステップとして自動保存。来月同じCSVが届いても更新を押すだけです。</p></div>
 <div class="pq-card pq-card-merit"><h4>✅ 3. 透明性 &horbar; 全工程が可視化される</h4><p>「適用したステップ」で各工程のプレビューも確認可能。引き継ぎにも強いです。</p></div>
-<div class="pq-card pq-card-merit"><h4>✅ 4. VBA禁止環境でも使える</h4><p>パワークエリはマクロではないためセキュリティポリシーの影響を受けません。</p></div>
+<div class="pq-card pq-card-merit"><h4>✅ 4. VBA・マクロ禁止環境でも使える</h4><p>パワークエリはマクロではないためセキュリティポリシーの影響を受けにくく、会社でVBAが使えないExcel環境でも検討しやすい代替手段です。</p></div>
 <div class="pq-card pq-card-merit"><h4>✅ 5. 専用エンジンで大量データも高速・省メモリ</h4><p>Mashupエンジンがシートとは別にデータを処理。データモデルの列指向圧縮で104万行の壁も突破可能です。</p></div>
 </div>
 </section>
@@ -252,7 +253,7 @@
 <strong>「毎月同じCSV/Excelを開いて同じ整形作業をしている」</strong> &horbar; 更新1回で完了。<br>
 <strong>「複数ファイルを手作業で1シートにまとめている」</strong> &horbar; フォルダ一括取込で自動化。<br>
 <strong>「PDFの表を毎回手入力でExcelに転記している」</strong> &horbar; PDF取込で解決。<br>
-<strong>「VBAが禁止されていて自動化をあきらめている」</strong> &horbar; パワークエリはマクロではないので使える。<br>
+<strong>「会社でVBAやマクロが禁止されていて自動化をあきらめている」</strong> &horbar; パワークエリはマクロではないので使える。<br>
 <strong>「引き継ぎで渡されたVBAマクロが読めない」</strong> &horbar; パワークエリのステップは日本語で全工程が見える。<br>
 <strong>「FILTER関数では外部ファイルから値として取れない」</strong> &horbar; パワークエリは確定値で読み込める。
             </p>
@@ -263,10 +264,10 @@
 <section class="method-section">
 <h3>まとめ</h3>
 <p>パワークエリは、<strong>「データ整形」という特定の領域で圧倒的に効率化する専用ツール</strong>です。
-        専用エンジンによる高速・省メモリ処理、VBA禁止環境での唯一の自動化手段、PDFやフォルダの一括取込&horbar;&horbar;
+        専用エンジンによる高速・省メモリ処理、VBA・マクロ禁止環境での代替手段、PDFやフォルダの一括取込&horbar;&horbar;
         これらはVBAにも関数にもない固有の強みです。</p>
 <p>一方で深い処理にはM言語が必要であり、リアルタイム性では関数に、UI操作の自動化ではVBAに劣ります。
-        <strong>パワークエリで取り込んで整形 &rarr; 関数で参照・集計</strong>という組み合わせが現代Excelの最適解です。</p>
+        <strong>Power Query（パワークエリ）で取り込んで整形 &rarr; 関数で参照・集計</strong>という組み合わせが、VBAが使えないExcel環境での現実的な使い分けです。</p>
 </section>
 <!-- ===== 補足編への誘導 ===== -->
 <a class="next-page-link" href="article_powerquery_intro_deep.html">
@@ -279,7 +280,7 @@
 <div class="series-nav" style="margin-top:20px;">
 <h4>📚 パワークエリシリーズ</h4>
 <ul>
-<li class="current">① パワークエリとは（このページ）</li>
+<li class="current">① Power QueryとVBAの違い（このページ）</li>
 <li><a href="article_powerquery_intro_deep.html">① 補足編</a> &horbar; データモデル・パラメータクエリ・クラウド連携・知られていない理由</li>
 <li><a href="article_pq_editor_ui.html">② 基本編</a> &horbar; 取得&rarr;変換&rarr;読込の3ステップ</li>
 <li><a href="../advanced/article_pq_merge_append.html">③ 応用編</a> &horbar; 結合・追加・ピボット解除・フォルダ一括取込</li>
@@ -289,7 +290,7 @@
 <section class="related-articles-section" style="margin-top:30px;border-top:2px dashed #ccc;padding-top:20px;">
 <h2><span class="icon">🔗</span> 関連記事</h2>
 <ul class="line-height-2">
-<li><a href="article_powerquery_intro_deep.html">パワークエリとは【補足編】&horbar; 深掘り機能と知られていない理由</a></li>
+<li><a href="article_powerquery_intro_deep.html">Power QueryとVBAの違い・使い分けをさらに深掘りする</a></li>
 <li><a href="article_pq_editor_ui.html">パワークエリ基本編 &horbar; 取得&rarr;変換&rarr;読込の3ステップ</a></li>
 <li>XLOOKUP基本編 &horbar; 構文と動作を完全理解</li>
 <li><a href="../../functions/latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>

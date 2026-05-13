@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-<title>Excel × No VBA Lab — VBA禁止環境でもExcelを極める</title>
+<title>Excel × No VBA Lab — VBA・マクロ禁止環境で使える代替手段</title>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
 <script>
@@ -15,7 +15,7 @@
   gtag('config', 'G-596JZ3M97H');
 </script>
 
-<meta content="VBA禁止環境でも、Excel関数・パワークエリ・動的配列を限界まで駆使する実務テクニック集。エクセルでのCOBOL帳票データ整形、Excel QRコード・QRリーダー・バーコードリーダー連携、計算速度最適化まで幅広く解説。" name="description">
+<meta content="VBAやマクロが会社で禁止されている、またはExcelで使えない環境でも、Excel関数・Power Query（パワークエリ）・QRリーダーを代替手段として使う実務テクニック集。COBOL帳票データ整形、QRコード連携、計算速度最適化まで幅広く解説。" name="description">
 <meta content="エクセル COBOL, Excel COBOL, COBOL帳票 整形, Excel QRコード, Excel QRリーダー, Excel バーコードリーダー, QRコード Excel入力, VBA不要 Excel" name="keywords">
 <meta content="#1a3d5c" name="theme-color">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/" rel="canonical">
@@ -23,8 +23,8 @@
 <link rel="preload" as="image" href="./image/hero_main_overview-1024.avif" imagesrcset="./image/hero_main_overview-768.avif 768w, ./image/hero_main_overview-1024.avif 1024w" imagesizes="(max-width: 1100px) 90vw, 1024px" media="(min-width: 601px)" type="image/avif">
 
 <!-- OGP -->
-<meta content="Excel × No VBA Lab — VBA禁止環境でもExcelを極める" property="og:title">
-<meta content="VBA禁止環境でも、Excel関数・パワークエリ・動的配列を限界まで駆使する実務テクニック集。エクセルでのCOBOL帳票データ整形、Excel QRコード・QRリーダー・バーコードリーダー連携、計算速度最適化まで幅広く解説。" property="og:description">
+<meta content="Excel × No VBA Lab — VBA・マクロ禁止環境で使える代替手段" property="og:title">
+<meta content="VBAやマクロが会社で禁止されている、またはExcelで使えない環境でも、Excel関数・Power Query（パワークエリ）・QRリーダーを代替手段として使う実務テクニック集。COBOL帳票データ整形、QRコード連携、計算速度最適化まで幅広く解説。" property="og:description">
 <meta content="website" property="og:type">
 <meta content="ja_JP" property="og:locale">
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/" property="og:url">
@@ -33,8 +33,8 @@
 
 <!-- Twitter Card -->
 <meta content="summary_large_image" name="twitter:card">
-<meta content="Excel × No VBA Lab — VBA禁止環境でもExcelを極める" name="twitter:title">
-<meta content="エクセルでのCOBOL帳票整形、Excel QRコード・QRリーダー・バーコードリーダー連携、Excel関数・パワークエリの実務テクニック集。" name="twitter:description">
+<meta content="Excel × No VBA Lab — VBA・マクロ禁止環境で使える代替手段" name="twitter:title">
+<meta content="VBAやマクロが会社で禁止されたExcel環境でも、関数・Power Query（パワークエリ）・QRリーダーで業務改善する実務テクニック集。" name="twitter:description">
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" name="twitter:image">
 
 <meta content="index, follow" name="robots">
@@ -85,7 +85,7 @@
   "name": "Excel × No VBA Lab",
   "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/",
   "inLanguage": "ja",
-  "description": "VBA禁止環境でもExcel関数・パワークエリ・動的配列を限界まで駆使する実務テクニック集"
+  "description": "VBAやマクロが会社で禁止されているExcel環境でも、関数・Power Query・QRリーダーを代替手段として使う実務テクニック集"
 }
 </script>
 <script type="application/ld+json">
@@ -124,18 +124,22 @@
     { "@type": "ListItem", "position": 6, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_match.html", "name": "INDEX+MATCH" },
     { "@type": "ListItem", "position": 7, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_zip_reverse.html", "name": "住所→郵便番号逆引き" },
     { "@type": "ListItem", "position": 8, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countif_extract.html", "name": "FILTER代替（旧ver）" },
-    { "@type": "ListItem", "position": 9, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_powerquery_intro.html", "name": "パワークエリとは" },
+    { "@type": "ListItem", "position": 9, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_powerquery_intro.html", "name": "Power QueryとVBAの違い" },
     { "@type": "ListItem", "position": 10, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_parameter_query.html", "name": "パラメータクエリ" },
     { "@type": "ListItem", "position": 11, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_m_language.html", "name": "M言語入門" },
     { "@type": "ListItem", "position": 12, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/01_article_cobol_basic.html", "name": "COBOL固定長基本編" },
     { "@type": "ListItem", "position": 13, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/04_article_cobol_irregular.html", "name": "不規則明細完結編" },
-    { "@type": "ListItem", "position": 14, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/08_qr_hardware.html", "name": "QRリーダーの選び方" },
+    { "@type": "ListItem", "position": 14, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/08_qr_hardware_revised_honeywell.html", "name": "QRリーダーの選び方" },
     { "@type": "ListItem", "position": 15, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/speed/article_01_lookup_speed.html", "name": "検索関数の速度" },
     { "@type": "ListItem", "position": 16, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/01_qr_barcode_control.html", "name": "バーコードコントロールでQR生成" },
     { "@type": "ListItem", "position": 17, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/07_qr_full_system.html", "name": "入力自動化システム" },
     { "@type": "ListItem", "position": 18, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/09_qr_closed_transfer.html", "name": "閉域環境のデータ転送" },
     { "@type": "ListItem", "position": 19, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/10_qr_system_migration.html", "name": "システム間データ移行" },
-    { "@type": "ListItem", "position": 20, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html", "name": "VBA標準機能だけで全角QR生成" }
+    { "@type": "ListItem", "position": 20, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html", "name": "全角QR生成の設計メモ" },
+    { "@type": "ListItem", "position": 21, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/14_qr_zebra_adf_variable_pause_revised_ranked.html", "name": "【Zebra】123Scan / ADF検証メモ" },
+    { "@type": "ListItem", "position": 22, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html", "name": "【Honeywell】EZConfig / Data Formatter検証メモ" },
+    { "@type": "ListItem", "position": 23, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/16_qr_opticon_universalconfig_streaming_control.html", "name": "【Opticon】UniversalConfig実機検証メモ" },
+    { "@type": "ListItem", "position": 24, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/17_qr_reader_recommendation_opticon_zebra_honeywell.html", "name": "QR自動入力におすすめのQRリーダー比較" }
   ]
 }
 </script>
@@ -146,10 +150,10 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "VBAが使えない環境でExcelの自動化は本当にできますか？",
+      "name": "VBAやマクロが使えない環境でExcelの自動化は本当にできますか？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "はい。Excel関数・パワークエリ・ハードウェア連携の3つの武器で、VBAなしでも多くの自動化が実現できます。"
+        "text": "はい。Excel関数・Power Query（パワークエリ）・ハードウェア連携の3つを代替手段として使えば、VBAなし・マクロ禁止の環境でも多くの自動化が実現できます。"
       }
     },
     {
@@ -170,10 +174,10 @@
     },
     {
       "@type": "Question",
-      "name": "パワークエリとVBAの違いは何ですか？",
+      "name": "Power Query（パワークエリ）とVBAの違いは何ですか？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "パワークエリはGUI操作でデータの取り込み・整形・結合を自動化するExcel標準機能です。VBAのようにマクロコードを書く必要がなく、更新ボタンで定型処理を再実行できます。"
+        "text": "Power Query（パワークエリ）はGUI操作でデータの取り込み・整形・結合を自動化するExcel標準機能です。VBAの完全な代替ではありませんが、CSV取込、データ整形、複数ファイル結合ではマクロコードを書かずに定型処理を再実行できます。"
       }
     },
     {
@@ -314,7 +318,7 @@
   </div>
 
   <p class="hero-practical">
-    このサイトでは、VBA・マクロが使えない職場でも実装できる
+    このサイトでは、会社でVBA・マクロが禁止されている職場や、VBAが使えないExcel環境でも実装できる
     Excel関数、Power Query、QRリーダー連携、COBOL帳票整形の具体的な手順を紹介しています。
     Excel 2016対応の旧式関数テクニックから、Excel 2021・2024・Microsoft 365 などの動的配列関数まで、
     関数ごとの対応差をふまえて使える方法を整理しています。
@@ -324,7 +328,7 @@
     <h2 id="quick-route-title">🚀 目的から選ぶ</h2>
     <p class="quick-route-lead">
       いま困っている作業に近いテーマから読み始めてください。
-      VBA・マクロが使えない環境でも、関数・Power Query・QR連携で突破できます。
+      会社でVBA・マクロが禁止されて困ったときでも、関数・Power Query・QR連携で突破できます。
     </p>
 
     <div class="quick-route-grid">
@@ -373,7 +377,7 @@
       <article class="starter-card">
         <h3>毎月の加工・取り込み作業</h3>
         <p>CSV、PDF、固定長データ、複数ファイル結合は Power Query の更新フローに寄せると、手作業の再発を防ぎやすくなります。</p>
-        <a href="#powerquery" data-tab-trigger="powerquery" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">Power Queryの記事へ</a>
+        <a href="#powerquery" data-tab-trigger="powerquery" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">Power QueryでExcelデータを整形する方法</a>
       </article>
 
       <article class="starter-card">
@@ -581,7 +585,7 @@
           <span class="qr-badge badge-new">🔓 VBA完全不要</span>
         </div>
 
-        <div class="qr-title">⚡ QR Automation Lab — 全11記事＋ハードウェア解説</div>
+        <div class="qr-title">⚡ QR Automation Lab — 全17記事＋メーカー別検証・選定</div>
 
         <div class="qr-highlight">
           💡 ソフトウェアが封じられた環境で、ハードウェア側から自動化を実現する逆転の発想
@@ -593,7 +597,7 @@
           ソフト側ではなく<strong>ハードウェア側から制約を突破する</strong>、他に類を見ない体系的なアプローチです。
         </p>
 
-        <span class="qr-cta">→ QR Automation Labへ（全11記事）</span>
+        <span class="qr-cta">→ QR Automation Labへ（全17記事）</span>
       </a>
 
       <a class="pickup-card card-cobol" href="#cobol" data-tab-trigger="cobol" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true" title="COBOL帳票処理の記事一覧へ">
@@ -649,7 +653,35 @@
 
       <ul class="news-list">
         <li class="is-new">
-          <a href="qr/11_qr_vba_generate.html">VBA標準機能だけで全角QRコード生成</a>
+          <a href="qr/17_qr_reader_recommendation_opticon_zebra_honeywell.html">QR自動入力におすすめのQRリーダー比較</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-qr">QR Automation Lab</span>
+            <time datetime="2026-05-14">2026-05-14</time>
+          </span>
+        </li>
+        <li class="is-new">
+          <a href="qr/16_qr_opticon_universalconfig_streaming_control.html"><span class="maker-name maker-opticon">Opticon</span> UniversalConfig実機検証メモ</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-qr">QR Automation Lab</span>
+            <time datetime="2026-05-11">2026-05-11</time>
+          </span>
+        </li>
+        <li class="is-new">
+          <a href="qr/15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html"><span class="maker-name maker-honeywell">Honeywell</span> Data Formatter検証メモ</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-qr">QR Automation Lab</span>
+            <time datetime="2026-05-11">2026-05-11</time>
+          </span>
+        </li>
+        <li class="is-new">
+          <a href="qr/14_qr_zebra_adf_variable_pause_revised_ranked.html"><span class="maker-name maker-zebra">Zebra</span> 123Scan / ADF検証メモ</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-qr">QR Automation Lab</span>
+            <time datetime="2026-05-11">2026-05-11</time>
+          </span>
+        </li>
+        <li class="is-new">
+          <a href="qr/11_qr_vba_generate.html">全角QR生成の設計メモ</a>
           <span class="news-meta">
             <span class="news-cat news-cat-qr">QR Automation Lab</span>
             <time datetime="2026-04-17">2026-04-17</time>
@@ -722,12 +754,12 @@
 
 
       <p class="more-link">
-        <a href="./functions/index.html">→ 関数テクニック総合へ</a> /
-        <a href="./powerquery/index.html">パワークエリ総合へ</a> /
-        <a href="./cobol/index.html">COBOL帳票処理総合へ</a> /
-        <a href="./qr/index.html">QR Automation Lab総合へ</a> /
-        <a href="./others/index.html">現場実務ラボ総合へ</a> /
-        <a href="./unlocked/index.html">制限解除ラボ総合へ</a>
+        <a href="./functions/index.html">→ VBA禁止環境で使えるExcel関数の代替手段</a> /
+        <a href="./powerquery/index.html">VBAとPower Queryの違い・使い分け</a> /
+        <a href="./cobol/index.html">COBOL帳票をExcelで整形する方法</a> /
+        <a href="./qr/index.html">VBAなしでWebシステム入力を自動化する方法</a> /
+        <a href="./others/index.html">マクロ禁止で困ったときのExcel業務改善方法</a> /
+        <a href="./unlocked/index.html">VBAが使える環境で補完する自動化方法</a>
       </p>
     </div>
 
@@ -746,7 +778,7 @@
         <ol aria-label="レアテクランキング" class="rarity-ranking">
           <li><a href="cobol/formula/04_article_cobol_irregular.html">不規則明細・完結編 — 行数バラバラの正規化展開</a><span class="rank-badge lv8" aria-label="難易度レベル8、超絶技巧">Lv.8</span><span class="rank-rarity" data-rare-id="cobol_irregular"></span></li>
           <li><a href="cobol/formula/03_article_cobol_expert.html">【関数超絶技巧編】凶悪COBOL帳票の撃破｜ヘッダー紐付け・フィルダウンをExcel関数で自動化</a><span class="rank-badge lv8" aria-label="難易度レベル8、超絶技巧">Lv.8</span><span class="rank-rarity" data-rare-id="cobol_expert"></span></li>
-          <li><a href="qr/08_qr_hardware.html">QRリーダーの選び方と接続方法</a><span class="rank-badge lv6" aria-label="難易度レベル6、かなり難しい">Lv.6</span><span class="rank-rarity" data-rare-id="qr_hardware"></span></li>
+          <li><a href="qr/08_qr_hardware_revised_honeywell.html">QRリーダーの選び方と接続方法</a><span class="rank-badge lv6" aria-label="難易度レベル6、かなり難しい">Lv.6</span><span class="rank-rarity" data-rare-id="qr_hardware"></span></li>
           <li><a href="qr/07_qr_full_system.html">QR1回で業務システム全操作を完結</a><span class="rank-badge lv7" aria-label="難易度レベル7、かなり難しい">Lv.7</span><span class="rank-rarity" data-rare-id="qr_series"></span></li>
           <li><a href="cobol/pq/03_article_cobol_pq_midb_ref.html">M言語でMIDB相当の自作関数を作る</a><span class="rank-badge lv7" aria-label="難易度レベル7、かなり難しい">Lv.7</span><span class="rank-rarity" data-rare-id="cobol_pq_midb"></span></li>
           <li><a href="others/print/article_print_area.html">印刷範囲を自動で伸縮させる裏ワザ（名前の管理）</a><span class="rank-badge lv4" aria-label="難易度レベル4、やや難しい">Lv.4</span><span class="rank-rarity" data-rare-id="print_area"></span></li>
@@ -768,7 +800,7 @@
           <li><a href="functions/latest/article_textsplit.html">TEXTSPLIT — カンマ区切りを一気に分割</a><span class="rank-badge lv2" aria-label="難易度レベル2、やさしい">Lv.2</span><span class="rank-impact">🔥 即戦力</span></li>
           <li><a href="functions/latest/article_let.html">LET関数で可読性＆速度UP</a><span class="rank-badge lv3" aria-label="難易度レベル3、標準">Lv.3</span><span class="rank-impact">🔥 即戦力</span></li>
           <li><a href="functions/old/article_index_match.html">INDEX＋MATCH — 旧ver対応の最強検索</a><span class="rank-badge lv3" aria-label="難易度レベル3、標準">Lv.3</span><span class="rank-impact">🔥 即戦力</span></li>
-          <li><a href="powerquery/basic/article_powerquery_intro.html">パワークエリとは — 全体像を把握</a><span class="rank-badge lv1" aria-label="難易度レベル1、入門">Lv.1</span><span class="rank-impact">🔥 即戦力</span></li>
+          <li><a href="powerquery/basic/article_powerquery_intro.html">Power QueryとVBAの違い — 全体像を把握</a><span class="rank-badge lv1" aria-label="難易度レベル1、入門">Lv.1</span><span class="rank-impact">🔥 即戦力</span></li>
         </ol>
       </div>
 
@@ -792,8 +824,8 @@
 
     <div class="faq-list">
       <details>
-        <summary>VBAが使えない環境でExcelの自動化は本当にできますか？</summary>
-        <p>はい。Excel関数・パワークエリ・ハードウェア連携の3つの武器で、VBAなしでも多くの自動化が実現できます。</p>
+        <summary>VBAやマクロが使えない環境でExcelの自動化は本当にできますか？</summary>
+        <p>はい。Excel関数・Power Query（パワークエリ）・ハードウェア連携の3つを代替手段として使えば、VBAなし・マクロ禁止の環境でも多くの自動化が実現できます。</p>
       </details>
 
       <details>
@@ -807,8 +839,8 @@
       </details>
 
       <details>
-        <summary>パワークエリとVBAの違いは何ですか？</summary>
-        <p>パワークエリはGUI操作でデータの取り込み・整形・結合を自動化するExcel標準機能です。VBAのようにマクロコードを書く必要がなく、更新ボタンで定型処理を再実行できます。</p>
+        <summary>Power Query（パワークエリ）とVBAの違いは何ですか？</summary>
+        <p>Power Query（パワークエリ）はGUI操作でデータの取り込み・整形・結合を自動化するExcel標準機能です。VBAの完全な代替ではありませんが、CSV取込、データ整形、複数ファイル結合ではマクロコードを書かずに定型処理を再実行できます。</p>
       </details>
 
       <details>
@@ -1281,8 +1313,8 @@
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-prereq">📖 前提知識 — 必ず先に読む</span><span class="tag-impact">🔥 即戦力</span></span>
       </div>
-      <a class="article-link" href="powerquery/basic/article_powerquery_intro.html">パワークエリとは</a>
-      <p class="article-summary">VBA・ワークシート関数と比較しながら、Power Queryの全体像を把握します。</p>
+      <a class="article-link" href="powerquery/basic/article_powerquery_intro.html">Power QueryとVBAの違い</a>
+      <p class="article-summary">VBAやマクロが使えないExcel環境で、Power Queryが代替できる作業と使い分けを把握します。</p>
     </li>
 
     <li class="article-item">
@@ -1830,8 +1862,8 @@
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-rare" data-rare-id="qr_generate"></span></span>
       </div>
-<a class="article-link" href="qr/01_qr_barcode_control.html">① Access搭載環境向けQRコード生成 — バーコードコントロールの使い方と2つの厳しい限界</a>
-<p class="article-summary">Access由来のバーコードコントロールをExcelから配置し、LinkedCellでセル連動するQRコードを生成。ExcelのみのPCでは使えない点、半角255文字・全角不可の限界も解説します。</p>
+<a class="article-link" href="qr/01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化 — Excelで作ったQRにTab・Enterを埋め込む</a>
+<p class="article-summary">ExcelでQR用データを作り、QRリーダーをキーボード入力として使う基本。Tab・Enterを組み合わせたWebシステム入力の入口です。</p>
     </li>
 
     <li class="article-item">
@@ -1841,7 +1873,7 @@
         <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
       </div>
       <a class="article-link" href="qr/02_qr_tab_enter.html">② QRコード1回で複数セルに自動入力 — Tab・Enterの埋め込み実践ガイド</a>
-      <p class="article-summary">CHAR(9)でTab、CHAR(13)でEnterを埋め込み、1回の読み取りで複数セルにデータを振り分けます。</p>
+      <p class="article-summary">VBA・マクロ禁止環境でも、Tab/Enterを埋め込んだQRで複数セル入力を減らします。</p>
     </li>
 
     <li class="article-item">
@@ -1878,7 +1910,7 @@
         <span class="level-label">Lv.6 かなり難</span>
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
       </div>
-      <a class="article-link" href="qr/06_qr_sleep.html">⑥ QRコードの中に「待ち時間」を作る — スリープで画面遷移を待つ</a>
+      <a class="article-link" href="qr/06_qr_sleep_revised_honeywell.html">⑥ QRコードの中に「待ち時間」を作る — スリープで画面遷移を待つ</a>
       <p class="article-summary">業務システムの画面遷移やWebフォームの応答を待ってから次の操作を実行します。</p>
     </li>
 
@@ -1889,11 +1921,11 @@
         <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="qr_series"></span></span>
       </div>
       <a class="article-link" href="qr/07_qr_full_system.html">⑦ QRコード1回で業務システムの全操作を完結させる — 6つの技術を統合した入力自動化システム</a>
-      <p class="article-summary">メニュー選択→画面遷移→検索→待機→データ入力→登録。手作業をQR読み取り1回に圧縮します。</p>
+      <p class="article-summary">VBA・マクロ禁止でPower Queryが届かない画面入力を、QR読み取り1回に圧縮します。</p>
     </li>
   </ul>
 
-  <h3 class="subcategory-heading">🔒 セクション2：データ転送・移行シリーズ（全4記事）</h3>
+  <h3 class="subcategory-heading">🔒 セクション2：機材選定・データ転送・移行シリーズ（全4記事）</h3>
 
   <ul class="article-list" id="list-qr-transfer">
     <li class="article-item">
@@ -1902,7 +1934,7 @@
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-rare" data-rare-id="qr_hardware"></span></span>
       </div>
-      <a class="article-link" href="qr/08_qr_hardware.html">⑧ QRリーダーの選び方と接続方法</a>
+      <a class="article-link" href="qr/08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a>
       <p class="article-summary">筆者が検証した機種を中心に、選び方・USB-HID接続・設定方法まで解説します。</p>
     </li>
 
@@ -1923,7 +1955,7 @@
         <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
       </div>
       <a class="article-link" href="qr/10_qr_system_migration.html">⑩ QRコードでシステム間データ移行 — 旧システムから新システムへ読み取るだけで引っ越し完了</a>
-      <p class="article-summary">APIもCSVインポートもない新システムに、QRリーダーでデータを流し込む移行手法です。</p>
+      <p class="article-summary">APIもCSVインポートもなく、VBA・マクロも禁止された新システムへQRリーダーで流し込む移行手法です。</p>
     </li>
 
     <li class="article-item highlight">
@@ -1932,8 +1964,72 @@
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-rare">💎 レアテク</span></span>
       </div>
-      <a class="article-link" href="qr/11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコードを生成 — バーコードコントロール不要・UTF-8対応</a>
-      <p class="article-summary">外部ライブラリ不要。ADODB.Stream＋ガロア体演算＋セル描画でQRコードを自力生成します。</p>
+      <a class="article-link" href="qr/11_qr_vba_generate.html">⑪ 全角QR生成の設計メモ — VBA完全版コードは後日公開検討</a>
+      <p class="article-summary">現時点では完成コードは未掲載。文字コード、リーダー設定、検証項目、既存ライブラリ活用方針を整理します。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">🧭 セクション3：導入前チェック・メーカー別検証・選定（全6記事）</h3>
+
+  <ul class="article-list" id="list-qr-reader-check">
+    <li class="article-item highlight">
+      <div class="level-bar lv-5">
+        <span class="level-label">Lv.5 難しい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 導入前チェック</span></span>
+      </div>
+      <a class="article-link" href="qr/12_qr_existing_reader_check.html">⑫ 会社にあるQRリーダーでまず試す — メモ帳・Excel・Webシステムで安全確認</a>
+      <p class="article-summary">本番機をいきなり変えず、余剰機・予備機・検証用機器でTab、Enter、ディレイ、Sleepの効き方を順番に確認します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-7">
+        <span class="level-label">Lv.7 上級</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="qr_hardware"></span></span>
+      </div>
+      <a class="article-link" href="qr/13_qr_reader_design_philosophy_current_research_v5.html">⑬ QRリーダーの設計思想比較<br><span class="maker-compare-line"><span class="maker-name maker-zebra">Zebra</span><span class="maker-name maker-honeywell">Honeywell</span><span class="maker-name maker-opticon">Opticon</span></span><span class="maker-topic">物理RPA用途で見るメーカー比較</span></a>
+      <p class="article-summary">読み取り性能だけでなく、入力制御エンジンとしての考え方、設定難易度、現場配備時の向き不向きを比較します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-7">
+        <span class="level-label">Lv.7 上級</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 検証メモ</span></span>
+      </div>
+      <a class="article-link" href="qr/14_qr_zebra_adf_variable_pause_revised_ranked.html"><span class="maker-title">⑭ <span class="maker-name maker-zebra">Zebra</span></span><br><span class="maker-tool">123Scan / ADF</span><br><span class="maker-topic">検証メモ — 区切り文字・Pause・可変件数の注意点</span></a>
+      <p class="article-summary">Zebra 123Scan / ADFで、区切り文字やPauseを使った入力制御を検証。固定手順に強い一方、可変件数ではExcel側の記号設計が重要になります。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-7">
+        <span class="level-label">Lv.7 上級</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 検証メモ</span><span class="tag-rare" data-rare-id="qr_hardware"></span></span>
+      </div>
+      <a class="article-link" href="qr/15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html"><span class="maker-title">⑮ <span class="maker-name maker-honeywell">Honeywell</span></span><br><span class="maker-tool">EZConfig / Data Formatter</span><br><span class="maker-topic">検証メモ — NumEnter・Delay・設定紙展開の注意点</span></a>
+      <p class="article-summary">Honeywell Data Formatterで、Delay、NumEnter、特殊キー送信を検証。TabはCHAR(9)を優先し、NumEnterはKey Strokes側で扱う点が重要です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-7">
+        <span class="level-label">Lv.7 上級</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 実機検証</span><span class="tag-rare" data-rare-id="qr_hardware"></span></span>
+      </div>
+      <a class="article-link" href="qr/16_qr_opticon_universalconfig_streaming_control.html"><span class="maker-title">⑯ <span class="maker-name maker-opticon">Opticon</span></span><br><span class="maker-tool">UniversalConfig</span><br><span class="maker-topic">実機検証メモ — ストリーミング方式・Sleep・キー変換</span></a>
+      <p class="article-summary">OPI-3601 / ALX-3601 / L-46Xで、サフィックスNone、Sleep、NumEnter、Page系キー、設定保存・復元を整理。基本キーはCHAR関数、特殊キーは変換に分けて考えます。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-7">
+        <span class="level-label">Lv.7 上級</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 選定ガイド</span><span class="tag-rare" data-rare-id="qr_hardware"></span></span>
+      </div>
+      <a class="article-link" href="qr/17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダーはどれ？<br><span class="maker-compare-line"><span class="maker-name maker-opticon">Opticon</span><span class="maker-name maker-zebra">Zebra</span><span class="maker-name maker-honeywell">Honeywell</span></span><span class="maker-topic">Excel起点の物理RPA用途で比較</span></a>
+      <p class="article-summary">TabやEnterはCHAR関数で対応し、Sleep・NumEnter・Pause・紙の設定バーコード運用まで含めて、3メーカーの選び方を整理します。</p>
     </li>
   </ul>
 </div>
@@ -2255,7 +2351,7 @@
         <span class="tag-row"><span class="tag-vba">VBA / QR</span></span>
       </div>
       <a aria-disabled="true" class="article-link" href="unlocked/coming_soon.html?topic=vba_qr_generate">QRコード一括生成 VBA完全版 <span class="badge-prep">準備中</span></a>
-      <p class="article-summary">全角文字対応のQRコードをVBAだけで生成する完全コード。QR Automation Labの実装補完です。<br><small>対応する本編：QR Automation Lab 記事⑪</small></p>
+      <p class="article-summary">全角文字対応のQRコードをVBAだけで生成する完全版コードは準備中です。公開時は記事⑪の設計メモを補完します。<br><small>対応する本編：QR Automation Lab 記事⑪</small></p>
     </li>
 
     <li class="article-item">

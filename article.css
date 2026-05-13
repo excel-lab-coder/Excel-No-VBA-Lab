@@ -458,6 +458,35 @@
 .key-table tr:hover { background: #f1f5f9; }
 .key-table .text-center { text-align: center; }
 
+.transfer-choice-table {
+  margin-left: auto;
+  margin-right: auto;
+  table-layout: fixed;
+}
+.transfer-choice-table th:first-child,
+.transfer-choice-table td:first-child {
+  width: 52%;
+}
+.transfer-choice-table th:nth-child(2),
+.transfer-choice-table td:nth-child(2) {
+  width: 18%;
+  text-align: center;
+}
+.transfer-choice-table th:nth-child(n+3),
+.transfer-choice-table td:nth-child(n+3) {
+  width: 15%;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.transfer-choice-table .choice-symbol {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.transfer-choice-table .choice-ok { color: #2e7d32; }
+.transfer-choice-table .choice-ng { color: #c62828; }
+
 /* Excel画面再現テーブル */
 .helper-display-table {
   width: 100%;
@@ -1202,7 +1231,8 @@ video::cue {
   padding: 20px;
   margin: 40px 0;
 }
-.series-nav ul {
+.series-nav ul,
+.series-nav ol {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -1551,6 +1581,13 @@ video::cue {
   color: var(--color-primary);
   font-weight: 800;
 }
+
+.pq-matrix-wrap {
+  width: 100%;
+  margin: 0 auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
 .nl-desc,
 .mc-tag,
 .lv,
@@ -1661,6 +1698,22 @@ video::cue {
   text-align: left;
   vertical-align: top;
 }
+
+.pq-matrix-wrap .pq-matrix-table {
+  margin: 18px auto 24px;
+}
+
+.pq-matrix-table th:first-child,
+.pq-matrix-table td:first-child {
+  text-align: left;
+}
+
+.pq-matrix-table th:nth-child(n + 2),
+.pq-matrix-table td:nth-child(n + 2) {
+  text-align: center;
+  vertical-align: middle;
+}
+
 .compare-table th,
 .pq-compare-table th,
 .pq-learn-table th,

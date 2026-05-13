@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>COBOL帳票データ整形ガイド｜固定長データをExcel関数・パワークエリで自動化｜Excel × No VBA Lab</title>
+<title>COBOL帳票データ整形ガイド｜VBA・マクロ禁止でもExcel関数・パワークエリで自動化｜Excel × No VBA Lab</title>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
 <script>
@@ -13,20 +13,20 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta name="description" content="「列が分かれない帳票を毎回手で直している」をCOBOL帳票処理の体系学習で解決。設定手順に加え、失敗しやすいポイント、エラー時の直し方、運用で詰まりやすい場面まで整理し、Excel 2016以降＋Power Query対応環境・VBA不要環境でも実務でそのまま使える形で解説します。 エクセルでCOBOL帳票・固定長データを整形したい方向け。">
+<meta name="description" content="会社でVBAやマクロが禁止されている環境でも、COBOL帳票や固定長データをExcel関数・Power Query（パワークエリ）で整形する代替手段を体系化。不要行除去、列分割、複数ファイル結合まで実務でそのまま使える形で解説します。">
 <meta name="keywords" content="エクセル COBOL, エクセル COBOL帳票, エクセル 固定長データ, Excel COBOL, Excel COBOL帳票 整形, COBOL帳票 Excel関数, COBOL帳票 Power Query, 固定長データ エクセル, MIDB エクセル">
 <meta name="theme-color" content="#1a3d5c">
 <link rel="canonical" href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/">
-<meta property="og:title" content="COBOL帳票データ整形ガイド｜固定長データをExcel関数・パワークエリで自動化｜Excel × No VBA Lab">
-<meta property="og:description" content="列が分かれない、ヘッダーが繰り返す、1件が複数行にまたがる。COBOL帳票データ整形の悩みを解決する総合ガイドです。固定長・不規則明細をExcel関数とパワークエリで実務化します。">
+<meta property="og:title" content="COBOL帳票データ整形ガイド｜VBA・マクロ禁止でもExcel関数・パワークエリで自動化｜Excel × No VBA Lab">
+<meta property="og:description" content="列が分かれない、ヘッダーが繰り返す、1件が複数行にまたがる。COBOL帳票データ整形の悩みを、VBA・マクロ禁止環境でもExcel関数とPower Queryで実務化します。">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/">
 <meta property="og:site_name" content="Excel × No VBA Lab">
 <meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="COBOL帳票データ整形ガイド｜固定長データをExcel関数・パワークエリで自動化｜Excel × No VBA Lab">
-<meta name="twitter:description" content="列が分かれない、ヘッダーが繰り返す、1件が複数行にまたがる。COBOL帳票データ整形の悩みを解決する総合ガイドです。固定長・不規則明細をExcel関数とパワークエリで実務化します。">
+<meta name="twitter:title" content="COBOL帳票データ整形ガイド｜VBA・マクロ禁止でもExcel関数・パワークエリで自動化｜Excel × No VBA Lab">
+<meta name="twitter:description" content="VBA・マクロ禁止環境でも、COBOL帳票や固定長データをExcel関数とPower Queryで整形する実務ガイドです。">
 <meta name="twitter:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
 <meta name="robots" content="index, follow">
 <link rel="icon" href="../favicon.ico">
@@ -68,7 +68,7 @@
     "@context":  "https://schema.org",
     "@type":  "CollectionPage",
     "name":  "COBOL帳票処理",
-    "description":  "列が分かれない、ヘッダーが繰り返す、1件が複数行にまたがる。COBOL帳票データ整形の悩みを解決する総合ガイドです。固定長・不規則明細をExcel関数とパワークエリで実務化します。",
+    "description":  "列が分かれない、ヘッダーが繰り返す、1件が複数行にまたがる。COBOL帳票データ整形の悩みを、VBA・マクロ禁止環境でもExcel関数とPower Queryで実務化する総合ガイドです。",
     "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/",
     "inLanguage":  "ja",
     "isPartOf":  {
@@ -148,7 +148,7 @@
                            "name":  "関数版とPower Query版はどちらを選ぶべき？",
                            "acceptedAnswer":  {
                                                   "@type":  "Answer",
-                                                  "text":  "単発分析や軽量処理は関数版、定期運用や大量データはPower Query版が向いています。"
+                                                  "text":  "単発分析や軽量処理は関数版、定期運用や大量データはPower Query版が向いています。VBAやマクロが禁止されている場合でも、この2つは現実的な代替手段になります。"
                                               }
                        },
                        {
@@ -200,7 +200,7 @@
   <section class="method-section">
     <h1>COBOL帳票処理 総合ガイド</h1>
     <p class="article-summary" data-seo-lead="true">エクセルでCOBOL帳票や固定長データを整形したい方向けに、Excel関数・Power Query・MIDBなどを使って列分割、不要行除去、帳票データ変換を進める実務手順を扱います。</p>
-<p class="article-summary">固定長テキストや不規則明細の「読めないデータ」を、分析・転記可能な表に変えるための実務カテゴリです。</p>
+<p class="article-summary">固定長テキストや不規則明細の「読めないデータ」を、分析・転記可能な表に変えるための実務カテゴリです。VBAが使えない、マクロが禁止されている会社でも、関数版とPower Query版を代替手段として選べます。</p>
   </section>
 
   <section class="method-section">
@@ -273,7 +273,7 @@
         <ul class="pattern-features">
           <li>全角・半角混在もMIDBで正確に切り出し</li>
           <li>コピペした瞬間に結果が出る「即時性」</li>
-          <li>VBA禁止、Power Query未導入PCでも動作</li>
+          <li>VBA・マクロ禁止、Power Query未導入PCでも動作</li>
         </ul>
       </div>
 
@@ -435,7 +435,7 @@
     <h2><span class="icon">❓</span> FAQ</h2>
     <ul class="article-list">
       <li class="article-item"><p class="article-link">Q. COBOL帳票はなぜ扱いづらいのですか？</p><p class="article-summary">A. 紙出力前提の固定桁・改ページ構造になっており、表計算向けの列構造を前提にしていないためです。</p></li>
-      <li class="article-item"><p class="article-link">Q. 関数版とPower Query版はどちらを選ぶべき？</p><p class="article-summary">A. 単発分析や軽量処理は関数版、定期運用や大量データはPower Query版が向いています。</p></li>
+      <li class="article-item"><p class="article-link">Q. 関数版とPower Query版はどちらを選ぶべき？</p><p class="article-summary">A. 単発分析や軽量処理は関数版、定期運用や大量データはPower Query版が向いています。VBAやマクロが禁止されている場合でも、この2つは現実的な代替手段になります。</p></li>
       <li class="article-item"><p class="article-link">Q. 不規則明細でも完全自動化できますか？</p><p class="article-summary">A. はい。パターン抽出と例外行ルールを先に定義すれば、多くの帳票で再現可能です。</p></li>
       <li class="article-item"><p class="article-link">Q. ヘッダー繰り返しはどう除去しますか？</p><p class="article-summary">A. 行判定キー（帳票タイトル、列名、桁数）を使ってフィルタリングします。関数版/PQ版どちらも対応手順があります。</p></li>
       <li class="article-item"><p class="article-link">Q. 元データがShift_JISでも対応可能ですか？</p><p class="article-summary">A. 可能です。取り込み時に文字コードを明示し、UTF-8側で処理する流れを推奨しています。</p></li>
@@ -445,11 +445,11 @@
   <section class="method-section method-section-spaced">
     <h2><span class="icon">🔗</span> 関連カテゴリへ</h2>
     <ul class="article-list">
-      <li class="article-item"><a class="article-link" href="../functions/">📐 関数テクニック総合</a><p class="article-summary">検索・抽出・整形を関数で体系化。</p></li>
-      <li class="article-item"><a class="article-link" href="../powerquery/">🔄 パワークエリ総合</a><p class="article-summary">取り込みから更新運用までを一気通貫。</p></li>
-      <li class="article-item"><a class="article-link" href="../qr/">⚡ QR Automation Lab総合</a><p class="article-summary">VBA不要の入力自動化と閉域転送。</p></li>
+      <li class="article-item"><a class="article-link" href="../functions/">📐 VBA禁止環境で使えるExcel関数の代替手段</a><p class="article-summary">検索・抽出・整形を関数で体系化。</p></li>
+      <li class="article-item"><a class="article-link" href="../powerquery/">🔄 VBAとPower Queryの違い・使い分け</a><p class="article-summary">取り込みから更新運用までを一気通貫。</p></li>
+      <li class="article-item"><a class="article-link" href="../qr/">⚡ VBAなしでWebシステム入力を自動化する方法</a><p class="article-summary">VBA不要の入力自動化と閉域転送。</p></li>
       <li class="article-item"><a class="article-link" href="../others/">🧰 現場実務ラボ総合</a><p class="article-summary">速度・印刷・UI改善の実戦ノウハウ。</p></li>
-      <li class="article-item"><a class="article-link" href="../unlocked/">🔓 制限解除ラボ総合</a><p class="article-summary">VBA可環境で最後の5%を補完。</p></li>
+      <li class="article-item"><a class="article-link" href="../unlocked/">🔓 VBAが使える環境で補完する自動化方法</a><p class="article-summary">VBA可環境で最後の5%を補完。</p></li>
     </ul>
   </section>
 </main>

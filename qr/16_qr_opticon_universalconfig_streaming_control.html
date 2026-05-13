@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>⑯【Opticon】UniversalConfig実機検証メモ｜ストリーミング方式・Sleep・キー変換の実務整理｜Excel × No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="Opticon / オプトエレクトロニクス系QRリーダーを、物理RPA用途の入力制御エンジンとして整理。OPI-3601、ALX-3601、L-46Xで確認したサフィックスNone、キャラクター間ディレイ、Sleep、キー変換、NumEnter、PageUp・PageDown・Home、設定QR配布・復元の考え方をまとめます。TabはCHAR(9)を優先し、CHAR関数で出しにくいキーだけ記号変換に分ける構成です。" name="description">
+<meta content="Opticon, オプトエレクトロニクス, UniversalConfig, OPI-3601, ALX-3601, L-46X, QRリーダー, バーコードリーダー, Sleep, Pause, NumEnter, キー変換, Function Code, サフィックス, キャラクター間ディレイ, 物理RPA, Excel QRコード, マクロ禁止" name="keywords">
+<meta content="⑯【Opticon】UniversalConfig実機検証メモ｜ストリーミング方式・Sleep・キー変換の実務整理" property="og:title">
+<meta content="オプト系リーダーは設定理解が難しい一方、QR内の制御記号を左から順番に処理するストリーミング方式に近い候補です。TabはCHAR(9)、NumEnterやPage系キーは専用記号という使い分けで整理します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/16_qr_opticon_universalconfig_streaming_control.html" rel="canonical">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Article",
+  "headline":"⑯【Opticon】UniversalConfig実機検証メモ｜ストリーミング方式・Sleep・キー変換の実務整理",
+  "description":"Opticon / オプトエレクトロニクス系QRリーダーを、物理RPA用途の入力制御エンジンとして整理。OPI-3601、ALX-3601、L-46Xで確認したサフィックスNone、キャラクター間ディレイ、Sleep、キー変換、NumEnter、PageUp・PageDown・Home、設定QR配布・復元の考え方をまとめます。",
+  "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
+  "publisher":{"@type":"Organization","name":"Excel × No VBA Lab"},
+  "datePublished":"2026-05-11",
+  "dateModified":"2026-05-11",
+  "mainEntityOfPage":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/16_qr_opticon_universalconfig_streaming_control.html"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type":"ListItem","position":2,"name":"QR Automation Lab","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/"},
+    {"@type":"ListItem","position":3,"name":"Opticon UniversalConfig実機検証","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/16_qr_opticon_universalconfig_streaming_control.html"}
+  ]
+}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+    <nav class="global-nav" aria-label="グローバルナビゲーション">
+      <a href="../index.html">ホーム</a>
+      <a href="../index.html#qr">QR Automation Lab</a>
+      <a href="../samples/">サンプル</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main-content" class="article-main">
+  <article class="article-content article-body">
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <a href="../index.html">ホーム</a><span>&gt;</span>
+      <a href="../index.html#qr">QR Automation Lab</a><span>&gt;</span>
+      <strong>⑯ Opticon UniversalConfig実機検証</strong>
+    </nav>
+
+    <header class="article-header">
+      <div class="article-meta">
+        <span class="badge badge-maniac">Opticon / UniversalConfig / ストリーミング方式</span>
+      </div>
+      <h1 class="article-title"><span class="maker-title"><span class="maker-name maker-opticon">Opticon</span></span><br><span class="maker-tool">UniversalConfig</span><br><span class="maker-topic">実機検証メモ — ストリーミング方式・Sleep・キー変換の実務整理</span></h1>
+      <p class="article-summary" data-seo-lead="true">
+        Opticon / オプトエレクトロニクス系リーダーは、設定を理解するまでが難しい一方、
+        一度設定してしまえば、QRコード内の制御記号を左から順番に処理する
+        <strong>ストリーミング方式</strong>に近い運用ができ、物理RPA用途では非常に使いやすい候補です。
+        Tabは <strong>CHAR(9)</strong> を優先し、NumEnterやPageUp・PageDown・HomeなどCHAR関数で出しにくいキーだけを記号変換へ分けると、QR文字列の意味が追いやすくなります。
+        本記事では、OPI-3601、ALX-3601、L-46Xで確認した実務向けの整理をまとめます。
+      </p>
+      <p style="color:#666;font-size:.88rem;">最終更新: 2026-05-11 ｜ 読了目安: 12分</p>
+    </header>
+
+    <section class="goal-section">
+      <h2><span class="icon">💡</span> この記事の結論</h2>
+      <div class="xdemo-note-good">
+        <strong>結論：</strong><br>
+        Opticon系は、設定は難しいです。特にSleep、キー変換、Function Code、文字コード、サフィックスを同時に理解する必要があります。<br>
+        ただし、設定さえ決まれば、Excel側で作るQR文字列に制御記号を並べるだけで入力手順を変えられるため、
+        <strong>ZebraやHoneywellよりも汎用的に使いやすい場面があります</strong>。
+      </div>
+      <p>
+        Zebraは固定工程を作りやすく、Honeywellは個別案件を細かく作り込める印象です。
+        それに対してOpticonは、あらかじめいくつかの制御文字を設定しておき、
+        QRコード側で待機・Tab・Enter・NumEnterなどを組み合わせる運用に向きます。ただしTabや通常Enterは <span class="code-inline">CHAR(9)</span> / <span class="code-inline">CHAR(13)</span> で直接作れるため、キー変換はNumEnterやPage系キーなどに絞ると読みやすくなります。
+      </p>
+    </section>
+
+    <section class="method-section">
+      <h2>検証済み機種と前提</h2>
+      <div class="table-wrapper">
+      <table class="format-table">
+        <thead>
+          <tr><th>項目</th><th>内容</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>確認済み機種</td><td>OPI-3601 / ALX-3601 / L-46X</td></tr>
+          <tr><td>設定ツール</td><td>UniversalConfig、設定メニューバーコード、機種別マニュアル</td></tr>
+          <tr><td>接続方式</td><td>USB-HIDキーボード入力を前提</td></tr>
+          <tr><td>確認した主な機能</td><td>サフィックスNone、キャラクター間ディレイ、Sleep、キー変換、NumEnter相当、設定QR配布・復元</td></tr>
+          <tr><td>注意</td><td>同じOpticon系でも、機種・ファームウェア・出荷設定で挙動が変わる可能性があります。</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="xdemo-note-warn">
+        <strong>最初に守ること：</strong><br>
+        会社で使っているリーダーを直接変更する前に、現在設定を保存し、復元できることを確認してください。
+        初期化バーコードだけでは、会社独自の設定を完全に戻せない場合があります。
+      </div>
+    </section>
+
+    <section class="method-section">
+      <h2>Opticonが強い理由：QR側を簡易スクリプトにできる</h2>
+      <p>
+        Opticon系で特に強いのは、QRコード内の文字を左から順番に処理し、
+        特定の記号が来たらその場でキー送信や待機に変換するような運用を作れる点です。
+        本シリーズでは、この性格を<strong>ストリーミング方式に近い</strong>と表現しています。
+      </p>
+      <p class="code-label-good">ストリーミング方式の考え方</p>
+      <pre class="code-block"><code>文字列を左から順番に読む
+↓
+! が来たら待機
+/ が来たらNumEnter
+} が来たらPageDown
+{ が来たらPageUp
+Tabや通常EnterはCHAR(9) / CHAR(13)を優先
+↓
+また次の文字へ進む</code></pre>
+      <p>
+        たとえば、最初に記号の役割を設定しておけば、業務ごとの違いはExcel側のQR文字列で吸収できます。
+      </p>
+      <p class="code-label-good">QR文字列の例</p>
+      <pre class="code-block"><code>=A2 &amp; CHAR(9) &amp; B2 &amp; "!" &amp; C2 &amp; "/"</code></pre>
+      <ol>
+        <li>品番を入力する</li>
+        <li><span class="code-inline">CHAR(9)</span> でTab移動する</li>
+        <li>数量を入力する</li>
+        <li><span class="code-inline">!</span> で画面処理を待つ</li>
+        <li>ロットを入力する</li>
+        <li><span class="code-inline">/</span> でNumEnterを送る</li>
+      </ol>
+      <div class="xdemo-note-good">
+        <strong>実務で使いやすいポイント：</strong><br>
+        待機を増やしたければ <span class="code-inline">!</span> を増やす、移動順を変えたければ <span class="code-inline">CHAR(9)</span> の位置を変える、NumEnterが必要なら <span class="code-inline">/</span> を置く、という調整ができます。
+        リーダー側の設定を毎回作り直さなくてよい形にできるのが大きな強みです。
+      </div>
+    </section>
+
+    <section class="method-section">
+      <h2>最初に固めるべき設定</h2>
+      <div class="table-wrapper">
+      <table class="format-table">
+        <thead>
+          <tr><th>設定</th><th>目的</th><th>考え方</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>サフィックスNone</td>
+            <td>余計なEnterを出さない</td>
+            <td>EnterはQR文字列側の制御に寄せる。最初に必ず確認する。</td>
+          </tr>
+          <tr>
+            <td>キャラクター間ディレイ</td>
+            <td>文字欠けを防ぐ</td>
+            <td>20段階程度の速度段階で調整できる機種があり、重い画面でも安定させやすい。</td>
+          </tr>
+          <tr>
+            <td>Sleep / Pause相当</td>
+            <td>画面遷移や処理完了を待つ</td>
+            <td><span class="code-inline">!</span> などの記号に待機を割り当て、必要な場所だけ待つ。</td>
+          </tr>
+          <tr>
+            <td>キー変換</td>
+            <td>NumEnter / PageUp / PageDown / Home / Fキーなどを送る</td>
+            <td>Tabや通常EnterはCHAR関数を優先し、CHAR関数で扱いにくいキーだけFunction Code Mappingやキー変換設定で実キー入力に変える。</td>
+          </tr>
+          <tr>
+            <td>設定保存・復元</td>
+            <td>現場で戻せるようにする</td>
+            <td>UniversalConfig、設定QR、設定記録表をセットで残す。</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section class="method-section">
+      <h2>Zebra / Honeywell と比べた位置づけ</h2>
+      <div class="table-wrapper">
+      <table class="format-table">
+        <thead>
+          <tr><th>メーカー</th><th>得意な形</th><th>実務での見方</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Zebra</td>
+            <td>固定手順をGUIで組み立てる</td>
+            <td>123Scan / ADFが分かりやすく、設定配布もしやすい。固定工程に強い。</td>
+          </tr>
+          <tr>
+            <td>Honeywell</td>
+            <td>Data Formatterで個別に作り込む</td>
+            <td>DelayやKey Strokesを細かく組める。自力設定できる人がいると強い。</td>
+          </tr>
+          <tr>
+            <td>Opticon</td>
+            <td>QR内の制御記号をその場で処理する</td>
+            <td>設定は難しいが、一度決まるとExcel側のQR文字列だけで柔軟に運用しやすい。</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <p>
+        つまり、Opticonは「誰でもすぐ設定できる機種」というより、
+        <strong>設定を理解した担当者が最初に型を作り、その後は現場が安定して使う機種</strong>として考えると分かりやすいです。
+      </p>
+    </section>
+
+    <section class="method-section">
+      <h2>現場導入でおすすめの型</h2>
+      <div class="setup-step">
+        <div class="setup-step-header">
+          <span class="step-number">1</span>
+          <span class="step-title">検証専用機で設定を作る</span>
+          <span class="step-time">最初だけ難しい</span>
+        </div>
+        <ul>
+          <li>本番機ではなく、余剰機・予備機・検証用機を使う。</li>
+          <li>サフィックスNone、速度、キー変換、Sleepを小さいテストQRで確認する。</li>
+          <li>設定前後の状態を保存し、戻し方を手順化する。</li>
+        </ul>
+      </div>
+
+      <div class="setup-step">
+        <div class="setup-step-header">
+          <span class="step-number">2</span>
+          <span class="step-title">制御文字を少数に絞る</span>
+          <span class="step-time">運用を単純化</span>
+        </div>
+        <ul>
+          <li><span class="code-inline">!</span> は待機、<span class="code-inline">/</span> はNumEnter、PageUp・PageDown・Homeは別記号のように役割を固定する。</li>
+          <li>Tabは原則 <span class="code-inline">CHAR(9)</span>、通常Enterは <span class="code-inline">CHAR(13)</span> / <span class="code-inline">CHAR(10)</span> を使う。</li>
+          <li>業務ごとに記号を増やしすぎない。</li>
+          <li>記号一覧を現場用の設定表として残す。</li>
+        </ul>
+      </div>
+
+      <div class="setup-step">
+        <div class="setup-step-header">
+          <span class="step-number">3</span>
+          <span class="step-title">Excel側でQR文字列を調整する</span>
+          <span class="step-time">日常運用</span>
+        </div>
+        <ul>
+          <li>待機が足りなければ <span class="code-inline">!</span> を増やす。</li>
+          <li>入力欄が変わったら <span class="code-inline">CHAR(9)</span> や <span class="code-inline">/</span> の位置を調整する。</li>
+          <li>リーダー設定はなるべく固定し、Excel式側で業務差を吸収する。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="method-section">
+      <h2>現時点の暫定結論</h2>
+      <div class="table-wrapper">
+      <table class="format-table">
+        <tr><th>項目</th><th>結論</th></tr>
+        <tr><td>設定難易度</td><td>高い。Sleep、キー変換、文字コード、復元手順まで含めると初期構築は難しい。</td></tr>
+        <tr><td>設定後の使いやすさ</td><td>非常に高い。制御文字の役割を固定できれば、Excel側のQR文字列だけで運用を変えやすい。</td></tr>
+        <tr><td>物理RPA適性</td><td>強い。画面遷移待ち、セル移動、確定キー、可変データをQR側で組み合わせやすい。</td></tr>
+        <tr><td>導入時の注意</td><td>設定保存・復元を先に固める。本番機に直接設定を入れない。</td></tr>
+      </table>
+      </div>
+      <div class="xdemo-note-good">
+        <strong>最終評価：</strong><br>
+        Opticon系は、設定できる人がいるなら非常に強いです。
+        「設定は難しいが、設定してしまえば現場で使いやすい」という評価が最も近いです。
+      </div>
+    </section>
+
+    <section class="qr-safety-note" aria-labelledby="qr-safety-title">
+      <h2 id="qr-safety-title">QRリーダー連携の運用注意</h2>
+      <p>QRリーダーは多くの場合、PCにはキーボード入力として認識されます。Tab、Enter、NumEnter、PageUp、PageDown、Home、Pause、Sleep、待機時間を組み合わせると、登録・更新・削除などの操作まで進められるため、実務投入前の検証手順を必ず固定してください。Tabや通常EnterはCHAR関数、NumEnterやPage系キーは変換記号という分担で整理すると、設定表も読みやすくなります。</p>
+      <ul>
+        <li>本番データではなく、架空データと検証用画面で読み取り順、セル移動、登録操作を確認する。</li>
+        <li>個人情報、認証情報、機密コードをQRにそのまま埋め込まない。</li>
+        <li>設定変更前に、現在設定の保存・復元手順を確認する。</li>
+        <li>初期化バーコードだけに頼らず、会社独自設定を戻せる状態を作る。</li>
+        <li>Excel以外の画面がアクティブな状態で誤送信されないか確認する。</li>
+      </ul>
+    </section>
+    <nav class="series-nav">
+      <h3>📱 QR Automation Lab ― 全17記事一覧</h3>
+      <p class="text-sm-gray">
+        <span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
+        <span class="color-orange">🟠 応用</span>（④〜⑰）＝ さらに自動化を極める
+      </p>
+
+      <ol>
+        <li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコード生成</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="12_qr_existing_reader_check.html">⑫ 会社にあるQRリーダーでまず試す</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="13_qr_reader_design_philosophy_current_research_v5.html">⑬ QRリーダーの設計思想比較</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="14_qr_zebra_adf_variable_pause_revised_ranked.html">⑭ Zebra 123Scan / ADF検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
+        <li class="current"><span class="lv-adv">[応用]</span> <strong>⑯ Opticon UniversalConfig実機検証メモ（この記事）</strong></li>
+        <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
+      </ol>
+    </nav>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、USB-HID型QRリーダー、Opticon / オプトエレクトロニクス系リーダー、UniversalConfig を想定しています。機種やファームウェアで挙動が変わる可能性があるため、実務適用前に必ずコピー環境で確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong>
+      <a href="https://www.opto.co.jp/products/tool/tool_download.html" rel="noopener" target="_blank">Opticon 設定ツール / UniversalConfig</a>
+      <a href="https://www.opto.co.jp/products/handy_scanner/OPI-3601.html" rel="noopener" target="_blank">OPI-3601 公式製品ページ</a>
+      <a href="https://www.opto.co.jp/products/handy_scanner/L-46X.html" rel="noopener" target="_blank">L-46X 公式製品ページ</a>
+      <a href="https://www.opto.co.jp/products/tool/manual_download/instruction_kanjioutput.html" rel="noopener" target="_blank">漢字出力インストラクション</a>
+      <a href="https://www.alf-net.co.jp/products/barcode-reader/2d-barcode-reader/2d-wired/alx-3601/" rel="noopener" target="_blank">ALX-3601 製品ページ</a>
+      <a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a>
+    </p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+  </div>
+  <p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>

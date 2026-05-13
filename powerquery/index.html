@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>パワークエリ総合ガイド｜取り込み・整形・更新をワンクリック化｜Excel × No VBA Lab</title>
+<title>パワークエリ総合ガイド｜VBA・マクロ禁止時のExcel代替手段｜Excel × No VBA Lab</title>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
 <script>
@@ -13,19 +13,19 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta name="description" content="「毎月の整形作業が属人化している」をPower Queryの体系学習で解決。設定手順に加え、失敗しやすいポイント、エラー時の直し方、運用で詰まりやすい場面まで整理し、Power Query対応のExcel 2016以降・VBA不要環境でも実務でそのまま使える形で解説します。">
+<meta name="description" content="VBAやマクロが会社で禁止されている、またはExcelで使えない環境で、Power Query（パワークエリ）を代替手段として使う総合ガイド。CSV取込、データ整形、複数ファイル結合、更新運用を実務でそのまま使える形で解説します。">
 <meta name="theme-color" content="#1a3d5c">
 <link rel="canonical" href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/">
-<meta property="og:title" content="パワークエリ総合ガイド｜取り込み・整形・更新をワンクリック化｜Excel × No VBA Lab">
-<meta property="og:description" content="毎月同じ整形を繰り返している、CSVやPDF取込が属人化している、更新時に壊れる。そんな悩みを解消するパワークエリ総合ページです。入門から結合・パラメータ・列加工まで体系化しています。">
+<meta property="og:title" content="パワークエリ総合ガイド｜VBA・マクロ禁止時のExcel代替手段｜Excel × No VBA Lab">
+<meta property="og:description" content="VBAやマクロが会社で禁止されている、またはExcelで使えない環境で、Power Query（パワークエリ）を代替手段として使う総合ガイド。CSV取込、データ整形、複数ファイル結合、更新運用を体系化しています。">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/">
 <meta property="og:site_name" content="Excel × No VBA Lab">
 <meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="パワークエリ総合ガイド｜取り込み・整形・更新をワンクリック化｜Excel × No VBA Lab">
-<meta name="twitter:description" content="毎月同じ整形を繰り返している、CSVやPDF取込が属人化している、更新時に壊れる。そんな悩みを解消するパワークエリ総合ページです。入門から結合・パラメータ・列加工まで体系化しています。">
+<meta name="twitter:title" content="パワークエリ総合ガイド｜VBA・マクロ禁止時のExcel代替手段｜Excel × No VBA Lab">
+<meta name="twitter:description" content="VBAやマクロが使えないExcel環境で、Power Query（パワークエリ）を代替手段として使う方法を整理します。">
 <meta name="twitter:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
 <meta name="robots" content="index, follow">
 <link rel="icon" href="../favicon.ico">
@@ -68,7 +68,7 @@
     "@context":  "https://schema.org",
     "@type":  "CollectionPage",
     "name":  "パワークエリ",
-    "description":  "毎月同じ整形を繰り返している、CSVやPDF取込が属人化している、更新時に壊れる。そんな悩みを解消するパワークエリ総合ページです。入門から結合・パラメータ・列加工まで体系化しています。",
+    "description":  "VBAやマクロが会社で禁止されている、またはExcelで使えない環境で、Power Query（パワークエリ）を代替手段として使う総合ガイドです。CSV取込、データ整形、複数ファイル結合、更新運用を体系化しています。",
     "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/",
     "inLanguage":  "ja",
     "isPartOf":  {
@@ -79,7 +79,7 @@
     "hasPart":  [
                     {
                         "@type":  "CreativeWork",
-                        "name":  "パワークエリとは",
+                        "name":  "Power QueryとVBAの違い",
                         "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_powerquery_intro.html",
                         "position":  1
                     },
@@ -145,6 +145,14 @@
                        },
                        {
                            "@type":  "Question",
+                           "name":  "VBAとPower Queryの違いは何ですか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "VBAはExcel操作全般や画面操作をコードで自動化する仕組みです。Power Queryはデータの取り込み・整形・結合に強い標準機能で、マクロ禁止のExcel環境でも代替手段になる場面があります。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
                            "name":  "関数より先に学ぶべきですか？",
                            "acceptedAnswer":  {
                                                   "@type":  "Answer",
@@ -200,6 +208,7 @@
   <section class="method-section">
     <h1>パワークエリ 総合ガイド</h1>
     <p class="article-summary">Power Query の設計を「取り込み→整形→更新運用」まで一続きで学べるカテゴリです。</p>
+    <p class="article-summary">VBAが使えない、マクロが禁止されている、外部ソフトを入れられない環境では、Power Query（パワークエリ）やExcel関数による代替手段を先に検討すると安全です。</p>
   </section>
 
   <section class="method-section">
@@ -240,7 +249,7 @@
 
   <div class="category-header">
     <h2>🔄 パワークエリ（Power Query）</h2>
-    <p>GUIによるデータ加工の自動化。基本操作から応用テクニックまで体系的に解説します。</p>
+    <p>VBAやマクロを書かずに、GUIでデータ加工を自動化するためのカテゴリです。基本操作から応用テクニックまで体系的に解説します。</p>
   </div>
 
   <div class="level-legend">
@@ -271,8 +280,8 @@
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-prereq">📖 前提知識 — 必ず先に読む</span><span class="tag-impact">🔥 即戦力</span></span>
       </div>
-      <a class="article-link" href="../powerquery/basic/article_powerquery_intro.html">パワークエリとは</a>
-      <p class="article-summary">VBA・ワークシート関数と比較しながら、Power Queryの全体像を把握します。</p>
+      <a class="article-link" href="../powerquery/basic/article_powerquery_intro.html">Power QueryとVBAの違い</a>
+      <p class="article-summary">VBAやマクロが使えないExcel環境で、Power Queryが代替できる作業と使い分けを把握します。</p>
     </li>
 
     <li class="article-item">
@@ -547,7 +556,7 @@
   <section class="method-section method-section-spaced">
     <h2><span class="icon">🛣️</span> 推奨学習ルート</h2>
     <ul class="article-list">
-      <li><a class="article-link" href="./basic/article_powerquery_intro.html">1. パワークエリとは</a><p class="article-summary">まずは全体像とできることを把握。</p></li>
+      <li><a class="article-link" href="./basic/article_powerquery_intro.html">1. VBAとPower Queryの違いを理解する</a><p class="article-summary">まずは全体像とできることを把握。</p></li>
       <li><a class="article-link" href="./basic/article_pq_first_steps.html">2. 取り込み直後の5操作</a><p class="article-summary">実務で最初に使う整形手順を習得。</p></li>
       <li><a class="article-link" href="./advanced/article_pq_merge_append.html">3. テーブルの結合（マージ/追加）</a><p class="article-summary">複数ソース統合の基本。</p></li>
       <li><a class="article-link" href="./advanced/article_pq_parameter_query.html">4. パラメータクエリ</a><p class="article-summary">条件切替をセル連動で自動化。</p></li>
@@ -559,6 +568,7 @@
     <h2><span class="icon">❓</span> FAQ</h2>
     <ul class="article-list">
       <li class="article-item"><p class="article-link">Q. Excel 2016でも使えますか？</p><p class="article-summary">A. はい。Power Query は Excel 2016 以降で利用できます（機能差分あり）。本カテゴリでは互換性を意識した手順を扱います。</p></li>
+      <li class="article-item"><p class="article-link">Q. VBAとPower Queryの違いは何ですか？</p><p class="article-summary">A. VBAはExcel操作全般や画面操作をコードで自動化する仕組みです。Power Queryはデータの取り込み・整形・結合に強い標準機能で、マクロ禁止のExcel環境でも代替手段になる場面があります。</p></li>
       <li class="article-item"><p class="article-link">Q. 関数より先に学ぶべきですか？</p><p class="article-summary">A. 定型の取り込み・整形が多い業務では先に学ぶ価値が高いです。セル単位ロジックは関数カテゴリと併用してください。</p></li>
       <li class="article-item"><p class="article-link">Q. 更新時に壊れない設計のコツは？</p><p class="article-summary">A. 型の確定、列名依存の最小化、ステップ命名、想定外値の吸収手順を先に組み込むことです。</p></li>
       <li class="article-item"><p class="article-link">Q. パラメータクエリは何に効きますか？</p><p class="article-summary">A. 日付・ファイル名・対象フォルダなどをセルで切り替え、同一クエリを再利用できます。</p></li>
@@ -569,11 +579,11 @@
   <section class="method-section method-section-spaced">
     <h2><span class="icon">🔗</span> 関連カテゴリへ</h2>
     <ul class="article-list">
-      <li class="article-item"><a class="article-link" href="../functions/">📐 関数テクニック総合</a><p class="article-summary">検索・抽出・整形を関数で体系化。</p></li>
-      <li class="article-item"><a class="article-link" href="../cobol/">🏭 COBOL帳票処理総合</a><p class="article-summary">固定長・不規則帳票をExcelで実務化。</p></li>
-      <li class="article-item"><a class="article-link" href="../qr/">⚡ QR Automation Lab総合</a><p class="article-summary">VBA不要の入力自動化と閉域転送。</p></li>
+      <li class="article-item"><a class="article-link" href="../functions/">📐 VBA禁止環境で使えるExcel関数の代替手段</a><p class="article-summary">検索・抽出・整形を関数で体系化。</p></li>
+      <li class="article-item"><a class="article-link" href="../cobol/">🏭 COBOL帳票をExcelで整形する方法</a><p class="article-summary">固定長・不規則帳票をExcelで実務化。</p></li>
+      <li class="article-item"><a class="article-link" href="../qr/">⚡ VBAなしでWebシステム入力を自動化する方法</a><p class="article-summary">VBA不要の入力自動化と閉域転送。</p></li>
       <li class="article-item"><a class="article-link" href="../others/">🧰 現場実務ラボ総合</a><p class="article-summary">速度・印刷・UI改善の実戦ノウハウ。</p></li>
-      <li class="article-item"><a class="article-link" href="../unlocked/">🔓 制限解除ラボ総合</a><p class="article-summary">VBA可環境で最後の5%を補完。</p></li>
+      <li class="article-item"><a class="article-link" href="../unlocked/">🔓 VBAが使える環境で補完する自動化方法</a><p class="article-summary">VBA可環境で最後の5%を補完。</p></li>
     </ul>
   </section>
 </main>

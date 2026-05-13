@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>【Zebra】123Scan / ADF検証メモ：区切り文字・Pause・可変件数で「!」が残る挙動｜Excel × No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="Zebra 123Scan / Advanced Data Formatting（ADF）で、区切り文字!、PAUSE、AHEAD、SEND ALL THAT REMAINSを使ったQRリーダー入力を検証。可変件数や区切り数が増えた場合に!が残る挙動、TabはCHAR(9)を優先し、NumEnterやPageUp・PageDown・Homeなどは必要に応じて専用トリガーへ分ける考え方、会社の既存リーダーを安全に実験するための設定退避まで整理します。" name="description">
+<meta content="Zebra 123Scan, Zebra ADF, Advanced Data Formatting, QRリーダー, バーコードリーダー, 区切り文字, PAUSE, AHEAD, SEND ALL THAT REMAINS, 可変件数, QRコード 自動入力, Excel QRコード, 物理RPA, マクロ禁止, 設定バックアップ" name="keywords">
+<meta content="【Zebra】123Scan / ADF検証メモ：区切り文字・Pause・可変件数で「!」が残る挙動｜Excel × No VBA Lab" property="og:title">
+<meta content="Zebra ADFで!を区切り兼Pause記号として使った場合の検証結果。TabはCHAR(9)、NumEnterやPage系キーは専用トリガーに分ける前提で、可変件数対応と現場実験の注意点を整理します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/14_qr_zebra_adf_variable_pause_revised_ranked.html" rel="canonical">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"【Zebra】123Scan / ADF検証メモ：区切り文字・Pause・可変件数で「!」が残る挙動",
+    "description":"Zebra 123Scan / Advanced Data Formatting（ADF）で、区切り文字!、PAUSE、AHEAD、SEND ALL THAT REMAINSを使ったQRリーダー入力を検証。可変件数や区切り数が増えた場合に!が残る挙動、TabはCHAR(9)を優先し、NumEnterやPageUp・PageDown・Homeなどは必要に応じて専用トリガーへ分ける考え方、会社の既存リーダーを安全に実験するための設定退避まで整理します。",
+    "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
+    "publisher":{"@type":"Organization","name":"Excel × No VBA Lab"},
+    "datePublished":"2026-05-11",
+    "dateModified":"2026-05-11",
+    "mainEntityOfPage":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/14_qr_zebra_adf_variable_pause_revised_ranked.html"
+  }
+</script>
+<script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+      {"@type":"ListItem","position":2,"name":"QR Automation Lab","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/"},
+      {"@type":"ListItem","position":3,"name":"Zebra ADF 可変件数検証","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/14_qr_zebra_adf_variable_pause_revised_ranked.html"}
+    ]
+  }
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+  <div class="breadcrumb">
+    <a href="../index.html">ホーム</a><span>&gt;</span>
+    <a href="../index.html#qr">QR Automation Lab</a><span>&gt;</span>
+    <strong>Zebra ADF 可変件数検証</strong>
+  </div>
+
+  <article class="article-body">
+    <div class="article-header">
+      <div class="article-meta">
+        <span class="badge badge-all">全バージョン</span>
+        <span class="badge badge-maniac">Zebra / 123Scan / ADF / 可変件数</span>
+      </div>
+      <h1 class="article-title"><span class="maker-title"><span class="maker-name maker-zebra">Zebra</span></span><br><span class="maker-tool">123Scan / ADF</span><br><span class="maker-topic">検証メモ — 区切り文字・Pause・可変件数で「!」が残る挙動</span></h1>
+      <p class="article-summary" data-seo-lead="true">Zebra の 123Scan と Advanced Data Formatting（ADF）を使い、QRコード内の <strong>!</strong> を区切り兼Pause記号として扱う検証を行いました。固定回数の処理では期待通り動く一方、区切り数が増えた場合に最後の <strong>!</strong> が残るケースがあり、可変件数対応では注意が必要です。TabはExcel側で <strong>CHAR(9)</strong> を入れられるならキー変換を増やさず、NumEnterやPageUp・PageDown・HomeなどCHAR関数で出せないキーだけ専用トリガーへ分けると、記号の意味が読みやすくなります。</p>
+    </div>
+
+    <div class="xdemo-note-danger">
+      <strong>⚠️ 会社のリーダーで試す前の注意</strong><br>
+      業務で使っているZebraリーダーは、出荷・検品・棚卸などの工程用に独自設定されている場合があります。実験前に現在設定を保存し、復元できることを確認してください。初期化だけでは、会社独自のPrefix/Suffix、読み取り対象、キーボード種別、HID設定などが戻らない可能性があります。
+    </div>
+
+    <section class="goal-section">
+      <h2><span class="icon">💡</span>この記事の目的</h2>
+      <p>この記事では、Zebra 123Scan の ADF を使って、QRコード内の区切り文字 <span class="code-inline">!</span> を処理した検証結果を整理します。</p>
+      <ul>
+        <li><strong>確認したこと：</strong><span class="code-inline">!</span> を区切りとして、送信・ポーズ・スキップ処理ができるか</li>
+        <li><strong>見つかった問題：</strong><span class="code-inline">!</span> の数が想定より多い場合、最後の <span class="code-inline">!</span> が残ることがある</li>
+        <li><strong>記号設計の前提：</strong>本記事の <span class="code-inline">!</span> は待機・区切り検証用。Tabは <span class="code-inline">CHAR(9)</span> を優先し、NumEnterやPageUp・PageDown・Homeなどは別記号に分けて考える</li>
+        <li><strong>重要な示唆：</strong>Zebra ADF は、完全なストリーム処理というより、固定手順型の処理に近い可能性がある</li>
+        <li><strong>実務上の焦点：</strong>可変件数データに耐えられるか、設定を安全に戻せるか</li>
+        <li><strong>対策方針：</strong>うまく動かない場合は、リーダー側だけでなくExcel側で <span class="code-inline">!</span>、<span class="code-inline">CHAR(9)</span>、<span class="code-inline">/</span> などの役割を分けて調整する</li>
+        <li><strong>展開面の強み：</strong>Zebraは設定QR/設定バーコードでリーダー設定を展開しやすい</li>
+      </ul>
+    </section>
+
+    <section class="method-section">
+      <h2>検証環境</h2>
+      <table class="format-table">
+        <tr><th>項目</th><th>内容</th></tr>
+        <tr><td>メーカー</td><td style="white-space:nowrap; word-break:keep-all; overflow-wrap:normal;">Zebra</td></tr>
+        <tr><td>確認画面</td><td>123Scan</td></tr>
+        <tr><td>機能</td><td>Advanced Data Formatting - v 1.1</td></tr>
+        <tr><td>表示機種</td><td>DS2208-COMMON SR MODELS-16</td></tr>
+        <tr><td>区切り記号</td><td><span class="code-inline">!</span></td></tr>
+        <tr><td>主なADFアクション</td><td>UP TO CHARACTER、PAUSE、AHEAD、SEND ALL THAT REMAINS</td></tr>
+      </table>
+
+    </section>
+
+    <section class="method-section">
+      <h2>今回のADF設定イメージ</h2>
+      <p>画面上では、以下のような処理を複数回繰り返す構成になっています。</p>
+      <div class="sample-box">
+<pre>UP TO CHARACTER &lt;!&gt;
+PAUSE &lt;20&gt;
+AHEAD &lt;1&gt;
+
+UP TO CHARACTER &lt;!&gt;
+PAUSE &lt;20&gt;
+AHEAD &lt;1&gt;
+
+UP TO CHARACTER &lt;!&gt;
+PAUSE &lt;20&gt;
+AHEAD &lt;1&gt;
+
+SEND ALL THAT REMAINS</pre>
+      </div>
+      <div class="xdemo-note-info">
+        <strong>📝 この設定の意味</strong><br>
+        <span class="code-inline">!</span> までの文字を送信し、少し待機し、<span class="code-inline">!</span> を1文字分飛ばして次のデータへ進む、という考え方です。最後は <span class="code-inline">SEND ALL THAT REMAINS</span> で残りを送ります。
+      </div>
+    </section>
+
+    <section class="tips-section">
+      <h2>テストしたQRコード</h2>
+      <p>元データは以下です。</p>
+      <div class="sample-box">
+<pre>202605010001 !100001 !!19800412 1 01 10 1 !00</pre>
+      </div>
+      <table class="key-table">
+        <thead>
+          <tr><th>部分</th><th>意味</th><th>確認ポイント</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="code-inline">202605010001</span></td><td>先頭データ</td><td>最初の区切りまで正しく送れるか</td></tr>
+          <tr><td><span class="code-inline">!100001</span></td><td>区切り後の2項目目</td><td><span class="code-inline">!</span> が削除またはスキップされるか</td></tr>
+          <tr><td><span class="code-inline">!!19800412</span></td><td>連続した区切りを含む部分</td><td>連続 <span class="code-inline">!!</span> の扱いが崩れないか</td></tr>
+          <tr><td><span class="code-inline">!00</span></td><td>最後の区切りと末尾データ</td><td>最後の <span class="code-inline">!</span> が残らないか</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="tips-section">
+      <h2>検証結果</h2>
+      <div class="setup-step">
+        <div class="setup-step-header">
+          <span class="step-number">1</span>
+          <span class="step-title">「!」が3つのとき</span>
+          <span class="level-badge level-verify">問題なし</span>
+        </div>
+        <p>出力結果は以下です。</p>
+        <div class="sample-box">
+<pre>202605010001 100001 19800412 1 01 10 1 00</pre>
+        </div>
+        <ul>
+          <li><span class="code-inline">!</span> は出力されない</li>
+          <li>区切り位置でデータがつながり、期待通りの結果になる</li>
+          <li>固定回数内の処理としては問題なく動いている</li>
+        </ul>
+      </div>
+
+      <div class="setup-step">
+        <div class="setup-step-header">
+          <span class="step-number">2</span>
+          <span class="step-title">「!」が4つのとき</span>
+          <span class="level-badge level-verify">残存あり</span>
+        </div>
+        <p>出力結果は以下です。</p>
+        <div class="sample-box">
+<pre>202605010001 100001 19800412 1 01 10 1 !00</pre>
+        </div>
+        <ul>
+          <li>最後の <span class="code-inline">!</span> が1個残った</li>
+          <li>ADFで想定した処理回数を超えた区切りが、最後に未処理として残った可能性がある</li>
+          <li><span class="code-inline">SEND ALL THAT REMAINS</span> が残りをそのまま送っている可能性がある</li>
+        </ul>
+      </div>
+
+      <div class="xdemo-note-warn">
+        <strong>⚠️ 重要な補足</strong><br>
+        以前は同じようなデータでも <span class="code-inline">!</span> が残る時と残らない時があったため、今回の結果だけで完全断定はできません。ADFルール順、AHEAD位置、連続区切り、末尾処理、SEND ALL THAT REMAINS の位置によって挙動が変わる可能性があります。
+      </div>
+    </section>
+
+    <section class="method-section">
+      <h2>実務上の対策：Excel側で記号の役割を分ける</h2>
+      <p>今回の検証で重要なのは、Zebra側のADFだけで完全に吸収しようとせず、<strong>Excel側でQR文字列の作り方を調整する</strong>という考え方です。特に、すべてを <span class="code-inline">!!</span> で表すと読者も運用者も混乱しやすいため、待機・確定・ページ移動などは役割ごとに記号を分けます。</p>
+      <table class="format-table">
+        <tr><th>対策</th><th>内容</th><th>狙い</th></tr>
+        <tr><td><span class="code-inline">!</span> は待機・区切り用に絞る</td><td>PauseやAHEAD確認の目印として使い、数はADF側の想定回数に合わせる</td><td>「何のための!か」を分かりやすくする</td></tr>
+        <tr><td>Tabは <span class="code-inline">CHAR(9)</span> を優先</td><td>ExcelでQRを作る場合、Tabはキー変換ではなく <span class="code-inline">CHAR(9)</span> を直接埋め込む</td><td>不要なADFルールを増やさない</td></tr>
+        <tr><td>特殊キーは別記号へ分ける</td><td>例：<span class="code-inline">/</span> をNumEnter、PageUp・PageDown・Homeなどは別の専用トリガーにする</td><td>すべてを <span class="code-inline">!!</span> に寄せず、読者が追いやすい設計にする</td></tr>
+        <tr><td>後続文字をそのまま出す設計</td><td>区切り処理後のデータは、最後に <span class="code-inline">SEND ALL THAT REMAINS</span> で素直に出る形にする</td><td>ADFの分岐を増やさず、最後の処理を単純化する</td></tr>
+        <tr><td>業務ごとにQR式を分ける</td><td>リーダー設定を増やす前に、Excel側のQR生成式で業務差を吸収する</td><td>会社にあるZebraリーダーを試しやすくする</td></tr>
+      </table>
+      <div class="xdemo-note-good">
+        <strong>💡 実務での考え方</strong><br>
+        Zebraは設定QR/設定バーコードでリーダー設定を配布しやすいのが強みです。そのため、リーダー側はできるだけ安定した固定手順にして、可変件数や区切り数の揺れはExcel側のQR生成式で調整する方が、現場展開しやすくなります。
+      </div>
+      <div class="sample-box">
+<pre>=A2 &amp; CHAR(9) &amp; B2 &amp; "!" &amp; TEXT(C2,"yyyymmdd") &amp; "/" &amp; D2
+
+うまくいかない場合：
+=A2 &amp; CHAR(9) &amp; B2 &amp; "!" &amp; TEXT(C2,"yyyymmdd") &amp; "!" &amp; "/" &amp; D2</pre>
+      </div>
+      <p>上の例のように、Tabは <span class="code-inline">CHAR(9)</span>、待機は <span class="code-inline">!</span>、NumEnterは <span class="code-inline">/</span> のように分けておくと、Zebra ADFの固定手順に合わせやすくなります。</p>
+    </section>
+
+    <section class="method-section">
+      <h2>この結果から見えるZebra ADFの特徴</h2>
+      <table class="method-choice-table">
+        <thead>
+          <tr><th>観点</th><th>見えてきた特徴</th><th>実務上の意味</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>固定データ</td><td>想定した区切り数なら安定しやすい</td><td>定型入力・固定件数業務に向く</td></tr>
+          <tr><td>可変データ</td><td>想定より区切り数が多いと残存の可能性</td><td>5件想定で3件、3件想定で4区切りなどを必ず検証する</td></tr>
+          <tr><td>処理思想</td><td>ストリーム変換というより固定手順処理に近い可能性</td><td>業務ごとに設定を作る運用と相性が良い</td></tr>
+          <tr><td>設定展開</td><td>123Scanと設定バーコードで配布しやすい</td><td>条件を満たせば現場展開しやすい</td></tr>
+        </tbody>
+      </table>
+      <div class="xdemo-note-info">
+        <strong>🔍 暫定仮説</strong><br>
+        Zebra ADF は「入力された文字を全部見て、その都度柔軟に変換する」方式というより、「登録したアクションを上から順番に実行する」固定手順型の色が強い可能性があります。そのため、業務フォーマットが固定なら非常に扱いやすい一方、可変件数では追加検証が必要です。
+      </div>
+    </section>
+
+    <section class="method-section">
+      <h2>3メーカー比較で見えるZebraの位置づけ</h2>
+      <p>今回の整理では、Zebra は「最も万能」というより、<strong>現場展開しやすさが最も強いリーダー</strong>として位置づけます。特に、QRコード/設定バーコードでリーダー設定を展開しやすい点と、123Scan の分かりやすさは大きな強みです。</p>
+      <table class="format-table">
+        <tr>
+          <th style="white-space:nowrap; word-break:keep-all; overflow-wrap:normal;">メーカー</th>
+          <th>QRリーダー設定</th>
+          <th>設定ツール</th>
+          <th>ディレイ</th>
+          <th>キー・ポーズ設定</th>
+          <th>総合的な見方</th>
+        </tr>
+        <tr>
+          <td style="white-space:nowrap; word-break:keep-all; overflow-wrap:normal;">Zebra</td>
+          <td><strong>1位</strong><br>QRコード/設定バーコードでリーダー設定を展開しやすい。</td>
+          <td><strong>1位</strong><br>123Scan が比較的分かりやすく、現場説明もしやすい。</td>
+          <td><strong>3位</strong><br>キャラクター間ディレイを極端に遅くする用途は弱い可能性。</td>
+          <td><strong>最も設定しやすい候補</strong><br>NumEnter、Enter、Tab、ポーズキーなどをADFで整理しやすい。</td>
+          <td>可変件数と低速化の限界をクリアできれば、3メーカーの中で最も標準機にしやすい。</td>
+        </tr>
+        <tr>
+          <td style="white-space:nowrap; word-break:keep-all; overflow-wrap:normal;">Honeywell</td>
+          <td><strong>2位</strong><br>設定バーコード展開は可能性あり。ただしQR読み込みだけで安定設定できるかは未確定。</td>
+          <td><strong>2位</strong><br>機能は強いが、Control Characters / Extended ASCII / Key Strokes の違いに注意。</td>
+          <td><strong>1位</strong><br>ディレイ・速度調整は柔軟。Opticon と同等クラスの候補。</td>
+          <td>NumEnter や各種ポーズキーの設定は可能。</td>
+          <td>速度調整とキー制御は強いが、設定手順の分かりやすさと設定紙展開が課題。</td>
+        </tr>
+        <tr>
+          <td style="white-space:nowrap; word-break:keep-all; overflow-wrap:normal;">Opticon</td>
+          <td><strong>3位</strong><br>QRコード読み込みで設定可能。ただし設定体系の理解が必要。</td>
+          <td><strong>3位</strong><br>ストリーミング型で、Zebra / Honeywell とは別系統。初見では最も分かりにくい。</td>
+          <td><strong>1位</strong><br>ディレイ・Sleep 系の考え方は柔軟。Honeywell と同等クラスの候補。</td>
+          <td>NumEnter や各種ポーズキーの設定は可能。</td>
+          <td>うまく使えば最も柔軟で、1つの設定で複数業務に対応しやすい。ただし設定難度が高い。</td>
+        </tr>
+      </table>
+      <div class="xdemo-note-good">
+        <strong>💡 Zebraの暫定評価</strong><br>
+        Zebra は、設定展開と設定ツールの分かりやすさでは最有力です。一方で、ディレイを極端に遅くする用途では Honeywell / Opticon に劣る可能性があります。そのため、<strong>Tabは <span class="code-inline">CHAR(9)</span>、待機は <span class="code-inline">!</span>、NumEnterやPage系キーは別トリガーというように役割を分け、後続処理は <span class="code-inline">SEND ALL THAT REMAINS</span> で自然に流す設計</strong>が現実的です。</div>
+      <p>今回の結果は、Zebra が弱いという意味ではありません。むしろ、<strong>可変件数と遅延限界をExcel側のQR生成式で吸収できるなら、Zebra は3メーカーの中で最も現場に配りやすい候補</strong>になります。</p>
+    </section>
+
+    <section class="tips-section">
+      <h2>次に確認すべき調査項目</h2>
+      <div class="setup-step">
+        <div class="setup-step-header">
+          <span class="step-number">1</span>
+          <span class="step-title">REPLACE ALL PATTERNS で最後の「!」を消せるか</span>
+          <span class="step-time">最優先</span>
+        </div>
+        <ul>
+          <li>残った <span class="code-inline">!</span> を最終段で削除できるか</li>
+          <li>複数の <span class="code-inline">!</span> をまとめて処理できるか</li>
+          <li>連続 <span class="code-inline">!!</span> がある場合も安全か</li>
+          <li>最後だけ Enter / Pause しない処理ができるか</li>
+          <li>Excel側で待機用の <span class="code-inline">!</span> と、NumEnter・Page系キー用の別トリガーを分けた場合に安定するか</li>
+        </ul>
+      </div>
+
+      <div class="setup-step">
+        <div class="setup-step-header">
+          <span class="step-number">2</span>
+          <span class="step-title">件数別テスト</span>
+          <span class="step-time">可変検証</span>
+        </div>
+        <table class="key-table">
+          <thead><tr><th>テスト</th><th>確認内容</th><th>期待結果</th></tr></thead>
+          <tbody>
+            <tr><td>1件</td><td>最小データで余計なキーが出ないか</td><td>不要な <span class="code-inline">!</span> が残らない</td></tr>
+            <tr><td>2件</td><td>少件数で処理が止まらないか</td><td>区切りとポーズが正常</td></tr>
+            <tr><td>3件</td><td>今回問題なしだった基準ケース</td><td>同じ結果が再現する</td></tr>
+            <tr><td>4件</td><td>今回 <span class="code-inline">!</span> が残ったケース</td><td>設定変更で消せるか確認</td></tr>
+            <tr><td>5件</td><td>最大想定件数</td><td>全件問題なく送信</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="setup-step">
+        <div class="setup-step-header">
+          <span class="step-number">3</span>
+          <span class="step-title">会社の既存リーダーで安全に実験できるか</span>
+          <span class="step-time">現場導入</span>
+        </div>
+        <ul>
+          <li>123Scanで現在設定を読み出せるか</li>
+          <li>現在設定をPCに保存できるか</li>
+          <li>保存設定から元に戻せるか</li>
+          <li>初期化バーコードだけでなく、会社独自設定も復元できるか</li>
+          <li>設定変更前後で元工程の読み取り結果が変わらないか</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="method-section">
+      <h2>現時点の暫定結論</h2>
+      <table class="format-table">
+        <tr><th>項目</th><th>結論</th></tr>
+        <tr><td>Zebra ADFの基本動作</td><td><span class="code-inline">UP TO CHARACTER</span>、<span class="code-inline">PAUSE</span>、<span class="code-inline">AHEAD</span>、<span class="code-inline">SEND ALL THAT REMAINS</span> により、区切り文字を使った送信制御は可能。</td></tr>
+        <tr><td>3個の <span class="code-inline">!</span></td><td>今回の検証では問題なし。</td></tr>
+        <tr><td>4個の <span class="code-inline">!</span></td><td>最後の <span class="code-inline">!</span> が1個残るケースを確認。</td></tr>
+        <tr><td>可変件数対応</td><td>固定件数なら扱いやすいが、可変件数では追加検証が必要。うまく動かない場合は、Excel側で待機用の <span class="code-inline">!</span>、Tabの <span class="code-inline">CHAR(9)</span>、NumEnterやPage系キー用トリガーを分けて調整する方法が現実的。</td></tr>
+        <tr><td>実務での位置づけ</td><td>可変件数と速度・ポーズ制御の限界をクリアできれば、Zebraは最も現場展開しやすい候補。</td></tr>
+      </table>
+      <div class="xdemo-note-good">
+        <strong>💡 価値があるポイント</strong><br>
+        会社にある既存のZebraリーダーでまず試せれば、新規購入や稟議の前に価値を証明できます。ただし、そのためには「元の設定に戻せること」が必須です。今後は、設定バックアップ・復元・設定バーコード化まで含めて確認する価値があります。
+      </div>
+    </section>
+
+    <section class="qr-safety-note" aria-labelledby="qr-safety-title">
+      <h2 id="qr-safety-title">QRリーダー連携の運用注意</h2>
+      <p>QRリーダーは多くの場合、PCにはキーボード入力として認識されます。Tab、Enter、NumEnter、PAUSE、待機時間を組み合わせると、登録・更新・削除などの操作まで進められるため、実務投入前の検証手順を必ず固定してください。</p>
+      <ul>
+        <li>本番データではなく、架空データと検証用画面で読み取り順、セル移動、登録操作を確認する。</li>
+        <li>個人情報、認証情報、機密コードをQRにそのまま埋め込まない。</li>
+        <li>設定変更前に、現在設定の保存・復元手順を確認する。</li>
+        <li>初期化バーコードだけに頼らず、会社独自設定を戻せる状態を作る。</li>
+        <li>Excel以外の画面がアクティブな状態で誤送信されないか確認する。</li>
+      </ul>
+    </section>
+    <nav class="series-nav">
+      <h3>📱 QR Automation Lab ― 全17記事一覧</h3>
+      <p class="text-sm-gray">
+        <span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
+        <span class="color-orange">🟠 応用</span>（④〜⑰）＝ さらに自動化を極める
+      </p>
+
+      <ol>
+        <li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコード生成</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="12_qr_existing_reader_check.html">⑫ 会社にあるQRリーダーでまず試す</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="13_qr_reader_design_philosophy_current_research_v5.html">⑬ QRリーダーの設計思想比較</a></li>
+        <li class="current"><span class="lv-adv">[応用]</span> <strong>⑭ Zebra 123Scan / ADF検証メモ（この記事）</strong></li>
+        <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
+      </ol>
+    </nav>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、USB-HID型QRリーダー、Zebra 123Scan を想定しています。機種やファームウェアで挙動が変わる可能性があるため、実務適用前に必ずコピー環境で確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong>
+      <a href="https://www.zebra.com/jp/ja/support-downloads/scanner-software/123scan-utility.html" rel="noopener" target="_blank">Zebra 123Scan Utility</a>
+      <a href="https://www.zebra.com/jp/ja/support-downloads/scanners/general-purpose-scanners/ds2208.html" rel="noopener" target="_blank">Zebra DS2208 サポート</a>
+      <a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a>
+    </p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+  </div>
+  <p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>

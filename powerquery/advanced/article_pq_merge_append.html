@@ -4,10 +4,10 @@
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<meta content="Power Queryでテーブルを結合する2つの方法「マージ（横方向の結合＝VLOOKUP的）」と「追加（縦方向の結合＝UNION的）」を、6種の結合型の違いからBefore/After付きで丁寧に解説します。" name="description">
+<meta content="Power Queryでテーブルを結合する2つの方法「マージ」と「追加」を解説。VBAが使えないExcel環境で、VLOOKUP的結合や複数ファイル統合をパワークエリで代替する考え方も扱います。" name="description">
 <meta content="パワークエリ, Power Query, Excel パワークエリ, VBA不要, Excel実務" name="keywords">
 <meta content="テーブルの結合 &horbar; マージと追加｜Excel &times; No VBA Lab" property="og:title">
-<meta content="Power Queryでテーブルを結合する2つの方法「マージ（横方向の結合＝VLOOKUP的）」と「追加（縦方向の結合＝UNION的）」を、6種の結合型の違いからBefore/After付きで丁寧に解説します。" property="og:description">
+<meta content="Power Queryでテーブルを結合する2つの方法「マージ」と「追加」を解説。VBAが使えないExcel環境で、VLOOKUP的結合や複数ファイル統合をパワークエリで代替する考え方も扱います。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
@@ -32,7 +32,7 @@
 
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"テーブルの結合 \u0026horbar; マージと追加","description":"Power Queryでテーブルを結合する2つの方法「マージ（横方向の結合＝VLOOKUP的）」と「追加（縦方向の結合＝UNION的）」を、6種の結合型の違いからBefore/After付きで丁寧に解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_merge_append.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"テーブルの結合 \u0026horbar; マージと追加","description":"Power Queryでテーブルを結合する2つの方法「マージ」と「追加」を解説。VBAが使えないExcel環境で、VLOOKUP的結合や複数ファイル統合をパワークエリで代替する考え方も扱います。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_merge_append.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -53,6 +53,7 @@
 <section id="goal">
 <h2>このページのゴール</h2>
 <p>Power Queryでテーブルを結合する2つの方法 &horbar;「マージ（横方向に列を増やす＝VLOOKUP的）」と「追加（縦方向に行を増やす＝UNION的）」&horbar; の違いを理解し、6種類の結合型を場面に応じて使い分けられるようになることです。</p>
+<p>VBAが使えない、マクロ禁止の職場では、VLOOKUP的な結合処理や月次データの統合をPower Queryで代替できる場面が多くあります。</p>
 </section>
 <!-- ==================== -->
 <section id="merge-vs-append">
@@ -257,7 +258,7 @@
 <!-- ==================== まとめ ==================== -->
 <section id="summary">
 <h2>まとめ</h2>
-<p>テーブル結合のポイントは4つです。<strong>マージ</strong>は横方向にデータを引っ張ってくる操作で、VLOOKUPの上位互換です。<strong>追加</strong>は縦方向に行を積み重ねる操作で、月次データの統合などに使います。マージの6種の結合型のうち、<strong>左外部</strong>がVLOOKUP相当で最も頻繁に使い、<strong>左反</strong>は「存在しないもの探し」に非常に便利です。そして結合キーの<strong>データ型を揃える</strong>ことを忘れないでください。</p>
+<p>テーブル結合のポイントは4つです。<strong>マージ</strong>は横方向にデータを引っ張ってくる操作で、VLOOKUPの上位互換です。<strong>追加</strong>は縦方向に行を積み重ねる操作で、月次データの統合などに使います。マージの6種の結合型のうち、<strong>左外部</strong>がVLOOKUP相当で最も頻繁に使い、<strong>左反</strong>は「存在しないもの探し」に非常に便利です。そして結合キーの<strong>データ型を揃える</strong>ことを忘れないでください。Power QueryはVBAの完全な代替ではありませんが、結合・整形・統合の定型処理ではマクロを書かずに再実行できる強みがあります。</p>
 </section>
 <nav class="nav-series">
 <strong>パワークエリ 応用編シリーズ</strong>
@@ -285,5 +286,4 @@
 <script src="../../script.js"></script>
 </body>
 </html>
-
 

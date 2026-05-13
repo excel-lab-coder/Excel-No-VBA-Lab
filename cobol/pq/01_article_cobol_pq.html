@@ -14,10 +14,10 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="Power QueryでCOBOL帳票データの不要行を除去して一括結合する方法をGUI操作中心に解説。VBA不要・Excel 2019以降対応。 エクセルでCOBOL帳票・固定長データを整形したい方向け。" name="description">
+<meta content="Power QueryでCOBOL帳票データの不要行を除去して一括結合する方法を解説。VBAやマクロが禁止されている会社で、固定長データ整形や複数ファイル結合の代替手段を探している方向け。" name="description">
 <meta content="パワークエリ COBOL帳票, Power Query 不要行 除去, 固定長データ パワークエリ, COBOL PQ 結合, VBA不要 帳票, エクセル COBOL, エクセル COBOL帳票, エクセル 固定長データ, Excel COBOL, Excel COBOL帳票 整形, COBOL帳票 Excel関数, COBOL帳票 Power Query, 固定長データ エクセル, MIDB エクセル" name="keywords">
 <meta content="【パワークエリ編】COBOL帳票データの不要行除去と一括結合｜Excel &times; No VBA Lab" property="og:title">
-<meta content="Power QueryでCOBOL帳票データの不要行を除去して一括結合する方法をGUI操作中心に解説。VBA不要・Excel 2019以降対応。" property="og:description">
+<meta content="Power QueryでCOBOL帳票データの不要行を除去して一括結合する方法を解説。VBAやマクロが禁止されている会社で、固定長データ整形や複数ファイル結合の代替手段を探している方向け。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="Excel × No VBA Lab" property="og:site_name">
 <meta content="ja_JP" property="og:locale">
@@ -33,7 +33,7 @@
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": "【パワークエリ編】COBOL帳票データの不要行除去と一括結合",
-    "description": "Power QueryでCOBOL帳票データの不要行を除去して一括結合する方法をGUI操作中心に解説。VBA不要・Excel 2019以降対応。",
+    "description": "Power QueryでCOBOL帳票データの不要行を除去して一括結合する方法を解説。VBAやマクロが禁止されている会社で、固定長データ整形や複数ファイル結合の代替手段を探している方向け。",
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
     "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
     "datePublished": "2026-03-18",
@@ -152,7 +152,7 @@
 <span class="article-date">更新日: 2026-04-23</span>
 </div>
 <h1 class="article-title">【パワークエリ編】COBOL帳票データの不要行除去と一括結合</h1>
-<p class="article-summary" data-seo-lead="true">エクセルでCOBOL帳票や固定長データを整形したい方向けに、Excel関数・Power Query・MIDBなどを使って列分割、不要行除去、帳票データ変換を進める実務手順を扱います。</p>
+<p class="article-summary" data-seo-lead="true">エクセルでCOBOL帳票や固定長データを整形したい方向けに、Excel関数・Power Query・MIDBなどを使って列分割、不要行除去、帳票データ変換を進める実務手順を扱います。VBAが使えない、マクロが禁止されている会社では、定期的なCOBOL帳票整形の代替手段としてPower Queryを検討できます。</p>
 </div>
 <!-- ======================== 導入 ======================== -->
 <section class="goal-section">
@@ -268,7 +268,7 @@
 <section class="tips-section" style="background:#fcfcfc;">
 <h2>🎯 結論：関数とパワークエリの使い分け</h2>
 <p>パワークエリにはMIDBに相当するバイト単位の切り出し関数がなく、これがCOBOL帳票処理における最大の壁です。しかし、M言語で自作関数を一度作ってしまえば、不要行除去・フィルダウン・MIDB分解・複数ファイル結合までを1つのクエリ内で完結でき、<strong>関数パイプラインよりはるかに簡潔な処理が可能</strong>になります。</p>
-<p>最初の壁を越えるコストをかけるかどうかは、処理の頻度と規模で判断してください。定期的に大量の帳票を処理する業務であれば、パワークエリへの移行は十分に元が取れます。単発の処理であれば、本シリーズの関数パイプラインで対応するのが現実的です。</p>
+<p>最初の壁を越えるコストをかけるかどうかは、処理の頻度と規模で判断してください。定期的に大量の帳票を処理する業務であれば、パワークエリへの移行は十分に元が取れます。単発の処理であれば、本シリーズの関数パイプラインで対応するのが現実的です。マクロ禁止で困ったときも、まず処理の頻度とファイル数から代替手段を選ぶと判断しやすくなります。</p>
 <div class="pq-step-box" style="border-left-color: #66bb6a;">
 <h3 class="pq-step-title" style="color: #2e7d32; border-bottom-color: #c8e6c9;">パワークエリが有利な場面</h3>
 <p><strong>定期的・反復的な帳票処理</strong> &horbar; 「更新」ボタンで全自動化できる。</p>
@@ -284,7 +284,7 @@
 </div>
 <div class="xdemo-note-good" style="margin-top: 20px;">
 <strong>💡 どちらから始めるべきか：</strong><br>
-          M言語に慣れていない方は、まず本シリーズの関数パイプライン（<a href="#">完全版</a>～不規則明細編）で処理の考え方を身につけることをお勧めします。パイプラインの設計思想（フラグ &rarr; フィルダウン &rarr; 抽出 &rarr; 分解）は、パワークエリに移行しても全く同じ考え方が使えます。関数で処理の流れを理解してからパワークエリに移行すると、何をどの順序で処理すべきかが明確なため、M言語の習得もスムーズになります。
+          M言語に慣れていない方は、まず本シリーズの関数パイプライン（<a href="../formula/01_article_cobol_basic.html">COBOL固定長データの切り出しと整形</a>～不規則明細編）で処理の考え方を身につけることをお勧めします。パイプラインの設計思想（フラグ &rarr; フィルダウン &rarr; 抽出 &rarr; 分解）は、パワークエリに移行しても全く同じ考え方が使えます。関数で処理の流れを理解してからパワークエリに移行すると、何をどの順序で処理すべきかが明確なため、M言語の習得もスムーズになります。
         </div>
 <div class="xdemo-note" style="margin-top: 15px;">
 <strong>📌 シリーズリンク：</strong><br>
