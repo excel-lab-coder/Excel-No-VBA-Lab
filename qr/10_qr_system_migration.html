@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="ja">
 <head>
@@ -15,7 +15,7 @@
   gtag('config', 'G-596JZ3M97H');
 </script>
 <meta content="旧システムのデータをExcelでQRコード化し、新システムへQRリーダーで読み取るだけで移行。APIやCSVインポートが使えず、VBA・マクロも禁止されている会社での代替手段として、フィールドマッピングやキー操作設計まで解説します。" name="description">
-<meta content="QRコード システム移行, データ移行 Excel, 旧システム 新システム, バーコードリーダー, フィールドマッピング, OPI-3601 ALX-3601 L-46X, オプトエレクトロニクス, VBAなし, Excel QRコード, Excel QRリーダー, Excel バーコードリーダー, QRコード Excel入力, QRリーダー Excel入力, バーコードリーダー Excel入力, Excel QRコード 作成, QRコード 自動入力 Excel, Webシステム QRリーダー, 業務システム バーコードリーダー" name="keywords">
+<meta content="QRコード システム移行, データ移行 Excel, 旧システム 新システム, バーコードリーダー, フィールドマッピング, OPI-3601 ALX-3601 L-46X, オプトエレクトロニクス, VBAなし, Excel QRコード, Excel QRリーダー, Excel バーコードリーダー, QRコード Excel入力, QRリーダー Excel入力, バーコードリーダー Excel入力, Excel QRコード 作成, QRコード 自動入力 Excel, Webシステム QRリーダー, 業務システム バーコードリーダー, Opticon, OPTOELECTRONICS, 株式会社オプトエレクトロニクス, Zebra, ゼブラ, Zebra Technologies, ゼブラ・テクノロジーズ, Honeywell, ハネウェル, Honeywell International, ハネウェル・インターナショナル, QRリーダー メーカー, バーコードリーダー メーカー" name="keywords">
 <meta content="QRコードでシステム間データ移行！旧システムから新システムへ読み取るだけで引っ越し完了｜Excel &times; No VBA Lab" property="og:title">
 <meta content="旧システムのデータをExcelでQRコード化し、新システムへQRリーダーで読み取るだけで移行する方法を解説。VBA・マクロ禁止環境での代替手段として、全角対応の導線も整理します。" property="og:description">
 <meta content="article" property="og:type">
@@ -37,7 +37,7 @@
     "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
     "publisher":{"@type":"Organization","name":"Excel × No VBA Lab"},
     "datePublished":"2026-04-17",
-    "dateModified":"2026-04-18",
+    "dateModified":"2026-05-14",
     "mainEntityOfPage":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/10_qr_system_migration.html"
   }
   </script>
@@ -97,6 +97,22 @@
 <h1 class="article-title">QRコードでシステム間データ移行！<br>旧システムから新システムへ、読み取るだけで引っ越し完了</h1>
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。APIやCSVインポートが使えず、VBA・マクロも禁止されている会社の移行作業では、QRリーダー入力が代替手段になる場合があります。</p>
 </div>
+
+<section class="method-section qr-control-guide">
+  <h2><span class="icon">↵</span> Enter / Tab の共通整理</h2>
+  <p>QR入力では、読み取り先によって最初に試す制御を分けます。Num Enter は Excel の CHAR 関数では生成できないため、必要な場合はQRリーダー側のキー変換で確認します。</p>
+  <table class="format-table">
+    <thead>
+      <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+      <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
+      <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
+      <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
+    </tbody>
+  </table>
+</section>
 <!-- ===== 機種限定告知 ===== -->
 <div class="xdemo-note-danger">
 <strong>🔥 機種限定の解説です</strong><br>
@@ -502,14 +518,15 @@
 </div>
 </section>
     <nav class="series-nav">
-      <h3>📱 QR Automation Lab ― 全17記事一覧</h3>
+      <h3>📱 QR Automation Lab ― 全19記事一覧</h3>
       <p class="text-sm-gray">
-        <span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
-        <span class="color-orange">🟠 応用</span>（④〜⑰）＝ さらに自動化を極める
+        <span class="text-blue-primary">🔵 基本</span>（⓪〜③）＝ まずここから ／
+        <span class="color-orange">🟠 応用</span>（④〜⑱）＝ さらに自動化を極める
       </p>
 
       <ol>
-        <li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="00_qr_reader_excel_input_basics.html">⓪ QRリーダーでExcel入力を自動化する仕組み</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
         <li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
@@ -526,6 +543,7 @@
         <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="18_qr_num_enter_numpad_enter.html">⑱ Num Enter・Numpad Enter・通常Enterの違い</a></li>
       </ol>
     </nav>
 <section class="qr-safety-note" aria-labelledby="qr-safety-title">

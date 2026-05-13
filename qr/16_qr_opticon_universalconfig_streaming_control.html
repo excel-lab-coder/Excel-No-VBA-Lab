@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="utf-8">
@@ -13,7 +13,7 @@
   gtag('config', 'G-596JZ3M97H');
 </script>
 <meta content="Opticon / オプトエレクトロニクス系QRリーダーを、物理RPA用途の入力制御エンジンとして整理。OPI-3601、ALX-3601、L-46Xで確認したサフィックスNone、キャラクター間ディレイ、Sleep、キー変換、NumEnter、PageUp・PageDown・Home、設定QR配布・復元の考え方をまとめます。TabはCHAR(9)を優先し、CHAR関数で出しにくいキーだけ記号変換に分ける構成です。" name="description">
-<meta content="Opticon, オプトエレクトロニクス, UniversalConfig, OPI-3601, ALX-3601, L-46X, QRリーダー, バーコードリーダー, Sleep, Pause, NumEnter, キー変換, Function Code, サフィックス, キャラクター間ディレイ, 物理RPA, Excel QRコード, マクロ禁止" name="keywords">
+<meta content="Opticon, オプトエレクトロニクス, UniversalConfig, OPI-3601, ALX-3601, L-46X, QRリーダー, バーコードリーダー, Sleep, Pause, NumEnter, キー変換, Function Code, サフィックス, キャラクター間ディレイ, 物理RPA, Excel QRコード, マクロ禁止, OPTOELECTRONICS, 株式会社オプトエレクトロニクス, Zebra, ゼブラ, Zebra Technologies, ゼブラ・テクノロジーズ, Honeywell, ハネウェル, Honeywell International, ハネウェル・インターナショナル, QRリーダー メーカー, バーコードリーダー メーカー, QRリーダー Excel入力" name="keywords">
 <meta content="⑯【Opticon】UniversalConfig実機検証メモ｜ストリーミング方式・Sleep・キー変換の実務整理" property="og:title">
 <meta content="オプト系リーダーは設定理解が難しい一方、QR内の制御記号を左から順番に処理するストリーミング方式に近い候補です。TabはCHAR(9)、NumEnterやPage系キーは専用記号という使い分けで整理します。" property="og:description">
 <meta content="article" property="og:type">
@@ -34,7 +34,7 @@
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
   "publisher":{"@type":"Organization","name":"Excel × No VBA Lab"},
   "datePublished":"2026-05-11",
-  "dateModified":"2026-05-11",
+  "dateModified":"2026-05-14",
   "mainEntityOfPage":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/16_qr_opticon_universalconfig_streaming_control.html"
 }
 </script>
@@ -87,8 +87,24 @@
         Tabは <strong>CHAR(9)</strong> を優先し、NumEnterやPageUp・PageDown・HomeなどCHAR関数で出しにくいキーだけを記号変換へ分けると、QR文字列の意味が追いやすくなります。
         本記事では、OPI-3601、ALX-3601、L-46Xで確認した実務向けの整理をまとめます。
       </p>
-      <p style="color:#666;font-size:.88rem;">最終更新: 2026-05-11 ｜ 読了目安: 12分</p>
+      <p style="color:#666;font-size:.88rem;">最終更新: 2026-05-14 ｜ 読了目安: 12分</p>
     </header>
+
+    <section class="method-section qr-control-guide">
+      <h2><span class="icon">↵</span> Enter / Tab の共通整理</h2>
+      <p>QR入力では、読み取り先によって最初に試す制御を分けます。Num Enter は Excel の CHAR 関数では生成できないため、必要な場合はQRリーダー側のキー変換で確認します。</p>
+      <table class="format-table">
+        <thead>
+          <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+          <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
+          <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
+          <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
+        </tbody>
+      </table>
+    </section>
 
     <section class="goal-section">
       <h2><span class="icon">💡</span> この記事の結論</h2>
@@ -308,14 +324,15 @@ Tabや通常EnterはCHAR(9) / CHAR(13)を優先
       </ul>
     </section>
     <nav class="series-nav">
-      <h3>📱 QR Automation Lab ― 全17記事一覧</h3>
+      <h3>📱 QR Automation Lab ― 全19記事一覧</h3>
       <p class="text-sm-gray">
-        <span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
-        <span class="color-orange">🟠 応用</span>（④〜⑰）＝ さらに自動化を極める
+        <span class="text-blue-primary">🔵 基本</span>（⓪〜③）＝ まずここから ／
+        <span class="color-orange">🟠 応用</span>（④〜⑱）＝ さらに自動化を極める
       </p>
 
       <ol>
-        <li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="00_qr_reader_excel_input_basics.html">⓪ QRリーダーでExcel入力を自動化する仕組み</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
         <li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
@@ -332,6 +349,7 @@ Tabや通常EnterはCHAR(9) / CHAR(13)を優先
         <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
         <li class="current"><span class="lv-adv">[応用]</span> <strong>⑯ Opticon UniversalConfig実機検証メモ（この記事）</strong></li>
         <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="18_qr_num_enter_numpad_enter.html">⑱ Num Enter・Numpad Enter・通常Enterの違い</a></li>
       </ol>
     </nav>
   </article>

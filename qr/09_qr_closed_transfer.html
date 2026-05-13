@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="ja">
 <head>
@@ -15,7 +15,7 @@
   gtag('config', 'G-596JZ3M97H');
 </script>
 <meta content="ネットワークもUSBメモリも使えない閉域環境で、ExcelデータをQRコードに変換し紙に印刷&rarr;OPI-3601・ALX-3601・L-46Xで読み取るだけで転送。全角文字のVBA対応策から、半角データの分割QR・連結数式・セキュリティまで網羅。 Excel QRコード作成、Excel QRリーダー連携、バーコードリーダー入力自動化を探している方向け。" name="description">
-<meta content="QRコード 閉域環境 データ転送, Excel ネットワーク不要, 紙転送 バーコードリーダー, OPI-3601 ALX-3601 L-46X, オプトエレクトロニクス, オフライン データ移行, 分割QR, 全角文字 QR VBA, Excel QRコード, Excel QRリーダー, Excel バーコードリーダー, QRコード Excel入力, QRリーダー Excel入力, バーコードリーダー Excel入力, Excel QRコード 作成, QRコード 自動入力 Excel, Webシステム QRリーダー, 業務システム バーコードリーダー" name="keywords">
+<meta content="QRコード 閉域環境 データ転送, Excel ネットワーク不要, 紙転送 バーコードリーダー, OPI-3601 ALX-3601 L-46X, オプトエレクトロニクス, オフライン データ移行, 分割QR, 全角文字 QR VBA, Excel QRコード, Excel QRリーダー, Excel バーコードリーダー, QRコード Excel入力, QRリーダー Excel入力, バーコードリーダー Excel入力, Excel QRコード 作成, QRコード 自動入力 Excel, Webシステム QRリーダー, 業務システム バーコードリーダー, Opticon, OPTOELECTRONICS, 株式会社オプトエレクトロニクス, Zebra, ゼブラ, Zebra Technologies, ゼブラ・テクノロジーズ, Honeywell, ハネウェル, Honeywell International, ハネウェル・インターナショナル, QRリーダー メーカー, バーコードリーダー メーカー" name="keywords">
 <meta content="QRコードで閉域環境のデータ転送！ネットワーク不要・紙だけでExcelデータを別PCに移す完全ガイド｜Excel &times; No VBA Lab" property="og:title">
 <meta content="ネットワークもUSBメモリも使えない閉域環境で、ExcelデータをQRコードに変換し紙に印刷&rarr;別PCのリーダーで読み取るだけで転送する方法を解説。全角対応のVBA手法も紹介。" property="og:description">
 <meta content="article" property="og:type">
@@ -37,7 +37,7 @@
     "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
     "publisher":{"@type":"Organization","name":"Excel × No VBA Lab"},
     "datePublished":"2026-04-17",
-    "dateModified":"2026-04-18",
+    "dateModified":"2026-05-14",
     "mainEntityOfPage":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/09_qr_closed_transfer.html"
   }
   </script>
@@ -97,6 +97,22 @@
 <h1 class="article-title">QRコードで閉域環境のデータ転送！<br>ネットワーク不要・紙だけでExcelデータを別PCに移す</h1>
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
 </div>
+
+<section class="method-section qr-control-guide">
+  <h2><span class="icon">↵</span> Enter / Tab の共通整理</h2>
+  <p>QR入力では、読み取り先によって最初に試す制御を分けます。Num Enter は Excel の CHAR 関数では生成できないため、必要な場合はQRリーダー側のキー変換で確認します。</p>
+  <table class="format-table">
+    <thead>
+      <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+      <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
+      <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
+      <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
+    </tbody>
+  </table>
+</section>
 <!-- ===== 機種限定告知 ===== -->
 <div class="xdemo-note-danger">
 <strong>🔥 機種限定の解説です</strong><br>
@@ -349,6 +365,9 @@
 <button class="copy-btn" onclick="copyFormula(this)">コピー</button>
 <code>=TEXTJOIN("", TRUE, E2:E151)</code>
 </div>
+<div class="xdemo-note-warn">
+<strong>⚠️ Excel 2016の場合:</strong> TEXTJOIN が使えない環境があります。候補に出ない場合は、E列を <code>&amp;</code> で連結する、または件数を小分けにして <code>&amp; CHAR(9) &amp;</code> を使う方式に切り替えてください。
+</div>
 <p>150レコード &times; 35文字 ＝ 約5,250文字の長い文字列がF1に格納されます。</p>
 <ul class="checklist">
 <li>F1にTEXTJOIN数式を入力</li>
@@ -510,6 +529,9 @@
 件数:     =COUNTA(A2:A151)              &rarr; 150
 QR枚数:   =ROUNDUP(LEN(F1)/255, 0)     &rarr; 21</pre>
 </div>
+<div class="xdemo-note-warn">
+<strong>⚠️ TEXTJOINが使えない場合:</strong> Excel 2016では使えない環境があります。使えない場合は、レコード数を分割しながら <code>&amp;</code> や <code>&amp; CHAR(9) &amp;</code> で連結してください。
+</div>
 <div class="xdemo-note-info">
 <strong>📝 もしこのシナリオのデータに「製品名（日本語）」列があったら？</strong><br>
           例えば「ステンレスボルトM8」のような全角文字を含む列があった場合、選択肢は2つです。<br>
@@ -560,7 +582,7 @@ QR枚数:   =ROUNDUP(LEN(F1)/255, 0)     &rarr; 21</pre>
 <tr><td>閉域環境とは</td><td>ネットワーク・USB等が使えない隔離されたIT環境</td></tr>
 <tr><td>QR転送の原理</td><td>Excel &rarr; QR文字列 &rarr; 紙に印刷 &rarr; 物理運搬 &rarr; 別PCでリーダー読取 &rarr; Excelに自動入力</td></tr>
 <tr><td>1QRの上限</td><td>半角255文字（バーコードコントロールの制限）</td></tr>
-<tr><td>送信側の数式</td><td>CHAR(9)でTab、CHAR(13)でEnter &rarr; TEXTJOIN連結 &rarr; MID 255文字分割</td></tr>
+<tr><td>送信側の数式</td><td>CHAR(9)でTab、CHAR(13)でEnter &rarr; TEXTJOIN連結（Excel 2016で使えない場合は &amp; 連結）&rarr; MID 255文字分割</td></tr>
 <tr><td>必要QR枚数</td><td><span class="code-inline">=ROUNDUP(LEN(全連結セル)/255, 0)</span></td></tr>
 <tr><td>受信側リーダー設定</td><td>サフィックスOFF、ディレイ5〜10ms前後、日本語キーボード。OPI系では RY / LB / PM を使用</td></tr>
 <tr><td>本記事の実機検証</td><td>OPI-3601、ALX-3601、L-46X（オプトエレクトロニクス社）。Zebra / Honeywell は本記事のバーコードを流用せず、各ツールで同等設定を作成して確認する</td></tr>
@@ -596,14 +618,15 @@ QR枚数:   =ROUNDUP(LEN(F1)/255, 0)     &rarr; 21</pre>
         </div>
 </section>
     <nav class="series-nav">
-      <h3>📱 QR Automation Lab ― 全17記事一覧</h3>
+      <h3>📱 QR Automation Lab ― 全19記事一覧</h3>
       <p class="text-sm-gray">
-        <span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
-        <span class="color-orange">🟠 応用</span>（④〜⑰）＝ さらに自動化を極める
+        <span class="text-blue-primary">🔵 基本</span>（⓪〜③）＝ まずここから ／
+        <span class="color-orange">🟠 応用</span>（④〜⑱）＝ さらに自動化を極める
       </p>
 
       <ol>
-        <li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="00_qr_reader_excel_input_basics.html">⓪ QRリーダーでExcel入力を自動化する仕組み</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
         <li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
@@ -620,6 +643,7 @@ QR枚数:   =ROUNDUP(LEN(F1)/255, 0)     &rarr; 21</pre>
         <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="18_qr_num_enter_numpad_enter.html">⑱ Num Enter・Numpad Enter・通常Enterの違い</a></li>
       </ol>
     </nav>
 <section class="qr-safety-note" aria-labelledby="qr-safety-title">

@@ -251,6 +251,12 @@ pre,
   background: #ecf8ef;
   border: 1px solid #9ed6ad;
 }
+.maker-kana {
+  font-size: 0.72em;
+  font-weight: 800;
+  margin-left: 0.28em;
+  opacity: 0.82;
+}
 .maker-title {
   display: inline-block;
   margin: 0 0 0.18em;

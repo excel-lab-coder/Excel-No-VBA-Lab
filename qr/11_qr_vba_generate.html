@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="ja">
 <head>
@@ -15,7 +15,7 @@
   gtag('config', 'G-596JZ3M97H');
 </script>
 <meta content="全角QRコード生成を検討するための設計メモ。現時点では完全なVBA生成コードは掲載せず、文字コード（UTF-8/Shift-JIS）、リーダー設定、検証項目、既存ライブラリ活用方針を整理します。完全版コードは後日公開を検討中です。" name="description">
-<meta content="QRコード, 全角, 漢字, VBA, ADODB.Stream, 閉域環境, データ移行, Excel, Excel QRコード, Excel QRリーダー, Excel バーコードリーダー, QRコード Excel入力, QRリーダー Excel入力, バーコードリーダー Excel入力, Excel QRコード 作成, QRコード 自動入力 Excel, Webシステム QRリーダー, 業務システム バーコードリーダー" name="keywords">
+<meta content="QRコード, 全角, 漢字, VBA, ADODB.Stream, 閉域環境, データ移行, Excel, Excel QRコード, Excel QRリーダー, Excel バーコードリーダー, QRコード Excel入力, QRリーダー Excel入力, バーコードリーダー Excel入力, Excel QRコード 作成, QRコード 自動入力 Excel, Webシステム QRリーダー, 業務システム バーコードリーダー, Opticon, オプトエレクトロニクス, OPTOELECTRONICS, 株式会社オプトエレクトロニクス, Zebra, ゼブラ, Zebra Technologies, ゼブラ・テクノロジーズ, Honeywell, ハネウェル, Honeywell International, ハネウェル・インターナショナル, QRリーダー メーカー, バーコードリーダー メーカー" name="keywords">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html" rel="canonical">
 <meta content="article" property="og:type">
 <meta content="⑪ 全角QR生成の設計メモ｜VBA完全版コードは後日公開検討｜QR Automation Lab" property="og:title">
@@ -46,7 +46,7 @@
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
   "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
   "datePublished":"2026-04-17",
-  "dateModified":"2026-05-12",
+  "dateModified":"2026-05-14",
   "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html"}
 }
 </script>
@@ -93,8 +93,24 @@
 </div>
 <h1 class="article-title">全角QR生成の設計メモ<br><small>&horbar; VBA完全版コードは後日公開を検討中</small></h1>
 <p class="article-summary" data-seo-lead="true">この記事は、全角文字を含むQRコード生成を検討するための技術整理です。現時点では完成済みのVBA生成コードを掲載せず、文字コード、読み取り側設定、検証項目、既存ライブラリ活用の判断基準をまとめます。</p>
-<p style="color:#666;font-size:.88rem;">最終更新: 2026-05-12 ｜ 読了目安: 15分 ｜ 前提: <a href="09_qr_closed_transfer.html">⑨ 閉域環境データ転送</a>、<a href="10_qr_system_migration.html">⑩ システム間データ移行</a></p>
+<p style="color:#666;font-size:.88rem;">最終更新: 2026-05-14 ｜ 読了目安: 15分 ｜ 前提: <a href="09_qr_closed_transfer.html">⑨ 閉域環境データ転送</a>、<a href="10_qr_system_migration.html">⑩ システム間データ移行</a></p>
 </div>
+
+<section class="method-section qr-control-guide">
+  <h2><span class="icon">↵</span> Enter / Tab の共通整理</h2>
+  <p>QR入力では、読み取り先によって最初に試す制御を分けます。Num Enter は Excel の CHAR 関数では生成できないため、必要な場合はQRリーダー側のキー変換で確認します。</p>
+  <table class="format-table">
+    <thead>
+      <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+      <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
+      <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
+      <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
+    </tbody>
+  </table>
+</section>
 <!-- ========================================== -->
 <!-- 冒頭ボックス（課題2対応：ライブラリ優先の案内に変更） -->
 <!-- ========================================== -->
@@ -260,7 +276,7 @@
 <section class="tips-section">
 <h2>🛠️ 全角QRコードの活用シーン</h2>
 <div class="xdemo-note-warn">
-<strong>⚠️ QRコードによるデータ入力は「最終手段」です：</strong>QRコードの読み取り精度は手入力と比較すれば桁違いに高い（後述の精度セクション参照）ものの、ネットワーク接続やファイル共有、クリップボード転送など他の手段が使える環境であれば、そちらを優先してください。QRコード経由のデータ入力が真に威力を発揮するのは、それらの手段がすべて使えない閉域環境・コピー禁止環境に限られます。
+<strong>⚠️ QRコードによるデータ入力は「最終手段」です：</strong>QRコードの読み取り精度は手入力と比較すれば桁違いに高い（後述の精度セクション参照）ものの、ネットワーク接続やファイル共有、クリップボード転送など他の手段が使える環境であれば、そちらを優先してください。QRコード経由のデータ入力が真に威力を発揮するのは、それらの手段がすべて使えず、社内ルールと管理者承認を確認した閉域環境・コピー制限環境です。
   </div>
 <div class="scenario-card">
 <span class="sc-label">基本</span>
@@ -274,8 +290,8 @@
 </div>
 <div class="scenario-card">
 <span class="sc-label sc-label-adv">応用</span>
-<h4>Webシステムへの処理票転記（コピー禁止環境）</h4>
-<p>Excelで作成した処理票（点検結果、所見文、備考欄）の内容を、業務Webシステムのテキストエリアに入力。<strong>コピー＆ペーストがセキュリティポリシーで禁止されている環境</strong>や、旧システムと新システムの間でドラッグ＆ドロップができない仮想環境で特に威力を発揮します。</p>
+<h4>Webシステムへの処理票転記（コピー制限環境・社内承認前提）</h4>
+<p>Excelで作成した処理票（点検結果、所見文、備考欄）の内容を、業務Webシステムのテキストエリアに入力。<strong>コピー＆ペーストがセキュリティポリシーで制限され、管理者承認を得た環境</strong>や、旧システムと新システムの間でドラッグ＆ドロップができない仮想環境で、手入力相当のキーボード入力として扱える場合があります。</p>
 <p>Excelで文書内容をQR化 &rarr; 印刷 &rarr; リーダーで読み取り、という物理経路で全角文字を含むテキストをそのままフォームに流し込めます。</p>
 </div>
 <div class="scenario-card">
@@ -537,7 +553,7 @@ QR入力で手入力ミスを減らし、バリデーションで異常値や不
 <div class="scenario-card">
 <span class="sc-label sc-label-adv">応用</span>
 <h4>シナリオC：Webシステムへの処理票転記</h4>
-<p>Excelで作成した処理票の所見文をWebシステムに入力。コピー＆ペースト禁止環境で、処理票セル内容をQR化しリーダーで読み取ってブラウザフォームに直接流し込み。100文字の所見文（UTF-8: 約300バイト）ならバージョン14のQR 1枚に収まり、読み取り3秒で入力完了。</p>
+<p>Excelで作成した処理票の所見文をWebシステムに入力。コピー＆ペーストが制限され、社内承認を得た環境で、処理票セル内容をQR化しリーダーで読み取ってブラウザフォームに直接流し込み。100文字の所見文（UTF-8: 約300バイト）ならバージョン14のQR 1枚に収まり、読み取り3秒で入力完了。</p>
 </div>
 <div class="scenario-card">
 <span class="sc-label sc-label-adv">応用</span>
@@ -695,12 +711,12 @@ QR入力で手入力ミスを減らし、バリデーションで異常値や不
 <tr><td>文字コードの鉄則</td><td><strong>QR作成時の文字コード ＝ リーダーの文字コード設定 ＝ 出力先アプリの文字コード</strong>。UTF-8推奨。</td></tr>
 <tr><td>アプリ別の文字コード</td><td>Word・Web＝UTF-8対応。メモ帳＝Win10 1903+はUTF-8。Excel内部はUTF-16LE（VBAで変換）。</td></tr>
 <tr><td>読み取り信頼性</td><td>手入力由来の打ち間違い・桁抜け・変換ミスを大幅に減らせる。ただし、実運用上の信頼性はQR生成実装、リーダー機種、印刷品質、文字コード設定、出力先アプリに依存するため、導入時の照合テストと業務システム側のバリデーションを併用する</td></tr>
-<tr><td>位置づけ</td><td><strong>QRコード入力はあくまで最終手段。</strong>ネットワーク接続・ファイル共有・クリップボード転送が使えるなら、そちらを優先。閉域環境・コピー禁止環境でのみ採用。</td></tr>
+<tr><td>位置づけ</td><td><strong>QRコード入力はあくまで最終手段。</strong>ネットワーク接続・ファイル共有・クリップボード転送が使えるなら、そちらを優先。閉域環境・コピー制限環境では、社内ルールと管理者承認を確認して採用。</td></tr>
 <tr><td>推奨誤り訂正</td><td>Q（25%）&boxh;&boxh; 全角QRで安定読み取り実績あり</td></tr>
 <tr><td>実用文字数</td><td>1枚あたり約28〜160文字（バージョン7〜20, Qレベル, UTF-8）</td></tr>
 <tr><td>QR表示・印刷</td><td>タブレット画面表示（コスト・機密性で優位）または紙印刷（3cm&times;3cm以上、600 dpi）。紙はシュレッダー廃棄を徹底。</td></tr>
 <tr><td>読み取り設定</td><td>文字コード＝QR作成時と一致。サフィックスNONE、ディレイ5〜10 ms、日本語キーボード</td></tr>
-<tr><td>活用シーン</td><td>DB移行、住所録入力、Web処理票転記、コピー禁止環境の文書転送、定型文入力</td></tr>
+<tr><td>活用シーン</td><td>DB移行、住所録入力、Web処理票転記、社内承認済みのコピー制限環境での文書転送、定型文入力</td></tr>
 </table>
 </section>
 <!-- ========================================== -->
@@ -732,14 +748,15 @@ QR入力で手入力ミスを減らし、バリデーションで異常値や不
 <!-- シリーズナビ -->
 <!-- ========================================== -->
     <nav class="series-nav">
-      <h3>📱 QR Automation Lab ― 全17記事一覧</h3>
+      <h3>📱 QR Automation Lab ― 全19記事一覧</h3>
       <p class="text-sm-gray">
-        <span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
-        <span class="color-orange">🟠 応用</span>（④〜⑰）＝ さらに自動化を極める
+        <span class="text-blue-primary">🔵 基本</span>（⓪〜③）＝ まずここから ／
+        <span class="color-orange">🟠 応用</span>（④〜⑱）＝ さらに自動化を極める
       </p>
 
       <ol>
-        <li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="00_qr_reader_excel_input_basics.html">⓪ QRリーダーでExcel入力を自動化する仕組み</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
         <li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
@@ -756,6 +773,7 @@ QR入力で手入力ミスを減らし、バリデーションで異常値や不
         <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="18_qr_num_enter_numpad_enter.html">⑱ Num Enter・Numpad Enter・通常Enterの違い</a></li>
       </ol>
     </nav>
 <section class="qr-safety-note" aria-labelledby="qr-safety-title">

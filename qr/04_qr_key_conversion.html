@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="ja">
 <head>
@@ -15,7 +15,7 @@
   gtag('config', 'G-596JZ3M97H');
 </script>
 <meta content="QRリーダーのキー変換（リマップ）機能で、CHAR関数では不可能なテンキーEnter・ファンクションキー・矢印キーをQRコードから送信する方法を詳しく解説。 Excel QRコード作成、Excel QRリーダー連携、バーコードリーダー入力自動化を探している方向け。" name="description">
-<meta content="QRコード, キー変換, リマップ, テンキーEnter, ファンクションキー, F2, NUM Enter, QRリーダー, VBA不要, Excel QRコード, Excel QRリーダー, Excel バーコードリーダー, QRコード Excel入力, QRリーダー Excel入力, バーコードリーダー Excel入力, Excel QRコード 作成, QRコード 自動入力 Excel, Webシステム QRリーダー, 業務システム バーコードリーダー" name="keywords">
+<meta content="QRコード, キー変換, リマップ, テンキーEnter, ファンクションキー, F2, NUM Enter, QRリーダー, VBA不要, Excel QRコード, Excel QRリーダー, Excel バーコードリーダー, QRコード Excel入力, QRリーダー Excel入力, バーコードリーダー Excel入力, Excel QRコード 作成, QRコード 自動入力 Excel, Webシステム QRリーダー, 業務システム バーコードリーダー, Opticon, オプトエレクトロニクス, OPTOELECTRONICS, 株式会社オプトエレクトロニクス, Zebra, ゼブラ, Zebra Technologies, ゼブラ・テクノロジーズ, Honeywell, ハネウェル, Honeywell International, ハネウェル・インターナショナル, QRリーダー メーカー, バーコードリーダー メーカー" name="keywords">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/04_qr_key_conversion.html" rel="canonical">
 <meta content="article" property="og:type">
 <meta content="④ キー変換テクニック &horbar; テンキーEnter・FキーをQRから送る｜QR Automation Lab" property="og:title">
@@ -46,7 +46,7 @@
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
   "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
   "datePublished":"2026-04-18",
-  "dateModified":"2026-04-18",
+  "dateModified":"2026-05-14",
   "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/04_qr_key_conversion.html"}
 }
 </script>
@@ -93,8 +93,24 @@
 </div>
 <h1 class="article-title">QRコード &rarr; キー変換テクニック<br><small>&horbar; テンキーEnter・ファンクションキーをQRから送信する</small></h1>
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
-<p style="color:#666;font-size:.88rem;">最終更新: 2026-04-18 ｜ 読了目安: 12分 ｜ 前提: <a href="01_qr_barcode_control.html">①</a> <a href="02_qr_tab_enter.html">②</a> <a href="03_qr_character_delay.html">③</a></p>
+<p style="color:#666;font-size:.88rem;">最終更新: 2026-05-14 ｜ 読了目安: 12分 ｜ 前提: <a href="01_qr_barcode_control.html">①</a> <a href="02_qr_tab_enter.html">②</a> <a href="03_qr_character_delay.html">③</a></p>
 </div>
+
+<section class="method-section qr-control-guide">
+  <h2><span class="icon">↵</span> Enter / Tab の共通整理</h2>
+  <p>QR入力では、読み取り先によって最初に試す制御を分けます。Num Enter は Excel の CHAR 関数では生成できないため、必要な場合はQRリーダー側のキー変換で確認します。</p>
+  <table class="format-table">
+    <thead>
+      <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+      <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
+      <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
+      <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
+    </tbody>
+  </table>
+</section>
 <!-- ========================================== -->
 <!-- ゴール -->
 <!-- ========================================== -->
@@ -179,7 +195,7 @@
     CHAR関数で <span class="code-inline">~</span> を入れるのは簡単（<span class="code-inline">CHAR(126)</span>）なので、これで<strong>ASCIIの壁を完全に突破</strong>できます。
   </p>
 <div class="xdemo-note-good">
-<strong>✅ ポイント:</strong> 変換処理はすべて<strong>リーダー内部</strong>で行われます。Excel側・PC側に特別な設定は不要です。リーダーの設定を変えるだけ。
+<strong>✅ ポイント:</strong> 変換処理はすべて<strong>リーダー内部</strong>で行われます。Excel側・PC側に特別な設定は不要ですが、対応リーダーでキー変換ルールを設定し、実機で確認することが前提です。
   </div>
 </section>
 <!-- ========================================== -->
@@ -296,12 +312,12 @@
 <tr><th style="width:10%">手順</th><th>操作</th></tr>
 <tr><td class="text-center">1</td><td>リーダーに「<span class="code-inline">~</span> &rarr; テンキーEnter」のキー変換を設定する</td></tr>
 <tr><td class="text-center">2</td><td>テスト用QRデータを作成：<span class="code-inline">="TEST"&CHAR(126)</span></td></tr>
-<tr><td class="text-center">3</td><td>メモ帳を開き、スキャンする。「TEST」と入力されて改行すればメインEnterとして動作中</td></tr>
+<tr><td class="text-center">3</td><td>メモ帳を開き、スキャンする。「TEST」と入力され、<span class="code-inline">~</span> がそのまま表示されず、何らかのEnter動作が起きることを確認</td></tr>
 <tr><td class="text-center">4</td><td>業務システムを開き、入力欄にカーソルを置いてスキャンする</td></tr>
-<tr><td class="text-center">5</td><td>業務システムで<strong>入力が確定される</strong>ことを確認。メインEnterでは確定しなかったのにスキャンで確定すれば、テンキーEnter変換が成功</td></tr>
+<tr><td class="text-center">5</td><td>Num Enterを要求する業務システム、またはキーコード確認ツールで<strong>Num Enterとして有効か</strong>を確認。メインEnterでは確定しなかった画面でスキャン時だけ確定すれば、変換成功と判断しやすい</td></tr>
 </table>
 <div class="xdemo-note-good">
-<strong>✅ テストのコツ:</strong> まずメモ帳で「文字が入力され改行される」ことを確認し、次に実際の業務システムで「確定されるか」を確認する。2段階でテストすると問題の切り分けが容易です。
+<strong>✅ テストのコツ:</strong> メモ帳ではメインEnterとテンキーEnterの違いを判別しにくいため、メモ帳テストは「トリガー文字がそのまま出ないこと」「何らかのEnter動作が起きること」の確認に使います。Num Enterとして有効かどうかは、実際にNum Enterを要求する業務システム、またはキーコード確認ツールで確認してください。
   </div>
 </section>
 <!-- ========================================== -->
@@ -366,14 +382,15 @@
 <!-- シリーズナビ -->
 <!-- ========================================== -->
     <nav class="series-nav">
-      <h3>📱 QR Automation Lab ― 全17記事一覧</h3>
+      <h3>📱 QR Automation Lab ― 全19記事一覧</h3>
       <p class="text-sm-gray">
-        <span class="text-blue-primary">🔵 基本</span>（①〜③）＝ まずここから ／
-        <span class="color-orange">🟠 応用</span>（④〜⑰）＝ さらに自動化を極める
+        <span class="text-blue-primary">🔵 基本</span>（⓪〜③）＝ まずここから ／
+        <span class="color-orange">🟠 応用</span>（④〜⑱）＝ さらに自動化を極める
       </p>
 
       <ol>
-        <li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
+        <li><span class="lv-basic">[基本]</span> <a href="00_qr_reader_excel_input_basics.html">⓪ QRリーダーでExcel入力を自動化する仕組み</a></li>
+<li><span class="lv-basic">[基本]</span> <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></li>
         <li><span class="lv-basic">[基本]</span> <a href="02_qr_tab_enter.html">② Tab・Enter埋め込みの詳細と実践パターン</a></li>
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li class="current"><span class="lv-adv">[応用]</span> <strong>④ QRコード → キー変換テクニック（この記事）</strong></li>
@@ -390,6 +407,7 @@
         <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="18_qr_num_enter_numpad_enter.html">⑱ Num Enter・Numpad Enter・通常Enterの違い</a></li>
       </ol>
     </nav>
 <section class="qr-safety-note" aria-labelledby="qr-safety-title">

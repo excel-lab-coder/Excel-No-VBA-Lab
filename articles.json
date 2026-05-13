@@ -568,6 +568,16 @@
     {
       "category": "qr",
       "subcategory": "input",
+      "title": "⓪ QRリーダーでExcel入力を自動化する仕組み — VBAなしでできる理由",
+      "url": "qr/00_qr_reader_excel_input_basics.html",
+      "summary": "QRリーダーをキーボード入力として使う基本。Excel側のQR用データ設計、リーダー側のキー送信設定、実機検証を1セットで理解します。",
+      "level": 1,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "qr",
+      "subcategory": "input",
       "title": "① QRコードでWebシステム入力を自動化 — Excelで作ったQRにTab・Enterを埋め込む",
       "url": "qr/01_qr_barcode_control.html",
       "summary": "ExcelでQR用データを作り、QRリーダーをキーボード入力として使う基本。Tab・Enterを組み合わせたWebシステム入力の入口です。",
@@ -721,6 +731,17 @@
       "summary": "ExcelでQRコードを作り、業務システムへ自動入力する用途で3メーカーを比較。TabやEnterはCHAR関数、NumEnterやPauseは設定しやすさ、紙の設定バーコード運用まで含めて選び方を整理します。",
       "level": 7,
       "tags": ["impact"],
+      "rarity_id": "qr_hardware",
+      "is_highlight": true
+    },
+    {
+      "category": "qr",
+      "subcategory": "reader_check",
+      "title": "⑱ QRリーダーでテンキーEnterを送る方法 — Num Enter・Numpad Enter・通常Enterの違い",
+      "url": "qr/18_qr_num_enter_numpad_enter.html",
+      "summary": "通常Enterでは確定できない基幹系画面向けに、Num Enterの表記ゆれ、CHAR(13)との違い、リーダー側のキー変換、メモ帳では判別しにくい検証方法を整理します。",
+      "level": 6,
+      "tags": ["impact", "rare"],
       "rarity_id": "qr_hardware",
       "is_highlight": true
     },

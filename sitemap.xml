@@ -505,103 +505,115 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/00_qr_reader_excel_input_basics.html</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/01_qr_barcode_control.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/02_qr_tab_enter.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/03_qr_character_delay.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/04_qr_key_conversion.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/05_qr_key_practice.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/06_qr_sleep_revised_honeywell.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/07_qr_full_system.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/08_qr_hardware_revised_honeywell.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/09_qr_closed_transfer.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/10_qr_system_migration.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/12_qr_existing_reader_check.html</loc>
-    <lastmod>2026-05-10</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/13_qr_reader_design_philosophy_current_research_v5.html</loc>
-    <lastmod>2026-05-10</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/14_qr_zebra_adf_variable_pause_revised_ranked.html</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/16_qr_opticon_universalconfig_streaming_control.html</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/17_qr_reader_recommendation_opticon_zebra_honeywell.html</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/18_qr_num_enter_numpad_enter.html</loc>
     <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
