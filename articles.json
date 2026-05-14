@@ -746,6 +746,16 @@
       "is_highlight": true
     },
     {
+      "category": "qr",
+      "subcategory": "input",
+      "title": "⑲ RPA・Seleniumが使いにくい現場での代替案 — キーボード扱いのQRリーダーで入力作業を減らす",
+      "url": "qr/19_qr_rpa_selenium_excel_qr_alternative.html",
+      "summary": "QRリーダーはキーボード入力として多くのソフトで動く一方、条件分岐はできません。RPA・Selenium・UIAが使いにくい現場での使いどころを整理します。",
+      "level": 4,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
       "category": "others",
       "subcategory": "speed",
       "title": "Excelが遅い本当の原因 — メモリスワップと数式設計の関係",

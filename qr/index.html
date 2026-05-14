@@ -13,12 +13,12 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta name="description" content="会社でVBAやマクロ、RPAが禁止されている環境でも、Excelで作ったQR用データとQRリーダー本体のキー送信設定を組み合わせて入力自動化を行う総合ガイド。Webシステム転記・閉域データ連携・Num Enter検証まで整理します。">
+<meta name="description" content="会社でVBAやマクロ、RPAが禁止されている環境でも、Excelで作ったQR用データとQRリーダー本体のキー送信設定を組み合わせて入力自動化を行う総合ガイド。QRリーダーはキーボード扱いで多くのソフトに使える一方、条件分岐はできない点まで整理します。">
 <meta name="keywords" content="Excel QRコード, Excel QRリーダー, Excel バーコードリーダー, QRコード Excel入力, QRリーダー Excel入力, バーコードリーダー Excel入力, Excel QRコード 作成, QRコード 自動入力 Excel, Webシステム QRリーダー, 業務システム バーコードリーダー, Opticon, ???????????, OPTOELECTRONICS, ???????????????, Zebra, ???, Zebra Technologies, Honeywell, ?????, Honeywell International, QR???? ????, ????????? ????, QR???? Excel??, オプトエレクトロニクス, 株式会社オプトエレクトロニクス, ゼブラ, ゼブラ・テクノロジーズ, ハネウェル, ハネウェル・インターナショナル, QRリーダー メーカー, バーコードリーダー メーカー">
 <meta name="theme-color" content="#1a3d5c">
 <link rel="canonical" href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/">
 <meta property="og:title" content="QR Automation Lab総合ガイド｜VBA・マクロ禁止で困ったときの入力自動化｜Excel × No VBA Lab">
-<meta property="og:description" content="VBAもマクロもRPAも使えない、でも入力作業は減らしたい。QR Automation Labは、Excelで作ったQR用データとQRリーダー本体のキー送信設定で入力自動化と閉域データ転送を整理する総合ページです。">
+<meta property="og:description" content="VBAもマクロもRPAも使えない、でも入力作業は減らしたい。QRリーダーをキーボード入力として使う強みと、条件分岐できない限界も含めて整理する総合ページです。">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/">
@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="QR Automation Lab総合ガイド｜VBA・マクロ禁止で困ったときの入力自動化｜Excel × No VBA Lab">
-<meta name="twitter:description" content="VBAもマクロもRPAも使えない環境で、QRリーダー設定とExcel設計を入力自動化の代替手段として使う総合ページです。">
+<meta name="twitter:description" content="VBAもマクロもRPAも使えない環境で、QRリーダー設定とExcel設計を入力自動化の代替手段として使う総合ページです。キーボード扱いの強みと条件分岐できない限界も整理します。">
 <meta name="twitter:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
 <meta name="robots" content="index, follow">
 <link rel="icon" href="../favicon.ico">
@@ -68,7 +68,7 @@
     "@context":  "https://schema.org",
     "@type":  "CollectionPage",
     "name":  "QR Automation Lab",
-    "description":  "VBAもマクロもRPAも使えない、でも入力作業は減らしたい。QR Automation Labは、Excelで作ったQR用データとQRリーダー本体のキー送信設定で入力自動化と閉域データ転送を整理する総合ページです。",
+    "description":  "VBAもマクロもRPAも使えない、でも入力作業は減らしたい。QR Automation Labは、Excelで作ったQR用データとQRリーダー本体のキー送信設定で入力自動化と閉域データ転送を整理する総合ページです。QRリーダーをキーボード入力として使う強みと、条件分岐できない限界も扱います。",
     "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/",
     "inLanguage":  "ja",
     "isPartOf":  {
@@ -190,6 +190,12 @@
                         "name":  "記事⑱ QRリーダーでテンキーEnterを送る方法",
                         "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/18_qr_num_enter_numpad_enter.html",
                         "position":  18
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "記事⑲ RPA・Seleniumが使いにくい現場での代替案",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/19_qr_rpa_selenium_excel_qr_alternative.html",
+                        "position":  19
                     }
                 ]
 }
@@ -233,6 +239,14 @@
                            "acceptedAnswer":  {
                                                   "@type":  "Answer",
                                                   "text":  "設定項目（接尾キー、ディレイ、文字変換）の有無が重要です。カテゴリ内の選定記事を参照してください。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "QRリーダーはほぼどんなソフトでも使えますか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "入力欄がキーボード入力を受け付けるソフトなら使える可能性があります。ただしQRリーダーは画面を読めないため、条件分岐やエラー判断はできません。記事⑲で使いどころを整理しています。"
                                               }
                        },
                        {
@@ -294,6 +308,7 @@
     <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
 <p class="article-summary">ハードウェアとExcel設計を組み合わせて、VBA・マクロ禁止環境でも入力自動化を成立させる実践カテゴリです。</p>
 <p class="article-summary">画面入力やWebシステムへの転記はPower Queryだけでは対応しにくいため、QRリーダーをキーボード入力装置として使う方法も選択肢になります。</p>
+<p class="article-summary">QRリーダーはキーボード扱いのため多くのソフトに入力できますが、画面状態を読んだ条件分岐はできません。入力列の設計と人間の確認を組み合わせるのが基本です。</p>
   </section>
 
   <section class="method-section">
@@ -596,6 +611,21 @@
       <p class="article-summary">通常Enterでは確定できない基幹系画面向けに、Num Enterの表記ゆれ、CHAR(13)との違い、リーダー側のキー変換、検証方法を整理します。</p>
     </li>
   </ul>
+
+  <h3 class="subcategory-heading">🧱 セクション4：制限環境・RPA代替案（全1記事）</h3>
+
+  <ul class="article-list" id="list-qr-alternative">
+    <li class="article-item highlight">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 代替案</span></span>
+      </div>
+      <a class="article-link" href="../qr/19_qr_rpa_selenium_excel_qr_alternative.html">⑲ RPA・Seleniumが使いにくい現場での代替案 — キーボード扱いのQRリーダーで入力作業を減らす</a>
+      <p class="article-summary">QRリーダーはキーボード入力として多くのソフトで動く一方、条件分岐はできません。RPA・Selenium・UIAが使いにくい現場での使いどころを整理します。</p>
+    </li>
+  </ul>
+
   <section class="method-section method-section-spaced">
     <h2><span class="icon">🛣️</span> 推奨学習ルート</h2>
     <ul class="article-list learning-route-list">
@@ -615,6 +645,7 @@
       <li><a class="article-link" href="./16_qr_opticon_universalconfig_streaming_control.html">14. 記事⑯ <span class="maker-name maker-opticon">Opticon<span class="maker-kana">オプト</span></span><br><span class="maker-tool">UniversalConfig</span><br><span class="maker-topic">ストリーミング方式・Sleep・キー変換</span></a><p class="article-summary">Opticonの入力制御と設定保存・復元を確認する。</p></li>
       <li><a class="article-link" href="./17_qr_reader_recommendation_opticon_zebra_honeywell.html">15. 記事⑰ QRリーダー選定比較<br><span class="maker-compare-line"><span class="maker-name maker-opticon">Opticon<span class="maker-kana">オプト</span></span><span class="maker-name maker-zebra">Zebra<span class="maker-kana">ゼブラ</span></span><span class="maker-name maker-honeywell">Honeywell<span class="maker-kana">ハネウェル</span></span></span></a><p class="article-summary">どのメーカーを選ぶか、現場運用と復旧性から決める。</p></li>
       <li><a class="article-link" href="./09_qr_closed_transfer.html">16. 記事⑨ 閉域環境データ転送</a><p class="article-summary">入力自動化を紙ベースのデータ転送へ広げる。</p></li>
+      <li><a class="article-link" href="./19_qr_rpa_selenium_excel_qr_alternative.html">17. 記事⑲ RPA・Selenium代替案</a><p class="article-summary">キーボード扱いで広く動く強みと、条件分岐できない限界を確認する。</p></li>
     </ul>
   </section>
 
@@ -623,6 +654,7 @@
     <ul class="article-list">
       <li class="article-item"><p class="article-link">Q. 本当にVBAやマクロなしで自動化できますか？</p><p class="article-summary">A. はい。Excelで作ったQR用データとQRリーダー本体のキー送信設定を組み合わせることで、マクロ禁止で困ったときの入力自動化の代替手段になります。</p></li>
       <li class="article-item"><p class="article-link">Q. どのQRリーダーでも使えますか？</p><p class="article-summary">A. 設定項目（接尾キー、ディレイ、文字変換）の有無が重要です。カテゴリ内の選定記事を参照してください。</p></li>
+      <li class="article-item"><p class="article-link">Q. QRリーダーはほぼどんなソフトでも使えますか？</p><p class="article-summary">A. 入力欄がキーボード入力を受け付けるソフトなら使える可能性があります。ただしQRリーダーは画面を読めないため、条件分岐やエラー判断はできません。記事⑲で使いどころを整理しています。</p></li>
       <li class="article-item"><p class="article-link">Q. Enterは効くのに、基幹システムで確定できないことがありますか？</p><p class="article-summary">A. あります。通常EnterではなくNum Enter / Numpad Enterを要求する画面があります。記事⑱で、CHAR(13)との違い、メモ帳では判別しにくい点、実機での確認方法を整理しています。</p></li>
       <li class="article-item"><p class="article-link">Q. 閉域環境での運用は安全ですか？</p><p class="article-summary">A. 転送ルールとデータ形式を固定すれば、安全性と再現性を両立できます。</p></li>
       <li class="article-item"><p class="article-link">Q. 日本語や全角データも扱えますか？</p><p class="article-summary">A. 対応できますが、方式選定が前提です。Microsoft Barcode Controlは半角ASCII中心の運用が安全で、全角は文字化け・無視の可能性があります。全角データは、UTF-8/Shift-JISなどの文字コード、桁数、QR生成方式、リーダー設定を合わせて実機確認してください。</p></li>

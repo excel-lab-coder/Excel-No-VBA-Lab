@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-84NBDYVXPT"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-84NBDYVXPT');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPA・Seleniumが使いにくい現場での代替案｜ExcelとQRリーダーで入力作業を減らす方法</title>
+    <meta name="description" content="RPA・Selenium・VBA・UI Automationが使いにくい現場で、ExcelとQRリーダーを組み合わせて入力作業を減らす考え方を整理します。QRリーダーはキーボード扱いのため多くのソフトで動きますが、条件分岐はできない点も含めて整理します。">
+    <meta name="keywords" content="RPA 代替案, Selenium 使えない, VBA禁止, マクロ禁止, QRリーダー Excel入力, QRリーダー キーボード入力, QRリーダー 条件分岐できない, QRリーダー 自動化, Excel QRコード, 業務システム 入力作業, UI Automation 使えない, Num Enter, 閉域環境 自動化">
+    <link rel="canonical" href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/19_qr_rpa_selenium_excel_qr_alternative.html">
+
+    <meta property="og:title" content="RPA・Seleniumが使いにくい現場での代替案｜ExcelとQRリーダーで入力作業を減らす方法">
+    <meta property="og:description" content="RPA・Selenium・VBA・UI Automationが使いにくい現場で、ExcelとQRリーダーを組み合わせて入力作業を減らす考え方を整理します。QRリーダーはキーボード扱いのため多くのソフトで動きますが、条件分岐はできない点も含めて整理します。">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/19_qr_rpa_selenium_excel_qr_alternative.html">
+    <meta property="og:site_name" content="Excel × No VBA Lab">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="index, follow">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../common.css">
+    <link rel="stylesheet" href="../article.css">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "RPA・Seleniumが使いにくい現場での代替案｜ExcelとQRリーダーで入力作業を減らす方法",
+        "description": "RPA・Selenium・VBA・UI Automationが使いにくい現場で、ExcelとQRリーダーを組み合わせて入力作業を減らす考え方を整理します。QRリーダーはキーボード扱いのため多くのソフトで動きますが、条件分岐はできない点も含めて整理します。",
+        "author": {
+            "@type": "Organization",
+            "name": "Excel × No VBA Lab"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Excel × No VBA Lab"
+        },
+        "datePublished": "2026-05-14",
+        "dateModified": "2026-05-14",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/19_qr_rpa_selenium_excel_qr_alternative.html"
+        }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Excel × No VBA Lab",
+                "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "QR Automation Lab",
+                "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "RPA・Selenium代替案"
+            }
+        ]
+    }
+    </script>
+</head>
+<body class="article-layout">
+    <div class="reading-progress" aria-hidden="true"></div>
+    <a class="skip-link" href="#main-content">本文へ移動</a>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="site-logo" href="../index.html">Excel × No VBA Lab</a>
+            <nav class="site-nav" aria-label="サイト内ナビゲーション">
+                <a href="../index.html#home">ホーム</a>
+                <a href="../index.html#qr">QR Automation</a>
+                <a href="./index.html">QR総合ガイド</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content article-layout" id="main-content">
+        <div class="container article-container">
+            <nav class="breadcrumb" aria-label="パンくずリスト">
+                <a href="../index.html">ホーム</a>
+                <span aria-hidden="true">/</span>
+                <a href="./index.html">QR Automation Lab</a>
+                <span aria-hidden="true">/</span>
+                <span>⑲ RPA・Selenium代替案</span>
+            </nav>
+
+            <article class="article-body">
+                <header class="article-header">
+                    <div class="article-meta">
+                        <span class="article-badge">QR Automation Lab</span>
+                        <span>⑲ RPA・Selenium代替案</span>
+                        <span>制限環境の入力補助</span>
+                    </div>
+                    <h1 class="article-title">RPA・Seleniumが使いにくい現場での代替案<br><span>ExcelとQRリーダーで入力作業を減らす方法</span></h1>
+                    <p class="article-summary" data-seo-lead>RPA・Selenium・VBA・UI Automationが使いにくい現場で、ExcelとQRリーダーを組み合わせて入力作業を減らす考え方を整理します。QRリーダーはキーボード扱いのため多くのソフトで動きますが、条件分岐はできない点も含めて整理します。</p>
+                    <div class="article-updated">最終更新日：2026年5月14日</div>
+                </header>
+
+                <section class="method-section goal-section">
+                    <h2><span class="icon">✅</span> 先に結論</h2>
+                    <p>
+                        業務の入力作業を減らしたいとき、最初に思いつきやすいのは、
+                        VBA、RPA、Selenium、UI Automation（UIA）、Power Automate Desktop などです。
+                      </p>
+                    
+                      <p>
+                        これらは非常に強力な自動化手段です。
+                        しかし、すべての職場・すべての業務画面で使えるとは限りません。
+                      </p>
+                    
+                      <p>
+                        特に、基幹システム、古い業務アプリ、閉域環境、外部ソフト禁止の端末では、
+                        「自動化したいのに、自動化ツールを使えない」という状況が起こります。
+                      </p>
+                    
+                      <p>
+                        そのような現場では、画面を直接操作するのではなく、
+                        <strong>Excelで入力用データを整え、QRリーダーをキーボード入力装置として使う</strong>
+                        という考え方が選択肢になります。
+                      </p>
+
+                      <p>
+                        QRリーダーを「専用連携ソフト」ではなく「キーボード」として見るのが、この方法のポイントです。
+                        キーボード入力を受け付ける画面であれば、Excel、Webフォーム、古い業務アプリ、リモート端末などでも動く可能性があります。
+                        ただし、画面の状態を読み取って「Aなら処理1、Bなら処理2」のように条件分岐することはできません。
+                      </p>
+
+                      <p>
+                        そのため、判断はExcel側のデータ作成や人間の確認に寄せ、
+                        QRリーダーには<strong>決まった順番の入力列を流す役割</strong>を持たせるのが現実的です。
+                      </p>
+                    
+                      <p>
+                        本記事では、RPA・Selenium・VBA・UIAが使いにくい現場で、
+                        ExcelとQRリーダーを使って入力作業を減らす考え方を整理します。
+                      </p>
+                </section>
+                <section class="method-section">
+                    <h2>1. RPA・Selenium・VBAは強力だが、現場では使えないことがある</h2>
+                    
+                      <p>
+                        RPA、Selenium、VBA、UI Automation（UIA）は、画面操作や入力作業を自動化する有力な方法です。
+                      </p>
+                    
+                      <p>
+                        たとえば、次のような用途では大きな効果があります。
+                      </p>
+                    
+                      <ul>
+                        <li>Excelのデータを別システムに入力する</li>
+                        <li>Web画面に自動ログインして処理する</li>
+                        <li>定型フォームに値を入力する</li>
+                        <li>ボタンを押す、画面を切り替える、結果を取得する</li>
+                        <li>毎日・毎月の同じ作業を自動化する</li>
+                      </ul>
+                    
+                      <p>
+                        しかし、実際の職場では次のような制約があります。
+                      </p>
+                    
+                      <ul>
+                        <li>VBA・マクロが禁止されている</li>
+                        <li>外部ソフトのインストールが禁止されている</li>
+                        <li>RPAツールを導入する予算や申請がない</li>
+                        <li>Selenium用のWebDriverを配置できない</li>
+                        <li>ブラウザの更新でSeleniumが動かなくなる</li>
+                        <li>二要素認証やログイン制御で自動化が止まる</li>
+                        <li>基幹システムが古く、画面要素を認識できない</li>
+                        <li>UIAで要素を拾えない、または安定しない</li>
+                        <li>EnterキーやTabキーの送信が思った通りに効かない</li>
+                        <li>担当者のPCごとに環境差があり、保守できない</li>
+                      </ul>
+                    
+                      <p>
+                        つまり、自動化したい業務があっても、
+                        自動化ツールを導入できない、または安定運用できないケースがあります。
+                      </p>
+                </section>
+                <section class="method-section">
+                    <h2>2. RPAが向かない工程とは</h2>
+                    
+                      <p>
+                        RPAは非常に便利ですが、すべての入力作業に向いているわけではありません。
+                      </p>
+                    
+                      <p>
+                        特に、次のような工程では、RPAよりも別の方法を検討した方がよい場合があります。
+                      </p>
+                    
+                      <table class="format-table">
+                        <thead>
+                          <tr>
+                            <th>RPAで困りやすい工程</th>
+                            <th>理由</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>古い基幹システムへの入力</td>
+                            <td>画面要素を認識できない、または安定しないことがある</td>
+                          </tr>
+                          <tr>
+                            <td>閉域環境での作業</td>
+                            <td>外部ツールやクラウド型RPAを使えない場合がある</td>
+                          </tr>
+                          <tr>
+                            <td>導入申請が必要な職場</td>
+                            <td>RPAツール導入までに時間がかかる</td>
+                          </tr>
+                          <tr>
+                            <td>少量から中量の定型入力</td>
+                            <td>RPAを作るほどではないが、手入力は面倒な場合がある</td>
+                          </tr>
+                          <tr>
+                            <td>画面変更が多い業務</td>
+                            <td>ボタン位置や項目名が変わるたびに保守が必要になる</td>
+                          </tr>
+                          <tr>
+                            <td>EnterやTabの挙動が特殊な画面</td>
+                            <td>通常EnterとNum Enterの違いなどで詰まることがある</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    
+                      <p>
+                        このような業務では、
+                        画面を直接操作する自動化ではなく、
+                        <strong>入力するデータそのものを整えて、人間の操作を最小化する</strong>
+                        という方向が有効な場合があります。
+                      </p>
+                </section>
+                <section class="method-section">
+                    <h2>3. Seleniumが使いにくい現場</h2>
+                    
+                      <p>
+                        Seleniumは、Web画面の自動操作に強い方法です。
+                        Webフォームに値を入れたり、ボタンを押したり、画面遷移を自動化したりできます。
+                      </p>
+                    
+                      <p>
+                        しかし、職場の業務システムでは、Seleniumが使いにくいことがあります。
+                      </p>
+                    
+                      <ul>
+                        <li>WebDriverを配置できない</li>
+                        <li>ブラウザ更新で動作が変わる</li>
+                        <li>社内ブラウザ設定で制限される</li>
+                        <li>ログインや二要素認証で止まる</li>
+                        <li>画面が特殊で要素を安定して取得できない</li>
+                        <li>そもそもWebシステムではなく、Windowsアプリや端末画面である</li>
+                      </ul>
+                    
+                      <p>
+                        また、Seleniumは基本的にWeb画面向けです。
+                        古い基幹システム、専用クライアント、リモート端末、エミュレータ画面などでは、
+                        思うように使えないことがあります。
+                      </p>
+                    
+                      <p>
+                        その場合、画面内部の要素を操作するのではなく、
+                        キーボード入力として値を送る発想が役に立つことがあります。
+                      </p>
+                </section>
+                <section class="method-section">
+                    <h2>4. VBAのSendKeysやUIAで詰まることもある</h2>
+                    
+                      <p>
+                        VBAで自動化しようとする場合、よく使われるのが SendKeys です。
+                      </p>
+                    
+                      <pre class="code-block"><code>SendKeys "{ENTER}"</code></pre>
+                    
+                      <p>
+                        しかし、SendKeys は環境によって不安定になることがあります。
+                      </p>
+                    
+                      <ul>
+                        <li>フォーカスがずれる</li>
+                        <li>処理タイミングが合わない</li>
+                        <li>送ったキーが反映されない</li>
+                        <li>通常EnterではなくテンキーEnterが必要な画面がある</li>
+                        <li>管理者権限やセキュリティ設定の影響を受ける</li>
+                      </ul>
+                    
+                      <p>
+                        UI Automation（UIA）も、Windowsアプリ操作では有効な方法です。
+                        ただし、対象アプリの作りによっては、要素が見えなかったり、
+                        ボタンや入力欄を安定して取得できなかったりします。
+                      </p>
+                    
+                      <p>
+                        このように、VBA、SendKeys、UIAを使っても、
+                        実務画面では思った通りに動かないことがあります。
+                      </p>
+                </section>
+                <section class="method-section">
+                    <h2>5. QRリーダー入力自動化という考え方</h2>
+                    
+                      <p>
+                        そこで使える場合があるのが、
+                        <strong>QRリーダーをキーボード入力装置として使う方法</strong>
+                        です。
+                      </p>
+                    
+                      <p>
+                        多くのQRリーダーやバーコードリーダーは、
+                        読み取った内容をキーボード入力としてPCに送信できます。
+                      </p>
+
+                      <p>
+                        これは大きな利点です。
+                        相手がExcelでも、Webフォームでも、専用ソフトでも、古い基幹システムでも、
+                        入力欄がフォーカスされていてキーボード入力を受け付けるなら、同じ考え方で試せます。
+                      </p>
+                    
+                      <p>
+                        つまり、QRコードの中に入力したい文字列を入れておけば、
+                        QRリーダーで読み取った瞬間に、現在フォーカスが当たっている入力欄へ文字が入力されます。
+                      </p>
+                    
+                      <p>
+                        さらに、設定や機種によっては、読み取り後に次のようなキー操作も組み合わせられます。
+                      </p>
+                    
+                      <ul>
+                        <li>Tab</li>
+                        <li>Enter</li>
+                        <li>Num Enter</li>
+                        <li>Prefix</li>
+                        <li>Suffix</li>
+                        <li>文字間ディレイ</li>
+                        <li>読み取り後の待ち時間</li>
+                        <li>一部文字を特殊キーに変換する設定</li>
+                      </ul>
+                    
+                      <p>
+                        これにより、単に文字を入力するだけでなく、
+                        入力欄の移動や確定操作まで含めた入力補助ができます。
+                      </p>
+
+                      <p>
+                        一方で、QRリーダーは画面を見て判断する道具ではありません。
+                        「エラーが出たら戻る」「在庫が足りなければ別画面へ進む」「入力値によって処理を変える」といった条件分岐は、
+                        QRリーダー単体ではできないと考えておく必要があります。
+                      </p>
+                </section>
+                <section class="method-section">
+                    <h2>6. 画面を操作するのではなく、入力列を作る</h2>
+                    
+                      <p>
+                        RPAやSeleniumは、画面そのものを操作しようとします。
+                      </p>
+                    
+                      <p>
+                        一方、QRリーダー入力自動化では、考え方が少し違います。
+                      </p>
+                    
+                      <p>
+                        画面を自動操作するのではなく、
+                        <strong>人が入力する順番に合わせて、Excel側で入力用の文字列を作る</strong>
+                        という発想です。
+                      </p>
+                    
+                      <p>
+                        たとえば、ある画面に次の順番で入力するとします。
+                      </p>
+                    
+                      <ol>
+                        <li>社員番号</li>
+                        <li>Tabで次の欄へ移動</li>
+                        <li>処理区分</li>
+                        <li>Tabで次の欄へ移動</li>
+                        <li>対象年月</li>
+                        <li>Enterで確定</li>
+                      </ol>
+                    
+                      <p>
+                        この場合、Excel側で次のような入力順序を作ります。
+                      </p>
+                    
+                      <pre class="code-block"><code>社員番号 + Tab + 処理区分 + Tab + 対象年月 + Enter</code></pre>
+                    
+                      <p>
+                        それをQRコード化し、QRリーダーで読み取ることで、
+                        手入力の回数を減らせる可能性があります。
+                      </p>
+                    
+                      <p>
+                        この方法は、複雑な判断処理には向きません。
+                        しかし、入力項目の順番が決まっている定型作業には強いです。
+                      </p>
+
+                      <p>
+                        条件分岐が必要な場合は、QRを読む前にExcel側で対象データを絞り込む、
+                        確認列で人が判断する、処理パターンごとに別のQRを作る、という形に分けると扱いやすくなります。
+                      </p>
+                </section>
+                <section class="method-section">
+                    <h2>7. RPA・Selenium・UIA・QRリーダー入力の比較</h2>
+                    
+                      <p>
+                        それぞれの方法には、向き不向きがあります。
+                      </p>
+                    
+                      <table class="format-table">
+                        <thead>
+                          <tr>
+                            <th>方法</th>
+                            <th>向いていること</th>
+                            <th>苦手なこと</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>VBA</td>
+                            <td>Excel内処理、簡単な定型操作</td>
+                            <td>マクロ禁止環境では使えない</td>
+                          </tr>
+                          <tr>
+                            <td>Selenium</td>
+                            <td>Web画面の自動操作</td>
+                            <td>WebDriver、ログイン制限、ブラウザ更新に影響される</td>
+                          </tr>
+                          <tr>
+                            <td>RPA</td>
+                            <td>画面操作全般の自動化</td>
+                            <td>導入、保守、ライセンス、権限管理が重い場合がある</td>
+                          </tr>
+                          <tr>
+                            <td>UI Automation / UIA</td>
+                            <td>Windowsアプリの操作</td>
+                            <td>対象アプリによって要素を取得できないことがある</td>
+                          </tr>
+                          <tr>
+                            <td>Power Query</td>
+                            <td>データ整形、結合、取り込み</td>
+                            <td>入力画面の操作はできない</td>
+                          </tr>
+                          <tr>
+                            <td>QRリーダー入力</td>
+                            <td>定型入力、閉域環境、ソフト禁止環境、幅広いソフトへのキー送信</td>
+                            <td>画面状態の読み取り、条件分岐、エラー判断には向かない</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    
+                      <p>
+                        QRリーダー入力自動化は、RPAやSeleniumの完全な代替ではありません。
+                      </p>
+                    
+                      <p>
+                        しかし、RPAを入れるほどではない入力作業、
+                        Seleniumが使えない業務画面、
+                        VBAやマクロが禁止されている職場では、
+                        現実的な代替案になることがあります。
+                      </p>
+                </section>
+                <section class="method-section">
+                    <h2>8. QRリーダー入力が向いている業務</h2>
+                    
+                      <p>
+                        QRリーダー入力自動化が向いているのは、次のような業務です。
+                      </p>
+                    
+                      <ul>
+                        <li>入力する項目が決まっている</li>
+                        <li>入力順序が毎回ほぼ同じ</li>
+                        <li>Excel側で入力データを作れる</li>
+                        <li>人が画面を確認しながら進めたい</li>
+                        <li>RPAを入れるほど件数が多くない</li>
+                        <li>しかし手入力では面倒、またはミスが出る</li>
+                        <li>基幹システムを改修できない</li>
+                        <li>外部ソフトを入れられない</li>
+                        <li>バーコードリーダーやQRリーダーが現場にある</li>
+                      </ul>
+                    
+                      <p>
+                        たとえば、次のような場面です。
+                      </p>
+                    
+                      <ul>
+                        <li>Excelの一覧から対象者だけを抽出し、別システムに入力する</li>
+                        <li>固定長帳票やCOBOL帳票を整形し、必要項目だけを入力する</li>
+                        <li>商品コード、社員番号、処理区分などを定型画面へ入力する</li>
+                        <li>Tabで項目移動し、最後にEnterで確定する画面に入力する</li>
+                        <li>通常EnterではなくNum Enterが必要な業務画面に入力する</li>
+                      </ul>
+                </section>
+                <section class="method-section">
+                    <h2>9. QRリーダー入力が向かない業務</h2>
+                    
+                      <p>
+                        一方で、QRリーダー入力自動化が向かない業務もあります。
+                      </p>
+                    
+                      <ul>
+                        <li>画面上の条件によって入力内容が大きく変わる</li>
+                        <li>複雑な分岐判断が必要</li>
+                        <li>入力結果を読んで次の操作を自動で変えたい</li>
+                        <li>エラー表示を読み取って自動判断したい</li>
+                        <li>大量件数を完全無人で処理したい</li>
+                        <li>画面遷移が毎回大きく変わる</li>
+                        <li>入力先のフォーカスが安定しない</li>
+                        <li>入力ミスが重大事故につながるため完全な検証機構が必要</li>
+                      </ul>
+                    
+                      <p>
+                        このような業務では、RPA、Selenium、API連携、システム改修などを検討した方がよい場合があります。
+                      </p>
+                    
+                      <p>
+                        QRリーダー入力自動化は、
+                        <strong>すべてを自動化する方法ではなく、人間の確認を残しながら入力負担を減らす方法</strong>
+                        と考えると使いやすいです。
+                      </p>
+
+                      <p>
+                        逆に言えば、条件分岐をQRリーダーに任せようとしないことが大切です。
+                        QRリーダーは、ほぼキーボードです。
+                        どのキーをどの順番で送るかは得意ですが、画面を読んで判断する役割はRPAや人間側に残ります。
+                      </p>
+                </section>
+                <section class="method-section">
+                    <h2>10. Enterが効かない場合はNum Enterを疑う</h2>
+                    
+                      <p>
+                        業務システムでは、通常のEnterキーでは確定できないのに、
+                        テンキー側のEnterでは確定できる場合があります。
+                      </p>
+                    
+                      <p>
+                        このテンキー側のEnterは、Num Enter、Numpad Enter、テンキーEnterなどと呼ばれることがあります。
+                      </p>
+                    
+                      <p>
+                        これは、VBAのSendKeys、RPA、Selenium、QRリーダー、バーコードリーダーのいずれでも問題になることがあります。
+                      </p>
+                    
+                      <p>
+                        たとえば、次のような場合です。
+                      </p>
+                    
+                      <ul>
+                        <li>Enterを送っているのに画面が進まない</li>
+                        <li>バーコードリーダーのSuffixにEnterを入れても確定されない</li>
+                        <li>キーボードのテンキーEnterなら確定できる</li>
+                        <li>RPAでEnter操作を入れても反応しない</li>
+                        <li>VBAのSendKeys "{ENTER}" では期待通りに動かない</li>
+                      </ul>
+                    
+                      <p>
+                        この場合、通常EnterとNum Enterの違いを確認する必要があります。
+                      </p>
+                    
+                      <p>
+                        QRリーダーによっては、読み取り後のキーを通常Enterではなく、
+                        Num Enter相当のキーに設定できる場合があります。
+                      </p>
+                    
+                      <p>
+                        このような入力確定の違いは、QR Automationを考える上で非常に重要です。
+                      </p>
+                </section>
+                <section class="method-section">
+                    <h2>11. 文字欠けや入力漏れにはディレイが必要になる</h2>
+                    
+                      <p>
+                        QRリーダーで長い文字列を一気に送ると、
+                        入力先のシステムが処理しきれず、文字欠けが起こることがあります。
+                      </p>
+                    
+                      <p>
+                        特に、古い基幹システムや反応の遅い画面では注意が必要です。
+                      </p>
+                    
+                      <p>
+                        この場合、次のような対策を検討します。
+                      </p>
+                    
+                      <ul>
+                        <li>文字と文字の間に待ち時間を入れる</li>
+                        <li>TabやEnterの前後に待ち時間を入れる</li>
+                        <li>画面遷移後に入力を再開するためのSleepを使う</li>
+                        <li>入力文字列を短く分割する</li>
+                        <li>QRコードを複数に分ける</li>
+                      </ul>
+                    
+                      <p>
+                        RPAでも画面待機が重要なように、
+                        QRリーダー入力でも、入力先の処理速度に合わせることが重要です。
+                      </p>
+                </section>
+                <section class="method-section">
+                    <h2>12. COBOL帳票や固定長データとも相性がよい</h2>
+                    
+                      <p>
+                        QRリーダー入力自動化は、COBOL帳票や固定長テキストの整形とも相性があります。
+                      </p>
+                    
+                      <p>
+                        たとえば、基幹システムから出力された帳票データをExcelに貼り付けると、
+                        A列にすべて入ってしまうことがあります。
+                      </p>
+                    
+                      <p>
+                        その中から、対象者や対象明細だけを抽出し、
+                        必要な項目だけを別システム入力用に並べ替えることができます。
+                      </p>
+                    
+                      <p>
+                        さらに、その入力用データをQRコード化すれば、
+                        QRリーダーを使って別システムへ入力する流れを作れます。
+                      </p>
+                    
+                      <p>
+                        つまり、次のような流れです。
+                      </p>
+                    
+                      <ol>
+                        <li>COBOL帳票や固定長テキストをExcelに貼り付ける</li>
+                        <li>不要行、ヘッダー行、合計行を除外する</li>
+                        <li>親情報を明細行へ補完する</li>
+                        <li>対象者や対象明細だけを抽出する</li>
+                        <li>半角英数字の入力用データに変換する</li>
+                        <li>QRコード化する</li>
+                        <li>QRリーダーで別システムへ入力する</li>
+                      </ol>
+                    
+                      <p>
+                        このように、Excelでのデータ整形とQRリーダー入力を組み合わせることで、
+                        RPAやSeleniumを使わずに、入力作業の一部を減らせる場合があります。
+                      </p>
+                </section>
+                <section class="method-section">
+                    <h2>13. どの方法を選ぶべきか</h2>
+                    
+                      <p>
+                        自動化方法は、業務の内容と職場の制約によって選ぶ必要があります。
+                      </p>
+                    
+                      <table class="format-table">
+                        <thead>
+                          <tr>
+                            <th>状況</th>
+                            <th>向いている方法</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Excel内で完結する処理</td>
+                            <td>関数、Power Query、VBA</td>
+                          </tr>
+                          <tr>
+                            <td>Web画面を安定して操作できる</td>
+                            <td>Selenium、RPA</td>
+                          </tr>
+                          <tr>
+                            <td>Windowsアプリの要素を取得できる</td>
+                            <td>UI Automation / UIA</td>
+                          </tr>
+                          <tr>
+                            <td>RPA導入が許可されている</td>
+                            <td>RPA、Power Automate Desktop</td>
+                          </tr>
+                          <tr>
+                            <td>VBAや外部ソフトが禁止されている</td>
+                            <td>Excel関数、QRリーダー入力</td>
+                          </tr>
+                          <tr>
+                            <td>入力順序が決まっている</td>
+                            <td>QRリーダー入力</td>
+                          </tr>
+                          <tr>
+                            <td>キーボード入力できるが、自動化ツールは入れられない</td>
+                            <td>Excel + QRリーダー入力</td>
+                          </tr>
+                          <tr>
+                            <td>完全無人で大量処理したい</td>
+                            <td>RPA、Selenium、API連携、システム改修</td>
+                          </tr>
+                          <tr>
+                            <td>人間の確認を残しつつ入力を減らしたい</td>
+                            <td>Excel + QRリーダー入力</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    
+                      <p>
+                        QRリーダー入力自動化は、RPAやSeleniumの代わりにすべてを処理するものではありません。
+                      </p>
+                    
+                      <p>
+                        しかし、制限の多い現場では、
+                        <strong>使える道具だけで現実的に入力作業を減らす方法</strong>
+                        として非常に有効な場合があります。
+                      </p>
+                </section>
+                <section class="method-section">
+                    <h2>14. まとめ</h2>
+                    
+                      <p>
+                        RPA、Selenium、VBA、UIAは強力な自動化手段です。
+                      </p>
+                    
+                      <p>
+                        しかし、職場によっては、マクロ禁止、外部ソフト禁止、WebDriver不可、RPA導入不可、
+                        古い基幹システム、閉域環境などの理由で使いにくいことがあります。
+                      </p>
+                    
+                      <p>
+                        そのような場合、画面を直接操作するのではなく、
+                        Excelで入力データを作り、QRリーダーをキーボード入力装置として使う方法があります。
+                      </p>
+
+                      <p>
+                        QRリーダーはキーボード扱いのため、入力欄さえ受け付けてくれれば、
+                        特定のアプリに依存しにくいのが強みです。
+                        ただし、条件分岐や画面判断はできないため、事前にExcel側で入力パターンを分ける設計が重要です。
+                      </p>
+                    
+                      <p>
+                        この方法は、複雑な判断や完全無人処理には向きません。
+                        しかし、入力順序が決まっている定型作業や、
+                        人間が確認しながら進める業務には向いています。
+                      </p>
+                    
+                      <p>
+                        特に、次のような現場では検討する価値があります。
+                      </p>
+                    
+                      <ul>
+                        <li>VBAやマクロが禁止されている</li>
+                        <li>RPAを導入できない</li>
+                        <li>SeleniumやWebDriverを使えない</li>
+                        <li>古い基幹システムで画面操作が安定しない</li>
+                        <li>通常EnterとNum Enterの違いで入力確定に困っている</li>
+                        <li>Excelで入力データは作れるが、別システムへの入力が面倒</li>
+                        <li>COBOL帳票や固定長データを整形して再入力している</li>
+                      </ul>
+                    
+                      <p>
+                        RPAが使えないから自動化できない、とは限りません。
+                      </p>
+                    
+                      <p>
+                        画面操作の自動化が難しい場合でも、
+                        <strong>入力データを整え、QRリーダーでキーボード入力として流す</strong>
+                        という別の考え方があります。
+                      </p>
+                    
+                      <p>
+                        制限の多い現場では、このような小さな工夫が、
+                        手入力の削減、ミス防止、作業時間短縮につながることがあります。
+                      </p>
+                </section>
+            </article>
+        </div>
+    </main>
+
+<footer class="site-footer">
+        <div class="site-footer-trust" aria-label="運営情報と検証方針">
+            <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+            <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、USB-HID型QRリーダーを想定しています。機種やファームウェアで挙動が変わる可能性があるため、実務適用前に必ずコピー環境で確認してください。</p>
+            <p><strong>免責:</strong> 掲載手順の業務適用前に、バックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や適用判断は利用環境に合わせて確認してください。</p>
+            <p class="site-footer-links"><strong>公式参照:</strong>
+                <a href="https://www.opto.co.jp/products/tool/tool_download.html" rel="noopener" target="_blank">Opticon 設定ツール / UniversalConfig</a>
+                <a href="https://www.zebra.com/ap/en/support-downloads/software/scanner-software/123scan-utility.html" rel="noopener" target="_blank">Zebra 123Scan Utility</a>
+                <a href="https://sps-support.honeywell.com/s/article/Xenon-Scanners-Resource-Article" rel="noopener" target="_blank">Honeywell Xenon Scanners Resource Article</a>
+                <a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a>
+            </p>
+        </div>
+        <div class="footer-contact-wrap">
+            <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ（Google Forms）</a>
+        </div>
+        <p>&copy; Excel × No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+      <p class="site-footer-legal-links">
+    <a href="../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

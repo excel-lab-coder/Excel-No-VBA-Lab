@@ -15,7 +15,7 @@
   gtag('config', 'G-596JZ3M97H');
 </script>
 
-<meta content="VBAやマクロが会社で禁止されている、またはExcelで使えない環境でも、Excel関数・Power Query（パワークエリ）・QRリーダーを代替手段として使う実務テクニック集。COBOL帳票データ整形、QRコード連携、計算速度最適化まで幅広く解説。" name="description">
+<meta content="VBAやマクロが会社で禁止されている、またはExcelで使えない環境でも、Excel関数・Power Query（パワークエリ）・QRリーダーを代替手段として使う実務テクニック集。QRリーダーはキーボード扱いで多くのソフトに使える一方、条件分岐はできない点も含めて整理します。" name="description">
 <meta content="エクセル COBOL, Excel COBOL, COBOL帳票 整形, Excel QRコード, Excel QRリーダー, Excel バーコードリーダー, QRコード Excel入力, VBA不要 Excel" name="keywords">
 <meta content="#1a3d5c" name="theme-color">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/" rel="canonical">
@@ -24,7 +24,7 @@
 
 <!-- OGP -->
 <meta content="Excel × No VBA Lab — VBA・マクロ禁止環境で使える代替手段" property="og:title">
-<meta content="VBAやマクロが会社で禁止されている、またはExcelで使えない環境でも、Excel関数・Power Query（パワークエリ）・QRリーダーを代替手段として使う実務テクニック集。COBOL帳票データ整形、QRコード連携、計算速度最適化まで幅広く解説。" property="og:description">
+<meta content="VBAやマクロが会社で禁止されている、またはExcelで使えない環境でも、Excel関数・Power Query（パワークエリ）・QRリーダーを代替手段として使う実務テクニック集。QRリーダーはキーボード扱いで多くのソフトに使える一方、条件分岐はできない点も含めて整理します。" property="og:description">
 <meta content="website" property="og:type">
 <meta content="ja_JP" property="og:locale">
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/" property="og:url">
@@ -34,7 +34,7 @@
 <!-- Twitter Card -->
 <meta content="summary_large_image" name="twitter:card">
 <meta content="Excel × No VBA Lab — VBA・マクロ禁止環境で使える代替手段" name="twitter:title">
-<meta content="VBAやマクロが会社で禁止されたExcel環境でも、関数・Power Query（パワークエリ）・QRリーダーで業務改善する実務テクニック集。" name="twitter:description">
+<meta content="VBAやマクロが会社で禁止されたExcel環境でも、関数・Power Query（パワークエリ）・QRリーダーで業務改善する実務テクニック集。キーボード扱いの強みと条件分岐できない限界も整理します。" name="twitter:description">
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" name="twitter:image">
 
 <meta content="index, follow" name="robots">
@@ -85,7 +85,7 @@
   "name": "Excel × No VBA Lab",
   "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/",
   "inLanguage": "ja",
-  "description": "VBAやマクロが会社で禁止されているExcel環境でも、関数・Power Query・QRリーダーを代替手段として使う実務テクニック集"
+  "description": "VBAやマクロが会社で禁止されているExcel環境でも、関数・Power Query・QRリーダーを代替手段として使う実務テクニック集。QRリーダーをキーボード入力として使う強みと、条件分岐できない限界も整理します"
 }
 </script>
 <script type="application/ld+json">
@@ -142,8 +142,9 @@
     { "@type": "ListItem", "position": 24, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/17_qr_reader_recommendation_opticon_zebra_honeywell.html", "name": "QR自動入力におすすめのQRリーダー比較" },
     { "@type": "ListItem", "position": 25, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/00_qr_reader_excel_input_basics.html", "name": "QRリーダーでExcel入力を自動化する仕組み" },
     { "@type": "ListItem", "position": 26, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/18_qr_num_enter_numpad_enter.html", "name": "QRリーダーでテンキーEnterを送る方法" },
-    { "@type": "ListItem", "position": 27, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_linked_picture_filter_serial_label.html", "name": "リンク図と連番で封筒ラベル印刷" },
-    { "@type": "ListItem", "position": 28, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/05_article_cobol_qr_bridge.html", "name": "COBOL帳票から半角QR入力へつなぐ実践編" }
+    { "@type": "ListItem", "position": 27, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/19_qr_rpa_selenium_excel_qr_alternative.html", "name": "RPA・Seleniumが使いにくい現場での代替案" },
+    { "@type": "ListItem", "position": 28, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_linked_picture_filter_serial_label.html", "name": "リンク図と連番で封筒ラベル印刷" },
+    { "@type": "ListItem", "position": 29, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/05_article_cobol_qr_bridge.html", "name": "COBOL帳票から半角QR入力へつなぐ実践編" }
   ]
 }
 </script>
@@ -188,8 +189,8 @@
       "@type": "Question",
       "name": "QRコードでExcelの入力を自動化できますか？",
       "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "はい。QRリーダーの設定を組み合わせれば、VBA・RPA不要で入力自動化が可能です。Tab、Enter、待ち時間、キー変換などを活用することで、読み取りからセル移動まで自動化できます。"
+      "@type": "Answer",
+      "text": "はい。QRリーダーの設定を組み合わせれば、VBA・RPA不要で入力補助が可能です。QRリーダーはキーボード扱いのため多くのソフトで動きますが、画面状態を読んだ条件分岐やエラー判断はできません。Tab、Enter、待ち時間、キー変換などを活用し、定型入力の負担を減らします。"
       }
     }
   ]
@@ -357,7 +358,7 @@
       <a class="quick-route-card qrc-qr" href="./qr/index.html">
         <span class="quick-route-icon">⚡</span>
         <span class="quick-route-title">QRで入力を自動化したい</span>
-        <span class="quick-route-text">Excelで作るQR用データとQRリーダー設定で入力作業を自動化</span>
+        <span class="quick-route-text">キーボード扱いのQRリーダーで、ソフトを選びにくい定型入力を補助</span>
       </a>
     </div>
   </section>
@@ -386,7 +387,7 @@
 
       <article class="starter-card">
         <h3>ソフト追加禁止・閉域環境</h3>
-        <p>QRリーダー連携は強力ですが、キー送信・待機・登録操作まで扱うため、必ずテスト画面、架空データ、復旧手順を用意してから検証してください。</p>
+        <p>QRリーダー連携はキーボード扱いで多くのソフトに使えますが、条件分岐はできません。必ずテスト画面、架空データ、復旧手順を用意してから検証してください。</p>
         <a href="./qr/index.html">QR Automation Lab総合ガイドへ</a>
       </article>
     </div>
@@ -487,7 +488,7 @@
         <div class="weapon-card-num">04</div>
         <div class="weapon-card-title">💎 ハードウェア逆転発想</div>
         <p class="weapon-card-desc">
-          ソフトが全て封じられたなら、Excelで作るQR用データとQRリーダー設定を組み合わせて入力作業を自動化。<br>
+          ソフトが全て封じられたなら、Excelで作るQR用データとキーボード扱いのQRリーダー設定を組み合わせて入力作業を補助。<br>
           <a class="color-purple-bold" href="./qr/index.html">→ QR Automation Lab総合ガイドへ</a>
         </p>
       </div>
@@ -656,6 +657,13 @@
       <h2>📰 新着記事 NEW</h2>
 
       <ul class="news-list">
+        <li class="is-new">
+          <a href="qr/19_qr_rpa_selenium_excel_qr_alternative.html">RPA・Seleniumが使いにくい現場での代替案</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-qr">QR Automation Lab</span>
+            <time datetime="2026-05-14">2026-05-14</time>
+          </span>
+        </li>
         <li class="is-new">
           <a href="qr/18_qr_num_enter_numpad_enter.html">QRリーダーでテンキーEnterを送る方法</a>
           <span class="news-meta">
@@ -1860,6 +1868,8 @@
       <strong>QRリーダー本体のキー送信設定</strong>を組み合わせることで入力作業を自動化できます。
       さらに閉域環境へのデータ転送、システム間移行、全角QR生成まで。
       <strong>Excel側の設計・QR生成・リーダー設定・実機検証を組み合わせる</strong>、他に類を見ないアプローチです。
+      QRリーダーはキーボード扱いのため多くのソフトに入力できますが、条件分岐はできません。
+      画面判断はExcel側の事前設計や人間の確認に寄せるのが基本です。
     </p>
 
     <div class="category-hero hero-concept-wall mx-auto max-width-800 my-20">
@@ -2087,6 +2097,20 @@
       </div>
       <a class="article-link" href="qr/18_qr_num_enter_numpad_enter.html">⑱ QRリーダーでテンキーEnterを送る方法 — Num Enter・Numpad Enter・通常Enterの違い</a>
       <p class="article-summary">通常Enterでは確定できない基幹系画面向けに、Num Enterの表記ゆれ、CHAR(13)との違い、リーダー側のキー変換、検証方法を整理します。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">🧱 セクション4：制限環境・RPA代替案（全1記事）</h3>
+
+  <ul class="article-list" id="list-qr-alternative">
+    <li class="article-item highlight">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 代替案</span></span>
+      </div>
+      <a class="article-link" href="qr/19_qr_rpa_selenium_excel_qr_alternative.html">⑲ RPA・Seleniumが使いにくい現場での代替案 — キーボード扱いのQRリーダーで入力作業を減らす</a>
+      <p class="article-summary">QRリーダーはキーボード入力として多くのソフトで動く一方、条件分岐はできません。RPA・Selenium・UIAが使いにくい現場での使いどころを整理します。</p>
     </li>
   </ul>
 </div>
