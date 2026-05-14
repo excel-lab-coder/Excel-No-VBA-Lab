@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>FILTER関数とリンク図で候補を確認し、連番だけで封筒ラベル印刷する方法｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="ExcelのFILTER関数とリンク図を使い、印刷シートの印刷範囲外に候補一覧を表示し、候補を見ながら連番だけを入力して封筒ラベルを印刷する実務的な作り方を解説。リンク図はコピーや直接選択ではなく参照用として使うのがポイントです。" name="description">
+<meta content="Excel リンク図, リンクされた図, FILTER関数 検索画面, Excel 封筒ラベル 印刷, Excel 宛名ラベル, Excel 連番 検索, Excel 印刷範囲外, Excel 抽出結果 見やすく表示, VBA不要" name="keywords">
+<meta content="FILTER関数とリンク図で候補を確認し、連番だけで封筒ラベル印刷する方法｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのFILTER関数とリンク図を使い、印刷範囲外に候補一覧を表示し、連番だけで封筒ラベル印刷できる仕組みを作る方法を解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_linked_picture_filter_serial_label.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<style>
+    .linked-picture-mock {
+      background: #f0f4f8;
+      border: 1px solid #cfd8dc;
+      padding: 16px;
+      border-radius: 6px;
+      margin: 18px 0;
+      color: #37474f;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .workflow-figure {
+      background: #f8fbff;
+      border: 1px solid #cfdde8;
+      border-radius: 8px;
+      padding: 12px;
+      margin: 20px 0 26px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .workflow-figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+
+    .workflow-figure figcaption {
+      margin-top: 10px;
+      color: #455a64;
+      font-size: 0.92em;
+      line-height: 1.7;
+    }
+
+    .serial-workflow-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr 1fr;
+      gap: 14px;
+      align-items: stretch;
+      margin-top: 12px;
+    }
+
+    .serial-workflow-panel {
+      background: #fff;
+      border: 1px solid #d7e7f7;
+      border-radius: 8px;
+      padding: 14px;
+      min-height: 160px;
+      position: relative;
+    }
+
+    .serial-workflow-panel-title {
+      display: inline-block;
+      font-size: 0.82em;
+      font-weight: bold;
+      color: #fff;
+      background: #607d8b;
+      padding: 2px 10px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+
+    .serial-workflow-panel-title.print-area-title {
+      background: #b85c5c;
+    }
+
+    .serial-workflow-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.83em;
+      margin-top: 8px;
+    }
+
+    .serial-workflow-table th,
+    .serial-workflow-table td {
+      border: 1px solid #d9e2ec;
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .serial-workflow-table th {
+      background: #e3f2fd;
+      color: #1f3f5b;
+    }
+
+    .serial-input-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+      font-weight: bold;
+      color: #1f3f5b;
+    }
+
+    .serial-input-box {
+      display: inline-block;
+      min-width: 74px;
+      padding: 5px 12px;
+      background: #fff;
+      border: 1px solid #90a4ae;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 1.1em;
+      color: #222;
+    }
+
+    .linked-picture-preview {
+      border: 2px dashed #1f78d1;
+      border-radius: 6px;
+      padding: 8px;
+      background: #f8fbff;
+      margin-top: 8px;
+    }
+
+    .print-area-preview {
+      border: 2px dashed #d36b6b;
+      border-radius: 6px;
+      padding: 16px;
+      background: #fff;
+      margin-top: 8px;
+      min-height: 150px;
+      box-shadow: inset 0 0 0 1px rgba(211,107,107,0.08);
+    }
+
+    .print-area-preview p {
+      margin-bottom: 9px;
+    }
+
+    .label-name-line {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #111;
+    }
+
+    .arrow-note {
+      text-align: center;
+      font-weight: bold;
+      color: #1f5d91;
+      margin: 10px 0 4px;
+    }
+
+    .mini-flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 18px 0;
+    }
+
+    .mini-flow-item {
+      background: #eef6ff;
+      border: 1px solid #b8d8f5;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.92em;
+    }
+
+    .mini-flow-item strong {
+      color: #1f3f5b;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .formula-table td:first-child {
+      white-space: nowrap;
+      font-weight: bold;
+      color: #1f3f5b;
+    }
+
+    @media (max-width: 900px) {
+      .serial-workflow-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-flow {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"FILTER関数とリンク図で候補を確認し、連番だけで封筒ラベル印刷する方法","description":"ExcelのFILTER関数とリンク図を使い、印刷シートの印刷範囲外に候補一覧を表示し、候補を見ながら連番だけを入力して封筒ラベルを印刷する実務的な作り方を解説。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_linked_picture_filter_serial_label.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span>
+<a href="../../index.html#others">小技</a><span>&gt;</span>
+<strong>FILTER関数とリンク図で封筒ラベル印刷</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Microsoft 365 / 新しいExcel向け</span>
+<span class="article-date">更新日: 2026-05-14</span>
+</div>
+<h1 class="article-title">🔎 FILTER関数とリンク図で候補を確認し、連番だけで封筒ラベル印刷する方法</h1>
+</div>
+
+<!-- =========================================================
+         【1】この記事でできること
+      ========================================================= -->
+<section class="goal-section">
+<h2><span class="icon">💡</span> 検索結果を見ながら、連番だけを入力して印刷する</h2>
+<p>Excelの<code>FILTER</code>関数とリンク図を組み合わせると、候補一覧を見やすく表示しながら、必要な番号だけを入力して封筒ラベルや宛名ラベルを印刷する仕組みを作れます。</p>
+<p>ポイントは、銀行コードや支店コード、市区町村コードなどをそのまま使うのではなく、宛名マスター側に<strong>連番</strong>を用意しておくことです。利用者は候補一覧を見て、左端の連番だけを印刷シートへ入力します。</p>
+
+<figure class="workflow-figure">
+  <img src="../../image/linked_picture_filter_serial_label_workflow.png" alt="検索しながら候補を確認し、連番を入れるだけで封筒ラベル印刷する流れ" width="1672" height="941" loading="lazy">
+  <figcaption>検索候補はリンク図で確認し、印刷範囲には確定連番から取得した宛名だけを表示します。リンク図は参照用にして、印刷されるラベル部分とは分けておくのがポイントです。</figcaption>
+</figure>
+
+<div class="xdemo-note-info">
+  ℹ️ <strong>FILTER関数が使えないExcelの場合</strong><br>
+  Excel 2019以前などで<code>FILTER</code>関数が使えない場合は、抽出用シートの候補一覧を旧関数の方式に置き換えます。詳しい作り方は <a href="../../functions/old/article_countif_extract.html">旧ExcelでFILTER関数の代わりに複数抽出する方法</a> を参照してください。
+</div>
+
+<div class="linked-picture-mock">
+  <strong>イメージ：</strong>抽出用シートで候補を作り、印刷シートの印刷範囲外にリンク図として表示します。印刷範囲には、確定した連番から取得した宛名だけを表示します。
+  <div class="serial-workflow-layout">
+    <div class="serial-workflow-panel">
+      <span class="serial-workflow-panel-title">抽出用シート</span>
+      <p>全国マスターから候補を抽出</p>
+      <table class="serial-workflow-table">
+        <thead>
+          <tr>
+            <th>連番</th>
+            <th>種別</th>
+            <th>名称</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>001</td>
+            <td>銀行</td>
+            <td>三菱UFJ銀行 新宿支店</td>
+          </tr>
+          <tr>
+            <td>002</td>
+            <td>銀行</td>
+            <td>三井住友銀行 新宿西口支店</td>
+          </tr>
+          <tr>
+            <td>003</td>
+            <td>市役所</td>
+            <td>新宿区役所</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="serial-workflow-panel">
+      <span class="serial-workflow-panel-title">印刷シート：印刷範囲外</span>
+      <p>リンク図として候補一覧を表示</p>
+      <div class="linked-picture-preview">
+        <table class="serial-workflow-table">
+          <thead>
+            <tr>
+              <th>連番</th>
+              <th>種別</th>
+              <th>名称</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>001</td>
+              <td>銀行</td>
+              <td>三菱UFJ銀行 新宿支店</td>
+            </tr>
+            <tr>
+              <td>003</td>
+              <td>市役所</td>
+              <td>新宿区役所</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="serial-input-row">
+        <span>確定連番：</span><span class="serial-input-box">001</span>
+      </div>
+      <p class="arrow-note">候補を見ながら、連番だけを入力</p>
+    </div>
+    <div class="serial-workflow-panel">
+      <span class="serial-workflow-panel-title print-area-title">印刷範囲</span>
+      <div class="print-area-preview">
+        <p>〒160-0023</p>
+        <p>東京都新宿区西新宿○-○-○</p>
+        <p class="label-name-line">三菱UFJ銀行 新宿支店 御中</p>
+        <p style="text-align:right;">総務部 行</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p>この構成にすると、検索や候補確認は印刷シート上で行いながら、実際に印刷されるのは封筒ラベル部分だけにできます。リンク図は参照用なので、候補一覧を印刷範囲外に置いても、印刷範囲を正しく設定しておけば印刷物には出ません。</p>
+</section>
+
+<!-- =========================================================
+         【2】なぜ連番にするのか
+      ========================================================= -->
+<section class="method-section">
+<h3>支店コードや市区町村コードではなく、連番にすると使いやすい</h3>
+<p>銀行支店や市役所などを検索する場合、正式な銀行コード、支店コード、市区町村コードをそのまま入力させる方法もあります。しかし、実務では次のような問題があります。</p>
+<ul>
+<li>銀行コードと支店コードの両方を入力する必要がある</li>
+<li>支店コードだけでは別の銀行と重複する可能性がある</li>
+<li>市区町村コード、事業所番号、部署番号など、データの種類によって番号体系が違う</li>
+<li>利用者が正式なコード体系を覚えていない</li>
+<li>検索結果からコピーできると思われると、リンク図の仕様と合わない</li>
+</ul>
+<p>そこで、宛名マスターの一番左に<strong>001、002、003</strong>のような連番を用意しておきます。利用者は検索結果を見ながら、目的の行の連番だけを入力すればよくなります。</p>
+<div class="xdemo-note-good">
+  ✅ <strong>連番方式のメリット</strong><br>
+  データの種類が銀行、支店、市役所、取引先、部署などに分かれていても、利用者は同じ操作で使えます。候補を見て、左端の連番を入力するだけです。
+</div>
+</section>
+
+<!-- =========================================================
+         【3】全体構成
+      ========================================================= -->
+<section class="method-section">
+<h3>おすすめのシート構成</h3>
+<p>この仕組みでは、次の3つの役割に分けると管理しやすくなります。</p>
+<table>
+<thead>
+<tr>
+<th>シート</th>
+<th>役割</th>
+<th>ポイント</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>宛名マスター</td>
+<td>全国の銀行、市役所、取引先、部署などの宛名データを管理する本体データ</td>
+<td>一番左に連番を用意する</td>
+</tr>
+<tr>
+<td>抽出用シート</td>
+<td>FILTER関数で検索候補を作る裏側のシート</td>
+<td>リンク図の元になる範囲を整える</td>
+</tr>
+<tr>
+<td>印刷シート</td>
+<td>検索、候補確認、連番入力、封筒ラベル印刷を行うシート</td>
+<td>候補一覧は印刷範囲外、ラベルは印刷範囲内に置く</td>
+</tr>
+</tbody>
+</table>
+<div class="xdemo-note-good">
+  ✅ <strong>ポイント：</strong><br>
+  印刷シートの中に、印刷される場所と印刷されない場所を分けて作ります。検索欄とリンク図の候補一覧は印刷範囲外に置き、封筒ラベル部分だけを印刷範囲にします。
+</div>
+</section>
+
+<!-- =========================================================
+         【4】宛名マスターの作り方
+      ========================================================= -->
+<section class="tips-section">
+<h3>【準備】宛名マスターに連番を用意する</h3>
+<p>まず、宛名マスターに次のような列を用意します。連番は、利用者が入力するための番号です。銀行コードや支店コードとは別に、画面操作用の番号として作ります。</p>
+<table>
+<thead>
+<tr>
+<th>連番</th>
+<th>種別</th>
+<th>名称</th>
+<th>郵便番号</th>
+<th>住所</th>
+<th>部署</th>
+<th>検索用文字列</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>001</td>
+<td>銀行</td>
+<td>三菱UFJ銀行 新宿支店</td>
+<td>160-0023</td>
+<td>東京都新宿区西新宿○-○-○</td>
+<td>総務部</td>
+<td>001 銀行 三菱UFJ銀行 新宿支店 東京都新宿区西新宿...</td>
+</tr>
+<tr>
+<td>002</td>
+<td>銀行</td>
+<td>三井住友銀行 新宿西口支店</td>
+<td>160-0023</td>
+<td>東京都新宿区西新宿○-○-○</td>
+<td>総務部</td>
+<td>002 銀行 三井住友銀行 新宿西口支店 東京都新宿区西新宿...</td>
+</tr>
+<tr>
+<td>003</td>
+<td>市役所</td>
+<td>新宿区役所</td>
+<td>160-8484</td>
+<td>東京都新宿区歌舞伎町○-○-○</td>
+<td>担当課</td>
+<td>003 市役所 新宿区役所 東京都新宿区歌舞伎町...</td>
+</tr>
+<tr>
+<td>004</td>
+<td>市役所</td>
+<td>大阪市役所</td>
+<td>530-8201</td>
+<td>大阪府大阪市北区中之島○-○-○</td>
+<td>担当課</td>
+<td>004 市役所 大阪市役所 大阪府大阪市北区中之島...</td>
+</tr>
+</tbody>
+</table>
+<p>検索用文字列の列は必須ではありませんが、作っておくと検索式が見やすくなります。名称、住所、種別、カナ、部署などをまとめて検索対象にできます。</p>
+<pre><code>=[@連番]&amp;" "&amp;[@種別]&amp;" "&amp;[@名称]&amp;" "&amp;[@住所]&amp;" "&amp;[@部署]</code></pre>
+<div class="xdemo-note-bad">
+  ⚠️ <strong>連番は文字列にしておくと安全です。</strong><br>
+  001、002のように先頭ゼロを使う場合は、連番列を文字列として扱うか、表示形式を整えてください。数値の1と文字列の001が混在すると、XLOOKUPで一致しない原因になります。
+</div>
+</section>
+
+<!-- =========================================================
+         【5】抽出用シート
+      ========================================================= -->
+<section class="tips-section">
+<h3>【抽出用シート】FILTER関数で候補一覧を作る</h3>
+<p>次に、抽出用シートで検索候補を作ります。印刷シートの検索値セルを参照して、該当する候補だけを表示します。</p>
+<p>例えば、印刷シートの<code>B3</code>セルに検索値を入力する場合、抽出用シートには次のような式を入れます。</p>
+<pre><code>=FILTER(
+  宛名マスター[[連番]:[住所]],
+  ISNUMBER(SEARCH(印刷シート!$B$3,宛名マスター[検索用文字列])),
+  "該当なし"
+)</code></pre>
+<p>見出しも含めてリンク図にしたい場合は、<code>VSTACK</code>関数を組み合わせます。</p>
+<pre><code>=VSTACK(
+  宛名マスター[[#Headers],[連番]:[住所]],
+  FILTER(
+    宛名マスター[[連番]:[住所]],
+    ISNUMBER(SEARCH(印刷シート!$B$3,宛名マスター[検索用文字列])),
+    "該当なし"
+  )
+)</code></pre>
+<p>この抽出結果をそのまま利用者が操作するのではなく、印刷シート側にリンク図として表示します。抽出用シート側では、列幅、罫線、文字サイズ、折り返し表示などを整えておきます。</p>
+<div class="xdemo-note-good">
+  ✅ <strong>抽出用シートは見た目の元になります。</strong><br>
+  リンク図は元範囲の見た目をそのまま表示するため、抽出用シート側で見やすい候補一覧に整えておくことが重要です。
+</div>
+</section>
+
+<!-- =========================================================
+         【6】印刷シート
+      ========================================================= -->
+<section class="tips-section">
+<h3>【印刷シート】印刷範囲外にリンク図を置く</h3>
+<p>印刷シートには、次の2つのエリアを作ります。</p>
+<table>
+<thead>
+<tr>
+<th>エリア</th>
+<th>置くもの</th>
+<th>印刷されるか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>印刷範囲外</td>
+<td>検索値入力欄、リンク図の候補一覧、確定連番入力欄</td>
+<td>印刷しない</td>
+</tr>
+<tr>
+<td>印刷範囲</td>
+<td>封筒ラベル、宛名ラベル、住所、宛名、部署名など</td>
+<td>印刷する</td>
+</tr>
+</tbody>
+</table>
+<p>印刷範囲外には、検索用の入力欄と、抽出用シートの候補一覧を貼り付けたリンク図を置きます。利用者はリンク図を見ながら、目的の行の連番だけを確定連番欄に入力します。</p>
+<pre><code>検索値：新宿
+候補一覧：リンク図で表示
+確定連番：001</code></pre>
+<p>このとき、リンク図は候補を確認するための表示です。リンク図の中の文字や数字を直接コピーしたり、行をクリックして選択したりするものではありません。</p>
+<div class="xdemo-note-bad">
+  ⚠️ <strong>リンク図は参照用です。</strong><br>
+  リンク図に表示された内容は、通常のセル範囲のように直接コピーできません。候補を見て、左端の連番を入力欄に入力する使い方にします。
+</div>
+</section>
+
+<!-- =========================================================
+         【7】印刷範囲の数式
+      ========================================================= -->
+<section class="tips-section">
+<h3>【印刷範囲】確定連番から宛名を取得する</h3>
+<p>印刷範囲では、確定連番をもとに、宛名マスターから郵便番号、住所、名称、部署などを取得します。例えば、確定連番が印刷シートの<code>B8</code>セルに入力されている場合は、次のようにできます。</p>
+<table class="formula-table">
+<thead>
+<tr>
+<th>表示項目</th>
+<th>数式例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>郵便番号</td>
+<td><code>=XLOOKUP($B$8,宛名マスター[連番],宛名マスター[郵便番号],"")</code></td>
+</tr>
+<tr>
+<td>住所</td>
+<td><code>=XLOOKUP($B$8,宛名マスター[連番],宛名マスター[住所],"")</code></td>
+</tr>
+<tr>
+<td>宛名</td>
+<td><code>=XLOOKUP($B$8,宛名マスター[連番],宛名マスター[名称],"")&amp;" 御中"</code></td>
+</tr>
+<tr>
+<td>部署</td>
+<td><code>=XLOOKUP($B$8,宛名マスター[連番],宛名マスター[部署],"")&amp;" 行"</code></td>
+</tr>
+</tbody>
+</table>
+<p>印刷範囲を封筒やラベル用紙に合わせて整えておけば、確定連番を変えるだけで印刷内容が切り替わります。</p>
+<div class="xdemo-note-good">
+  ✅ <strong>実務ではかなり使いやすい形です。</strong><br>
+  検索で候補を絞り込み、リンク図で候補を確認し、連番だけを入力する。これなら銀行、市役所、取引先、部署など、異なる種類の宛名を同じ操作で扱えます。
+</div>
+</section>
+
+<!-- =========================================================
+         【8】リンク図の貼り付け方法
+      ========================================================= -->
+<section class="tips-section">
+<h3>【基本操作】抽出結果をリンク図として貼り付ける</h3>
+<h4>① 抽出用シートの候補一覧を整える</h4>
+<p>抽出用シートで、リンク図にしたい範囲の見た目を整えます。候補一覧として見やすいように、列幅、行の高さ、罫線、見出しの色、文字サイズなどを調整します。</p>
+<h4>② 表示したい範囲をコピーする</h4>
+<p>抽出結果の最大表示件数を考えて、少し広めに範囲を選択します。</p>
+<pre><code>A1:D20</code></pre>
+<p>候補一覧を最大20件まで見せるなら、20行程度をリンク図の範囲にします。広すぎると空白行も表示されるため、実務では最大表示件数を決めておくとよいです。</p>
+<h4>③ 印刷シートの印刷範囲外にリンク図として貼り付ける</h4>
+<p>印刷シートに移動し、印刷範囲外の場所に貼り付けます。</p>
+<pre><code>ホーム
+→ 貼り付け
+→ その他の貼り付けオプション
+→ リンクされた図</code></pre>
+<p>これで、検索値を変えるたびに抽出用シートの候補一覧が更新され、印刷シート上のリンク図にも反映されます。</p>
+</section>
+
+<!-- =========================================================
+         【9】印刷範囲の設定
+      ========================================================= -->
+<section class="method-section">
+<h3>印刷範囲を正しく設定する</h3>
+<p>この仕組みでは、検索欄やリンク図の候補一覧は印刷に出したくありません。そのため、封筒ラベルや宛名ラベルの部分だけを印刷範囲に設定します。</p>
+<pre><code>ページ レイアウト
+→ 印刷範囲
+→ 印刷範囲の設定</code></pre>
+<p>検索欄、リンク図、確定連番入力欄は印刷範囲の外に置きます。そうすると、画面上では検索や候補確認に使えますが、印刷時にはラベル部分だけが出力されます。</p>
+<div class="xdemo-note-good">
+  ✅ <strong>印刷シート1枚で完結できます。</strong><br>
+  検索、候補確認、連番入力、印刷結果の確認を同じシート上で行いながら、印刷されるのは指定した範囲だけにできます。
+</div>
+</section>
+
+<!-- =========================================================
+         【10】この方法のメリット
+      ========================================================= -->
+<section class="method-section">
+<h3>この方法のメリット</h3>
+<h4>① 利用者は連番だけ入力すればよい</h4>
+<p>銀行コード、支店コード、市区町村コードなどを覚える必要がありません。検索結果を見て、左端の連番を入力するだけで印刷内容を切り替えられます。</p>
+<h4>② リンク図を安全な参照画面として使える</h4>
+<p>リンク図はセルではなく、表示用の図として扱えます。候補一覧を見やすく配置でき、印刷シートのレイアウトも崩れにくくなります。</p>
+<h4>③ 印刷範囲外を検索エリアとして使える</h4>
+<p>同じ印刷シート上に検索欄や候補一覧を置いても、印刷範囲を分けておけば、実際の印刷物には出ません。封筒ラベル、宛名ラベル、差込印刷風の帳票に使いやすい構成です。</p>
+<h4>④ データの種類が混在しても扱いやすい</h4>
+<p>銀行、支店、市役所、取引先、部署、施設など、番号体系が違うデータでも、連番を共通のキーにすれば同じ操作で扱えます。</p>
+</section>
+
+<!-- =========================================================
+         【11】注意点
+      ========================================================= -->
+<section class="method-section">
+<h3>注意点</h3>
+<h4>① リンク図の内容は直接コピーできない</h4>
+<p>リンク図は、元のセル範囲と連動して表示内容が更新されますが、表示されている文字や数値を通常のセルのように直接コピーすることはできません。</p>
+<p>そのため、リンク図は「見るための参照用」として考えるのが基本です。リンク図に表示された候補を確認し、必要な連番を入力欄に入力して、印刷範囲側で正式なデータ参照を行います。</p>
+<h4>② 連番の形式を統一する</h4>
+<p>連番を001、002のように見せたい場合は、文字列として管理するか、表示形式を統一します。入力欄側とマスター側の形式が違うと、検索できない原因になります。</p>
+<h4>③ 大量件数をリンク図で見せすぎない</h4>
+<p>リンク図は、10件から20件程度の候補を見せる用途に向いています。何百件も表示する場合は見づらくなるため、検索条件を工夫して候補を絞り込む方が実務的です。</p>
+<h4>④ 印刷範囲を必ず確認する</h4>
+<p>検索欄やリンク図が印刷範囲に入っていると、候補一覧まで印刷されてしまいます。完成前に印刷プレビューで、ラベル部分だけが印刷されるか確認してください。</p>
+</section>
+
+<!-- =========================================================
+         【12】応用例
+      ========================================================= -->
+<section class="method-section">
+<h3>応用できる実務例</h3>
+<p>この考え方は、封筒ラベル以外にも使えます。</p>
+<ul>
+<li>銀行支店マスターから送付先を選ぶ</li>
+<li>市役所、区役所、税務署などの宛名ラベルを印刷する</li>
+<li>取引先マスターから請求書送付先を選ぶ</li>
+<li>社内部署マスターから回覧先や配布先を選ぶ</li>
+<li>施設、店舗、営業所マスターから掲示物や送付状を作る</li>
+<li>顧客マスターからラベル用紙に印刷する</li>
+</ul>
+<p>どの例でも、リンク図は候補確認用、連番入力欄は確定用、印刷範囲は出力用として分けると、操作が分かりやすくなります。</p>
+</section>
+
+<!-- =========================================================
+         【13】まとめ
+      ========================================================= -->
+<section class="goal-section">
+<h2><span class="icon">✅</span> まとめ：リンク図で候補を見て、連番だけで印刷する</h2>
+<p>FILTER関数は、条件に合うデータを抽出するのに便利な関数です。ただし、抽出結果をそのまま印刷シートに置くと、列幅や行の高さに影響され、レイアウトが崩れやすくなります。</p>
+<p>そこで、抽出結果はリンク図として印刷範囲外に表示します。利用者はリンク図に表示された候補を見て、左端の連番だけを入力します。印刷範囲では、その連番をもとに宛名マスターから住所や宛名を取得し、封筒ラベルとして印刷します。</p>
+<div class="mini-flow">
+  <div class="mini-flow-item">
+    <strong>1. 全国マスター</strong>
+    宛名データに連番を付けて管理する
+  </div>
+  <div class="mini-flow-item">
+    <strong>2. FILTERで候補抽出</strong>
+    名称、住所、キーワードで候補を絞り込む
+  </div>
+  <div class="mini-flow-item">
+    <strong>3. リンク図で確認</strong>
+    印刷範囲外で候補を見て、正しい連番を確認する
+  </div>
+  <div class="mini-flow-item">
+    <strong>4. 連番入力で印刷</strong>
+    確定連番を入れるだけでラベルを印刷する
+  </div>
+</div>
+<div class="xdemo-note-good">
+  ✅ <strong>リンク図は操作用ではなく、参照用です。</strong><br>
+  リンク図内の内容を直接コピーするのではなく、候補を確認し、必要な連番を入力欄へ入力して、印刷範囲側で正式な参照を行います。この考え方にすると、Excelだけで使いやすい検索付き印刷シートを作れます。
+</div>
+<p><strong>FILTER関数で候補を抽出し、リンク図で見せ、連番だけで印刷する。</strong><br>
+この組み合わせは、Excelの検索結果を「安全で使いやすい印刷補助パーツ」に変える実務的な方法です。</p>
+</section>
+
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../../functions/old/article_countif_extract.html">旧ExcelでFILTER関数の代わりに複数抽出する方法</a></li>
+<li><a href="../../functions/latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+<li><a href="../../functions/latest/article_xlookup_basic.html">XLOOKUP &horbar; 連番から宛名情報を取り出す検索の基本</a></li>
+</ul>
+</section>
+
+</article>
+</main>
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>
