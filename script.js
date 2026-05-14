@@ -298,7 +298,7 @@
       } else if (badge.classList.contains('rank-combined')) {
         text = (badge.getAttribute('data-rare-prefix') || '🔥💎') + ' ' + text;
       } else {
-        text = '💎 ' + text;
+        text = '💎 レアテク ' + text;
       }
 
       badge.textContent = text;

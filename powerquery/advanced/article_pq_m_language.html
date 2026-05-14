@@ -4,8 +4,16 @@
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<meta content="Power Queryの更新方法、読み込み先の選び方、接続のみクエリの活用、エラー予防策、複数クエリの設計パターンをまとめて解説。" name="description">
-<title>更新と管理 &horbar; 接続・エラー対策・設計パターン｜Excel &times; No VBA Lab</title>
+<meta content="Power QueryのM言語を初めて読む人向けに、let...in構文、ステップ参照、列参照、if式、よく使うTable・Text・Date関数、詳細エディターでの直し方を実務目線で解説します。" name="description">
+<meta content="Power Query M言語, パワークエリ M, let in 構文, Power Query カスタム列, Power Query 詳細エディター, VBA不要 Excel" name="keywords">
+<meta content="M言語入門 &horbar; GUIの限界を超えるカスタム処理｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power QueryのM言語を初めて読む人向けに、let...in構文、ステップ参照、列参照、if式、よく使う関数を実務目線で解説します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_m_language.html" rel="canonical">
+<title>M言語入門 &horbar; GUIの限界を超えるカスタム処理｜Excel &times; No VBA Lab</title>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
 <script>
@@ -15,12 +23,6 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="noindex, follow" name="robots">
-<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_m_language.html" rel="canonical">
-<meta content="更新と管理 &horbar; 接続・エラー対策・設計パターン｜Excel &times; No VBA Lab" property="og:title">
-<meta content="article" property="og:type">
-<meta content="ja_JP" property="og:locale">
-<meta content="Excel &times; No VBA Lab" property="og:site_name">
 <link href="https://fonts.googleapis.com" rel="preconnect">
 <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
@@ -31,7 +33,7 @@
 
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"更新と管理 \u0026horbar; 接続・エラー対策・設計パターン","description":"Power Queryの更新方法、読み込み先の選び方、接続のみクエリの活用、エラー予防策、複数クエリの設計パターンをまとめて解説。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_m_language.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"M言語入門 \u0026horbar; GUIの限界を超えるカスタム処理","description":"Power QueryのM言語を初めて読む人向けに、let...in構文、ステップ参照、列参照、if式、よく使うTable・Text・Date関数、詳細エディターでの直し方を実務目線で解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_m_language.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -42,121 +44,160 @@
 </div></div></header>
 
 <main class="main-content article-layout" id="main-content">
-<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>更新と管理</strong></div>
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#powerquery">パワークエリ</a><span>&gt;</span><strong>M言語入門</strong></div>
 <article class="article-body">
 <div class="article-header">
-<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
-<h1 class="article-title">更新と管理 &horbar; 接続・エラー対策・設計パターン</h1>
+<div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="badge badge-maniac">M言語</span><span class="article-date">更新日: 2026-05-14</span></div>
+<h1 class="article-title">M言語入門 &horbar; GUIの限界を超えるカスタム処理</h1>
 </div>
-<section id="goal"><h2>このページのゴール</h2><p>Power Queryの更新方法、読み込み先の使い分け、エラーの予防・対処法、複数クエリの設計パターンを理解し、長期運用に耐えるクエリを作れるようになることです。</p></section>
-<!-- ==================== 更新 ==================== -->
-<section id="refresh">
-<h2>クエリの更新方法</h2>
-<table class="ref-table">
-<thead><tr><th>方法</th><th>操作</th><th>範囲</th></tr></thead>
-<tbody>
-<tr><td><strong>すべて更新</strong></td><td>データ タブ &rarr; すべて更新（Ctrl+Alt+F5）</td><td>ブック内の全クエリ</td></tr>
-<tr><td><strong>個別更新</strong></td><td>クエリ結果のテーブル上で右クリック &rarr;「更新」</td><td>そのクエリだけ</td></tr>
-<tr><td><strong>バックグラウンド更新</strong></td><td>クエリのプロパティ &rarr;「バックグラウンドで更新する」にチェック</td><td>更新中もExcel操作が可能になる</td></tr>
-<tr><td><strong>ファイルを開いたとき自動更新</strong></td><td>クエリのプロパティ &rarr;「ファイルを開くときにデータを更新する」にチェック</td><td>ブックを開いただけで自動更新</td></tr>
-</tbody>
-</table>
-<div class="step-box">
-<h4>プロパティの開き方</h4>
-<p>データ タブ &rarr; クエリと接続 &rarr; 右パネルでクエリを右クリック &rarr;「プロパティ」</p>
-</div>
-<div class="tip-box">
-<strong>実務のコツ：定期レポートには「開いたとき自動更新」</strong><br>
-          毎朝開くレポートブックなら「ファイルを開くときにデータを更新する」を有効にすると、開くだけで最新データに切り替わります。
-        </div>
+<section id="goal">
+<h2>このページのゴール</h2>
+<p>Power QueryのM言語を「全部書けるようになる」ことではなく、<strong>自動生成されたコードを読める、必要な1行だけ直せる、カスタム列で簡単な式を足せる</strong>状態にすることです。実務では、M言語をゼロから手書きするより、GUIで作った手順を少しだけ補正する使い方がもっとも安全です。</p>
 </section>
-<!-- ==================== 読み込み先 ==================== -->
-<section id="load-destination">
-<h2>読み込み先の選び方</h2>
+
+<section id="where-to-use">
+<h2>M言語はどこで使うか</h2>
+<p>Power Queryで画面操作をすると、裏側ではM言語のコードが自動で作られます。まずは「どこに出てくるか」を押さえるだけで十分です。</p>
 <table class="ref-table">
-<thead><tr><th>読み込み先</th><th>特徴</th><th>使いどころ</th></tr></thead>
+<thead><tr><th>場所</th><th>何をするところか</th><th>実務での使い方</th></tr></thead>
 <tbody>
-<tr><td><strong>テーブル</strong></td><td>シートにExcelテーブルとして出力。最も標準的。</td><td>結果をシートに表示して関数やグラフで活用したいとき</td></tr>
-<tr><td><strong>ピボットテーブル</strong></td><td>ピボットテーブルのデータソースとして直結。</td><td>集計・分析をピボットテーブルで行いたいとき</td></tr>
-<tr><td><strong>接続のみ</strong></td><td>シートにデータを出力しない。クエリの結果はメモリ上に保持される。</td><td>中間加工用クエリ、パラメータクエリ、他のクエリの参照元</td></tr>
-<tr><td><strong>データモデルに追加</strong></td><td>Power Pivotのデータモデルに読み込む。104万行超のデータ、複数テーブルのリレーションが必要な場合。</td><td>大量データの分析、DAX関数を使いたいとき</td></tr>
+<tr><td><strong>数式バー</strong></td><td>現在選択中のステップのM式を表示・編集する</td><td>フィルター値、列名、固定文字などを少し直す</td></tr>
+<tr><td><strong>カスタム列</strong></td><td>新しい列をM式で追加する</td><td>条件判定、文字列結合、日付加工を足す</td></tr>
+<tr><td><strong>詳細エディター</strong></td><td>クエリ全体のMコードをまとめて編集する</td><td>ファイルパスや複数ステップの流れを確認する</td></tr>
+<tr><td><strong>高度なエディター操作</strong></td><td>関数化、パラメータ化、共通処理化を行う</td><td>同じ処理を複数ファイル・複数部署で再利用する</td></tr>
 </tbody>
 </table>
 <div class="tip-box">
-<strong>設計の原則：中間クエリは「接続のみ」、最終出力だけをテーブルに</strong><br>
-          クエリが5個以上になってくると、すべてをシートに出力するとブックが重くなります。データ加工途中のクエリは「接続のみ」にし、最終結果のクエリだけを「テーブル」や「ピボットテーブル」に出力するのが効率的です。
+<strong>まずは「読む」だけでよい</strong><br>
+          Power QueryはGUIだけでもかなりの作業ができます。M言語は、GUIの手順を壊さずに少しだけ融通を利かせるための補助輪として使うのが現実的です。
         </div>
 </section>
-<!-- ==================== エラー ==================== -->
-<section id="error-handling">
-<h2>よくあるエラーと対処法</h2>
+
+<section id="let-in">
+<h2>基本形は let ... in</h2>
+<p>M言語のクエリは、多くの場合 <code>let</code> で手順を並べ、最後に <code>in</code> で返す結果を指定します。Excelの数式というより、料理のレシピに近い構造です。</p>
+<div class="code-block">let
+    ソース = Excel.CurrentWorkbook(){[Name="売上表"]}[Content],
+    型の変更 = Table.TransformColumnTypes(ソース, {{"売上", Int64.Type}, {"日付", type date}}),
+    営業部だけ = Table.SelectRows(型の変更, each [部署] = "営業部")
+in
+    営業部だけ</div>
 <table class="ref-table">
-<thead><tr><th>エラー</th><th>原因</th><th>対処法</th></tr></thead>
+<thead><tr><th>部分</th><th>意味</th><th>見るポイント</th></tr></thead>
 <tbody>
-<tr>
-<td><strong>DataSource.Error：ファイルが見つかりません</strong></td>
-<td>参照先ファイルが移動・削除・名前変更された</td>
-<td>ファイルを元の場所に戻す。パスが変わった場合はソースステップのパスを修正。パラメータクエリでパスを管理している場合はパラメータテーブルを更新。</td>
-</tr>
-<tr>
-<td><strong>Expression.Error：列 'XXX' が見つかりません</strong></td>
-<td>元データの列名が変わった、または列が削除された</td>
-<td>ソースデータの列名を元に戻すか、クエリの該当ステップを修正。「他の列の削除」で列名を明示指定している場合は、その列名リストを更新する。</td>
-</tr>
-<tr>
-<td><strong>DataFormat.Error：データの変換中にエラー</strong></td>
-<td>データ型の変換に失敗（テキストを日付に変換できない行がある、など）</td>
-<td>エラー行を確認 &rarr; 型変更前に値の置換でデータを修正するか、型変更後に「エラーの置換」でnullに変換する。</td>
-</tr>
-<tr>
-<td><strong>Formula.Firewall：プライバシーレベルの問題</strong></td>
-<td>異なるデータソース（ローカルファイルとWebなど）を1つのクエリで混在させた</td>
-<td>ファイル &rarr; オプションと設定 &rarr; クエリのオプション &rarr; プライバシー &rarr;「プライバシーレベルの設定を無視する」にチェック。社内利用なら実用上問題なし。</td>
-</tr>
+<tr><td><code>ソース = ...</code></td><td>最初のデータ取得</td><td>Excel表、CSV、フォルダ、Webなどの入口</td></tr>
+<tr><td><code>型の変更 = ...</code></td><td>前の結果に処理を重ねる</td><td>右辺の先頭に、前ステップ名が入ることが多い</td></tr>
+<tr><td><code>営業部だけ = ...</code></td><td>行フィルターなどの変換</td><td><code>each [部署] = "営業部"</code> のように行ごとに判定する</td></tr>
+<tr><td><code>in 営業部だけ</code></td><td>最終的に返すステップ</td><td>ここを途中ステップ名に変えると、その時点の結果を確認できる</td></tr>
 </tbody>
 </table>
 </section>
-<!-- ==================== 設計パターン ==================== -->
-<section id="design-patterns">
-<h2>複数クエリの設計パターン</h2>
-<h3>ステージングパターン</h3>
-<p>データの取り込みと変換を分離する設計です。</p>
+
+<section id="step-reference">
+<h2>ステップ名・列名・行の読み方</h2>
+<h3>ステップ名は変数のように扱う</h3>
+<p>Power Queryの「適用したステップ」は、M言語では1行ずつ名前付きで保存されています。次のステップは、前のステップ名を材料にして処理します。</p>
+<div class="code-block">削除された列 = Table.RemoveColumns(ソース, {"不要列"}),
+並べ替えられた行 = Table.Sort(削除された列, {{"日付", Order.Ascending}})</div>
+<p>ステップ名に空白や記号が入る場合は、<code>#"変更された型"</code> のように <code>#""</code> で囲まれます。これはエラーではありません。</p>
+<h3>列名は角かっこで参照する</h3>
+<div class="code-block">each [部署] = "営業部"</div>
+<p><code>[部署]</code> は「今見ている行の部署列」を意味します。ExcelのA列・B列ではなく、列名で参照するのがPower Queryらしいところです。</p>
+<h3>each は「各行に対して」</h3>
+<p><code>each</code> は、表の各行に対して同じ判定や計算を行う合図です。行フィルター、カスタム列、列変換でよく出てきます。</p>
+</section>
+
+<section id="if-null">
+<h2>if式とnullを押さえる</h2>
+<p>カスタム列で最初に覚えるなら、<code>if ... then ... else ...</code> です。M言語では <code>if</code>、<code>then</code>、<code>else</code> を小文字で書きます。</p>
+<div class="code-block">if [売上] &gt;= 1000000 then "重点" else "通常"</div>
+<p>AND / OR 条件も小文字です。</p>
+<div class="code-block">if [売上] &gt;= 1000000 and [部署] = "営業部" then "対象" else "対象外"</div>
+<p>空白セルはExcelの空文字とは違い、Power Queryでは <code>null</code> として扱われることがあります。空白判定は次のように書きます。</p>
+<div class="code-block">if [備考] = null then "未入力" else [備考]</div>
+<div class="warning-box">
+<strong>大文字のIFは使わない</strong><br>
+          Excel関数の感覚で <code>IF</code> と書くとエラーになります。M言語のキーワードは基本的に小文字で覚えると安全です。
+        </div>
+</section>
+
+<section id="common-functions">
+<h2>よく使うM関数</h2>
+<p>関数名は <code>Text.</code>、<code>Table.</code>、<code>Date.</code> のようにカテゴリ名から始まるため、名前を見るだけで役割を推測しやすくなっています。</p>
 <table class="ref-table">
-<thead><tr><th>クエリ層</th><th>役割</th><th>読み込み先</th></tr></thead>
+<thead><tr><th>カテゴリ</th><th>代表例</th><th>使いどころ</th></tr></thead>
 <tbody>
-<tr><td><strong>ステージングクエリ</strong>（stg_売上、stg_マスタ）</td><td>データソースからの取り込みだけ行い、最低限の型変換のみ</td><td>接続のみ</td></tr>
-<tr><td><strong>変換クエリ</strong>（trn_売上加工）</td><td>ステージングクエリを参照し、フィルター・列追加・マージなどの変換を行う</td><td>接続のみ</td></tr>
-<tr><td><strong>出力クエリ</strong>（out_月次レポート）</td><td>変換クエリを参照し、最終的な出力形式に整える</td><td>テーブル or ピボットテーブル</td></tr>
+<tr><td><strong>Text</strong></td><td><code>Text.BeforeDelimiter</code><br><code>Text.AfterDelimiter</code><br><code>Text.Trim</code></td><td>文字列の抽出、区切り文字の前後取得、余分な空白削除</td></tr>
+<tr><td><strong>Number</strong></td><td><code>Number.Round</code><br><code>Number.FromText</code></td><td>丸め、文字列から数値への変換</td></tr>
+<tr><td><strong>Date</strong></td><td><code>Date.Year</code><br><code>Date.Month</code><br><code>Date.EndOfMonth</code></td><td>年・月の取り出し、月末日の取得</td></tr>
+<tr><td><strong>Table</strong></td><td><code>Table.SelectRows</code><br><code>Table.AddColumn</code><br><code>Table.TransformColumnTypes</code></td><td>行フィルター、列追加、型変換</td></tr>
+<tr><td><strong>List</strong></td><td><code>List.Sum</code><br><code>List.Max</code><br><code>List.Contains</code></td><td>リスト集計、最大値取得、含まれるかの判定</td></tr>
 </tbody>
 </table>
+</section>
+
+<section id="custom-column-examples">
+<h2>カスタム列で使う実務例</h2>
+<h3>区切り文字より前を取り出す</h3>
+<p>商品コード <code>ABC-001</code> から、ハイフンより前の <code>ABC</code> を取り出す例です。</p>
+<div class="code-block">Text.BeforeDelimiter([商品コード], "-")</div>
+<h3>複数条件で区分を作る</h3>
+<div class="code-block">if [売上] &gt;= 1000000 and [粗利率] &gt;= 0.3 then "優先"
+else if [売上] &gt;= 500000 then "確認"
+else "通常"</div>
+<p>M言語の <code>else if</code> は横に続けてもよいですが、長くなる場合は改行した方が読みやすくなります。</p>
+<h3>年月ラベルを作る</h3>
+<div class="code-block">Text.From(Date.Year([日付])) &amp; "年" &amp; Text.From(Date.Month([日付])) &amp; "月"</div>
+<p>文字列と数値を連結するときは、年や月を <code>Text.From</code> で文字列に変換してから <code>&amp;</code> でつなぎます。</p>
+</section>
+
+<section id="advanced-editor">
+<h2>詳細エディターで安全に直す手順</h2>
+<div class="step-box">
+<h4>操作手順</h4>
+<p>1. Power Queryエディターで <strong>表示 タブ &rarr; 詳細エディター</strong> を開きます。<br>
+          2. いきなり大きく書き換えず、まずはソース、型変更、フィルター、列追加の流れを確認します。<br>
+          3. 変更したい箇所だけを1か所直します。たとえばファイルパス、列名、固定値などです。<br>
+          4. 「完了」を押し、プレビューでエラーが出ないか確認します。<br>
+          5. エラーが出たら、直前の状態に戻せるように、変更前のコードをメモしておくと安全です。</p>
+</div>
 <div class="tip-box">
-<strong>なぜ分離するか</strong><br>
-          ソースの変更（ファイルパスや列名の変更）が発生した場合、ステージングクエリだけ修正すれば後続の変換・出力クエリには影響しません。クエリ数が10を超えるような大規模な構成では、この設計が保守性を大幅に向上させます。
+<strong>おすすめは「GUIで作ってから少し直す」</strong><br>
+          最初から詳細エディターで全部書く必要はありません。Power Queryに8割作らせて、人間は最後の2割だけ整える。この使い方が一番壊れにくいです。
         </div>
-<h3>命名規則</h3>
+</section>
+
+<section id="common-errors">
+<h2>よくあるエラーと直し方</h2>
 <table class="ref-table">
-<thead><tr><th>プレフィックス</th><th>意味</th><th>例</th></tr></thead>
+<thead><tr><th>エラー・症状</th><th>よくある原因</th><th>確認する場所</th></tr></thead>
 <tbody>
-<tr><td>stg_</td><td>ステージング（取り込み）</td><td>stg_売上CSV</td></tr>
-<tr><td>trn_</td><td>変換（トランスフォーム）</td><td>trn_売上加工</td></tr>
-<tr><td>out_</td><td>出力</td><td>out_月次集計</td></tr>
-<tr><td>prm_</td><td>パラメータ</td><td>prm_対象月</td></tr>
+<tr><td><strong>トークンが必要です</strong></td><td>カンマ、かっこ、引用符の不足。全角記号を混ぜた。</td><td>直前の行末、<code>"</code>、<code>)</code>、<code>,</code></td></tr>
+<tr><td><strong>列が見つかりません</strong></td><td>元データの列名変更、余分な空白、全角半角違い。</td><td><code>[列名]</code> と実データの見出し</td></tr>
+<tr><td><strong>型を変換できません</strong></td><td>数値列に文字、日付列に不正な文字列が混ざっている。</td><td>型変更ステップ、エラー行の確認</td></tr>
+<tr><td><strong>循環参照のようなエラー</strong></td><td>クエリ名とステップ名、またはパラメータ名が衝突している。</td><td>クエリ名、ステップ名、参照先名</td></tr>
 </tbody>
 </table>
 </section>
-<!-- ==================== クエリの整理 ==================== -->
-<section id="organize">
-<h2>クエリの整理</h2>
-<div class="step-box">
-<h4>グループフォルダで分類する</h4>
-<p>エディターの左パネルでクエリを右クリック &rarr; 「グループに移動」&rarr;「新しいグループ」で、フォルダを作ってクエリを分類できます。「01_ステージング」「02_変換」「03_出力」「99_パラメータ」のようにフォルダ分けすると、見通しがよくなります。</p>
-</div>
-<div class="step-box">
-<h4>クエリの複製と参照</h4>
-<p>クエリを右クリック &rarr;「複製」はクエリ全体のコピーを作ります。「参照」は既存のクエリの最終結果を入力として使う新しいクエリを作ります。ステージングパターンでは「参照」を使って変換クエリを作ります。</p>
-</div>
+
+<section id="learning-order">
+<h2>学ぶ順番</h2>
+<p>M言語は一気に覚えようとすると重いので、次の順に慣れると実務に乗せやすくなります。</p>
+<ol>
+<li>GUI操作後に、数式バーで自動生成されたM式を見る。</li>
+<li>フィルター値や固定文字だけを書き換える。</li>
+<li>カスタム列で <code>if</code>、文字列結合、日付加工を使う。</li>
+<li>詳細エディターでクエリ全体の流れを読む。</li>
+<li>必要になったら、複数クエリで共通利用する関数化に進む。</li>
+</ol>
+<p>固定長データやバイト単位の切り出しまで踏み込む場合は、<a href="../../cobol/pq/03_article_cobol_pq_midb_ref.html">M言語でMIDB相当の自作関数を作る</a>も参考になります。</p>
 </section>
-<section id="summary"><h2>まとめ</h2><p>Power Queryは作って終わりではなく、長期運用するツールです。<strong>更新方法</strong>を理解し、<strong>読み込み先を使い分け</strong>（中間は接続のみ、最終だけテーブル）、<strong>よくあるエラー</strong>の対処法を知り、クエリが増えてきたら<strong>ステージングパターン</strong>で設計を整理する。この4つの管理スキルが、Power Queryを「便利だけど壊れやすいもの」から「信頼できる業務基盤」に変えます。</p></section>
+
+<section id="summary">
+<h2>まとめ</h2>
+<p>M言語は、Power Queryを「画面操作だけの便利機能」から「再利用できるデータ処理」に変えるための道具です。最初に覚えるべきことは多くありません。<strong>let...inの流れ、ステップ名の参照、列名の角かっこ、if式、よく使うText・Table・Date関数</strong>を押さえれば、GUIで作ったクエリを実務向けに少しずつ改良できるようになります。</p>
+</section>
+
 <nav class="nav-series">
 <strong>パワークエリ 応用編シリーズ</strong>
 <a href="../basic/article_powerquery_intro.html">⓪ パワークエリとは</a>
@@ -164,7 +205,8 @@
 <a href="article_pq_group_pivot.html">⑧ 集計とピボット</a>
 <a href="article_pq_import_patterns.html">⑨ データ取り込みパターン集</a>
 <a href="article_pq_parameter_query.html">⑩ パラメータクエリ</a>
-<a class="current" href="../basic/article_pq_management.html">⑪ 更新と管理（このページ）</a>
+<a class="current" href="article_pq_m_language.html">M言語入門（このページ）</a>
+<a href="../basic/article_pq_management.html">⑪ 更新と管理</a>
 </nav>
 
 </article>
@@ -191,4 +233,3 @@
 <script src="../../script.js"></script>
 </body>
 </html>
-

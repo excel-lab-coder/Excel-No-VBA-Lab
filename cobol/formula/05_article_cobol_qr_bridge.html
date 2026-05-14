@@ -1,0 +1,1251 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="6" name="difficulty">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>COBOL帳票から対象者だけを抽出し、半角QRで別システムへ入力する実践編｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="COBOL帳票や固定長テキストをExcelで整形し、対象者だけを抽出した後、職員番号・対象年月・所属コード・金額など半角項目だけをQR化して別システムへ入力する流れを解説します。" name="description">
+<meta content="COBOL QR, COBOL帳票 QR入力, 固定長データ QRコード, Excel QRリーダー, 半角QR, COBOL帳票 別システム入力, VBA不要 QR入力, QR Automation, Excel COBOL 連携" name="keywords">
+<meta content="COBOL帳票から対象者だけを抽出し、半角QRで別システムへ入力する実践編｜Excel &times; No VBA Lab" property="og:title">
+<meta content="COBOL帳票や固定長テキストをExcelで整形し、対象者だけを抽出した後、職員番号・対象年月・所属コード・金額など半角項目だけをQR化して別システムへ入力する流れを解説します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/05_article_cobol_qr_bridge.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "COBOL帳票から対象者だけを抽出し、半角QRで別システムへ入力する実践編",
+  "description": "COBOL帳票や固定長テキストをExcelで整形し、対象者だけを抽出した後、職員番号・対象年月・所属コード・金額など半角項目だけをQR化して別システムへ入力する流れを解説します。",
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/05_article_cobol_qr_bridge.html"},
+  "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
+  "datePublished": "2026-05-14",
+  "dateModified": "2026-05-14"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type": "ListItem", "position": 2, "name": "COBOL帳票処理", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/#cobol"},
+    {"@type": "ListItem", "position": 3, "name": "半角QR連携 実践編"}
+  ]
+}
+</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+  <div class="breadcrumb">
+    <a href="../../index.html">ホーム</a><span>&gt;</span>
+    <a href="../../index.html#cobol">COBOLデータ整形</a><span>&gt;</span>
+    <strong>半角QR連携 実践編</strong>
+  </div>
+
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta">
+    <span class="badge badge-all">補助解説</span>
+    <span class="badge badge-maniac">COBOL × QR</span>
+    <span class="badge badge-all">半角データ前提</span>
+    <span class="article-date">更新日: 2026-05-14</span>
+  </div>
+  <h1 class="article-title">COBOL帳票から対象者だけを抽出し、半角QRで別システムへ入力する実践編</h1>
+  <p class="article-summary" data-seo-lead="true">COBOL帳票や固定長テキストをExcelで整形し、対象者だけを抽出した後、職員番号・対象年月・所属コード・金額など半角項目だけをQR化して別システムへ入力する流れを解説します。</p>
+</div>
+
+<div class="toc-box">
+<h3>この記事の内容</h3>
+<ol>
+<li><a href="#sec-overview">COBOL帳票整形と半角QR入力をつなぐ補助解説</a></li>
+<li><a href="#sec-01">この記事で扱う前提</a></li>
+<li><a href="#sec-02">全体の流れ</a></li>
+<li><a href="#sec-03">なぜ半角QRに限定するのか</a></li>
+<li><a href="#sec-04">QRに入れる項目と入れない項目</a></li>
+<li><a href="#sec-05">例：COBOL帳票の元データ</a></li>
+<li><a href="#sec-06">ステップ1：元データをExcelに貼り付ける</a></li>
+<li><a href="#sec-07">ステップ2：行の種類を判定する</a></li>
+<li><a href="#sec-08">ステップ3：所属コードを明細行へ引き継ぐ</a></li>
+<li><a href="#sec-09">ステップ4：MIDB関数で固定長データを切り出す</a></li>
+<li><a href="#sec-10">ステップ5：対象者だけを抽出する</a></li>
+<li><a href="#sec-11">ステップ6：入力先システムの項目順に並べる</a></li>
+<li><a href="#sec-12">ステップ7：ExcelでQR用文字列を作る</a></li>
+<li><a href="#sec-13">ステップ8：テンキーEnterが必要な場合</a></li>
+<li><a href="#sec-14">ステップ9：複数人を1つのQRにまとめる場合</a></li>
+<li><a href="#sec-15">ステップ10：画面遷移がある場合はSleepを検討する</a></li>
+<li><a href="#sec-16">ステップ11：文字欠けが起きる場合はキャラクター間ディレイを調整する</a></li>
+<li><a href="#sec-17">ステップ12：1人1QR方式と複数人まとめQR方式の使い分け</a></li>
+<li><a href="#sec-18">ステップ13：入力前の確認表を作る</a></li>
+<li><a href="#sec-19">ステップ14：入力後のチェックを行う</a></li>
+<li><a href="#sec-20">この方法が向いている業務</a></li>
+<li><a href="#sec-21">この方法が向いていない業務</a></li>
+<li><a href="#sec-22">導入時の注意点</a></li>
+<li><a href="#sec-23">閉域環境で使う場合の注意点</a></li>
+<li><a href="#sec-24">まとめ</a></li>
+</ol>
+</div>
+
+<section class="goal-section" id="sec-overview">
+<h2><span class="icon">💡</span> COBOL帳票整形と半角QR入力をつなぐ補助解説</h2>
+<p>
+    この記事では、COBOL帳票や固定長テキストをExcelで整形し、
+    条件に合う対象者だけを抽出したうえで、
+    職員番号、対象年月、所属コード、金額、処理区分などの半角データをQRコード化し、
+    QRリーダーで別システムへ入力する流れを解説します。
+  </p>
+
+  <p>
+    ここで重要なのは、QRコードに入れる内容を半角データに限定することです。
+    氏名、所属名、住所、摘要、備考などの日本語項目は、Excel上で確認するために使います。
+    実際にQRコードへ入れるのは、入力先システムが受け付ける半角コードや数値だけにします。
+  </p>
+
+  <p>
+    つまり、この記事の目的は、
+    「日本語を含むCOBOL帳票をそのままQR化すること」ではありません。
+    COBOL帳票から必要な対象者を抽出し、
+    別システムへ入力するために必要な半角項目だけをQR化することです。
+  </p>
+<div class="xdemo-note-info">
+<strong>この記事の位置づけ</strong><br>
+このページは、COBOL帳票を整形するシリーズ本編の補助記事です。固定長データをExcelで表にした後、別システムへ入力する半角コード・数値だけをQR化する流れをまとめています。QRコードに日本語を入れる方法ではなく、氏名や所属名は確認用に残し、入力対象は半角項目に絞る設計です。
+</div>
+</section>
+
+<section class="method-section" id="sec-01">
+<h2>この記事で扱う前提</h2>
+
+  <p>
+    本記事では、次の前提で説明します。
+  </p>
+
+  <ul>
+    <li>COBOL帳票や固定長テキストをExcelへ貼り付ける</li>
+    <li>Excel関数またはPower Queryでデータを整形する</li>
+    <li>対象者だけを抽出する</li>
+    <li>QRコードへ入れる内容は半角英数字、半角記号、数値に限定する</li>
+    <li>氏名や所属名などの日本語は確認用としてExcel上に残す</li>
+    <li>QRリーダーはキーボード入力装置として使う</li>
+    <li>入力先システムにはCSV取込やAPI連携がない想定とする</li>
+  </ul>
+
+  <p>
+    Excelの標準機能やAccessのバーコードコントロールなどを利用する場合、
+    QRコードに安定して入れやすい内容は、基本的に半角データ中心になります。
+    そのため、この記事では半角データのみをQR投入対象とします。
+  </p>
+</section>
+
+<section class="method-section" id="sec-02">
+<h2>全体の流れ</h2>
+
+  <p>
+    COBOL帳票から別システム入力までの流れは、次のようになります。
+  </p>
+
+  <ol>
+    <li>COBOL帳票や固定長テキストをExcelへ貼り付ける</li>
+    <li>不要行を除外する</li>
+    <li>所属コードや処理年月などの親情報を明細行へ引き継ぐ</li>
+    <li>MIDB関数などで固定長データを列に分解する</li>
+    <li>条件に合う対象者だけを抽出する</li>
+    <li>入力先システムの項目順に並べる</li>
+    <li>半角項目だけを使ってQR用文字列を作成する</li>
+    <li>Tab、Enter、必要に応じて制御記号を含める</li>
+    <li>QRコードを生成する</li>
+    <li>QRリーダーで別システムへ入力する</li>
+    <li>入力結果を確認する</li>
+  </ol>
+
+  <p>
+    COBOL帳票処理は、帳票データをExcelで扱える表にする工程です。
+    QR Automationは、その整形済みデータを別システムへ入力する工程です。
+    この2つをつなげることで、古い基幹システムと別の業務システムの間に、
+    ExcelとQRリーダーを使った簡易的なデータ連携ルートを作ることができます。
+  </p>
+</section>
+
+<section class="method-section" id="sec-03">
+<h2>なぜ半角QRに限定するのか</h2>
+
+  <p>
+    COBOL帳票には、氏名、所属名、住所、摘要などの日本語が含まれていることがあります。
+    しかし、この記事ではそれらをQRコードへ入れません。
+  </p>
+
+  <p>
+    理由は次の通りです。
+  </p>
+
+  <ul>
+    <li>Excel標準機能で作るQRコードは半角データ中心の方が扱いやすい</li>
+    <li>QRリーダーや入力先システムによっては日本語入力が安定しないことがある</li>
+    <li>文字化けや入力漏れのリスクを減らせる</li>
+    <li>氏名や住所などの個人情報をQRに含めずに済む</li>
+    <li>入力先システムでは、氏名ではなく職員番号や所属コードで登録することが多い</li>
+    <li>閉域環境や制限環境でも運用ルールを作りやすい</li>
+  </ul>
+
+  <p>
+    日本語項目は、Excel上で対象者を確認するために使います。
+    QRコードへ入れるのは、職員番号、対象年月、所属コード、金額、処理区分などの半角データだけにします。
+  </p>
+</section>
+
+<section class="method-section" id="sec-04">
+<h2>QRに入れる項目と入れない項目</h2>
+
+  <p>
+    実務では、QRに入れる項目と入れない項目を明確に分けておくことが重要です。
+  </p>
+
+  <table class="format-table">
+    <thead>
+      <tr>
+        <th>区分</th>
+        <th>項目例</th>
+        <th>扱い</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>QRに入れる</td>
+        <td>職員番号、社員番号、対象年月、所属コード、金額、処理区分、伝票番号</td>
+        <td>半角英数字、半角記号、数値として入力する</td>
+      </tr>
+      <tr>
+        <td>QRに入れない</td>
+        <td>氏名、所属名、住所、摘要、備考、日本語メモ</td>
+        <td>Excel上の確認用項目として使う</td>
+      </tr>
+      <tr>
+        <td>注意が必要</td>
+        <td>ハイフン、スラッシュ、カンマ、スペース、小数点、マイナス符号</td>
+        <td>入力先システムが受け付ける形式に合わせる</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    QRコードに入れる項目は、入力先システムの画面で実際に入力する項目に合わせます。
+    Excel上の確認項目と、QRに送る項目を混同しないことが重要です。
+  </p>
+</section>
+
+<section class="method-section" id="sec-05">
+<h2>例：COBOL帳票の元データ</h2>
+
+  <p>
+    たとえば、次のようなCOBOL帳票があるとします。
+  </p>
+
+  <div class="code-readonly code-scroll" data-lang="例">
+<code>所属: 001 総務課
+--------------------------------
+職員番号  氏名        金額
+000123    山田太郎    000012000
+000124    佐藤花子    000000000
+000125    高橋三郎    000006500
+小計                  000018500
+
+所属: 002 経理課
+--------------------------------
+職員番号  氏名        金額
+000201    鈴木一郎    000015000
+000202    田中次郎    000000000
+小計                  000015000</code>
+</div>
+
+  <p>
+    このデータには、日本語の氏名や所属名が含まれています。
+    しかし、QRコードへ入れるのは、職員番号、対象年月、所属コード、金額、処理区分などの半角データだけです。
+  </p>
+
+  <p>
+    氏名や所属名は、対象者が正しいかを確認するためにExcel上に表示します。
+  </p>
+</section>
+
+<section class="method-section" id="sec-06">
+<h2>ステップ1：元データをExcelに貼り付ける</h2>
+
+  <p>
+    最初に、COBOL帳票や固定長テキストをExcelの貼付用シートに貼り付けます。
+  </p>
+
+  <p>
+    この段階では、無理に列分割しません。
+    まずは、元データをそのままA列に貼り付けます。
+  </p>
+
+  <table class="format-table">
+    <thead>
+      <tr>
+        <th>列</th>
+        <th>内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>A列</td>
+        <td>COBOL帳票の元テキスト1行分</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    元データを直接加工してしまうと、後から原因確認が難しくなります。
+    そのため、貼付シートには元データをできるだけそのまま残し、
+    判定列、抽出列、QR用文字列は別列または別シートに作成します。
+  </p>
+</section>
+
+<section class="method-section" id="sec-07">
+<h2>ステップ2：行の種類を判定する</h2>
+
+  <p>
+    COBOL帳票には、明細行以外にも多くの行が含まれます。
+    まずは、それぞれの行が何の行なのかを判定します。
+  </p>
+
+  <table class="format-table">
+    <thead>
+      <tr>
+        <th>行の種類</th>
+        <th>例</th>
+        <th>処理</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>所属行</td>
+        <td>所属: 001 総務課</td>
+        <td>所属コードを親情報として保持する</td>
+      </tr>
+      <tr>
+        <td>区切り線</td>
+        <td>--------------------------------</td>
+        <td>除外する</td>
+      </tr>
+      <tr>
+        <td>見出し行</td>
+        <td>職員番号 氏名 金額</td>
+        <td>除外する</td>
+      </tr>
+      <tr>
+        <td>明細行</td>
+        <td>000123 山田太郎 000012000</td>
+        <td>抽出対象にする</td>
+      </tr>
+      <tr>
+        <td>小計行</td>
+        <td>小計 000018500</td>
+        <td>除外する、または検算用に使う</td>
+      </tr>
+      <tr>
+        <td>空白行</td>
+        <td></td>
+        <td>除外する</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    ここで大切なのは、いきなり全行をMIDB関数で分解しないことです。
+    まずは、どの行が明細行なのかを軽い判定で見つけます。
+  </p>
+
+  <p>
+    10万行、20万行、30万行の帳票では、
+    全行に重い文字列分解をかけるとExcelが遅くなります。
+    そのため、先に明細行だけに絞り、必要な行だけを分解する設計が重要です。
+  </p>
+</section>
+
+<section class="method-section" id="sec-08">
+<h2>ステップ3：所属コードを明細行へ引き継ぐ</h2>
+
+  <p>
+    COBOL帳票では、所属コードや所属名が明細行の上にだけ表示されていることがあります。
+  </p>
+
+  <div class="code-readonly code-scroll" data-lang="例">
+<code>所属: 001 総務課
+000123    山田太郎    000012000
+000124    佐藤花子    000000000
+000125    高橋三郎    000006500
+
+所属: 002 経理課
+000201    鈴木一郎    000015000
+000202    田中次郎    000000000</code>
+</div>
+
+  <p>
+    この場合、明細行には所属コードが直接入っていません。
+    しかし、別システムへ入力するときに所属コードが必要になることがあります。
+  </p>
+
+  <p>
+    そのため、Excel側で所属コードを下の明細行へ引き継ぎます。
+    ここでは、所属名は確認用、所属コードはQR投入用として扱います。
+  </p>
+
+  <table class="format-table">
+    <thead>
+      <tr>
+        <th>確認用所属名</th>
+        <th>所属コード</th>
+        <th>職員番号</th>
+        <th>確認用氏名</th>
+        <th>金額</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>総務課</td>
+        <td>001</td>
+        <td>000123</td>
+        <td>山田太郎</td>
+        <td>12000</td>
+      </tr>
+      <tr>
+        <td>総務課</td>
+        <td>001</td>
+        <td>000124</td>
+        <td>佐藤花子</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>総務課</td>
+        <td>001</td>
+        <td>000125</td>
+        <td>高橋三郎</td>
+        <td>6500</td>
+      </tr>
+      <tr>
+        <td>経理課</td>
+        <td>002</td>
+        <td>000201</td>
+        <td>鈴木一郎</td>
+        <td>15000</td>
+      </tr>
+      <tr>
+        <td>経理課</td>
+        <td>002</td>
+        <td>000202</td>
+        <td>田中次郎</td>
+        <td>0</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    このように、日本語項目は確認用として残し、
+    QRに入れる項目は所属コードや職員番号などの半角データに限定します。
+  </p>
+</section>
+
+<section class="method-section" id="sec-09">
+<h2>ステップ4：MIDB関数で固定長データを切り出す</h2>
+
+  <p>
+    固定長のCOBOL帳票では、項目の位置がバイト単位で決まっていることがあります。
+  </p>
+
+  <p>
+    たとえば、明細行が次のような構造だとします。
+  </p>
+
+  <div class="code-readonly code-scroll" data-lang="例">
+<code>000123    山田太郎        000012000</code>
+</div>
+
+  <p>
+    この場合、見た目の空白ではなく、
+    何バイト目から何バイト分が職員番号、氏名、金額なのかを確認します。
+  </p>
+
+  <table class="format-table">
+    <thead>
+      <tr>
+        <th>項目</th>
+        <th>開始位置</th>
+        <th>バイト数</th>
+        <th>用途</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>職員番号</td>
+        <td>1</td>
+        <td>6</td>
+        <td>QR投入用</td>
+      </tr>
+      <tr>
+        <td>氏名</td>
+        <td>11</td>
+        <td>16</td>
+        <td>Excel上の確認用</td>
+      </tr>
+      <tr>
+        <td>金額</td>
+        <td>27</td>
+        <td>9</td>
+        <td>QR投入用</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    Excelでは、全角と半角が混在する固定長データの場合、
+    MID関数ではなくMIDB関数を使うことで、バイト単位の切り出しができます。
+  </p>
+
+  <div class="code-readonly code-scroll" data-lang="例">
+<code>=TRIM(MIDB(A2,1,6))
+=TRIM(MIDB(A2,11,16))
+=VALUE(TRIM(MIDB(A2,27,9)))</code>
+</div>
+
+  <p>
+    ただし、QR用文字列に使うのは、職員番号や金額などの半角データだけです。
+    氏名は確認用に表示しますが、QRコードには含めません。
+  </p>
+</section>
+
+<section class="method-section" id="sec-10">
+<h2>ステップ5：対象者だけを抽出する</h2>
+
+  <p>
+    帳票を整形した後、すべての明細を別システムへ入力するとは限りません。
+    実務では、条件に合う対象者だけを入力することが多いです。
+  </p>
+
+  <p>
+    たとえば、次のような条件が考えられます。
+  </p>
+
+  <ul>
+    <li>金額が0円より大きい人だけ</li>
+    <li>特定の所属コードだけ</li>
+    <li>処理区分が対象になっている人だけ</li>
+    <li>未処理フラグが立っている人だけ</li>
+    <li>別表に存在する職員番号だけ</li>
+    <li>エラーがない行だけ</li>
+  </ul>
+
+  <p>
+    ここでは、金額が0円より大きい人だけを対象にします。
+  </p>
+
+  <table class="format-table">
+    <thead>
+      <tr>
+        <th>確認用氏名</th>
+        <th>確認用所属名</th>
+        <th>職員番号</th>
+        <th>対象年月</th>
+        <th>所属コード</th>
+        <th>金額</th>
+        <th>処理区分</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>山田太郎</td>
+        <td>総務課</td>
+        <td>000123</td>
+        <td>202605</td>
+        <td>001</td>
+        <td>12000</td>
+        <td>01</td>
+      </tr>
+      <tr>
+        <td>高橋三郎</td>
+        <td>総務課</td>
+        <td>000125</td>
+        <td>202605</td>
+        <td>001</td>
+        <td>6500</td>
+        <td>01</td>
+      </tr>
+      <tr>
+        <td>鈴木一郎</td>
+        <td>経理課</td>
+        <td>000201</td>
+        <td>202605</td>
+        <td>002</td>
+        <td>15000</td>
+        <td>01</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    この表では、左側の氏名と所属名は確認用です。
+    QRコードへ入れるのは、職員番号、対象年月、所属コード、金額、処理区分です。
+  </p>
+</section>
+
+<section class="method-section" id="sec-11">
+<h2>ステップ6：入力先システムの項目順に並べる</h2>
+
+  <p>
+    QRリーダーは、基本的にはキーボードと同じように入力します。
+    そのため、入力先システムの画面でTabキーを押したときに、
+    どの順番で入力欄が移動するかを確認します。
+  </p>
+
+  <p>
+    たとえば、入力先システムの入力順が次のようになっているとします。
+  </p>
+
+  <ol>
+    <li>職員番号</li>
+    <li>対象年月</li>
+    <li>所属コード</li>
+    <li>金額</li>
+    <li>処理区分</li>
+    <li>登録</li>
+  </ol>
+
+  <p>
+    この場合、QRコードに入れる文字列は、次の順番にします。
+  </p>
+
+  <div class="code-readonly code-scroll" data-lang="例">
+<code>職員番号 → Tab → 対象年月 → Tab → 所属コード → Tab → 金額 → Tab → 処理区分 → Enter</code>
+</div>
+
+  <p>
+    文字としては、次のようなイメージです。
+  </p>
+
+  <div class="code-readonly code-scroll" data-lang="例">
+<code>000123[Tab]202605[Tab]001[Tab]12000[Tab]01[Enter]</code>
+</div>
+
+  <p>
+    QRリーダーで読み取ると、職員番号、対象年月、所属コード、金額、処理区分が順番に入力され、
+    最後にEnterが送信されます。
+  </p>
+</section>
+
+<section class="method-section" id="sec-12">
+<h2>ステップ7：ExcelでQR用文字列を作る</h2>
+
+  <p>
+    対象者表の列が次のようになっているとします。
+  </p>
+
+  <table class="format-table">
+    <thead>
+      <tr>
+        <th>列</th>
+        <th>項目</th>
+        <th>用途</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>A列</td>
+        <td>確認用氏名</td>
+        <td>QRには入れない</td>
+      </tr>
+      <tr>
+        <td>B列</td>
+        <td>確認用所属名</td>
+        <td>QRには入れない</td>
+      </tr>
+      <tr>
+        <td>C列</td>
+        <td>職員番号</td>
+        <td>QRに入れる</td>
+      </tr>
+      <tr>
+        <td>D列</td>
+        <td>対象年月</td>
+        <td>QRに入れる</td>
+      </tr>
+      <tr>
+        <td>E列</td>
+        <td>所属コード</td>
+        <td>QRに入れる</td>
+      </tr>
+      <tr>
+        <td>F列</td>
+        <td>金額</td>
+        <td>QRに入れる</td>
+      </tr>
+      <tr>
+        <td>G列</td>
+        <td>処理区分</td>
+        <td>QRに入れる</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    QR用文字列は、次のように作成できます。
+  </p>
+
+  <div class="code-readonly code-scroll" data-lang="例">
+<code>=C2 &amp; CHAR(9) &amp; D2 &amp; CHAR(9) &amp; E2 &amp; CHAR(9) &amp; F2 &amp; CHAR(9) &amp; G2 &amp; CHAR(13)</code>
+</div>
+
+  <p>
+    CHAR(9)はTab、CHAR(13)はEnterとして使います。
+    ただし、入力先システムやQRリーダーの設定によっては、
+    Enterの扱いが異なる場合があります。
+  </p>
+
+  <p>
+    通常Enterで登録できる場合はCHAR(13)で足りることがあります。
+    しかし、入力先システムがテンキーEnterを要求する場合は、
+    QRリーダー側で特定の半角記号をテンキーEnterに変換する設定が必要になることがあります。
+  </p>
+</section>
+
+<section class="method-section" id="sec-13">
+<h2>ステップ8：テンキーEnterが必要な場合</h2>
+
+  <p>
+    一部の業務システムでは、通常EnterとテンキーEnterの扱いが異なる場合があります。
+  </p>
+
+  <p>
+    たとえば、通常Enterでは改行や別動作になり、
+    テンキーEnterでないと登録や確定ができない画面があります。
+  </p>
+
+  <p>
+    この場合は、ExcelのCHAR関数だけでは対応できないことがあります。
+    そこで、QR用文字列の最後に特定の半角記号を入れ、
+    QRリーダー側の設定でその記号をテンキーEnterに変換します。
+  </p>
+
+  <p>
+    たとえば、スラッシュをテンキーEnterに変換する設定にしている場合、
+    QR用文字列は次のようになります。
+  </p>
+
+  <div class="code-readonly code-scroll" data-lang="例">
+<code>000123[Tab]202605[Tab]001[Tab]12000[Tab]01/</code>
+</div>
+
+  <p>
+    Excelの数式例は次の通りです。
+  </p>
+
+  <div class="code-readonly code-scroll" data-lang="例">
+<code>=C2 &amp; CHAR(9) &amp; D2 &amp; CHAR(9) &amp; E2 &amp; CHAR(9) &amp; F2 &amp; CHAR(9) &amp; G2 &amp; "/"</code>
+</div>
+
+  <p>
+    この場合、QRコードに入っているスラッシュ自体を入力するのではなく、
+    QRリーダー側でスラッシュをテンキーEnterに変換して送信します。
+  </p>
+
+  <p>
+    どの記号を何のキーに変換するかは、使用するQRリーダーの機種や設定方針に合わせて決めます。
+    すでに別用途で使っている記号と衝突しないように注意が必要です。
+  </p>
+</section>
+
+<section class="goal-section" id="sec-14">
+<h2>ステップ9：複数人を1つのQRにまとめる場合</h2>
+
+  <p>
+    最初の導入では、1人1QR方式が安全です。
+    しかし、入力先システムが安定していて、同じ画面で連続登録できる場合は、
+    複数人分を1つのQRコードにまとめることも考えられます。
+  </p>
+
+  <p>
+    たとえば、次のような入力ストリームです。
+  </p>
+
+  <div class="code-readonly code-scroll" data-lang="例">
+<code>000123[Tab]202605[Tab]001[Tab]12000[Tab]01[Enter]
+000125[Tab]202605[Tab]001[Tab]6500[Tab]01[Enter]
+000201[Tab]202605[Tab]002[Tab]15000[Tab]01[Enter]</code>
+</div>
+
+  <p>
+    ただし、複数人まとめQR方式では、次の点に注意が必要です。
+  </p>
+
+  <ul>
+    <li>1件登録後に、次の入力欄へ正しく戻るか</li>
+    <li>登録後に確認ダイアログが出ないか</li>
+    <li>登録処理中に次の文字列が送られないか</li>
+    <li>途中でエラーが出た場合に後続データが誤入力されないか</li>
+    <li>QRコードの文字数上限を超えないか</li>
+    <li>読み取り後に途中停止できる運用になっているか</li>
+  </ul>
+
+  <p>
+    業務システムの画面遷移が不安定な場合は、複数人まとめQR方式は避け、
+    1人1QR方式で運用した方が安全です。
+  </p>
+</section>
+
+<section class="method-section" id="sec-15">
+<h2>ステップ10：画面遷移がある場合はSleepを検討する</h2>
+
+  <p>
+    入力先システムで登録処理を行った後、
+    画面が切り替わるまで時間がかかる場合があります。
+  </p>
+
+  <p>
+    このとき、次の人のデータがすぐに送信されると、
+    画面遷移中に入力が始まり、文字欠けや誤入力が起きる可能性があります。
+  </p>
+
+  <p>
+    その場合は、QRリーダー側でSleep、つまり待機時間を設定する方法を検討します。
+  </p>
+
+  <p>
+    Sleepとキャラクター間ディレイは役割が違います。
+  </p>
+
+  <table class="format-table">
+    <thead>
+      <tr>
+        <th>項目</th>
+        <th>目的</th>
+        <th>使う場面</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>キャラクター間ディレイ</td>
+        <td>文字と文字の送信間隔を遅くする</td>
+        <td>文字欠け、セルずれ、Web画面の入力遅れ対策</td>
+      </tr>
+      <tr>
+        <td>Sleep</td>
+        <td>一定時間待つ</td>
+        <td>登録後、検索後、印刷後、画面遷移後の待機</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    たとえば、感嘆符を1秒待機に変換する設定にしている場合、
+    複数人分のQR用文字列は次のようになります。
+  </p>
+
+  <div class="code-readonly code-scroll" data-lang="例">
+<code>000123[Tab]202605[Tab]001[Tab]12000[Tab]01[Enter]!
+000125[Tab]202605[Tab]001[Tab]6500[Tab]01[Enter]!
+000201[Tab]202605[Tab]002[Tab]15000[Tab]01[Enter]</code>
+</div>
+
+  <p>
+    この場合、感嘆符そのものを入力するのではなく、
+    QRリーダー側の設定で感嘆符を待機動作に変換します。
+  </p>
+
+  <p>
+    ただし、Sleepの設定方法や対応可否はQRリーダーの機種によって異なります。
+    本番前に必ず検証用データで確認します。
+  </p>
+</section>
+
+<section class="method-section" id="sec-16">
+<h2>ステップ11：文字欠けが起きる場合はキャラクター間ディレイを調整する</h2>
+
+  <p>
+    QRリーダーは非常に高速に文字を送信します。
+    そのため、Excelや業務システム側が入力速度に追いつかない場合、
+    文字欠け、文字飛び、セルずれが発生することがあります。
+  </p>
+
+  <p>
+    たとえば、本来は次のように入力されるべきところが、
+  </p>
+
+  <div class="code-readonly code-scroll" data-lang="例">
+<code>000123 202605 001 12000 01</code>
+</div>
+
+  <p>
+    次のように欠けることがあります。
+  </p>
+
+  <div class="code-readonly code-scroll" data-lang="例">
+<code>00123 20265 001 1200 01</code>
+</div>
+
+  <p>
+    このような場合は、QRリーダーのキャラクター間ディレイを調整します。
+  </p>
+
+  <p>
+    まずは短いQRで試し、問題があれば少しずつ遅くします。
+    入力先がExcelなのか、Webシステムなのか、古い業務システムなのかによって、
+    必要なディレイは変わります。
+  </p>
+</section>
+
+<section class="goal-section" id="sec-17">
+<h2>ステップ12：1人1QR方式と複数人まとめQR方式の使い分け</h2>
+
+  <p>
+    実務では、1人1QR方式と複数人まとめQR方式を使い分けます。
+  </p>
+
+  <table class="format-table">
+    <thead>
+      <tr>
+        <th>方式</th>
+        <th>特徴</th>
+        <th>向いている場面</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1人1QR方式</td>
+        <td>安全性が高く、途中確認しやすい</td>
+        <td>初回導入、本番登録、エラーが出やすい画面</td>
+      </tr>
+      <tr>
+        <td>複数人まとめQR方式</td>
+        <td>読み取り回数を減らせるが、失敗時の影響が大きい</td>
+        <td>画面遷移が安定していて、入力項目が固定の業務</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    初めて導入する場合は、1人1QR方式をおすすめします。
+    画面の動き、入力結果、エラー時の挙動を確認したうえで、
+    必要に応じて複数人まとめQR方式を検討します。
+  </p>
+</section>
+
+<section class="method-section" id="sec-18">
+<h2>ステップ13：入力前の確認表を作る</h2>
+
+  <p>
+    QRコードに日本語を入れない場合でも、Excel上には確認用の情報を残しておく必要があります。
+  </p>
+
+  <p>
+    たとえば、QRを読む前に次のような確認表を表示します。
+  </p>
+
+  <table class="format-table">
+    <thead>
+      <tr>
+        <th>入力順</th>
+        <th>確認用氏名</th>
+        <th>確認用所属名</th>
+        <th>職員番号</th>
+        <th>対象年月</th>
+        <th>所属コード</th>
+        <th>金額</th>
+        <th>処理区分</th>
+        <th>QR作成</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>山田太郎</td>
+        <td>総務課</td>
+        <td>000123</td>
+        <td>202605</td>
+        <td>001</td>
+        <td>12000</td>
+        <td>01</td>
+        <td>作成済</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>高橋三郎</td>
+        <td>総務課</td>
+        <td>000125</td>
+        <td>202605</td>
+        <td>001</td>
+        <td>6500</td>
+        <td>01</td>
+        <td>作成済</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>鈴木一郎</td>
+        <td>経理課</td>
+        <td>000201</td>
+        <td>202605</td>
+        <td>002</td>
+        <td>15000</td>
+        <td>01</td>
+        <td>作成済</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    この表では、氏名や所属名を確認しながら、
+    実際にQRへ入る半角データも同時に確認できます。
+  </p>
+
+  <p>
+    QRに日本語を入れないからこそ、
+    Excel上の確認表が重要になります。
+  </p>
+</section>
+
+<section class="tips-section" id="sec-19">
+<h2>ステップ14：入力後のチェックを行う</h2>
+
+  <p>
+    QRリーダーで入力した後は、入力結果を必ず確認します。
+  </p>
+
+  <p>
+    チェック項目の例は次の通りです。
+  </p>
+
+  <ul>
+    <li>入力件数が対象者件数と一致しているか</li>
+    <li>職員番号が正しく入力されているか</li>
+    <li>対象年月が正しいか</li>
+    <li>所属コードが正しいか</li>
+    <li>金額が正しいか</li>
+    <li>処理区分が正しいか</li>
+    <li>0円の人が誤って入力されていないか</li>
+    <li>対象外の所属が混ざっていないか</li>
+    <li>エラーで止まった行がないか</li>
+  </ul>
+
+  <p>
+    QR Automationは入力を速くできますが、
+    入力結果の確認を省略してよいわけではありません。
+    むしろ、入力が速くなる分、事前条件と入力後チェックを明確にしておく必要があります。
+  </p>
+</section>
+
+<section class="method-section" id="sec-20">
+<h2>この方法が向いている業務</h2>
+
+  <p>
+    この方法は、次のような業務に向いています。
+  </p>
+
+  <ul>
+    <li>COBOL帳票や固定長テキストから対象者を抽出している</li>
+    <li>対象者だけを別システムへ入力している</li>
+    <li>入力先システムにCSV取込機能がない</li>
+    <li>入力項目が職員番号、年月、コード、金額など半角中心である</li>
+    <li>氏名や所属名は確認用であり、入力にはコードを使う</li>
+    <li>VBA、RPA、外部ソフトの利用が難しい</li>
+    <li>閉域環境や制限環境でデータ移送が難しい</li>
+    <li>少量から中量の定型入力を減らしたい</li>
+  </ul>
+</section>
+
+<section class="tips-section" id="sec-21">
+<h2>この方法が向いていない業務</h2>
+
+  <p>
+    一方で、次のような場合は別の方法を検討した方がよいです。
+  </p>
+
+  <ul>
+    <li>入力先システムにCSV取込やAPI連携が正式に用意されている</li>
+    <li>日本語の氏名、住所、摘要をそのまま入力する必要がある</li>
+    <li>入力項目が長文中心である</li>
+    <li>大量件数を毎日処理する必要がある</li>
+    <li>入力先システムの画面遷移が不安定である</li>
+    <li>入力中に確認分岐やエラー分岐が頻繁に発生する</li>
+    <li>QRリーダー設定の変更が禁止されている</li>
+    <li>キーボード入力では監査要件を満たせない</li>
+  </ul>
+
+  <p>
+    QR Automationは万能ではありません。
+    ただし、半角コードや数値を中心に入力する業務では、
+    非常に現実的な選択肢になることがあります。
+  </p>
+</section>
+
+<section class="tips-section" id="sec-22">
+<h2>導入時の注意点</h2>
+
+  <p>
+    実務で導入する場合は、次の点を必ず確認します。
+  </p>
+
+  <ul>
+    <li>QRに含める項目を半角データに限定する</li>
+    <li>氏名や所属名はExcel上の確認用にする</li>
+    <li>本番データではなく、架空データで検証する</li>
+    <li>入力先システムのTab移動順を確認する</li>
+    <li>通常EnterとテンキーEnterの違いを確認する</li>
+    <li>文字欠けがあればキャラクター間ディレイを調整する</li>
+    <li>画面遷移があればSleepを検討する</li>
+    <li>QRリーダーの現在設定を保存しておく</li>
+    <li>初期化方法と復旧手順を確認する</li>
+    <li>入力前に対象者件数を確認する</li>
+    <li>入力後に登録件数と金額を確認する</li>
+  </ul>
+</section>
+
+<section class="tips-section" id="sec-23">
+<h2>閉域環境で使う場合の注意点</h2>
+
+  <p>
+    閉域環境では、USBメモリ、メール、クラウド、共有フォルダ、外部ツールが使えないことがあります。
+    そのような場合でも、紙に印刷したQRコードを使えば、
+    一方の環境で作成した半角入力データを、別の端末へキーボード入力として渡せる可能性があります。
+  </p>
+
+  <p>
+    ただし、QRコードはデータそのものです。
+    氏名や住所を入れない場合でも、職員番号、金額、処理区分などが含まれていれば、
+    管理対象の情報になる可能性があります。
+  </p>
+
+  <p>
+    閉域環境でQRを使う場合は、次のような運用ルールを決めます。
+  </p>
+
+  <ul>
+    <li>QRに含めてよい項目を決める</li>
+    <li>QRに氏名、住所、摘要などの日本語個人情報を含めない</li>
+    <li>QRの作成者、使用者、使用日を記録する</li>
+    <li>印刷したQRの保管場所を決める</li>
+    <li>使用後の廃棄方法を決める</li>
+    <li>本番前に架空データで検証する</li>
+  </ul>
+
+  <p>
+    半角データだけであっても、職員番号や金額が含まれる場合は注意が必要です。
+    QRを単なる紙ではなく、データを含む媒体として扱います。
+  </p>
+</section>
+
+<section class="goal-section" id="sec-24">
+<h2>まとめ</h2>
+
+  <p>
+    COBOL帳票のExcel整形とQR Automationは、別々の技術に見えます。
+    しかし、実務では一連の流れとしてつながります。
+  </p>
+
+  <p>
+    COBOL帳票処理は、古い基幹システムから出た帳票データを、
+    Excelで扱える表に変換する工程です。
+  </p>
+
+  <p>
+    QR Automationは、その整形済みデータのうち、
+    別システムへ入力するために必要な半角データだけをQRコード化し、
+    QRリーダーでキーボード入力として流す工程です。
+  </p>
+
+  <p>
+    この2つを組み合わせることで、
+    COBOL帳票から対象者を抽出し、
+    職員番号、対象年月、所属コード、金額、処理区分などの半角項目を、
+    別システムへ入力する流れを作ることができます。
+  </p>
+
+  <p>
+    重要なのは、QRコードに何でも入れようとしないことです。
+    氏名や所属名などの日本語はExcel上で確認し、
+    QRコードには入力に必要な半角コードや数値だけを入れます。
+  </p>
+
+  <p>
+    この設計にすると、文字化けや入力不安定のリスクを減らしながら、
+    QRリーダーを使った現実的な入力省力化ができます。
+  </p>
+
+  <p>
+    CSV取込やAPI連携が使えるなら、それが第一候補です。
+    しかし、古い業務システムや制限環境では、常に理想的な連携手段が用意されているとは限りません。
+  </p>
+
+  <p>
+    そのような場面で、
+    COBOL帳票をExcelで整形し、
+    対象者だけを抽出し、
+    半角QRで別システムへ入力する方法は、
+    手入力を減らすための強力な選択肢になります。
+  </p>
+</section>
+
+<section class="method-section" id="sec-related">
+<h2><span class="icon">🔗</span> あわせて読む</h2>
+<ul class="line-height-2">
+<li><a href="01_article_cobol_basic.html">COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）</a></li>
+<li><a href="03_article_cobol_expert.html">凶悪COBOL帳票の撃破｜ヘッダー紐付け・フィルダウン</a></li>
+<li><a href="04_article_cobol_irregular.html">不規則明細・完結編｜行数がバラバラなデータの正規化展開</a></li>
+<li><a href="../../qr/00_qr_reader_excel_input_basics.html">QRリーダーでExcel入力を自動化する仕組み</a></li>
+<li><a href="../../qr/18_qr_num_enter_numpad_enter.html">QRリーダーでテンキーEnterを送る方法</a></li>
+</ul>
+</section>
+
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a></p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ(Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab — 制限環境こそが最高の教師。</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>
