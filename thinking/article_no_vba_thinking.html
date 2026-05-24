@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>VBA禁止時の思考法：自動操作を捨て、データの流れを設計する｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="VBA禁止環境で、自動操作を諦める代わりに、Power Query、関数、テーブル、スピル、QR入力でデータの流れを設計する思考法を整理します。" name="description">
+<meta content="VBA禁止, No VBA, Power Query, Excel 関数, スピル, QR入力, データの流れ" name="keywords">
+<meta content="VBA禁止時の思考法：自動操作を捨て、データの流れを設計する｜Excel × No VBA Lab" property="og:title">
+<meta content="マクロを使えないときに、何を諦め、何を設計対象に戻すのかを整理します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_no_vba_thinking.html" property="og:url">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_no_vba_thinking.html" rel="canonical">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">設計思想・コラム</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../index.html">ホーム</a><span>&gt;</span><a href="index.html">技術の流れ</a><span>&gt;</span><strong>VBA禁止時の思考法</strong></div>
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta"><span class="badge badge-365">No VBA</span><span class="badge badge-column">思考法</span><span class="article-date">公開日: 2026-05-24</span><span class="article-reading-time">📖 約9分</span></div>
+  <h1 class="article-title">VBA禁止時の思考法：自動操作を捨て、データの流れを設計する</h1>
+</div>
+
+<p class="article-lead">VBA禁止環境で一番つらいのは、「できない」のではなく「やり方は分かっているのに使えない」ことです。ここで必要なのは、VBAの代替探しではなく、思考の置き換えです。</p>
+<p>この記事では、マクロが使えないときに、何を諦め、何を設計対象として残すのかを整理します。</p>
+
+<div class="toc-box">
+  <h3>この記事で扱う流れ</h3>
+  <ol>
+    <li><a href="#give-up">まず、自動操作を諦める</a></li>
+    <li><a href="#decompose">処理を分解して、残せる自動化を探す</a></li>
+    <li><a href="#pq">Power Queryで入力データを整える</a></li>
+    <li><a href="#functions">関数で判定と出力を作る</a></li>
+    <li><a href="#spill">スピルで可変範囲を扱う</a></li>
+    <li><a href="#qr">QRで入力を圧縮する</a></li>
+    <li><a href="#checklist">VBA禁止時の判断チェック</a></li>
+  </ol>
+</div>
+
+<section class="goal-section" id="give-up">
+  <h2>まず、自動操作を諦める</h2>
+  <p>VBA禁止時に最初にやるべきことは、つらいですが「画面操作を自動化する」という発想を一度手放すことです。ボタンを押す、別アプリを操作する、ファイルを勝手に保存する、Web画面へ入力する。これらは制限に引っかかりやすい領域です。</p>
+  <p>ここにしがみつくと、「VBAならできるのに」で止まります。止まっている間、現場の作業は何も軽くなりません。</p>
+  <p>大事なのは、全部を諦めることではありません。自動操作できない部分と、自動化できる部分を切り分けることです。</p>
+  <div class="xdemo-note-info">
+    <strong>No VBA思考の入口</strong>
+    <p>「操作を自動化する」から「データを整え、判断を見える化し、入力を短くする」へ切り替えます。</p>
+  </div>
+</section>
+
+<section class="method-section" id="decompose">
+  <h3>処理を分解して、残せる自動化を探す</h3>
+  <p>たとえば、VBAでやりたかったことが「社内システムへ毎月300件登録する」だったとします。VBAが使えないと、登録ボタンの自動クリックはできないかもしれません。しかし、作業を分解すると別の余地が見えます。</p>
+  <div class="code-block" data-lang="text">
+<span class="code-line">元データを集める
+↓
+登録対象だけに絞る
+↓
+項目を入力順に並べる
+↓
+エラー候補を先に見つける
+↓
+入力用の文字列を作る
+↓
+人が画面を確認しながら登録する</span>
+  </div>
+  <p>最後の登録操作は人が行うとしても、前半の整形、抽出、チェック、入力列生成はExcel側でかなり減らせます。VBA禁止時は、この「残せる自動化」を拾う力が重要です。</p>
+</section>
+
+<section class="method-section" id="pq">
+  <h3>Power Queryで入力データを整える</h3>
+  <p>Power Queryは、VBA禁止環境で最初に頼れる柱です。CSVやExcelファイルを取り込み、不要列を消し、列名を整え、型をそろえ、複数ファイルを結合できます。</p>
+  <p>VBAのように画面を動かすことはできません。しかし、元データを毎回同じ形に整える力は強いです。ここが安定すると、その後の関数や出力設計が楽になります。</p>
+  <p>特に、データの取得元が毎月同じフォルダ、同じ列構成、同じ帳票形式であれば、Power Queryは非常に向いています。人がやるのは、ファイルを置いて更新することだけになります。</p>
+</section>
+
+<section class="method-section" id="functions">
+  <h3>関数で判定と出力を作る</h3>
+  <p>Power Queryで材料を整えたら、関数で判定と出力を作ります。未登録か、重複していないか、入力必須が空白ではないか、金額や日付が範囲内か。こうした確認は、VBAがなくても設計できます。</p>
+  <p>ここで関数を、単なる計算式ではなく「業務ルールを見える化する部品」として使います。複雑なルールを1本の式に押し込むのではなく、作業列で段階的に分けると、他人が見ても追いやすくなります。</p>
+  <div class="comparison-section">
+    <h4>関数に任せるとよい領域</h4>
+    <ul class="philosophy-list">
+      <li>入力漏れ、重複、形式不正のチェック。</li>
+      <li>マスタ参照、分類、コード変換。</li>
+      <li>登録順、出力順、確認欄の作成。</li>
+      <li>人が判断すべき例外の表示。</li>
+    </ul>
+  </div>
+</section>
+
+<section class="method-section" id="spill">
+  <h3>スピルで可変範囲を扱う</h3>
+  <p>Microsoft 365や新しいExcelが使えるなら、スピル関数はNo VBA設計の大きな武器になります。FILTERで対象だけを抽出し、SORTで順番を整え、UNIQUEで重複を外し、LETで式を読みやすくできます。</p>
+  <p>従来のように数式を下までコピーする必要が減るため、データ件数が増減しても出力が追従しやすくなります。これは、VBAの最終行処理に近い安心感を、関数側で持てるということです。</p>
+</section>
+
+<section class="method-section" id="qr">
+  <h3>QRで入力を圧縮する</h3>
+  <p>外部システムの画面操作が自動化できない場合でも、入力そのものを短くすることはできます。QRリーダーをキーボードとして扱い、入力順に並べた文字列をQR化する方法です。</p>
+  <p>たとえば、1つ目の項目、Tab、2つ目の項目、Tab、最後にEnter、という文字列を作り、それをQRコードにします。人は画面を見ながらQRを読み取るだけで、複数項目の入力を一気に進められます。</p>
+  <p>これはRPAではありません。画面を勝手に操作しません。だからこそ、閉域環境や厳しい社内ルールの中でも検討しやすい場合があります。</p>
+</section>
+
+<section class="method-section" id="checklist">
+  <h3>VBA禁止時の判断チェック</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">問い</th>
+          <th scope="col">見るべき方向</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>元データは毎回同じ形で来るか</td>
+          <td>Power Queryで取り込み・整形を固定化する</td>
+        </tr>
+        <tr>
+          <td>登録対象を絞る条件は決まっているか</td>
+          <td>関数やスピルで対象リストを作る</td>
+        </tr>
+        <tr>
+          <td>入力順が決まっているか</td>
+          <td>入力列を生成し、QR化を検討する</td>
+        </tr>
+        <tr>
+          <td>人が確認すべき例外は何か</td>
+          <td>チェック欄とエラー一覧を作る</td>
+        </tr>
+        <tr>
+          <td>誰が更新しても壊れないか</td>
+          <td>設定、手順、入力場所を分ける</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>VBA禁止時のゴールは、完全自動化とは限りません。人がやるべき判断だけを残し、それ以外の整形、確認、入力補助をExcelに寄せることです。</p>
+</section>
+
+<section class="stage-checklist">
+  <h3>VBA禁止時に切り替えられたサイン</h3>
+  <ul>
+    <li>「VBAならできるのに」で止まらず、作業を入力、整形、判定、出力に分解できる</li>
+    <li>Power Queryで元データを毎回同じ形へ整えられる</li>
+    <li>関数やスピルで対象リスト、エラー一覧、入力順を作れる</li>
+    <li>人が確認すべき箇所と、Excelに任せる箇所を分けられる</li>
+    <li>必要ならQR入力など、画面操作以外の自動化を検討できる</li>
+  </ul>
+</section>
+
+<section class="method-section">
+  <h2>関連する段階記事</h2>
+  <ul class="article-list">
+    <li class="article-item"><a class="article-link" href="article_stage4_no_macro_powerquery.html">段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage5_qr_input_design_shift.html">段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_spill_design_shift.html">段階7：スピル関数で、Excelの設計思想が変わる時期</a></li>
+  </ul>
+</section>
+
+<nav class="stage-nav" aria-label="記事ナビゲーション">
+  <a class="stage-nav-prev" href="article_vba_omnipotence_trap.html">
+    <span class="stage-nav-label">← 前に読む</span>
+    <span class="stage-nav-title">VBAの万能感に依存する時期</span>
+  </a>
+  <a class="stage-nav-next" href="article_stage4_no_macro_powerquery.html">
+    <span class="stage-nav-label">段階記事へ</span>
+    <span class="stage-nav-title">段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期</span>
+  </a>
+</nav>
+
+</article>
+</main>
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">お問い合わせ (Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab &horbar; コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>

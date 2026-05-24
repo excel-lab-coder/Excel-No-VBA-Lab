@@ -334,6 +334,73 @@ pre,
 }
 .article-body h3 { font-size: 1.1em; color: #2a5f8f; margin: 26px 0 12px; padding-left: 4px; }
 
+.article-feedback {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  margin: 42px 0 28px;
+  padding: 20px 22px;
+  border: 1px solid #d7e5f1;
+  border-left: 5px solid var(--color-accent);
+  border-radius: 8px;
+  background: #f7fbff;
+  box-shadow: 0 8px 20px rgba(26, 61, 92, 0.07);
+}
+.article-feedback-text h2 {
+  margin: 0 0 6px;
+  padding: 0;
+  border: 0;
+  font-size: 1.05rem;
+  color: var(--color-primary);
+}
+.article-feedback-text p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.94rem;
+  line-height: 1.7;
+}
+.article-feedback-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+.article-feedback-btn {
+  appearance: none;
+  border: 0;
+  border-radius: 8px;
+  padding: 11px 20px;
+  min-width: 132px;
+  background: linear-gradient(180deg, #1e88e5 0%, #1565c0 100%);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(21, 101, 192, 0.22);
+}
+.article-feedback-btn:hover {
+  background: linear-gradient(180deg, #1976d2 0%, #0d47a1 100%);
+}
+.article-feedback-btn:focus-visible {
+  outline: 3px solid rgba(33, 150, 243, 0.35);
+  outline-offset: 3px;
+}
+.article-feedback-btn:disabled {
+  cursor: default;
+  background: #78909c;
+  box-shadow: none;
+}
+.article-feedback-status {
+  min-height: 1.4em;
+  margin: 0;
+  color: #2e7d32;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
 /* パンくず */
 .breadcrumb {
   font-size: 1.15rem;
@@ -915,6 +982,20 @@ a[aria-disabled="true"] { color: #999 !important; cursor: not-allowed; }
   .formula-copy-label { border-right: none; border-bottom: 1px solid #cfd8dc; }
   .formula-copy-btn { border-left: none; border-top: 1px solid #cfd8dc; padding: 10px; }
   .article-body { padding: 24px 20px; }
+  .article-feedback {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 18px 18px;
+  }
+  .article-feedback-actions {
+    align-items: stretch;
+  }
+  .article-feedback-btn {
+    width: 100%;
+  }
+  .article-feedback-status {
+    text-align: center;
+  }
   .hero-copy { left: 5% !important; max-width: 88% !important; }
   .pattern-card { padding: 24px 22px 22px 26px; }
   .pattern-card h4 { font-size: 1.2em; }

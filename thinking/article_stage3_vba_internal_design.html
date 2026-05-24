@@ -1,0 +1,362 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="VBA初級のマクロ記録や連続印刷を超えて、配列、Dictionary、エラー処理、ログ、設定シート、ユーザーフォームなどでExcel内の業務ツールを設計する段階を整理します。" name="description">
+<meta content="VBA 中級, VBA 上級, Excel 業務ツール, Dictionary, 配列処理, エラー処理, UserForm, Excel自動化" name="keywords">
+<meta content="段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期｜Excel × No VBA Lab" property="og:title">
+<meta content="マクロの記録から一歩進み、他人が使えるExcel内業務ツールをVBAで設計する段階を整理します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage3_vba_internal_design.html" property="og:url">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage3_vba_internal_design.html" rel="canonical">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期",
+  "description": "VBA初級のマクロ記録や連続印刷を超えて、配列、Dictionary、エラー処理、ログ、設定シート、ユーザーフォームなどでExcel内の業務ツールを設計する段階を整理します。",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage3_vba_internal_design.html"
+  },
+  "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "publisher": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab",
+    "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}
+  },
+  "datePublished": "2026-05-23",
+  "dateModified": "2026-05-24"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type": "ListItem", "position": 2, "name": "技術の流れ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/"},
+    {"@type": "ListItem", "position": 3, "name": "段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期"}
+  ]
+}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">技術の流れ</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../index.html">ホーム</a><span>&gt;</span><a href="index.html">技術の流れ</a><span>&gt;</span><strong>段階3</strong></div>
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta">
+    <span class="badge badge-classic">VBA中級</span>
+    <span class="badge badge-all">設計</span>
+    <span class="article-reading-time">📖 約9分</span>
+    <span class="article-date">公開日: 2026-05-23</span>
+  </div>
+  <h1 class="article-title">段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期</h1>
+</div>
+
+<p class="article-lead">VBA初級で連続印刷やCSV取込ができるようになると、かなり仕事は楽になります。ただ、そこで終わると「作った本人しか動かせないマクロ」になりがちです。段階3では、VBAを他人が使えるExcel内業務ツールへ育てていきます。</p>
+<p>ここで変わるのは、コードの量ではありません。入力、処理、出力、エラー、設定、ログ、引き継ぎまで含めて考えるようになります。</p>
+<p>つまり、VBAを「作業を消す道具」として使う段階から、VBAで「Excel内に小さな業務システムを作る」段階へ進みます。</p>
+
+<div class="toc-box">
+  <h3>この記事で扱う流れ</h3>
+  <ol>
+    <li><a href="#shift">動くマクロから、使い続けられるツールへ</a></li>
+    <li><a href="#select">SelectとActivateを卒業する</a></li>
+    <li><a href="#array">配列とDictionaryで処理速度が変わる</a></li>
+    <li><a href="#structure">処理を分けると保守できるようになる</a></li>
+    <li><a href="#operation">エラー処理、ログ、設定シートを持つ</a></li>
+    <li><a href="#ui">他人が使うための入力画面とボタン設計</a></li>
+    <li><a href="#what-can-do">この段階でできるようになること</a></li>
+    <li><a href="#rarity">どれぐらいの人ができるか</a></li>
+    <li><a href="#limit">この段階の限界</a></li>
+  </ol>
+</div>
+
+<section class="goal-section" id="shift">
+  <h2>この段階で起きる変化</h2>
+  <p>段階2では、毎月の作業をボタン1つにすることが大きな成果でした。段階3では、もう少し視点が変わります。「自分が動かせるマクロ」ではなく、「他の人も安心して使えるExcelツール」を考えるようになります。</p>
+  <p>たとえば、連続印刷マクロを作ったとします。自分だけが使うなら、対象シート名や保存先フォルダをコードに直接書いても動きます。しかし他の人が使うなら、対象者の選択、印刷前チェック、保存先の変更、エラー時の表示、処理ログが必要になります。</p>
+  <p>ここで、VBAは作業短縮から運用設計へ変わります。処理が一度動くことより、毎月安定して動くことのほうが大事になります。</p>
+  <div class="xdemo-note-info">
+    <strong>段階3の本質</strong>
+    <p>初級VBAは「自分の作業を消す」段階です。中級・上級VBAは「他人が使っても回る仕組みにする」段階です。</p>
+  </div>
+</section>
+
+<section class="method-section" id="select">
+  <h3>SelectとActivateを卒業する</h3>
+  <p>マクロの記録から入ると、最初はSelectやActivateだらけになります。セルを選んで、コピーして、別のシートを選んで、貼り付ける。記録マクロとしては自然ですが、実務ツールとしては壊れやすくなります。</p>
+  <p>中級に進むと、画面で選択している場所に頼らず、ブック、シート、範囲を明示して操作するようになります。これだけでコードの安定感がかなり変わります。</p>
+  <div class="code-block" data-lang="vba">
+<span class="code-line">' 記録マクロ寄り
+Sheets(&quot;元データ&quot;).Select
+Range(&quot;A1:C100&quot;).Select
+Selection.Copy
+Sheets(&quot;出力&quot;).Select
+Range(&quot;A1&quot;).Select
+ActiveSheet.Paste
+
+' 中級以降の考え方
+Worksheets(&quot;元データ&quot;).Range(&quot;A1:C100&quot;).Copy _
+    Destination:=Worksheets(&quot;出力&quot;).Range(&quot;A1&quot;)</span>
+  </div>
+  <p>この変化は小さく見えますが、かなり重要です。画面を選択しないので速くなりますし、ユーザーが別のシートを開いていても処理が安定します。</p>
+  <p>ここで初めて、Excelの見た目ではなく、Excelのオブジェクト構造を触っている感覚が出てきます。ブック、シート、範囲、セル、行、列。それぞれを明示的に扱うようになります。</p>
+</section>
+
+<section class="method-section" id="array">
+  <h3>配列とDictionaryで処理速度が変わる</h3>
+  <p>VBA初級では、セルを1つずつ読み書きしがちです。100行なら問題ありませんが、1万行、5万行になると急に重くなります。ここで配列やDictionaryを使うかどうかで、実務レベルがかなり変わります。</p>
+  <p>配列を使うと、シート上の値を一度メモリに取り込み、処理してからまとめて戻せます。Dictionaryを使うと、重複チェック、集計、マスタ照合、存在確認が速くなります。</p>
+  <div class="code-block" data-lang="vba">
+<span class="code-line">Dim data As Variant
+Dim i As Long
+
+data = Worksheets(&quot;明細&quot;).Range(&quot;A2:D50000&quot;).Value
+
+For i = 1 To UBound(data, 1)
+    If data(i, 2) = &quot;対象&quot; Then
+        data(i, 4) = &quot;出力&quot;
+    End If
+Next i
+
+Worksheets(&quot;明細&quot;).Range(&quot;A2:D50000&quot;).Value = data</span>
+  </div>
+  <p>この段階で画期的なのは、Excelを「セルを触る画面」としてではなく、「データを一度まとめて扱う場所」として見られるようになることです。後のPower Queryやスピル関数にも、この感覚はつながります。</p>
+</section>
+
+<section class="method-section" id="structure">
+  <h3>処理を分けると保守できるようになる</h3>
+  <p>初級VBAでは、1つのSubに全部を書きがちです。CSVを開く、整形する、チェックする、印刷する、保存する、メッセージを出す。最初は動きますが、後から直すのが苦しくなります。</p>
+  <p>中級以降では、処理を役割ごとに分けます。入力を読む処理、データを整える処理、チェックする処理、出力する処理、ログを書く処理。分けておくと、エラーが起きたときに原因を探しやすくなります。</p>
+  <div class="code-block" data-lang="text">
+<span class="code-line">Main
+├─ LoadInputFiles
+├─ NormalizeData
+├─ ValidateData
+├─ CreateReports
+├─ SaveOutputs
+└─ WriteLog</span>
+  </div>
+  <p>この分割は、きれいなコードを書くためだけではありません。業務の説明にも効きます。「何を入力し、どこでチェックし、何を出力しているか」を、コードの構造で表せるようになります。</p>
+</section>
+
+<section class="method-section" id="operation">
+  <h3>エラー処理、ログ、設定シートを持つ</h3>
+  <p>他人が使うツールにするなら、正常時だけを考えていては足りません。ファイルがない、列名が違う、保存先フォルダがない、対象データが0件、同じファイル名がすでに存在する。こうしたことは実務では普通に起きます。</p>
+  <p>中級以降では、エラー処理、チェック処理、ログ出力を考えるようになります。処理開始時刻、処理件数、エラー件数、対象ファイル名、出力先。こうした情報を残すだけで、トラブル時の復旧がかなり楽になります。</p>
+  <div class="code-block" data-lang="text">
+<span class="code-line">設定シート
+├─ 入力フォルダ
+├─ 出力フォルダ
+├─ 対象年月
+├─ 印刷対象区分
+└─ 管理者メモ
+
+ログシート
+├─ 処理日時
+├─ 対象ファイル
+├─ 処理件数
+├─ エラー内容
+└─ 実行者</span>
+  </div>
+  <p>設定をコードに埋め込むのではなく、設定シートに逃がす。エラーをMsgBoxだけで終わらせるのではなく、ログに残す。こうした工夫で、作った本人以外でも扱いやすくなります。</p>
+</section>
+
+<section class="method-section" id="ui">
+  <h3>他人が使うための入力画面とボタン設計</h3>
+  <p>VBA中級・上級では、ユーザーインターフェースも考えるようになります。ボタンをどこに置くか。押す前に何を確認させるか。処理中に何を表示するか。終わった後に何を伝えるか。</p>
+  <p>UserFormを使う場合もあります。対象年月を選ぶ、出力先を指定する、処理区分を選ぶ、対象者をチェックする。こうした入力画面を作ると、利用者がシート構造を知らなくても操作できます。</p>
+  <p>ただし、画面を作ればよいわけではありません。入力項目が多すぎると使われません。確認メッセージが多すぎると押されなくなります。ボタンが多すぎると、どれを押せばよいか分からなくなります。</p>
+  <div class="xdemo-note-good">
+    <strong>他人が使うVBAで大事なこと</strong>
+    <p>処理の速さだけではなく、迷わず使えること、間違えにくいこと、失敗したときに戻れることが大事です。</p>
+  </div>
+</section>
+
+<section class="method-section" id="what-can-do">
+  <h3>この段階でできるようになること</h3>
+  <p>段階3を通ると、VBAで作れるものの性質が変わります。自分の定型作業を短くするだけでなく、部署の中で使われる小さな業務ツールを作れるようになります。</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">できること</th>
+          <th scope="col">段階2との違い</th>
+          <th scope="col">現場で効く理由</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>大量データを高速処理する</td>
+          <td>セル操作から配列処理へ進む</td>
+          <td>データ件数が増えても現実的に動く</td>
+        </tr>
+        <tr>
+          <td>設定を外に出す</td>
+          <td>コード修正なしで運用条件を変えられる</td>
+          <td>担当者変更や月次変更に耐えやすい</td>
+        </tr>
+        <tr>
+          <td>ログとエラー処理を持つ</td>
+          <td>止まった理由を残せる</td>
+          <td>復旧、問い合わせ、引き継ぎが楽になる</td>
+        </tr>
+        <tr>
+          <td>利用者向けの画面を作る</td>
+          <td>作った本人以外でも操作できる</td>
+          <td>部署内で使い回しやすくなる</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>画期的な進化は、VBAが「速く動くコード」から「運用を含んだ仕組み」へ変わることです。この段階を越えると、Excelが小さな業務システムに見えてきます。</p>
+</section>
+
+<section class="method-section" id="rarity">
+  <h3>どれぐらいの人ができるか</h3>
+  <p>厳密な統計ではなく現場感ですが、この段階までできる人は一般事務の中ではかなり少ないです。マクロの記録や簡単なVBAを触れる人はいても、配列、Dictionary、設定シート、ログ、エラー処理まで含めて業務ツールとして組める人は一気に減ります。</p>
+  <p>部署内に1人いればかなり強いレベルです。複数部署をまたいで頼られることもあります。Excelが得意な人というより、「業務ツールを作れる人」として見られ始めます。</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">レベル</th>
+          <th scope="col">できること</th>
+          <th scope="col">現場での人数感</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>VBA初級</td>
+          <td>記録マクロ、連続印刷、簡単なCSV取込</td>
+          <td>Excelが強い職場なら見かける</td>
+        </tr>
+        <tr>
+          <td>VBA中級</td>
+          <td>最終行、ループ、配列、処理分割、設定シート</td>
+          <td>部署に1人いるとかなり助かる</td>
+        </tr>
+        <tr>
+          <td>VBA上級寄り</td>
+          <td>ログ、エラー処理、Dictionary、UserForm、運用設計</td>
+          <td>一般事務ではかなり希少</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>ここまで来ると、単に自分の作業が速いだけではありません。周りの作業の仕組みを変えられます。だから強い一方で、依頼が集まりやすく、作ったツールの保守も背負いやすくなります。</p>
+</section>
+
+<section class="goal-section" id="limit">
+  <h2>ツール職人の孤独と「Excelの檻」への絶望</h2>
+  <p>VBA中級・上級になり、配列やDictionary、ログ出力、エラーハンドリングを覚えると、Excel内に立派な業務システムを構築できるようになります。周りからの評価も高く、部署の基幹業務をあなたのツールが支えている状態になります。</p>
+  <p>しかし、ここでも新たな絶望が待っています。それは「Excelという檻」の限界です。データは社内のWebシステムから手でダウンロードしなければならない。結果は別の基幹システムに手入力しなければならない。どんなにExcelの中で処理を高速化しても、その前後の「システム間の手渡し」は人間の手作業のままです。</p>
+  <p>また、ツールの規模が大きくなるにつれ、「本当にExcelで作るべきだったのか？」という根本的な疑問も湧いてきます。便利だからこそ依頼が増え、保守も増え、作った本人へ責任が集中します。</p>
+  <div class="xdemo-note-warn">
+    <strong>段階3の壁：Excel内完結の限界と野良システム化</strong>
+    <p>Excelの内部をどれだけ完璧に設計しても、前後の業務フローが手作業である限り、真の自動化は達成できません。ここでExcelの外側を動かしたい欲求が生まれます。</p>
+  </div>
+</section>
+
+<div class="stage-checklist">
+  <h3>この段階を通過したサイン</h3>
+  <ul>
+    <li>Select/Activateを使わずにブック・シート・範囲を直接操作できる</li>
+    <li>配列にデータを取り込んでまとめて処理できる</li>
+    <li>Dictionaryで高速な照合・集計ができる</li>
+    <li>処理をSub/Functionに分割して設計できる</li>
+    <li>エラー処理、ログ出力、設定シートを組み込める</li>
+    <li>UserFormやボタン配置で、他人が迷わず使える入口を作れる</li>
+    <li>Excel内は整ったが、外部システムとの手作業に強いストレスを感じている</li>
+  </ul>
+</div>
+
+<section class="method-section">
+  <h3>まとめ</h3>
+  <p>段階3は、VBA初級の「動くマクロ」から、Excel内の業務ツールを設計する段階です。</p>
+  <p>SelectやActivateを卒業し、配列やDictionaryで処理速度を上げ、処理を分け、エラー処理、ログ、設定シート、入力画面まで考える。ここまで来ると、Excelは単なる作業ファイルではなく、小さな業務システムになります。</p>
+  <p>ただし、Excel内で作れるようになるほど、次はExcelの外側も動かしたくなります。Web画面、外部アプリ、PDF、メール、社内システム。ここから次の段階、VBA応用による外部連携へ進みます。</p>
+</section>
+
+<nav class="stage-nav" aria-label="段階ナビゲーション">
+  <a class="stage-nav-prev" href="article_stage2_vba_macro_recording.html">
+    <span class="stage-nav-label">← 前の段階</span>
+    <span class="stage-nav-title">段階2：マクロの記録とVBA初級で、作業が消える時期</span>
+  </a>
+  <a class="stage-nav-next" href="article_stage3_vba_web_automation.html">
+    <span class="stage-nav-label">次の段階 →</span>
+    <span class="stage-nav-title">段階4：VBA応用で、Web操作や外部アプリまで広がる時期</span>
+  </a>
+</nav>
+
+<section class="method-section">
+  <h2>シリーズ記事</h2>
+  <ul class="article-list">
+    <li class="article-item"><a class="article-link" href="article_stage1_functions_printing.html">段階1：VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage2_vba_macro_recording.html">段階2：マクロの記録とVBA初級で、作業が消える時期</a></li>
+    <li class="article-item"><p class="article-link">段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期（この記事）</p></li>
+    <li class="article-item"><a class="article-link" href="article_stage3_vba_web_automation.html">段階4：VBA応用で、Web操作や外部アプリまで広がる時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage4_no_macro_powerquery.html">段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage5_qr_input_design_shift.html">段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_spill_design_shift.html">段階7：スピル関数で、Excelの設計思想が変わる時期</a></li>
+  </ul>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式・参考:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/let-function-34842dd8-b92b-4d3f-b325-b8b8f9908999" rel="noopener" target="_blank">LET公式説明</a><a href="https://support.microsoft.com/en-us/office/filter-function-f4f7cb66-82eb-4767-8f7c-4877ad80c759" rel="noopener" target="_blank">FILTER公式説明</a><a href="https://support.microsoft.com/en-us/office/dynamic-array-formulas-and-spilled-array-behavior-205c6b06-03ba-4151-89a1-87a7eb36e531" rel="noopener" target="_blank">動的配列とスピル動作</a><a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/excel-performance/excel-tips-for-optimizing-performance-obstructions" rel="noopener" target="_blank">Excelパフォーマンス最適化</a><a href="../samples/index.html">サンプルデータ</a></p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">お問い合わせ (Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab &horbar; コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>

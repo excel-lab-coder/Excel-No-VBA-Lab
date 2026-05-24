@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="マクロ禁止・外部ソフト禁止環境で、画面操作の自動化から入力データの圧縮へ発想を転換し、QRリーダーをキーボードとして扱う設計思想を整理します。" name="description">
+<meta content="マクロ禁止, VBA禁止, QRリーダー, 入力自動化, Excel入力, インターフェース設計, RPA代替" name="keywords">
+<meta content="段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期｜Excel &times; No VBA Lab" property="og:title">
+<meta content="RPAやSeleniumが使えない制限環境で、QRリーダーを用いて入力作業そのものを圧縮する設計へシフトする段階です。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage5_qr_input_design_shift.html">
+<meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage5_qr_input_design_shift.html" rel="canonical">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage5_qr_input_design_shift.html"
+  },
+  "headline": "段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期",
+  "image": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png",
+  "datePublished": "2026-05-23",
+  "dateModified": "2026-05-23",
+  "author": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "技術の流れ",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "段階6"
+    }
+  ]
+}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">技術の流れ</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../index.html">ホーム</a><span>&gt;</span><a href="index.html">技術の流れ</a><span>&gt;</span><strong>段階6</strong></div>
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta"><span class="badge badge-365">QR Automation</span><span class="badge badge-all">No VBA</span><span class="article-date">公開日: 2026-05-23</span><span class="article-reading-time">📖 約8分</span></div>
+  <h1 class="article-title">段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期</h1>
+</div>
+
+<p class="article-lead">VBAが禁止され、RPAやSeleniumも導入できない。閉域環境や古い基幹システムで自動化が完全に塞がれ、絶望的な手作業に戻されたとき、そこから這い上がるための「入力作業そのものを圧縮する設計」へシフトします。</p>
+<p>段階5（Power Query）で「Excelのデータ整形」は自動化できました。しかし、そこから別システムへデータを入力する工程は、手作業のまま残りがちです。ここで画面を自動操作しようとすると、自動化ツールの壁にぶつかり、技術を知っている人ほど深い無力感を味わうことになります。</p>
+<p>この段階では、無理にシステムを操作する正攻法を諦め、「Excelで入力順序を整え、QRリーダーをプログラマブルなキーボードとして扱う」という執念の逆転発想へ移行します。</p>
+
+<div class="toc-box">
+  <h3>この記事で扱う流れ</h3>
+  <ol>
+    <li><a href="#limit">自動化ツールを奪われ、奈落の底へ突き落とされる感覚</a></li>
+    <li><a href="#keyboard">QRリーダーは「キーボード」である</a></li>
+    <li><a href="#design">画面操作から、入力列の生成へ</a></li>
+    <li><a href="#no-branch">条件分岐を捨てて、人間に任せる</a></li>
+    <li><a href="#what-can-do">この段階でできるようになること</a></li>
+    <li><a href="#rarity">どれぐらいの人ができるか</a></li>
+    <li><a href="#trained">この段階で鍛えられるもの</a></li>
+  </ol>
+</div>
+
+<section class="goal-section" id="limit">
+  <h2>自動化ツールを奪われ、奈落の底へ突き落とされる感覚</h2>
+  <p>VBA、RPA、Selenium。これらは非常に強力な自動化手段です。前段階まででこれらの技術を身につけた人は、「どんな作業でも自動化できる」という万能感を持っているはずです。ボタン一つでブラウザが動き、システムにデータが次々と打ち込まれていく。その快感を知っています。</p>
+  <p>しかし、実際の現場では突然「万能の杖」をへし折られる瞬間が訪れます。</p>
+  <p>セキュリティ強化によるマクロの全面禁止。外部ソフトのインストール不可。クラウドRPAが使えない閉域環境。WebDriverが更新できないブラウザ制限。そして何より、要素を一切取得できない謎の古い基幹システムや専用エミュレータ。これらが組み合わさったとき、これまで築き上げた自動化の仕組みはすべて頓挫します。</p>
+  <p>これは、スキルが足りないからできないのではありません。「やり方は完全に分かっているのに、環境のせいで何も手出しができない」のです。VBAのコードなら10分で書けるのに、ツールが使えないがゆえに、何百件、何千件というデータを「人間が手作業で」入力し続けるしかない。この時の絶望感、まさに奈落の底に突き落とされるような無力感は、技術を知っている人ほど深く、強烈に心を折ります。</p>
+  <div class="xdemo-note-info">
+    <strong>段階6の本質</strong>
+    <p>「どうやって自動化ツールを通すか（正攻法）」を諦め、「使える道具だけで手入力を最小化する（ゲリラ戦）」へと泥臭く発想を転換する段階です。</p>
+  </div>
+</section>
+
+<section class="method-section" id="keyboard">
+  <h3>QRリーダーは「キーボード」である</h3>
+  <p>そこで突破口になるのが、USB接続のQRリーダーです。QRリーダーの本質は「カメラ」ではなく「キーボード」です。</p>
+  <p>多くのQRリーダーは、読み取った文字列をキーボード入力としてPCに送信します（HIDキーボードエミュレーション）。相手がExcelでも、Webフォームでも、古い基幹システムでも、入力欄がフォーカスされていれば文字が打ち込まれます。システム側からは、人間が超高速でタイピングしているようにしか見えません。</p>
+  <p>この性質を利用すれば、自動化ツールが入り込めないシステムに対しても、物理的な入力装置としてアプローチできます。</p>
+</section>
+
+<section class="method-section" id="design">
+  <h3>画面操作から、入力列の生成へ</h3>
+  <p>RPAは「画面を読んで操作する」発想です。一方、QR入力自動化は「人が入力する順序に合わせて、Excel側で入力用文字列（入力列）を作る」という発想です。</p>
+  <p>たとえば、社員番号を入れてTabを押し、処理区分を入れてTabを押し、対象年月を入れてEnterを押す。この定型操作がある場合、Excel側で以下のような文字列を生成します。</p>
+  <div class="code-block" data-lang="text">
+<span class="code-line">社員番号 + Tab + 処理区分 + Tab + 対象年月 + Enter</span>
+  </div>
+  <p>これをQRコード化し、QRリーダーで読み取れば、手入力の負担は激減します。Excel（Power Queryと関数）で対象データを抽出し、入力列を組み立て、QR化する。この設計が組めると、RPAに頼らなくても業務のボトルネックを解消できます。</p>
+</section>
+
+<section class="method-section" id="no-branch">
+  <h3>条件分岐を捨てて、人間に任せる</h3>
+  <p>ただし、QRリーダーは画面を見て判断しません。「エラーが出たら戻る」「Aなら処理1」といった条件分岐はできません。</p>
+  <p>ここが重要な設計の分水嶺です。QRリーダーに条件分岐をさせようとするのではなく、分岐判断はExcelのデータ生成時か、人間の確認作業に残します。すべてを自動化する完全無人処理を目指すのではなく、「人間が確認しながら、入力だけを圧縮する」という現実的な着地点を見極めます。</p>
+  <div class="comparison-section">
+    <h4>RPAとQR入力の設計思想の違い</h4>
+    <ul class="philosophy-list">
+      <li><strong>RPA：</strong>画面の状態を読み取り、条件分岐しながらすべてを自動操作する。</li>
+      <li><strong>QR入力：</strong>Excelで確定させた入力手順を物理的に流し込み、人間の確認プロセスを残す。</li>
+    </ul>
+  </div>
+</section>
+
+<section class="method-section" id="what-can-do">
+  <h3>この段階でできるようになること</h3>
+  <p>段階6でできるようになるのは、QRコードを作ることだけではありません。RPAが使えない現場で、入力作業を「人間が打つ文字」から「Excelが生成する入力列」へ変えることです。</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">できること</th>
+          <th scope="col">従来の手作業</th>
+          <th scope="col">QR設計後</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>入力順をExcel側で組み立てる</td>
+          <td>画面を見ながら1項目ずつ入力する</td>
+          <td>入力欄の順番に合わせた文字列を作る</td>
+        </tr>
+        <tr>
+          <td>TabやEnterを含めた入力を設計する</td>
+          <td>項目ごとに手で移動する</td>
+          <td>QR読取で次の欄や確定まで進める</td>
+        </tr>
+        <tr>
+          <td>入力前チェックを組み込む</td>
+          <td>登録中にエラーへ気づく</td>
+          <td>QR化前に未入力、桁数、禁止文字を確認する</td>
+        </tr>
+        <tr>
+          <td>人間の確認を残す</td>
+          <td>全部手入力で疲弊する</td>
+          <td>確認と例外判断だけ人間に残す</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>画期的なのは、外部システムの画面を直接支配しなくても、入力の形をこちらで設計できることです。VBAやRPAのように画面を自動操作するのではなく、画面に渡すデータを圧縮します。</p>
+</section>
+
+<section class="method-section" id="rarity">
+  <h3>どれぐらいの人ができるか</h3>
+  <p>ツールの壁に絶望し、それでも「手作業には戻りたくない」という執念から、QRリーダーを入力インターフェースとして再設計できる人は、現場では極めて希少です。多くの人は、ツールが禁止された瞬間に「じゃあもう手入力するしかないですね」と諦め、奈落の底でひたすらキーボードを叩き続ける日々に戻ってしまいます。</p>
+  <p>一般的なスキルアップの経過としては、関数 → VBA → Power Query と進んできた万能感のある人が、環境の壁という「理不尽な暴力」にぶつかり、絶望の底から視点を「システムの自動操作」から「入力データの圧縮」へと無理やり切り替えることで到達します。</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">状態</th>
+          <th scope="col">できること</th>
+          <th scope="col">現場での人数感</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ツールの壁にぶつかる</td>
+          <td>RPA・VBAが使えず手作業に戻る</td>
+          <td>大多数</td>
+        </tr>
+        <tr>
+          <td>入力手順を整理する</td>
+          <td>Excelで入力用データだけは作成する</td>
+          <td>部署に数人</td>
+        </tr>
+        <tr>
+          <td>入力列を生成しQRで流す</td>
+          <td>Tab/Enter込みの入力列をQR化し、確認と入力を切り分ける設計ができる</td>
+          <td>かなり希少</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>この段階に到達する人は、単なるツールの使い方を超えて、目的（手入力を減らす）のために使える道具（Excel＋QRリーダー）を組み合わせ、システム横断的なインターフェース設計ができる人です。</p>
+</section>
+
+<section class="method-section" id="trained">
+  <h3>この段階で鍛えられるもの</h3>
+  <p>QR入力自動化で鍛えられるのは、「ツールに依存せず、データの流れと入力インターフェースを最適化する力」です。</p>
+  <p>自動化ツールがないからと諦めるのではなく、Excelを「データを整える場所」として使い切り、QRを「システムへの入力装置」として再定義する。制限環境下で目的を達成するための、システム横断的な設計思想が身につきます。</p>
+  <div class="xdemo-note-good">
+    <strong>段階6から段階7へ</strong>
+    <p>Excel内でデータを自由に組み立てる力が高まると、次に「数式を敷き詰める」ことの限界を感じるようになります。そこで、Excelの構造そのものを可変にする「スピル関数」へと向かうことになります。</p>
+  </div>
+</section>
+
+<div class="stage-checklist">
+  <h3>この段階を通過したサイン</h3>
+  <ul>
+    <li>RPAが使えない環境でも、別システムへの入力負担を軽減できる</li>
+    <li>QRリーダーを単なる読み取り機ではなく、入力装置として利用できる</li>
+    <li>Excel側でTabやEnterを含めた入力文字列（入力列）を設計できる</li>
+    <li>すべてを自動化せず、人間の判断と定型入力の切り分けができる</li>
+  </ul>
+</div>
+
+<section class="method-section">
+  <h3>まとめ</h3>
+  <p>段階6は、ツールによる自動操作を諦め、入力データそのもののインターフェース設計へと発想を切り替える時期です。</p>
+  <p>Power Queryでデータを整え、関数で入力順序を組み立て、QRで流し込む。この一連の設計は、RPAが使えない現場における最強のサバイバルスキルになります。そして、Excel内でデータを動的に組み立てる経験が、次のスピル関数の理解へと繋がっていきます。</p>
+</section>
+
+<nav class="stage-nav" aria-label="段階ナビゲーション">
+  <a class="stage-nav-prev" href="article_stage4_no_macro_powerquery.html">
+    <span class="stage-nav-label">← 前の段階</span>
+    <span class="stage-nav-title">段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期</span>
+  </a>
+  <a class="stage-nav-next" href="article_spill_design_shift.html">
+    <span class="stage-nav-label">次の段階 →</span>
+    <span class="stage-nav-title">段階7：スピル関数で、Excelの設計思想が変わる時期</span>
+  </a>
+</nav>
+
+<section class="method-section">
+  <h2>シリーズ記事</h2>
+  <ul class="article-list">
+    <li class="article-item"><a class="article-link" href="article_stage1_functions_printing.html">段階1：VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage2_vba_macro_recording.html">段階2：マクロの記録とVBA初級で、作業が消える時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage3_vba_internal_design.html">段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage3_vba_web_automation.html">段階4：VBA応用で、Web操作や外部アプリまで広がる時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage4_no_macro_powerquery.html">段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期</a></li>
+    <li class="article-item"><p class="article-link">段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期（この記事）</p></li>
+    <li class="article-item"><a class="article-link" href="article_spill_design_shift.html">段階7：スピル関数で、Excelの設計思想が変わる時期</a></li>
+  </ul>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-info">
+      <p class="footer-copyright">&copy; Excel &times; No VBA Lab</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="../about.html">運営者情報</a></li>
+      <li><a href="../disclaimer.html">免責事項</a></li>
+      <li><a href="../privacy.html">プライバシーポリシー</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>

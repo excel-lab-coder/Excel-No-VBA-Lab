@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Excelで画期的に進化する瞬間：できることが一段変わるブレイクスルー集｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="VLOOKUP、マクロの記録、配列、Dictionary、Web操作、Power Query、スピル関数、QR入力など、Excelで画期的に進化する瞬間を整理します。" name="description">
+<meta content="Excel ブレイクスルー, VLOOKUP, マクロの記録, VBA 配列, Power Query, スピル関数, QR入力" name="keywords">
+<meta content="Excelで画期的に進化する瞬間：できることが一段変わるブレイクスルー集｜Excel × No VBA Lab" property="og:title">
+<meta content="Excel技術が一段進化する瞬間を、何ができるようになるかと次に見える壁で整理します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_breakthrough_moments.html" property="og:url">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_breakthrough_moments.html" rel="canonical">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">技術の流れ</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../index.html">ホーム</a><span>&gt;</span><a href="index.html">技術の流れ</a><span>&gt;</span><strong>ブレイクスルー</strong></div>
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta"><span class="badge badge-all">ブレイクスルー</span><span class="badge badge-column">全体像</span><span class="article-date">公開日: 2026-05-24</span><span class="article-reading-time">📖 約8分</span></div>
+  <h1 class="article-title">Excelで画期的に進化する瞬間：できることが一段変わるブレイクスルー集</h1>
+</div>
+
+<p class="article-lead">Excelの上達には、「できることが少し増える時期」と「見える世界が一段変わる瞬間」があります。この記事では、その一段変わる瞬間だけを抜き出して整理します。</p>
+<p>どの技術も、単体ではただの機能です。しかし、実務の中である壁にぶつかったタイミングで出会うと、仕事の考え方そのものを変えます。</p>
+
+<div class="toc-box">
+  <h3>この記事で扱う流れ</h3>
+  <ol>
+    <li><a href="#lookup">VLOOKUPで、表がつながる</a></li>
+    <li><a href="#recording">マクロの記録で、操作がコードになる</a></li>
+    <li><a href="#array">配列とDictionaryで、処理速度が別物になる</a></li>
+    <li><a href="#web">Web操作で、Excelの外側が動き出す</a></li>
+    <li><a href="#pq">Power Queryで、手順から流れへ変わる</a></li>
+    <li><a href="#spill">スピル関数で、範囲が可変になる</a></li>
+    <li><a href="#qr">QR入力で、入力作業そのものを圧縮する</a></li>
+  </ol>
+</div>
+
+<section class="goal-section" id="lookup">
+  <h2>VLOOKUPで、表がつながる</h2>
+  <p>最初の大きな転機は、VLOOKUPです。社員番号から部署名を返す。商品コードから単価を返す。今まで人が目で探していた情報が、キーでつながります。</p>
+  <p>ここでExcelは、入力表ではなく、複数の表を関連づける道具になります。マスタという概念、キーという概念、完全一致の重要性が少しずつ見えてきます。</p>
+  <div class="xdemo-note-info">
+    <strong>この瞬間にできるようになること</strong>
+    <p>転記、目視確認、マスタ参照を減らせます。仕事の速度より先に、探し間違いを減らせるのが大きいです。</p>
+  </div>
+</section>
+
+<section class="method-section" id="recording">
+  <h3>マクロの記録で、操作がコードになる</h3>
+  <p>次の衝撃は、マクロの記録です。コピー、貼り付け、印刷、保存という自分の操作が、VBAコードとして残ります。完璧なコードではありませんが、「作業は記録して再実行できる」という発見は大きいです。</p>
+  <p>ここから、毎月同じ手順を短くする発想が生まれます。関数は結果を作りますが、VBAは操作を動かします。この違いに気づいた瞬間、Excelは作業場所から作業装置になります。</p>
+</section>
+
+<section class="method-section" id="array">
+  <h3>配列とDictionaryで、処理速度が別物になる</h3>
+  <p>VBA初級のまま大量データを処理すると、セルを1つずつ触って遅くなります。ここで配列にデータを取り込み、メモリ上で処理してから戻すと、処理速度が一段変わります。</p>
+  <p>Dictionaryを使うと、重複チェック、存在確認、マスタ照合、集計が安定します。ここでVBAは、操作の自動化からデータ処理の設計へ進みます。</p>
+  <div class="comparison-section">
+    <h4>進化前後の違い</h4>
+    <ul class="philosophy-list">
+      <li>進化前：セルを1行ずつ触る。動くが遅い。</li>
+      <li>進化後：配列でまとめて扱う。大量データでも現実的に動く。</li>
+      <li>進化前：重複や照合をループで探す。</li>
+      <li>進化後：Dictionaryで存在確認を一瞬にする。</li>
+    </ul>
+  </div>
+</section>
+
+<section class="method-section" id="web">
+  <h3>Web操作で、Excelの外側が動き出す</h3>
+  <p>Excel内の処理を自動化できるようになると、次に気になるのは外側です。Web画面へ入力する、結果を取る、PDFを作る、メールを作る。業務の入口と出口がExcelの外にあることに気づきます。</p>
+  <p>ここで、Excelは業務フローのハブになります。強力ですが、同時に壊れやすくもなります。ログイン、権限、画面変更、待機、セッション切れ。Excelだけでは制御できない要素が一気に増えるからです。</p>
+</section>
+
+<section class="method-section" id="pq">
+  <h3>Power Queryで、手順から流れへ変わる</h3>
+  <p>VBAでは「どう動かすか」を書きます。Power Queryでは「どのデータを、どんな形へ整えるか」を定義します。ここで、手順中心の思考からデータの状態中心の思考へ変わります。</p>
+  <p>不要列を消す、型を変える、複数ファイルを結合する、マスタと結合する。こうした処理は、VBAよりPower Queryのほうが読みやすく、更新しやすい場面があります。</p>
+  <p>特にVBA禁止環境では、この切り替えが大きな救いになります。自動操作できなくても、データの流れは設計できるからです。</p>
+</section>
+
+<section class="method-section" id="spill">
+  <h3>スピル関数で、範囲が可変になる</h3>
+  <p>従来のExcelでは、数式をどこまでコピーするかを人が管理しがちでした。スピル関数では、1つの式から必要な分だけ結果が広がります。</p>
+  <p>FILTER、SORT、UNIQUE、LETを組み合わせると、「一覧から条件に合う行だけを出す」「重複を除いて並べる」「実データ範囲だけを処理する」といった設計が自然になります。</p>
+  <p>これは単に新しい関数が増えたという話ではありません。Excelの範囲を固定のマス目ではなく、データ量に応じて変わる出力として見る転換です。</p>
+</section>
+
+<section class="method-section" id="qr">
+  <h3>QR入力で、入力作業そのものを圧縮する</h3>
+  <p>RPAもSeleniumもVBAも使えない現場では、画面操作の自動化が封じられます。ここで発想を変え、入力欄へ流し込む文字列そのものをExcelで作ると、別の道が開きます。</p>
+  <p>QRリーダーは、多くの場合キーボードとして動きます。QRコードに「値 + Tab + 値 + Enter」のような入力列を持たせれば、人間は画面を見ながら読み取るだけで、手入力の多くを圧縮できます。</p>
+  <p>このブレイクスルーは、システムを操作するのではなく、システムに渡す入力を設計するところにあります。</p>
+</section>
+
+<section class="method-section">
+  <h3>ブレイクスルー早見表</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">瞬間</th>
+          <th scope="col">進化前</th>
+          <th scope="col">進化後</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>VLOOKUP</td>
+          <td>人が目で探す</td>
+          <td>キーで表をつなぐ</td>
+        </tr>
+        <tr>
+          <td>マクロの記録</td>
+          <td>人が毎回操作する</td>
+          <td>操作を再実行できる</td>
+        </tr>
+        <tr>
+          <td>配列・Dictionary</td>
+          <td>セルを1つずつ処理する</td>
+          <td>データをまとめて高速に扱う</td>
+        </tr>
+        <tr>
+          <td>Power Query</td>
+          <td>手順を動かす</td>
+          <td>データの流れを定義する</td>
+        </tr>
+        <tr>
+          <td>スピル</td>
+          <td>数式をコピーする</td>
+          <td>必要な結果だけ広がる</td>
+        </tr>
+        <tr>
+          <td>QR入力</td>
+          <td>画面へ手入力する</td>
+          <td>入力列そのものを圧縮する</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<nav class="stage-nav" aria-label="記事ナビゲーション">
+  <a class="stage-nav-prev" href="article_growth_curve_standard_flow.html">
+    <span class="stage-nav-label">← 前に読む</span>
+    <span class="stage-nav-title">成長曲線の全体像</span>
+  </a>
+  <a class="stage-nav-next" href="article_stage1_functions_printing.html">
+    <span class="stage-nav-label">段階記事へ</span>
+    <span class="stage-nav-title">段階1：VLOOKUP、印刷、データ整形</span>
+  </a>
+</nav>
+
+</article>
+</main>
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">お問い合わせ (Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab &horbar; コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>

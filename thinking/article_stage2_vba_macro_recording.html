@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>段階2：マクロの記録とVBA初級で、作業が消える時期｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="社内の誰かが書いたマクロやマクロの記録をきっかけに、連続印刷、CSV取込、ファイル処理などで仕事の効率が一気に上がるVBA初級段階を整理します。" name="description">
+<meta content="Excel VBA 初級, マクロの記録, 連続印刷, CSV取込, Excel自動化, VBA成長段階" name="keywords">
+<meta content="段階2：マクロの記録とVBA初級で、作業が消える時期｜Excel &times; No VBA Lab" property="og:title">
+<meta content="マクロの記録や社内マクロとの出会いで、Excel作業がボタン1つに変わる段階を整理します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage2_vba_macro_recording.html">
+<meta content="index, follow" name="robots">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage2_vba_macro_recording.html" rel="canonical">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "段階2：マクロの記録とVBA初級で、作業が消える時期",
+  "description": "社内の誰かが書いたマクロやマクロの記録をきっかけに、連続印刷、CSV取込、ファイル処理などで仕事の効率が一気に上がるVBA初級段階を整理します。",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage2_vba_macro_recording.html"
+  },
+  "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "publisher": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab",
+    "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}
+  },
+  "datePublished": "2026-05-23",
+  "dateModified": "2026-05-23"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type": "ListItem", "position": 2, "name": "技術の流れ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/"},
+    {"@type": "ListItem", "position": 3, "name": "段階2：マクロの記録とVBA初級で、作業が消える時期"}
+  ]
+}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">技術の流れ</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+  <a href="../index.html">ホーム</a><span>&gt;</span><a href="index.html">技術の流れ</a><span>&gt;</span><strong>段階2：マクロの記録とVBA初級で、作業が消える時期</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta">
+    <span class="badge badge-classic">VBA</span>
+    <span class="article-reading-time">📖 約7分</span>
+    <span class="article-date">公開日: 2026-05-23</span>
+  </div>
+  <h1 class="article-title">段階2：マクロの記録とVBA初級で、作業が消える時期</h1>
+</div>
+
+<p class="article-lead">Excelで一度目の世界が変わるのがVLOOKUPなら、二度目に世界が変わるのはVBAです。特に最初のきっかけは、社内の誰かが作ったマクロを見た瞬間か、マクロの記録を初めて触った瞬間であることが多いです。</p>
+<p>段階1では、検索や整形や印刷を少しずつ楽にしました。段階2では、その先に進みます。今まで人が毎回やっていた操作そのものを、Excelに実行させるようになります。</p>
+<p>この変化はかなり大きいです。関数では「結果を出す」ことが中心でした。VBAでは「手順を動かす」ことが中心になります。ここで、Excelは作業場所から、作業を実行する装置に変わります。</p>
+
+<div class="toc-box">
+  <h3>この記事で扱う流れ</h3>
+  <ol>
+    <li><a href="#shift">操作するExcelから、操作させるExcelへ</a></li>
+    <li><a href="#first-macro">社内マクロに感動する入口</a></li>
+    <li><a href="#recording">マクロの記録でコードの入口に立つ</a></li>
+    <li><a href="#vba-thinking">最終行、ループ、条件分岐を覚える</a></li>
+    <li><a href="#printing-csv">連続印刷とCSV取込で成果が出る</a></li>
+    <li><a href="#level">この段階でどこまで行けるか</a></li>
+    <li><a href="#omnipotence">VBA万能感の入口に立つ</a></li>
+    <li><a href="#rarity">どれぐらいの人ができるか</a></li>
+    <li><a href="#risk">便利さの裏側にある属人化</a></li>
+  </ol>
+</div>
+
+<section class="goal-section" id="shift">
+  <h2>この段階で起きる変化</h2>
+  <p>毎回同じ手順でやっていた作業が、ボタン1つで終わるようになります。ここで初めて「Excelは操作するものではなく、操作させるものでもある」と気づきます。</p>
+  <p>たとえば、担当者ごとにフィルターして、印刷して、PDF保存して、次の担当者に切り替える。毎月届くCSVを開いて、列幅を整え、不要列を消し、別ブックへ貼り付ける。こうした手順は、関数ではなく操作の連続です。</p>
+  <p>VBAに触れると、その操作の連続をコードにできます。ここで仕事の見え方が変わります。表の中身だけではなく、作業の順番そのものが設計対象になります。</p>
+  <div class="xdemo-note-info">
+    <strong>段階2の本質</strong>
+    <p>VBA初級は、難しいプログラムを書く段階ではありません。毎月同じように繰り返しているExcel操作を、記録し、整理し、ボタン化する段階です。</p>
+  </div>
+</section>
+
+<section class="method-section" id="first-macro">
+  <h3>最初は、社内の誰かが書いたマクロに感動する</h3>
+  <p>よくある入口は、自分で書く前に、誰かが作ったマクロを使うことです。ボタンを押すと帳票が印刷される。CSVが取り込まれる。複数シートが整形される。ファイル名が一括で変わる。</p>
+  <p>それまで30分かかっていた作業が、数秒で終わる。この経験はかなり強烈です。Excelの便利さではなく、仕事の時間そのものが変わったように感じます。</p>
+  <p>この瞬間に、「自分もこれを作れる側になりたい」と思う人が出てきます。最初からきれいなコードを書きたいわけではありません。とにかく、この面倒な作業を消したい。その欲求がVBAを学ぶ一番強い動機になります。</p>
+  <p>逆に、この感動を経験しないままだと、VBAはただの難しい英語の羅列に見えます。VBAを学び始めるきっかけは、理屈よりも「これ、仕事が消えるじゃん」という衝撃のほうが大きいです。</p>
+</section>
+
+<section class="method-section" id="recording">
+  <h3>マクロの記録で「操作がコードになる」ことを知る</h3>
+  <p>次に触るのがマクロの記録です。セルを選ぶ、コピーする、貼り付ける、印刷する。その操作がVBAコードとして残る。</p>
+  <p>最初は意味が分からなくても、「自分の操作がコードになる」という事実だけで十分です。そこから少しずつ、不要なSelectを消す、範囲を変数にする、最終行を取る、ループで回す、と進んでいきます。</p>
+  <p>マクロの記録が面白いのは、完璧ではないところです。記録されたコードは長く、無駄が多く、環境に依存します。でもその無駄が、学習材料になります。どの行が選択で、どの行がコピーで、どの行が印刷なのか。実際の操作とコードがつながるからです。</p>
+  <div class="code-block" data-lang="vba">
+<span class="code-line">Sub PrintSheet()
+    Sheets(&quot;帳票&quot;).PrintOut
+End Sub</span>
+  </div>
+  <p>最初はこの程度でも十分です。ボタンを押すと印刷される。それだけで、毎回のメニュー操作が消えます。小さな成功体験を積むほど、次はここを変えたい、ここを繰り返したい、という欲が出てきます。</p>
+  <div class="xdemo-note-info">
+    <strong>この時期の代表スキル</strong>
+    <p>マクロの記録、ボタン登録、For文、If文、最終行取得、CSVを開く、別ブックへコピー、連続印刷、PDF保存、ファイル名変更。</p>
+  </div>
+</section>
+
+<section class="method-section" id="vba-thinking">
+  <h3>最終行、ループ、条件分岐を覚えると一気に伸びる</h3>
+  <p>VBA初級で伸びる分岐点は、最終行、ループ、条件分岐です。この3つを覚えると、単なる記録マクロから、実務で使えるマクロに変わります。</p>
+  <p>最終行を取得できると、毎月行数が変わるデータに対応できます。ループを回せると、1行ずつ処理できます。Ifで条件分岐できると、対象だけ印刷する、空白行を飛ばす、エラー行を別扱いにする、といったことができます。</p>
+  <div class="code-block" data-lang="vba">
+<span class="code-line">lastRow = Cells(Rows.Count, &quot;A&quot;).End(xlUp).Row
+
+For i = 2 To lastRow
+    If Cells(i, &quot;B&quot;).Value = &quot;印刷&quot; Then
+        Sheets(&quot;帳票&quot;).Range(&quot;B2&quot;).Value = Cells(i, &quot;A&quot;).Value
+        Sheets(&quot;帳票&quot;).PrintOut
+    End If
+Next i</span>
+  </div>
+  <p>このあたりから、VBAは「操作を記録したもの」ではなく、「処理を組み立てるもの」になります。行数が変わっても動く。対象者が増減しても動く。月次データが変わっても動く。ここで実務の安定感が出てきます。</p>
+  <p>そして、この最終行思想は後のスピル設計にもつながります。必要な範囲だけを処理する。データ量に合わせて動かす。無駄な行を処理しない。この感覚は、VBAでかなり早く身につきます。</p>
+</section>
+
+<section class="method-section" id="printing-csv">
+  <h3>連続印刷とCSV取込は、初級VBAの大きな成功体験</h3>
+  <p>特に効果が大きいのは、連続印刷とCSV取込です。部署別、担当者別、顧客別に帳票を切り替えて印刷する。毎月届くCSVを開いて、必要な列だけ整形して貼り付ける。</p>
+  <p>このあたりは、関数だけでも不可能ではありません。しかしVBAで組むと、操作そのものを消せます。人がやるのは、ボタンを押すことと結果を確認することだけになります。</p>
+  <p>連続印刷は、VBAの分かりやすい成功例です。リストの1行を帳票に差し込み、印刷し、次の行へ進む。人がやると単調でミスが出やすい作業ですが、VBAはこういう繰り返しに強いです。</p>
+  <p>CSV取込も同じです。毎月同じ形式のCSVが来るなら、開く、コピーする、貼る、不要列を消す、列名を直す、日付を整える、という手順をマクロ化できます。ここで「毎月の作業」が「毎月の更新」に変わります。</p>
+  <div class="comparison-section">
+    <h4>段階1と段階2の違い</h4>
+    <ul class="philosophy-list">
+      <li>段階1：関数で結果を出す。人が範囲や操作を管理する。</li>
+      <li>段階2：VBAで操作を流す。人は開始と確認に寄る。</li>
+      <li>段階1：表の中を便利にする。</li>
+      <li>段階2：作業手順そのものを短くする。</li>
+    </ul>
+  </div>
+</section>
+
+<section class="method-section" id="level">
+  <h3>この段階でどこまで行けるか</h3>
+  <p>一般事務の中では、ここまで来るとかなり目立ちます。VLOOKUPが使える人より、VBAで毎月処理を自動化できる人のほうが少ないからです。</p>
+  <p>この段階でできるようになることは、想像以上に多いです。月次帳票の一括印刷、CSVの取込、複数ブックからの転記、シート作成、PDF保存、ファイル名変更、フォルダ内のファイル一覧取得、簡単なチェックリスト作成。</p>
+  <p>部署内の定型作業なら、これだけでかなり効率化できます。特に「毎月同じ」「毎日同じ」「人数分繰り返す」「ファイル数分繰り返す」作業に強いです。</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">対象作業</th>
+          <th scope="col">VBA初級でできること</th>
+          <th scope="col">効果</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>連続印刷</td>
+          <td>リストを順番に帳票へ差し込み印刷</td>
+          <td>印刷漏れ、転記ミス、手順ミスを減らす</td>
+        </tr>
+        <tr>
+          <td>CSV取込</td>
+          <td>毎月ファイルを開いて必要範囲を整形</td>
+          <td>取込作業を更新作業に変える</td>
+        </tr>
+        <tr>
+          <td>ブック処理</td>
+          <td>複数ファイルから値を集める</td>
+          <td>ファイルを開いて閉じる作業を減らす</td>
+        </tr>
+        <tr>
+          <td>PDF保存</td>
+          <td>帳票ごとに名前を付けて保存</td>
+          <td>出力物の作成を標準化する</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>ただし、この段階のVBAはまだ「Excel内の作業を自動化する入口」が中心です。ブックを開く、シートを加工する、印刷する、保存する。ここまででも十分強いですが、次の段階では、他人が使っても壊れにくいExcel内業務ツールとして設計する力が必要になります。</p>
+</section>
+
+<section class="method-section" id="omnipotence">
+  <h3>VBA万能感の入口に立つ</h3>
+  <p>段階2の終盤で、最初の万能感が生まれます。毎月30分かかっていた印刷が数秒で終わる。CSVを開いて整える作業がボタン1つになる。フォルダ内のファイル名を一括で変えられる。こうした成功体験が続くと、「これもVBAで消せるのでは？」と考えるようになります。</p>
+  <p>この感覚は大事です。面倒な作業を疑う力が育つからです。今までは「そういう仕事だから」と受け入れていた繰り返しを、処理として切り出せるようになります。</p>
+  <p>ただし、この時期の万能感はまだ粗いです。記録マクロの延長で作ったコードは、シート名、列位置、保存先、行数の変化に弱いです。自分が動かすなら直せても、他人が使うとすぐ止まります。</p>
+  <div class="xdemo-note-warn">
+    <strong>入口で気づきたいこと</strong>
+    <p>VBAで作業を消せるようになるほど、「動くこと」と「使い続けられること」の差が大きくなります。ここで設計の必要性が見え始めます。</p>
+  </div>
+</section>
+
+<section class="method-section" id="rarity">
+  <h3>どれぐらいの人ができるか</h3>
+  <p>厳密な統計ではなく現場感ですが、VBA初級まで来ると一般事務の中ではかなり少数派です。マクロの記録を試したことがある人はいても、最終行、For文、If文を使って毎月の処理を安定して回せる人は一気に減ります。</p>
+  <p>部署内に1人いれば、月次処理や印刷作業でかなり頼られます。Excelが得意な人というより、「あの面倒な作業をボタン化できる人」として見られ始めます。</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">状態</th>
+          <th scope="col">できること</th>
+          <th scope="col">現場での人数感</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>マクロの記録だけ</td>
+          <td>操作を記録して再実行する</td>
+          <td>触ったことがある人はいる</td>
+        </tr>
+        <tr>
+          <td>VBA初級</td>
+          <td>最終行、ループ、条件分岐、連続印刷、CSV取込</td>
+          <td>一般事務では少数派</td>
+        </tr>
+        <tr>
+          <td>毎月処理を任せられる</td>
+          <td>自分以外の作業もボタン化できる</td>
+          <td>部署に1人いると強い</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="goal-section" id="risk">
+  <h2>スパゲッティコードと「自分が休めない」絶望</h2>
+  <p>マクロの記録とVBA初級の知識で、毎月の数時間がボタン1つで終わるようになりました。周りからは「魔法使い」のように感謝されます。しかし、水面下で時限爆弾が静かに動き始めます。</p>
+  <p>記録しただけのコードは、少しでもシート名が変わったり、列が挿入されたりすると一撃でエラーを吐いて止まります。SelectとActivateが乱舞するコードは画面が激しくちらつき、エラーが起きたときに「どこで、なぜ止まったのか」が全く分かりません。</p>
+  <p>「動かなくなった！直して！」と同僚から呼ばれるたびに、自分が継ぎ接ぎで書いたスパゲッティコードを冷や汗を流しながら解読する羽目になります。休みの日に電話がかかってくる恐怖。自分が異動したらこの業務は完全に回らなくなるというプレッシャー。</p>
+  <div class="xdemo-note-warn">
+    <strong>段階2の壁：ブラックボックス化と保守の限界</strong>
+    <p>「とにかく動けばいい」で書いたコードは、いずれ必ず壊れます。そして壊れたとき、それを直せるのは書いた本人だけです。作業は消えましたが、代わりに「保守の責任」という重い十字架を背負うことになります。</p>
+  </div>
+  <p>この絶望的なプレッシャーを前にして、初めて「動くコード」ではなく「壊れにくいコード」「他人が読めるコード」を書かなければならない、と痛感します。これが、次の「設計」という段階へ進む強烈なモチベーションになるのです。</p>
+</section>
+
+<div class="stage-checklist">
+  <h3>段階2の壁とブレイクスルー チェックリスト</h3>
+  <p>以下の状態に到達していれば、この段階の恩恵と限界を知り、次のステップ（設計とモジュール化）へ進む準備ができています。</p>
+  <ul>
+    <li><label><input type="checkbox" disabled checked> マクロの記録を使い、手作業をそのままコードに書き起こすことができる。</label></li>
+    <li><label><input type="checkbox" disabled checked> For文とIf文を使い、条件に応じた繰り返し処理（連続印刷など）を組める。</label></li>
+    <li><label><input type="checkbox" disabled checked> 最終行（End(xlUp).Rowなど）を取得し、データ増減に耐えられる処理が書ける。</label></li>
+    <li><label><input type="checkbox" disabled checked> <strong>【限界への気づき】</strong> 自分が書いた継ぎ接ぎだらけのコードがエラーで止まることに恐怖を覚え、「整理された、壊れにくい書き方」を渇望している。</label></li>
+  </ul>
+</div>
+
+<nav class="stage-nav" aria-label="段階ナビゲーション">
+  <a class="stage-nav-prev" href="article_stage1_functions_printing.html">
+    <span class="stage-nav-label">← 前の段階</span>
+    <span class="stage-nav-title">段階1：VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期</span>
+  </a>
+  <a class="stage-nav-next" href="article_stage3_vba_internal_design.html">
+    <span class="stage-nav-label">次の段階 →</span>
+    <span class="stage-nav-title">段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期</span>
+  </a>
+</nav>
+
+<section class="method-section">
+  <h2>シリーズ記事</h2>
+  <ul class="article-list">
+    <li class="article-item"><a class="article-link" href="article_stage1_functions_printing.html">段階1：VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期</a></li>
+    <li class="article-item"><p class="article-link">段階2：マクロの記録とVBA初級で、作業が消える時期（この記事）</p></li>
+    <li class="article-item"><a class="article-link" href="article_stage3_vba_internal_design.html">段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage3_vba_web_automation.html">段階4：VBA応用で、Web操作や外部アプリまで広がる時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage4_no_macro_powerquery.html">段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage5_qr_input_design_shift.html">段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_spill_design_shift.html">段階7：スピル関数で、Excelの設計思想が変わる時期</a></li>
+  </ul>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式・参考:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/let-function-34842dd8-b92b-4d3f-b325-b8b8f9908999" rel="noopener" target="_blank">LET公式説明</a><a href="https://support.microsoft.com/en-us/office/filter-function-f4f7cb66-82eb-4767-8f7c-4877ad80c759" rel="noopener" target="_blank">FILTER公式説明</a><a href="https://support.microsoft.com/en-us/office/dynamic-array-formulas-and-spilled-array-behavior-205c6b06-03ba-4151-89a1-87a7eb36e531" rel="noopener" target="_blank">動的配列とスピル動作</a><a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/excel-performance/excel-tips-for-optimizing-performance-obstructions" rel="noopener" target="_blank">Excelパフォーマンス最適化</a><a href="https://www.excelcampus.com/functions/whole-column-references/" rel="noopener" target="_blank">Excel Campus全列参照実験</a><a href="https://fastexcel.wordpress.com/2015/12/12/excel-full-column-references-and-used-range-good-idea-or-bad-idea/" rel="noopener" target="_blank">FastExcel全列参照実験</a><a href="../samples/index.html">サンプルデータ</a></p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">お問い合わせ (Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab &horbar; コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../script.js"></script>
+</body>
+</html>

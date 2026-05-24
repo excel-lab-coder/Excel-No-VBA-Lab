@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>段階4：VBA応用で、Web操作や外部アプリまで広がる時期｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="VBA中級・上級でExcel内の業務ツールを設計できるようになった先で、Web操作、外部アプリ連携、フォルダ処理、PDF出力などExcelの外側まで自動化が広がる段階を整理します。" name="description">
+<meta content="VBA 応用, Web操作 VBA, UI Automation, Excel 外部アプリ連携, VBA自動化" name="keywords">
+<meta content="段階4：VBA応用で、Web操作や外部アプリまで広がる時期｜Excel &times; No VBA Lab" property="og:title">
+<meta content="VBAがExcel内の自動化を超えて、Web操作や外部アプリ連携へ広がる段階を整理します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage3_vba_web_automation.html" property="og:url">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage3_vba_web_automation.html" rel="canonical">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "段階4：VBA応用で、Web操作や外部アプリまで広がる時期",
+  "description": "VBAがExcel内の自動化を超えて、Web操作や外部アプリ連携へ広がる段階を整理します。",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage3_vba_web_automation.html"
+  },
+  "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "publisher": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab",
+    "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}
+  },
+  "datePublished": "2026-05-23",
+  "dateModified": "2026-05-23"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type": "ListItem", "position": 2, "name": "技術の流れ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/"},
+    {"@type": "ListItem", "position": 3, "name": "段階4：VBA応用で、Web操作や外部アプリまで広がる時期"}
+  ]
+}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">技術の流れ</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../index.html">ホーム</a><span>&gt;</span><a href="index.html">技術の流れ</a><span>&gt;</span><strong>段階4</strong></div>
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta">
+    <span class="badge badge-classic">VBA応用</span>
+    <span class="article-reading-time">📖 約9分</span>
+    <span class="article-date">公開日: 2026-05-23</span>
+  </div>
+  <h1 class="article-title">段階4：VBA応用で、Web操作や外部アプリまで広がる時期</h1>
+</div>
+
+<p class="article-lead">VBAに慣れてくると、Excelの中だけでは物足りなくなります。ファイルを開く、印刷する、CSVを取り込むだけでなく、Web画面や他アプリまで操作したくなる時期が来ます。</p>
+<p>段階3では、Excel内で他人が使える業務ツールを設計できるようになりました。段階4では、そのツールがExcelの外側へ手を伸ばします。社内システム、Web画面、PDF、メール、フォルダ、別アプリ。Excelが単体の表計算ソフトではなく、業務全体を動かす入口のように見え始めます。</p>
+<p>ここまで来ると、もう「Excelが得意」というより、「業務の流れを分解して、どこを機械に任せるか考える人」に近づきます。</p>
+
+<div class="toc-box">
+  <h3>この記事で扱う流れ</h3>
+  <ol>
+    <li><a href="#shift">Excelの外側が自動化対象になる</a></li>
+    <li><a href="#web">Web操作に手を出すと見える世界</a></li>
+    <li><a href="#external">外部アプリ連携で業務のハブになる</a></li>
+    <li><a href="#patterns">実務で多い3つの自動化パターン</a></li>
+    <li><a href="#omnipotence">VBA万能感がピークになる</a></li>
+    <li><a href="#hard">なぜこの段階は急に難しくなるのか</a></li>
+    <li><a href="#rare">どれぐらいの人ができるか</a></li>
+    <li><a href="#fragile">強力だが壊れやすいという現実</a></li>
+    <li><a href="#next">マクロ禁止への伏線</a></li>
+  </ol>
+</div>
+
+<section class="goal-section" id="shift">
+  <h2>この段階で起きる変化</h2>
+  <p>Excelが単体の表計算ソフトではなく、他のシステムを動かす司令塔のように見えてきます。業務システム、Web画面、フォルダ、PDF、メールなどが、Excelからつながる対象になります。</p>
+  <p>段階3までは、Excelブックの中で完結する作業が中心でした。開く、貼る、整える、印刷する、保存する。段階4では、Excelの外にあるものも処理対象になります。</p>
+  <p>ここで発想が変わります。「この表をどう便利にするか」ではなく、「この業務の入口と出口はどこか」「Excelはその流れのどこに置くべきか」を考えるようになります。</p>
+  <div class="xdemo-note-info">
+    <strong>段階4の本質</strong>
+    <p>Excelの中を自動化する段階から、Excelを起点に業務システムや外部ファイルを動かす段階へ進みます。技術というより、業務フロー設計に近づきます。</p>
+  </div>
+</section>
+
+<section class="method-section" id="web">
+  <h3>Web操作に手を出すと、見える世界が広がる</h3>
+  <p>社内システムにログインして、検索条件を入力し、結果を取得する。Web画面にExcelの一覧を順番に入力する。画面から取得した結果をExcelに戻す。こうした処理をVBAで自動化しようとする段階です。</p>
+  <p>最初は単純です。ブラウザを開く。URLへ移動する。入力欄に値を入れる。ボタンを押す。結果を待つ。表示された値を取る。人がやっていることを、そのままExcelから再現しようとします。</p>
+  <p>ただ、Web操作はExcel内のマクロより急に難しくなります。画面の読み込みを待つ必要がある。ボタン名やHTML構造が変わる。ログインや権限が絡む。ポップアップやセッション切れが起きる。画面は人間向けに作られているので、機械的に操作すると想定外が増えます。</p>
+  <p>かつてはInternet Explorer操作が入口になることも多かったですが、現在はブラウザ環境や社内ルールによって事情が変わります。UI AutomationやRPAに近い考え方が必要になる場面もあります。</p>
+  <div class="code-block" data-lang="text">
+<span class="code-line">Excelの一覧
+↓
+Web画面へ1件ずつ入力
+↓
+検索・登録・照会
+↓
+結果をExcelへ戻す</span>
+  </div>
+  <p>この流れを一度でも組めると、Excelは単なる表ではなく、社内システムの操作台のように見えてきます。</p>
+</section>
+
+<section class="method-section" id="external">
+  <h3>外部アプリ連携で「Excelの外側」を触り始める</h3>
+  <p>フォルダ内のファイルを一括処理する。PDFを出力する。メールを作成する。Accessや社内DBからデータを取る。別アプリの画面に値を送る。</p>
+  <p>この段階では、Excelは作業場所ではなく、業務全体のハブになります。Excelにあるデータを起点に、他のアプリへ流す。外部から取ったデータをExcelへ戻す。処理の範囲が一気に広がります。</p>
+  <p>たとえば、Excelの顧客一覧から個別のPDF帳票を作り、ファイル名を顧客コードで保存し、メール本文を作り、添付する。あるいは、フォルダ内のCSVをすべて読み込み、日付別に整理し、結果だけを集計表に出す。</p>
+  <p>段階3では「Excel内の業務ツールをどう設計するか」でした。段階4では「この業務のデータは、どのアプリを通って、どの形で出ていくか」を考え始めます。</p>
+  <div class="xdemo-note-info">
+    <strong>この時期の代表スキル</strong>
+    <p>Web操作、UI Automation、ファイルシステム操作、PDF出力、メール作成、外部ブック連携、APIやHTMLの入口、エラー処理、ログ出力。</p>
+  </div>
+</section>
+
+<section class="method-section" id="patterns">
+  <h3>実務で多い3つの自動化パターン</h3>
+  <p>Web操作や外部アプリ連携といっても、現場で出てくる形はある程度決まっています。大きく分けると、照会系、登録系、出力系です。</p>
+  <p>照会系は、Excelにある番号やコードをWeb画面へ入れて、結果を取得する処理です。たとえば、伝票番号を検索してステータスを取る、顧客コードから登録情報を確認する、社内システムの照会結果をExcelへ戻す。これは比較的入りやすいですが、結果が0件のとき、複数件出るとき、検索画面が遅いときの処理が必要になります。</p>
+  <p>登録系は、Excelの一覧をWeb画面や別アプリへ順番に入力する処理です。これは効果が大きい一方で、かなり慎重さが必要です。途中で止まったときに、どこまで登録済みなのか。再実行したら二重登録にならないか。登録前に人の確認を挟むべきか。ここを考えないと危ない仕組みになります。</p>
+  <p>出力系は、PDF保存、メール作成、フォルダ振り分け、ファイル名変更などです。Excelの一覧から帳票を作り、顧客別や部署別に保存する。メール本文を作り、添付ファイルをセットする。ここではファイル名ルール、保存先、上書き確認、送信前確認が重要になります。</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">パターン</th>
+          <th scope="col">よくある処理</th>
+          <th scope="col">注意点</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>照会系</td>
+          <td>番号検索、ステータス取得、結果転記</td>
+          <td>0件、複数件、読み込み待ち、セッション切れ</td>
+        </tr>
+        <tr>
+          <td>登録系</td>
+          <td>一覧を1件ずつWeb画面へ入力</td>
+          <td>二重登録、途中停止、再実行、入力前確認</td>
+        </tr>
+        <tr>
+          <td>出力系</td>
+          <td>PDF保存、メール作成、ファイル振り分け</td>
+          <td>保存先、ファイル名、上書き、送信前確認</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>段階4で大事なのは、「動かすこと」だけではありません。止まったときに戻れること、途中から再開できること、危険な処理の前に人が確認できることです。ここを考えると、VBAは単なる自動操作ではなく、業務の安全装置まで含めた設計になります。</p>
+</section>
+
+<section class="method-section" id="omnipotence">
+  <h3>VBA万能感がピークになる</h3>
+  <p>段階4は、VBAの万能感がもっとも強くなる時期です。Excelの中だけでなく、Web画面、PDF、メール、フォルダ、外部アプリまで動かせるようになるため、「現場の作業はだいたい自動化できる」と感じます。</p>
+  <p>この感覚は、実際に大きな成果を生みます。月次処理の前半を自動化し、社内システムから結果を取り、Excelで加工し、PDFを出し、メールの下書きまで作る。ここまでできると、Excelはただの表ではなく、業務全体をつなぐ操作台のように見えてきます。</p>
+  <p>ただし、万能感が強いほど、環境への依存も強くなります。ブラウザの仕様、社内ポリシー、マクロの許可、画面変更、権限、ネットワーク。自分のコードが正しくても、相手側の都合で止まる場面が増えます。</p>
+  <div class="xdemo-note-warn">
+    <strong>万能感の裏側</strong>
+    <p>VBAで外部まで動かせるようになると、便利さは一気に増えます。その一方で、制限された瞬間に仕組み全体が使えなくなるリスクも大きくなります。</p>
+  </div>
+</section>
+
+<section class="method-section" id="hard">
+  <h3>なぜこの段階は急に難しくなるのか</h3>
+  <p>段階4が難しいのは、Excelだけを知っていても足りなくなるからです。ファイルパス、文字コード、拡張子、PDF、メール、ブラウザ、HTML、待機処理、権限、ネットワーク、セキュリティ。触るものが一気に増えます。</p>
+  <p>Excel内のVBAなら、対象はブック、シート、セルが中心です。しかしWeb操作や外部アプリ連携では、相手側の都合があります。画面が変われば壊れる。回線が遅ければ待つ必要がある。ログインが切れれば止まる。ファイル名に使えない文字があれば保存に失敗する。</p>
+  <p>つまり、段階4では「正しいコードを書く」だけでは足りません。失敗する前提で考える必要があります。止まったときにどこまで進んだか。再実行して二重登録にならないか。エラー行だけ後から処理できるか。ここで運用の視点が入ってきます。</p>
+  <div class="comparison-section">
+    <h4>段階3と段階4の違い</h4>
+    <ul class="philosophy-list">
+      <li>段階3：Excel内で業務ツールとして設計する。</li>
+      <li>段階4：Excelの外側にある画面やファイルまで扱う。</li>
+      <li>段階3：失敗要因はシート構成やデータ形式が中心。</li>
+      <li>段階4：失敗要因に通信、権限、画面変更、外部アプリの都合が加わる。</li>
+    </ul>
+  </div>
+</section>
+
+<section class="method-section" id="rare">
+  <h3>どれぐらいの人ができるか</h3>
+  <p>厳密な統計ではなく現場感ですが、この段階は一般事務のExcelスキルとしてはかなり希少です。VBA中級・上級でExcel内ツールを作れる人でも、Web操作や外部アプリ連携まで安定して作れる人はさらに減ります。</p>
+  <p>理由は、Excelだけでなく、ブラウザ、ファイル、文字コード、待機処理、例外処理、セキュリティ制限などを同時に考える必要があるからです。ここから先は、単なるExcelの知識ではなく、システム的な視点が必要になります。</p>
+  <p>部署に1人いるというより、会社の中でも「あの人ならできるかもしれない」と名前が出るレベルに近づきます。情シス、RPA担当、業務改善担当の領域に片足を入れ始める段階です。</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">段階</th>
+          <th scope="col">主な対象</th>
+          <th scope="col">求められる視点</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>VBA初級</td>
+          <td>Excelブック、シート、印刷、CSV</td>
+          <td>繰り返し操作の短縮</td>
+        </tr>
+        <tr>
+          <td>VBA応用</td>
+          <td>Web画面、PDF、メール、外部アプリ、フォルダ</td>
+          <td>業務フロー全体の制御</td>
+        </tr>
+        <tr>
+          <td>運用レベル</td>
+          <td>エラー、ログ、権限、例外、引き継ぎ</td>
+          <td>止まっても復旧できる設計</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>ここまで来ると、現場ではかなり重宝されます。単にExcelが速い人ではなく、業務システムの隙間を埋める人になるからです。</p>
+</section>
+
+<section class="method-section" id="fragile">
+  <h3>強力だが、制限に弱い</h3>
+  <p>この段階のVBAは非常に強力です。ただし、セキュリティポリシーやマクロ禁止に弱いという問題があります。</p>
+  <p>マクロが止められる。外部参照が禁止される。ブラウザ操作が社内ルールに引っかかる。監査で属人ツールが問題になる。そうなると、それまで作った強力な仕組みが一気に使えなくなります。</p>
+  <p>特にWeb操作系のマクロは、便利な反面、壊れるポイントが多いです。画面のボタン名が変わる。ログイン画面が変わる。待機時間が足りない。セキュリティ更新で動かなくなる。担当者のPCでは動くのに、別のPCでは動かない。</p>
+  <div class="xdemo-note-warn">
+    <strong>段階4の弱点</strong>
+    <p>業務を大きく変えられる一方で、環境変更に弱くなります。Excelの外側へ出るほど、相手側の仕様変更や社内ルールの影響を受けます。</p>
+  </div>
+</section>
+
+<section class="method-section" id="next">
+  <h3>ここで、マクロ禁止への伏線が生まれる</h3>
+  <p>段階4まで進むと、VBAは本当に強いです。強いからこそ、現場の重要な作業を背負い始めます。月次処理、照会処理、帳票出力、登録作業。いつの間にか、そのマクロが止まると業務も止まる状態になります。</p>
+  <p>この状態で、セキュリティポリシーの変更や監査が入ると、一気に苦しくなります。マクロが使えない。外部操作が許可されない。作った本人しか分からない。便利だったものが、リスクとして見られるようになります。</p>
+  <p>ここで初めて、次の段階である「マクロ禁止環境でどう作るか」という問いが出てきます。VBAで動かす力を知っているからこそ、VBAを使えない苦しさも大きくなります。</p>
+</section>
+
+<div class="stage-checklist">
+  <h3>この段階を通過したサイン</h3>
+  <ul>
+    <li>Web画面への入力・照会をVBAで組める</li>
+    <li>PDF出力、メール作成を自動化できる</li>
+    <li>フォルダ内のファイルを一括処理できる</li>
+    <li>途中停止や二重登録を防ぐ設計ができる</li>
+    <li>止まっても復旧できるログ設計を組める</li>
+  </ul>
+</div>
+
+<section class="method-section">
+  <h3>まとめ</h3>
+  <p>段階4は、VBAがExcelの外側へ広がる時期です。Web操作、外部アプリ連携、PDF、メール、フォルダ処理まで扱うようになり、Excelは業務全体のハブになります。</p>
+  <p>この段階まで来ると、一般事務のExcelスキルとしてはかなり希少です。ただし、強力であるほど環境変更やセキュリティ制限に弱くなります。</p>
+  <p>そして、この強さと弱さを知った状態でマクロ禁止に直面すると、次の段階が始まります。Power Queryと関数で、Excelの作り方そのものを組み直す段階です。</p>
+</section>
+
+<nav class="stage-nav" aria-label="段階ナビゲーション">
+  <a class="stage-nav-prev" href="article_stage3_vba_internal_design.html">
+    <span class="stage-nav-label">← 前の段階</span>
+    <span class="stage-nav-title">段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期</span>
+  </a>
+  <a class="stage-nav-next" href="article_stage4_no_macro_powerquery.html">
+    <span class="stage-nav-label">次の段階 →</span>
+    <span class="stage-nav-title">段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期</span>
+  </a>
+</nav>
+
+<section class="method-section">
+  <h2>シリーズ記事</h2>
+  <ul class="article-list">
+    <li class="article-item"><a class="article-link" href="article_stage1_functions_printing.html">段階1：VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage2_vba_macro_recording.html">段階2：マクロの記録とVBA初級で、作業が消える時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage3_vba_internal_design.html">段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期</a></li>
+    <li class="article-item"><p class="article-link">段階4：VBA応用で、Web操作や外部アプリまで広がる時期（この記事）</p></li>
+    <li class="article-item"><a class="article-link" href="article_stage4_no_macro_powerquery.html">段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage5_qr_input_design_shift.html">段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_spill_design_shift.html">段階7：スピル関数で、Excelの設計思想が変わる時期</a></li>
+  </ul>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式・参考:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/let-function-34842dd8-b92b-4d3f-b325-b8b8f9908999" rel="noopener" target="_blank">LET公式説明</a><a href="https://support.microsoft.com/en-us/office/filter-function-f4f7cb66-82eb-4767-8f7c-4877ad80c759" rel="noopener" target="_blank">FILTER公式説明</a><a href="https://support.microsoft.com/en-us/office/dynamic-array-formulas-and-spilled-array-behavior-205c6b06-03ba-4151-89a1-87a7eb36e531" rel="noopener" target="_blank">動的配列とスピル動作</a><a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/excel-performance/excel-tips-for-optimizing-performance-obstructions" rel="noopener" target="_blank">Excelパフォーマンス最適化</a><a href="https://www.excelcampus.com/functions/whole-column-references/" rel="noopener" target="_blank">Excel Campus全列参照実験</a><a href="https://fastexcel.wordpress.com/2015/12/12/excel-full-column-references-and-used-range-good-idea-or-bad-idea/" rel="noopener" target="_blank">FastExcel全列参照実験</a><a href="../samples/index.html">サンプルデータ</a></p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">お問い合わせ (Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab &horbar; コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>

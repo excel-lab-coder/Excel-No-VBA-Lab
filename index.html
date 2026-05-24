@@ -49,7 +49,7 @@
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
 
 <link href="common.css" rel="stylesheet">
-<link href="index.css?v=2" rel="stylesheet">
+    <link href="index.css?v=3" rel="stylesheet">
 
 <script>
   window.ExcelLab = window.ExcelLab || {};
@@ -144,7 +144,22 @@
     { "@type": "ListItem", "position": 26, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/18_qr_num_enter_numpad_enter.html", "name": "QRリーダーでテンキーEnterを送る方法" },
     { "@type": "ListItem", "position": 27, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/19_qr_rpa_selenium_excel_qr_alternative.html", "name": "RPA・Seleniumが使いにくい現場での代替案" },
     { "@type": "ListItem", "position": 28, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_linked_picture_filter_serial_label.html", "name": "リンク図と連番で封筒ラベル印刷" },
-    { "@type": "ListItem", "position": 29, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/05_article_cobol_qr_bridge.html", "name": "COBOL帳票から半角QR入力へつなぐ実践編" }
+    { "@type": "ListItem", "position": 29, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/05_article_cobol_qr_bridge.html", "name": "COBOL帳票から半角QR入力へつなぐ実践編" },
+    { "@type": "ListItem", "position": 30, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/intro/03_article_cobol_output_patterns.html", "name": "COBOL帳票データの出力パターン集" },
+    { "@type": "ListItem", "position": 31, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_growth_curve_standard_flow.html", "name": "Excel技術の成長曲線：定番ルートで読む全体像" },
+    { "@type": "ListItem", "position": 32, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_breakthrough_moments.html", "name": "Excelで画期的に進化する瞬間" },
+    { "@type": "ListItem", "position": 33, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage1_functions_printing.html", "name": "段階1：関数・印刷・データ整形" },
+    { "@type": "ListItem", "position": 34, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage2_vba_macro_recording.html", "name": "段階2：マクロの記録とVBA初級" },
+    { "@type": "ListItem", "position": 35, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage3_vba_internal_design.html", "name": "段階3：VBA中級・上級と業務ツール設計" },
+    { "@type": "ListItem", "position": 36, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage3_vba_web_automation.html", "name": "段階4：VBA応用とWeb操作" },
+    { "@type": "ListItem", "position": 37, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage4_no_macro_powerquery.html", "name": "段階5：マクロ禁止とPower Query" },
+    { "@type": "ListItem", "position": 38, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage5_qr_input_design_shift.html", "name": "段階6：QR入力自動化のインターフェース設計" },
+    { "@type": "ListItem", "position": 39, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_spill_design_shift.html", "name": "段階7：スピル関数で、Excelの設計思想が変わる時期" },
+    { "@type": "ListItem", "position": 40, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_vba_omnipotence_trap.html", "name": "VBAの万能感に依存する時期" },
+    { "@type": "ListItem", "position": 41, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_function_depth_before_vba.html", "name": "関数を深めてからVBAを使うと、判断力が一段上がる" },
+    { "@type": "ListItem", "position": 42, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_no_vba_thinking.html", "name": "VBA禁止時の思考法" },
+    { "@type": "ListItem", "position": 43, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_powerquery_design_shift.html", "name": "コラム：Power Queryのデータ整形思想" },
+    { "@type": "ListItem", "position": 44, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_cobol_structure_shift.html", "name": "コラム：COBOL帳票と固定長データ構造" }
   ]
 }
 </script>
@@ -232,6 +247,16 @@
       role="tab"
       tabindex="0">
       🏠 ホーム
+    </button>
+    <button
+      aria-selected="false"
+      aria-controls="thinking"
+      class="tab-btn"
+      data-tab="thinking"
+      id="tab-btn-thinking"
+      role="tab"
+      tabindex="-1">
+      🧭 技術の流れ
     </button>
     <button
       aria-selected="false"
@@ -343,6 +368,12 @@
         <span class="quick-route-text">XLOOKUP、FILTER、LET、旧Excel対応の関数テクニック</span>
       </a>
 
+      <a class="quick-route-card qrc-thinking" href="#thinking" data-tab-trigger="thinking" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">
+        <span class="quick-route-icon">🧭</span>
+        <span class="quick-route-title">技術の流れを知りたい</span>
+        <span class="quick-route-text">VBA禁止、スピル、Power Queryなどを設計思想として整理</span>
+      </a>
+
       <a class="quick-route-card qrc-pq" href="#powerquery" data-tab-trigger="powerquery" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">
         <span class="quick-route-icon">🔄</span>
         <span class="quick-route-title">毎月の整形作業をなくしたい</span>
@@ -393,7 +424,7 @@
     </div>
 
     <div class="starter-resource-row" aria-label="検証用リソース">
-      <a href="samples/">サンプルデータ</a>
+      <a href="samples/index.html">サンプルデータ集（全角半角混在のCOBOL帳票300行あり）</a>
       <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a>
       <a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a>
     </div>
@@ -658,6 +689,49 @@
 
       <ul class="news-list">
         <li class="is-new">
+          <a href="thinking/article_cobol_structure_shift.html">コラム：COBOL帳票処理で学んだ、固定長データを構造として読む考え方</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-thinking">設計思想・コラム</span>
+            <time datetime="2026-05-24">2026-05-24</time>
+          </span>
+        </li>
+        <li class="is-new">
+          <a href="thinking/article_powerquery_design_shift.html">コラム：Power QueryはVBAの代替ではなく、データ整形思想だった</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-thinking">設計思想・コラム</span>
+            <time datetime="2026-05-24">2026-05-24</time>
+          </span>
+        </li>
+        <li class="is-new">
+          <a href="thinking/article_stage5_qr_input_design_shift.html">段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-thinking">技術の流れ</span>
+            <time datetime="2026-05-23">2026-05-23</time>
+          </span>
+        </li>
+        <li class="is-new">
+          <a href="thinking/index.html">Excel技術の成長段階シリーズを追加</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-thinking">技術の流れ</span>
+            <time datetime="2026-05-23">2026-05-23</time>
+          </span>
+        </li>
+        <li class="is-new">
+          <a href="thinking/article_spill_design_shift.html">段階7：スピル関数で、Excelの設計思想が変わる時期</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-thinking">技術の流れ</span>
+            <time datetime="2026-05-23">2026-05-23</time>
+          </span>
+        </li>
+        <li class="is-new">
+          <a href="cobol/intro/03_article_cobol_output_patterns.html">COBOL帳票データの出力パターン集</a>
+          <span class="news-meta">
+            <span class="news-cat news-cat-cobol">COBOL帳票処理</span>
+            <span class="news-cat news-cat-cobol">サンプルデータあり</span>
+            <time datetime="2026-05-19">2026-05-19</time>
+          </span>
+        </li>
+        <li class="is-new">
           <a href="qr/19_qr_rpa_selenium_excel_qr_alternative.html">RPA・Seleniumが使いにくい現場での代替案</a>
           <span class="news-meta">
             <span class="news-cat news-cat-qr">QR Automation Lab</span>
@@ -780,6 +854,7 @@
 
 
       <p class="more-link">
+        <a href="./thinking/index.html">→ Excel技術の流れと設計思想</a> /
         <a href="./functions/index.html">→ VBA禁止環境で使えるExcel関数の代替手段</a> /
         <a href="./powerquery/index.html">VBAとPower Queryの違い・使い分け</a> /
         <a href="./cobol/index.html">COBOL帳票をExcelで整形する方法</a> /
@@ -889,9 +964,193 @@
 </div>
 <!-- /tab-panel#home -->
 
+<!-- ==========================================
+     タブ2: 技術の流れ
+     ========================================== -->
+<div aria-labelledby="tab-btn-thinking" class="tab-panel" id="thinking" role="tabpanel" tabindex="-1">
+  <p class="more-link more-link-subtle"><a href="./thinking/index.html">技術の流れ一覧を見る</a></p>
+
+  <div class="category-hero hero-overlay hero-small">
+    <picture>
+      <source media="(max-width: 600px)" type="image/avif" data-srcset="./image/concept_breaking_wall-480.avif 480w, ./image/concept_breaking_wall-768.avif 768w" sizes="100vw">
+      <source type="image/avif" data-srcset="./image/concept_breaking_wall-768.avif 768w, ./image/concept_breaking_wall-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <source media="(max-width: 600px)" type="image/webp" data-srcset="./image/concept_breaking_wall-480.webp 480w, ./image/concept_breaking_wall-768.webp 768w" sizes="100vw">
+      <source type="image/webp" data-srcset="./image/concept_breaking_wall-768.webp 768w, ./image/concept_breaking_wall-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <img alt="Excel技術の流れと設計思想" decoding="async" height="576" loading="lazy" data-src="./image/concept_breaking_wall.png" src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Thinking</div>
+      <div class="hero-copy-title">技術の流れ</div>
+      <div class="hero-copy-sub">テクニックではなく、Excel設計がどう進化したかを読む。</div>
+    </div>
+  </div>
+
+  <div class="category-header">
+    <h2>🧭 技術の流れ — Excel技術の進化と設計思想</h2>
+    <p>
+      関数、VBA、Power Query、スピル、QR入力自動化。<br>
+      それぞれの使い方ではなく、現場の考え方や設計がどう変わったのかを整理する読み物カテゴリです。
+    </p>
+  </div>
+
+  <h3 class="subcategory-heading">まず読む成長曲線</h3>
+  <div class="thinking-route-note">
+    <p><strong>関数で結果を作る → VBAで作業を動かす → VBA万能感で業務全体へ広げる → VBA禁止で設計思想を組み直す → Power Query・スピル・QRでデータと入力を再設計する</strong>、という流れで読むと、各段階の記事がつながって見えます。</p>
+  </div>
+  <div class="thinking-flow-wrap">
+    <table class="thinking-flow-table">
+      <thead>
+        <tr>
+          <th scope="col">成長段階</th>
+          <th scope="col">見え始めること</th>
+          <th scope="col">取れる対応</th>
+          <th scope="col">次にぶつかる壁</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">関数・印刷</th>
+          <td>VLOOKUPやINDEX + MATCHで、表はキーでつなげられると気づく</td>
+          <td>詳しい人に聞く、ネットで調べる、マスタや参照範囲という言葉で相談できる</td>
+          <td>組み合わせによる最適化はまだ難しく、人が範囲や手順を管理し続ける</td>
+        </tr>
+        <tr>
+          <th scope="row">VBA初級</th>
+          <td>連続印刷、CSV取込、PDF保存、定型操作のボタン化</td>
+          <td>同じ手順を記録・修正し、繰り返し作業を短くできる</td>
+          <td>作った本人しか直せない</td>
+        </tr>
+        <tr>
+          <th scope="row">VBA中級・応用</th>
+          <td>業務ツール化、Web操作、外部アプリ連携</td>
+          <td>業務全体の入口と出口を見て、どこを機械に任せるか考えられる</td>
+          <td>万能感が強まり、制限に弱くなる</td>
+        </tr>
+        <tr>
+          <th scope="row">No VBA設計</th>
+          <td>Power Queryと関数で、データの流れを再構築する</td>
+          <td>自動操作を諦めても、整形・判定・出力は設計できる</td>
+          <td>自動操作ではなく構造設計へ切り替える必要がある</td>
+        </tr>
+        <tr>
+          <th scope="row">スピル・QR・構造化</th>
+          <td>可変配列、入力圧縮、固定長データの二次元化</td>
+          <td>データ量や入力順に合わせて、Excel側の出力構造を変えられる</td>
+          <td>テクニック単体ではなく業務全体を設計する</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="subcategory-heading">全体像・読み方</h3>
+  <ul class="article-list mb-32">
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">全体像</span>
+        <span class="tag-row"><span class="tag-impact">成長曲線</span></span>
+      </div>
+      <a class="article-link" href="thinking/article_growth_curve_standard_flow.html">Excel技術の成長曲線：定番ルートで読む全体像 <span class="article-reading-time">📖 約9分</span></a>
+      <p class="article-summary">入力担当から、関数、VBA、VBA万能感、VBA禁止、Power Query、スピル、QR設計へ進む定番ルートを、1本の成長曲線として整理します。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">転機</span>
+        <span class="tag-row"><span class="tag-impact">ブレイクスルー</span></span>
+      </div>
+      <a class="article-link" href="thinking/article_breakthrough_moments.html">Excelで画期的に進化する瞬間：できることが一段変わるブレイクスルー集 <span class="article-reading-time">📖 約8分</span></a>
+      <p class="article-summary">VLOOKUP、マクロの記録、配列、Web操作、Power Query、スピル、QR入力など、仕事の見え方が一段変わる瞬間をまとめます。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">Excel技術の成長段階</h3>
+  <ul class="article-list mb-32" id="list-thinking-evolution">
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">段階1</span>
+        <span class="tag-row"><span class="tag-impact">基礎転換</span></span>
+      </div>
+      <a class="article-link" href="thinking/article_stage1_functions_printing.html">VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期 <span class="article-reading-time">📖 約6分</span></a>
+      <p class="article-summary">関数を完璧に組めなくても、表をキーでつなげる発想に気づき、詳しい人へ相談したり検索したりできるようになる段階です。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">段階2</span>
+        <span class="tag-row"><span class="tag-impact">VBA初級</span></span>
+      </div>
+      <a class="article-link" href="thinking/article_stage2_vba_macro_recording.html">マクロの記録とVBA初級で、作業が消える時期 <span class="article-reading-time">📖 約7分</span></a>
+      <p class="article-summary">社内マクロやマクロの記録をきっかけに、連続印刷やCSV取込がボタン1つで終わり、VBA万能感の入口に立つ段階です。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">段階3</span>
+        <span class="tag-row"><span class="tag-impact">VBA中級</span></span>
+      </div>
+      <a class="article-link" href="thinking/article_stage3_vba_internal_design.html">VBA中級・上級で、Excel内の業務ツールを設計する時期 <span class="article-reading-time">📖 約9分</span></a>
+      <p class="article-summary">配列、Dictionary、エラー処理、ログ、設定シート、UserFormなどで、他人が使えるExcel内業務ツールにしていく段階です。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-4">
+        <span class="level-label">段階4</span>
+        <span class="tag-row"><span class="tag-impact">VBA応用</span></span>
+      </div>
+      <a class="article-link" href="thinking/article_stage3_vba_web_automation.html">VBA応用で、Web操作や外部アプリまで広がる時期 <span class="article-reading-time">📖 約9分</span></a>
+      <p class="article-summary">Excel内の自動化を超えて、Web画面、外部アプリ、ファイル処理まで業務フロー全体を動かし、VBA万能感がピークになる段階です。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-5">
+        <span class="level-label">段階5</span>
+        <span class="tag-row"><span class="tag-impact">No VBA</span></span>
+      </div>
+      <a class="article-link" href="thinking/article_stage4_no_macro_powerquery.html">マクロ禁止で、Power Queryと関数に活路を見出す時期 <span class="article-reading-time">📖 約8分</span></a>
+      <p class="article-summary">VBA禁止環境で、Power Queryと関数を組み合わせ、操作ではなくデータの流れとしてExcelを再設計する段階です。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-6">
+        <span class="level-label">段階6</span>
+        <span class="tag-row"><span class="tag-impact">QR Automation</span></span>
+      </div>
+      <a class="article-link" href="thinking/article_stage5_qr_input_design_shift.html">段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期 <span class="article-reading-time">📖 約8分</span></a>
+      <p class="article-summary">RPAやSeleniumが使えない環境で、QRリーダーをキーボードとして扱い、入力データそのものを圧縮する設計へシフトする段階です。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-7">
+        <span class="level-label">段階7</span>
+        <span class="tag-row"><span class="tag-impact">設計思想</span></span>
+      </div>
+      <a class="article-link" href="thinking/article_spill_design_shift.html">段階7：スピル関数で、Excelの設計思想が変わる時期 <span class="article-reading-time">📖 約9分</span></a>
+      <p class="article-summary">LET、実データ範囲、FILTER、SORT、UNIQUE、スピルを組み合わせ、Excelを可変構造として設計する段階です。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">設計思想・コラム</h3>
+  <ul class="article-list mb-32" id="list-thinking-column">
+    <li class="article-item">
+      <a class="article-link" href="thinking/article_vba_omnipotence_trap.html">VBAの万能感に依存する時期：作業を消せる快感と危うさ</a>
+      <p class="article-summary">VBAで何でも動かせるようになった時期に起こる高揚感、依頼の集中、野良システム化、そしてマクロ禁止で折れる理由を整理します。</p>
+    </li>
+    <li class="article-item">
+      <a class="article-link" href="thinking/article_function_depth_before_vba.html">関数を深めてからVBAを使うと、判断力が一段上がる</a>
+      <p class="article-summary">VBA使いの多くが関数上級まで到達しにくい理由と、関数を高めたあとにVBAを使うと、できること・できないことの判定力が上がる理由を整理します。</p>
+    </li>
+    <li class="article-item">
+      <a class="article-link" href="thinking/article_no_vba_thinking.html">VBA禁止時の思考法：自動操作を捨て、データの流れを設計する</a>
+      <p class="article-summary">マクロを奪われたときに、何を諦め、何を設計対象に戻すのか。Power Query、関数、テーブル、QR入力へ切り替える考え方です。</p>
+    </li>
+    <li class="article-item">
+      <a class="article-link" href="thinking/article_powerquery_design_shift.html">Power QueryはVBAの代替ではなく、データ整形思想だった</a>
+      <p class="article-summary">VBAユーザーが陥る罠から、宣言的ETL思想へパラダイムシフトする過程を深掘りします。</p>
+    </li>
+    <li class="article-item">
+      <a class="article-link" href="thinking/article_cobol_structure_shift.html">COBOL帳票処理で学んだ、固定長データを構造として読む考え方</a>
+      <p class="article-summary">レガシーシステムが出力する見た目重視の帳票テキストから、ほとんどのVBAユーザーが見落とす固定長構造を読み解く思考プロセスです。</p>
+    </li>
+  </ul>
+</div>
+<!-- /tab-panel#thinking -->
+
 
 <!-- ==========================================
-     タブ2: 関数テクニック
+     タブ3: 関数テクニック
      ========================================== -->
 <div aria-labelledby="tab-btn-functions" class="tab-panel" id="functions" role="tabpanel" tabindex="-1">
   <p class="more-link more-link-subtle"><a href="./functions/index.html">関数テクニック一覧を見る</a></p>
@@ -1747,6 +2006,16 @@
       <a class="article-link" href="cobol/intro/02_article_cobol_approach.html">COBOL帳票処理の3大アプローチ：本当の難易度と完成時のメリット</a>
       <p class="article-summary">関数・Power Query・VBAなど、複数のアプローチを難易度と工数で比較します。</p>
     </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-prereq">📖 前提知識</span><span class="tag-impact">サンプルデータあり</span></span>
+      </div>
+      <a class="article-link" href="cobol/intro/03_article_cobol_output_patterns.html">COBOL帳票データの出力パターン集：Excelで整形しやすい帳票・難しい帳票</a>
+      <p class="article-summary">サンプルデータあり。最大8行まで膨らむブロック明細、主情報と複数付属情報の統合、全角半角混在データ、半角QR連携まで、実務でよくある10種類の帳票構造を整理します。</p>
+    </li>
   </ul>
 
   <h3 class="subcategory-heading">2. 数式版（Excel関数でのアプローチ）</h3>
@@ -2493,7 +2762,7 @@
     <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
-    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a></p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="samples/index.html">サンプルデータ集</a></p>
   </div>
   <p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
   <p>このサイトがお役に立ちましたら「シェア」「Bookmark」をお願いいたします。</p>

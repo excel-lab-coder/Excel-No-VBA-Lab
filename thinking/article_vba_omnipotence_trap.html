@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>VBAの万能感に依存する時期：作業を消せる快感と危うさ｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="VBAで何でも自動化できるように感じる万能感、その成功体験、属人化、野良システム化、マクロ禁止で折れる理由を整理します。" name="description">
+<meta content="VBA 万能感, Excel 自動化, 野良システム, マクロ禁止, VBA 属人化" name="keywords">
+<meta content="VBAの万能感に依存する時期：作業を消せる快感と危うさ｜Excel × No VBA Lab" property="og:title">
+<meta content="VBAで作業を消せる快感と、そこに依存しすぎたときの危うさを整理します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_vba_omnipotence_trap.html" property="og:url">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_vba_omnipotence_trap.html" rel="canonical">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">設計思想・コラム</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../index.html">ホーム</a><span>&gt;</span><a href="index.html">技術の流れ</a><span>&gt;</span><strong>VBA万能感</strong></div>
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta"><span class="badge badge-classic">VBA</span><span class="badge badge-column">コラム</span><span class="article-date">公開日: 2026-05-24</span><span class="article-reading-time">📖 約8分</span></div>
+  <h1 class="article-title">VBAの万能感に依存する時期：作業を消せる快感と危うさ</h1>
+</div>
+
+<p class="article-lead">VBAを覚えると、ある時期から「だいたいの作業は自動化できる」と感じるようになります。この万能感は、現場を救う強い力である一方、依存しすぎると次の壁で大きく折れます。</p>
+<p>この記事では、VBA万能感がなぜ生まれ、どこまで現場を変え、どこから危うさに変わるのかを整理します。</p>
+
+<div class="toc-box">
+  <h3>この記事で扱う流れ</h3>
+  <ol>
+    <li><a href="#good">万能感は、最初は正しい</a></li>
+    <li><a href="#flow">操作、判断、出力がつながる快感</a></li>
+    <li><a href="#dependence">依頼が集まり、仕組みが属人化する</a></li>
+    <li><a href="#shadow">野良システム化と保守責任</a></li>
+    <li><a href="#ban">マクロ禁止で万能感が折れる</a></li>
+    <li><a href="#after">万能感の先に残すべきもの</a></li>
+  </ol>
+</div>
+
+<section class="goal-section" id="good">
+  <h2>万能感は、最初は正しい</h2>
+  <p>VBAの万能感は、ただの勘違いではありません。実際、VBAは強いです。連続印刷、CSV取込、PDF保存、ファイル名変更、複数ブック処理、メール作成、Web画面操作。現場の単調な作業を大きく減らせます。</p>
+  <p>特に、毎月同じ、毎日同じ、人数分繰り返す、ファイル数分繰り返す、という作業には抜群に効きます。今まで人が消耗していた時間が、ボタン1つに変わる。これは現場では本当に大きいです。</p>
+  <p>だから、VBAを覚えた人が高揚するのは自然です。仕事の中にある「無駄な繰り返し」が見えるようになり、それを自分の手で消せるようになるからです。</p>
+</section>
+
+<section class="method-section" id="flow">
+  <h3>操作、判断、出力がつながる快感</h3>
+  <p>VBAが強く感じる理由は、操作、判断、出力を1本につなげられることです。</p>
+  <div class="code-block" data-lang="text">
+<span class="code-line">CSVを開く
+↓
+必要な列だけ残す
+↓
+条件に合う行だけ処理する
+↓
+帳票へ差し込む
+↓
+PDF保存する
+↓
+メールを作る</span>
+  </div>
+  <p>関数だけでは、ここまで一気通貫に動かすのは難しいです。Power Queryもデータ整形には強いですが、印刷やメールや画面操作までは担当しません。VBAはその境界をまたげます。</p>
+  <p>ここで「Excelは表計算ソフトではなく、業務全体を動かす入口だ」と感じるようになります。この感覚が、万能感の中心です。</p>
+</section>
+
+<section class="method-section" id="dependence">
+  <h3>依頼が集まり、仕組みが属人化する</h3>
+  <p>VBAで成果を出すと、周囲から依頼が集まります。「これも自動化できる？」「このシステムにも入れられる？」「この帳票も一括で出したい」。最初はうれしいですが、だんだん危うくなります。</p>
+  <p>作った本人だけが仕様を知っている。エラーが出たら本人しか直せない。設定がコードに埋まっている。担当者が変わると運用できない。こうなると、作業は消えたのに、責任は作った人へ集中します。</p>
+  <div class="xdemo-note-warn">
+    <strong>万能感の副作用</strong>
+    <p>VBAで何でも作れる人ほど、仕事を引き受けすぎます。便利なツールが増えるほど、保守、問い合わせ、例外対応も増えます。</p>
+  </div>
+</section>
+
+<section class="method-section" id="shadow">
+  <h3>野良システム化と保守責任</h3>
+  <p>便利なVBAツールは、放っておくと野良システム化します。システム部門が管理していないのに、実務では止められない。仕様書はない。担当者のPCにだけ最新版がある。バックアップも曖昧。こうなると、業務改善のはずがリスクになります。</p>
+  <p>また、VBAは自由度が高いぶん、設計の差が出ます。ログがない、設定シートがない、エラー時に途中から再開できない、二重登録を防げない。動くことだけを優先したツールは、業務が重くなるほど弱点が表に出ます。</p>
+  <p>この段階で必要なのは、さらにコードを書く力だけではありません。誰が使うのか、止まったらどう戻すのか、設定をどこに置くのか、引き継げるのか、という運用設計です。</p>
+</section>
+
+<section class="method-section" id="ban">
+  <h3>マクロ禁止で万能感が折れる</h3>
+  <p>VBA万能感に依存していると、マクロ禁止はかなりきついです。なぜなら、やり方は見えているからです。ループを回せば終わる。条件分岐すればできる。ファイルを開いて保存すればいい。全部分かっているのに、書けない。</p>
+  <p>この「分かっているのに使えない」状態が、VBA経験者を折ります。知らない人は最初から手作業を前提にできますが、知っている人は理想の自動化が頭から離れません。</p>
+  <p>しかし、ここで万能感を捨てる必要があります。捨てるのはVBAで培った力ではなく、「全部を自分のコードで動かす」という前提です。</p>
+</section>
+
+<section class="method-section" id="after">
+  <h3>万能感の先に残すべきもの</h3>
+  <p>VBA禁止になっても、VBAで鍛えた視点は残ります。繰り返しを見つける力、例外を想定する力、入力と出力を分ける力、処理を分割する力、ログや復旧を考える力。これらは、Power Queryや関数、スピル関数、QR入力設計にもそのまま効きます。</p>
+  <p>重要なのは、VBAを失ったときに「何もできない」と考えないことです。自動操作はできなくても、データ整形はできるかもしれません。入力列を作れるかもしれません。エラーを見える化できるかもしれません。更新手順を短くできるかもしれません。</p>
+  <p>VBAの万能感を一度通った人は、現場の無駄を見つける目を持っています。その目を、コードではなく設計へ向け直すことが、次の成長です。</p>
+  <div class="xdemo-note-good">
+    <strong>次の段階への合言葉</strong>
+    <p>「全部を動かす」から、「流れを整える」へ。万能感の後に残るべきなのは、自由なコードではなく、業務を分解して設計する力です。</p>
+  </div>
+</section>
+
+<section class="method-section">
+  <h2>関連する段階記事</h2>
+  <ul class="article-list">
+    <li class="article-item"><a class="article-link" href="article_stage2_vba_macro_recording.html">段階2：マクロの記録とVBA初級で、作業が消える時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage3_vba_internal_design.html">段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage3_vba_web_automation.html">段階4：VBA応用で、Web操作や外部アプリまで広がる時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_function_depth_before_vba.html">関数を深めてからVBAを使うと、判断力が一段上がる</a></li>
+    <li class="article-item"><a class="article-link" href="article_no_vba_thinking.html">VBA禁止時の思考法：自動操作を捨て、データの流れを設計する</a></li>
+  </ul>
+</section>
+
+<nav class="stage-nav" aria-label="記事ナビゲーション">
+  <a class="stage-nav-prev" href="index.html">
+    <span class="stage-nav-label">← 戻る</span>
+    <span class="stage-nav-title">技術の流れ トップへ</span>
+  </a>
+  <a class="stage-nav-next" href="article_no_vba_thinking.html">
+    <span class="stage-nav-label">次に読む</span>
+    <span class="stage-nav-title">VBA禁止時の思考法</span>
+  </a>
+</nav>
+
+</article>
+</main>
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">お問い合わせ (Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab &horbar; コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>

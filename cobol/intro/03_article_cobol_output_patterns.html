@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="3" name="difficulty">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>COBOL帳票データの出力パターン集｜Excelで整形しやすい帳票・難しい帳票｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="実務でよくあるCOBOL帳票データの出力パターンを10種類に分類。1行1レコード型、ページヘッダー混在型、親子構造型、可変明細型、最大8行まで膨らむブロック明細型、主情報と複数付属情報を統合する型、全角半角混在固定長型、半角QR入力へつなげやすい型を、Excel整形の考え方と関連手順つきで解説します。" name="description">
+<meta content="COBOL帳票 パターン, COBOL 出力データ, 固定長データ Excel, COBOL帳票 Excel整形, ページヘッダー混在, 親子構造 帳票, 可変明細 COBOL, 小計 合計 除外, MIDB 固定長, VBA禁止 COBOL" name="keywords">
+<meta content="COBOL帳票データの出力パターン集｜Excelで整形しやすい帳票・難しい帳票｜Excel &times; No VBA Lab" property="og:title">
+<meta content="COBOL帳票の構造を10パターンに分類し、自分の帳票がどれに近いか、Excelでどう整形するかを見取り図として整理します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/intro/03_article_cobol_output_patterns.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "COBOL帳票データの出力パターン集：Excelで整形しやすい帳票・難しい帳票",
+    "description": "実務でよくあるCOBOL帳票データの出力パターンを10種類に分類。1行1レコード型、ページヘッダー混在型、親子構造型、可変明細型、最大8行まで膨らむブロック明細型、主情報と複数付属情報を統合する型、全角半角混在固定長型、半角QR入力へつなげやすい型を、Excel整形の考え方と関連手順つきで解説します。",
+    "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
+    "datePublished": "2026-05-19",
+    "dateModified": "2026-05-20"
+  }
+  </script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+      {"@type": "ListItem", "position": 2, "name": "COBOL帳票処理", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/#cobol"},
+      {"@type": "ListItem", "position": 3, "name": "COBOL帳票の出力パターン集"}
+    ]
+  }
+  </script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+  <div class="breadcrumb">
+    <a href="../../index.html">ホーム</a><span>&gt;</span>
+    <a href="../../index.html#cobol">COBOLデータ整形</a><span>&gt;</span>
+    <strong>COBOL帳票の出力パターン集</strong>
+  </div>
+
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta">
+    <span class="badge badge-all">全バージョン</span>
+    <span class="badge badge-maniac">COBOL/帳票構造</span>
+    <span class="badge badge-2016">サンプルデータあり</span>
+    <span class="article-date">更新日: 2026-05-20</span>
+  </div>
+  <h1 class="article-title">COBOL帳票データの出力パターン集：Excelで整形しやすい帳票・難しい帳票</h1>
+  <p class="article-summary" data-seo-lead="true">COBOL帳票は、見た目が似ていても構造が違います。この記事では、実務でよくある出力パターンを10種類に分け、自分の帳票がどれに近いか、Excelでどう整形すればよいかを見取り図として整理します。</p>
+</div>
+
+<div class="toc-box">
+  <h3>この記事の内容</h3>
+  <ol>
+    <li><a href="#sec-start">はじめに：処理方法より先に帳票構造を見る</a></li>
+    <li><a href="#sec-dummy">サンプルデータについて</a></li>
+    <li><a href="#pattern-1">パターン1：1行1レコード型</a></li>
+    <li><a href="#pattern-2">パターン2：ページヘッダー混在型</a></li>
+    <li><a href="#pattern-3">パターン3：親子構造型</a></li>
+    <li><a href="#pattern-4">パターン4：可変明細型</a></li>
+    <li><a href="#pattern-5">パターン5：小計・合計混在型</a></li>
+    <li><a href="#pattern-6">パターン6：複数行で1レコード型</a></li>
+    <li><a href="#pattern-7">パターン7：最大8行まで膨らむ可変ブロック明細型</a></li>
+    <li><a href="#pattern-8">パターン8：主情報と複数付属情報を統合する型</a></li>
+    <li><a href="#pattern-9">パターン9：全角半角混在の固定長型</a></li>
+    <li><a href="#pattern-10">パターン10：半角QR入力へつなげやすい項目中心型</a></li>
+    <li><a href="#sec-difficulty">どのパターンが難しいか</a></li>
+    <li><a href="#sec-checkpoints">Excel整形で見るべきポイント</a></li>
+    <li><a href="#sec-next">次に読む記事</a></li>
+  </ol>
+</div>
+
+<section class="goal-section" id="sec-start">
+  <h2><span class="icon">💡</span> はじめに：処理方法より先に帳票構造を見る</h2>
+  <p>COBOL帳票の整形で読者が本当に困るのは、<code>MIDB</code>関数そのものではありません。</p>
+  <p>「自分の帳票はどのパターンに近いのか」「明細行だけを取り出せるのか」「部署名や伝票番号を下の行へ補完する必要があるのか」「小計行は消すのか、検算に残すのか」といった、帳票構造の見極めです。</p>
+  <p>構造を見誤ると、どれだけきれいな数式やPower Queryを作っても、ページが変わった瞬間、部署が変わった瞬間、明細行数が変わった瞬間に崩れます。この記事は、処理手順に入る前の「帳票の地図」です。</p>
+</section>
+
+<section class="method-section" id="sec-dummy">
+  <h2>サンプルデータについて</h2>
+  <div class="note-box xdemo-note-good">
+    <p>
+      この記事のサンプル帳票は、COBOL帳票の構造を説明するために作成した架空のダミーデータです。
+      実在の個人名・会社名・団体名・金額・取引内容・業務データは含まれていません。
+    </p>
+  </div>
+  <p>実務データは個人情報や機密情報を含むことが多いため、そのまま教材化するのは危険です。ここでは、実務でよくある構造だけを抽出し、説明用の架空データとして再構成しています。</p>
+  <p>大きめの練習用データは、<a href="../../samples/index.html">全角半角混在のサンプルデータ集</a>からまとめてダウンロードできます。</p>
+  <div class="note-box">
+    <p><strong>この記事で使うサンプル</strong></p>
+    <ul>
+      <li><a href="../../samples/cobol_variable_block_8line_sample.txt" download>最大8行まで膨らむ可変ブロック明細型：元帳票テキスト</a></li>
+      <li><a href="../../samples/cobol_variable_block_8line_expected.csv" download>最大8行まで膨らむ可変ブロック明細型：整形後CSV</a></li>
+      <li><a href="../../samples/cobol_main_subitem_sample.txt" download>主情報と複数付属情報を統合する型：元帳票テキスト</a></li>
+      <li><a href="../../samples/cobol_main_subitem_expected.csv" download>主情報と複数付属情報を統合する型：整形後CSV</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="method-section" id="pattern-1">
+  <h2>パターン1：1行1レコード型</h2>
+  <table class="format-table">
+    <tr><th>難易度</th><td>★☆☆☆☆</td></tr>
+    <tr><th>よくある用途</th><td>社員一覧、得意先一覧、給与一覧、売上一覧</td></tr>
+    <tr><th>問題点</th><td>固定長の場合は、見た目ではなくバイト位置で列を切る必要がある</td></tr>
+    <tr><th>Excel整形の考え方</th><td><code>MIDB</code>で列を切り出し、<code>TRIM</code>や<code>VALUE</code>で整える</td></tr>
+  </table>
+  <div class="code-block" data-lang="text">
+<span class="code-line">社員番号    氏名        部署        金額</span>
+<span class="code-line">000001      山田太郎    総務部      12000</span>
+<span class="code-line">000002      佐藤花子    経理部      18000</span>
+<span class="code-line">000003      鈴木一郎    営業部      15000</span>
+  </div>
+  <p>この形式は、すでに1行が1件のデータになっています。Excelでの整形難易度は低めです。ただし、固定長データとして出力されている場合は、スペースで揃っているように見えても、実際にはバイト単位で列位置を読む必要があります。</p>
+  <p><strong>関連する既存記事:</strong> <a href="../formula/01_article_cobol_basic.html">COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）</a></p>
+</section>
+
+<section class="method-section" id="pattern-2">
+  <h2>パターン2：ページヘッダー混在型</h2>
+  <table class="format-table">
+    <tr><th>難易度</th><td>★★☆☆☆</td></tr>
+    <tr><th>よくある用途</th><td>紙印刷前提の一覧表、月次帳票、部署別帳票</td></tr>
+    <tr><th>問題点</th><td>タイトル行、日付、ページ番号、見出し行が明細に混ざる</td></tr>
+    <tr><th>Excel整形の考え方</th><td>明細行と不要行を判定し、不要行を除外してから列分割する</td></tr>
+  </table>
+  <div class="code-block" data-lang="text">
+<span class="code-line">売上一覧表                         2026/05/19</span>
+<span class="code-line">ページ: 1</span>
+<span class="code-line"></span>
+<span class="code-line">社員番号    氏名        部署        金額</span>
+<span class="code-line">000001      山田太郎    総務部      12000</span>
+<span class="code-line">000002      佐藤花子    経理部      18000</span>
+<span class="code-line"></span>
+<span class="code-line">売上一覧表                         2026/05/19</span>
+<span class="code-line">ページ: 2</span>
+<span class="code-line"></span>
+<span class="code-line">社員番号    氏名        部署        金額</span>
+<span class="code-line">000003      鈴木一郎    営業部      15000</span>
+<span class="code-line">000004      高橋美咲    人事部      22000</span>
+  </div>
+  <p>実務でかなり多い形式です。人間が読む分には親切ですが、Excelでデータベース化するときはタイトル行やページ番号が邪魔になります。</p>
+  <p>最初に考えるべきことは、「明細行だけを判定できる目印があるか」です。社員番号が必ず6桁なら、先頭6文字が数字かどうかで明細行を判定できます。日付やページ番号の行は、先頭文字や特定語句で除外できます。</p>
+  <p><strong>関連する既存記事:</strong> <a href="../formula/02_article_cobol_advanced.html">不規則なCOBOL帳票の撃破（不要行除外・縦持ち展開）</a> / <a href="../pq/01_article_cobol_pq.html">Power Queryで不要行除去と一括結合</a></p>
+</section>
+
+<section class="method-section" id="pattern-3">
+  <h2>パターン3：親子構造型</h2>
+  <table class="format-table">
+    <tr><th>難易度</th><td>★★★★☆</td></tr>
+    <tr><th>よくある用途</th><td>部署別一覧、得意先別明細、支店別集計、勘定科目別明細</td></tr>
+    <tr><th>問題点</th><td>部署コードや部署名などの親情報が、明細行に毎回出てこない</td></tr>
+    <tr><th>Excel整形の考え方</th><td>親行を判定し、下の明細行へ親情報を補完する</td></tr>
+  </table>
+  <div class="code-block" data-lang="text">
+<span class="code-line">部署コード: 1001  部署名: 総務部</span>
+<span class="code-line"></span>
+<span class="code-line">社員番号    氏名        金額</span>
+<span class="code-line">000001      山田太郎    12000</span>
+<span class="code-line">000002      佐藤花子    18000</span>
+<span class="code-line"></span>
+<span class="code-line">部署コード: 1002  部署名: 営業部</span>
+<span class="code-line"></span>
+<span class="code-line">社員番号    氏名        金額</span>
+<span class="code-line">000003      鈴木一郎    15000</span>
+<span class="code-line">000004      高橋美咲    22000</span>
+  </div>
+  <p>整形後は、親情報を明細行に持たせます。</p>
+  <table class="format-table">
+    <tr><th>部署コード</th><th>部署名</th><th>社員番号</th><th>氏名</th><th>金額</th></tr>
+    <tr><td>1001</td><td>総務部</td><td>000001</td><td>山田太郎</td><td class="text-right">12000</td></tr>
+    <tr><td>1001</td><td>総務部</td><td>000002</td><td>佐藤花子</td><td class="text-right">18000</td></tr>
+    <tr><td>1002</td><td>営業部</td><td>000003</td><td>鈴木一郎</td><td class="text-right">15000</td></tr>
+    <tr><td>1002</td><td>営業部</td><td>000004</td><td>高橋美咲</td><td class="text-right">22000</td></tr>
+  </table>
+  <p>このパターンでは、親行を消すだけでは不十分です。親行にしかない部署コードや部署名を、下の明細行に引き継ぐ必要があります。Power Queryならフィルダウン、関数なら直前の親情報を参照する作業列が重要になります。</p>
+  <p><strong>関連する既存記事:</strong> <a href="../formula/03_article_cobol_expert.html">ヘッダー紐付け・フィルダウンをExcel関数で自動化</a></p>
+</section>
+
+<section class="method-section" id="pattern-4">
+  <h2>パターン4：可変明細型</h2>
+  <table class="format-table">
+    <tr><th>難易度</th><td>★★★★★</td></tr>
+    <tr><th>よくある用途</th><td>伝票別明細、請求明細、受注伝票、入出庫明細</td></tr>
+    <tr><th>問題点</th><td>1つの親データに対して、明細行数が毎回変わる</td></tr>
+    <tr><th>Excel整形の考え方</th><td>固定行数で処理せず、レコード開始行・明細行・終了行を判定する</td></tr>
+  </table>
+  <div class="code-block" data-lang="text">
+<span class="code-line">伝票番号: A001  得意先: 東京商事</span>
+<span class="code-line"></span>
+<span class="code-line">商品コード    商品名        数量    金額</span>
+<span class="code-line">P001          商品A         2       1000</span>
+<span class="code-line">P002          商品B         1       3000</span>
+<span class="code-line"></span>
+<span class="code-line">伝票番号: A002  得意先: 大阪物産</span>
+<span class="code-line"></span>
+<span class="code-line">商品コード    商品名        数量    金額</span>
+<span class="code-line">P003          商品C         5       2500</span>
+<span class="code-line">P004          商品D         2       4000</span>
+<span class="code-line">P005          商品E         1       1500</span>
+  </div>
+  <p>「伝票1件につき必ず2行」と決め打ちできない帳票です。2行の場合もあれば、5行、10行になることもあります。固定行数で処理すると、次の伝票に食い込んだり、明細を取りこぼしたりします。</p>
+  <p>この形式では、まず行種を分けます。伝票番号行、見出し行、明細行、空白行を判定し、明細行だけを残したうえで、伝票番号や得意先を補完します。</p>
+  <p><strong>関連する既存記事:</strong> <a href="../formula/04_article_cobol_irregular.html">不規則明細・完結編</a></p>
+</section>
+
+<section class="method-section" id="pattern-5">
+  <h2>パターン5：小計・合計混在型</h2>
+  <table class="format-table">
+    <tr><th>難易度</th><td>★★★☆☆</td></tr>
+    <tr><th>よくある用途</th><td>部署別集計、支店別売上、勘定科目別残高、給与集計</td></tr>
+    <tr><th>問題点</th><td>明細行の間に小計行や総合計行が混ざる</td></tr>
+    <tr><th>Excel整形の考え方</th><td>データ化では除外し、検算ではチェック用に使う</td></tr>
+  </table>
+  <div class="code-block" data-lang="text">
+<span class="code-line">部署コード: 1001  総務部</span>
+<span class="code-line">000001      山田太郎    12000</span>
+<span class="code-line">000002      佐藤花子    18000</span>
+<span class="code-line">小計                    30000</span>
+<span class="code-line"></span>
+<span class="code-line">部署コード: 1002  営業部</span>
+<span class="code-line">000003      鈴木一郎    15000</span>
+<span class="code-line">000004      高橋美咲    22000</span>
+<span class="code-line">小計                    37000</span>
+<span class="code-line"></span>
+<span class="code-line">総合計                  67000</span>
+  </div>
+  <p>小計や総合計は、人間が帳票を確認するには便利ですが、Excelで明細データベースを作るときには混入してはいけません。ピボットやSUMIFSで再集計すると、二重計上の原因になります。</p>
+  <p>ただし、完全に無視するのはもったいないです。小計行や総合計行は、整形後データの合計が元帳票と一致しているかを確認する検算材料として使えます。</p>
+  <p><strong>関連する既存記事:</strong> <a href="../formula/02_article_cobol_advanced.html">不要行除外・縦持ち展開</a> / <a href="../../others/speed/article_02_formula_techniques.html">数式の速度UPテクニック集</a></p>
+</section>
+
+<section class="method-section" id="pattern-6">
+  <h2>パターン6：複数行で1レコード型</h2>
+  <table class="format-table">
+    <tr><th>難易度</th><td>★★★★★</td></tr>
+    <tr><th>よくある用途</th><td>住所録、顧客台帳、支払通知、個人別明細</td></tr>
+    <tr><th>問題点</th><td>1件のデータが複数行に分かれている</td></tr>
+    <tr><th>Excel整形の考え方</th><td>レコード開始行を判定し、複数行を横1行へ展開する</td></tr>
+  </table>
+  <div class="code-block" data-lang="text">
+<span class="code-line">社員番号: 000001  氏名: 山田太郎</span>
+<span class="code-line">住所    : 東京都千代田区サンプル町1-2-3</span>
+<span class="code-line">電話    : 03-0000-0000</span>
+<span class="code-line">金額    : 12000</span>
+<span class="code-line"></span>
+<span class="code-line">社員番号: 000002  氏名: 佐藤花子</span>
+<span class="code-line">住所    : 大阪府大阪市サンプル区4-5-6</span>
+<span class="code-line">電話    : 06-0000-0000</span>
+<span class="code-line">金額    : 18000</span>
+  </div>
+  <p>整形後は、複数行に散らばっていた情報を1行へまとめます。</p>
+  <table class="format-table">
+    <tr><th>社員番号</th><th>氏名</th><th>住所</th><th>電話</th><th>金額</th></tr>
+    <tr><td>000001</td><td>山田太郎</td><td>東京都千代田区サンプル町1-2-3</td><td>03-0000-0000</td><td class="text-right">12000</td></tr>
+    <tr><td>000002</td><td>佐藤花子</td><td>大阪府大阪市サンプル区4-5-6</td><td>06-0000-0000</td><td class="text-right">18000</td></tr>
+  </table>
+  <p>このパターンは、COBOL帳票処理の中でも難しい部類です。必ず4行で1件ならまだ扱いやすいですが、住所が2行になる、備考がある人だけ追加行が出る、といった例外があると一気に難易度が上がります。</p>
+  <p><strong>関連する既存記事:</strong> <a href="../formula/02_article_cobol_advanced.html">縦持ちデータの横展開</a> / <a href="../formula/04_article_cobol_irregular.html">不規則明細・完結編</a></p>
+</section>
+
+<section class="method-section" id="pattern-7">
+  <h2>パターン7：最大8行まで膨らむ可変ブロック明細型</h2>
+  <table class="format-table">
+    <tr><th>難易度</th><td>★★★★★</td></tr>
+    <tr><th>よくある用途</th><td>作業指示書、点検票、工程別実績、設備別の複数項目チェック</td></tr>
+    <tr><th>問題点</th><td>1件の中に入る明細行が2〜3行では収まらず、条件によって最大8行程度まで膨らむ</td></tr>
+    <tr><th>Excel整形の考え方</th><td>行番号の決め打ちではなく、ブロック開始・行種別・ブロック終了を判定してから正規化する</td></tr>
+  </table>
+  <div class="code-block" data-lang="text">
+<span class="code-line">案件ID: WK-0101  設備: プレスA   実施日: 2026/05/19</span>
+<span class="code-line">  01 点検区分   外観確認</span>
+<span class="code-line">  02 測定値     圧力  0150</span>
+<span class="code-line">  03 測定値     温度  0038</span>
+<span class="code-line">  04 判定       OK</span>
+<span class="code-line">  05 処置       なし</span>
+<span class="code-line">  06 備考       予備確認済</span>
+<span class="code-line">  07 確認欄     L1</span>
+<span class="code-line">  08 終了       END</span>
+<span class="code-line"></span>
+<span class="code-line">案件ID: WK-0102  設備: 搬送B     実施日: 2026/05/19</span>
+<span class="code-line">  01 点検区分   ベルト確認</span>
+<span class="code-line">  02 測定値     張力  0045</span>
+<span class="code-line">  03 判定       要確認</span>
+<span class="code-line">  08 終了       END</span>
+  </div>
+  <p>この形式が厄介なのは、「1件は必ず3行」といった固定ルールが使えない点です。ある案件は8行、別の案件は4行というように、帳票上の情報量によってブロックの長さが変わります。</p>
+  <p>この場合、最初に作るべきなのは列分割ではなく、行種別の判定です。案件ID行をブロック開始、01〜08のような行番号を明細種別、END行をブロック終了として扱い、親情報を各明細行へ補完してから、必要に応じて横持ち化または縦持ちの正規化テーブルへ変換します。</p>
+  <table class="format-table">
+    <tr><th>案件ID</th><th>設備</th><th>行番号</th><th>項目</th><th>値</th></tr>
+    <tr><td>WK-0101</td><td>プレスA</td><td>01</td><td>点検区分</td><td>外観確認</td></tr>
+    <tr><td>WK-0101</td><td>プレスA</td><td>02</td><td>圧力</td><td>0150</td></tr>
+    <tr><td>WK-0101</td><td>プレスA</td><td>03</td><td>温度</td><td>0038</td></tr>
+    <tr><td>WK-0102</td><td>搬送B</td><td>02</td><td>張力</td><td>0045</td></tr>
+  </table>
+  <p>横1行にまとめたい場合でも、いきなり横展開しない方が安全です。まず「案件ID・設備・行番号・項目・値」の縦持ち表を作り、そこから必要な項目だけを横に並べると、8行ある案件と4行しかない案件を同じルールで処理できます。</p>
+  <p><strong>全角半角混在サンプル:</strong> <a href="../../samples/cobol_variable_block_8line_sample.txt" download>元帳票テキスト</a> / <a href="../../samples/cobol_variable_block_8line_expected.csv" download>整形後CSV</a> / <a href="../../samples/index.html">サンプルデータ集</a></p>
+  <p><strong>関連する既存記事:</strong> <a href="../formula/03_article_cobol_expert.html">ヘッダー紐付け・フィルダウンをExcel関数で自動化</a> / <a href="../formula/04_article_cobol_irregular.html">不規則明細・完結編</a> / <a href="../pq/01_article_cobol_pq.html">Power Queryで不要行除去と一括結合</a></p>
+</section>
+
+<section class="method-section" id="pattern-8">
+  <h2>パターン8：主情報と複数付属情報を統合する型</h2>
+  <table class="format-table">
+    <tr><th>難易度</th><td>★★★★★</td></tr>
+    <tr><th>よくある用途</th><td>設備台帳と付属部品、契約本体とオプション、申請本体と添付項目、出荷単位と同梱品</td></tr>
+    <tr><th>問題点</th><td>左側に主情報、右側に複数の付属情報が並び、見た目は表でもデータとしては1対多になっている</td></tr>
+    <tr><th>Excel整形の考え方</th><td>主情報を下方向へ補完し、付属情報を1行ずつ明細化するか、付属1〜付属Nの列へ横展開する</td></tr>
+  </table>
+  <div class="code-block" data-lang="text">
+<span class="code-line">主設備コード  主設備名        付属コード  付属名        数量</span>
+<span class="code-line">EQ-A001       加工ラインA     OP-101      センサーS1    1</span>
+<span class="code-line">                              OP-102      保護カバー    2</span>
+<span class="code-line">                              OP-103      交換ベルト    1</span>
+<span class="code-line">EQ-B002       搬送ラインB     OP-201      ガイド板      4</span>
+<span class="code-line">                              OP-202      制御ケーブル  2</span>
+<span class="code-line">                              OP-203      予備ローラー  3</span>
+<span class="code-line">                              OP-204      固定金具      8</span>
+  </div>
+  <p>これは、1列目に主となる情報があり、2列目以降に複数の付属情報がぶら下がる帳票です。人間には「加工ラインAに3つの付属部品がある」と読めますが、Excelでは2行目以降の主設備コードが空白なので、そのままでは主情報と付属情報の関係が切れてしまいます。</p>
+  <p>整形方針は2つあります。分析や照合に使うなら、主情報をフィルダウンして「主設備1件 × 付属1件」の明細表にします。入力画面が「付属1、付属2、付属3」のような横並びなら、いったん明細化したあと、付属番号を振って横展開します。</p>
+  <table class="format-table">
+    <tr><th>主設備コード</th><th>主設備名</th><th>付属番号</th><th>付属コード</th><th>付属名</th><th>数量</th></tr>
+    <tr><td>EQ-A001</td><td>加工ラインA</td><td>1</td><td>OP-101</td><td>センサーS1</td><td>1</td></tr>
+    <tr><td>EQ-A001</td><td>加工ラインA</td><td>2</td><td>OP-102</td><td>保護カバー</td><td>2</td></tr>
+    <tr><td>EQ-A001</td><td>加工ラインA</td><td>3</td><td>OP-103</td><td>交換ベルト</td><td>1</td></tr>
+    <tr><td>EQ-B002</td><td>搬送ラインB</td><td>1</td><td>OP-201</td><td>ガイド板</td><td>4</td></tr>
+  </table>
+  <p>難所は、空白の主情報を単純に消してはいけないことです。空白行は不要行ではなく、「直前の主情報に属する付属明細」です。まず主設備コードを下方向へ補完し、そのあと付属コードがある行だけを抽出します。</p>
+  <p><strong>全角半角混在サンプル:</strong> <a href="../../samples/cobol_main_subitem_sample.txt" download>元帳票テキスト</a> / <a href="../../samples/cobol_main_subitem_expected.csv" download>整形後CSV</a> / <a href="../../samples/index.html">サンプルデータ集</a></p>
+  <p><strong>関連する既存記事:</strong> <a href="../formula/03_article_cobol_expert.html">ヘッダー紐付け・フィルダウンをExcel関数で自動化</a> / <a href="../formula/04_article_cobol_irregular.html">不規則明細・完結編</a> / <a href="../pq/02_article_cobol_pq3.html">Power QueryでCOBOL帳票を処理する全テクニック</a></p>
+</section>
+
+<section class="method-section" id="pattern-9">
+  <h2>パターン9：全角半角混在の固定長型</h2>
+  <table class="format-table">
+    <tr><th>難易度</th><td>★★★★☆</td></tr>
+    <tr><th>よくある用途</th><td>氏名・部署名・会社名を含む固定長データ</td></tr>
+    <tr><th>問題点</th><td>文字数で切るとズレる。Shift_JIS系のバイト位置で考える必要がある</td></tr>
+    <tr><th>Excel整形の考え方</th><td><code>MID</code>ではなく、必要に応じて<code>MIDB</code>で切り出す</td></tr>
+  </table>
+  <div class="code-block" data-lang="text">
+<span class="code-line">000001山田太郎    総務部    000012000</span>
+<span class="code-line">000002佐藤花子    経理部    000018000</span>
+<span class="code-line">000003ABC商事     営業部    000025000</span>
+  </div>
+  <p>氏名や部署名に全角文字が入り、コードや金額に半角文字が入る形式です。見た目上は列が揃っているように見えても、実際には全角1文字を2バイトとして数える前提でレイアウトが組まれていることがあります。</p>
+  <p>この形式では、通常の <code>MID</code> 関数で文字数を数えると、途中から列位置がズレる場合があります。固定長の仕様書がバイト単位で書かれているなら、<code>MIDB</code> を使う発想が重要になります。</p>
+  <p><strong>関連する既存記事:</strong> <a href="../formula/01_article_cobol_basic.html">MIDB＋TRIM 基本編</a> / <a href="../../functions/old/article_midb.html">MID / MIDB関数</a> / <a href="../pq/03_article_cobol_pq_midb_ref.html">M言語でMIDB相当の自作関数を作る</a></p>
+</section>
+
+<section class="method-section" id="pattern-10">
+  <h2>パターン10：半角QR入力へつなげやすい項目中心型</h2>
+  <table class="format-table">
+    <tr><th>難易度</th><td>★★★☆☆</td></tr>
+    <tr><th>よくある用途</th><td>対象者抽出後の別システム入力、月次処理、承認画面への定型入力</td></tr>
+    <tr><th>問題点</th><td>確認用の日本語項目と、入力用の半角コード・数値が混在する</td></tr>
+    <tr><th>Excel整形の考え方</th><td>氏名・部署名は確認列に残し、QRへ送る項目は半角英数字・半角記号・数値に絞る</td></tr>
+  </table>
+  <div class="code-block" data-lang="text">
+<span class="code-line">対象者一覧                         2026/05/19</span>
+<span class="code-line">職員コード  氏名        部署コード  対象年月  金額      処理区分</span>
+<span class="code-line">EMP-A001    山田太郎    DEP-010     202605    00012000  K1</span>
+<span class="code-line">EMP-A002    佐藤花子    DEP-020     202605    00018000  K1</span>
+  </div>
+  <p>COBOL帳票をExcelで整形したあと、その結果を別システムへ入力したい場合があります。このとき、帳票内のすべてをQRコード化するのではなく、入力先が受け付ける半角コードや数値だけをQR用文字列にします。</p>
+  <p>氏名や部署名は、人間が対象者を確認するための列として残します。一方、QRに入れるのは職員コード、部署コード、対象年月、金額、処理区分など、入力画面の項目に対応する半角データだけにします。</p>
+  <table class="format-table">
+    <tr><th>項目</th><th>Excel上での役割</th><th>QRに入れるか</th></tr>
+    <tr><td>職員コード</td><td>入力対象者の指定</td><td>入れる</td></tr>
+    <tr><td>氏名</td><td>人間の確認用</td><td>原則入れない</td></tr>
+    <tr><td>部署コード</td><td>システム入力値</td><td>入れる</td></tr>
+    <tr><td>部署名</td><td>人間の確認用</td><td>原則入れない</td></tr>
+    <tr><td>対象年月・金額・処理区分</td><td>システム入力値</td><td>入れる</td></tr>
+  </table>
+  <p><strong>関連する既存記事:</strong> <a href="../formula/05_article_cobol_qr_bridge.html">COBOL帳票から対象者だけを抽出し、半角QRで別システムへ入力する実践編</a> / <a href="../../qr/index.html">QR Automation Lab総合ガイド</a> / <a href="../../qr/00_qr_reader_excel_input_basics.html">QRリーダーでExcel入力を自動化する仕組み</a> / <a href="../../qr/01_qr_barcode_control.html">QRコードでWebシステム入力を自動化</a></p>
+</section>
+
+<section class="method-section" id="sec-difficulty">
+  <h2>どのパターンが難しいか</h2>
+  <p>難しさは、帳票の見た目の派手さではなく「明細行だけを安定して取り出せるか」「親情報を補完する必要があるか」「1件の行数が固定か」で決まります。</p>
+  <table class="format-table">
+    <tr><th>パターン</th><th>難易度</th><th>難所</th><th>主な対策</th></tr>
+    <tr><td>1行1レコード型</td><td>★☆☆☆☆</td><td>固定長の列位置</td><td>MIDB、TRIM</td></tr>
+    <tr><td>ページヘッダー混在型</td><td>★★☆☆☆</td><td>不要行の除外</td><td>行種判定、FILTER</td></tr>
+    <tr><td>親子構造型</td><td>★★★★☆</td><td>親情報の補完</td><td>フィルダウン、直前値参照</td></tr>
+    <tr><td>可変明細型</td><td>★★★★★</td><td>明細行数が変わる</td><td>開始行判定、親情報補完</td></tr>
+    <tr><td>小計・合計混在型</td><td>★★★☆☆</td><td>二重計上</td><td>明細化では除外、検算では利用</td></tr>
+    <tr><td>複数行で1レコード型</td><td>★★★★★</td><td>縦持ちから横持ちへの展開</td><td>行番号計算、配列展開</td></tr>
+    <tr><td>最大8行まで膨らむ可変ブロック明細型</td><td>★★★★★</td><td>1件内の行数と項目が増減する</td><td>ブロック開始判定、行種別、縦持ち正規化</td></tr>
+    <tr><td>主情報と複数付属情報を統合する型</td><td>★★★★★</td><td>主情報の空白行が付属明細を意味する</td><td>主情報フィルダウン、付属番号、1対多展開</td></tr>
+    <tr><td>全角半角混在固定長型</td><td>★★★★☆</td><td>文字数とバイト数の違い</td><td>MIDB、文字コード確認</td></tr>
+    <tr><td>半角QR入力へつなげやすい項目中心型</td><td>★★★☆☆</td><td>確認列と入力列の分離</td><td>半角項目抽出、QR用文字列設計</td></tr>
+  </table>
+</section>
+
+<section class="method-section" id="sec-checkpoints">
+  <h2>Excel整形で見るべきポイント</h2>
+  <p>帳票を受け取ったら、いきなり数式を組む前に次の順で見ます。</p>
+  <ol>
+    <li>1行が1件か、複数行で1件か。</li>
+    <li>ページヘッダー、見出し、小計、総合計が混ざるか。</li>
+    <li>部署・得意先・伝票番号などの親情報が、明細行に毎回出ているか。</li>
+    <li>明細行数が固定か、伝票ごとに変わるか。</li>
+    <li>1件の中が最大何行まで膨らむか。2〜3行なのか、8行以上まで増える可能性があるか。</li>
+    <li>左側の主情報が空白でも、右側の付属情報が直前の主情報に属していないか。</li>
+    <li>列位置は文字数で考えればよいか、バイト数で考える必要があるか。</li>
+    <li>小計・合計行を消すだけでよいか、検算用に残すべきか。</li>
+    <li>別システム入力へ使う場合、QRに入れる半角項目と確認用の日本語項目を分けられるか。</li>
+  </ol>
+  <div class="xdemo-note-good">
+    <strong>構造が見えれば、処理方法は選びやすい</strong><br>
+    1行1レコードならMIDB基本編、不要行が多いなら不要行除外、親子構造なら親情報補完、可変明細なら不規則明細編へ進みます。
+    8行まで膨らむブロック型や、主情報と複数付属情報を統合する型では、先に行種別列と親情報の補完列を作り、いったん縦持ちの正規化表にしてから横展開を考えるのが安全です。
+    複数ファイル運用ならPower Query、整形後に別システムへ入力するならQR連携へ進む、という流れで考えられます。
+  </div>
+</section>
+
+<section class="tips-section" id="sec-next">
+  <h2>次に読む記事</h2>
+  <p>自分の帳票がどのパターンに近いか見えたら、具体的な整形手順へ進みます。</p>
+  <ul>
+    <li><a href="01_article_cobol_fixed.html">扱っているデータはCOBOL固定長？見分け方と基礎知識</a></li>
+    <li><a href="../formula/01_article_cobol_basic.html">COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）</a></li>
+    <li><a href="../formula/02_article_cobol_advanced.html">不規則なCOBOL帳票の撃破（不要行除外・縦持ち展開）</a></li>
+    <li><a href="../formula/03_article_cobol_expert.html">ヘッダー紐付け・フィルダウンをExcel関数で自動化</a></li>
+    <li><a href="../formula/04_article_cobol_irregular.html">不規則明細・完結編</a></li>
+    <li><a href="../pq/01_article_cobol_pq.html">Power QueryでCOBOL帳票データの不要行除去と一括結合</a></li>
+    <li><a href="../formula/05_article_cobol_qr_bridge.html">COBOL帳票から対象者だけを抽出し、半角QRで別システムへ入力する実践編</a></li>
+    <li><a href="../../qr/index.html">QR Automation Lab総合ガイド</a></li>
+  </ul>
+</section>
+
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ（Google Forms）</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab — 制限環境こそが最高の教師。</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

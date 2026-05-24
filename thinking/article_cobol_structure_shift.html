@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>コラム：COBOL帳票処理で学んだ、固定長データを構造として読む考え方｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="レガシー基幹システムが出力する「見た目重視の帳票テキスト」から、純粋な固定長データ構造を読み解く思考プロセスを掘り下げたコラムです。" name="description">
+<meta content="COBOL, 固定長データ, 帳票処理, Power Query, データクレンジング, レガシーシステム, データ構造" name="keywords">
+<meta content="コラム：COBOL帳票処理で学んだ、固定長データを構造として読む考え方｜Excel &times; No VBA Lab" property="og:title">
+<meta content="「CSVが欲しいのに印刷プレビューのテキストが来る」絶望から、空白の持つ構造的意味に気づくまでのパラダイムシフトを描きます。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_cobol_structure_shift.html">
+<meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_cobol_structure_shift.html" rel="canonical">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_cobol_structure_shift.html"
+  },
+  "headline": "コラム：COBOL帳票処理で学んだ、固定長データを構造として読む考え方",
+  "image": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png",
+  "datePublished": "2026-05-24",
+  "dateModified": "2026-05-24",
+  "author": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "技術の流れ",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "コラム：COBOL帳票処理とデータ構造"
+    }
+  ]
+}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">設計思想・コラム</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../index.html">ホーム</a><span>&gt;</span><a href="index.html">技術の流れ</a><span>&gt;</span><strong>設計思想・コラム</strong></div>
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta"><span class="badge badge-365">Data Structure</span><span class="badge badge-column">コラム</span><span class="article-date">公開日: 2026-05-24</span><span class="article-reading-time">📖 約11分</span></div>
+  <h1 class="article-title">コラム：COBOL帳票処理で学んだ、固定長データを構造として読む考え方</h1>
+</div>
+
+<p class="article-lead">古い基幹システムからデータを出力する際、「綺麗なCSV」がもらえるとは限りません。現場でよく渡されるのは、印刷用にフォーマットされた「帳票テキスト（スプールデータ）」です。</p>
+
+<p>人間が読むための「見た目」と、システムが処理するための「データ構造」は、全く別の言語です。この記事では、COBOLなどのレガシーシステムが吐き出すカオスな帳票テキストの海から、純粋なデータ構造を読み解き、Excelの二次元表へと錬成するパラダイムシフトについて掘り下げます。</p>
+
+<div class="toc-box">
+  <h3>この記事で扱う流れ</h3>
+  <ol>
+    <li><a href="#despair">「CSVが欲しいのに、なぜか印刷プレビューのテキストが渡される」絶望</a></li>
+    <li><a href="#vba-trap">「見た目」に騙されるVBAプログラマーの罠</a></li>
+    <li><a href="#fixed-length">固定長データの真実：空白には「意味」がある</a></li>
+    <li><a href="#paradigm">構造化へのパラダイムシフト：Power Queryによる二次元化</a></li>
+    <li><a href="#rarity">どれぐらいの人が気づけるか（現場での人数感）</a></li>
+  </ol>
+</div>
+
+<section class="goal-section" id="despair">
+  <h2>「CSVが欲しいのに、なぜか印刷プレビューのテキストが渡される」絶望</h2>
+  <p>ある日、あなたは業務改善のために「基幹システムから先月の売上データを出してほしい」と情シスやベテラン担当者に頼みます。頭の中では、カンマで区切られた美しいCSVデータが送られてくることを想像しています。</p>
+  <p>しかし、渡された `.txt` ファイルを開いた瞬間、奈落の底に突き落とされます。</p>
+  <div class="code-block" data-lang="text">
+<span class="code-line">=============================================================</span>
+<span class="code-line"> 株式会社〇〇〇〇             売上明細レポート       PAGE: 1</span>
+<span class="code-line"> 出力日: 2026/05/24                             担当: 山田</span>
+<span class="code-line">=============================================================</span>
+<span class="code-line"> 伝票番号   商品コード   品名                 数量    金額</span>
+<span class="code-line">-------------------------------------------------------------</span>
+<span class="code-line"> 100001     A-001        スーパーボルト         10    1,500</span>
+<span class="code-line"> 100001     B-020        特殊ナット              5    2,000</span>
+<span class="code-line"> </span>
+<span class="code-line"> 100002     A-001        スーパーボルト        100   15,000</span>
+<span class="code-line">-------------------------------------------------------------</span>
+<span class="code-line">                                        小計:        18,500</span>
+<span class="code-line">=============================================================</span>
+<span class="code-line"> 株式会社〇〇〇〇             売上明細レポート       PAGE: 2</span>
+  </div>
+  <p>ページヘッダー、飾り線、無駄な空白行、そして「ページが変わるたびに繰り返されるタイトル」。これはデータではありません。「ドットインパクトプリンターで印刷するためのレイアウト」です。</p>
+  <p>ここからデータ分析を始めなければならないという現実に、多くの人がエクセルにテキストを貼り付け、手作業で行を消していく地獄の作業を開始します。</p>
+</section>
+
+<section class="method-section" id="vba-trap">
+  <h3>「見た目」に騙されるVBAプログラマーの罠</h3>
+  <p>VBAを知っている人なら、手作業はしません。「マクロでテキストを1行ずつ読み込んで、不要な行を消そう」と考えます。</p>
+  <p>しかし、ここでも「人間の見た目」に引きずられた泥沼のコーディングが始まります。</p>
+  <ul>
+    <li><code>If InStr(line, "===") > 0 Then</code>（飾り線ならスキップ）</li>
+    <li><code>If InStr(line, "PAGE:") > 0 Then</code>（ヘッダーならスキップ）</li>
+    <li><code>If line = "" Then</code>（空白行ならスキップ）</li>
+  </ul>
+  <p>そして極めつけは、データの分割です。「スペースで区切られているから <code>Split(line, " ")</code> で配列にしよう」とした瞬間、破綻します。「品名」の中にスペースが含まれていたり、桁数がずれてスペースの数が変わったりするため、配列のインデックスがめちゃくちゃになるのです。</p>
+  <p>結局、例外処理だらけの何百行にも及ぶスパゲッティコードが完成し、少しでもフォーマットが変わると動かなくなる「呪いのマクロ」が誕生します。</p>
+</section>
+
+<section class="method-section" id="fixed-length">
+  <h3>固定長データの真実：空白には「意味」がある</h3>
+  <p>この苦しみから抜け出す鍵は、「空白を区切り文字として見る」ことをやめ、「空白をデータ構造の一部として見る」ことです。これがCOBOLなどのレガシーシステムが持つ<strong>固定長データ（Fixed-Length Data）</strong>の概念です。</p>
+  <p>彼らは「スペースで間を空けている」のではありません。「伝票番号は1列目から8列目」「商品コードは12列目から6文字」「品名は20列目から20文字」という<strong>絶対的な座標（バイト位置）</strong>を持っているのです。</p>
+  <p>この事実に気づいたとき、テキストファイルは単なる文字の羅列から、厳格なルールを持った「グリッド（方眼紙）」に見えてきます。品名の中にスペースがあろうが、数字が右揃えになっていようが関係ありません。「何文字目から何文字目を取り出すか」というルールだけで、データは完全にコントロールできます。</p>
+</section>
+
+<section class="method-section" id="paradigm">
+  <h3>構造化へのパラダイムシフト：Power Queryによる二次元化</h3>
+  <p>この「固定長データ」の概念と、Power Queryの思想が組み合わさったとき、圧倒的な威力を発揮します。Power Queryでこのテキストを読み込む際、「区切り文字」ではなく「固定長」を指定します。</p>
+  <ol>
+    <li><strong>分割：</strong> 文字の位置（1, 10, 20, 42, 50...）を指定して一撃で列を分割する。</li>
+    <li><strong>クレンジング：</strong> 列の先頭や末尾にある不要な空白（Trim）を取り除く。</li>
+    <li><strong>フィルタリング：</strong> 「伝票番号列が数値に変換できない行（つまりヘッダーや飾り線、小計行）」を丸ごとフィルターで除外する。</li>
+  </ol>
+  <p>VBAで何百行も書いた「ヘッダーを飛ばす条件分岐」は、Power Queryの「エラー行の削除」や「テキストフィルター」というたった1ステップに昇華されます。</p>
+  <p>人間を騙すための「見た目の飾り」を一瞬で剥ぎ取り、背後に隠された「固定長のデータ構造」だけを抽出する。このプロセスを経ることで、カオスだった印刷データは、美しいリレーショナルデータベースのテーブル（二次元表）へと生まれ変わります。</p>
+</section>
+
+<section class="method-section" id="rarity">
+  <h3>どれぐらいの人が気づけるか（現場での人数感）</h3>
+  <p>「見た目のレイアウト」に騙されず、テキストから純粋な「データ構造」を分離できる人はどれくらいいるのでしょうか。</p>
+  <p>ここで勘違いしやすいのは、VBA経験者なら自然にこの発想へ進むわけではない、という点です。多くのVBAユーザーは、Excel内の転記、印刷、集計、CSV取込、ファイル処理までは覚えても、Power Queryや固定長データの分解までは学ばないことが多いです。</p>
+  <p>VBAは「手順を動かす」発想に強い一方、固定長データの分解は「見た目を捨てて、文字位置やバイト位置で構造を読む」発想です。ここは同じExcel周辺スキルでも、かなり別系統の能力です。</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">状態</th>
+          <th scope="col">できること</th>
+          <th scope="col">現場での人数感</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>手作業での整形</td>
+          <td>Excelに貼り付け、手作業で行や列を消していく</td>
+          <td>大多数</td>
+        </tr>
+        <tr>
+          <td>文字列の条件分岐の沼</td>
+          <td>VBAで「PAGE」や「===」を探して処理を分岐させる</td>
+          <td>VBA経験者の中でも、テキスト取込や帳票処理に踏み込んだ一部</td>
+        </tr>
+        <tr>
+          <td>Power Queryでの整形</td>
+          <td>不要行削除、列分割、型変換、フィルターを更新手順として組む</td>
+          <td>VBAユーザー全体では少数。VBAとは別物として触れない人も多い</td>
+        </tr>
+        <tr>
+          <td>固定長としての構造化</td>
+          <td>文字位置で分割し、非データ行を一括フィルタリングする</td>
+          <td>ほぼいない。固定長、レガシー帳票、ETLの発想を持つ人に限られる</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>「文字列をどう切り刻むか」を考える人はいます。しかし、「そもそもこのファイルは固定長の構造を持っている」と見抜ける人はかなり少ないです。VBAで1行ずつ条件分岐する発想と、Power Queryで行全体をデータ構造として再定義する発想は、似ているようでまったく違います。</p>
+  <p>だから固定長の分解は、単なるExcelの小技ではありません。レイアウトを読むのではなく、裏側のデータモデルを読む力です。現場でこの視点を持っている人は、かなり希少です。</p>
+</section>
+
+<section class="method-section">
+  <h3>結論：一番汚いデータが、最も美しいデータ構造を教えてくれた</h3>
+  <p>「今どきCSVも吐き出せない古いシステムなんて」と文句を言うのは簡単です。しかし、その「一番汚い、人間向けの印刷データ」と格闘した経験こそが、データ構造に対する深い理解を育ててくれます。</p>
+  <p>空白には意味がある。飾り線はただのノイズである。行には種類（ヘッダー、明細、フッター）がある。これらを見極め、Power Queryというメスで切り分ける技術を身につけたとき、あなたはどんなシステムからどんな形のデータを出力されても、恐れることなく美しい二次元表へと錬成できるようになります。</p>
+</section>
+
+<nav class="stage-nav" aria-label="コラムナビゲーション">
+  <a class="stage-nav-prev" href="index.html">
+    <span class="stage-nav-label">← 戻る</span>
+    <span class="stage-nav-title">技術の流れ トップへ</span>
+  </a>
+</nav>
+
+</article>
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-info">
+      <p class="footer-copyright">&copy; Excel &times; No VBA Lab</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="../about.html">運営者情報</a></li>
+      <li><a href="../disclaimer.html">免責事項</a></li>
+      <li><a href="../privacy.html">プライバシーポリシー</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>

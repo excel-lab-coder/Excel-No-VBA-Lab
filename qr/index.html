@@ -312,6 +312,17 @@
   </section>
 
   <section class="method-section">
+    <h2><span class="icon">🏭</span> COBOL帳票からQR入力へつなげたい場合</h2>
+    <p>COBOL帳票や固定長データをExcelで整形したあと、CSV取込できない業務システムへ入力する場面では、対象行だけを抽出し、職員コード・対象年月・所属コード・金額などの半角項目をQR化する流れが有効です。</p>
+    <p>氏名や部署名などの日本語項目は確認列として残し、QRへ送る項目は入力先システムが受け付ける半角データに絞ると、文字化けや読み取り差異を避けやすくなります。</p>
+    <ul class="article-list">
+      <li class="article-item"><a class="article-link" href="../cobol/formula/05_article_cobol_qr_bridge.html">COBOL帳票から対象者だけを抽出し、半角QRで別システムへ入力する実践編</a><p class="article-summary">COBOL整形後のデータを、半角QR入力へ渡す橋渡し記事です。</p></li>
+      <li class="article-item"><a class="article-link" href="../cobol/intro/03_article_cobol_output_patterns.html">COBOL帳票データの出力パターン集</a><p class="article-summary">QRへつなげやすい帳票構造かどうかを、処理前に見分けます。</p></li>
+      <li class="article-item"><a class="article-link" href="../cobol/index.html">COBOL帳票処理 総合ガイド</a><p class="article-summary">固定長・不規則帳票をExcelで使える表へ整形するカテゴリです。</p></li>
+    </ul>
+  </section>
+
+  <section class="method-section">
     <h2><span class="icon">🧩</span> 読者の課題</h2>
     <ul class="philosophy-list">
       <li>会社でVBA・マクロ・RPA禁止になり、入力自動化の手段がない。</li>
@@ -685,7 +696,7 @@
       <a href="https://www.opto.co.jp/products/handy_scanner/L-46X.html" rel="noopener" target="_blank">L-46X 公式製品ページ</a>
       <a href="https://www.opto.co.jp/products/tool/manual_download/instruction_kanjioutput.html" rel="noopener" target="_blank">漢字出力インストラクション</a>
       <a href="https://www.alf-net.co.jp/products/barcode-reader/2d-barcode-reader/2d-wired/alx-3601/" rel="noopener" target="_blank">ALX-3601 製品ページ</a>
-      <a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a>
+      <a href="../samples/index.html">サンプルデータ</a>
     </p>
   </div>
   <div class="footer-contact-wrap">

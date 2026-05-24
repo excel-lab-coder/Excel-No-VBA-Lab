@@ -455,6 +455,157 @@
     window.addEventListener('orientationchange', updateProgress);
   }
 
+  function getArticleMeta() {
+    var articleBody = document.querySelector('.article-body');
+    var titleNode = document.querySelector('.article-header .article-title, .article-title');
+    if (!articleBody || !titleNode) return null;
+
+    var path = location.pathname || '';
+    var fileName = path.split('/').pop() || '';
+    if (!fileName || fileName === 'index.html') return null;
+
+    var normalizedPath = path.replace(/^\/Excel-No-VBA-Lab\//, '').replace(/^\//, '');
+    var section = normalizedPath.split('/')[0] || 'article';
+
+    return {
+      body: articleBody,
+      title: titleNode.textContent.trim(),
+      path: normalizedPath,
+      section: section
+    };
+  }
+
+  function sendArticleEvent(eventName, params) {
+    if (location.protocol === 'file:') return;
+    if (typeof window.gtag !== 'function') return;
+
+    window.gtag('event', eventName, params);
+  }
+
+  function safeStorageGet(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function safeStorageSet(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      // ストレージが使えない環境では、ボタン表示だけ継続する。
+    }
+  }
+
+  function initArticleFeedback() {
+    var meta = getArticleMeta();
+    if (!meta) return;
+    if (meta.body.querySelector('.article-feedback')) return;
+
+    var storageKey = 'excel_no_vba_lab_helpful_' + meta.path;
+    var alreadyVoted = safeStorageGet(storageKey) === '1';
+
+    var feedback = document.createElement('aside');
+    feedback.className = 'article-feedback';
+    feedback.setAttribute('aria-label', '記事の評価');
+
+    var textWrap = document.createElement('div');
+    textWrap.className = 'article-feedback-text';
+
+    var heading = document.createElement('h2');
+    heading.textContent = 'この記事は役に立ちましたか？';
+
+    var note = document.createElement('p');
+    note.textContent = 'よかった記事だけ、気軽に押してください。';
+
+    textWrap.appendChild(heading);
+    textWrap.appendChild(note);
+
+    var actionWrap = document.createElement('div');
+    actionWrap.className = 'article-feedback-actions';
+
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'article-feedback-btn';
+    button.textContent = alreadyVoted ? '送信済み' : '役に立った';
+    button.setAttribute('aria-pressed', alreadyVoted ? 'true' : 'false');
+    if (alreadyVoted) button.disabled = true;
+
+    var status = document.createElement('p');
+    status.className = 'article-feedback-status';
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-live', 'polite');
+    status.textContent = alreadyVoted ? '評価ありがとうございます。' : '';
+
+    button.addEventListener('click', function () {
+      if (button.disabled) return;
+
+      safeStorageSet(storageKey, '1');
+      button.textContent = '送信済み';
+      button.setAttribute('aria-pressed', 'true');
+      button.disabled = true;
+      status.textContent = '評価ありがとうございます。';
+
+      sendArticleEvent('article_helpful_click', {
+        event_category: 'article_feedback',
+        event_label: meta.path,
+        article_title: meta.title,
+        article_path: meta.path,
+        article_section: meta.section
+      });
+    });
+
+    actionWrap.appendChild(button);
+    actionWrap.appendChild(status);
+    feedback.appendChild(textWrap);
+    feedback.appendChild(actionWrap);
+
+    var nav = meta.body.querySelector('.stage-nav');
+    if (nav && nav.parentNode === meta.body) {
+      meta.body.insertBefore(feedback, nav);
+    } else {
+      meta.body.appendChild(feedback);
+    }
+  }
+
+  function initArticleReadDepth() {
+    var meta = getArticleMeta();
+    if (!meta) return;
+
+    var sent = false;
+    var threshold = 0.75;
+
+    function checkDepth() {
+      if (sent) return;
+
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+      var articleTop = meta.body.getBoundingClientRect().top + scrollTop;
+      var articleHeight = meta.body.scrollHeight;
+      var viewport = window.innerHeight || document.documentElement.clientHeight || 1;
+      var effectiveHeight = Math.max(articleHeight - viewport * 0.65, 1);
+      var ratio = (scrollTop - articleTop) / effectiveHeight;
+
+      if (ratio >= threshold) {
+        sent = true;
+        window.removeEventListener('scroll', checkDepth);
+        sendArticleEvent('article_read_75', {
+          event_category: 'article_engagement',
+          event_label: meta.path,
+          article_title: meta.title,
+          article_path: meta.path,
+          article_section: meta.section,
+          read_depth: 75
+        });
+      }
+    }
+
+    checkDepth();
+    window.addEventListener('scroll', checkDepth, { passive: true });
+    window.addEventListener('resize', checkDepth);
+    window.addEventListener('orientationchange', checkDepth);
+  }
+
   if ('scrollRestoration' in history) {
     history.scrollRestoration = 'auto';
   }
@@ -466,5 +617,7 @@
     updateRarityBadges();
     initCopyButtons();
     initReadingProgress();
+    initArticleFeedback();
+    initArticleReadDepth();
   });
 })();

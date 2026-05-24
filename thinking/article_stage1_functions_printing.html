@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>段階1：VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="入社1年から3年程度でVLOOKUP、IFERROR、MID、INDEX+MATCH、印刷設定、差し込み印刷などを覚え、Excelが単なる入力表から業務改善の道具に見え始める段階を整理します。" name="description">
+<meta content="Excel 成長段階, VLOOKUP, INDEX MATCH, IFERROR, MID関数, 差し込み印刷, データ整形" name="keywords">
+<meta content="段階1：VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Excelが単なる入力表から、検索・整形・印刷を効率化する道具に変わる最初の段階を整理します。" property="og:description">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage1_functions_printing.html" property="og:url">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage1_functions_printing.html" rel="canonical">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "段階1：VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期",
+  "description": "入社1年から3年程度でVLOOKUP、IFERROR、MID、INDEX+MATCH、印刷設定、差し込み印刷などを覚え、Excelが単なる入力表から業務改善の道具に見え始める段階を整理します。",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage1_functions_printing.html"
+  },
+  "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "publisher": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab",
+    "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}
+  },
+  "datePublished": "2026-05-23",
+  "dateModified": "2026-05-23"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type": "ListItem", "position": 2, "name": "技術の流れ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/"},
+    {"@type": "ListItem", "position": 3, "name": "段階1：VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期"}
+  ]
+}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">技術の流れ</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../index.html">ホーム</a><span>&gt;</span><a href="index.html">技術の流れ</a><span>&gt;</span><strong>段階1</strong></div>
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta"><span class="badge badge-all">基礎</span><span class="article-date">公開日: 2026-05-23</span><span class="article-reading-time">📖 約6分</span></div>
+  <h1 class="article-title">段階1：VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期</h1>
+</div>
+
+<p class="article-lead">Excelの成長は、最初からVBAやPower Queryに行くわけではありません。多くの場合、最初の転機はVLOOKUP、IFERROR、MID、印刷設定、差し込み印刷あたりです。</p>
+<p>入社して1年から3年くらい経つと、日々の入力作業だけでなく、既存の表を少し楽に扱う方法に気づき始めます。ここでExcelは、単なる「入力する表」から「仕事を少し動かせる道具」に変わります。</p>
+<p>この段階は地味です。まだ自動化という言葉は出てきません。けれど、実務ではかなり大きい。なぜなら、ここで初めて「人が探す」「人が直す」「人が整える」という作業を、関数や印刷設定に少しずつ任せられるようになるからです。</p>
+
+<div class="toc-box">
+  <h3>この記事で扱う流れ</h3>
+  <ol>
+    <li><a href="#shift">入力する人から、整える人へ変わる</a></li>
+    <li><a href="#lookup">VLOOKUPで表同士がつながる</a></li>
+    <li><a href="#print">印刷と差し込み印刷で実務の形になる</a></li>
+    <li><a href="#text">MIDやIFERRORでデータの汚れに気づく</a></li>
+    <li><a href="#index-match">INDEX + MATCHで一段上に行く</a></li>
+    <li><a href="#what-can-do">この段階でできるようになること</a></li>
+    <li><a href="#rarity">どれぐらいの人ができるか</a></li>
+    <li><a href="#limit">この段階の限界</a></li>
+  </ol>
+</div>
+
+<section class="goal-section" id="shift">
+  <h2>この段階で起きる変化</h2>
+  <p>最初はセルに文字や数字を入れるだけだったExcelが、検索、置換、整形、印刷、集計を助ける道具に見え始めます。ここで一度、仕事の見え方が変わります。</p>
+  <p>たとえば、今まではマスタ表を開いて、目で商品名を探して、別の表に転記していた。担当者名も部署名も、都度コピーしていた。印刷も、毎回改ページを直していた。こういう作業が、関数や設定で少しずつ消えます。</p>
+  <p>この変化は小さく見えますが、本人の中ではかなり大きいです。「Excelは入力されたものを保存する場所」ではなく、「入力されたものから結果を作る場所」だと分かり始めるからです。</p>
+  <div class="xdemo-note-info">
+    <strong>段階1の本質</strong>
+    <p>作業を完全に自動化する段階ではありません。手作業の中にある検索、確認、転記、整形、印刷調整を、少しずつExcelへ渡していく段階です。</p>
+  </div>
+</section>
+
+<section class="method-section" id="lookup">
+  <h3>最初に効くのはVLOOKUP</h3>
+  <p>多くの人にとって、最初の衝撃はVLOOKUPです。コードを入力すると商品名が返る。社員番号を入力すると氏名や部署が返る。手で探していたものが、自動で引けるようになる。</p>
+  <p>この段階で、Excelが「表を作る道具」ではなく「表同士をつなぐ道具」だと分かります。これはかなり大きい発見です。入力表、商品マスタ、社員マスタ、単価表、部署一覧。それぞれ別々だった表が、キーを通してつながります。</p>
+  <p>最初は、VLOOKUPの列番号を数えるだけでも大変です。検索値が左端にないと動かない、完全一致にしないと危ない、列を挿入すると結果がズレる。こういうつまずきも含めて、表の構造を意識し始めます。</p>
+  <div class="code-block" data-lang="excel">
+<span class="code-line">=VLOOKUP(A2, 商品マスタ!A:D, 3, FALSE)</span>
+  </div>
+  <p>この1本の式で、手で探していた情報が返る。初めて見ると、本当に少し世界が変わります。</p>
+  <div class="xdemo-note-info">
+    <strong>この時期の代表スキル</strong>
+    <p>VLOOKUP、IF、COUNTIF、SUMIF、IFERROR、LEFT / MID / RIGHT、TEXT、表示形式、フィルター、並べ替え、ピボットテーブルの入口。</p>
+  </div>
+</section>
+
+<section class="method-section" id="print">
+  <h3>印刷と差し込み印刷で、実務感が一気に出る</h3>
+  <p>関数と同じくらい大きいのが、印刷設定です。印刷範囲、改ページ、ヘッダー、余白、拡大縮小。これを理解すると、Excelは画面上の表ではなく、帳票や配布物を作る道具になります。</p>
+  <p>現場では「画面上で正しい」だけでは足りません。きれいに1ページに収まる。部署ごとにページが分かれる。提出先が見やすい。印刷したときに罫線や見出しが崩れない。ここまでできて、初めて実務で使えるExcelになります。</p>
+  <p>さらにWordの差し込み印刷まで使えるようになると、宛名ラベル、案内文、封筒、一覧表の作成が一気に楽になります。Excelをデータベースとして使い、Wordを出力先として使う。ここで、Excelが他のOfficeアプリとつながる感覚も少し出てきます。</p>
+  <p>この時点で、単なる入力担当から「この人に頼むと配布物や帳票が早い」という立ち位置に変わります。一般事務の現場では、このあたりまで安定して使えるだけでもかなり頼られる側になります。</p>
+</section>
+
+<section class="method-section" id="text">
+  <h3>MIDやIFERRORに触れると、データの汚れが見えてくる</h3>
+  <p>次に出てくるのが、文字列の整形です。商品コードの先頭だけ取りたい。固定長の文字列から日付だけ抜きたい。住所から都道府県だけ分けたい。CSVから取り込んだ値の前後に空白が混じっている。</p>
+  <p>ここでLEFT、MID、RIGHT、FIND、SUBSTITUTE、TRIMなどに触れます。最初は「文字を切り出す関数」として覚えますが、実務で使っているうちに、データは最初からきれいではないと気づきます。</p>
+  <p>IFERRORもこの時期に効きます。VLOOKUPで見つからないとエラーになる。文字列の位置が見つからないとエラーになる。割り算で0除算になる。こうしたエラーをどう見せるか、どう止めるかを考え始めると、Excelは少しだけ設計に近づきます。</p>
+  <div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(VLOOKUP(A2, 商品マスタ!A:D, 3, FALSE), &quot;未登録&quot;)</span>
+  </div>
+  <p>エラーを消すこと自体が目的ではありません。未登録なのか、入力ミスなのか、マスタ不足なのか。原因が分かる形で見せることが大事になります。このあたりから、関数は単なる便利技ではなく、運用を支える部品になっていきます。</p>
+</section>
+
+<section class="method-section" id="index-match">
+  <h3>INDEX + MATCHに触れると、少し上の世界が見える</h3>
+  <p>VLOOKUPの「左側を検索できない」「列番号がズレると壊れる」という弱点に気づくと、INDEX + MATCHに進みます。ここに来ると、かなりExcelができる人の雰囲気が出てきます。</p>
+  <p>INDEXは範囲の中から指定位置の値を返す。MATCHは値が何番目にあるかを返す。2つを組み合わせると、列番号を固定で数えなくても、検索結果を取り出せます。</p>
+  <div class="code-block" data-lang="excel">
+<span class="code-line">=INDEX(商品マスタ!C:C, MATCH(A2, 商品マスタ!A:A, 0))</span>
+  </div>
+  <p>この式を理解すると、Excelの見え方が変わります。VLOOKUPのように1つの関数を覚える段階から、「部品を組み合わせて目的の結果を作る」段階に入るからです。</p>
+  <p>ここでさらに、MATCHで行番号を取り、別のMATCHで列番号を取り、INDEXで交差点を返すような考え方に進む人もいます。ここまで来ると、もう単なる表作成ではなく、小さな検索システムを作っている感覚に近くなります。</p>
+</section>
+
+<section class="method-section" id="what-can-do">
+  <h3>この段階でできるようになること</h3>
+  <p>段階1は、まだ自動化の段階ではありません。それでも、実務でははっきり景色が変わります。入力された値をそのまま並べる人から、データを探し、整え、帳票として出せる人へ変わるからです。</p>
+  <p>この時期にできるようになることは、次の段階の土台になります。VBAに進む人も、Power Queryに進む人も、まずここで「表は構造を持っている」「キーがあれば表はつながる」「データは汚れている」「画面で正しいだけでは実務にならない」という感覚を身につけます。</p>
+  <p>ただし、ここに到達しても、最初から関数を組み合わせて最適化できるわけではありません。VLOOKUPやINDEX + MATCHの研修を受けても、自力で実務の式を完成できないことは普通にあります。それでも無駄ではありません。大きいのは、「これは検索関数で対処できそうだ」「マスタやキーを見れば何か分かりそうだ」と気づけることです。</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">できるようになること</th>
+          <th scope="col">最初に起きる変化</th>
+          <th scope="col">取れる対応</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>VLOOKUPやINDEX + MATCHで検索する</td>
+          <td>目視転記を減らす以前に、表はキーでつなげられると気づく</td>
+          <td>詳しい人に「このキーでマスタ参照できますか」と聞ける。検索語も具体化できる</td>
+        </tr>
+        <tr>
+          <td>IFERRORで例外を扱う</td>
+          <td>エラーを単なる失敗ではなく、未登録や入力ミスのサインとして見られる</td>
+          <td>原因を切り分け、マスタ不足なのか入力ミスなのかを相談できる</td>
+        </tr>
+        <tr>
+          <td>LEFT / MID / RIGHTで文字列を整える</td>
+          <td>データはそのまま使えないことがあると分かる</td>
+          <td>桁数、区切り、空白、コード体系という観点で調べられる</td>
+        </tr>
+        <tr>
+          <td>印刷範囲や差し込み印刷を整える</td>
+          <td>画面上の表と、提出・配布する帳票は別物だと分かる</td>
+          <td>入力データと出力レイアウトを分けて相談できる</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>ここで画期的なのは、Excelが「入力したものを保存する場所」から、「入力されたものを別の形に変換する場所」へ変わることです。この感覚がないままVBAへ進むと、操作だけを記録してしまい、表の構造を見落としやすくなります。</p>
+  <div class="xdemo-note-info">
+    <strong>できなくても、相談の精度が上がる</strong>
+    <p>関数を完璧に書けなくても、「何を聞けばよいか」が分かるだけで仕事は変わります。組織全体でも、周囲がこの言葉を持っていると、少数のハイスキルな人へ依頼をつなぎやすくなり、評価や改善の精度も上がります。</p>
+  </div>
+</section>
+
+<section class="method-section" id="rarity">
+  <h3>どれぐらいの人ができるか</h3>
+  <p>この段階の難しさは、資格や肩書きでは測りにくいです。VLOOKUPを知っている人はいても、業務に合わせて安全に組める人は一気に減ります。INDEX + MATCH、MID、IFERROR、印刷設定、差し込み印刷まで一通り使える人となると、一般事務の中ではかなり少数派です。</p>
+  <p>もちろん職場によって差はあります。Excelが強い部署なら珍しくないかもしれません。一方で、紙中心、基幹システム中心、入力作業中心の部署では、部署内に1人いるだけでかなり頼られることもあります。</p>
+  <p>体感としては、SUMや罫線までなら多くの人ができます。VLOOKUPを実務で安定して使える人になると一段減り、INDEX + MATCH、文字列整形、差し込み印刷まで自然に組み合わせられる人はさらに少なくなります。</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">状態</th>
+          <th scope="col">できること</th>
+          <th scope="col">現場での見え方</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>基本操作中心</td>
+          <td>入力、罫線、簡単な合計、並べ替え</td>
+          <td>普通にExcelを使える人</td>
+        </tr>
+        <tr>
+          <td>VLOOKUPまで使える</td>
+          <td>マスタ参照、転記削減、確認作業の短縮</td>
+          <td>Excelが得意な人</td>
+        </tr>
+        <tr>
+          <td>INDEX + MATCHや文字列整形まで使える</td>
+          <td>表構造に合わせた検索、データ整形、エラー制御</td>
+          <td>困ったときに呼ばれる人</td>
+        </tr>
+        <tr>
+          <td>印刷・差し込みまで安定</td>
+          <td>帳票、ラベル、案内文、配布物の効率化</td>
+          <td>実務を任せられる人</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>ここで大事なのは、珍しさそのものではありません。この段階まで来ると、Excelを「自分の作業を早くする道具」としてではなく、「部署の作業を少し楽にする道具」として使い始めることです。</p>
+</section>
+
+<section class="goal-section" id="limit">
+  <h2>手作業の限界と「人が表を管理する」ことの絶望</h2>
+  <p>VLOOKUPや印刷設定を覚えたことで、作業は劇的に早くなりました。しかし、次第に「自分の手足がExcelの計算の奴隷になっている」という感覚に陥ります。</p>
+  <p>数式を下までコピーする。データが増えるたびに範囲を広げる。誰かが行を挿入して参照がズレたら直す。作業列が増えすぎて、どの列が何をしているのか分からなくなる。十分便利になったはずなのに、<strong>「人が表の機嫌を取りながら管理している」</strong>状態からは抜け出せていないのです。</p>
+  <p>処理そのものを自動で流す、ボタン1つで毎月の面倒な作業を終わらせる、という発想にはまだ届きません。この段階のExcelは「作った本人の属人的な頑張り」に依存しやすく、便利になればなるほど、保守する本人の負担が増大していくという矛盾を抱えます。</p>
+  <div class="xdemo-note-warn">
+    <strong>段階1の限界：セル単位の思考</strong>
+    <p>数式をセルに敷き詰め、人が範囲を管理する限り、「毎月同じ手順を繰り返す作業」を丸ごと消し去ることはできません。この見えない限界が立ちはだかります。</p>
+  </div>
+  <p>この「自分が手を動かさないとExcelが動かない」という壁にぶつかったとき、次の段階であるVBA（マクロ）の強烈な魅力に引き込まれます。関数で結果を出すだけの世界から、「処理を自律的に動かす世界」への扉が開くのです。</p>
+</section>
+
+<div class="stage-checklist">
+  <h3>段階1の壁とブレイクスルー チェックリスト</h3>
+  <p>以下の状態に到達していれば、この段階を卒業し、次のステップ（マクロ・VBA）へ進む準備ができています。</p>
+  <ul>
+    <li><label><input type="checkbox" disabled checked> VLOOKUP等で、点在する表同士をキーで繋ぎ合わせることができる。</label></li>
+    <li><label><input type="checkbox" disabled checked> IFERROR等でエラーを隠すだけでなく、運用の「想定外」をコントロールしている。</label></li>
+    <li><label><input type="checkbox" disabled checked> 文字列整形（MID, LEFT, SUBSTITUTE等）で、汚いデータを関数で洗い落とせる。</label></li>
+    <li><label><input type="checkbox" disabled checked> 印刷範囲、改ページ設定、差し込み印刷で、「画面のデータ」を「実務の帳票」に変換できる。</label></li>
+    <li><label><input type="checkbox" disabled checked> <strong>【限界への気づき】</strong> 数式のコピーや手作業の修正に追われ、「これを全自動でやってくれる魔法はないのか？」と強く渇望している。</label></li>
+  </ul>
+</div>
+
+<nav class="stage-nav" aria-label="段階ナビゲーション">
+  <a class="stage-nav-next" href="article_stage2_vba_macro_recording.html">
+    <span class="stage-nav-label">次の段階 →</span>
+    <span class="stage-nav-title">段階2：マクロの記録とVBA初級で、作業が消える時期</span>
+  </a>
+</nav>
+
+<section class="method-section">
+  <h2>シリーズ記事</h2>
+  <ul class="article-list">
+    <li class="article-item"><p class="article-link">段階1：VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期（この記事）</p></li>
+    <li class="article-item"><a class="article-link" href="article_function_depth_before_vba.html">関数を深めてからVBAを使うと、判断力が一段上がる</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage2_vba_macro_recording.html">段階2：マクロの記録とVBA初級で、作業が消える時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage3_vba_internal_design.html">段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage3_vba_web_automation.html">段階4：VBA応用で、Web操作や外部アプリまで広がる時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage4_no_macro_powerquery.html">段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage5_qr_input_design_shift.html">段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_spill_design_shift.html">段階7：スピル関数で、Excelの設計思想が変わる時期</a></li>
+  </ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式・参考:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/let-function-34842dd8-b92b-4d3f-b325-b8b8f9908999" rel="noopener" target="_blank">LET公式説明</a><a href="https://support.microsoft.com/en-us/office/filter-function-f4f7cb66-82eb-4767-8f7c-4877ad80c759" rel="noopener" target="_blank">FILTER公式説明</a><a href="https://support.microsoft.com/en-us/office/dynamic-array-formulas-and-spilled-array-behavior-205c6b06-03ba-4151-89a1-87a7eb36e531" rel="noopener" target="_blank">動的配列とスピル動作</a><a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/excel-performance/excel-tips-for-optimizing-performance-obstructions" rel="noopener" target="_blank">Excelパフォーマンス最適化</a><a href="https://www.excelcampus.com/functions/whole-column-references/" rel="noopener" target="_blank">Excel Campus全列参照実験</a><a href="https://fastexcel.wordpress.com/2015/12/12/excel-full-column-references-and-used-range-good-idea-or-bad-idea/" rel="noopener" target="_blank">FastExcel全列参照実験</a><a href="../samples/index.html">サンプルデータ</a></p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">お問い合わせ (Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab &horbar; コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>

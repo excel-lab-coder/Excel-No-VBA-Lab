@@ -27,16 +27,97 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
 <style>
-.xlookup-basic-demo .xd-formula {
-  min-width: 170px;
-  font-size: 0.84rem;
-  line-height: 1.45;
-  word-break: keep-all;
-  overflow-wrap: normal;
+.xlookup-basic-demo .xdemo-wrap {
+  overflow: hidden;
 }
 
+.xlookup-basic-demo .xdemo-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1.08fr) 28px minmax(0, 1fr);
+  gap: 10px;
+  align-items: stretch;
+}
+
+.xlookup-basic-demo .xdemo-block {
+  min-width: 0;
+  padding: 14px;
+  overflow: hidden;
+}
+
+.xlookup-basic-demo .xdemo-block-title {
+  font-size: 0.9rem;
+}
+
+.xlookup-basic-demo .xdemo-arrow {
+  min-width: 0;
+  width: 28px;
+  font-size: 1.25rem;
+}
+
+.xlookup-basic-demo .table-wrapper {
+  overflow-x: visible;
+  margin: 10px 0 0;
+}
+
+.xlookup-basic-demo .xdemo-table {
+  width: 100%;
+  min-width: 0 !important;
+  table-layout: fixed;
+  margin: 0;
+  font-size: 0.84rem;
+}
+
+.xlookup-basic-demo .xdemo-table caption {
+  font-size: 0.86rem;
+  line-height: 1.4;
+  margin-bottom: 7px;
+}
+
+.xlookup-basic-demo .xdemo-table th,
 .xlookup-basic-demo .xdemo-table td {
+  min-width: 0 !important;
+  max-width: none !important;
+  padding: 7px 5px;
+  line-height: 1.45;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.xlookup-basic-demo .xdemo-table .xd-row,
+.xlookup-basic-demo .xdemo-table .xd-col {
+  width: 2rem !important;
+  min-width: 2rem !important;
+  max-width: 2rem !important;
+}
+
+.xlookup-basic-demo .xd-formula {
+  min-width: 0 !important;
+  font-size: 0.72rem;
   line-height: 1.5;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+.xlookup-basic-demo .xd-head,
+.xlookup-basic-demo .xd-key,
+.xlookup-basic-demo .xd-master,
+.xlookup-basic-demo .xd-hit,
+.xlookup-basic-demo .xd-result {
+  font-size: 0.86rem;
+}
+
+@media (max-width: 1050px) {
+  .xlookup-basic-demo .xdemo-layout {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .xlookup-basic-demo .xdemo-arrow {
+    width: 100%;
+    min-height: 18px;
+    transform: rotate(90deg);
+  }
 }
 
 @media (max-width: 900px) {
@@ -382,7 +463,7 @@
     <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
-    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/">サンプルデータ</a></p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
   </div>
 <div class="footer-contact-wrap">
 <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>

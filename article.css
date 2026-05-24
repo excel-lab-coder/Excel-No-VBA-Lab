@@ -3766,3 +3766,298 @@ video::cue {
     line-break: auto !important;
   }
 }
+
+/* ===================================================
+   段階ナビゲーション（前/次の段階）
+   =================================================== */
+.stage-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 40px 0 8px;
+  padding-top: 28px;
+  border-top: 2px solid #e3ecf5;
+}
+.stage-nav a {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, #f8faff 0%, #eef3fb 100%);
+  border: 1px solid #d0ddef;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.stage-nav a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(26, 61, 92, 0.12);
+  border-color: #90caf9;
+  text-decoration: none;
+}
+.stage-nav-prev { text-align: left; }
+.stage-nav-next { text-align: right; }
+.stage-nav-label {
+  font-size: 0.8em;
+  font-weight: 700;
+  color: #1976d2;
+  letter-spacing: 0.03em;
+}
+.stage-nav-title {
+  font-size: 0.92em;
+  font-weight: 700;
+  color: var(--color-primary, #1a3d5c);
+  line-height: 1.5;
+}
+@media (max-width: 600px) {
+  .stage-nav {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .stage-nav-next { text-align: left; }
+}
+
+/* ===================================================
+   振り返りチェックリスト
+   =================================================== */
+.stage-checklist {
+  background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%);
+  border: 1px solid #c5e1a5;
+  border-left: 6px solid #43a047;
+  border-radius: 0 10px 10px 0;
+  padding: 22px 26px;
+  margin: 28px 0;
+}
+.stage-checklist h3 {
+  margin: 0 0 14px;
+  padding: 0;
+  border: none;
+  color: #2e7d32;
+  font-size: 1.08em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.stage-checklist h3::before { content: "✅"; }
+.stage-checklist ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.stage-checklist li {
+  position: relative;
+  padding: 6px 0 6px 30px;
+  font-size: 0.93em;
+  line-height: 1.7;
+  color: #33691e;
+  border-bottom: 1px solid rgba(76, 175, 80, 0.15);
+}
+.stage-checklist li:last-child { border-bottom: none; }
+.stage-checklist li::before {
+  content: "☐";
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  font-size: 1.1em;
+  color: #66bb6a;
+}
+
+/* ===================================================
+   技術の流れトップ：成長曲線テーブル
+   =================================================== */
+.growth-curve-section .growth-curve-note {
+  margin-bottom: 24px;
+}
+
+.growth-curve-wrap {
+  margin: 22px 0 24px;
+  overflow-x: auto;
+  border: 1px solid #d7e5f1;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 12px 26px rgba(26, 61, 92, 0.08);
+}
+
+.growth-curve-table {
+  width: 100%;
+  min-width: 920px;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  font-size: 0.94rem;
+}
+
+.growth-curve-table th,
+.growth-curve-table td {
+  padding: 15px 17px;
+  border-right: 1px solid #e4edf5;
+  border-bottom: 1px solid #e4edf5;
+  line-height: 1.75;
+  text-align: left;
+  vertical-align: top;
+  color: #263b4f;
+  overflow-wrap: anywhere;
+}
+
+.growth-curve-table th:last-child,
+.growth-curve-table td:last-child {
+  border-right: 0;
+}
+
+.growth-curve-table tbody tr:last-child th,
+.growth-curve-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.growth-curve-table thead th {
+  background: linear-gradient(180deg, #eaf4fc 0%, #dcecf8 100%);
+  color: #173d5f;
+  font-weight: 800;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.growth-curve-table th[scope="row"] {
+  width: 16%;
+  background: #f7fbff;
+  color: #174c78;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.growth-curve-table tbody tr:nth-child(even) td,
+.growth-curve-table tbody tr:nth-child(even) th[scope="row"] {
+  background-color: #fbfdff;
+}
+
+.growth-curve-table tbody tr:hover td,
+.growth-curve-table tbody tr:hover th[scope="row"] {
+  background-color: #eef7ff;
+}
+
+.growth-curve-insight {
+  margin: 18px 0 0;
+  padding: 20px 22px;
+  border: 1px solid #cfe1ef;
+  border-left: 6px solid #2f80c9;
+  border-radius: 0 8px 8px 0;
+  background: #f6fbff;
+}
+
+.growth-curve-insight h3 {
+  margin: 0 0 10px;
+  padding: 0;
+  border: 0;
+  color: #174c78;
+  font-size: 1.05rem;
+}
+
+.growth-curve-insight p {
+  margin: 0 0 10px;
+  line-height: 1.85;
+}
+
+.growth-curve-insight p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 760px) {
+  .growth-curve-wrap {
+    border-radius: 8px;
+  }
+
+  .growth-curve-table {
+    min-width: 760px;
+    font-size: 0.9rem;
+  }
+
+  .growth-curve-table th,
+  .growth-curve-table td {
+    padding: 12px 13px;
+  }
+
+  .growth-curve-insight {
+    padding: 17px 18px;
+  }
+}
+
+/* ===================================================
+   読了時間バッジ
+   =================================================== */
+.article-reading-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.82em;
+  color: #607d8b;
+  background: #eceff1;
+  padding: 2px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+/* ===================================================
+   コードブロック言語ラベル（data-lang）
+   =================================================== */
+.code-block[data-lang]::before {
+  content: attr(data-lang);
+  display: block;
+  background: #37474f;
+  color: #90a4ae;
+  padding: 3px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  width: fit-content;
+  font-family: var(--font-main, sans-serif);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* badge-classic（VBA記事用） */
+.badge-classic { background: #4a148c; color: #fff; }
+
+/* ===================================================
+   記事内タイムライン強化
+   =================================================== */
+.timeline {
+  position: relative;
+  padding-left: 28px;
+  margin: 20px 0 28px;
+}
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #1976d2 0%, #64b5f6 50%, #e3f2fd 100%);
+  border-radius: 2px;
+}
+.tl-item {
+  position: relative;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  background: #fff;
+  border: 1px solid #e3ecf5;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+.tl-item::before {
+  content: "";
+  position: absolute;
+  left: -23px;
+  top: 22px;
+  width: 12px;
+  height: 12px;
+  background: #1976d2;
+  border: 3px solid #e3f2fd;
+  border-radius: 50%;
+}
+.tl-item h4 {
+  margin: 0 0 8px;
+  color: #1565c0;
+  font-size: 1em;
+}

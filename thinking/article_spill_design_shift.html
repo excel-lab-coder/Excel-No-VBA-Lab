@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>段階7：スピル関数で、Excelの設計思想が変わる時期｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="Excel技術の成長段階の第7段階として、スピル関数を単なる便利機能ではなく、最終行・実データ範囲・1セル出力でExcelの設計思想を変える技術として捉え直します。" name="description">
+<meta content="Excel スピル関数, 動的配列, VBA禁止, FILTER関数, Excel設計, Power Query, 最終行, 関数設計" name="keywords">
+<meta content="段階7：スピル関数で、Excelの設計思想が変わる時期｜Excel &times; No VBA Lab" property="og:title">
+<meta content="スピル関数は便利な新関数ではなく、Excelの作り方そのものを変える技術だった。Excel技術の成長段階の第7段階として整理します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_spill_design_shift.html" property="og:url">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_spill_design_shift.html" rel="canonical">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "段階7：スピル関数で、Excelの設計思想が変わる時期",
+  "description": "Excel技術の成長段階の第7段階として、スピル関数を単なる便利機能ではなく、最終行・実データ範囲・1セル出力でExcelの設計思想を変える技術として捉え直します。",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_spill_design_shift.html"
+  },
+  "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "publisher": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab",
+    "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}
+  },
+  "datePublished": "2026-05-23",
+  "dateModified": "2026-05-23"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type": "ListItem", "position": 2, "name": "技術の流れ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/"},
+    {"@type": "ListItem", "position": 3, "name": "段階7：スピル関数で、Excelの設計思想が変わる時期"}
+  ]
+}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">Excel &times; No VBA Lab</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+  <a href="../index.html">ホーム</a><span>&gt;</span><a href="index.html">技術の流れ</a><span>&gt;</span><strong>段階7：スピル関数で、Excelの設計思想が変わる時期</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta">
+    <span class="badge badge-2021">2021～</span>
+    <span class="badge badge-365">365</span>
+    <span class="badge badge-all">段階7</span>
+    <span class="article-date">公開日: 2026-05-23</span>
+    <span class="article-reading-time">📖 約9分</span>
+  </div>
+  <h1 class="article-title">段階7：スピル関数で、Excelの設計思想が変わる時期</h1>
+</div>
+
+<p class="article-lead">段階7は、関数を1つずつ覚える時期ではありません。スピル関数、LET、実データ範囲の考え方を組み合わせて、Excelシート全体を可変構造として設計し始める時期です。</p>
+<p>Excelのスピル関数、つまり動的配列を最初に見たとき、正直そこまで感動はありませんでした。FILTER関数を見ても、最初の感想は「便利そうだけど、これ前もできたよね？」というものだったからです。</p>
+<p>実際、私の場合はVBA禁止になったあと、旧世代の関数をかなりやり切った後でした。FILTER相当の処理はINDEX + SMALLで組んでいたし、UNIQUE相当の重複除去もCOUNTIFで作っていた。SORTやSORTBYに近いことも、作業列を使えばなんとかできていました。</p>
+<p>だから最初は、スピル関数を見ても「やりやすくなった」とは思っても、「革命だ」とは思えなかったのです。</p>
+<p>ただ、後から考えが大きく変わります。今振り返ると、スピル関数は便利な新機能ではなく、<strong>Excelの設計そのものを変える技術</strong>でした。</p>
+
+<div class="xdemo-note-info">
+  <strong>段階7で変わること</strong>
+  <p>下まで数式をコピーしておく発想から、最終行を決め、実データ範囲だけを配列化し、1セルの数式から必要な結果をスピルさせる発想へ変わります。ここでExcelは、セル単位の作業表から、変化に追従する設計物に近づきます。</p>
+</div>
+
+<div class="toc-box">
+  <h3>この記事で扱う流れ</h3>
+  <ol>
+    <li><a href="#era">Excelの世界が変わった3つの時代</a></li>
+    <li><a href="#mental">VBA禁止で削られたもの</a></li>
+    <li><a href="#thinking">VBA思考から関数思考へ</a></li>
+    <li><a href="#legacy">旧世代関数を極めた時代</a></li>
+    <li><a href="#spill">スピル関数が本当に変えたもの</a></li>
+    <li><a href="#practical-design">実務での設計形：最終行を決めてからスピルさせる</a></li>
+    <li><a href="#rarity">どれぐらいの人ができるか</a></li>
+    <li><a href="#future">制限環境で鍛えられた先にあるもの</a></li>
+  </ol>
+</div>
+
+<section class="goal-section">
+  <h2>この記事の位置づけ</h2>
+  <p>この記事は、FILTER関数やUNIQUE関数の構文を解説する記事ではありません。テーマは、Excelの技術がどのような流れで進化してきたのか、そしてスピル関数をどの視点で捉えると実務設計が変わるのかです。</p>
+  <p>テクニックとしての「使い方」よりも、技術の流れとしての「意味」を整理します。</p>
+</section>
+
+<section class="method-section" id="era">
+  <h3>振り返ると、自分のExcelは何回か世界が変わっている</h3>
+  <p>自分のExcelスキルを振り返ると、考え方が根本から変わったタイミングが何度かありました。</p>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <h4>1. 関数時代：セルごとに数式を書く世界</h4>
+      <p>最初は普通のExcelでした。IF、VLOOKUP、COUNTIF、SUMIF。いわゆる「Excelそこそこできます」レベルです。この頃はまだ、セルごとに数式を書く世界で、Excelの可能性も「表計算ソフト」以上には見えていませんでした。</p>
+    </div>
+    <div class="tl-item">
+      <h4>2. VBA時代：作業が設計に変わった世界</h4>
+      <p>次に来たのがVBAです。これはかなり衝撃でした。ボタン1つで処理が完了する。最終行を自動で取得して、必要な分だけ処理する。大量ファイルを一括で処理する。Web操作、データ加工、一括印刷までできる。</p>
+      <p>特に大きかったのは、<strong>人がやっていた作業が消える</strong>という感覚です。VBAを覚えると、仕事の見え方が変わります。作業が設計になる感覚と言ってもいいと思います。</p>
+    </div>
+    <div class="tl-item">
+      <h4>3. VBA禁止時代：使えたものが突然使えなくなる世界</h4>
+      <p>しかし、ある日環境が変わります。VBA禁止。セキュリティポリシーの変更、外部監査、ガバナンス強化。理由はいろいろありますが、結果は同じです。マクロが使えない。</p>
+      <p>これは正直、かなり苦しかったです。周りも「VBAが使えないなら無理」という状態でした。実際、VBAを使っていた人ほど手も足も出ないケースが多かったと思います。</p>
+    </div>
+  </div>
+</section>
+
+<section class="method-section" id="mental">
+  <h3>VBA禁止は、できる人ほどメンタルが折れる</h3>
+  <p>VBA禁止になって一番きつかったのは、スキルの問題ではありませんでした。メンタルです。</p>
+  <p>目の前の仕事を見たときに、「これ、VBAなら3分で終わるのに」「ループを回せば一瞬なのに」「最終行を取得して処理するだけなのに」という考えが、毎日、何度も頭をよぎります。</p>
+  <p>これが本当に消耗します。手は動かしているのに、頭の中ではずっと「本来ならもっと早く終わる仕事」という意識が消えない。つまり、自分の作業を自分でずっと否定し続けている状態になるのです。</p>
+
+  <div class="xdemo-note-warn">
+    <strong>できる人ほどストレスが大きい理由</strong>
+    <p>VBAなら一瞬で終わる処理の姿を知っているからです。理想の処理速度を知ってしまっている人ほど、現実の手作業や旧式関数とのギャップが大きくなります。</p>
+  </div>
+
+  <h4>集中力が落ちるという、地味だけど深刻な問題</h4>
+  <p>メンタルが削られると、当然集中力も落ちます。関数を組んでいる途中で集中が切れる。「VBAなら」と考えて思考が止まる。作業時間が延びる。そして、また「VBAなら早いのに」と思う。</p>
+  <p>この悪循環に入ります。集中力が落ちているから、本来できるはずの関数すら組むのに時間がかかる。そして時間がかかるたびに、またVBAと比較してしまう。</p>
+  <p>VBA禁止初期、自分も周りも、たぶん本来のパフォーマンスの半分以下しか出ていなかったと思います。スキルの問題ではなく、完全にメンタルの問題でした。</p>
+
+  <h4>むしろ知らない人のほうが集中できている現実</h4>
+  <p>現場で見ていて一番意外だったのが、Excelの効率化手段を知らない人のほうが、集中して仕事ができていることでした。</p>
+  <p>これは「知らない人のほうが優秀」という意味ではありません。そうではなく、VBAも知らない、効率的な関数も知らない、Power Queryも知らない人は、今やっている作業が非効率だという自覚がないのです。</p>
+  <p>自覚がないから、目の前の作業を「これが普通」として淡々とこなせる。もっと早い方法があるのに、という雑念がない。比較する対象がない。だからストレスも少なく、集中力も削られません。</p>
+
+  <div class="comparison-section">
+    <h4>VBA禁止環境で起きた逆転現象</h4>
+    <ul class="philosophy-list">
+      <li>知らない人：比較対象がないため、今の作業に集中できる。</li>
+      <li>知っている人：理想の処理が頭にあるため、集中が削られる。</li>
+      <li>できる人：過去の成功パターンが強いほど、別の技術に切り替えるのが難しい。</li>
+    </ul>
+  </div>
+</section>
+
+<section class="method-section" id="thinking">
+  <h3>VBA使いほど苦戦する、もうひとつの理由</h3>
+  <p>メンタル面に加えて、もうひとつ大きな理由があります。それは、頭が完全にVBA思考になっていることです。</p>
+  <p>VBAでは、変数を置き、ループを回し、配列に格納し、条件分岐し、最終行を取得して処理します。どう処理するかを順番に書く、手続き型の世界です。</p>
+  <p>しかし関数の世界は、まったく別物です。手続き型ではなく宣言型に近く、「どう処理するか」ではなく「どういう結果が欲しいか」を書く世界です。</p>
+
+  <div class="antipattern-vs">
+    <div class="antipattern-box antipattern-bad">
+      <div class="antipattern-title-bad">VBA思考のまま関数を書く</div>
+      <p>ここで変数を置きたい。ここでループを回したい。ここで最終行だけ処理したい。こう考えるほど、関数がVBAの劣化版に見えて苦しくなります。</p>
+    </div>
+    <div class="antipattern-box antipattern-good">
+      <div class="antipattern-title-good">関数を関数として設計する</div>
+      <p>欲しい結果を配列として捉え、抽出、整形、集計、並べ替えを数式の構造として表現する。比較をやめた瞬間、関数は別の技術として見えてきます。</p>
+    </div>
+  </div>
+
+  <p>正直、自分も数年伸び悩みました。理由は単純で、頭がVBAのままだったからです。無理やりVBA思考で関数を書いていた。だから伸びない。</p>
+  <p>ある時から変わったポイントは、<strong>関数はVBAの代替ではない</strong>と理解したことでした。関数は手抜き版のVBAではなく、まったく別の設計思想なのだと気づいた瞬間、世界が変わりました。</p>
+</section>
+
+<section class="method-section" id="legacy">
+  <h3>旧世代関数を極めていく時代</h3>
+  <p>そこから、関数をかなり深くやるようになります。INDEX + SMALL + ROWの配列的な抽出。MIDBによる固定長帳票の解体。可変抽出、親子構造の展開、複数条件の抽出、可変明細、作業列の設計。</p>
+  <p>今のFILTER関数に相当する処理も、普通に組めるようになりました。しかも、実務で壊れず、毎月安定して回るレベルまで作り込む。</p>
+  <p>さらに、ここでPower Queryも併用するようになりました。VBAが使えた頃は、何でもVBAで解決できてしまうので、Power Queryに手を出す動機が弱かったのだと思います。</p>
+  <p>でも逆に、VBA禁止だったからこそ、関数とPower Queryを深く学ばざるを得ませんでした。そして結果的に、これが効きました。</p>
+</section>
+
+<section class="method-section" id="spill">
+  <h3>だからスピル関数の価値が、最初はわからなかった</h3>
+  <p>その状態でスピル関数が登場しました。でも正直、最初はそこまで感動しませんでした。なぜなら、前もできたからです。</p>
+  <p>FILTER関数の処理も、INDEX + SMALLでやっていた。SORTもSORTBYも、作業列で並べ替えていた。UNIQUEもCOUNTIFで重複を除いていた。</p>
+  <p>だから「便利にはなった。でも何がそんなに違うの？」と思っていました。実際、できること自体は大差ないケースも多かったのです。</p>
+
+  <h4>でも後から気づく。「最終行」が消えた</h4>
+  <p>使っていくうちに、決定的な違いに気づきます。本当の価値は「できること」ではありませんでした。</p>
+  <p>昔は、行数が毎月変わるデータに対して、将来増えることを見越して5万行、10万行先まで数式を仕込むのが定番でした。そして、<code>IF(A2=&quot;&quot;,&quot;&quot;,処理)</code>で後続を停止させる。</p>
+  <p>これは旧世代Excelではほぼ常識のテクニックです。ただ、実際にやると問題は山積みでした。数万セルに数式が存在し、作業列が大量に並び、ファイルサイズが肥大化し、再計算は重く、保守は属人化する。</p>
+  <p>「動くけど重い」「動くけど触れない」ファイルが量産される。これが旧世代の構造的な限界でした。</p>
+
+  <div class="xdemo-note-info">
+    <strong>スピル関数の本質</strong>
+    <p>1セルに数式を書く。必要な分だけ展開される。データが増減しても、結果範囲が動的に変わる。つまり、数式を大量に敷き詰める設計から、結果を動的に生ませる設計へ変わったということです。</p>
+  </div>
+
+  <h4>スピルはVBAの最終行思想に近づいた</h4>
+  <p>VBAでは、最終行を取得して、必要な範囲だけを処理するのが基本です。無駄な空白行を10万行分処理し続けるような設計は、普通は避けます。</p>
+  <p>スピル後のExcel関数は、その考え方に近づきました。1セル。必要分だけ。結果は動的に伸びる。</p>
+  <p>正直、一番驚いたのはFILTERが便利という話ではなく、ファイルサイズが劇的に軽くなったことです。今まで20MBあったファイルが、数MBで済む。再計算も速い。シートの見通しもいい。</p>
+  <p>ここで初めて、「Excelの設計そのものが変わっている」と気づきました。スピルは関数の追加ではなく、シート全体の作り方を変える技術だったのです。</p>
+
+  <div class="table-wrapper">
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th scope="col">観点</th>
+          <th scope="col">旧世代関数設計</th>
+          <th scope="col">スピル後の設計</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>数式の置き方</strong></td>
+          <td>将来行数を見越して大量コピー</td>
+          <td>起点セルに1つ置いて動的展開</td>
+        </tr>
+        <tr>
+          <td><strong>行数変化への対応</strong></td>
+          <td>空白判定や余分な式で吸収</td>
+          <td>結果範囲が自動で伸縮</td>
+        </tr>
+        <tr>
+          <td><strong>ファイルサイズ</strong></td>
+          <td>数式セルが増えるほど肥大化</td>
+          <td>必要な式が少なく軽くなりやすい</td>
+        </tr>
+        <tr>
+          <td><strong>保守性</strong></td>
+          <td>作業列と範囲管理が属人化しやすい</td>
+          <td>設計意図が数式の起点に集約される</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="method-section" id="practical-design">
+  <h3>実務での設計形：最終行を決めてからスピルさせる</h3>
+  <p>スピル関数を使うときに一番伝えたいのは、難しい範囲指定ではありません。まず<strong>最終行を1か所で決める</strong>。その最終行を使って、<code>INDEX</code>で必要な範囲だけを作る。それだけです。</p>
+  <p>たとえば、A列に必ず値が入るデータで、1行目が見出し、2行目から明細だとします。この場合は、作業セルで最終行を持たせるとイメージがかなり分かりやすくなります。</p>
+
+  <h4>まずは作業セルで最終行を出す</h4>
+  <p>たとえば <code>H1</code> に、A列の件数を数える式を入れます。A1に見出しがあり、A列に途中空白がない前提なら、これで最終行番号として使えます。</p>
+  <div class="code-block" data-lang="excel">
+<span class="code-line">=COUNTA(A:A)</span>
+  </div>
+  <p>ここで <code>H1</code> が <code>20000</code> なら、データは20,000行目まである、という意味です。あとはこの値を、範囲の終点として使います。</p>
+
+  <h4>INDEXで範囲の終点を作る</h4>
+  <p>通常なら <code>A2:C20000</code> と手で書くところを、<code>INDEX</code>で終点だけ動かします。</p>
+  <div class="code-block" data-lang="excel">
+<span class="code-line">A2:INDEX(C:C,$H$1)</span>
+  </div>
+  <p>これは「A2から、C列のH1行目まで」という意味です。<code>H1</code> が <code>20000</code> なら <code>A2:C20000</code>、<code>H1</code> が <code>35000</code> なら <code>A2:C35000</code> になります。</p>
+
+  <h4>その範囲をFILTERに渡す</h4>
+  <p>条件列も同じ考え方です。B列の2行目から、B列の最終行までを条件範囲にします。</p>
+  <div class="code-block" data-lang="excel">
+<span class="code-line">=FILTER(A2:INDEX(C:C,$H$1),B2:INDEX(B:B,$H$1)=&quot;X&quot;,&quot;&quot;)</span>
+  </div>
+  <p>これだけで、処理対象は「A2からC列の最終行まで」に絞られます。数式を10万行分コピーするのではなく、最終行を1回決め、その範囲だけをFILTERに渡す形です。</p>
+
+  <div class="xdemo-note-info">
+    <strong>ここが設計の変化</strong>
+    <p>昔は「将来増えるかもしれないから、下まで数式を入れておく」設計でした。スピル後は「今ある実データ範囲だけを作り、その結果を必要な分だけ出す」設計にできます。</p>
+  </div>
+
+  <h4>同じことをLETで書く</h4>
+  <p>作業セルで考え方が分かったら、次はLETで同じ処理を1つの数式にまとめます。やっていることは同じです。<code>H1</code> に置いていた最終行を、式の中の <code>last</code> に入れているだけです。</p>
+  <div class="code-block code-scroll" data-lang="excel">
+<span class="code-line">=LET(
+  last, COUNTA(A:A),
+  data, A2:INDEX(C:C,last),
+  key, B2:INDEX(B:B,last),
+  FILTER(data,key=&quot;X&quot;,&quot;&quot;)
+)</span>
+  </div>
+  <p><code>last</code>が最終行、<code>data</code>が抽出対象の範囲、<code>key</code>が条件を見る範囲です。最後に <code>FILTER(data,key=&quot;X&quot;,&quot;&quot;)</code> と書くので、数式の意味も読みやすくなります。</p>
+
+  <h4>並べ替えまで含める場合</h4>
+  <p>FILTERした結果をさらにSORTしたい場合も、考え方は同じです。FILTER結果を <code>result</code> に一度入れて、それをSORTします。</p>
+  <div class="code-block code-scroll" data-lang="excel">
+<span class="code-line">=LET(
+  last, COUNTA(A:A),
+  data, A2:INDEX(C:C,last),
+  key, B2:INDEX(B:B,last),
+  result, FILTER(data,key=&quot;X&quot;,&quot;&quot;),
+  SORT(result,1,1)
+)</span>
+  </div>
+  <p>この形にすると、最終行取得は1回、処理対象は実データ範囲だけ、数式本体は1セル、出力はスピルになります。VBAでいう「最終行を取って、必要な範囲だけ処理する」感覚にかなり近いです。</p>
+  <p>なお、A列に途中空白がある場合は、件数を数える列を変えるだけです。社員ID、伝票番号、日付など、必ず埋まる列で <code>COUNTA</code> すれば、後ろの <code>INDEX</code> の考え方は同じまま使えます。</p>
+</section>
+
+<section class="method-section" id="rarity">
+  <h3>どれぐらいの人ができるか</h3>
+  <p>厳密な統計ではなく現場感ですが、スピル関数を「便利な関数」として使う人と、「Excelの設計を変える技術」として使う人の間にはかなり差があります。</p>
+  <p>FILTERやUNIQUEを単体で使える人は、Microsoft 365環境では少しずつ増えています。ただし、LETで最終行を一度だけ持ち、INDEXで実データ範囲を作り、FILTERやSORTで一括処理し、スピルで出力するところまで設計できる人はまだ少数派です。</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">状態</th>
+          <th scope="col">できること</th>
+          <th scope="col">現場での人数感</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>単体関数として使う</td>
+          <td>FILTER、UNIQUE、SORTを個別に使う</td>
+          <td>365環境では増えている</td>
+        </tr>
+        <tr>
+          <td>LETと組み合わせる</td>
+          <td>中間結果や最終行を式内で管理する</td>
+          <td>Excelが得意な人の中でも少数派</td>
+        </tr>
+        <tr>
+          <td>設計思想として使う</td>
+          <td>実データ範囲だけを配列化し、1セルから可変出力する</td>
+          <td>現場ではかなり希少</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>この段階の人は、新関数を覚えた人ではありません。旧世代関数、VBAの最終行思想、Power Queryの構造化、そしてスピルの可変出力をつなげて考えられる人です。</p>
+</section>
+
+<section class="method-section" id="future">
+  <h3>VBA禁止は苦しかった。でも今思うと意味があった</h3>
+  <p>正直、VBA禁止はかなり苦しい経験でした。メンタルは削られるし、集中力も落ちる。「VBAなら」と何度も思う。何も知らない人のほうが穏やかに作業している姿を見て、複雑な気持ちになる。</p>
+  <p>でも今振り返ると、Excelの考え方を根本から変えてくれた出来事でもありました。VBAだけでは気づかなかった関数設計、配列的思考、可変構造、Power Query、そしてスピル。これらを深く学ぶことになったからです。</p>
+  <p>制限環境で鍛えられた人ほど、環境が変わったときに大きく伸びる可能性があります。VBAが使えた頃は、何でもVBAで解決できてしまうから、関数の限界を突破する動機がなかった。Power Queryに触る必要もなかった。スピル関数の本当の価値にも、たぶん気づかなかったと思います。</p>
+  <p>制限は、ときに最大の学びになります。</p>
+
+  <div class="xdemo-note-good">
+    <strong>これからのExcel設計</strong>
+    <p>DXという言葉が当たり前になった今、Excelに求められるのは「マクロで自動化された属人ツール」だけではありません。関数とクエリで構造化され、誰でも保守できるシートです。スピル関数は、その世界に向かうための設計思想でもあります。</p>
+  </div>
+</section>
+
+<div class="stage-checklist">
+  <h3>この段階を通過したサイン</h3>
+  <ul>
+    <li>LETで最終行を1回だけ取得して使い回せる</li>
+    <li>INDEXで実データ範囲を動的に作れる</li>
+    <li>FILTERやSORTで可変出力を設計できる</li>
+    <li>数式を大量にコピーせず、1セルから結果をスピルさせる設計にできる</li>
+  </ul>
+</div>
+
+<section class="method-section">
+  <h3>まとめ</h3>
+  <p>スピル関数を便利機能として使うだけなら、価値は「FILTERが簡単になった」「UNIQUEで重複除去が楽になった」で止まります。</p>
+  <p>しかし、設計を変える技術として捉えると、見え方が変わります。数式を大量に埋めるのではなく、起点から結果を生ませる。将来行数を予測して仕込むのではなく、データ量に合わせて動的に伸縮させる。作業列を積み上げるのではなく、構造として見える形にする。</p>
+  <p>VBA禁止という数年の苦しさがなければ、たぶんここには辿り着けませんでした。スピル関数は、Excelを「セルごとに処理する道具」から「可変構造を設計する道具」へ進める技術だったのです。</p>
+</section>
+
+<nav class="stage-nav" aria-label="段階ナビゲーション">
+  <a class="stage-nav-prev" href="article_stage5_qr_input_design_shift.html">
+    <span class="stage-nav-label">← 前の段階</span>
+    <span class="stage-nav-title">段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期</span>
+  </a>
+</nav>
+
+<section class="method-section">
+  <h2>シリーズ記事</h2>
+  <ul class="article-list">
+    <li class="article-item"><a class="article-link" href="article_stage1_functions_printing.html">段階1：VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage2_vba_macro_recording.html">段階2：マクロの記録とVBA初級で、作業が消える時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage3_vba_internal_design.html">段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage3_vba_web_automation.html">段階4：VBA応用で、Web操作や外部アプリまで広がる時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage4_no_macro_powerquery.html">段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage5_qr_input_design_shift.html">段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期</a></li>
+    <li class="article-item"><p class="article-link">段階7：スピル関数で、Excelの設計思想が変わる時期（この記事）</p></li>
+  </ul>
+</section>
+
+<section class="method-section">
+  <h2>関連記事</h2>
+  <ul class="line-height-2">
+    <li><a href="../functions/latest/article_filter.html">FILTER関数: 条件に合うデータを動的抽出</a></li>
+    <li><a href="../functions/latest/article_unique.html">UNIQUE関数: 重複を消して一意リストを作る</a></li>
+    <li><a href="../functions/old/article_countif_extract.html">FILTER代替: VBA不要・CSE不要の複数抽出</a></li>
+    <li><a href="../powerquery/basic/article_powerquery_intro.html">Power QueryとVBAの違い: 全体像を把握</a></li>
+  </ul>
+</section>
+
+</article>
+</main>
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式・参考:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/let-function-34842dd8-b92b-4d3f-b325-b8b8f9908999" rel="noopener" target="_blank">LET公式説明</a><a href="https://support.microsoft.com/en-us/office/filter-function-f4f7cb66-82eb-4767-8f7c-4877ad80c759" rel="noopener" target="_blank">FILTER公式説明</a><a href="https://support.microsoft.com/en-us/office/dynamic-array-formulas-and-spilled-array-behavior-205c6b06-03ba-4151-89a1-87a7eb36e531" rel="noopener" target="_blank">動的配列とスピル動作</a><a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/excel-performance/excel-tips-for-optimizing-performance-obstructions" rel="noopener" target="_blank">Excelパフォーマンス最適化</a><a href="https://www.excelcampus.com/functions/whole-column-references/" rel="noopener" target="_blank">Excel Campus全列参照実験</a><a href="https://fastexcel.wordpress.com/2015/12/12/excel-full-column-references-and-used-range-good-idea-or-bad-idea/" rel="noopener" target="_blank">FastExcel全列参照実験</a><a href="../samples/index.html">サンプルデータ</a></p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">お問い合わせ (Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab &horbar; コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../script.js"></script>
+</body>
+</html>

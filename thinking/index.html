@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>技術の流れ｜Excel技術の進化と設計思想｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta name="description" content="Excelの関数、VBA、Power Query、スピル、QR入力自動化などを、単体テクニックではなく技術の流れと設計思想として整理する読み物カテゴリです。">
+<meta name="theme-color" content="#1a3d5c">
+<link rel="canonical" href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/">
+<meta property="og:title" content="技術の流れ｜Excel技術の進化と設計思想｜Excel × No VBA Lab">
+<meta property="og:description" content="VBA禁止環境で見えてきたExcel技術の進化、スピル関数・Power Query・QR入力自動化の意味を設計思想として整理します。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/">
+<meta property="og:site_name" content="Excel × No VBA Lab">
+<meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="../common.css">
+<link rel="stylesheet" href="../index.css">
+<link rel="stylesheet" href="../article.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "技術の流れ",
+  "description": "Excelの関数、VBA、Power Query、スピル、QR入力自動化などを、単体テクニックではなく技術の流れと設計思想として整理する読み物カテゴリです。",
+  "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/",
+  "inLanguage": "ja",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Excel × No VBA Lab",
+    "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"
+  },
+  "hasPart": [
+    {
+      "@type": "CreativeWork",
+      "name": "Excel技術の成長曲線：定番ルートで読む全体像",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_growth_curve_standard_flow.html",
+      "position": 1
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Excelで画期的に進化する瞬間：できることが一段変わるブレイクスルー集",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_breakthrough_moments.html",
+      "position": 2
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "段階1：VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage1_functions_printing.html",
+      "position": 3
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "段階2：マクロの記録とVBA初級で、作業が消える時期",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage2_vba_macro_recording.html",
+      "position": 4
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage3_vba_internal_design.html",
+      "position": 5
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "段階4：VBA応用で、Web操作や外部アプリまで広がる時期",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage3_vba_web_automation.html",
+      "position": 6
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage4_no_macro_powerquery.html",
+      "position": 7
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage5_qr_input_design_shift.html",
+      "position": 8
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "段階7：スピル関数で、Excelの設計思想が変わる時期",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_spill_design_shift.html",
+      "position": 9
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "VBAの万能感に依存する時期：作業を消せる快感と危うさ",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_vba_omnipotence_trap.html",
+      "position": 10
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "関数を深めてからVBAを使うと、判断力が一段上がる",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_function_depth_before_vba.html",
+      "position": 11
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "VBA禁止時の思考法：自動操作を捨て、データの流れを設計する",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_no_vba_thinking.html",
+      "position": 12
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Power QueryはVBAの代替ではなく、データ整形思想だった",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_powerquery_design_shift.html",
+      "position": 13
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "COBOL帳票処理で学んだ、固定長データを構造として読む考え方",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_cobol_structure_shift.html",
+      "position": 14
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type": "ListItem", "position": 2, "name": "技術の流れ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/"}
+  ]
+}
+</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">技術の流れ</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+  <nav aria-label="パンくずリスト">
+    <div class="breadcrumb">
+      <a href="../index.html">ホーム</a><span>&gt;</span><strong>技術の流れ</strong>
+    </div>
+  </nav>
+
+  <section class="method-section">
+    <div class="category-hero hero-overlay hero-small">
+      <picture>
+        <source media="(max-width: 600px)" type="image/avif" srcset="../image/concept_breaking_wall-480.avif 480w, ../image/concept_breaking_wall-768.avif 768w" sizes="100vw">
+        <source type="image/avif" srcset="../image/concept_breaking_wall-768.avif 768w, ../image/concept_breaking_wall-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+        <source media="(max-width: 600px)" type="image/webp" srcset="../image/concept_breaking_wall-480.webp 480w, ../image/concept_breaking_wall-768.webp 768w" sizes="100vw">
+        <source type="image/webp" srcset="../image/concept_breaking_wall-768.webp 768w, ../image/concept_breaking_wall-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+        <img alt="Excel技術の流れと設計思想" decoding="async" height="576" loading="eager" src="../image/concept_breaking_wall.png" width="1024">
+      </picture>
+      <div class="hero-copy">
+        <div class="hero-copy-kicker">Thinking</div>
+        <div class="hero-copy-title">技術の流れ</div>
+        <div class="hero-copy-sub">テクニックではなく、設計の変化として読む。</div>
+      </div>
+    </div>
+    <h1>技術の流れ</h1>
+    <p class="article-summary">ここは、関数やPower Queryの「使い方」ではなく、Excel技術がどう変わってきたのか、なぜその技術が現場設計を変えるのかを整理する読み物カテゴリです。成長曲線、定番の学習順、VBAの万能感、VBA禁止時の思考までをひとつの流れとして読めるようにしています。</p>
+  </section>
+
+  <section class="method-section">
+    <h2>このカテゴリに置く記事</h2>
+    <ul class="philosophy-list">
+      <li>VBA、関数、Power Query、スピルなどの役割がどう変わったか。</li>
+      <li>制限環境によって、仕事の考え方や設計がどう変わるか。</li>
+      <li>テクニック単体ではなく、複数技術をどう捉えると実務に強くなるか。</li>
+      <li>QR入力自動化やCOBOL帳票処理のような、カテゴリ横断の設計思想。</li>
+    </ul>
+  </section>
+
+  <section class="method-section growth-curve-section">
+    <h2>まず読む成長曲線</h2>
+    <div class="xdemo-note-info growth-curve-note">
+      <p>このカテゴリの本線は、<strong>関数で結果を作る → VBAで作業を動かす → VBA万能感で業務全体へ広げる → VBA禁止で設計思想を組み直す → Power Query・スピル・QRでデータと入力を再設計する</strong>、という流れです。最初に全体像を読むと、各段階の記事がつながって見えます。</p>
+    </div>
+    <div class="table-wrapper growth-curve-wrap">
+      <table class="growth-curve-table">
+        <thead>
+          <tr>
+            <th scope="col">成長段階</th>
+            <th scope="col">見え始めること</th>
+            <th scope="col">取れる対応</th>
+            <th scope="col">次にぶつかる壁</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">関数・印刷</th>
+            <td>VLOOKUPやINDEX + MATCHで、表はキーでつなげられると気づく</td>
+            <td>詳しい人に聞く、ネットで調べる、マスタや参照範囲という言葉で相談できる</td>
+            <td>組み合わせによる最適化はまだ難しく、人が範囲や手順を管理し続ける</td>
+          </tr>
+          <tr>
+            <th scope="row">VBA初級</th>
+            <td>連続印刷、CSV取込、PDF保存、定型操作のボタン化</td>
+            <td>同じ手順を記録・修正し、繰り返し作業を短くできる</td>
+            <td>作った本人しか直せない</td>
+          </tr>
+          <tr>
+            <th scope="row">VBA中級・応用</th>
+            <td>業務ツール化、Web操作、外部アプリ連携</td>
+            <td>業務全体の入口と出口を見て、どこを機械に任せるか考えられる</td>
+            <td>万能感が強まり、制限に弱くなる</td>
+          </tr>
+          <tr>
+            <th scope="row">No VBA設計</th>
+            <td>Power Queryと関数で、データの流れを再構築する</td>
+            <td>自動操作を諦めても、整形・判定・出力は設計できる</td>
+            <td>自動操作ではなく構造設計へ切り替える必要がある</td>
+          </tr>
+          <tr>
+            <th scope="row">スピル・QR・構造化</th>
+            <td>可変配列、入力圧縮、固定長データの二次元化</td>
+            <td>データ量や入力順に合わせて、Excel側の出力構造を変えられる</td>
+            <td>テクニック単体ではなく業務全体を設計する</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="growth-curve-insight">
+      <h3>最初は「できる」より「対処に気づける」ことが大きい</h3>
+      <p>VLOOKUP研修を受けても、すぐに組み合わせ最適化までできる人は多くありません。それでも無駄ではありません。なんとなくでも「検索関数で何かできそう」「キーやマスタを見ればよさそう」と分かれば、詳しい人に聞く、ネットで調べる、依頼内容を具体化する、という対応が取れるからです。</p>
+      <p>この入口がないと、本人はただ漠然と頑張るしかなく、組織側もハイスキルな人を活かせません。少数の詳しい人がいても、周囲が相談の言葉を持っていなければ、評価も依頼も精度が上がらないためです。</p>
+    </div>
+  </section>
+
+  <section class="method-section">
+    <h2>公開中の記事</h2>
+    <h3 class="subcategory-heading">シリーズの読み方ガイド</h3>
+    <div class="xdemo-note-info" style="margin-bottom: 32px;">
+      <p>この「技術の流れ」カテゴリは、段階1から段階7まで<strong>順番に読んでいただくことを想定</strong>して構成されています。<br>
+      先に「全体像」と「ブレイクスルー集」を読むと、各段階で何ができるようになり、どこで考え方が変わるのかが追いやすくなります。</p>
+    </div>
+
+    <h3 class="subcategory-heading">全体像・読み方</h3>
+    <ul class="article-list mb-32">
+      <li class="article-item highlight">
+        <div class="level-bar lv-1">
+          <span class="level-label">全体像</span>
+          <span class="tag-row"><span class="tag-impact">成長曲線</span></span>
+        </div>
+        <a class="article-link" href="article_growth_curve_standard_flow.html">Excel技術の成長曲線：定番ルートで読む全体像 <span class="article-reading-time">📖 約9分</span></a>
+        <p class="article-summary">入力担当から、関数、VBA、VBA万能感、VBA禁止、Power Query、スピル、QR設計へ進む定番ルートを、1本の成長曲線として整理します。</p>
+      </li>
+      <li class="article-item highlight">
+        <div class="level-bar lv-2">
+          <span class="level-label">転機</span>
+          <span class="tag-row"><span class="tag-impact">ブレイクスルー</span></span>
+        </div>
+        <a class="article-link" href="article_breakthrough_moments.html">Excelで画期的に進化する瞬間：できることが一段変わるブレイクスルー集 <span class="article-reading-time">📖 約8分</span></a>
+        <p class="article-summary">VLOOKUP、マクロの記録、配列、Web操作、Power Query、スピル、QR入力など、仕事の見え方が一段変わる瞬間をまとめます。</p>
+      </li>
+    </ul>
+
+    <h3 class="subcategory-heading">Excel技術の成長段階</h3>
+    <ul class="article-list mb-32" id="list-thinking-evolution">
+      <!-- 新しい記事はこのliをコピーし、href・タイトル・概要・日付を差し替えるだけで追加できます。 -->
+      <li class="article-item highlight">
+        <div class="level-bar lv-1">
+          <span class="level-label">段階1</span>
+          <span class="tag-row"><span class="tag-impact">基礎転換</span></span>
+        </div>
+        <a class="article-link" href="article_stage1_functions_printing.html">VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期 <span class="article-reading-time">📖 約6分</span></a>
+        <p class="article-summary">入社1年から3年程度で、関数・印刷・差し込み印刷を覚え、Excelが単なる入力表から業務改善の道具に変わる段階です。</p>
+      </li>
+      <li class="article-item highlight">
+        <div class="level-bar lv-2">
+          <span class="level-label">段階2</span>
+          <span class="tag-row"><span class="tag-impact">VBA初級</span></span>
+        </div>
+        <a class="article-link" href="article_stage2_vba_macro_recording.html">マクロの記録とVBA初級で、作業が消える時期 <span class="article-reading-time">📖 約7分</span></a>
+        <p class="article-summary">社内マクロやマクロの記録をきっかけに、連続印刷やCSV取込がボタン1つで終わるようになる段階です。</p>
+      </li>
+      <li class="article-item highlight">
+        <div class="level-bar lv-3">
+          <span class="level-label">段階3</span>
+          <span class="tag-row"><span class="tag-impact">VBA中級</span></span>
+        </div>
+        <a class="article-link" href="article_stage3_vba_internal_design.html">VBA中級・上級で、Excel内の業務ツールを設計する時期 <span class="article-reading-time">📖 約9分</span></a>
+        <p class="article-summary">配列、Dictionary、エラー処理、ログ、設定シート、UserFormなどで、他人が使えるExcel内業務ツールにしていく段階です。</p>
+      </li>
+      <li class="article-item highlight">
+        <div class="level-bar lv-4">
+          <span class="level-label">段階4</span>
+          <span class="tag-row"><span class="tag-impact">VBA応用</span></span>
+        </div>
+        <a class="article-link" href="article_stage3_vba_web_automation.html">VBA応用で、Web操作や外部アプリまで広がる時期 <span class="article-reading-time">📖 約9分</span></a>
+        <p class="article-summary">Excel内の自動化を超えて、Web画面、外部アプリ、ファイル処理まで業務フロー全体を動かし始める段階です。</p>
+      </li>
+      <li class="article-item highlight">
+        <div class="level-bar lv-5">
+          <span class="level-label">段階5</span>
+          <span class="tag-row"><span class="tag-impact">No VBA</span></span>
+        </div>
+        <a class="article-link" href="article_stage4_no_macro_powerquery.html">マクロ禁止で、Power Queryと関数に活路を見出す時期 <span class="article-reading-time">📖 約8分</span></a>
+        <p class="article-summary">VBA禁止環境で、Power Queryと関数を組み合わせ、データの流れとしてExcelを再設計する段階です。</p>
+      </li>
+      <li class="article-item highlight">
+        <div class="level-bar lv-6">
+          <span class="level-label">段階6</span>
+          <span class="tag-row"><span class="tag-impact">QR Automation</span></span>
+        </div>
+        <a class="article-link" href="article_stage5_qr_input_design_shift.html">段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期 <span class="article-reading-time">📖 約8分</span></a>
+        <p class="article-summary">RPAやSeleniumが使えない環境で、QRリーダーをキーボードとして扱い、入力データそのものを圧縮する設計へシフトする段階です。</p>
+      </li>
+      <li class="article-item highlight">
+        <div class="level-bar lv-7">
+          <span class="level-label">段階7</span>
+          <span class="tag-row"><span class="tag-impact">設計思想</span></span>
+        </div>
+        <a class="article-link" href="article_spill_design_shift.html">段階7：スピル関数で、Excelの設計思想が変わる時期 <span class="article-reading-time">📖 約9分</span></a>
+        <p class="article-summary">LET、実データ範囲、FILTER、SORT、UNIQUE、スピルを組み合わせ、Excelを可変構造として設計する段階です。</p>
+      </li>
+    </ul>
+
+    <h3 class="subcategory-heading">設計思想・コラム</h3>
+    <ul class="article-list mb-32" id="list-thinking-column">
+      <li class="article-item">
+        <a class="article-link" href="article_vba_omnipotence_trap.html">VBAの万能感に依存する時期：作業を消せる快感と危うさ</a>
+        <p class="article-summary">VBAで何でも動かせるようになった時期に起こる高揚感、依頼の集中、野良システム化、そしてマクロ禁止で折れる理由を整理します。</p>
+      </li>
+      <li class="article-item">
+        <a class="article-link" href="article_function_depth_before_vba.html">関数を深めてからVBAを使うと、判断力が一段上がる</a>
+        <p class="article-summary">VBA使いの多くが関数上級まで到達しにくい理由と、関数を高めたあとにVBAを使うと、できること・できないことの判定力が上がる理由を整理します。</p>
+      </li>
+      <li class="article-item">
+        <a class="article-link" href="article_no_vba_thinking.html">VBA禁止時の思考法：自動操作を捨て、データの流れを設計する</a>
+        <p class="article-summary">マクロを奪われたときに、何を諦め、何を設計対象に戻すのか。Power Query、関数、テーブル、QR入力へ切り替える考え方です。</p>
+      </li>
+      <li class="article-item">
+        <a class="article-link" href="article_powerquery_design_shift.html">Power QueryはVBAの代替ではなく、データ整形思想だった</a>
+        <p class="article-summary">VBAユーザーが陥る罠から、宣言的ETL思想へパラダイムシフトする過程を深掘りします。</p>
+      </li>
+      <li class="article-item">
+        <a class="article-link" href="article_cobol_structure_shift.html">COBOL帳票処理で学んだ、固定長データを構造として読む考え方</a>
+        <p class="article-summary">レガシーシステムが出力する見た目重視の帳票テキストから、ほとんどのVBAユーザーが見落とす固定長構造を読み解く思考プロセスです。</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="method-section">
+    <h2>関連カテゴリ</h2>
+    <ul class="article-list">
+      <li class="article-item"><a class="article-link" href="../functions/">関数テクニック</a><p class="article-summary">構文、サンプル、実務での使い方はこちら。</p></li>
+      <li class="article-item"><a class="article-link" href="../powerquery/">パワークエリ</a><p class="article-summary">取り込み、整形、更新運用の具体手順はこちら。</p></li>
+      <li class="article-item"><a class="article-link" href="../qr/">QR Automation Lab</a><p class="article-summary">QRリーダーによる入力自動化の実装はこちら。</p></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載内容は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <div class="site-footer-links" style="margin-top: 14px;">
+      <a href="https://support.microsoft.com/ja-jp/excel" target="_blank" rel="noopener noreferrer">Microsoft Excel ヘルプとラーニング</a>
+      <a href="https://learn.microsoft.com/ja-jp/office/vba/api/overview/excel" target="_blank" rel="noopener noreferrer">Excel VBA リファレンス</a>
+    </div>
+  </div>
+  <div class="footer-contact-wrap">
+    <a href="https://forms.gle/6SnCHNWK6EcRy1XG8" class="footer-contact-btn" rel="noopener">記事に関するお問い合わせ・誤字報告</a>
+  </div>
+  <p>&copy; 2026 Excel × No VBA Lab &horbar; コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../script.js"></script>
+</body>
+</html>

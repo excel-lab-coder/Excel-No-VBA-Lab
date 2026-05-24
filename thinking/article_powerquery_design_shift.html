@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>コラム：Power QueryはVBAの代替ではなく、データ整形思想だった｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="VBA禁止環境でPower Queryを触り始めた人が陥る罠と、処理手順からデータパイプライン（ETL）思想へパラダイムシフトする過程を深く掘り下げたコラムです。" name="description">
+<meta content="Power Query, VBA代替, ETL, パラダイムシフト, Excel設計, データ整形, 非破壊的変更" name="keywords">
+<meta content="コラム：Power QueryはVBAの代替ではなく、データ整形思想だった｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Power Queryを単なるマクロの代わりだと思っていると本質を見誤る。プロシージャ思考から宣言的ETL思考への変化を深掘りします。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_powerquery_design_shift.html">
+<meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_powerquery_design_shift.html" rel="canonical">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_powerquery_design_shift.html"
+  },
+  "headline": "コラム：Power QueryはVBAの代替ではなく、データ整形思想だった",
+  "image": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png",
+  "datePublished": "2026-05-24",
+  "dateModified": "2026-05-24",
+  "author": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "技術の流れ",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "コラム：Power Queryのデータ整形思想"
+    }
+  ]
+}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">設計思想・コラム</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../index.html">ホーム</a><span>&gt;</span><a href="index.html">技術の流れ</a><span>&gt;</span><strong>設計思想・コラム</strong></div>
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta"><span class="badge badge-365">Power Query</span><span class="badge badge-column">コラム</span><span class="article-date">公開日: 2026-05-24</span><span class="article-reading-time">📖 約12分</span></div>
+  <h1 class="article-title">コラム：Power QueryはVBAの代替ではなく、データ整形思想だった</h1>
+</div>
+
+<p class="article-lead">VBAが禁止された現場で、多くの人がPower Query（パワークエリ）に救いを求めます。「マクロの代わりにこれで自動化できるらしいぞ」と。しかし、VBAの「代用品」としてPower Queryを触り始めた人は、ほぼ確実に一度絶望し、そして全く異なる設計思想の美しさに気づくことになります。</p>
+
+<p>この記事では、VBAというプログラミング言語に習熟した人が、いかにしてPower Queryの「宣言的・非破壊的・ETL思想」にパラダイムシフトしていくか、その深い葛藤と技術的覚醒のプロセスを掘り下げます。</p>
+
+<div class="toc-box">
+  <h3>この記事で扱う流れ</h3>
+  <ol>
+    <li><a href="#allergy">VBA上級者が陥る「Power Queryアレルギー」の正体</a></li>
+    <li><a href="#procedural">「処理手順（How）」から「データの状態（What）」へ</a></li>
+    <li><a href="#memory">「作業シート」から「メモリ上のストリーム」へ</a></li>
+    <li><a href="#non-destructive">破壊的変更と非破壊的変更という決定的な違い</a></li>
+    <li><a href="#etl">ETL（取得・変換・読込）という思想への到達</a></li>
+    <li><a href="#rarity">どれぐらいの人が気づけるか（現場での人数感）</a></li>
+  </ol>
+</div>
+
+<section class="goal-section" id="allergy">
+  <h2>VBA上級者が陥る「Power Queryアレルギー」の正体</h2>
+  <p>VBAを極めた人が初めてPower Queryの画面を開いたとき、強烈な違和感、あるいはイライラを覚えます。なぜなら、自分が頭の中で思い描いている「完璧な処理手順」を記述する場所が見当たらないからです。</p>
+  <p>「Forループはどこに書くんだ？」「ここでIf分岐させて、セルごとに色を変えたいのにボタンがない」「変数を宣言して途中の値を保持するにはどうすればいい？」</p>
+  <p>VBAユーザーは、長年の経験から「コンピュータに何を（What）させるか」ではなく「どうやって（How）動かすか」を事細かに指示する思考プロセスに最適化されています。</p>
+  <div class="code-block" data-lang="vba">
+<span class="code-line">' VBAの思考プロセス（How）の例</span>
+<span class="code-line">For i = 2 To lastRow</span>
+<span class="code-line">    If Cells(i, 1).Value = "東京" Then</span>
+<span class="code-line">        Cells(i, 2).Value = "関東"</span>
+<span class="code-line">    End If</span>
+<span class="code-line">Next i</span>
+  </div>
+  <p>彼らは、この「1行ずつ確認して処理する」という細やかなコントロール権を手放すことに強い恐怖と抵抗を感じます。結果として、「Power QueryはGUIでおもちゃみたいだ」「かゆいところに手が届かない」「やっぱりVBAのほうが優秀だ」と切り捨ててしまう人が後を絶ちません。これがPower Queryアレルギーの正体です。</p>
+</section>
+
+<section class="method-section" id="procedural">
+  <h3>「処理手順（How）」から「データの状態（What）」へ</h3>
+  <p>しかし、VBAが完全に禁止された環境では、逃げ道はありません。嫌々でもPower Queryを使い込むうちに、ある日突然、雷に打たれたように理解する瞬間が来ます。</p>
+  <p><strong>「Power Queryは、ループを書くツールではない。最終的に欲しい『データの状態』を定義するツールなんだ」</strong></p>
+  <p>例えば、先ほどの「東京なら関東にする」という処理。Power Queryではループを回しません。「条件列の追加」機能を使って、「列Aが『東京』なら『関東』という新しい列を作る」と<strong>宣言</strong>するだけです。裏側でどうやってループしているかは、M言語のエンジンに完全に委ねられます。</p>
+  <p>これはプログラミングの世界でいう「手続き型（Procedural）」から「宣言型（Declarative）」へのパラダイムシフトです。VBAは「包丁を持って、こう切って、こう炒めろ」と指示するのに対し、Power Queryは「完成したカレーを出せ。材料はこれだ」と要求する。この思想の違いを受け入れた瞬間、Power Queryは不便なツールから、強力なデータパイプラインへと変貌します。</p>
+</section>
+
+<section class="method-section" id="memory">
+  <h3>「作業シート」から「メモリ上のストリーム」へ</h3>
+  <p>もう一つの大きな違いは、「中間データの持ち方」です。</p>
+  <p>VBAで複雑な処理を組むとき、多くの人は「一時的な作業シート」を作ります。データを貼り付け、並べ替え、VLOOKUPを掛け、不要な列を削除し、最後に結果だけを「提出用シート」にコピーして作業シートを非表示（VeryHidden）にする。誰もがやったことのある黒魔術です。</p>
+  <p>しかし、この方法はExcelファイルの肥大化を招き、途中でエラーが起きると作業シートにゴミデータが残り、デバッグを困難にします。</p>
+  <p>一方、Power Queryには「作業シート」という概念が存在しません。データソース（CSVや他ブック）から読み込まれたデータは、メモリ上で「ストリーム（データの川）」として流れていきます。「列の削除」「型の変更」「テーブルの結合」というステップ（フィルター）を通過するたびに、メモリ上のデータが形を変えていき、最終的に「読込（Load）」されたとき初めてExcelのシートに実体として出力されます。</p>
+  <p>Excelのセルを一切汚さず、巨大なデータであってもメモリの許す限り高速に処理し続ける。これは、VBAの「セルへの物理的な読み書き」というボトルネックから完全に解放されたことを意味します。</p>
+</section>
+
+<section class="method-section" id="non-destructive">
+  <h3>破壊的変更と非破壊的変更という決定的な違い</h3>
+  <p>さらに現場の保守性を劇的に変えるのが「非破壊的変更」という思想です。</p>
+  <p>VBAで `Cells(1,1).Value = ""` と実行すれば、元のデータは消え去り、二度と元には戻りません（Undoも効きません）。これは「破壊的変更」です。そのためVBAでは、必ず「元データのバックアップを取る処理」を最初に書くのが定石でした。</p>
+  <p>Power Queryは全く逆です。すべてのステップは「前のステップの状態を入力として受け取り、新しい状態を出力する」という純粋な関数的アプローチを取ります（非破壊的変更）。</p>
+  <ul>
+    <li>ステップ1：ソースを読み込む</li>
+    <li>ステップ2：1行目をヘッダーに昇格する</li>
+    <li>ステップ3：不要な列を削除する</li>
+  </ul>
+  <p>もし「ステップ3で間違えて必要な列を消してしまった」と後から気づいても、右側の「適用したステップ」の×ボタンを押すだけで、いつでも「ステップ2」の無傷な状態に戻れます。元データそのものは1ミリも改変されていません。</p>
+  <p>この「いつ変更しても元データが壊れない安心感」は、複雑なデータクレンジングを行う上で、心理的ハードルを劇的に下げてくれます。トライアンドエラーが無限に許される設計なのです。</p>
+</section>
+
+<section class="method-section" id="etl">
+  <h3>ETL（取得・変換・読込）という思想への到達</h3>
+  <p>VBAの代用品としてPower Queryを使い始めた人は、やがてこのツールが<strong>ETL（Extract：抽出、Transform：変換、Load：読込）</strong>という、本格的なデータエンジニアリングの概念をExcelに持ち込んだものであることに気づきます。</p>
+  <div class="comparison-section">
+    <h4>システム設計における分業の美学</h4>
+    <ul class="philosophy-list">
+      <li><strong>Extract（取得）:</strong> どこからデータを持ってくるか（フォルダ、Web、データベース）</li>
+      <li><strong>Transform（変換）:</strong> どう綺麗にするか（クレンジング、結合、型定義）</li>
+      <li><strong>Load（読込）:</strong> どこに出力するか（テーブル、ピボット、データモデル）</li>
+    </ul>
+  </div>
+  <p>VBAではこれらがひとつのスパゲッティコードに混在しがちでしたが、Power Queryではシステムアーキテクチャとして完全に分離されます。Excelファイルは単なる「計算用紙」から、モダンな「データ処理パイプラインのエンドポイント」へと格上げされるのです。</p>
+</section>
+
+<section class="method-section" id="rarity">
+  <h3>どれぐらいの人が気づけるか</h3>
+  <p>「マクロの代わり」という浅い理解を脱却し、宣言的ETLツールとしてのPower Queryの真価に到達できる人は、現場でどのくらいいるのでしょうか。</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">状態</th>
+          <th scope="col">できること</th>
+          <th scope="col">現場での人数感</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>VBAの代替として挫折</td>
+          <td>「If文が書けないから使えない」と見切りをつける</td>
+          <td>VBA経験者の半数以上</td>
+        </tr>
+        <tr>
+          <td>マクロ記録の延長</td>
+          <td>GUIをポチポチ押して、定型作業の自動化だけを行う</td>
+          <td>部署に数人</td>
+        </tr>
+        <tr>
+          <td>ETL思想・ストリーム処理の理解</td>
+          <td>非破壊的変更を活かし、他人が見ても意図が分かるパイプラインを設計する</td>
+          <td>極めて希少（データモデリングの領域）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>VBAのコードが書ける人は大勢いますが、Power Queryのステップを「誰もが保守できるデータパイプライン」として美しく設計できる人は、プログラマーというよりも「データエンジニア」に近い希少な存在です。</p>
+</section>
+
+<section class="method-section">
+  <h3>結論：制限が教えてくれた「構造化」の本当の意味</h3>
+  <p>もしVBAが禁止されていなかったら、私は一生Power Queryを「なんか変なGUIツール」と侮り、何でもかんでもForループと配列で処理するスパゲッティコードを量産し続けていたでしょう。</p>
+  <p>VBA禁止という絶望的な制限は、私から「自由な処理手順」を奪いました。しかしその代わりに、「データを構造として捉え、状態の変化を宣言する」という、よりモダンで強固な設計思想を叩き込んでくれました。</p>
+  <p>Power Queryは、VBAの「劣化版」ではありません。まったく異なるパラダイムでデータを支配する、別次元の思考フレームワークなのです。</p>
+</section>
+
+<nav class="stage-nav" aria-label="コラムナビゲーション">
+  <a class="stage-nav-prev" href="index.html">
+    <span class="stage-nav-label">← 戻る</span>
+    <span class="stage-nav-title">技術の流れ トップへ</span>
+  </a>
+</nav>
+
+</article>
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-info">
+      <p class="footer-copyright">&copy; Excel &times; No VBA Lab</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="../about.html">運営者情報</a></li>
+      <li><a href="../disclaimer.html">免責事項</a></li>
+      <li><a href="../privacy.html">プライバシーポリシー</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>

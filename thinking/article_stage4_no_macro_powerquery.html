@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="VBA禁止・マクロ禁止環境で、Power Query、旧世代関数、作業列、ピボット、テーブルを組み合わせて活路を見出す段階を整理します。" name="description">
+<meta content="マクロ禁止, VBA禁止, Power Query, Excel関数, 作業列, マクロ代替, Excel設計" name="keywords">
+<meta content="段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期｜Excel &times; No VBA Lab" property="og:title">
+<meta content="VBA禁止環境で、Power Queryと関数を組み合わせてExcel設計を作り直す段階を整理します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage4_no_macro_powerquery.html">
+<meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage4_no_macro_powerquery.html" rel="canonical">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link href="../common.css" rel="stylesheet">
+<link href="../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage4_no_macro_powerquery.html"
+  },
+  "headline": "段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期",
+  "image": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png",
+  "datePublished": "2026-05-23",
+  "dateModified": "2026-05-23",
+  "author": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "技術の流れ",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "段階5"
+    }
+  ]
+}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span><span class="sub-main">技術の流れ</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../index.html">ホーム</a><span>&gt;</span><a href="index.html">技術の流れ</a><span>&gt;</span><strong>段階5</strong></div>
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta"><span class="badge badge-365">Power Query</span><span class="badge badge-all">No VBA</span><span class="article-date">公開日: 2026-05-23</span><span class="article-reading-time">📖 約8分</span></div>
+  <h1 class="article-title">段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期</h1>
+</div>
+
+<p class="article-lead">VBAを使いこなした人ほど、マクロ禁止はきついです。今までボタン1つで終わっていた処理が、突然使えなくなる。ここでExcelの考え方を組み直す必要が出てきます。</p>
+<p>段階4まで進むと、VBAはかなり強力です。Web操作、外部アプリ連携、連続印刷、CSV取込、PDF保存までできる。だからこそ、マクロ禁止になったときの落差が大きくなります。</p>
+<p>ただ、この段階は単なる後退ではありません。苦しいですが、ここでPower Queryと関数を深く使うようになると、Excelの設計思想そのものが変わり始めます。</p>
+
+<div class="toc-box">
+  <h3>この記事で扱う流れ</h3>
+  <ol>
+    <li><a href="#shift">処理を動かす発想から、流れを組む発想へ</a></li>
+    <li><a href="#mental">最初はかなり苦しい</a></li>
+    <li><a href="#thinking">VBA禁止時の思考に切り替える</a></li>
+    <li><a href="#pq">Power QueryはVBAの劣化版ではない</a></li>
+    <li><a href="#function">関数も作り直すことになる</a></li>
+    <li><a href="#division">Power Queryと関数の役割分担</a></li>
+    <li><a href="#range">どこまでできるようになるか</a></li>
+    <li><a href="#rarity">どれぐらいの人ができるか</a></li>
+    <li><a href="#trained">この段階で鍛えられるもの</a></li>
+  </ol>
+</div>
+
+<section class="goal-section" id="shift">
+  <h2>この段階で起きる変化</h2>
+  <p>VBAで「処理を動かす」発想から、Power Queryと関数で「データの流れを組む」発想に変わります。最初は代替策に見えますが、慣れると別の強さが見えてきます。</p>
+  <p>VBAは、手順を書きます。ブックを開く、コピーする、貼り付ける、印刷する、保存する。人がやっていた操作を、プログラムに置き換える感覚です。</p>
+  <p>Power Queryと関数の世界では、少し違います。データをどこから取得するのか。どう整形するのか。どこで結合するのか。最後にどのシートへ出すのか。操作よりも、流れと構造を先に考えます。</p>
+  <div class="xdemo-note-info">
+    <strong>段階5の本質</strong>
+    <p>VBAを使えないから仕方なく代替する段階ではありません。処理手順中心の設計から、データの流れ中心の設計へ移る段階です。</p>
+  </div>
+</section>
+
+<section class="method-section" id="mental">
+  <h3>最初はかなり苦しい</h3>
+  <p>マクロ禁止になると、まず頭に浮かぶのは「VBAなら一瞬なのに」です。CSV取込も、連続印刷も、整形も、ファイル処理も、今までの成功パターンが使えません。</p>
+  <p>ここで多くの人は止まります。VBA解禁待ちになる人もいますし、手作業に戻る人もいます。VBAができる人ほど、理想の処理速度を知っているので、ストレスが大きくなります。</p>
+  <p>この苦しさは、単にツールを失ったからではありません。頭の中に、すでに最短ルートが見えているからです。最終行を取って、ループを回して、条件分岐して、保存する。VBAなら流れが見える。なのに、それを書けない。</p>
+  <p>だから、最初は関数を書いていても集中できません。「これ、VBAなら3分で終わるのに」と思いながら、作業列を増やしていく。これはかなりメンタルを削ります。</p>
+  <div class="comparison-section">
+    <h4>マクロ禁止直後に起きやすいこと</h4>
+    <ul class="philosophy-list">
+      <li>VBAでの理想手順が頭に浮かび続ける。</li>
+      <li>関数をVBAの代替として書こうとして苦しくなる。</li>
+      <li>Power Queryを「仕方なく使うもの」と見てしまう。</li>
+      <li>知らない人のほうが迷わず手作業できているように見える。</li>
+    </ul>
+  </div>
+  <p>ここを抜けるには、VBAの劣化版を探すのではなく、別の設計思想として捉え直す必要があります。</p>
+</section>
+
+<section class="method-section" id="thinking">
+  <h3>VBA禁止時の思考に切り替える</h3>
+  <p>VBA禁止時に最初に切り替えるべきなのは、「どうやって操作を自動化するか」ではなく、「この作業はどのデータの流れで成り立っているか」です。</p>
+  <p>たとえば、VBAなら「フォルダからCSVを開き、シートへ貼り、条件に合う行だけコピーし、帳票へ出す」と考えます。No VBAでは、同じ作業を次のように分けます。</p>
+  <div class="code-block" data-lang="text">
+<span class="code-line">入力: どのファイルを材料にするか
+整形: どの列を残し、どの型へそろえるか
+判定: どの条件で対象・例外を分けるか
+出力: 誰が見る表、誰が入力する列にするか
+更新: 誰が、どの手順で、安全に再実行するか</span>
+  </div>
+  <p>ここで大事なのは、手作業をゼロにすることだけをゴールにしないことです。自動操作が禁止されているなら、人間が押す、確認する、読み取る部分は残ります。その代わり、入力前の整形、対象抽出、エラー候補の洗い出し、入力順の生成はExcel側に寄せられます。</p>
+  <p>VBA禁止時の設計は、敗北ではありません。どこを人間に残し、どこをExcelに任せるかを冷静に分ける設計です。この切り替えができると、Power Query、関数、テーブル、スピル、QR入力が同じ流れの中で見えるようになります。</p>
+  <div class="xdemo-note-good">
+    <strong>思考の合図</strong>
+    <p>「VBAなら3分で書けるのに」と感じたら、その処理を入力、整形、判定、出力、更新に分解します。そこからNo VBAで残せる自動化を拾います。</p>
+  </div>
+</section>
+
+<section class="method-section" id="pq">
+  <h3>Power Queryは、VBAの劣化版ではない</h3>
+  <p>突破口になるのがPower Queryです。最初は「VBAが使えないから仕方なく使うもの」に見えるかもしれません。でも、実際は考え方が違います。</p>
+  <p>Power Queryは、操作を順番に自動実行するというより、取得、変換、結合、読み込みというデータ処理の流れを定義します。ボタン1つで更新できる点はVBAに似ていますが、仕組みはかなり違います。</p>
+  <p>特に強いのは、データ整形です。不要列を消す、列名を整える、型を変える、行をフィルターする、複数ファイルを結合する、マスタと結合する。こうした処理は、VBAで書くよりPower Queryのほうが見通しよく作れることがあります。</p>
+  <p>また、手順がクエリとして残るのも大きいです。どの列を消したか、どこで型変換したか、どのマスタと結合したか。VBAのコードを読めない人でも、ステップ名を追えば処理の流れを理解しやすい場合があります。</p>
+  <div class="xdemo-note-info">
+    <strong>この時期の代表スキル</strong>
+    <p>Power Queryの取得・変換・読込、フォルダ一括取込、列の分割、不要行削除、型変換、結合、追加、パラメータ、旧世代関数による補助設計。</p>
+  </div>
+</section>
+
+<section class="method-section" id="function">
+  <h3>関数も作り直すことになる</h3>
+  <p>マクロ禁止環境では、関数の価値も上がります。VBAで一瞬だった抽出や分類を、COUNTIFS、SUMIFS、INDEX + MATCH、IFERROR、作業列で組み直す必要が出てきます。</p>
+  <p>この時期に重要なのは、VBAの発想をそのまま関数に押し込まないことです。関数は手続きではなく、結果を宣言する道具です。欲しい結果をどういう配列や条件に分解するか、という考え方に切り替える必要があります。</p>
+  <p>たとえば、VBAなら「上から順番に見て、条件に合う行を別シートへコピーする」と考えます。関数では「条件に合うかどうかの判定列を作り、その判定をもとに抽出結果を組む」と考えます。やりたいことは似ていても、頭の使い方が違います。</p>
+  <p>ここで作業列の価値も見直します。作業列はダサいものではありません。複雑な処理を分解し、途中結果を見えるようにする設計部品です。VBAの中で見えなくなっていた途中処理を、シート上で可視化する役割があります。</p>
+  <div class="code-block" data-lang="text">
+<span class="code-line">VBA思考:
+上から順番に処理する
+
+関数思考:
+条件・分類・結果を列や式として定義する</span>
+  </div>
+</section>
+
+<section class="method-section" id="division">
+  <h3>Power Queryと関数の役割分担が見えてくる</h3>
+  <p>段階5で大事なのは、Power Queryだけで全部やろうとしないことです。同じように、関数だけで全部やろうともしないことです。</p>
+  <p>Power Queryは、取り込み、整形、結合、不要行削除、型変換に強いです。関数は、シート上での条件判定、マスタ参照、出力レイアウト、確認欄、例外表示に強いです。</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">役割</th>
+          <th scope="col">向いている処理</th>
+          <th scope="col">設計の考え方</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Power Query</td>
+          <td>CSV取込、複数ファイル結合、列整理、型変換、マスタ結合</td>
+          <td>データをきれいな材料にする</td>
+        </tr>
+        <tr>
+          <td>関数</td>
+          <td>判定、検索、集計、出力欄、例外表示、ユーザー確認</td>
+          <td>利用者が見る結果に仕上げる</td>
+        </tr>
+        <tr>
+          <td>テーブル</td>
+          <td>入力範囲、マスタ、明細、更新対象</td>
+          <td>伸縮する範囲として管理する</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>この役割分担が見えると、マクロ禁止でもかなり戦えるようになります。処理を全部1か所に詰め込むのではなく、入力、整形、判定、出力を分けて考えるからです。</p>
+</section>
+
+<section class="method-section" id="range">
+  <h3>どこまでできるようになるか</h3>
+  <p>Power Queryと関数を組み合わせると、マクロ禁止でもかなりのことができます。CSVやExcelファイルの取込、複数ファイル結合、帳票データの整形、マスタ結合、分類、集計、抽出、出力用シートの作成。</p>
+  <p>外部アプリの画面操作やファイルの移動・削除など、VBAでしか届きにくい領域は残ります。ただし、データ整形と集計については、Power Queryと関数だけで十分実務化できる場面が多いです。</p>
+  <p>特に、毎月同じ形式で届くデータには強いです。フォルダにCSVを置く。Power Queryで取り込む。不要行を消す。マスタと結合する。関数で例外を表示する。ピボットや出力シートで確認する。この形にできると、かなり安定します。</p>
+  <div class="code-block" data-lang="text">
+<span class="code-line">元データフォルダ
+↓
+Power Queryで取得・整形・結合
+↓
+テーブルとして読み込み
+↓
+関数で判定・抽出・出力
+↓
+確認・印刷・共有</span>
+  </div>
+  <p>VBAのように何でも操作できるわけではありません。しかし、データ処理に限れば、むしろ見通しがよくなることがあります。処理手順がシートやクエリに分かれて残るため、あとから見直しやすいからです。</p>
+</section>
+
+<section class="method-section" id="rarity">
+  <h3>どれぐらいの人ができるか</h3>
+  <p>厳密な統計ではなく現場感ですが、Power Queryと関数を組み合わせて、マクロ禁止環境でも実務を回せる人はまだ少数派です。Power Queryを触ったことがある人、VLOOKUPやSUMIFSが使える人はいても、両方を役割分担して設計できる人は一気に減ります。</p>
+  <p>特に、VBAを使えた人が発想を切り替えてPower Queryと関数へ移れるケースは貴重です。VBAの便利さを知っているほど、最初は「代替」に見えてしまうからです。ここを越えて、別の設計思想として使えるようになると強いです。</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">状態</th>
+          <th scope="col">できること</th>
+          <th scope="col">現場での人数感</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Power Queryを少し使う</td>
+          <td>CSV取込、列削除、型変換、更新</td>
+          <td>学んだ人なら到達できる</td>
+        </tr>
+        <tr>
+          <td>関数と併用する</td>
+          <td>クエリで整形し、関数で判定・出力する</td>
+          <td>一般事務では少数派</td>
+        </tr>
+        <tr>
+          <td>マクロ禁止環境を設計できる</td>
+          <td>入力、整形、確認、出力、更新運用まで組む</td>
+          <td>部署に1人いるとかなり強い</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>この段階の人は、単にPower Queryを知っている人ではありません。VBAが使えない制約の中で、誰が更新しても壊れにくい形へ組み直せる人です。</p>
+</section>
+
+<section class="method-section" id="trained">
+  <h3>この段階で鍛えられるもの</h3>
+  <p>マクロ禁止で鍛えられるのは、単なる代替テクニックではありません。構造化して考える力です。</p>
+  <p>入力データはどこから来るのか。どこで整形するのか。どこまでPower Queryでやり、どこから関数で受けるのか。誰が更新しても壊れない形にするにはどうするのか。</p>
+  <p>ここを通ると、Excelは「自分だけが動かせる自動化ツール」から「他の人も更新できる仕組み」に近づいていきます。</p>
+  <p>そして、この経験が次の段階につながります。旧世代関数とPower Queryで可変データを扱い続けると、やがて「なぜ数式を下まで敷き詰めているのか」「なぜ使っていない行まで処理しているのか」という疑問が出てきます。</p>
+  <p>そこでスピル関数の意味が変わります。FILTERが便利、UNIQUEが便利、という話ではなく、1セルから必要な分だけ結果を出す設計へ進める技術として見えてきます。</p>
+  <div class="xdemo-note-good">
+    <strong>段階5から先へ</strong>
+    <p>Power Queryと関数で構造化する力がつくと、次は「入力そのものをどう短くするか」「可変データをどう扱うか」が見えやすくなります。QR入力では入力列の生成へ、スピル関数では実データ範囲だけを動的に出す設計へ進みます。</p>
+  </div>
+</section>
+
+<div class="stage-checklist">
+  <h3>この段階を通過したサイン</h3>
+  <ul>
+    <li>Power QueryでCSVやExcelファイルを取り込み・整形できる</li>
+    <li>複数ファイルの結合をPower Queryでできる</li>
+    <li>関数で判定・抽出・出力を組める</li>
+    <li>Power Queryと関数の役割分担を考えて設計できる</li>
+    <li>マクロ禁止でも月次処理を安定して回せる</li>
+  </ul>
+</div>
+
+<section class="method-section">
+  <h3>まとめ</h3>
+  <p>段階5は、マクロ禁止によって一度かなり苦しくなる時期です。VBAを知っている人ほど、「VBAなら一瞬なのに」という比較で集中力を削られます。</p>
+  <p>ただし、ここでPower Queryと関数を代替策としてではなく、別の設計思想として見られるようになると、Excelの作り方が変わります。処理を動かすのではなく、データの流れを組む。手順を隠すのではなく、整形、判定、出力を分けて見える形にする。</p>
+  <p>この段階を通ると、スピル関数の見え方も変わります。便利な新関数ではなく、可変構造を扱うための設計技術として見えてきます。</p>
+</section>
+
+<nav class="stage-nav" aria-label="段階ナビゲーション">
+  <a class="stage-nav-prev" href="article_stage3_vba_web_automation.html">
+    <span class="stage-nav-label">← 前の段階</span>
+    <span class="stage-nav-title">段階4：VBA応用で、Web操作や外部アプリまで広がる時期</span>
+  </a>
+  <a class="stage-nav-next" href="article_stage5_qr_input_design_shift.html">
+    <span class="stage-nav-label">次の段階 →</span>
+    <span class="stage-nav-title">段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期</span>
+  </a>
+</nav>
+
+<section class="method-section">
+  <h2>シリーズ記事</h2>
+  <ul class="article-list">
+    <li class="article-item"><a class="article-link" href="article_stage1_functions_printing.html">段階1：VLOOKUP、印刷、データ整形でExcelの便利さに気づく時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage2_vba_macro_recording.html">段階2：マクロの記録とVBA初級で、作業が消える時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage3_vba_internal_design.html">段階3：VBA中級・上級で、Excel内の業務ツールを設計する時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_stage3_vba_web_automation.html">段階4：VBA応用で、Web操作や外部アプリまで広がる時期</a></li>
+    <li class="article-item"><p class="article-link">段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期（この記事）</p></li>
+    <li class="article-item"><a class="article-link" href="article_stage5_qr_input_design_shift.html">段階6：QR入力自動化で、RPAに頼らないインターフェースを設計する時期</a></li>
+    <li class="article-item"><a class="article-link" href="article_spill_design_shift.html">段階7：スピル関数で、Excelの設計思想が変わる時期</a></li>
+  </ul>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-info">
+      <p class="footer-copyright">&copy; Excel &times; No VBA Lab</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="../about.html">運営者情報</a></li>
+      <li><a href="../disclaimer.html">免責事項</a></li>
+      <li><a href="../privacy.html">プライバシーポリシー</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="../script.js"></script>
+</body>
+</html>
