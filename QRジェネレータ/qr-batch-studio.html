@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Batch Studio｜複数件QRコード一括作成ツール｜Excel × No VBA Lab</title>
+<meta name="description" content="住所などの一覧からQRコードを連続生成。改行(Enter)付与で次の行へ自動移動。全角の文字欠けを防ぐ行単位分割。通し番号・バイト数表示を選べてQRだけを整然と1ページ印刷。">
+<style>
+  :root{ --accent:#1a73a7; --accent-dark:#0f4c6b; --bg:#f5f7fa; --border:#d6dde5; --text:#1f2d3a;
+    --ok:#1a8a4a; --warn:#c47f00; --ng:#c0392b; }
+  *{box-sizing:border-box;}
+  body{font-family:"Segoe UI","Hiragino Kaku Gothic ProN","Meiryo",sans-serif;
+    margin:0; background:
+      radial-gradient(circle at 85% 0,rgba(124,58,237,.18),transparent 30%),
+      linear-gradient(180deg,#071426 0,#123052 310px,var(--bg) 310px);
+    color:var(--text); line-height:1.6;}
+  .tool-header{color:#fff; border-bottom:1px solid rgba(255,255,255,.12);}
+  .tool-header-inner{max-width:1040px; margin:0 auto; padding:18px 20px;
+    display:flex; align-items:center; justify-content:space-between; gap:18px;}
+  .brand{color:#fff; text-decoration:none; font-weight:800; letter-spacing:.02em;}
+  .brand span{display:block; color:#b9a5ff; font-size:.68rem; letter-spacing:.15em; margin-bottom:2px;}
+  .tool-nav{display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px;}
+  .tool-nav a{color:#eee8ff; text-decoration:none; border:1px solid rgba(205,190,255,.3);
+    border-radius:999px; background:rgba(5,24,47,.48); padding:6px 11px; font-size:.78rem; font-weight:700;}
+  .tool-nav a[aria-current=page]{border-color:#bba4ff; background:rgba(124,58,237,.24); color:#fff;}
+  .wrap{max-width:980px; margin:0 auto; padding:42px 20px 64px;}
+  h1{font-size:1.45rem; margin:0 0 4px;}
+  .tool-kicker{color:#bdaaff; font-size:.72rem; font-weight:800; letter-spacing:.16em; margin:0 0 4px;}
+  .tool-title-block{color:#fff; margin-bottom:24px;}
+  .tool-title-block h1{font-size:clamp(1.8rem,5vw,2.75rem);}
+  .lead{color:#d2e6f5; font-size:.93rem; margin:0;}
+  .card{background:#fff; border:1px solid var(--border); border-radius:12px;
+    padding:24px; box-shadow:0 18px 42px rgba(4,18,38,.2);}
+  label{display:block; font-weight:600; font-size:.9rem; margin:16px 0 6px;}
+  label:first-of-type{margin-top:0;}
+  textarea,select,input[type=number]{width:100%; padding:10px 12px; border:1px solid var(--border);
+    border-radius:8px; font-size:.95rem; font-family:inherit; background:#fff; color:var(--text);}
+  textarea{resize:vertical; min-height:150px; font-family:"Meiryo",monospace;}
+  .row{display:flex; gap:16px; flex-wrap:wrap;}
+  .row > div{flex:1; min-width:130px;}
+  .chk{display:flex; align-items:center; gap:8px; margin-top:10px; font-size:.9rem;}
+  .chk input{width:auto;}
+  .btn{margin-top:20px; width:100%; padding:12px; border:none; border-radius:8px;
+    background:var(--accent); color:#fff; font-size:1rem; font-weight:600; cursor:pointer;}
+  .btn:hover{background:var(--accent-dark);}
+  .dlrow{margin-top:16px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; align-items:center;}
+  .dlbtn{padding:8px 18px; border:1px solid var(--accent); border-radius:8px;
+    background:#fff; color:var(--accent); font-size:.9rem; font-weight:600; cursor:pointer; text-decoration:none;}
+  .dlbtn:hover{background:#eef5fa;}
+  .inlinectrl{display:flex; align-items:center; gap:6px; font-size:.85rem; color:#5a6b7b;}
+  .inlinectrl select{width:auto; padding:6px 8px;}
+  .note{font-size:.82rem; color:#6b7b8b; margin-top:20px;
+    background:#eef3f7; border-radius:8px; padding:12px 14px;}
+  .warnbox{font-size:.82rem; color:#7a5500; margin-top:12px;
+    background:#fff6e5; border:1px solid #f0d79a; border-radius:8px; padding:10px 14px;}
+  .err{color:var(--ng); font-size:.88rem; margin-top:10px; min-height:1.2em;}
+  .summary{font-size:.85rem; color:#5a6b7b; margin:18px 0 8px; font-weight:600;}
+
+  /* 画面表示用グリッド */
+  #grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(170px,1fr)); gap:14px; margin-top:8px;}
+  .qrcell{border:1px solid var(--border); border-radius:8px; background:#fff; padding:10px; text-align:center;}
+  .qrcell img{width:100%; max-width:150px; height:auto; image-rendering:pixelated;}
+  .qrcell .no{font-size:.8rem; font-weight:700; color:var(--accent); margin-top:4px;}
+  .qrcell .no .bytes{font-weight:500; color:#9aa7b3; font-size:.72rem; margin-left:4px;}
+  .qrcell .label{font-size:.78rem; color:var(--text); margin-top:2px; word-break:break-all;}
+  #grid.hideLabel .label{display:none;}
+  #grid.hideBytes .no .bytes{display:none;}
+  .tool-footer{max-width:980px; margin:0 auto; padding:0 20px 34px; text-align:center;
+    color:#718096; font-size:.78rem;}
+  .tool-footer a{color:var(--accent); font-weight:700; text-decoration:none;}
+  @media(max-width:620px){
+    body{background:
+      radial-gradient(circle at 85% 0,rgba(124,58,237,.18),transparent 30%),
+      linear-gradient(180deg,#071426 0,#123052 410px,var(--bg) 410px);}
+    .tool-header-inner{align-items:flex-start; flex-direction:column;}
+    .tool-nav{justify-content:flex-start;}
+    .wrap{padding-top:30px;}
+    .card{padding:18px;}
+  }
+
+  /* ===== 印刷：#grid だけ表示。番号・バイト数は設定に従う ===== */
+  @media print{
+    body{background:#fff !important;}
+    .tool-header,.tool-footer{display:none !important;}
+    body * { visibility:hidden !important; }
+    #grid, #grid * { visibility:visible !important; }
+    #grid{
+      position:absolute; left:0; top:0; width:100%;
+      display:grid !important;
+      grid-template-columns:repeat(var(--print-cols,4), 1fr) !important;
+      gap:5mm !important;
+      margin:0 !important; padding:0 !important;
+    }
+    .qrcell{
+      page-break-inside:avoid; break-inside:avoid;
+      border:none !important; border-radius:0 !important;
+      background:transparent !important; padding:0 !important; margin:0 !important;
+      display:flex !important; flex-direction:column; align-items:center; justify-content:flex-start;
+    }
+    .qrcell img{ width:100% !important; max-width:100% !important; height:auto !important; }
+    .qrcell .no{ display:block !important; font-size:8pt; font-weight:700; color:#000; margin-top:1mm; }
+    .qrcell .no .bytes{ color:#444; font-size:7pt; }
+    .qrcell .label{font-size:8pt; margin-top:0.5mm;}
+    #grid.hideLabel .label{display:none !important;}
+    #grid.hideBytes .no .bytes{display:none !important;}
+    @page{ margin:8mm; }
+  }
+</style>
+</head>
+<body>
+<header class="tool-header">
+  <div class="tool-header-inner">
+    <a class="brand" href="../index.html#qr"><span>EXCEL × NO VBA LAB</span>QR Browser Tools</a>
+    <nav class="tool-nav" aria-label="QRツールナビゲーション">
+      <a href="../index.html#qr">ホームへ戻る</a>
+      <a href="qr-quick-maker.html">1件用</a>
+      <a href="qr-batch-studio.html" aria-current="page">一括作成</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap">
+  <div class="tool-title-block">
+    <p class="tool-kicker">02 / BATCH QR GENERATOR</p>
+    <h1>QR Batch Studio</h1>
+    <p class="lead">複数件の一覧からQRコードをまとめて作成。行単位の安全な分割、末尾Enter、通し番号、バイト数表示、一覧印刷に対応します。処理はブラウザ内で完結し、データは外部に送信されません。</p>
+  </div>
+
+  <div class="card">
+    <label for="text">データ（1行に1件。改行で区切ってください）</label>
+    <textarea id="text" placeholder="北海道札幌市中央区旭ケ丘&#10;北海道札幌市中央区大通東"></textarea>
+
+    <div class="row">
+      <div>
+        <label for="enc">文字コード</label>
+        <select id="enc">
+          <option value="UTF8">UTF-8</option>
+          <option value="SJIS" selected>Shift_JIS（旧基幹システム向け）</option>
+        </select>
+      </div>
+      <div>
+        <label for="ecc">誤り訂正</label>
+        <select id="ecc">
+          <option value="L">L</option>
+          <option value="M" selected>M（標準）</option>
+          <option value="Q">Q</option>
+          <option value="H">H</option>
+        </select>
+      </div>
+      <div>
+        <label for="eol">末尾のEnter（改行）</label>
+        <select id="eol">
+          <option value="CRLF">CR+LF（最も一般的）</option>
+          <option value="LF" selected>LF</option>
+          <option value="CR">CR</option>
+          <option value="NONE">付けない</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="mode">分割モード</label>
+        <select id="mode">
+          <option value="bytes" selected>複数行をまとめて分割（行単位・標準）</option>
+          <option value="line">1行＝1QR（1件ずつ）</option>
+        </select>
+      </div>
+      <div>
+        <label for="limit">まとめ分割の上限（バイト）</label>
+        <input type="number" id="limit" value="300" min="20" max="2000">
+      </div>
+      <div>
+        <label for="scale">セルサイズ(px・画面用)</label>
+        <input type="number" id="scale" value="4" min="2" max="12">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="printCols">印刷時の横の個数（列数）</label>
+        <select id="printCols">
+          <option value="2">2 列（大きめ・読み取りやすい）</option>
+          <option value="3">3 列</option>
+          <option value="4" selected>4 列（標準）</option>
+          <option value="5">5 列</option>
+          <option value="6">6 列（小さめ・たくさん）</option>
+        </select>
+      </div>
+      <div>
+        <div class="chk">
+          <input type="checkbox" id="showLabel" checked>
+          <label for="showLabel" style="margin:0;">QRの下に内容（住所）を表示する</label>
+        </div>
+        <div class="chk">
+          <input type="checkbox" id="showBytes" checked>
+          <label for="showBytes" style="margin:0;">番号の横にバイト数を表示する</label>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn" id="gen">QRコードを連続生成</button>
+    <div class="err" id="err"></div>
+
+    <div class="summary" id="summary"></div>
+    <div id="overflowWarn" class="warnbox" style="display:none;"></div>
+
+    <div class="dlrow" id="toolbar" style="display:none;">
+      <button class="dlbtn" id="printBtn" type="button">一覧を印刷</button>
+      <span class="inlinectrl">
+        印刷の列数：
+        <select id="printColsQuick">
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4" selected>4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </span>
+    </div>
+
+    <div id="grid"></div>
+
+    <div class="note">
+      ※ <strong>通し番号・バイト数：</strong>各QRの下にNo.が付きます。「番号の横にバイト数を表示する」をオンにすると「No.3 (87B)」のように容量も並びます。住所表示をオフにしても番号は残るので、読み取る順番が分かります。<br>
+      ※ <strong>印刷：</strong>印刷するとQRコードと番号（必要ならバイト数）だけが出力されます（入力欄・見出し・枠線は印刷されません）。横の個数（列数）で1ページに収まる数とQRの大きさが決まります。<br>
+      ※ <strong>文字欠け防止：</strong>分割は必ず行（1件）単位。全角・半角が混在しても文字の途中で切れません。<br>
+      ※ <strong>Enter：</strong>各QR末尾の改行を多くのリーダーがEnterとして送出します。対応コードはリーダーにより異なるため、必ず実機でテストしてください。<br>
+      ※ 印刷時にページ上下へ日付やURLが入る場合は、ブラウザの印刷設定で「ヘッダーとフッター」をオフにしてください。
+    </div>
+  </div>
+</div>
+
+<footer class="tool-footer">
+  <p><a href="../index.html#qr">QR Automation Labへ戻る</a> ｜ Excel × No VBA Lab</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/encoding-japanese@2.2.0/encoding.min.js"></script>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(id){return document.getElementById(id);};
+  var EOL={CRLF:"\r\n", LF:"\n", CR:"\r", NONE:""};
+  var MAX_BYTES={ L:2953, M:2331, Q:1663, H:1273 };
+
+  function toByteArray(text, encMode){
+    var uni=Encoding.stringToCode(text);
+    return Encoding.convert(uni, {to:(encMode==='SJIS'?'SJIS':'UTF8'), from:'UNICODE'});
+  }
+  function bytesToBinStr(arr){ var s=""; for(var i=0;i<arr.length;i++) s+=String.fromCharCode(arr[i]); return s; }
+  function byteLen(text, encMode){ return toByteArray(text, encMode).length; }
+  function makeQR(payload, encMode, ecc, scale){
+    var qr=qrcode(0, ecc);
+    qr.addData(bytesToBinStr(toByteArray(payload, encMode)), 'Byte');
+    qr.make();
+    return qr.createDataURL(scale, scale*4);
+  }
+
+  function applyPrintCols(n){ $('grid').style.setProperty('--print-cols', n); }
+  function applyToggles(){
+    $('grid').classList.toggle('hideLabel', !$('showLabel').checked);
+    $('grid').classList.toggle('hideBytes', !$('showBytes').checked);
+  }
+
+  function generate(){
+    $('err').textContent=""; $('grid').innerHTML="";
+    $('summary').textContent="";
+    $('overflowWarn').style.display="none"; $('overflowWarn').textContent="";
+    $('toolbar').style.display="none";
+
+    var raw=$('text').value;
+    if(!raw.trim()){ $('err').textContent="データを入力してください。"; return; }
+
+    var encMode=$('enc').value, ecc=$('ecc').value;
+    var eol=EOL[$('eol').value], mode=$('mode').value;
+    var limit=Math.max(20, parseInt($('limit').value,10)||300);
+    var scale=Math.max(2, Math.min(12, parseInt($('scale').value,10)||4));
+    var max=MAX_BYTES[ecc];
+
+    var lines=raw.split(/\r\n|\r|\n/).filter(function(s){return s.trim()!=="";});
+
+    var items=[];
+    if(mode==='line'){
+      lines.forEach(function(line){ items.push({label:line, payload:line+eol}); });
+    }else{
+      var buf="", labels=[];
+      lines.forEach(function(line){
+        var unit=line+eol;
+        if(buf===""){ buf=unit; labels=[line]; }
+        else if(byteLen(buf+unit, encMode) <= limit){ buf+=unit; labels.push(line); }
+        else{ items.push({label:labels.join(" / "), payload:buf}); buf=unit; labels=[line]; }
+      });
+      if(buf!=="") items.push({label:labels.join(" / "), payload:buf});
+    }
+
+    var grid=$('grid'), ok=0, over=0, overLines=[];
+    items.forEach(function(it,i){
+      var bl=byteLen(it.payload, encMode);
+      var cell=document.createElement('div'); cell.className='qrcell';
+      var noHtml='No.'+(i+1)+'<span class="bytes">('+bl+'B)</span>';
+      if(bl>max){
+        over++; overLines.push(it.label);
+        cell.innerHTML='<div class="label" style="color:#c0392b;">容量超過（'+bl+'/'+max+'）<br>'+escapeHtml(it.label)+'</div>'+
+          '<div class="no" style="color:#c0392b;">'+noHtml+'</div>';
+      }else{
+        try{
+          var url=makeQR(it.payload, encMode, ecc, scale);
+          cell.innerHTML=
+            '<img alt="QR No.'+(i+1)+'" src="'+url+'">'+
+            '<div class="no">'+noHtml+'</div>'+
+            '<div class="label">'+escapeHtml(it.label)+'</div>';
+          ok++;
+        }catch(e){ over++; overLines.push(it.label);
+          cell.innerHTML='<div class="label" style="color:#c0392b;">生成失敗：'+escapeHtml(it.label)+'</div>'+
+            '<div class="no" style="color:#c0392b;">'+noHtml+'</div>'; }
+      }
+      grid.appendChild(cell);
+    });
+
+    applyToggles();
+    applyPrintCols($('printCols').value);
+
+    $('summary').textContent='生成：'+ok+' 個 / 全 '+items.length+' 件'+
+      '（'+(encMode==='SJIS'?'Shift_JIS':'UTF-8')+'・誤り訂正'+ecc+
+      '・末尾Enter：'+$('eol').options[$('eol').selectedIndex].text+'）';
+    if(over>0){
+      $('overflowWarn').style.display="block";
+      $('overflowWarn').innerHTML='⚠ 容量超過で生成できなかった項目が '+over+' 件あります：<br>'+escapeHtml(overLines.join(" / "));
+    }
+    if(ok>0) $('toolbar').style.display="flex";
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g,function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function syncCols(val){ $('printCols').value=val; $('printColsQuick').value=val; applyPrintCols(val); }
+
+  $('gen').addEventListener('click', generate);
+  $('printBtn').addEventListener('click', function(){ window.print(); });
+  $('printCols').addEventListener('change', function(){ syncCols(this.value); });
+  $('printColsQuick').addEventListener('change', function(){ syncCols(this.value); });
+  $('showLabel').addEventListener('change', applyToggles);
+  $('showBytes').addEventListener('change', applyToggles);
+})();
+</script>
+</body>
+</html>

@@ -128,8 +128,8 @@
 <p>本記事では、バーコードコントロール＋キーボードエミュレーション方式での「半角データのシステム移行」を解説します。<strong>フィールドマッピング・キー操作設計・Sleepの配置・移行バッチの組み立て</strong>といった設計思想は、全角対応の場合でもそのまま活きる共通技術です。</p>
 <p>しかし正直に言えば、<strong>本シリーズの本命は次の記事⑪</strong>です。</p>
 <div class="xdemo-note-good">
-<strong>💡 記事⑪「VBA標準機能だけで全角QR生成」が本命です</strong><br>
-          記事⑪では、外部ライブラリなし・ネット接続なしで、<strong>VBAの標準機能だけ</strong>で漢字・ひらがなを含むQRコードを生成する方法を解説しています。閉域環境ではライブラリの追加インストールが困難なため、ADODB.Stream＋リード・ソロモン符号によるVBA自力生成が最も現実的な選択肢になります。<br><br>
+<strong>💡 記事⑪「全角QR生成のVBA完全版コード」が本命です</strong><br>
+          記事⑪では、外部ライブラリなし・ネット接続なしで、<strong>Excel VBAとWindows標準APIだけ</strong>で漢字・ひらがなを含むQRコードを生成する方法を解説しています。閉域環境ではライブラリの追加インストールが困難なため、WideCharToMultiByteによる文字コード変換、リード・ソロモン符号、BMP出力、Excelセルへの画像配置までを1つの標準モジュールにまとめた公開版コードが現実的な選択肢になります。<br><br>
           本記事で学ぶ<strong>「操作を分解してQRプログラムに変換する設計技法」</strong>は、記事⑪のVBA生成方式でもそのまま使います。つまり本記事は、記事⑪を最大限に活用するための<strong>設計編</strong>という位置づけです。ぜひ最後まで読んで、記事⑪へ進んでください。
         </div>
 <h3>本記事と記事⑪の関係</h3>
@@ -138,11 +138,11 @@
 <tr><th>項目</th><th>本記事（⑩）</th><th>記事⑪（本命）</th></tr>
 </thead>
 <tbody>
-<tr><td>QR生成方式</td><td>バーコードコントロール（Access由来のActiveX）</td><td>VBA標準機能のみで自力生成</td></tr>
+<tr><td>QR生成方式</td><td>バーコードコントロール（Access由来のActiveX）</td><td>VBA＋Windows標準APIで自力生成</td></tr>
 <tr><td>全角文字</td><td style="color:#c62828;font-weight:bold">✕ 使えない</td><td style="color:#2e7d32;font-weight:bold">&cir; 使える</td></tr>
 <tr><td>外部ライブラリ</td><td>不要。ただしAccess由来のMicrosoft Barcode Controlが使えるOffice構成と、ActiveX利用が許可された設定が前提</td><td>不要</td></tr>
 <tr><td>閉域環境</td><td>&cir;</td><td style="color:#2e7d32;font-weight:bold">&cir; 最適</td></tr>
-<tr class="recommend"><td>学べること</td><td><strong>設計技法</strong>：画面分析・マッピング・キー操作設計・Sleep配置</td><td><strong>実装技法</strong>：UTF-8変換・RS符号・セル描画・全角QR生成</td></tr>
+<tr class="recommend"><td>学べること</td><td><strong>設計技法</strong>：画面分析・マッピング・キー操作設計・Sleep配置</td><td><strong>実装技法</strong>：UTF-8(ECI) / Shift-JIS変換・RS符号・BMP出力・セル配置・全角QR生成</td></tr>
 <tr><td>実務での出番</td><td>半角のみのコード・数値データの移行</td><td><strong>日本語を含む実データの移行（＝ほとんどの現場）</strong></td></tr>
 </tbody>
 </table>
@@ -472,7 +472,7 @@
 <tr><td>確認ダイアログが出ない件がある</td><td>データ内容により確認の有無が変わる</td><td>IF関数で条件分岐（Enter追加/省略）</td></tr>
 <tr><td>途中で新システムがタイムアウト</td><td>移行に時間がかかりセッション切れ</td><td>50〜100件ごとに再ログインする運用に変更</td></tr>
 <tr><td>旧データに不正値がありエラーで止まる</td><td>旧システムの入力規則が甘かった</td><td>事前にExcelでバリデーション（IF・ISERROR等）</td></tr>
-<tr><td>全角文字が文字化けする</td><td>バーコードコントロールの半角制限</td><td>記事⑪のVBA標準機能のみ方式で全角QRを生成する</td></tr>
+<tr><td>全角文字が文字化けする</td><td>バーコードコントロールの半角制限</td><td>記事⑪のVBA＋Windows標準API版で全角QRを生成する</td></tr>
 </table>
 </section>
 <!-- ===== まとめ ===== -->
@@ -512,9 +512,9 @@
 </div>
 <div class="xdemo-note-good">
 <strong>💡 次はいよいよシリーズの本命です</strong><br>
-          本記事で学んだ<strong>画面分析・マッピング・数式設計</strong>の技法は、次の記事⑪でもそのまま活きます。記事⑪では、バーコードコントロールの「半角しか使えない」という壁を、<strong>VBA標準機能だけで突破</strong>します。外部ライブラリなし・ネット接続なしで、漢字・ひらがなを含むQRコードを生成する方法を解説します。<br><br>
-          閉域環境ではライブラリの追加インストールが困難です。そのため、<strong>ADODB.Stream（UTF-8変換）＋ リード・ソロモン符号（誤り訂正）＋ セル描画</strong>というVBA自力実装が、最も現実的な全角対応手段になります。<br><br>
-          &rarr; <a href="11_qr_vba_generate.html"><strong>記事⑪「VBA標準機能だけで全角QR生成」へ進む</strong></a>
+          本記事で学んだ<strong>画面分析・マッピング・数式設計</strong>の技法は、次の記事⑪でもそのまま活きます。記事⑪では、バーコードコントロールの「半角しか使えない」という壁を、<strong>VBA＋Windows標準API</strong>で突破します。外部ライブラリなし・ネット接続なしで、漢字・ひらがなを含むQRコードを生成する方法を解説します。<br><br>
+          閉域環境ではライブラリの追加インストールが困難です。そのため、<strong>WideCharToMultiByte（UTF-8 / Shift-JIS変換）＋ リード・ソロモン符号（誤り訂正）＋ BMP出力＋セル配置</strong>というVBA自力実装が、現実的な全角対応手段になります。<br><br>
+          &rarr; <a href="11_qr_vba_generate.html"><strong>記事⑪「全角QR生成のVBA完全版コード」へ進む</strong></a>
 </div>
 </section>
     <nav class="series-nav">
@@ -536,7 +536,7 @@
         <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>
         <li class="current"><span class="lv-adv">[応用]</span> <strong>⑩ システム間データ移行（この記事）</strong></li>
-        <li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ VBA標準機能だけで全角QRコード生成</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ 全角QR生成のVBA完全版コード</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="12_qr_existing_reader_check.html">⑫ 会社にあるQRリーダーでまず試す</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="13_qr_reader_design_philosophy_current_research_v5.html">⑬ QRリーダーの設計思想比較</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="14_qr_zebra_adf_variable_pause_revised_ranked.html">⑭ Zebra 123Scan / ADF検証メモ</a></li>

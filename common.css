@@ -494,7 +494,7 @@ a[aria-disabled="true"] { color: #999 !important; cursor: not-allowed; }
   margin-left: 4px;
   flex-wrap: wrap;
 }
-.tag-impact, .tag-rare, .tag-prereq {
+.tag-impact, .tag-rare, .tag-prereq, .tag-important {
   display: inline-block;
   padding: 2px 8px;
   border-radius: 4px;
@@ -505,6 +505,7 @@ a[aria-disabled="true"] { color: #999 !important; cursor: not-allowed; }
 .tag-impact { color: #e65100; background: #fff3e0; border: 1px solid #ffb74d; }
 .tag-rare { color: #6a1b9a; background: #f3e5f5; border: 1px solid #ce93d8; }
 .tag-prereq { color: #1565c0; background: #e3f2fd; border: 1px solid #64b5f6; }
+.tag-important { color: #b71c1c; background: #ffebee; border: 1px solid #ef9a9a; }
 .tag-vba {
   display: inline-block;
   background: #4a148c;
@@ -1238,7 +1239,8 @@ a[aria-disabled="true"] { color: #999 !important; cursor: not-allowed; }
   .level-label,
   .tag-impact,
   .tag-rare,
-  .tag-prereq {
+  .tag-prereq,
+  .tag-important {
     font-size: 0.72rem;
   }
 

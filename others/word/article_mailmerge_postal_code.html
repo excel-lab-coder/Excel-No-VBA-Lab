@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Word差し込み印刷で郵便番号にハイフンを入れる方法｜Excel側に作業列を作らない｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="Wordの差し込み印刷で、Excel住所録の郵便番号が1000001や0010001のようにハイフンなしの場合に、Excel側へ作業列を追加せずWordのフィールドコードで000-0000形式に表示する方法を解説。一般的な対応方法との違いも整理します。" name="description">
+<meta content="Word 差し込み印刷 郵便番号 ハイフン, MERGEFIELD 郵便番号 表示形式, Word フィールドコード 000-0000, Excel 住所録 作業列不要, 郵便番号 0010001" name="keywords">
+<meta content="Word差し込み印刷で郵便番号にハイフンを入れる方法｜Excel側に作業列を作らない" property="og:title">
+<meta content="Excel住所録を崩さず、Word側のフィールドコードだけで郵便番号を000-0000形式に整える方法を解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_postal_code.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Word差し込み印刷で郵便番号にハイフンを入れる方法",
+  "description": "Wordの差し込み印刷で、Excel住所録の郵便番号が1000001や0010001のようにハイフンなしの場合に、Excel側へ作業列を追加せずWordのフィールドコードで000-0000形式に表示する方法を解説。一般的な対応方法との違いも整理します。",
+  "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
+  "datePublished": "2026-06-22",
+  "dateModified": "2026-06-22"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},
+    {"@type": "ListItem", "position": 3, "name": "Word差し込み印刷で郵便番号にハイフンを入れる方法", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_postal_code.html"}
+  ]
+}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span>
+<strong>Word差し込み印刷 郵便番号</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全バージョン</span>
+<span class="article-date">更新日: 2026-06-22</span>
+</div>
+<h1 class="article-title">Word差し込み印刷で郵便番号にハイフンを入れる方法：Excel側に作業列を作らない</h1>
+</div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>Wordの差し込み印刷でExcel住所録を使ったとき、郵便番号が <code>1000001</code> や <code>0010001</code> のようにハイフンなしで表示されることがあります。</p>
+<p>本当はWord上では <code>100-0001</code>、<code>001-0001</code> のように表示したい。ただし、Excel側に「ハイフン付き郵便番号」の作業列は作りたくない。この記事はそのための方法です。</p>
+<div class="xdemo-note-good">
+<strong>結論：Excelの住所録は触らず、Word側のフィールドコードで整形します。</strong><br>
+住所録に列を追加したり、既存の表にハイフン入りの作業列を作ったりしなくてよいので、元データの構造を崩さずに運用できます。
+</div>
+</section>
+
+<section class="method-section">
+<h3>一般的にはどう対応していることが多いか</h3>
+<p>郵便番号のハイフン問題は、Wordだけの問題というより、<strong>Excel住所録の持ち方</strong> と <strong>Word差し込み印刷の表示方法</strong> が混ざって起きることが多いです。現場では、だいたい次のどれかで対応されています。</p>
+<div class="table-responsive">
+<div class="table-wrapper"><table class="comparison-table"><caption>よくある対応方法</caption>
+<thead>
+<tr>
+<th scope="col">対応方法</th>
+<th scope="col">よくある理由</th>
+<th scope="col">注意点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Excel側に作業列を作る</td>
+<td class="text-left"><code>=TEXT(A2,"000-0000")</code> や <code>=LEFT(TEXT(A2,"0000000"),3)&amp;"-"&amp;RIGHT(TEXT(A2,"0000000"),4)</code> で、ハイフン付き列を作ってから差し込む。</td>
+<td class="text-left">一番分かりやすい反面、住所録に印刷用の列が増えます。共有ファイルやCSV貼り替え運用では表が崩れやすくなります。</td>
+</tr>
+<tr>
+<td>Excelの表示形式だけ変える</td>
+<td class="text-left">郵便番号列にユーザー定義の表示形式 <code>000-0000</code> を設定する。</td>
+<td class="text-left">Excel上ではきれいに見えても、Word差し込み印刷では表示形式がそのまま反映されないことがあります。</td>
+</tr>
+<tr>
+<td>最初からハイフン付きで管理する</td>
+<td class="text-left">住所録の郵便番号を <code>100-0001</code> のような文字列で持つ。</td>
+<td class="text-left">入力ルールを徹底できるなら安定します。ただし、基幹システムやCSV出力がハイフンなしの場合は毎回変換が必要です。</td>
+</tr>
+<tr>
+<td>Word側のフィールドコードで整える</td>
+<td class="text-left">Excel住所録は <code>1000001</code> のままにして、Word側で <code>000-0000</code> 表示にする。</td>
+<td class="text-left">フィールドコードの作り方に慣れが必要ですが、住所録の列構成を変えずに済みます。</td>
+</tr>
+<tr>
+<td>印刷前に手修正する</td>
+<td class="text-left">差し込み後の文書を見ながら手でハイフンを入れる。</td>
+<td class="text-left">少数なら可能ですが、差し込み印刷の強みがなくなります。件数が増えるほどミスが出やすい方法です。</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="xdemo-note-good">
+<strong>この記事で採用するのは「Word側のフィールドコードで整える」方法です。</strong><br>
+Excel側に作業列を作る方法はよく使われますが、住所録の表を変えたくない現場では、Word側で表示だけ整える方が壊れにくいです。
+</div>
+<div class="xdemo-note-info">
+<strong>ただし、この方法は意外と知られていません。</strong><br>
+Wordの差し込み印刷は「差し込みフィールドを入れる」操作までは知られていても、<code>Alt + F9</code> でフィールドコードを開き、<code>\#</code> で表示形式を指定するところまではあまり共有されていないことが多いです。そのため、Excel側に作業列を作って解決しようとする流れになりがちです。
+</div>
+</section>
+
+<section class="method-section">
+<h3>フィールドコードは正攻法だが、Word中級者向け</h3>
+<p>Wordの差し込み印刷を使う人でも、多くは次の操作範囲で止まります。</p>
+<ul class="line-height-2">
+<li>Excel住所録を選ぶ。</li>
+<li>「差し込みフィールドの挿入」で氏名・住所・郵便番号を入れる。</li>
+<li>「結果のプレビュー」で表示を確認する。</li>
+<li>封筒、ラベル、案内文書を印刷する。</li>
+</ul>
+<p>一方で、次の操作まで知っている人はかなり少数派です。</p>
+<ul class="line-height-2">
+<li><code>Alt + F9</code> で差し込みフィールドの中身を見る。</li>
+<li><code>Ctrl + F9</code> でフィールド用の波かっこを作る。</li>
+<li><code>\# "000'-'0000"</code> のような数値表示スイッチを書く。</li>
+<li>手入力の <code>{ }</code> ではフィールドとして動かないことを知っている。</li>
+</ul>
+<div class="xdemo-note-info">
+<strong>つまり、機能としては正攻法、操作としては中級者向けです。</strong><br>
+ExcelやAccessなどのデータソースから差し込むと、Excel側で見えている表示形式がWord側でそのまま保持されないことがあります。その場合、Word側のMERGEFIELDに数値表示スイッチ <code>\#</code> を指定して整える、という考え方になります。
+</div>
+</section>
+
+<section class="method-section">
+<h3>まず答え：使うフィールドコード</h3>
+<p>郵便番号の列名が <code>郵便番号</code> の場合、Word側で次のフィールドコードを使います。</p>
+<div class="code-block" data-lang="word">
+<span class="code-line">{ = { MERGEFIELD 郵便番号 } \# "000'-'0000" }</span>
+</div>
+<p>これで、Excel側の値が <code>1000001</code> なら <code>100-0001</code>、<code>0010001</code> なら <code>001-0001</code> と表示できます。</p>
+<div class="xdemo-note-info">
+<strong>おすすめは <code>"000'-'0000"</code> の形です。</strong><br>
+ハイフンを <code>'-'</code> として文字扱いにするため、単なる表示形式の記号ではなく「ここにハイフンを出す」と明示できます。
+</div>
+<div class="xdemo-note-good">
+<strong>Excel側が文字列でも、半角数字だけならこの方法で対応しやすいです。</strong><br>
+たとえばセルの値が文字列の <code>1000001</code> や <code>0010001</code> でも、Word側の数値フィールドで <code>000-0000</code> 形式に整えます。ただし、全角数字、余分なスペース、すでにハイフンが入っている値が混ざる場合は、後述の注意点を確認してください。
+</div>
+</section>
+
+<section class="method-section">
+<h3>この方法の何が便利なのか</h3>
+<p>便利な点は、単に「ハイフンが入る」ことだけではありません。<strong>Excel住所録を印刷用に改造しなくて済む</strong>ことが一番大きいです。</p>
+<div class="table-responsive">
+<div class="table-wrapper"><table class="comparison-table"><caption>Word側で整形するメリット</caption>
+<thead>
+<tr>
+<th scope="col">便利な点</th>
+<th scope="col">現場で効く理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>住所録をそのまま使える</td>
+<td class="text-left">Excel側は <code>1000001</code> のまま。印刷用の <code>100-0001</code> 列を追加しないので、元データの表構造が変わりません。</td>
+</tr>
+<tr>
+<td>CSVや基幹データの貼り替えに強い</td>
+<td class="text-left">毎月住所録を入れ替える運用でも、Wordテンプレート側の設定は残ります。Excel側の作業列数式をコピーし直す手間がありません。</td>
+</tr>
+<tr>
+<td>他の集計や参照を壊しにくい</td>
+<td class="text-left">列を増やさないため、VLOOKUPの列番号、Power Queryの列名、他部署の集計表がずれるリスクを減らせます。</td>
+</tr>
+<tr>
+<td>出力先ごとに見た目を変えられる</td>
+<td class="text-left">住所録は同じまま、封筒用Wordではハイフン付き、管理用一覧ではハイフンなし、というように出力側で表示を分けられます。</td>
+</tr>
+<tr>
+<td>先頭ゼロを表示で補える</td>
+<td class="text-left"><code>10001</code> のように先頭ゼロが落ちている値でも、Word上では <code>001-0001</code> と表示できます。</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="xdemo-note-good">
+<strong>つまり、Excelは「データ」、Wordは「印刷の見た目」と役割分担できます。</strong><br>
+住所録をきれいに保ったまま、差し込み印刷だけ郵便番号をハイフン付きにできるので、共有ファイルや定期更新のある現場ほど効果が大きい方法です。
+</div>
+</section>
+
+<section class="method-section">
+<h3>なぜExcel側に作業列を作らない方がよいのか</h3>
+<p>現場では、Excel住所録に <code>=TEXT(A2,"000-0000")</code> や <code>=LEFT(TEXT(A2,"0000000"),3)&amp;"-"&amp;RIGHT(TEXT(A2,"0000000"),4)</code> のような作業列を追加して、その列をWordに差し込む方法も見かけます。小さな個人用ファイルならそれでも動きますが、共有データではおすすめしません。</p>
+<div class="table-responsive">
+<div class="table-wrapper"><table class="comparison-table"><caption>Excel側で作業列を作る場合の問題</caption>
+<thead>
+<tr>
+<th scope="col">問題</th>
+<th scope="col">現場で起きやすいこと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>表の形が変わる</td>
+<td class="text-left">列が1本増えることで、他の人が使っている参照範囲、列番号、Power Query、集計表がずれることがあります。</td>
+</tr>
+<tr>
+<td>元データと出力用データが混ざる</td>
+<td class="text-left">住所録の中に「印刷のためだけの列」が増え、どれが正式な郵便番号なのか分かりにくくなります。</td>
+</tr>
+<tr>
+<td>更新時に壊れやすい</td>
+<td class="text-left">CSVや基幹システムから貼り替えるたびに、作業列の数式が消えたり、範囲外になったりします。</td>
+</tr>
+<tr>
+<td>先頭ゼロの扱いで事故りやすい</td>
+<td class="text-left"><code>0010001</code> のような値が数値化されると <code>10001</code> になり、見た目だけ直しても原因が見えにくくなります。</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="xdemo-note-good">
+<strong>Word側で表示だけ整えるのが安全です。</strong><br>
+Excelは住所録としての元データを保ち、Wordは印刷物としての見た目を担当する。役割を分けると、表が崩れにくくなります。
+</div>
+</section>
+
+<section class="method-section">
+<h3>フィールドコードの意味</h3>
+<div class="table-responsive">
+<div class="table-wrapper"><table class="comparison-table"><caption>フィールドコードの分解</caption>
+<thead>
+<tr>
+<th scope="col">部分</th>
+<th scope="col">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{ MERGEFIELD 郵便番号 }</code></td>
+<td>Excel住所録の「郵便番号」列を呼び出します。</td>
+</tr>
+<tr>
+<td><code>{ = ... }</code></td>
+<td>呼び出した郵便番号を、Wordの数値フィールドとして評価します。</td>
+</tr>
+<tr>
+<td><code>\# "000'-'0000"</code></td>
+<td>7桁の郵便番号として、3桁目と4桁目の間にハイフンを表示します。</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p><code>000</code> は前半3桁、<code>'-'</code> は文字としてのハイフン、<code>0000</code> は後半4桁です。桁数が足りない場合も、先頭にゼロを補って表示できます。</p>
+</section>
+
+<section class="method-section">
+<h3>フィールドコードの設定手順</h3>
+<p>ここが一番つまずきやすいところです。Wordのフィールドコードの <code>{ }</code> は、キーボードで普通に入力した波かっこでは動きません。必ず <code>Ctrl + F9</code> で作ります。</p>
+<div class="xdemo-note-warn">
+<strong>手入力の <code>{ }</code> はNGです。</strong><br>
+見た目が同じでも、Word内部では「ただの文字」と「フィールド」は別物です。フィールドとして動かすには、Wordにフィールドを挿入させる必要があります。
+</div>
+<h4>手順1：郵便番号を表示したい場所にカーソルを置く</h4>
+<p>差し込み印刷文書を開き、封筒や宛名ラベルの郵便番号を表示したい位置をクリックします。</p>
+<h4>手順2：外側のフィールドを作る</h4>
+<p><code>Ctrl + F9</code> を押します。Word上にフィールド用の波かっこが表示されます。</p>
+<div class="code-block" data-lang="word">
+<span class="code-line">{  }</span>
+</div>
+<p>その中に、まず次のように入力します。</p>
+<div class="code-block" data-lang="word">
+<span class="code-line">{ =  \# "000'-'0000" }</span>
+</div>
+<p><code>=</code> の後ろに、あとで差し込みフィールドを入れます。</p>
+<h4>手順3：内側の差し込みフィールドを作る</h4>
+<p><code>=</code> の後ろ、<code>\#</code> の前にカーソルを置き、もう一度 <code>Ctrl + F9</code> を押します。</p>
+<div class="code-block" data-lang="word">
+<span class="code-line">{ = {  } \# "000'-'0000" }</span>
+</div>
+<p>内側の波かっこの中に、差し込み元の列名を指定します。</p>
+<div class="code-block" data-lang="word">
+<span class="code-line">{ = { MERGEFIELD 郵便番号 } \# "000'-'0000" }</span>
+</div>
+<h4>手順4：フィールドを更新して表示を確認する</h4>
+<p>フィールド全体を選択し、<code>F9</code> を押して更新します。差し込み結果のプレビューで、<code>1000001</code> が <code>100-0001</code> のように表示されるか確認します。</p>
+<div class="xdemo-note-info">
+<strong>表示の切り替え：</strong><br>
+フィールドコードの表示／非表示は <code>Alt + F9</code> で切り替えます。コードが見えている状態と、実際の表示結果が見えている状態を行き来できます。
+</div>
+<div class="xdemo-note-good">
+<strong>通常の差し込みフィールドから編集する方法もあります。</strong><br>
+先に「差し込みフィールドの挿入」で <code>郵便番号</code> を入れ、<code>Alt + F9</code> でコード表示に切り替えてから、外側に <code>{ = ... \# "000'-'0000" }</code> を追加する方法でも作れます。ただし、慣れないうちは上の手順のように外側から作る方が構造を理解しやすいです。
+</div>
+</section>
+
+<section class="method-section">
+<h3>ケース別：どのフィールドコードを使うか</h3>
+<div class="table-responsive">
+<div class="table-wrapper"><table class="comparison-table"><caption>郵便番号データ別の対応</caption>
+<thead>
+<tr>
+<th scope="col">Excel側の値</th>
+<th scope="col">Wordで出したい形</th>
+<th scope="col">使う方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1000001</code></td>
+<td><code>100-0001</code></td>
+<td class="text-left"><code>{ = { MERGEFIELD 郵便番号 } \# "000'-'0000" }</code></td>
+</tr>
+<tr>
+<td><code>0010001</code></td>
+<td><code>001-0001</code></td>
+<td class="text-left">同じフィールドコードで対応できます。</td>
+</tr>
+<tr>
+<td><code>10001</code></td>
+<td><code>001-0001</code></td>
+<td class="text-left">数値化で先頭ゼロが落ちていても、<code>000'-'0000</code> が先頭ゼロを補います。</td>
+</tr>
+<tr>
+<td><code>100-0001</code></td>
+<td><code>100-0001</code></td>
+<td class="text-left">すでにハイフン付きなら、この数式は使わず通常の <code>{ MERGEFIELD 郵便番号 }</code> で差し込みます。</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</section>
+
+<section class="tips-section">
+<h3>列名が違う場合</h3>
+<p>Excel側の列名が <code>郵便番号</code> ではない場合は、MERGEFIELDの名前も合わせます。</p>
+<div class="code-block" data-lang="word">
+<span class="code-line">{ = { MERGEFIELD 〒 } \# "000'-'0000" }</span>
+<span class="code-line">{ = { MERGEFIELD 郵便番号1 } \# "000'-'0000" }</span>
+<span class="code-line">{ = { MERGEFIELD zip } \# "000'-'0000" }</span>
+</div>
+<p class="code-comment">列名にスペースや記号があると扱いにくいことがあります。差し込み印刷で使う列名は、できれば短く分かりやすい名前にしておくと安全です。</p>
+</section>
+
+<section class="comparison-section">
+<h3>郵便番号ハイフン処理の実務的な整理</h3>
+<div class="table-responsive">
+<div class="table-wrapper"><table class="formula-count-table"><caption>方法別の現場感</caption>
+<thead>
+<tr>
+<th scope="col">方法</th>
+<th scope="col">現場での多さ</th>
+<th scope="col">安定性</th>
+<th scope="col">コメント</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Excelに作業列を作る</strong></td>
+<td>多い</td>
+<td>中</td>
+<td class="text-left">分かりやすいが、住所録に印刷用の列が増えます。共有ファイルやCSV貼り替え運用では壊れやすいです。</td>
+</tr>
+<tr>
+<td><strong>最初からハイフン付き文字列で管理</strong></td>
+<td>多い</td>
+<td>高</td>
+<td class="text-left">入力ルールを守れるなら強い方法です。ただし、システム出力がハイフンなしの場合は変換が必要です。</td>
+</tr>
+<tr>
+<td><strong>Excelの表示形式だけ変える</strong></td>
+<td>多い</td>
+<td>低〜中</td>
+<td class="text-left">Excel上ではきれいに見えますが、Word差し込み印刷では元の値が出ることがあります。</td>
+</tr>
+<tr>
+<td><strong>Wordのフィールドコードで整形</strong></td>
+<td>少なめ</td>
+<td>高</td>
+<td class="text-left">知っていれば便利です。住所録を崩さず、Wordテンプレート側で印刷表示だけ整えられます。</td>
+</tr>
+<tr>
+<td><strong>差し込み後に手修正</strong></td>
+<td>少数件ならあり</td>
+<td>低</td>
+<td class="text-left">件数が増えると、入れ忘れ・位置間違い・再差し込み時のやり直しが発生しやすいです。</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="xdemo-note-good">
+<strong>この記事の位置づけ：</strong><br>
+Word側フィールドコードは、一般的に一番多い方法ではありません。ただし、住所録を崩したくない運用ではかなり有効な方法です。「知っている人が使う壊れにくい方法」と考えると、実務感に近いです。
+</div>
+</section>
+
+<section class="tips-section">
+<h3>うまく表示されない時の確認ポイント</h3>
+<ul class="line-height-2">
+<li><strong>波かっこを手入力していないか：</strong>必ず <code>Ctrl + F9</code> でフィールドを作ります。</li>
+<li><strong>フィールド名がExcelの列名と一致しているか：</strong><code>郵便番号</code>、<code>〒</code>、<code>郵便番号1</code> などを確認します。</li>
+<li><strong>フィールドを更新したか：</strong>対象フィールドを選択して <code>F9</code> を押します。</li>
+<li><strong>コード表示のままになっていないか：</strong><code>Alt + F9</code> で表示を切り替えます。</li>
+<li><strong>Excel側にハイフンがすでに入っていないか：</strong>ハイフン入りデータには基本形の数値フィールドを使いません。</li>
+<li><strong>全角数字や余分なスペースが混ざっていないか：</strong>Wordの表示形式だけでは直しにくいので、元データの品質として確認します。</li>
+</ul>
+</section>
+
+<section class="method-section">
+<h3>まとめ</h3>
+<p>Wordの差し込み印刷で、Excel住所録の郵便番号をハイフン付きで表示したい場合は、Excel側に作業列を作らず、Word側で次のフィールドコードを使います。</p>
+<div class="code-block" data-lang="word">
+<span class="code-line">{ = { MERGEFIELD 郵便番号 } \# "000'-'0000" }</span>
+</div>
+<p>これで <code>1000001</code> は <code>100-0001</code>、<code>0010001</code> は <code>001-0001</code> と表示できます。住所録は住所録としてそのまま保ち、印刷時の見た目はWordで整えるのが、現場では一番壊れにくい運用です。</p>
+</section>
+
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_mailmerge_excel_source_design.html">Word差し込み印刷で失敗しにくいExcel住所録の作り方</a></li>
+<li><a href="article_mailmerge_number_format.html">Word差し込み印刷で日付・金額・数値の表示崩れを直す方法</a></li>
+<li><a href="article_mailmerge_textbox_wrap.html">Word差し込み印刷で長い住所・会社名を枠内で折り返す方法</a></li>
+<li><a href="../print/article_mail_print.html">Excel 宛名1ページ1枚 案内文書印刷 &horbar; スピンボタン＋Print_Area</a></li>
+<li><a href="../print/article_label_print.html">Excel 10面ラベル印刷 &horbar; Print_Area数式で空白シールを自動除外</a></li>
+<li><a href="../misc/article_format.html">ユーザー定義の表示形式＆TEXT関数 逆引き一覧</a></li>
+</ul>
+</section>
+
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Word差し込み印刷、Power Query、USB-HID型QRリーダーを想定しています。関数やWordフィールドの挙動は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

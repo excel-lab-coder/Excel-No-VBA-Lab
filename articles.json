@@ -29,6 +29,16 @@
     {
       "category": "functions",
       "subcategory": "modern_search",
+      "title": "検索列2列を1つの検索値で探す方法",
+      "url": "functions/latest/article_xlookup_joined_key.html",
+      "summary": "Aシートの東京001を、マスタ表の東京列+001列に一致。表を増やさず使うメリットとケース別の式も整理します。",
+      "level": 3,
+      "tags": ["impact", "important", "rare"],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_search",
       "title": "XLOOKUP比較編：VLOOKUP・INDEX+MATCHとの使い分け",
       "url": "functions/latest/article_xlookup_vs.html",
       "summary": "VLOOKUPの弱点、INDEX+MATCHの強み、XLOOKUPの便利さを比較して使い分けます。",
@@ -49,7 +59,7 @@
       "url": "functions/latest/article_choosecols.html",
       "summary": "指定した配列から、必要な列番号だけを選んでスピル展開する関数です。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": ["impact", "important"],
       "rarity_id": "choosecols"
     },
     {
@@ -961,6 +971,86 @@
       "url": "others/print/article_mail_print.html",
       "summary": "スピンボタン＋VLOOKUPで差し込み印刷をExcelだけで実現します。",
       "level": 3
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Word差し込み印刷で宛名ラベルを作る基本手順",
+      "url": "others/word/article_mailmerge_label_basic.html",
+      "summary": "Excel住所録からWordで宛名ラベルを作る基本手順を、ラベル設定からプレビュー・試し印刷まで整理します。",
+      "level": 2,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Excel VBA・Excel数式・Word差し込み印刷の使い分け",
+      "url": "others/word/article_mailmerge_method_comparison.html",
+      "summary": "自分用・配布用・VBA禁止環境・印刷混入リスクで、3つの差し込み印刷方式を使い分けます。",
+      "level": 3,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Word差し込み印刷で失敗しにくいExcel住所録の作り方",
+      "url": "others/word/article_mailmerge_excel_source_design.html",
+      "summary": "1行1件、列名、郵便番号、住所分割、敬称、QR用文字列まで、差し込み元データの作り方を整理します。",
+      "level": 2,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Word差し込み印刷で郵便番号にハイフンを入れる方法",
+      "url": "others/word/article_mailmerge_postal_code.html",
+      "summary": "Excel住所録に作業列を追加せず、Word側のフィールドコードだけで1000001を100-0001形式に整えます。",
+      "level": 3,
+      "tags": ["impact", "rare"],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Word差し込み印刷で長い住所・会社名を枠内で折り返す方法",
+      "url": "others/word/article_mailmerge_textbox_wrap.html",
+      "summary": "窓あき封筒や宛名印刷で長い住所・会社名が横に伸びる問題を、テキストボックスで枠内に収めます。",
+      "level": 3,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Word差し込み印刷で日付・金額・数値の表示崩れを直す方法",
+      "url": "others/word/article_mailmerge_number_format.html",
+      "summary": "Excelの表示形式がWordに反映されない時、MERGEFIELDのスイッチで年月日・金額・ゼロ埋めを整えます。",
+      "level": 3,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Wordラベル差し込みで全ラベルが同じ宛名になる原因と直し方",
+      "url": "others/word/article_mailmerge_label_next_record.html",
+      "summary": "ラベル差し込みで全部同じ宛名になる、1件飛ばしになる原因をNext Recordの位置で整理します。",
+      "level": 2,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Word差し込み印刷でQRコードを差し込む方法",
+      "url": "others/word/article_mailmerge_qrcode.html",
+      "summary": "MERGEBARCODEでExcelの値をQR化。255文字制限に悩む場面との差別化と、全角文字を避ける注意点を整理します。",
+      "level": 5,
+      "tags": ["impact", "rare"],
+      "is_highlight": true
     },
     {
       "category": "others",

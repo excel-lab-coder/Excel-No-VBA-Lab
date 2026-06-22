@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Word差し込み印刷で日付・金額・数値の表示崩れを直す方法｜Excel側を直さずフィールドコードで整える｜Excel &times; No VBA Lab</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="Wordの差し込み印刷でExcelの表示形式が反映されず、日付・金額・数値が崩れる場合に、MERGEFIELDのフィールドコードで表示形式を指定する方法を解説します。" name="description">
+<meta content="Word 差し込み印刷 日付 表示形式, MERGEFIELD 日付, MERGEFIELD 金額, Word フィールドコード 数値, Excel 表示形式 Word 反映されない" name="keywords">
+<meta content="Word差し込み印刷で日付・金額・数値の表示崩れを直す方法" property="og:title">
+<meta content="Excel側の表示形式に頼らず、Word側のフィールドコードで日付・金額・数値の見た目を整える実務手順です。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_number_format.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Word差し込み印刷で日付・金額・数値の表示崩れを直す方法","description":"Wordの差し込み印刷でExcelの表示形式が反映されず、日付・金額・数値が崩れる場合に、MERGEFIELDのフィールドコードで表示形式を指定する方法を解説します。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},"datePublished":"2026-06-22","dateModified":"2026-06-22"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"現場実務ラボ","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":3,"name":"Word差し込み印刷で日付・金額・数値の表示崩れを直す方法","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_number_format.html"}]}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span><strong>差し込み印刷 表示形式</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">全バージョン</span><span class="article-date">更新日: 2026-06-22</span></div><h1 class="article-title">Word差し込み印刷で日付・金額・数値の表示崩れを直す方法</h1></div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>Excel住所録や請求データでは、日付が <code>2026/6/22</code>、金額が <code>12,000円</code> のようにきれいに見えているのに、Wordへ差し込み印刷すると表示が崩れることがあります。</p>
+<div class="xdemo-note-good"><strong>結論：Word側のMERGEFIELDに表示形式スイッチを付けます。</strong><br>Excel側に印刷用の作業列を増やさず、Wordテンプレート側で「日付は年月日」「金額はカンマ付き」のように指定します。</div>
+</section>
+
+<section class="method-section">
+<h3>よくある表示崩れ</h3>
+<div class="table-responsive"><div class="table-wrapper"><table class="comparison-table"><caption>Excelでは合っているのにWordで崩れる例</caption><thead><tr><th>項目</th><th>Wordで起きること</th><th>直したい表示</th></tr></thead><tbody>
+<tr><td>日付</td><td><code>6/22/2026</code> やシリアル値のように見える</td><td><code>2026年6月22日</code></td></tr>
+<tr><td>金額</td><td><code>12000</code> になりカンマや円が消える</td><td><code>12,000円</code></td></tr>
+<tr><td>顧客番号</td><td><code>123</code> になり先頭ゼロが消える</td><td><code>000123</code></td></tr>
+<tr><td>割合</td><td><code>0.08</code> のまま表示される</td><td><code>8%</code></td></tr>
+</tbody></table></div></div>
+</section>
+
+<section class="method-section">
+<h3>日付の表示形式</h3>
+<p>日付は <code>\@</code> を使って指定します。</p>
+<div class="code-block" data-lang="word">
+<span class="code-line">{ MERGEFIELD 請求日 \@ "yyyy年M月d日" }</span>
+<span class="code-line">{ MERGEFIELD 請求日 \@ "yyyy/MM/dd" }</span>
+</div>
+<p><code>yyyy</code> は年、<code>M</code> は月、<code>d</code> は日です。Excel側のセル表示ではなく、Word側の表示ルールとして指定するのがポイントです。</p>
+</section>
+
+<section class="method-section">
+<h3>金額・数値の表示形式</h3>
+<p>金額や番号などの数値は <code>\#</code> を使って指定します。</p>
+<div class="code-block" data-lang="word">
+<span class="code-line">{ MERGEFIELD 金額 \# "#,##0" }円</span>
+<span class="code-line">{ MERGEFIELD 顧客番号 \# "000000" }</span>
+<span class="code-line">{ MERGEFIELD 税率 \# "0%" }</span>
+</div>
+<div class="xdemo-note-info"><strong>郵便番号の記事と同じ考え方です。</strong><br>Wordの差し込み印刷では、Excelの見た目がそのまま来るとは限りません。表示の責任をWord側に持たせると、テンプレートとして安定します。</div>
+</section>
+
+<section class="method-section">
+<h3>設定手順</h3>
+<ol class="line-height-2">
+<li>差し込みフィールドを挿入します。</li>
+<li><code>Alt + F9</code> でフィールドコード表示に切り替えます。</li>
+<li><code>{ MERGEFIELD 金額 }</code> のようなコードに、表示形式スイッチを追加します。</li>
+<li><code>F9</code> でフィールドを更新し、結果のプレビューで確認します。</li>
+</ol>
+<div class="xdemo-note-warn"><strong>手入力の波かっこでは作れません。</strong><br>フィールドコードの <code>{ }</code> はWordのフィールドです。既存の差し込みフィールドを編集する場合は、<code>Alt + F9</code> で表示して中身を書き換えるのが分かりやすいです。</div>
+</section>
+
+<section class="tips-section">
+<h3>実務でおすすめの使い分け</h3>
+<div class="table-responsive"><div class="table-wrapper"><table class="formula-count-table"><caption>表示形式の担当を分ける</caption><thead><tr><th>内容</th><th>おすすめ</th></tr></thead><tbody>
+<tr><td>データとして必要な値</td><td class="text-left">Excel側で持つ。日付、金額、顧客番号など。</td></tr>
+<tr><td>印刷物だけの見た目</td><td class="text-left">Word側のフィールドコードで整える。年月日、円、カンマ、ゼロ埋めなど。</td></tr>
+<tr><td>例外が多い文言</td><td class="text-left">Excel側に正式な表示列を持たせる方が安全な場合もあります。</td></tr>
+</tbody></table></div></div>
+</section>
+
+<section class="summary-section">
+<h2><span class="icon">✅</span> まとめ</h2>
+<p>Word差し込み印刷で日付・金額・数値の見た目が崩れる場合は、Excel側を直す前にWord側のフィールドコードを確認します。日付は <code>\@</code>、数値は <code>\#</code> を使うと、テンプレート側で表示を安定させられます。</p>
+</section>
+
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="article_mailmerge_postal_code.html">Word差し込み印刷で郵便番号にハイフンを入れる方法</a></li>
+<li><a href="article_mailmerge_excel_source_design.html">Word差し込み印刷で失敗しにくいExcel住所録の作り方</a></li>
+</ul></section>
+</article>
+</main>
+<footer class="site-footer"><div class="site-footer-trust" aria-label="運営情報と検証方針"><p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Word差し込み印刷、Power Query、USB-HID型QRリーダーを想定しています。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js"></script>
+</body>
+</html>

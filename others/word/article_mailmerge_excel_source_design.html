@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Word差し込み印刷で失敗しにくいExcel住所録の作り方｜列名・住所分割・敬称・郵便番号の実務設計｜Excel &times; No VBA Lab</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="Word差し込み印刷で使いやすいExcel住所録の作り方を、列名、1行1件、結合セルNG、郵便番号、住所1・住所2、敬称、QR用文字列まで実務向けに整理します。" name="description">
+<meta content="Word 差し込み印刷 Excel 住所録 作り方, 差し込み印刷 データソース, Excel 住所録 列名, 宛名印刷 住所録" name="keywords">
+<meta content="Word差し込み印刷で失敗しにくいExcel住所録の作り方" property="og:title">
+<meta content="差し込み印刷のトラブルを減らすためのExcel住所録設計。列名、郵便番号、住所分割、敬称、QR用文字列まで整理します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_excel_source_design.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Word差し込み印刷で失敗しにくいExcel住所録の作り方","description":"Word差し込み印刷で使いやすいExcel住所録の作り方を、列名、1行1件、結合セルNG、郵便番号、住所1・住所2、敬称、QR用文字列まで実務向けに整理します。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},"datePublished":"2026-06-22","dateModified":"2026-06-22"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"現場実務ラボ","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":3,"name":"Word差し込み印刷で失敗しにくいExcel住所録の作り方","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_excel_source_design.html"}]}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span><strong>差し込み印刷 住所録設計</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">全バージョン</span><span class="article-date">更新日: 2026-06-22</span></div><h1 class="article-title">Word差し込み印刷で失敗しにくいExcel住所録の作り方</h1></div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>Word差し込み印刷は、Word側の操作だけでなく、Excel住所録の作り方で安定性が大きく変わります。住所録が崩れていると、郵便番号、空白行、敬称、QRコードなど、あとから全部つまずきます。</p>
+<div class="xdemo-note-good"><strong>結論：Excel住所録は「1行1件・1列1項目・見出しは明確」にします。</strong><br>Wordは印刷テンプレート、Excelは差し込み元データ。役割を分けると、あとからテンプレートを増やしても壊れにくくなります。</div>
+</section>
+
+<section class="method-section">
+<h3>最初に守る基本ルール</h3>
+<div class="table-responsive"><div class="table-wrapper"><table class="comparison-table"><caption>差し込み印刷向け住所録の基本</caption><thead><tr><th>ルール</th><th>理由</th></tr></thead><tbody>
+<tr><td>1行1件にする</td><td class="text-left">1行が1つの宛先になるため、複数行に分かれると差し込みが崩れます。</td></tr>
+<tr><td>1行目を見出しにする</td><td class="text-left">Wordの差し込みフィールド名になります。</td></tr>
+<tr><td>結合セルを使わない</td><td class="text-left">WordやPower Queryで扱いにくく、空白として読まれることがあります。</td></tr>
+<tr><td>途中に空白行を入れない</td><td class="text-left">宛先一覧の途中で不要な空白レコードが混ざります。</td></tr>
+<tr><td>集計行・メモ行を入れない</td><td class="text-left">印刷対象ではない行まで差し込まれる原因になります。</td></tr>
+</tbody></table></div></div>
+</section>
+
+<section class="method-section">
+<h3>おすすめの列構成</h3>
+<div class="table-responsive"><div class="table-wrapper"><table class="formula-count-table"><caption>住所録の列例</caption><thead><tr><th>列名</th><th>用途</th><th>ポイント</th></tr></thead><tbody>
+<tr><td>宛先ID</td><td>管理番号</td><td class="text-left">印刷後の確認やQRコードにも使えます。</td></tr>
+<tr><td>郵便番号</td><td>郵便番号</td><td class="text-left">先頭ゼロを守るため、文字列扱いが安全です。</td></tr>
+<tr><td>住所1</td><td>市区町村・番地</td><td class="text-left">原則必須の住所。</td></tr>
+<tr><td>住所2</td><td>建物名・部屋番号</td><td class="text-left">空白になりやすいので分けておくと調整しやすいです。</td></tr>
+<tr><td>会社名</td><td>法人名</td><td class="text-left">個人宛では空白でもOK。</td></tr>
+<tr><td>部署名</td><td>部署・支店</td><td class="text-left">長くなりやすく、空白にもなりやすい列です。</td></tr>
+<tr><td>氏名</td><td>個人名</td><td class="text-left">担当者宛、個人宛で使います。</td></tr>
+<tr><td>敬称</td><td>御中・様など</td><td class="text-left">例外が多いので列として持つと安全です。</td></tr>
+<tr><td>宛先区分</td><td>法人・個人・担当者</td><td class="text-left">敬称や表示パターンの判断材料になります。</td></tr>
+<tr><td>QR用文字列</td><td>QRコード化する値</td><td class="text-left">半角英数字・URL・ID中心で設計します。</td></tr>
+</tbody></table></div></div>
+</section>
+
+<section class="method-section">
+<h3>列名の付け方</h3>
+<p>列名はWordの差し込みフィールド名になります。短く、意味が明確で、記号が少ない名前にしておくと扱いやすいです。</p>
+<div class="table-responsive"><div class="table-wrapper"><table class="comparison-table"><caption>列名の例</caption><thead><tr><th>おすすめ</th><th>避けたい例</th><th>理由</th></tr></thead><tbody>
+<tr><td>郵便番号</td><td>〒 / 郵便番号(ハイフンなし)</td><td class="text-left">記号や括弧があるとフィールドコード編集時に扱いにくいです。</td></tr>
+<tr><td>住所1</td><td>住所その1</td><td class="text-left">短い方がテンプレート内で見つけやすいです。</td></tr>
+<tr><td>会社名</td><td>会社・団体・屋号</td><td class="text-left">項目の意味を1つに絞ります。</td></tr>
+</tbody></table></div></div>
+</section>
+
+<section class="tips-section">
+<h3>作業列を作ってよい列・避けたい列</h3>
+<p>このサイトでは「Excel住所録を崩さない」考え方を重視しています。ただし、すべての追加列が悪いわけではありません。</p>
+<div class="table-responsive"><div class="table-wrapper"><table class="formula-count-table"><caption>列追加の判断</caption><thead><tr><th>列</th><th>判断</th></tr></thead><tbody>
+<tr><td>敬称</td><td class="text-left">宛名データそのものなので追加してよい列です。</td></tr>
+<tr><td>宛先区分</td><td class="text-left">運用判断に必要なので追加してよい列です。</td></tr>
+<tr><td>QR用文字列</td><td class="text-left">印刷物や業務システム連携で必要なら持たせてよい列です。</td></tr>
+<tr><td>ハイフン付き郵便番号</td><td class="text-left">印刷の見た目だけならWord側で処理した方が表を増やさず済みます。</td></tr>
+<tr><td>Word専用の一時連結列</td><td class="text-left">共有住所録では壊れやすいので慎重にします。</td></tr>
+</tbody></table></div></div>
+</section>
+
+<section class="summary-section"><h2><span class="icon">✅</span> まとめ</h2><p>Word差し込み印刷は、Excel住所録が整っているほど安定します。1行1件、結合セルなし、明確な列名、住所1・住所2の分割、敬称列の用意。この土台があると、郵便番号、空白行、敬称、QRコードの記事で紹介している方法も使いやすくなります。</p></section>
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="article_mailmerge_postal_code.html">Word差し込み印刷で郵便番号にハイフンを入れる方法</a></li>
+<li><a href="article_mailmerge_qrcode.html">Word差し込み印刷でQRコードを差し込む方法</a></li>
+</ul></section>
+</article>
+</main>
+<footer class="site-footer"><div class="site-footer-trust" aria-label="運営情報と検証方針"><p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Word差し込み印刷を想定しています。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js"></script>
+</body>
+</html>

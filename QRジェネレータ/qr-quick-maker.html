@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Quick Maker｜1件用QRコード作成ツール｜Excel × No VBA Lab</title>
+<meta name="description" content="UTF-8とShift_JISを切替できるQRコード生成ツール。全角対応・残り容量表示・最大バージョン40まで自動対応。入力文字とQRを1ページ印刷。">
+<style>
+  :root{
+    --accent:#1a73a7; --accent-dark:#0f4c6b;
+    --bg:#f5f7fa; --border:#d6dde5; --text:#1f2d3a;
+    --ok:#1a8a4a; --warn:#c47f00; --ng:#c0392b;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:"Segoe UI","Hiragino Kaku Gothic ProN","Meiryo",sans-serif;
+    margin:0; background:
+      radial-gradient(circle at 85% 0,rgba(0,194,255,.16),transparent 28%),
+      linear-gradient(180deg,#071426 0,#123052 310px,var(--bg) 310px);
+    color:var(--text); line-height:1.6;}
+  .tool-header{color:#fff; border-bottom:1px solid rgba(255,255,255,.12);}
+  .tool-header-inner{max-width:980px; margin:0 auto; padding:18px 20px;
+    display:flex; align-items:center; justify-content:space-between; gap:18px;}
+  .brand{color:#fff; text-decoration:none; font-weight:800; letter-spacing:.02em;}
+  .brand span{display:block; color:#83e4ff; font-size:.68rem; letter-spacing:.15em; margin-bottom:2px;}
+  .tool-nav{display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px;}
+  .tool-nav a{color:#dff7ff; text-decoration:none; border:1px solid rgba(160,225,255,.3);
+    border-radius:999px; background:rgba(5,24,47,.48); padding:6px 11px; font-size:.78rem; font-weight:700;}
+  .tool-nav a[aria-current=page]{border-color:#75ddff; background:rgba(0,194,255,.2); color:#fff;}
+  .wrap{max-width:800px; margin:0 auto; padding:42px 20px 64px;}
+  h1{font-size:1.45rem; margin:0 0 4px;}
+  .tool-kicker{color:#6edfff; font-size:.72rem; font-weight:800; letter-spacing:.16em; margin:0 0 4px;}
+  .tool-title-block{color:#fff; margin-bottom:24px;}
+  .tool-title-block h1{font-size:clamp(1.8rem,5vw,2.75rem);}
+  .lead{color:#d2e6f5; font-size:.93rem; margin:0;}
+  .card{background:#fff; border:1px solid var(--border); border-radius:12px;
+    padding:24px; box-shadow:0 18px 42px rgba(4,18,38,.2);}
+  label{display:block; font-weight:600; font-size:.9rem; margin:16px 0 6px;}
+  label:first-of-type{margin-top:0;}
+  textarea,select,input[type=number]{width:100%; padding:10px 12px; border:1px solid var(--border);
+    border-radius:8px; font-size:.95rem; font-family:inherit; background:#fff; color:var(--text);}
+  textarea{resize:vertical; min-height:90px;}
+  .row{display:flex; gap:16px; flex-wrap:wrap;}
+  .row > div{flex:1; min-width:130px;}
+  .btn{margin-top:20px; width:100%; padding:12px; border:none; border-radius:8px;
+    background:var(--accent); color:#fff; font-size:1rem; font-weight:600; cursor:pointer; transition:background .15s;}
+  .btn:hover{background:var(--accent-dark);}
+  .result{text-align:center; margin-top:28px;}
+  #qrwrap{display:inline-block; background:#fff; border:1px solid var(--border);
+    border-radius:8px; padding:14px; line-height:0;}
+  #qrwrap img{max-width:100%; height:auto;}
+  .dlrow{margin-top:16px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
+  .dlbtn{padding:8px 18px; border:1px solid var(--accent); border-radius:8px;
+    background:#fff; color:var(--accent); font-size:.9rem; font-weight:600; cursor:pointer; text-decoration:none;}
+  .dlbtn:hover{background:#eef5fa;}
+  .note{font-size:.82rem; color:#6b7b8b; margin-top:24px;
+    background:#eef3f7; border-radius:8px; padding:12px 14px;}
+  .err{color:var(--ng); font-size:.88rem; margin-top:10px; text-align:center; min-height:1.2em;}
+  .meta{font-size:.8rem; color:#8a98a6; text-align:center; margin-top:8px; min-height:1.1em;}
+
+  /* 容量メーター */
+  .capbox{margin-top:10px; font-size:.83rem;}
+  .capbar{height:8px; border-radius:4px; background:#e3e9ef; overflow:hidden; margin-top:4px;}
+  .capfill{height:100%; width:0%; background:var(--ok); transition:width .15s, background .15s;}
+  .captxt{display:flex; justify-content:space-between; color:#5a6b7b;}
+  .captxt .state{font-weight:700;}
+  .state.ok{color:var(--ok);} .state.warn{color:var(--warn);} .state.ng{color:var(--ng);}
+
+  /* 最大文字数の早見表 */
+  details{margin-top:20px; border:1px solid var(--border); border-radius:8px; background:#fff;}
+  summary{cursor:pointer; padding:10px 14px; font-weight:600; font-size:.9rem; color:var(--accent);}
+  table{width:100%; border-collapse:collapse; font-size:.82rem;}
+  th,td{border-top:1px solid var(--border); padding:7px 10px; text-align:center;}
+  th{background:#f0f5f9; color:var(--text);}
+  td.l{text-align:left;}
+  .tabnote{padding:8px 14px; font-size:.76rem; color:#8a98a6;}
+
+  #printArea{display:none;}
+  .tool-footer{max-width:800px; margin:0 auto; padding:0 20px 34px; text-align:center;
+    color:#718096; font-size:.78rem;}
+  .tool-footer a{color:var(--accent); font-weight:700; text-decoration:none;}
+  @media(max-width:620px){
+    body{background:
+      radial-gradient(circle at 85% 0,rgba(0,194,255,.16),transparent 30%),
+      linear-gradient(180deg,#071426 0,#123052 410px,var(--bg) 410px);}
+    .tool-header-inner{align-items:flex-start; flex-direction:column;}
+    .tool-nav{justify-content:flex-start;}
+    .wrap{padding-top:30px;}
+    .card{padding:18px;}
+  }
+  @media print{
+    body{background:#fff;}
+    .tool-header,.tool-footer,.wrap{display:none !important;}
+    #printArea{display:flex !important; flex-direction:column; align-items:center;
+      justify-content:center; min-height:100vh; page-break-inside:avoid; text-align:center;}
+    #printArea img{max-width:80mm; width:auto; height:auto;}
+    #printText{margin-top:8mm; font-size:14pt;
+      font-family:"Hiragino Kaku Gothic ProN","Meiryo",sans-serif; color:#000;
+      word-break:break-all; max-width:140mm; white-space:pre-wrap;}
+    @page{ margin:12mm; }
+  }
+</style>
+</head>
+<body>
+<header class="tool-header">
+  <div class="tool-header-inner">
+    <a class="brand" href="../index.html#qr"><span>EXCEL × NO VBA LAB</span>QR Browser Tools</a>
+    <nav class="tool-nav" aria-label="QRツールナビゲーション">
+      <a href="../index.html#qr">ホームへ戻る</a>
+      <a href="qr-quick-maker.html" aria-current="page">1件用</a>
+      <a href="qr-batch-studio.html">一括作成</a>
+    </nav>
+  </div>
+</header>
+<div class="wrap">
+  <div class="tool-title-block">
+    <p class="tool-kicker">01 / SINGLE QR GENERATOR</p>
+    <h1>QR Quick Maker</h1>
+    <p class="lead">1件のデータをすばやくQRコード化。UTF-8 / Shift_JIS 切替・全角対応・残り容量表示付きです。処理はブラウザ内で完結し、入力データは外部に送信されません。</p>
+  </div>
+
+  <div class="card">
+    <label for="text">QR化する文字列</label>
+    <textarea id="text" placeholder="例：商品番号、URL、氏名、長文メモなど。全角文字も使えます。">Excel × No VBA Lab</textarea>
+
+    <!-- 容量メーター -->
+    <div class="capbox">
+      <div class="captxt">
+        <span><span id="useBytes">0</span> / <span id="maxBytes">0</span> バイト使用（<span id="usePct">0</span>%）</span>
+        <span class="state ok" id="capState">余裕あり</span>
+      </div>
+      <div class="capbar"><div class="capfill" id="capFill"></div></div>
+      <div class="captxt" style="margin-top:4px;">
+        <span id="remainTxt">この文字コード・誤り訂正レベルでの目安残り：—</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="enc">文字コード</label>
+        <select id="enc">
+          <option value="UTF8" selected>UTF-8（Web・最近のシステム向け）</option>
+          <option value="SJIS">Shift_JIS（旧基幹システム・日本語業務向け）</option>
+        </select>
+      </div>
+      <div>
+        <label for="ecc">誤り訂正レベル</label>
+        <select id="ecc">
+          <option value="L">L（約7%・最大容量）</option>
+          <option value="M" selected>M（約15%・標準）</option>
+          <option value="Q">Q（約25%）</option>
+          <option value="H">H（約30%）</option>
+        </select>
+      </div>
+      <div>
+        <label for="scale">セルサイズ(px)</label>
+        <input type="number" id="scale" value="6" min="2" max="16">
+      </div>
+    </div>
+
+    <button class="btn" id="gen">QRコードを生成</button>
+
+    <div class="result">
+      <div id="qrwrap"></div>
+      <div class="meta" id="meta"></div>
+      <div class="err" id="err"></div>
+      <div class="dlrow">
+        <a class="dlbtn" id="dlpng" download="qrcode.png">PNGで保存</a>
+        <button class="dlbtn" id="printBtn" type="button">印刷する</button>
+      </div>
+    </div>
+
+    <!-- 最大文字数の早見表 -->
+    <details>
+      <summary>📊 文字コード別・最大文字数の早見表（バージョン40＝最大サイズ）</summary>
+      <table>
+        <tr><th>誤り訂正</th><th>半角数字</th><th>半角英数</th><th>UTF-8バイト</th><th>全角(UTF-8)目安</th><th>全角(SJIS)目安</th></tr>
+        <tr><td>L</td><td>7,089</td><td>4,296</td><td>2,953</td><td>約984</td><td>約1,476</td></tr>
+        <tr><td>M</td><td>5,596</td><td>3,391</td><td>2,331</td><td>約777</td><td>約1,165</td></tr>
+        <tr><td>Q</td><td>3,993</td><td>2,420</td><td>1,663</td><td>約554</td><td>約831</td></tr>
+        <tr><td>H</td><td>3,057</td><td>1,852</td><td>1,273</td><td>約424</td><td>約636</td></tr>
+      </table>
+      <div class="tabnote">
+        全角の目安は、UTF-8で1文字3バイト・Shift_JISで1文字2バイトとして計算した概算です。半角と全角が混在する場合や記号により実際の上限は前後します。
+        データが多いほどQRは大きく・複雑になり、読み取りにくくなります。実務では誤り訂正M以上＋できるだけ短いデータを推奨します。
+      </div>
+    </details>
+
+    <div class="note">
+      ※ UTF-8とShift_JISでは生成されるQRが異なります。読み取り先のシステム・QRリーダーが想定する文字コードに合わせて選んでください。
+      旧来の基幹システムはShift_JIS前提が多く、UTF-8で生成すると全角が文字化けすることがあります。
+      <strong>本番投入前に必ず実機のQRリーダーで読み取りテストを行ってください。</strong><br>
+      ※ 印刷時にページ上下へ日付やURLが入る場合は、ブラウザの印刷設定で「ヘッダーとフッター」をオフにしてください。
+    </div>
+  </div>
+</div>
+
+<footer class="tool-footer">
+  <p><a href="../index.html#qr">QR Automation Labへ戻る</a> ｜ Excel × No VBA Lab</p>
+</footer>
+
+<div id="printArea">
+  <img id="printImg" alt="QRコード">
+  <div id="printText"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/encoding-japanese@2.2.0/encoding.min.js"></script>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(id){return document.getElementById(id);};
+
+  // バージョン40・各誤り訂正レベルでのバイトモード最大データ容量（バイト）
+  var MAX_BYTES = { L:2953, M:2331, Q:1663, H:1273 };
+
+  // 入力をエンコードしてバイト列（または擬似バイト列）を得る
+  function encodeBytes(text, encMode){
+    if(encMode==='SJIS'){
+      var uni = Encoding.stringToCode(text);
+      var sjis = Encoding.convert(uni, {to:'SJIS', from:'UNICODE'});
+      return sjis.map(function(b){ return String.fromCharCode(b); }).join('');
+    }else{
+      // UTF-8 バイト長を擬似バイト文字列で再現
+      var uni2 = Encoding.stringToCode(text);
+      var utf8 = Encoding.convert(uni2, {to:'UTF8', from:'UNICODE'});
+      return utf8.map(function(b){ return String.fromCharCode(b); }).join('');
+    }
+  }
+
+  // 容量メーターの更新
+  function updateCapacity(){
+    var text=$('text').value;
+    var encMode=$('enc').value;
+    var ecc=$('ecc').value;
+    var max=MAX_BYTES[ecc];
+    var used = text ? encodeBytes(text, encMode).length : 0;
+    var pct = Math.min(100, Math.round(used/max*1000)/10);
+
+    $('useBytes').textContent = used;
+    $('maxBytes').textContent = max;
+    $('usePct').textContent = pct;
+    var fill=$('capFill'); fill.style.width = Math.min(100,pct)+'%';
+
+    var state=$('capState');
+    state.className='state';
+    if(used>max){ state.classList.add('ng'); state.textContent='容量オーバー'; fill.style.background='var(--ng)'; }
+    else if(pct>=80){ state.classList.add('warn'); state.textContent='残りわずか'; fill.style.background='var(--warn)'; }
+    else{ state.classList.add('ok'); state.textContent='余裕あり'; fill.style.background='var(--ok)'; }
+
+    var remain = max - used;
+    $('remainTxt').textContent = (used>max)
+      ? ('上限を '+(used-max)+' バイト超過しています。文字を減らすか、誤り訂正レベルを下げてください。')
+      : ('この設定での目安残り：約 '+remain+' バイト');
+  }
+
+  function generate(){
+    $('err').textContent=""; $('meta').textContent="";
+    var text=$('text').value;
+    if(!text){ $('err').textContent="文字列を入力してください。"; return; }
+    var encMode=$('enc').value, ecc=$('ecc').value;
+    var scale=Math.max(2, Math.min(16, parseInt($('scale').value,10)||6));
+
+    try{
+      var qr = qrcode(0, ecc);        // type 0 = 最適バージョンを最大40まで自動選定
+      qr.addData(encodeBytes(text,encMode), 'Byte');
+      qr.make();
+
+      var moduleCount = qr.getModuleCount();
+      var img = qr.createDataURL(scale, scale*4);
+      $('qrwrap').innerHTML='<img id="qrimg" alt="生成されたQRコード" src="'+img+'">';
+      $('dlpng').href=img;
+      $('meta').textContent =
+        '文字コード：'+(encMode==='SJIS'?'Shift_JIS':'UTF-8')+
+        '／モジュール数：'+moduleCount+'×'+moduleCount+'／誤り訂正：'+ecc;
+      $('printImg').src=img;
+      $('printText').textContent=text;
+    }catch(e){
+      $('err').textContent='データが多すぎて、最大サイズ（バージョン40）に収まりません。文字を減らすか、誤り訂正レベルを下げてください。';
+    }
+  }
+
+  function doPrint(){ generate(); if($('printImg').src){ window.print(); } }
+
+  $('gen').addEventListener('click', generate);
+  $('printBtn').addEventListener('click', doPrint);
+  ['input','change'].forEach(function(ev){
+    $('text').addEventListener(ev, updateCapacity);
+    $('enc').addEventListener(ev, updateCapacity);
+    $('ecc').addEventListener(ev, updateCapacity);
+  });
+
+  updateCapacity();
+  window.addEventListener('load', generate);
+})();
+</script>
+</body>
+</html>

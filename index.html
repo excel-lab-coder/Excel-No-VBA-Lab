@@ -135,7 +135,7 @@
     { "@type": "ListItem", "position": 17, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/07_qr_full_system.html", "name": "入力自動化システム" },
     { "@type": "ListItem", "position": 18, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/09_qr_closed_transfer.html", "name": "閉域環境のデータ転送" },
     { "@type": "ListItem", "position": 19, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/10_qr_system_migration.html", "name": "システム間データ移行" },
-    { "@type": "ListItem", "position": 20, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html", "name": "全角QR生成の設計メモ" },
+    { "@type": "ListItem", "position": 20, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html", "name": "全角QR生成のVBA完全版コード" },
     { "@type": "ListItem", "position": 21, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/14_qr_zebra_adf_variable_pause_revised_ranked.html", "name": "【Zebra】123Scan / ADF検証メモ" },
     { "@type": "ListItem", "position": 22, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html", "name": "【Honeywell】EZConfig / Data Formatter検証メモ" },
     { "@type": "ListItem", "position": 23, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/16_qr_opticon_universalconfig_streaming_control.html", "name": "【Opticon】UniversalConfig実機検証メモ" },
@@ -386,10 +386,10 @@
         <span class="quick-route-text">固定長・不規則帳票・ヘッダー混在データをExcelで使える表へ</span>
       </a>
 
-      <a class="quick-route-card qrc-qr" href="./qr/index.html">
+      <a class="quick-route-card qrc-qr" href="#qr" data-tab-trigger="qr" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">
         <span class="quick-route-icon">⚡</span>
         <span class="quick-route-title">QRで入力を自動化したい</span>
-        <span class="quick-route-text">キーボード扱いのQRリーダーで、ソフトを選びにくい定型入力を補助</span>
+        <span class="quick-route-text">QRコードをその場で作成し、キーボード扱いのQRリーダー連携を試す</span>
       </a>
     </div>
   </section>
@@ -781,7 +781,7 @@
           </span>
         </li>
         <li class="is-new">
-          <a href="qr/11_qr_vba_generate.html">全角QR生成の設計メモ</a>
+          <a href="qr/11_qr_vba_generate.html">全角QR生成のVBA完全版コード公開</a>
           <span class="news-meta">
             <span class="news-cat news-cat-qr">QR Automation Lab</span>
             <time datetime="2026-04-17">2026-04-17</time>
@@ -1189,6 +1189,7 @@
 
     <div class="legend-row-tags">
       <span class="legend-tag-desc"><span class="tag-impact">🔥 即戦力</span><span class="tag-desc-text">実務効果が大きい</span></span>
+      <span class="legend-tag-desc"><span class="tag-important">⚠ 重要</span><span class="tag-desc-text">見落とすと崩れやすい</span></span>
       <span class="legend-tag-desc"><span class="tag-rare">💎 レアテク</span><span class="tag-desc-text">知る人ぞ知る</span></span>
     </div>
   </div>
@@ -1224,6 +1225,16 @@
       </div>
       <a class="article-link" href="functions/latest/article_xlookup_multi.html">XLOOKUP ネスト（多条件検索）</a>
       <p class="article-summary">「店舗」と「商品名」など、複数条件の組み合わせが完全一致する行を探し出します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="functions/latest/article_xlookup_joined_key.html">検索列2列を1つの検索値で探す方法</a>
+      <p class="article-summary">Aシートの東京001を、マスタ表の東京列+001列に一致。表を増やさず使うメリットとケース別の式も整理します。</p>
     </li>
 
     <li class="article-item">
@@ -2152,6 +2163,28 @@
     </div>
   </div>
 
+  <section class="qr-tool-links" aria-labelledby="qr-tool-links-title">
+    <div class="qr-tool-links-head">
+      <p class="qr-tool-links-kicker">BROWSER TOOLS / NO VBA</p>
+      <h3 id="qr-tool-links-title">QRコード作成ツール</h3>
+      <p>用途に合わせて専用ページを開いてください。入力内容はブラウザ内だけで処理されます。</p>
+    </div>
+    <div class="qr-tool-link-grid">
+      <a class="qr-tool-link-card qr-tool-link-quick" href="QRジェネレータ/qr-quick-maker.html">
+        <span class="qr-tool-link-number">01 / SINGLE</span>
+        <strong>QR Quick Maker</strong>
+        <span>URLや商品番号など、1件のデータをすぐにQRコード化。容量表示、PNG保存、印刷に対応。</span>
+        <span class="qr-tool-link-action">1件用ツールを開く →</span>
+      </a>
+      <a class="qr-tool-link-card qr-tool-link-batch" href="QRジェネレータ/qr-batch-studio.html">
+        <span class="qr-tool-link-number">02 / BATCH</span>
+        <strong>QR Batch Studio</strong>
+        <span>1行1件の一覧からQRコードを一括作成。末尾Enter、通し番号、一覧印刷に対応。</span>
+        <span class="qr-tool-link-action">一括作成ツールを開く →</span>
+      </a>
+    </div>
+  </section>
+
   <div class="level-legend">
     <div class="legend-row-levels">
       <span class="level-legend-item"><span class="lv-dot lv-dot-1"></span>Lv.1 入門</span>
@@ -2291,8 +2324,8 @@
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-rare">💎 レアテク</span></span>
       </div>
-      <a class="article-link" href="qr/11_qr_vba_generate.html">⑪ 全角QR生成の設計メモ — VBA完全版コードは後日公開検討</a>
-      <p class="article-summary">現時点では完成コードは未掲載。文字コード、リーダー設定、検証項目、既存ライブラリ活用方針を整理します。</p>
+      <a class="article-link" href="qr/11_qr_vba_generate.html">⑪ 全角QR生成のVBA完全版コード公開 — 外部ライブラリなしでBMP生成・セル配置</a>
+      <p class="article-summary">Excel VBAとWindows標準APIだけで、UTF-8(ECI) / Shift-JIS対応の全角QR生成、BMP出力、セル配置まで行う公開版コードです。</p>
     </li>
   </ul>
 
@@ -2561,6 +2594,88 @@
     </li>
   </ul>
 
+  <h3 class="subcategory-heading">📄 Word差し込み印刷</h3>
+
+  <p class="text-desc">
+    Wordの差し込み印刷で、Excel住所録を崩さずに印刷用の見た目だけを整える実務シリーズです。
+    住所録設計、フィールドコード、テキストボックス、ラベル、QRコードまで、宛名印刷の詰まりどころをまとめます。
+  </p>
+
+  <ul class="article-list" id="list-others-word">
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/word/article_mailmerge_label_basic.html">Word差し込み印刷で宛名ラベルを作る基本手順</a>
+      <p class="article-summary">Excel住所録からWordで宛名ラベルを作る基本手順を、ラベル設定からプレビュー・試し印刷まで整理します。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/word/article_mailmerge_method_comparison.html">Excel VBA・Excel数式・Word差し込み印刷の使い分け</a>
+      <p class="article-summary">自分用・配布用・VBA禁止環境・印刷混入リスクで、3つの差し込み印刷方式を使い分けます。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/word/article_mailmerge_excel_source_design.html">Word差し込み印刷で失敗しにくいExcel住所録の作り方</a>
+      <p class="article-summary">1行1件、列名、郵便番号、住所分割、敬称、QR用文字列まで、差し込み元データの作り方を整理します。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-important">⚠ 重要</span><span class="tag-rare">💎 レアテク</span></span>
+      </div>
+      <a class="article-link" href="others/word/article_mailmerge_postal_code.html">Word差し込み印刷で郵便番号にハイフンを入れる方法</a>
+      <p class="article-summary">Excel住所録に作業列を追加せず、Word側のフィールドコードだけで1000001を100-0001形式に整えます。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-important">⚠ 重要</span></span>
+      </div>
+      <a class="article-link" href="others/word/article_mailmerge_textbox_wrap.html">Word差し込み印刷で長い住所・会社名を枠内で折り返す方法</a>
+      <p class="article-summary">窓あき封筒や宛名印刷で長い住所・会社名が横に伸びる問題を、テキストボックスで枠内に収めます。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/word/article_mailmerge_number_format.html">Word差し込み印刷で日付・金額・数値の表示崩れを直す方法</a>
+      <p class="article-summary">Excelの表示形式がWordに反映されない時、MERGEFIELDのスイッチで年月日・金額・ゼロ埋めを整えます。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/word/article_mailmerge_label_next_record.html">Wordラベル差し込みで全ラベルが同じ宛名になる原因と直し方</a>
+      <p class="article-summary">ラベル差し込みで全部同じ宛名になる、1件飛ばしになる原因をNext Recordの位置で整理します。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-5">
+        <span class="level-label">Lv.5 難しい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare">💎 レアテク</span></span>
+      </div>
+      <a class="article-link" href="others/word/article_mailmerge_qrcode.html">Word差し込み印刷でQRコードを差し込む方法</a>
+      <p class="article-summary">MERGEBARCODEでExcelの値をQR化。255文字制限に悩む場面との差別化と、全角文字を避ける注意点を整理します。</p>
+    </li>
+  </ul>
+
   <h3 class="subcategory-heading">🎛 操作UI・入力補助</h3>
 
   <div class="category-hero hero-overlay hero-small hero-others-ui margin-y-16-24 max-width-800">
@@ -2706,12 +2821,12 @@
     </li>
 
     <li class="article-item">
-      <div class="level-bar lv-6">
-        <span class="level-label">Lv.6 かなり難</span>
+      <div class="level-bar lv-8">
+        <span class="level-label">Lv.8 超絶技巧</span>
         <span class="tag-row"><span class="tag-vba">VBA / QR</span></span>
       </div>
-      <a aria-disabled="true" class="article-link" href="unlocked/coming_soon.html?topic=vba_qr_generate">QRコード一括生成 VBA完全版 <span class="badge-prep">準備中</span></a>
-      <p class="article-summary">全角文字対応のQRコードをVBAだけで生成する完全版コードは準備中です。公開時は記事⑪の設計メモを補完します。<br><small>対応する本編：QR Automation Lab 記事⑪</small></p>
+      <a class="article-link" href="qr/11_qr_vba_generate.html">全角QR生成のVBA完全版コード公開</a>
+      <p class="article-summary">Excel VBAとWindows標準APIだけで、UTF-8(ECI) / Shift-JIS対応の全角QR生成、BMP出力、セル配置まで行う公開版コードです。<br><small>対応する本編：QR Automation Lab 記事⑪</small></p>
     </li>
 
     <li class="article-item">

@@ -88,7 +88,7 @@
 <ul class="related-articles" id="alt-links">
 <li><a href="../index.html#functions">📐 関数テクニック一覧</a></li>
 <li><a href="../index.html#powerquery">🔄 パワークエリ一覧</a></li>
-<li><a href="../index.html#qr">⚡ QR Automation Lab 一覧（全17記事）</a></li>
+<li><a href="../index.html#qr">⚡ QR Automation Lab 一覧（全19記事）</a></li>
 <li><a href="../index.html#cobol">🏭 COBOL帳票処理一覧</a></li>
 </ul>
 </section>
@@ -147,11 +147,14 @@
           ]
         },
         vba_qr_generate: {
-          title: "QRコード一括生成 VBA完全版（準備中）",
-          lead: "VBA標準機能・Windowsの BarcodeSymbol／QRCode コンポーネントだけで、画像ファイル化・Excel貼り付け・印刷までを一括処理する完全版です。本編「QR Automation Lab 記事⑪」のVBA実装を徹底拡張します。",
+          title: "全角QR生成のVBA完全版コード（公開済み）",
+          lead: "このテーマは QR Automation Lab 記事⑪として公開済みです。Excel VBAとWindows標準APIだけで、UTF-8(ECI) / Shift-JIS対応の全角QR生成、BMP出力、Excelセルへの画像配置まで行う公開版コードを掲載しています。",
+          status: "公開済み",
+          statusClass: "badge-published",
+          note: "公開ページ：QR Automation Lab 記事⑪",
           alts: [
-            ["../qr/11_qr_vba_generate.html", "⚡ QR⑪ VBA標準機能だけで全角QR生成（本編）"],
-            ["../qr/",             "⚡ QR Automation Lab 全17記事"]
+            ["../qr/11_qr_vba_generate.html", "⚡ QR⑪ 全角QR生成のVBA完全版コード"],
+            ["../qr/",             "⚡ QR Automation Lab 全19記事"]
           ]
         },
         vba_supplement: {
@@ -178,10 +181,17 @@
       var leadEl  = document.getElementById("topic-lead");
       var crumbEl = document.getElementById("crumb-current");
       var altEl   = document.getElementById("alt-links");
+      var badgeEl = document.querySelector(".prep-status span:first-child");
+      var noteEl  = document.querySelector(".prep-status .prep-note");
 
       if (titleEl) titleEl.textContent = data.title;
       if (leadEl)  leadEl.textContent  = data.lead;
-      if (crumbEl) crumbEl.textContent = data.title.replace(/（準備中）$/, "");
+      if (crumbEl) crumbEl.textContent = data.title.replace(/（準備中）$/, "").replace(/（公開済み）$/, "");
+      if (badgeEl && data.status) {
+        badgeEl.textContent = data.status;
+        badgeEl.className = data.statusClass || "badge-prep";
+      }
+      if (noteEl && data.note) noteEl.textContent = data.note;
       document.title = data.title + "｜Excel × No VBA Lab";
 
       if (altEl && data.alts && data.alts.length) {
