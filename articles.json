@@ -33,7 +33,7 @@
       "url": "functions/latest/article_xlookup_joined_key.html",
       "summary": "Aシートの東京001を、マスタ表の東京列+001列に一致。表を増やさず使うメリットとケース別の式も整理します。",
       "level": 3,
-      "tags": ["impact", "important", "rare"],
+      "tags": ["impact", "rare"],
       "is_highlight": true
     },
     {
@@ -59,7 +59,7 @@
       "url": "functions/latest/article_choosecols.html",
       "summary": "指定した配列から、必要な列番号だけを選んでスピル展開する関数です。",
       "level": 3,
-      "tags": ["impact", "important"],
+      "tags": ["impact"],
       "rarity_id": "choosecols"
     },
     {
@@ -818,9 +818,9 @@
     {
       "category": "qr",
       "subcategory": "transfer",
-      "title": "⑪ 全角QR生成の設計メモ — VBA完全版コードは後日公開検討",
+      "title": "⑪ 全角QR生成のVBA完全版コード公開",
       "url": "qr/11_qr_vba_generate.html",
-      "summary": "現時点では完成コードは未掲載。文字コード、リーダー設定、検証項目、既存ライブラリ活用方針を整理します。",
+      "summary": "Excel VBAとWindows標準APIだけで、UTF-8(ECI) / Shift-JIS対応の全角QR生成、BMP出力、セル配置まで行う公開版コードです。",
       "level": 8,
       "tags": ["rare"],
       "is_highlight": true
@@ -1009,7 +1009,7 @@
       "url": "others/word/article_mailmerge_postal_code.html",
       "summary": "Excel住所録に作業列を追加せず、Word側のフィールドコードだけで1000001を100-0001形式に整えます。",
       "level": 3,
-      "tags": ["impact", "rare"],
+      "tags": ["impact", "important", "rare"],
       "is_highlight": true
     },
     {
@@ -1019,7 +1019,7 @@
       "url": "others/word/article_mailmerge_textbox_wrap.html",
       "summary": "窓あき封筒や宛名印刷で長い住所・会社名が横に伸びる問題を、テキストボックスで枠内に収めます。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": ["impact", "important"],
       "is_highlight": true
     },
     {

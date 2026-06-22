@@ -21,7 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Article","headline":"Word差し込み印刷でQRコードを差し込む方法","description":"WordのDISPLAYBARCODE、MERGEBARCODEフィールドを使い、Excel住所録や管理表の値から差し込み印刷でQRコードを作る方法を解説。255文字制限に悩む場面との差別化、全角文字の注意も整理します。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},"datePublished":"2026-06-22","dateModified":"2026-06-22"}
+{"@context":"https://schema.org","@type":"Article","headline":"Word差し込み印刷でQRコードを差し込む方法","description":"WordのDISPLAYBARCODE、MERGEBARCODEフィールドを使い、Excel住所録や管理表の値から差し込み印刷でQRコードを作る方法を解説。255文字制限に悩む場面との差別化、全角文字の注意も整理します。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},"datePublished":"2026-06-22","dateModified":"2026-06-23"}
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"現場実務ラボ","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":3,"name":"Word差し込み印刷でQRコードを差し込む方法","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_qrcode.html"}]}
@@ -34,7 +34,7 @@
 <main class="main-content" id="main-content">
 <div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span><strong>差し込み印刷 QRコード</strong></div>
 <article class="article-body">
-<div class="article-header"><div class="article-meta"><span class="badge badge-all">Word for Windows</span><span class="article-date">更新日: 2026-06-22</span></div><h1 class="article-title">Word差し込み印刷でQRコードを差し込む方法：MERGEBARCODEでExcelの値をQR化</h1></div>
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Word for Windows</span><span class="article-date">更新日: 2026-06-23</span></div><h1 class="article-title">Word差し込み印刷でQRコードを差し込む方法：MERGEBARCODEでExcelの値をQR化</h1></div>
 
 <section class="goal-section">
 <h2><span class="icon">💡</span> やりたいこと</h2>
@@ -73,6 +73,7 @@
 <section class="tips-section">
 <h3>全角文字は避ける</h3>
 <p>実務では、WordのQRコードに日本語の氏名や住所などの全角文字をそのまま入れる設計は避けた方が安全です。半角英数字、URL、ID、区切り記号を中心にします。</p>
+<div class="xdemo-note-warn"><strong>全角文字を使う場合の注意：</strong>どうしても日本語や全角文字をQRに入れる必要がある場合は、十分に注意して検証してください。Word上でQRが表示されるだけで判断せず、印刷後に実際のQRリーダーやスマホで読み取り、読み取り結果の文字列が想定どおりに出力されるかまで確認してから使用します。</div>
 <div class="table-responsive"><div class="table-wrapper"><table class="formula-count-table"><caption>QR用文字列の設計</caption><thead><tr><th>入れるもの</th><th>おすすめ度</th><th>理由</th></tr></thead><tbody>
 <tr><td>URL</td><td>高</td><td class="text-left">読み取り後にWeb画面へ飛ばせます。</td></tr>
 <tr><td>受付番号・伝票番号</td><td>高</td><td class="text-left">半角英数字で安定しやすいです。</td></tr>
@@ -99,7 +100,7 @@
 <li><strong>長い文字列ほどQRが細かくなる：</strong>印刷サイズが小さいと読み取りにくくなります。</li>
 <li><strong>余白を潰しすぎない：</strong>QRコードの周囲に余白がないと読み取り精度が落ちます。</li>
 <li><strong>レーザープリンターと実機で確認する：</strong>画面で見えても、印刷すると読めないことがあります。</li>
-<li><strong>全角文字は避ける：</strong>日本語住所を入れるより、IDやURLにして読み取り後に参照する設計が安定します。</li>
+<li><strong>全角文字は慎重に扱う：</strong>日本語住所を入れるより、IDやURLにして読み取り後に参照する設計が安定します。使う場合は、必ず印刷後の読み取り結果まで確認します。</li>
 </ul>
 </section>
 
@@ -112,7 +113,7 @@
 </tbody></table></div></div>
 </section>
 
-<section class="summary-section"><h2><span class="icon">✅</span> まとめ</h2><p>Wordの <code>MERGEBARCODE</code> を使うと、Excelの値を差し込み印刷しながらQRコード化できます。Excel側でQR画像を作らなくてよいので、宛名ラベル、受付票、案内文、封筒などと相性がよい方法です。255文字制限に悩む場面との差別化にもなりますが、全角文字は避け、半角英数字・URL・ID中心で設計するのが安全です。</p></section>
+<section class="summary-section"><h2><span class="icon">✅</span> まとめ</h2><p>Wordの <code>MERGEBARCODE</code> を使うと、Excelの値を差し込み印刷しながらQRコード化できます。Excel側でQR画像を作らなくてよいので、宛名ラベル、受付票、案内文、封筒などと相性がよい方法です。255文字制限に悩む場面との差別化にもなりますが、基本は半角英数字・URL・ID中心で設計するのが安全です。全角文字を使う場合は、十分に注意し、表示だけで判断せず、印刷後にきちんと読み取れるか、出力文字列が崩れていないかを確認してから使用してください。</p></section>
 <section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
 <li><a href="article_mailmerge_excel_source_design.html">Word差し込み印刷で失敗しにくいExcel住所録の作り方</a></li>
 <li><a href="../../qr/01_qr_barcode_control.html">QRコードでWebシステム入力を自動化</a></li>

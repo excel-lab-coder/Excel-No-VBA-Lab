@@ -46,7 +46,7 @@
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
   "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
   "datePublished":"2026-04-17",
-  "dateModified":"2026-06-21",
+  "dateModified":"2026-06-23",
   "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html"}
 }
 </script>
@@ -93,7 +93,7 @@
 </div>
 <h1 class="article-title">全角QR生成のVBA完全版コード<br><small>&horbar; 外部ライブラリなしでBMP生成・セル配置まで行う公開版</small></h1>
 <p class="article-summary" data-seo-lead="true">この記事では、全角文字を含むQRコードをExcel VBAとWindows標準APIだけで生成する公開版コードを掲載します。閉域・制限環境では、Shift-JISでQRを作り、オプトエレクトロニクス側は漢字出力モード②とShift-JIS設定でExcelなどへ出力する運用を中心に整理します。UTF-8はMOSTが必要です。EdgeなどへShift-JISをそのまま出すと文字化けしやすく、旧IME設定で暫定回避できる場合はありますが、「～」などが「?」になる制限があります。なお、本記事は社内ルールや情報システム部門の管理を回避するためのものではなく、承認済み環境で代替入力手段を検討するための技術メモです。</p>
-<p style="color:#666;font-size:.88rem;">最終更新: 2026-06-21 ｜ 読了目安: 30分 ｜ 前提: <a href="09_qr_closed_transfer.html">⑨ 閉域環境データ転送</a>、<a href="10_qr_system_migration.html">⑩ システム間データ移行</a></p>
+<p style="color:#666;font-size:.88rem;">最終更新: 2026-06-23 ｜ 読了目安: 30分 ｜ 前提: <a href="09_qr_closed_transfer.html">⑨ 閉域環境データ転送</a>、<a href="10_qr_system_migration.html">⑩ システム間データ移行</a></p>
 </div>
 
 <section class="method-section" style="background:#e8f5e9;border:2px solid #2e7d32;">
@@ -1803,6 +1803,7 @@ DENSO WAVEのQRコード解説でも、誤り訂正レベル L / M / Q / H が�
 <div class="xdemo-note-danger">
 <strong>🔥 結論：QRコードは手入力ミスを大幅に減らせますが、検証なしで100%保証されるものではありません。</strong><br>
 特に全角QRやVBA生成QRでは、読み取り精度だけでなく、生成ロジック、文字コード、リーダー設定、出力先アプリとの相性まで含めて確認する必要があります。
+全角文字を含むQRを使う場合は、十分に注意したうえで、QRが作成されることだけでなく、実際の読み取り先に文字列が正しく出力されるかを確認してから使用してください。
 ただし、これはQR方式の価値を下げるものではありません。
 手入力の大量ミスを減らし、確認作業を「全文目視」から「自動チェック・異常検出・抜き取り確認」へ移せることが、QR入力の大きなメリットです。
 </div>
