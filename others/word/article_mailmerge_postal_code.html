@@ -153,12 +153,12 @@ Wordの差し込み印刷は「差し込みフィールドを入れる」操作�
 <ul class="line-height-2">
 <li><code>Alt + F9</code> で差し込みフィールドの中身を見る。</li>
 <li><code>Ctrl + F9</code> でフィールド用の波かっこを作る。</li>
-<li><code>\# "000'-'0000"</code> のような数値表示スイッチを書く。</li>
+<li><code>\# "000'-'0000"</code> のような表示形式スイッチを書く。</li>
 <li>手入力の <code>{ }</code> ではフィールドとして動かないことを知っている。</li>
 </ul>
 <div class="xdemo-note-info">
 <strong>つまり、機能としては正攻法、操作としては中級者向けです。</strong><br>
-ExcelやAccessなどのデータソースから差し込むと、Excel側で見えている表示形式がWord側でそのまま保持されないことがあります。その場合、Word側のMERGEFIELDに数値表示スイッチ <code>\#</code> を指定して整える、という考え方になります。
+ExcelやAccessなどのデータソースから差し込むと、Excel側で見えている表示形式がWord側でそのまま保持されないことがあります。その場合、Word側のMERGEFIELDに表示形式スイッチ <code>\#</code> を指定して整える、という考え方になります。
 </div>
 </section>
 
@@ -166,7 +166,7 @@ ExcelやAccessなどのデータソースから差し込むと、Excel側で見�
 <h3>まず答え：使うフィールドコード</h3>
 <p>郵便番号の列名が <code>郵便番号</code> の場合、Word側で次のフィールドコードを使います。</p>
 <div class="code-block" data-lang="word">
-<span class="code-line">{ = { MERGEFIELD 郵便番号 } \# "000'-'0000" }</span>
+<span class="code-line">{ MERGEFIELD 郵便番号 \# "000'-'0000" }</span>
 </div>
 <p>これで、Excel側の値が <code>1000001</code> なら <code>100-0001</code>、<code>0010001</code> なら <code>001-0001</code> と表示できます。</p>
 <div class="xdemo-note-info">
@@ -175,7 +175,7 @@ ExcelやAccessなどのデータソースから差し込むと、Excel側で見�
 </div>
 <div class="xdemo-note-good">
 <strong>Excel側が文字列でも、半角数字だけならこの方法で対応しやすいです。</strong><br>
-たとえばセルの値が文字列の <code>1000001</code> や <code>0010001</code> でも、Word側の数値フィールドで <code>000-0000</code> 形式に整えます。ただし、全角数字、余分なスペース、すでにハイフンが入っている値が混ざる場合は、後述の注意点を確認してください。
+たとえばセルの値が文字列の <code>1000001</code> や <code>0010001</code> でも、Word側のMERGEFIELDで <code>000-0000</code> 形式に整えます。ただし、全角数字、余分なスペース、すでにハイフンが入っている値が混ざる場合は、後述の注意点を確認してください。
 </div>
 </section>
 
@@ -246,7 +246,7 @@ ExcelやAccessなどのデータソースから差し込むと、Excel側で見�
 </tr>
 <tr>
 <td>先頭ゼロの扱いで事故りやすい</td>
-<td class="text-left"><code>0010001</code> のような値が数値化されると <code>10001</code> になり、見た目だけ直しても原因が見えにくくなります。</td>
+<td class="text-left"><code>0010001</code> のような値がExcel側で数値として扱われると <code>10001</code> になり、見た目だけ直しても原因が見えにくくなります。</td>
 </tr>
 </tbody>
 </table></div>
@@ -273,12 +273,8 @@ Excelは住所録としての元データを保ち、Wordは印刷物として�
 <td>Excel住所録の「郵便番号」列を呼び出します。</td>
 </tr>
 <tr>
-<td><code>{ = ... }</code></td>
-<td>呼び出した郵便番号を、Wordの数値フィールドとして評価します。</td>
-</tr>
-<tr>
 <td><code>\# "000'-'0000"</code></td>
-<td>7桁の郵便番号として、3桁目と4桁目の間にハイフンを表示します。</td>
+<td>MERGEFIELDに指定する表示形式です。7桁の郵便番号として、3桁目と4桁目の間にハイフンを表示します。</td>
 </tr>
 </tbody>
 </table></div>
@@ -288,31 +284,22 @@ Excelは住所録としての元データを保ち、Wordは印刷物として�
 
 <section class="method-section">
 <h3>フィールドコードの設定手順</h3>
-<p>ここが一番つまずきやすいところです。Wordのフィールドコードの <code>{ }</code> は、キーボードで普通に入力した波かっこでは動きません。必ず <code>Ctrl + F9</code> で作ります。</p>
+<p>ここが一番つまずきやすいところです。Wordのフィールドコードの <code>{ }</code> は、キーボードで普通に入力した波かっこでは動きません。「差し込みフィールドの挿入」または <code>Ctrl + F9</code> でWordに作らせます。</p>
 <div class="xdemo-note-warn">
 <strong>手入力の <code>{ }</code> はNGです。</strong><br>
 見た目が同じでも、Word内部では「ただの文字」と「フィールド」は別物です。フィールドとして動かすには、Wordにフィールドを挿入させる必要があります。
 </div>
 <h4>手順1：郵便番号を表示したい場所にカーソルを置く</h4>
 <p>差し込み印刷文書を開き、封筒や宛名ラベルの郵便番号を表示したい位置をクリックします。</p>
-<h4>手順2：外側のフィールドを作る</h4>
-<p><code>Ctrl + F9</code> を押します。Word上にフィールド用の波かっこが表示されます。</p>
+<h4>手順2：郵便番号の差し込みフィールドを挿入する</h4>
+<p>「差し込みフィールドの挿入」から <code>郵便番号</code> を入れます。</p>
 <div class="code-block" data-lang="word">
-<span class="code-line">{  }</span>
+<span class="code-line">{ MERGEFIELD 郵便番号 }</span>
 </div>
-<p>その中に、まず次のように入力します。</p>
+<h4>手順3：表示形式スイッチを追加する</h4>
+<p><code>Alt + F9</code> でフィールドコード表示に切り替え、<code>郵便番号</code> の後ろに表示形式スイッチを追加します。</p>
 <div class="code-block" data-lang="word">
-<span class="code-line">{ =  \# "000'-'0000" }</span>
-</div>
-<p><code>=</code> の後ろに、あとで差し込みフィールドを入れます。</p>
-<h4>手順3：内側の差し込みフィールドを作る</h4>
-<p><code>=</code> の後ろ、<code>\#</code> の前にカーソルを置き、もう一度 <code>Ctrl + F9</code> を押します。</p>
-<div class="code-block" data-lang="word">
-<span class="code-line">{ = {  } \# "000'-'0000" }</span>
-</div>
-<p>内側の波かっこの中に、差し込み元の列名を指定します。</p>
-<div class="code-block" data-lang="word">
-<span class="code-line">{ = { MERGEFIELD 郵便番号 } \# "000'-'0000" }</span>
+<span class="code-line">{ MERGEFIELD 郵便番号 \# "000'-'0000" }</span>
 </div>
 <h4>手順4：フィールドを更新して表示を確認する</h4>
 <p>フィールド全体を選択し、<code>F9</code> を押して更新します。差し込み結果のプレビューで、<code>1000001</code> が <code>100-0001</code> のように表示されるか確認します。</p>
@@ -321,8 +308,8 @@ Excelは住所録としての元データを保ち、Wordは印刷物として�
 フィールドコードの表示／非表示は <code>Alt + F9</code> で切り替えます。コードが見えている状態と、実際の表示結果が見えている状態を行き来できます。
 </div>
 <div class="xdemo-note-good">
-<strong>通常の差し込みフィールドから編集する方法もあります。</strong><br>
-先に「差し込みフィールドの挿入」で <code>郵便番号</code> を入れ、<code>Alt + F9</code> でコード表示に切り替えてから、外側に <code>{ = ... \# "000'-'0000" }</code> を追加する方法でも作れます。ただし、慣れないうちは上の手順のように外側から作る方が構造を理解しやすいです。
+<strong>波かっこはWordに作らせます。</strong><br>
+画面上では同じ <code>{ }</code> に見えても、手入力した波かっこはフィールドとして動きません。必ず「差し込みフィールドの挿入」または <code>Ctrl + F9</code> で作ったフィールドを使います。
 </div>
 </section>
 
@@ -341,7 +328,7 @@ Excelは住所録としての元データを保ち、Wordは印刷物として�
 <tr>
 <td><code>1000001</code></td>
 <td><code>100-0001</code></td>
-<td class="text-left"><code>{ = { MERGEFIELD 郵便番号 } \# "000'-'0000" }</code></td>
+<td class="text-left"><code>{ MERGEFIELD 郵便番号 \# "000'-'0000" }</code></td>
 </tr>
 <tr>
 <td><code>0010001</code></td>
@@ -351,12 +338,12 @@ Excelは住所録としての元データを保ち、Wordは印刷物として�
 <tr>
 <td><code>10001</code></td>
 <td><code>001-0001</code></td>
-<td class="text-left">数値化で先頭ゼロが落ちていても、<code>000'-'0000</code> が先頭ゼロを補います。</td>
+<td class="text-left">Excel側で先頭ゼロが落ちていても、<code>000'-'0000</code> が先頭ゼロを補います。</td>
 </tr>
 <tr>
 <td><code>100-0001</code></td>
 <td><code>100-0001</code></td>
-<td class="text-left">すでにハイフン付きなら、この数式は使わず通常の <code>{ MERGEFIELD 郵便番号 }</code> で差し込みます。</td>
+<td class="text-left">すでにハイフン付きなら、この表示形式は使わず通常の <code>{ MERGEFIELD 郵便番号 }</code> で差し込みます。</td>
 </tr>
 </tbody>
 </table></div>
@@ -367,9 +354,9 @@ Excelは住所録としての元データを保ち、Wordは印刷物として�
 <h3>列名が違う場合</h3>
 <p>Excel側の列名が <code>郵便番号</code> ではない場合は、MERGEFIELDの名前も合わせます。</p>
 <div class="code-block" data-lang="word">
-<span class="code-line">{ = { MERGEFIELD 〒 } \# "000'-'0000" }</span>
-<span class="code-line">{ = { MERGEFIELD 郵便番号1 } \# "000'-'0000" }</span>
-<span class="code-line">{ = { MERGEFIELD zip } \# "000'-'0000" }</span>
+<span class="code-line">{ MERGEFIELD 〒 \# "000'-'0000" }</span>
+<span class="code-line">{ MERGEFIELD 郵便番号1 \# "000'-'0000" }</span>
+<span class="code-line">{ MERGEFIELD zip \# "000'-'0000" }</span>
 </div>
 <p class="code-comment">列名にスペースや記号があると扱いにくいことがあります。差し込み印刷で使う列名は、できれば短く分かりやすい名前にしておくと安全です。</p>
 </section>
@@ -429,11 +416,11 @@ Word側フィールドコードは、一般的に一番多い方法ではあり�
 <section class="tips-section">
 <h3>うまく表示されない時の確認ポイント</h3>
 <ul class="line-height-2">
-<li><strong>波かっこを手入力していないか：</strong>必ず <code>Ctrl + F9</code> でフィールドを作ります。</li>
+<li><strong>波かっこを手入力していないか：</strong>「差し込みフィールドの挿入」または <code>Ctrl + F9</code> でフィールドを作ります。</li>
 <li><strong>フィールド名がExcelの列名と一致しているか：</strong><code>郵便番号</code>、<code>〒</code>、<code>郵便番号1</code> などを確認します。</li>
 <li><strong>フィールドを更新したか：</strong>対象フィールドを選択して <code>F9</code> を押します。</li>
 <li><strong>コード表示のままになっていないか：</strong><code>Alt + F9</code> で表示を切り替えます。</li>
-<li><strong>Excel側にハイフンがすでに入っていないか：</strong>ハイフン入りデータには基本形の数値フィールドを使いません。</li>
+<li><strong>Excel側にハイフンがすでに入っていないか：</strong>ハイフン入りデータにはこの表示形式を使いません。</li>
 <li><strong>全角数字や余分なスペースが混ざっていないか：</strong>Wordの表示形式だけでは直しにくいので、元データの品質として確認します。</li>
 </ul>
 </section>
@@ -442,7 +429,7 @@ Word側フィールドコードは、一般的に一番多い方法ではあり�
 <h3>まとめ</h3>
 <p>Wordの差し込み印刷で、Excel住所録の郵便番号をハイフン付きで表示したい場合は、Excel側に作業列を作らず、Word側で次のフィールドコードを使います。</p>
 <div class="code-block" data-lang="word">
-<span class="code-line">{ = { MERGEFIELD 郵便番号 } \# "000'-'0000" }</span>
+<span class="code-line">{ MERGEFIELD 郵便番号 \# "000'-'0000" }</span>
 </div>
 <p>これで <code>1000001</code> は <code>100-0001</code>、<code>0010001</code> は <code>001-0001</code> と表示できます。住所録は住所録としてそのまま保ち、印刷時の見た目はWordで整えるのが、現場では一番壊れにくい運用です。</p>
 </section>
