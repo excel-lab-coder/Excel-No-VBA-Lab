@@ -85,7 +85,7 @@
 <section class="goal-section">
 <h2><span class="icon">💡</span> 処理票の入力値だけを安全に消したい</h2>
 <p>処理票、受付票、点検表などを繰り返し使うとき、前回入力した氏名・日付・数量・備考を消して初期状態へ戻します。しかし、シートの途中には合計式、判定式、参照式などがあり、広く選択してDeleteすると数式まで消してしまいます。</p>
-<p>そこで、手入力するセルだけを<strong>名前付き範囲</strong>として登録します。名前ボックスから選ぶだけで、消してよい入力欄だけをすぐに範囲選択できます。</p>
+<p>そこで、手入力するセルだけを<strong>名前付き範囲</strong>として登録します。離れた入力欄は、<strong>Ctrlキーを押しながら追加選択</strong>すれば1つの名前にまとめられます。以後は名前ボックスから1回選ぶだけで、消してよい入力欄をまとめて範囲選択できます。</p>
 
 <div class="flow-diagram extract-role-flow" aria-label="入力欄を安全に初期化する3段階">
   <div class="extract-role extract-role-row"><strong>① 範囲を登録</strong><span>手入力セルだけを<br>名前付き範囲にする</span></div>
@@ -96,8 +96,8 @@
 </div>
 
 <div class="xdemo-note-good">
-<strong>この方法が安全な理由</strong><br>
-範囲を選択しただけでは削除されません。選択範囲が画面で見えるため、正しい範囲か確認してからDeleteを押せます。この確認操作が誤削除防止になります。
+<strong>この方法のメリット</strong><br>
+範囲の指定は最初の1回だけです。数式セルを除いた複数の入力範囲を「入力クリア範囲」という1つの名前へ登録しておけば、毎回の初期化では名前を選んでDeleteするだけです。ドラッグ選択のずれや数式の巻き込みを減らせます。
 </div>
 </section>
 
@@ -124,14 +124,14 @@
 </section>
 
 <section class="method-section">
-<h3><span class="step-badge">STEP 1</span> 入力欄へ名前を付ける</h3>
-<p>例として、処理票シートのB4:E12がすべて手入力欄で、数式を含まないものとします。</p>
+<h3><span class="step-badge">STEP 1</span> Ctrlキーで複数範囲を選び、名前を付ける</h3>
+<p>例として、Sheet4のC2:C6とC8:C12が手入力欄で、C7には消してはいけない数式が入っているものとします。</p>
 
 <ol class="line-height-2">
-<li>B4:E12を選択します。</li>
-<li>数式バーの左にある「名前ボックス」をクリックします。</li>
-<li><code>入力クリア範囲</code> と入力します。</li>
-<li>Enterキーで確定します。</li>
+<li>最初の入力範囲C2:C6を選択します。</li>
+<li>Ctrlキーを押したまま、次の入力範囲C8:C12を追加選択します。</li>
+<li>数式バー左側の名前ボックスをクリックします。</li>
+<li><code>入力クリア範囲</code> と入力し、Enterキーで確定します。</li>
 </ol>
 
 <figure class="extract-figure">
@@ -140,15 +140,20 @@
 <table class="xdemo-table">
 <thead><tr><th>名前</th><th>参照範囲</th><th>意味</th></tr></thead>
 <tbody>
-<tr><td class="xd-result">入力クリア範囲</td><td><code>=処理票!$B$4:$E$12</code></td><td>Deleteしてよい手入力セルだけ</td></tr>
+<tr><td class="xd-result">入力クリア範囲</td><td><code>=Sheet4!$C$2:$C$6,Sheet4!$C$8:$C$12</code></td><td>C7の数式を除き、上下の入力欄を1つの名前へ登録</td></tr>
 </tbody>
 </table>
 </div>
 </figure>
 
+<div class="xdemo-note-warn">
+<strong>重なる範囲では数式を除外できません</strong><br>
+<code>=Sheet4!$C$2:$C$6,Sheet4!$C$5:$C$7</code> のように範囲が重なる場合、選択結果は実質C2:C7です。C7に数式があればDeleteで消えてしまいます。数式セルを除くなら、<code>C2:C6,C8:C12</code> のように数式の前後で範囲を分けます。
+</div>
+
 <div class="xdemo-note-info">
-<strong>後から範囲を変更できます</strong><br>
-「数式」タブ→「名前の管理」で、参照範囲を確認・修正できます。処理票のレイアウトが変わった場合も、登録した名前の参照先だけを直せます。
+<strong>カンマ区切りはExcelが内部で作ります</strong><br>
+Ctrlキーで複数範囲を選んで名前を付けると、「名前の管理」では <code>=Sheet4!$C$2:$C$6,Sheet4!$C$8:$C$12</code> のように表示されます。通常はカンマを手入力する必要はありません。後から範囲を修正するときだけ「名前の管理」で参照先を編集します。
 </div>
 </section>
 
@@ -187,23 +192,23 @@
 </section>
 
 <section class="method-section">
-<h3>入力欄が複数に分かれている場合</h3>
-<p>処理票の上部に基本情報、下部に明細があり、その間に数式がある場合は、範囲を分ける方が安全です。</p>
+<h3>離れた入力欄も一度に範囲選択できる</h3>
+<p>Ctrlキーを押しながら基本情報・明細・備考を追加選択し、まとめて1つの名前を付けます。名前ボックスから1回選ぶだけで、すべての範囲が同時に選択されます。</p>
 
 <div class="table-wrapper">
 <table class="compare-table">
-<thead><tr><th>名前</th><th>範囲例</th><th>選択する場面</th></tr></thead>
+<thead><tr><th>入力場所</th><th>範囲例</th><th>1つの名前へまとめる参照</th></tr></thead>
 <tbody>
-<tr><td>基本情報入力</td><td><code>B4:E8</code></td><td>氏名・日付などだけ消す</td></tr>
-<tr><td>明細入力</td><td><code>B12:E20</code></td><td>明細だけ消す</td></tr>
-<tr><td>備考入力</td><td><code>B24:E26</code></td><td>備考だけ消す</td></tr>
+<tr><td>基本情報</td><td><code>B4:E8</code></td><td rowspan="3"><code>=処理票!$B$4:$E$8,処理票!$B$12:$E$20,処理票!$B$24:$E$26</code></td></tr>
+<tr><td>明細</td><td><code>B12:E20</code></td></tr>
+<tr><td>備考</td><td><code>B24:E26</code></td></tr>
 </tbody>
 </table>
 </div>
 
 <div class="xdemo-note-good">
-<strong>一度に全部消すより安全です</strong><br>
-「基本情報」「明細」「備考」を別々に選べば、残したい入力まで誤って消す事故を減らせます。必要な部分だけ初期化する運用にも使えます。
+<strong>範囲指定は最初の1回だけ</strong><br>
+基本情報・明細・備考が離れていても、1つの「入力クリア範囲」にまとめられます。毎回Ctrlキーを押しながら複数範囲を選び直す必要はありません。
 </div>
 </section>
 
@@ -215,7 +220,7 @@
 <table class="compare-table">
 <thead><tr><th>対策</th><th>内容</th><th>おすすめ度</th></tr></thead>
 <tbody>
-<tr><td>範囲を分割</td><td>数式行の上・下で名前付き範囲を分ける</td><td>★★★★★</td></tr>
+<tr><td>複数範囲を1つの名前へ登録</td><td>Ctrlキーで数式行の上・下を追加選択し、数式セルだけ除外する</td><td>★★★★★</td></tr>
 <tr><td>入力セルを別列へ整理</td><td>手入力列と計算列を分離する</td><td>★★★★★</td></tr>
 <tr><td>シート保護</td><td>入力セルだけロック解除し、数式セルをロックする</td><td>★★★★☆</td></tr>
 <tr><td>広い範囲を選んでDelete</td><td>数式を含む可能性がある</td><td>非推奨</td></tr>
@@ -285,7 +290,7 @@
 <h3>まとめ：選択と削除を分けるから安全</h3>
 <div class="xdemo-note">
 <strong>安全な初期化の基本</strong><br>
-1．手入力セルだけを名前付き範囲にする<br>
+1．手入力セルだけを、複数範囲も含めて1つの名前へ登録する<br>
 2．名前ボックスからその範囲を選択する<br>
 3．選択範囲を目で確認する<br>
 4．Deleteで内容だけを消す<br>
