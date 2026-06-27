@@ -200,7 +200,7 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_sequence.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -295,6 +295,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_unique_filter_sort.html</loc>
+    <lastmod>2026-06-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_switch.html</loc>
     <lastmod>2026-05-03</lastmod>
     <changefreq>monthly</changefreq>
@@ -320,7 +326,7 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_unique.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -362,13 +368,37 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countif_extract.html</loc>
-    <lastmod>2026-05-03</lastmod>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_small_row_index_extract.html</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countifs_serial_number.html</loc>
+    <lastmod>2026-06-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countifs_sumifs.html</loc>
     <lastmod>2026-05-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_wareki_datevalue_serial.html</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_yyyymmdd_date_serial.html</loc>
+    <lastmod>2026-06-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -557,6 +587,18 @@
     <lastmod>2026-05-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_hyperlink_jump_last_row.html</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_select_input_range.html</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_shape_circle.html</loc>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Excelで入力欄だけ範囲選択して初期化する方法｜数式を消さずDelete｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="処理票などのExcel様式で、数式を残したまま入力欄だけを範囲選択し、Deleteキーで安全に初期化する方法を解説。名前の定義を使うためVBA・マクロ不要です。" name="description">
+<meta content="Excel 入力欄 初期化, Excel 数式 消さない Delete, Excel 範囲選択, Excel 名前の定義 範囲選択, VBAなし クリア, 処理票 初期化" name="keywords">
+<meta content="Excelで入力欄だけ範囲選択して初期化する方法｜数式を消さずDelete｜Excel &times; No VBA Lab" property="og:title">
+<meta content="名前の定義で入力欄だけを範囲選択し、数式や書式を残してDeleteキーで初期化します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_select_input_range.html" property="og:url">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_select_input_range.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Excelで入力欄だけ範囲選択して初期化する方法｜数式を消さずDelete",
+  "description": "処理票などのExcel様式で、数式を残したまま入力欄だけを選択し、Deleteキーで安全に初期化する方法を解説。",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_select_input_range.html"
+  },
+  "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/index.html"},
+    {"@type": "ListItem", "position": 3, "name": "入力欄だけ範囲選択して初期化", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_select_input_range.html"}
+  ]
+}</script>
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+  <a href="../../index.html">ホーム</a><span>&gt;</span>
+  <a href="../index.html">現場実務ラボ</a><span>&gt;</span>
+  <strong>入力欄だけ範囲選択して初期化</strong>
+</div>
+
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta">
+    <span class="badge badge-all">全ver対応</span>
+    <span style="display:inline-block;background:#1976d2;color:#fff;font-size:.7em;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:5px;">VBA不要</span>
+    <span style="display:inline-block;background:#2e7d32;color:#fff;font-size:.7em;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:5px;">数式を保護</span>
+    <span class="article-date">更新日: 2026-06-27</span>
+  </div>
+  <h1 class="article-title">Excelで入力欄だけ範囲選択して初期化する方法<br>&horbar; 数式を消さずDeleteで入力値だけ消す</h1>
+</div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> 処理票の入力値だけを安全に消したい</h2>
+<p>処理票、受付票、点検表などを繰り返し使うとき、前回入力した氏名・日付・数量・備考を消して初期状態へ戻します。しかし、シートの途中には合計式、判定式、参照式などがあり、広く選択してDeleteすると数式まで消してしまいます。</p>
+<p>そこで、手入力するセルだけを<strong>名前付き範囲</strong>として登録します。名前ボックスから選ぶだけで、消してよい入力欄だけをすぐに範囲選択できます。</p>
+
+<div class="flow-diagram extract-role-flow" aria-label="入力欄を安全に初期化する3段階">
+  <div class="extract-role extract-role-row"><strong>① 範囲を登録</strong><span>手入力セルだけを<br>名前付き範囲にする</span></div>
+  <div class="extract-arrow" aria-hidden="true">→</div>
+  <div class="extract-role extract-role-small"><strong>② 名前で選択</strong><span>名前ボックスから<br>入力範囲を選ぶ</span></div>
+  <div class="extract-arrow" aria-hidden="true">→</div>
+  <div class="extract-role extract-role-index"><strong>③ Delete</strong><span>値だけ消して<br>書式と数式を残す</span></div>
+</div>
+
+<div class="xdemo-note-good">
+<strong>この方法が安全な理由</strong><br>
+範囲を選択しただけでは削除されません。選択範囲が画面で見えるため、正しい範囲か確認してからDeleteを押せます。この確認操作が誤削除防止になります。
+</div>
+</section>
+
+<section class="method-section">
+<h3>先に重要：数式セルを選択範囲へ入れない</h3>
+<p>Deleteキーは、選択されたセルの内容を消します。入力値だけでなく、選択範囲内の数式も消えます。したがって、最初に「消してよいセルだけの範囲」を正しく作ることが最重要です。</p>
+
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>セル</th><th>初期化時の扱い</th><th>名前付き範囲</th></tr></thead>
+<tbody>
+<tr><td>氏名、日付、数量、備考</td><td>毎回入力し直す</td><td><strong>含める</strong></td></tr>
+<tr><td>合計、判定、検索などの数式</td><td>次回も使う</td><td><strong>含めない</strong></td></tr>
+<tr><td>見出し、説明文、注意書き</td><td>固定表示</td><td><strong>含めない</strong></td></tr>
+<tr><td>セルの色、罫線、表示形式</td><td>残したい</td><td>Deleteなら基本的に残る</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="xdemo-note-warn">
+<strong>数式が途中にある長方形を、そのまま選択してはいけません</strong><br>
+たとえばB4:F20の途中に合計式があるなら、B4:F20全体を初期化範囲にしないでください。入力欄を複数の範囲へ分けるか、数式セルを避けた名前付き範囲を作ります。
+</div>
+</section>
+
+<section class="method-section">
+<h3><span class="step-badge">STEP 1</span> 入力欄へ名前を付ける</h3>
+<p>例として、処理票シートのB4:E12がすべて手入力欄で、数式を含まないものとします。</p>
+
+<ol class="line-height-2">
+<li>B4:E12を選択します。</li>
+<li>数式バーの左にある「名前ボックス」をクリックします。</li>
+<li><code>入力クリア範囲</code> と入力します。</li>
+<li>Enterキーで確定します。</li>
+</ol>
+
+<figure class="extract-figure">
+<figcaption>名前の定義：セル番地ではなく用途で範囲を管理する</figcaption>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>名前</th><th>参照範囲</th><th>意味</th></tr></thead>
+<tbody>
+<tr><td class="xd-result">入力クリア範囲</td><td><code>=処理票!$B$4:$E$12</code></td><td>Deleteしてよい手入力セルだけ</td></tr>
+</tbody>
+</table>
+</div>
+</figure>
+
+<div class="xdemo-note-info">
+<strong>後から範囲を変更できます</strong><br>
+「数式」タブ→「名前の管理」で、参照範囲を確認・修正できます。処理票のレイアウトが変わった場合も、登録した名前の参照先だけを直せます。
+</div>
+</section>
+
+<section class="method-section">
+<h3><span class="step-badge">STEP 2</span> 名前ボックスから入力範囲を選択する</h3>
+<p>数式バーの左側にある名前ボックスの▼を開き、<strong>入力クリア範囲</strong>を選びます。登録した手入力セルだけが一度に選択されます。</p>
+
+<div class="extract-checklist">
+  <div class="extract-check"><strong>1．名前ボックスを開く</strong>数式バー左側の▼をクリックします。</div>
+  <div class="extract-check"><strong>2．範囲名を選ぶ</strong>「入力クリア範囲」を選択します。</div>
+  <div class="extract-check"><strong>3．範囲を目視確認</strong>数式セルや見出しが含まれていないか確認します。</div>
+  <div class="extract-check"><strong>4．Deleteキー</strong>選択したセルの内容だけを消します。</div>
+</div>
+
+<div class="xdemo-note-good">
+<strong>操作はこれだけです</strong><br>
+名前ボックスから「入力クリア範囲」を選ぶ → 選択範囲を確認 → Delete。ドラッグで毎回同じ範囲を選び直す必要がありません。
+</div>
+</section>
+
+<section class="method-section">
+<h3>Delete・クリア・セル削除の違い</h3>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>操作</th><th>結果</th><th>初期化で使用</th></tr></thead>
+<tbody>
+<tr><td><strong>Deleteキー</strong></td><td>内容を消す。セルの書式やコメントは残る</td><td class="xd-result">おすすめ</td></tr>
+<tr><td>ホーム→クリア→数式と値のクリア</td><td>内容だけを消す</td><td>使用可能</td></tr>
+<tr><td>クリア→すべてクリア</td><td>内容・書式・コメントなども消す</td><td>使わない</td></tr>
+<tr><td>右クリック→セルの削除</td><td>セル自体を削除し、周囲を移動する</td><td>使わない</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Deleteキーは値だけを消し、罫線、背景色、表示形式などを残せるため、帳票の初期化に向いています。ただし、選択範囲内に数式があれば数式も内容として消える点は変わりません。</p>
+</section>
+
+<section class="method-section">
+<h3>入力欄が複数に分かれている場合</h3>
+<p>処理票の上部に基本情報、下部に明細があり、その間に数式がある場合は、範囲を分ける方が安全です。</p>
+
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>名前</th><th>範囲例</th><th>選択する場面</th></tr></thead>
+<tbody>
+<tr><td>基本情報入力</td><td><code>B4:E8</code></td><td>氏名・日付などだけ消す</td></tr>
+<tr><td>明細入力</td><td><code>B12:E20</code></td><td>明細だけ消す</td></tr>
+<tr><td>備考入力</td><td><code>B24:E26</code></td><td>備考だけ消す</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="xdemo-note-good">
+<strong>一度に全部消すより安全です</strong><br>
+「基本情報」「明細」「備考」を別々に選べば、残したい入力まで誤って消す事故を減らせます。必要な部分だけ初期化する運用にも使えます。
+</div>
+</section>
+
+<section class="method-section">
+<h3>数式セルが入力欄の途中にある場合</h3>
+<p>次の順で安全性を上げます。</p>
+
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>対策</th><th>内容</th><th>おすすめ度</th></tr></thead>
+<tbody>
+<tr><td>範囲を分割</td><td>数式行の上・下で名前付き範囲を分ける</td><td>★★★★★</td></tr>
+<tr><td>入力セルを別列へ整理</td><td>手入力列と計算列を分離する</td><td>★★★★★</td></tr>
+<tr><td>シート保護</td><td>入力セルだけロック解除し、数式セルをロックする</td><td>★★★★☆</td></tr>
+<tr><td>広い範囲を選んでDelete</td><td>数式を含む可能性がある</td><td>非推奨</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>シート保護を併用する手順</h4>
+<ol class="line-height-2">
+<li>手入力セルを選択します。</li>
+<li>Ctrl+1→「保護」→「ロック」のチェックを外します。</li>
+<li>数式セルはロックしたままにします。</li>
+<li>「校閲」→「シートの保護」を有効にします。</li>
+</ol>
+
+<p>シート保護はセキュリティ機能ではなく、誤操作防止の補助です。入力可能な範囲を限定することで、数式を上書き・削除するミスを減らせます。</p>
+</section>
+
+<section class="method-section">
+<h3>名前付き範囲を選択する3つの方法</h3>
+<p>普段は名前ボックスを使います。キーボード中心で操作する場合はF5またはCtrl+Gも便利です。</p>
+
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>方法</th><th>操作</th></tr></thead>
+<tbody>
+<tr><td>名前ボックス</td><td>数式バー左の一覧から「入力クリア範囲」を選択</td></tr>
+<tr><td>ジャンプ</td><td>F5またはCtrl+G→「入力クリア範囲」→OK</td></tr>
+<tr><td>名前の管理</td><td>数式→名前の管理から参照範囲を確認</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="method-section">
+<h3>現場向けのおすすめ表示</h3>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>表示する案内</th><th>役割</th></tr></thead>
+<tbody>
+<tr><td>① 名前ボックスから「入力クリア範囲」を選択</td><td>消すセルだけを一括選択</td></tr>
+<tr><td>② 選択範囲を確認</td><td>数式セルが含まれていないか確認</td></tr>
+<tr><td>③ Deleteキー</td><td>書式を残して入力値を削除</td></tr>
+</tbody>
+</table>
+</div>
+<p>この3行を処理票の上部へ固定表示しておけば、担当者が変わっても同じ手順で初期化できます。</p>
+</section>
+
+<section class="method-section">
+<h3>よくある失敗</h3>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>失敗</th><th>原因</th><th>対策</th></tr></thead>
+<tbody>
+<tr><td>数式まで消えた</td><td>名前付き範囲に数式セルが含まれていた</td><td>範囲を分割し、数式を除外</td></tr>
+<tr><td>違う範囲が選ばれた</td><td>名前の参照先が古い</td><td>名前の管理で参照先を修正</td></tr>
+<tr><td>罫線や色まで消えた</td><td>「すべてクリア」を使った</td><td>Deleteまたは「数式と値のクリア」を使う</td></tr>
+<tr><td>名前が一覧にない</td><td>範囲名を確定していない</td><td>名前ボックスへ入力後、Enterで確定</td></tr>
+<tr><td>Deleteできない</td><td>保護されたセルが選択範囲に入っている</td><td>入力範囲とロック状態を再確認</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="legacy-section">
+<h3>まとめ：選択と削除を分けるから安全</h3>
+<div class="xdemo-note">
+<strong>安全な初期化の基本</strong><br>
+1．手入力セルだけを名前付き範囲にする<br>
+2．名前ボックスからその範囲を選択する<br>
+3．選択範囲を目で確認する<br>
+4．Deleteで内容だけを消す<br>
+5．必要なら数式セルのロックとシート保護を併用する
+</div>
+
+<p>VBAなしでは完全なワンクリック初期化はできませんが、選択範囲を固定するだけでも、ドラッグ選択の手間と数式を消すミスを大幅に減らせます。処理票を繰り返し使う現場では、速さと安全性のバランスがよい方法です。</p>
+</section>
+
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事・公式資料</h2>
+<ul class="line-height-2">
+<li><a href="article_hyperlink_jump_last_row.html">HYPERLINK関数で最終行・次の空き行へジャンプする方法</a></li>
+<li><a href="https://support.microsoft.com/en-us/office/define-and-use-names-in-formulas-4d0f13ac-53b7-422e-afd2-abd7ff379c64" rel="noopener" target="_blank">Microsoft：数式で名前を定義して使用する</a></li>
+<li><a href="https://support.microsoft.com/en-gb/office/clear-cells-of-contents-or-formats-9ff6b8ff-1afd-495f-8ad8-8c1f6f82a9d6" rel="noopener" target="_blank">Microsoft：セルの内容または書式をクリアする</a></li>
+<li><a href="https://support.microsoft.com/en-US/Excel/protect-a-worksheet" rel="noopener" target="_blank">Microsoft：ワークシートを保護する</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excelを想定しています。業務適用前に必ずファイルのコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順はバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。</p>
+    <p class="site-footer-links"><strong>関連:</strong> <a href="../../samples/index.html">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+<p class="site-footer-legal-links">
+  <a href="../../about.html">運営者情報</a><span>|</span>
+  <a href="../../disclaimer.html">免責事項</a><span>|</span>
+  <a href="../../privacy.html">プライバシーポリシー</a>
+</p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

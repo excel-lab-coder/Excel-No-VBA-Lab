@@ -602,6 +602,9 @@ a[aria-disabled="true"] { color: #999 !important; cursor: not-allowed; }
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 14px;
 }
+.article-list.expert-pair-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 .article-item {
   background: var(--color-surface);
   border-radius: var(--radius);
@@ -966,6 +969,7 @@ a[aria-disabled="true"] { color: #999 !important; cursor: not-allowed; }
   .tab-nav-aux { padding: 0 8px 8px; text-align: left; }
   .tab-nav-aux a { font-size: 0.78rem; }
   .article-list,
+  .article-list.expert-pair-grid,
   .pickup-grid,
   .home-sub-grid,
   .reasons-grid {

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Excelで複数条件に合う行だけ連番を振る方法｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="Excelで複数条件を満たす行だけに1,2,3と飛ばない連番を振る方法を解説。まずCOUNTIFSだけで連番の土台を作り、必要に応じてIFで対象外を空白にします。" name="description">
+<meta content="Excel 連番 条件付き, COUNTIFS 連番 飛ぶ, 複数条件 連番 Excel, IF AND COUNTIFS, 条件に合う行だけ番号" name="keywords">
+<meta content="Excelで複数条件に合う行だけ連番を振る方法｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Excelで複数条件を満たす行だけに1,2,3と飛ばない連番を振る方法を解説。まずCOUNTIFSだけで連番の土台を作り、必要に応じてIFで対象外を空白にします。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countifs_serial_number.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countifs_serial_number.html" property="og:url">
+<style>
+.serial-figure {
+  margin: 22px 0;
+  padding: 18px;
+  border: 1px solid #d7e2ec;
+  border-radius: 8px;
+  background: #f8fbfd;
+}
+.serial-figure-title {
+  margin: 0 0 12px;
+  color: #1a3d5c;
+  font-weight: 700;
+}
+.serial-figure-note {
+  margin: 10px 0 0;
+  color: #4b5b67;
+  font-size: 0.94em;
+  line-height: 1.7;
+}
+.serial-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.serial-chip {
+  min-width: 52px;
+  padding: 8px 10px;
+  border: 1px solid #bdd4e7;
+  border-radius: 8px;
+  background: #fff;
+  text-align: center;
+  font-weight: 700;
+}
+.serial-chip.good {
+  border-color: #43a047;
+  background: #e8f5e9;
+  color: #1b5e20;
+}
+.serial-chip.bad {
+  border-color: #c62828;
+  background: #ffebee;
+  color: #8a1c1c;
+}
+.serial-chip.empty {
+  border-style: dashed;
+  color: #777;
+  font-weight: 400;
+}
+.serial-chip-label {
+  min-width: 110px;
+  color: #1a3d5c;
+  font-weight: 700;
+}
+.serial-flow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+.serial-step {
+  border: 1px solid #d8e5ef;
+  border-left: 5px solid #1976d2;
+  border-radius: 8px;
+  background: #fff;
+  padding: 12px;
+}
+.serial-step strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #1a3d5c;
+}
+.serial-step code {
+  white-space: normal;
+  word-break: break-word;
+}
+.serial-formula-map {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+}
+.serial-formula-piece {
+  padding: 12px;
+  border: 1px solid #d8e5ef;
+  border-radius: 8px;
+  background: #fff;
+}
+.serial-formula-piece h3 {
+  margin-top: 0;
+  font-size: 1.02em;
+}
+.serial-formula-piece code {
+  display: block;
+  margin: 8px 0;
+  white-space: normal;
+  word-break: break-word;
+}
+.serial-sheet {
+  overflow-x: auto;
+}
+.serial-sheet table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+  background: #fff;
+}
+.serial-sheet th,
+.serial-sheet td {
+  padding: 9px 10px;
+  border: 1px solid #d8e5ef;
+  text-align: center;
+}
+.serial-sheet th {
+  background: #eaf3fb;
+  color: #1a3d5c;
+}
+.serial-sheet .serial-hit {
+  background: #e8f5e9;
+  color: #1b5e20;
+  font-weight: 700;
+}
+.serial-sheet .serial-skip {
+  background: #f7f7f7;
+  color: #777;
+}
+.serial-sheet .serial-result {
+  background: #fff8e1;
+  color: #5d4037;
+  font-weight: 700;
+}
+.serial-sheet .serial-bad {
+  background: #ffebee;
+  color: #8a1c1c;
+  font-weight: 700;
+}
+@media (max-width: 640px) {
+  .serial-figure {
+    padding: 14px;
+  }
+  .serial-chip-label {
+    width: 100%;
+  }
+}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Excelで複数条件に合う行だけ連番を振る方法",
+  "description": "Excelで複数条件を満たす行だけに1,2,3と飛ばない連番を振る方法を解説。まずCOUNTIFSだけで連番の土台を作り、必要に応じてIFで対象外を空白にします。",
+  "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
+  "datePublished": "2026-06-24",
+  "dateModified": "2026-06-24"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type": "ListItem", "position": 2, "name": "関数", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/"},
+    {"@type": "ListItem", "position": 3, "name": "複数条件に合う行だけ連番を振る方法", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countifs_serial_number.html"}
+  ]
+}
+</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#functions">関数</a><span>&gt;</span><strong>条件付き連番</strong>
+</div>
+
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">全ver対応</span>
+<span class="article-date">更新日: 2026-06-24</span>
+</div>
+<h1 class="article-title">Excelで複数条件に合う行だけ連番を振る方法</h1>
+<p class="article-lead">「条件に合う行だけに番号を振りたい」。このとき、いきなりIFまで組み合わせると分かりにくくなります。まずはCOUNTIFSだけで「上から今の行までを数える」仕組みを理解し、そのあと必要に応じて空白表示を足していきます。</p>
+</div>
+
+<section class="goal-section">
+<h2>最初に分けて考える：COUNTIFSは「数える」、IFは「隠す」</h2>
+<p>今回やりたいことは、「C列が <code>A社</code>」かつ「D列が1」の行だけに、1、2、3と連番を振ることです。</p>
+<p>ただし、ここで最初から完成形の数式を見ると、<code>IF</code>、<code>AND</code>、<code>COUNTIFS</code> の役割が混ざってしまいます。まずは <strong>COUNTIFSだけで連番の土台を作る</strong> ところから見ていきましょう。</p>
+</section>
+
+<section class="method-section">
+<h2>まずCOUNTIFSだけで連番の土台を作る</h2>
+<p>3行目からデータが始まる場合、まずは次のCOUNTIFSだけを考えます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=COUNTIFS($C$3:C3, "A社", $D$3:D3, 1)</span>
+</div>
+<p>この式の意味は、「3行目から今の行までの中で、C列が <code>A社</code>、かつD列が1の行が何件あるか」を数える、です。</p>
+
+<div class="serial-figure">
+<p class="serial-figure-title">COUNTIFSだけを下へコピーしたときの動き</p>
+<div class="serial-sheet">
+<table>
+<thead>
+<tr>
+<th scope="col">行</th>
+<th scope="col">C列：取引先</th>
+<th scope="col">D列：対象フラグ</th>
+<th scope="col">COUNTIFSの結果</th>
+<th scope="col">対象行だけ見ると</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>3</td><td>A社</td><td>1</td><td class="serial-result">1</td><td class="serial-hit">1件目</td></tr>
+<tr><td>4</td><td>B社</td><td>1</td><td>1</td><td class="serial-skip">対象外</td></tr>
+<tr><td>5</td><td>A社</td><td>0</td><td>1</td><td class="serial-skip">対象外</td></tr>
+<tr><td>6</td><td>A社</td><td>1</td><td class="serial-result">2</td><td class="serial-hit">2件目</td></tr>
+<tr><td>7</td><td>A社</td><td>1</td><td class="serial-result">3</td><td class="serial-hit">3件目</td></tr>
+</tbody>
+</table>
+</div>
+<p class="serial-figure-note">この記事では、条件をセル参照ではなく文字列 <code>"A社"</code> で書きます。COUNTIFSだけだと対象外の行にも数字は表示されますが、対象行だけを見ると、すでに1、2、3の連番になっています。</p>
+</div>
+<div class="xdemo-note-good">
+<strong>ここでは、まだ空白にしません。</strong><br>
+COUNTIFSの仕事は「数えること」だけです。対象外の行を空白にする処理は、後でIFを使って追加します。
+</div>
+</section>
+
+<section class="method-section">
+<h2>COUNTIFS部分を徹底的に分解する</h2>
+<p>COUNTIFSは、複数の条件をすべて満たす行数を数える関数です。今回の式は、次の4つの部品でできています。</p>
+
+<div class="serial-figure">
+<p class="serial-figure-title">COUNTIFSの分解図</p>
+<div class="serial-formula-map">
+<div class="serial-formula-piece">
+<h3>条件範囲1</h3>
+<code>$C$3:C3</code>
+<p>C列を、3行目から今の行まで見ます。</p>
+</div>
+<div class="serial-formula-piece">
+<h3>条件1</h3>
+<code>"A社"</code>
+<p>C列が文字列 <code>A社</code> と同じかを判定します。</p>
+</div>
+<div class="serial-formula-piece">
+<h3>条件範囲2</h3>
+<code>$D$3:D3</code>
+<p>D列を、3行目から今の行まで見ます。</p>
+</div>
+<div class="serial-formula-piece">
+<h3>条件2</h3>
+<code>1</code>
+<p>D列が1の行だけを数えます。</p>
+</div>
+</div>
+</div>
+
+<h3>ポイント1：開始位置だけ固定する</h3>
+<p>連番にするために一番大事なのが、<code>$C$3:C3</code> と <code>$D$3:D3</code> の形です。</p>
+<p>左側の <code>$C$3</code> は固定します。右側の <code>C3</code> は固定しません。こうすると、下へコピーしたときに範囲が少しずつ広がります。</p>
+
+<div class="serial-figure">
+<p class="serial-figure-title">範囲が広がるイメージ</p>
+<div class="serial-chip-row">
+<span class="serial-chip-label">3行目</span>
+<span class="serial-chip good">$C$3:C3</span>
+<span class="serial-chip good">$D$3:D3</span>
+</div>
+<div class="serial-chip-row">
+<span class="serial-chip-label">6行目</span>
+<span class="serial-chip good">$C$3:C6</span>
+<span class="serial-chip good">$D$3:D6</span>
+</div>
+<div class="serial-chip-row">
+<span class="serial-chip-label">7行目</span>
+<span class="serial-chip good">$C$3:C7</span>
+<span class="serial-chip good">$D$3:D7</span>
+</div>
+<p class="serial-figure-note">これで「先頭から今の行までに、対象が何件あったか」を数えられます。</p>
+</div>
+
+<h3>ポイント2：カウント条件にもD列が1を入れる</h3>
+<p>今回の対象は「C列が <code>A社</code>」だけではありません。「D列が1」も条件です。</p>
+<p>そのため、COUNTIFSにも <code>$D$3:D3, 1</code> を入れます。ここを抜くと、D列が0の行までカウントされてしまい、連番が飛ぶ原因になります。</p>
+
+<div class="serial-figure">
+<p class="serial-figure-title">D列条件を入れないと、対象外も数えてしまう</p>
+<div class="serial-sheet">
+<table>
+<thead>
+<tr>
+<th scope="col">行</th>
+<th scope="col">C列</th>
+<th scope="col">D列</th>
+<th scope="col">D列条件なし</th>
+<th scope="col">D列条件あり</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>3</td><td>A社</td><td>1</td><td>1</td><td class="serial-result">1</td></tr>
+<tr><td>4</td><td>B社</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>5</td><td>A社</td><td>0</td><td class="serial-bad">2</td><td>1</td></tr>
+<tr><td>6</td><td>A社</td><td>1</td><td class="serial-bad">3</td><td class="serial-result">2</td></tr>
+<tr><td>7</td><td>A社</td><td>1</td><td class="serial-bad">4</td><td class="serial-result">3</td></tr>
+</tbody>
+</table>
+</div>
+<p class="serial-figure-note">D列条件なしだと、5行目の「A社だけどD列が0」の行も数えます。だから次の対象行が3になってしまいます。</p>
+</div>
+
+<div class="xdemo-note-info">
+<strong>COUNTIFS部分の結論</strong><br>
+連番の土台は <code>=COUNTIFS($C$3:C3, "A社", $D$3:D3, 1)</code> です。ここまでで、「対象行だけを見ると1、2、3になる」状態は作れています。
+</div>
+</section>
+
+<section class="method-section">
+<h2>あとで合体：対象外を空白にしたいとき</h2>
+<p>COUNTIFSだけだと、対象外の行にも累計の数字が表示されます。業務表では、対象外の行は空白にしたいことが多いですよね。</p>
+<p>そこで、COUNTIFSの外側にIFを足します。考え方はシンプルです。</p>
+
+<div class="serial-figure">
+<p class="serial-figure-title">合体の考え方</p>
+<div class="serial-flow">
+<div class="serial-step">
+<strong>対象行なら</strong>
+COUNTIFSで作った連番を表示します。
+</div>
+<div class="serial-step">
+<strong>対象外なら</strong>
+<code>""</code> を返して空白にします。
+</div>
+</div>
+</div>
+
+<h3>表示するかどうかをANDで判定する</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">IF(AND(C3="A社", D3=1), [カウント処理], "")</span>
+</div>
+<p><code>AND(C3="A社", D3=1)</code> は、「C3が <code>A社</code>」かつ「D3が1」のときだけTRUEになります。</p>
+<p>TRUEならCOUNTIFSの結果を表示し、FALSEなら <code>""</code>、つまり空白を表示します。</p>
+
+<h3>COUNTIFSをIFの中に入れる</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(AND(C3="A社", D3=1), COUNTIFS($C$3:C3, "A社", $D$3:D3, 1), "")</span>
+</div>
+<p>ここで大事なのは、COUNTIFS部分はさきほど作った式をそのまま使うことです。外側のIFは、表示するか空白にするかを決めているだけです。</p>
+
+<div class="serial-figure">
+<p class="serial-figure-title">IFで空白にした完成イメージ</p>
+<div class="serial-sheet">
+<table>
+<thead>
+<tr>
+<th scope="col">行</th>
+<th scope="col">C列：取引先</th>
+<th scope="col">D列：対象フラグ</th>
+<th scope="col">COUNTIFSだけ</th>
+<th scope="col">IFで空白にした結果</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>3</td><td>A社</td><td>1</td><td>1</td><td class="serial-result">1</td></tr>
+<tr><td>4</td><td>B社</td><td>1</td><td>1</td><td class="serial-skip">空白</td></tr>
+<tr><td>5</td><td>A社</td><td>0</td><td>1</td><td class="serial-skip">空白</td></tr>
+<tr><td>6</td><td>A社</td><td>1</td><td>2</td><td class="serial-result">2</td></tr>
+<tr><td>7</td><td>A社</td><td>1</td><td>3</td><td class="serial-result">3</td></tr>
+</tbody>
+</table>
+</div>
+<p class="serial-figure-note">COUNTIFSで連番の土台を作り、IFで対象外だけ隠す。役割を分けて考えると、式がかなり読みやすくなります。</p>
+</div>
+</section>
+
+<section class="method-section">
+<h2>まとめ</h2>
+<p>まず覚えるべき本体は、COUNTIFS部分です。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=COUNTIFS($C$3:C3, "A社", $D$3:D3, 1)</span>
+</div>
+<p>これで「上から今の行までに、条件を満たす行が何件あったか」を数えられます。</p>
+<p>そして、対象外の行を空白にしたいときだけ、外側にIFを足します。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(AND(C3="A社", D3=1), COUNTIFS($C$3:C3, "A社", $D$3:D3, 1), "")</span>
+</div>
+<p>COUNTIFSは数える担当、IFは表示を整える担当。こう分けて見ると、条件付き連番はぐっと理解しやすくなります。</p>
+</section>
+
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;">
+<h2>関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_countifs_sumifs.html">COUNTIFS・SUMIFS完全ガイド</a></li>
+<li><a href="article_countif_extract.html">【FILTER代替】VBA不要・CSE不要の複数抽出</a></li>
+<li><a href="../latest/article_filter.html">FILTER関数で条件に合うデータを動的抽出</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務などで使う前のバックアップ、権限確認、承認、個人情報や機密情報を除外した検証を前提にしています。操作結果や可用性判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="../../samples/index.html">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

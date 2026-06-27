@@ -1959,6 +1959,153 @@ video::cue {
   gap: 10px;
 }
 
+/* ROW + SMALL + INDEX 複数抽出の図解 */
+.extract-figure {
+  margin: 1.5em 0 2em;
+  padding: 18px;
+  background: linear-gradient(135deg, #f7fbff 0%, #f8fff9 100%);
+  border: 1px solid #cfdfec;
+  border-radius: 14px;
+}
+
+.extract-figure figcaption {
+  margin-bottom: 14px;
+  color: #1a3d5c;
+  font-weight: 800;
+  line-height: 1.6;
+}
+
+.extract-role-flow {
+  justify-content: center;
+  gap: 12px;
+}
+
+.extract-role {
+  flex: 1 1 180px;
+  min-width: 0;
+  padding: 16px;
+  border: 2px solid #c8d8e8;
+  border-radius: 12px;
+  background: #fff;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.extract-role strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1.1rem;
+  color: #153c5a;
+}
+
+.extract-role span {
+  display: block;
+  color: #4b6578;
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.extract-role-row { border-color: #5c8fc2; background: #f1f7ff; }
+.extract-role-small { border-color: #e6a43c; background: #fff9ed; }
+.extract-role-index { border-color: #4da56a; background: #f0fbf3; }
+
+.extract-arrow {
+  align-self: center;
+  color: #78909c;
+  font-size: 1.55rem;
+  font-weight: 900;
+}
+
+.formula-anatomy {
+  margin: 1.4em 0;
+  padding: 16px;
+  background: #f8fafc;
+  border: 1px solid #d9e2ea;
+  border-radius: 14px;
+}
+
+.formula-layer {
+  padding: 13px 14px;
+  border: 2px solid;
+  border-radius: 11px;
+  background: #fff;
+}
+
+.formula-layer + .formula-layer,
+.formula-layer .formula-layer {
+  margin-top: 10px;
+}
+
+.formula-layer-label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.formula-layer code {
+  display: block;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.layer-iferror { border-color: #8b9bad; }
+.layer-iferror > .formula-layer-label { color: #526477; }
+.layer-index { border-color: #4da56a; background: #f4fcf6; }
+.layer-index > .formula-layer-label { color: #257442; }
+.layer-small { border-color: #e6a43c; background: #fffbf1; }
+.layer-small > .formula-layer-label { color: #9a5c00; }
+.layer-row { border-color: #5c8fc2; background: #f2f8ff; }
+.layer-row > .formula-layer-label { color: #245f98; }
+
+.trace-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2em;
+  height: 2em;
+  padding: 0 0.45em;
+  border-radius: 999px;
+  background: #1a3d5c;
+  color: #fff;
+  font-weight: 800;
+}
+
+.extract-checklist {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 1.25em 0;
+}
+
+.extract-check {
+  padding: 14px 16px;
+  border: 1px solid #d7e2ec;
+  border-left: 5px solid #4d87b8;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.extract-check strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #1a3d5c;
+}
+
+@media (max-width: 768px) {
+  .extract-role-flow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .extract-arrow {
+    transform: rotate(90deg);
+    text-align: center;
+  }
+  .extract-checklist {
+    grid-template-columns: 1fr;
+  }
+}
+
 .flow-box-result {
   flex: 1 1 180px;
   min-width: min(100%, 220px);

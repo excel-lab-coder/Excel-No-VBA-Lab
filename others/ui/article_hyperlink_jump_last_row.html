@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Excelで最終行・次の空き行へジャンプする方法｜HYPERLINK関数でVBA不要｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="ExcelのHYPERLINK関数で、VBAを使わずに入力済み最終行、次の空き行、指定セル、処理票番号の行へジャンプする方法を解説。コピー・貼り付けで台帳へ1件ずつ追加する現場業務を使いやすくします。" name="description">
+<meta content="Excel 最終行 ジャンプ, Excel 次の空き行 移動, HYPERLINK関数 セル移動, Excel VBAなし ジャンプ, 最終行 ハイパーリンク, 処理票 台帳 入力, Excel 指定セル 移動" name="keywords">
+<meta content="Excelで最終行・次の空き行へジャンプする方法｜HYPERLINK関数でVBA不要｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのHYPERLINK関数で、VBAを使わずに入力済み最終行、次の空き行、指定セル、処理票番号の行へジャンプする方法を解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_hyperlink_jump_last_row.html" property="og:url">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_hyperlink_jump_last_row.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Excelで最終行・次の空き行へジャンプする方法｜HYPERLINK関数でVBA不要",
+  "description": "ExcelのHYPERLINK関数で、VBAを使わずに入力済み最終行、次の空き行、指定セル、処理票番号の行へジャンプする方法を解説。",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_hyperlink_jump_last_row.html"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab"
+  }
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "現場実務ラボ",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "HYPERLINK関数で最終行・次の空き行へジャンプ",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_hyperlink_jump_last_row.html"
+    }
+  ]
+}</script>
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+  <a href="../../index.html">ホーム</a><span>&gt;</span>
+  <a href="../index.html">現場実務ラボ</a><span>&gt;</span>
+  <strong>最終行・次の空き行へジャンプ</strong>
+</div>
+
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta">
+    <span class="badge badge-all">全ver対応</span>
+    <span style="display:inline-block;background:#1976d2;color:#fff;font-size:.7em;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:5px;">VBA不要</span>
+    <span style="display:inline-block;background:#2e7d32;color:#fff;font-size:.7em;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:5px;">マクロ不要</span>
+    <span class="article-date">更新日: 2026-06-27</span>
+  </div>
+  <h1 class="article-title">Excelで最終行・次の空き行へジャンプする方法<br>&horbar; HYPERLINK関数でVBAなしの入力ナビを作る</h1>
+</div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> 長い台帳の入力場所まで一発で移動する</h2>
+<p>処理票や受付票の内容を、Excel台帳へ1件ずつコピー・貼り付けして追加する業務があります。件数が増えると、毎回スクロールして最終行を探すだけでも手間です。</p>
+<p>VBAが使えない環境でも、<strong>HYPERLINK関数のリンク先を数式で組み立てる</strong>と、現在のデータ量に応じて移動先が変わる「ジャンプボタン」をセルに作れます。</p>
+
+<div class="flow-diagram extract-role-flow" aria-label="次の空き行へ移動して処理票を追加する流れ">
+  <div class="extract-role extract-role-row"><strong>① 最終行を計算</strong><span>入力済みデータの<br>一番下を調べる</span></div>
+  <div class="extract-arrow" aria-hidden="true">→</div>
+  <div class="extract-role extract-role-small"><strong>② 1行加える</strong><span>次に入力する<br>空き行を決める</span></div>
+  <div class="extract-arrow" aria-hidden="true">→</div>
+  <div class="extract-role extract-role-index"><strong>③ HYPERLINK</strong><span>クリックだけで<br>入力セルへ移動</span></div>
+</div>
+
+<div class="xdemo-note-good">
+<strong>最も実用的な使い方</strong><br>
+シート上部に「次の入力行へ」というリンクセルを置きます。リンクをクリックして空き行へ移動し、処理票を貼り付けます。次にリンクをクリックしたときは、貼り付けたデータのさらに1行下へ移動します。
+</div>
+</section>
+
+<section class="method-section">
+<h3>まず知っておく：HYPERLINK関数でセル内移動できる</h3>
+<p>HYPERLINK関数はWebページを開くだけの関数ではありません。リンク先の先頭へ <code>#</code> を付けると、同じブック内のシートやセルへ移動できます。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">固定セルへ</div>
+<div class="formula-copy-code">=HYPERLINK("#'処理票'!A100","A100へ移動")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+<div class="formula-copy-row">
+<div class="formula-copy-label">先頭へ戻る</div>
+<div class="formula-copy-code">=HYPERLINK("#'処理票'!A1","先頭へ戻る")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>数式の部分</th><th>意味</th></tr></thead>
+<tbody>
+<tr><td><code>#</code></td><td>Webではなく、現在のブック内へ移動する指定</td></tr>
+<tr><td><code>'処理票'!</code></td><td>移動先シート。日本語や空白を含むためシングルクォートで囲む</td></tr>
+<tr><td><code>A100</code></td><td>移動先セル</td></tr>
+<tr><td><code>"A100へ移動"</code></td><td>セルに表示するクリック文字</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="xdemo-note-warn">
+<strong>シート名は実際の名前に変更してください</strong><br>
+この記事では移動先シートを「処理票」としています。「入力台帳」「受付一覧」などを使っている場合は、数式内の <code>'処理票'</code> を置き換えます。
+</div>
+</section>
+
+<section class="method-section">
+<h3><span class="step-badge">基本1</span> COUNTAで次の入力行へジャンプ</h3>
+<p>A列の1行目が見出しで、A2から下へ処理票番号を<strong>空白なく連続して</strong>入力する台帳なら、COUNTAで簡単に作れます。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">次の空き行</div>
+<div class="formula-copy-code">=HYPERLINK("#'処理票'!A"&(COUNTA('処理票'!A:A)+1),"次の入力行へ")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<figure class="extract-figure">
+<figcaption>COUNTA方式：見出し1件＋入力済み3件なら、次は5行目</figcaption>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>行</th><th>A列：処理票番号</th><th>COUNTAの数</th><th>移動先</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>処理票番号（見出し）</td><td rowspan="4">4セル</td><td rowspan="4" class="xd-result">4 + 1<br>→ A5</td></tr>
+<tr><td>2</td><td>P-001</td></tr>
+<tr><td>3</td><td>P-002</td></tr>
+<tr><td>4</td><td>P-003</td></tr>
+<tr><td>5</td><td class="xd-hit">次に貼り付ける場所</td><td></td><td></td></tr>
+</tbody>
+</table>
+</div>
+</figure>
+
+<h4>処理票を1件ずつ追加する流れ</h4>
+<div class="extract-checklist">
+  <div class="extract-check"><strong>1．リンクをクリック</strong>「次の入力行へ」をクリックして、現在の空き行へ移動します。</div>
+  <div class="extract-check"><strong>2．コピー内容を貼り付け</strong>処理票番号、日付、担当者、内容などをその行へ貼り付けます。</div>
+  <div class="extract-check"><strong>3．次の処理票をコピー</strong>別画面や別シートから次の1件をコピーします。</div>
+  <div class="extract-check"><strong>4．もう一度リンク</strong>データ件数が増えたため、リンク先も次の空き行へ変わります。</div>
+</div>
+
+<div class="xdemo-note-warn">
+<strong>COUNTA方式は途中に空白がある台帳では使わない</strong><br>
+COUNTAは「入力されたセルの個数」を数える関数です。A列の途中に空白があると、実際の最終行より上へ移動してしまいます。途中空白の可能性がある場合は、次のLOOKUP方式を使います。
+</div>
+</section>
+
+<section class="method-section">
+<h3><span class="step-badge">おすすめ</span> LOOKUPで途中空白があっても次の行へジャンプ</h3>
+<p>A列の途中に空白があっても、一番下に入力されているセルの行番号を探す方法です。処理票番号など、各レコードで必ず入力する列を基準にします。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">次の空き行</div>
+<div class="formula-copy-code">=IFERROR(HYPERLINK("#'処理票'!A"&(LOOKUP(2,1/('処理票'!$A$2:$A$10000&lt;&gt;""),ROW('処理票'!$A$2:$A$10000))+1),"次の入力行へ"),HYPERLINK("#'処理票'!A2","最初の入力行へ"))</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+<div class="formula-copy-row">
+<div class="formula-copy-label">入力済み最終行</div>
+<div class="formula-copy-code">=IFERROR(HYPERLINK("#'処理票'!A"&LOOKUP(2,1/('処理票'!$A$2:$A$10000&lt;&gt;""),ROW('処理票'!$A$2:$A$10000)),"入力済み最終行へ"),"データなし")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<figure class="extract-figure">
+<figcaption>図：途中に空白があっても、一番下の入力行を基準にする</figcaption>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>行</th><th>A列</th><th>判定</th><th>LOOKUPの結果</th></tr></thead>
+<tbody>
+<tr><td>2</td><td>P-001</td><td>入力あり</td><td rowspan="6" class="xd-result">最後の入力は7行目<br>次の入力先はA8</td></tr>
+<tr><td>3</td><td>P-002</td><td>入力あり</td></tr>
+<tr><td>4</td><td></td><td>途中空白</td></tr>
+<tr><td>5</td><td>P-003</td><td>入力あり</td></tr>
+<tr><td>6</td><td></td><td>途中空白</td></tr>
+<tr><td>7</td><td>P-004</td><td class="xd-hit">一番下の入力</td></tr>
+<tr><td>8</td><td></td><td>次の入力先</td><td></td></tr>
+</tbody>
+</table>
+</div>
+</figure>
+
+<h4>数式を3つに分けて理解する</h4>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>数式</th><th>担当する処理</th></tr></thead>
+<tbody>
+<tr><td><code>'処理票'!$A$2:$A$10000&lt;&gt;""</code></td><td>A列に値がある行を判定する</td></tr>
+<tr><td><code>LOOKUP(2,1/(判定),ROW(範囲))</code></td><td>一番下に値がある実際の行番号を返す</td></tr>
+<tr><td><code>行番号+1</code></td><td>入力済み最終行ではなく、次の空き行を移動先にする</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="xdemo-note-info">
+<strong>「最終行」と「次の空き行」は用途が違います</strong><br>
+入力済みデータを確認・コピーしたい → <strong>最終行へ</strong><br>
+新しい処理票を追加・貼り付けたい → <strong>最終行 + 1へ</strong>
+</div>
+</section>
+
+<section class="method-section">
+<h3>リンク文字に次の件数を表示する</h3>
+<p>何件目を入力するのかもリンクに表示すると、作業者が現在の件数を確認できます。A2:A10000に処理票番号が入る例です。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">件数表示付き</div>
+<div class="formula-copy-code">=IFERROR(HYPERLINK("#'処理票'!A"&(LOOKUP(2,1/('処理票'!$A$2:$A$10000&lt;&gt;""),ROW('処理票'!$A$2:$A$10000))+1),"次の入力行へ（"&COUNTA('処理票'!$A$2:$A$10000)+1&"件目）"),HYPERLINK("#'処理票'!A2","最初の入力行へ（1件目）"))</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<p>表示例は「次の入力行へ（125件目）」です。リンク先はLOOKUPで最終位置を調べ、表示する件数はCOUNTAで入力済み件数を数えています。</p>
+</section>
+
+<section class="method-section">
+<h3>指定したセル・行番号へジャンプする</h3>
+<p>移動先を別セルから指定すると、簡単なナビゲーション欄を作れます。</p>
+
+<h4>B2へ「A250」のようにセル番地を入力する場合</h4>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">セル番地指定</div>
+<div class="formula-copy-code">=IF(B2="","",HYPERLINK("#'処理票'!"&B2,B2&"へ移動"))</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<h4>B2へ「250」のように行番号だけを入力する場合</h4>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">行番号指定</div>
+<div class="formula-copy-code">=IF(B2="","",HYPERLINK("#'処理票'!A"&B2,B2&"行目へ移動"))</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<div class="xdemo-note-good">
+<strong>使いどころ</strong><br>
+・担当者から「350行目を確認して」と言われたとき<br>
+・入力開始位置が日によって決まっているとき<br>
+・管理表から処理票シートの指定位置へ移動したいとき
+</div>
+</section>
+
+<section class="method-section">
+<h3>処理票番号を検索して該当行へジャンプする</h3>
+<p>確認したい処理票番号をH2へ入力し、A列から完全一致で探してその行へ移動します。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">番号検索</div>
+<div class="formula-copy-code">=IF(H2="","",IFERROR(HYPERLINK("#'処理票'!A"&MATCH(H2,'処理票'!A:A,0),H2&"へ移動"),"該当する処理票なし"))</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<div class="flow-diagram extract-role-flow" aria-label="処理票番号から該当行へ移動する流れ">
+  <div class="extract-role extract-role-row"><strong>H2へ番号入力</strong><span>P-0125</span></div>
+  <div class="extract-arrow" aria-hidden="true">→</div>
+  <div class="extract-role extract-role-small"><strong>MATCHで検索</strong><span>A列の125行目で<br>番号を発見</span></div>
+  <div class="extract-arrow" aria-hidden="true">→</div>
+  <div class="extract-role extract-role-index"><strong>HYPERLINK</strong><span>該当するA125へ<br>クリック移動</span></div>
+</div>
+</section>
+
+<section class="method-section">
+<h3>現場で使いやすい配置</h3>
+<p>リンクを作るだけでなく、どこへ置くかで使いやすさが変わります。</p>
+
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>配置</th><th>おすすめのリンク</th><th>使い方</th></tr></thead>
+<tbody>
+<tr><td>処理票シート上部</td><td>次の入力行へ</td><td>入力や貼り付けを始める入口にする</td></tr>
+<tr><td>処理票シート上部</td><td>入力済み最終行へ</td><td>直前に追加した内容を確認する</td></tr>
+<tr><td>シート下部または固定表示部分</td><td>先頭へ戻る</td><td>入力後に操作欄へ戻る</td></tr>
+<tr><td>メニューシート</td><td>処理票番号検索</td><td>複数シートを開かず対象レコードへ移動する</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="xdemo-note-info">
+<strong>上部の行を固定するとさらに便利です</strong><br>
+「表示」→「ウィンドウ枠の固定」でリンクを置いた上部を固定すれば、長い台帳でもナビゲーション欄を表示したままにできます。
+</div>
+</section>
+
+<section class="method-section">
+<h3>失敗しやすい点</h3>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>症状</th><th>原因</th><th>対処</th></tr></thead>
+<tbody>
+<tr><td>リンクを押しても移動しない</td><td>シート名が数式と違う</td><td><code>'処理票'!</code> を実際の名前へ変更</td></tr>
+<tr><td>途中の行へ移動する</td><td>COUNTA方式で途中空白がある</td><td>LOOKUP方式へ変更</td></tr>
+<tr><td>常に同じ行へ移動する</td><td>計算方法が手動になっている</td><td>数式タブで自動計算に戻すか、F9で再計算</td></tr>
+<tr><td>最終行をデータと誤認する</td><td>基準列に空白文字や不要な値が残っている</td><td>必ず値が入る処理票番号列を基準にする</td></tr>
+<tr><td>数式が重い</td><td>A:Aのような列全体でLOOKUPしている</td><td><code>$A$2:$A$10000</code> のように実用範囲へ限定</td></tr>
+<tr><td>シート名変更後にリンク切れ</td><td>HYPERLINK内の文字列は古い名前のまま</td><td>数式内のシート名も修正</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="xdemo-note-warn">
+<strong>最終行を調べる基準列が重要です</strong><br>
+氏名や備考のように未入力になることがある列ではなく、処理票番号や受付番号など、1件ごとに必ず値が入る列を使ってください。
+</div>
+</section>
+
+<section class="legacy-section">
+<h3>まとめ：VBAなしでも入力ナビは作れる</h3>
+<div class="xdemo-note">
+<strong>目的別の選び方</strong><br>
+データが連続している簡単な台帳 → COUNTAで次の行へ<br>
+途中空白がある可能性がある → LOOKUPで最終行 + 1へ<br>
+直前の入力を確認したい → LOOKUPで入力済み最終行へ<br>
+確認対象が決まっている → MATCHで処理票番号の行へ<br>
+いつでも戻りたい → A1への固定リンク
+</div>
+
+<p>HYPERLINK関数は処理そのものを自動化する機能ではありません。しかし、入力位置を探す、長い表をスクロールする、最終行を確認するという小さな手間をなくせます。マクロ禁止環境で処理票を1件ずつ追加する運用では、壊れにくく導入しやすい改善方法です。</p>
+</section>
+
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_select_input_range.html">入力欄だけを範囲選択してDeleteで初期化する方法</a></li>
+<li><a href="../misc/article_shortcuts.html">実務で本当に使うショートカットキー厳選集</a></li>
+<li><a href="article_form_controls.html">開発タブ＆フォームコントロール完全ガイド</a></li>
+<li><a href="../print/article_print_area.html">印刷範囲を最終行まで自動調整する方法</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

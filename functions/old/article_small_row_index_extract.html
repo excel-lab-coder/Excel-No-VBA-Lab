@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>旧ExcelでFILTER関数を代用する方法｜ROW・SMALL・INDEXで複数行抽出｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="旧Excelで条件に合う複数行を抽出するROW・SMALL・INDEXの仕組みを徹底図解。作業列、数式の計算順、コピー時の変化、範囲指定、よくある失敗までセル単位で解説します。" name="description">
+<meta content="SMALL ROW INDEX, Excel 複数抽出, FILTER 代替, SMALL関数 使い方, ROW関数 使い方, INDEX関数, 旧Excel, VBA不要, CSE不要" name="keywords">
+<meta content="旧ExcelでFILTER関数を代用する方法｜ROW・SMALL・INDEXで複数行抽出｜Excel &times; No VBA Lab" property="og:title">
+<meta content="旧Excelで条件に合う複数行を抽出するROW・SMALL・INDEXの仕組みを徹底図解。作業列、数式の計算順、コピー時の変化、範囲指定、よくある失敗までセル単位で解説します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_small_row_index_extract.html" property="og:url">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_small_row_index_extract.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "旧ExcelでFILTER関数を代用する方法｜ROW・SMALL・INDEXで複数行抽出",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "旧Excelで条件に合う複数行を抽出するROW・SMALL・INDEXの仕組みを徹底図解。作業列、数式の計算順、コピー時の変化、範囲指定、よくある失敗までセル単位で解説します。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/index.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "旧ExcelでFILTER関数を代用する方法",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_small_row_index_extract.html"
+    }
+  ]
+}</script>
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+  <a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#functions">関数</a><span>&gt;</span><strong>旧ExcelでFILTER関数を代用</strong>
+</div>
+
+<article class="article-body">
+<div class="article-header">
+  <div class="article-meta">
+    <span class="badge badge-all">全ver対応</span>
+    <span style="display:inline-block;background:#e53935;color:#fff;font-size:.7em;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:5px;">CSE不要</span>
+    <span style="display:inline-block;background:#1976d2;color:#fff;font-size:.7em;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:5px;">VBA不要</span>
+  </div>
+  <h1 class="article-title">旧ExcelでFILTER関数を代用する方法<br>&horbar; ROW・SMALL・INDEXで複数行抽出する仕組み</h1>
+</div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> この記事で理解すること</h2>
+<p>Excel 2019以前にはFILTER関数がありません。それでも、条件に合う行を1件目、2件目、3件目……と上から順に取り出すことはできます。</p>
+<p>使う中心の関数は <strong>ROW・SMALL・INDEX</strong> の3つです。長い数式を暗記するのではなく、3人の担当者が順番に仕事をすると考えると理解しやすくなります。</p>
+
+<div class="flow-diagram extract-role-flow" aria-label="ROW、SMALL、INDEXの3段階">
+  <div class="extract-role extract-role-row"><strong>① ROW</strong><span>条件に合うデータの<br>行番号を記録する</span></div>
+  <div class="extract-arrow" aria-hidden="true">→</div>
+  <div class="extract-role extract-role-small"><strong>② SMALL</strong><span>小さい行番号から<br>1件ずつ選ぶ</span></div>
+  <div class="extract-arrow" aria-hidden="true">→</div>
+  <div class="extract-role extract-role-index"><strong>③ INDEX</strong><span>選ばれた行の<br>名前や売上を表示する</span></div>
+</div>
+
+<div class="xdemo-note-good">
+<strong>先に結論</strong><br>
+作業列：<code>=IF(C2="営業部",ROW(),"")</code><br>
+抽出側：<code>=IFERROR(INDEX(B:B,SMALL($A:$A,ROW(A1))),"")</code><br><br>
+この記事では、この2本がなぜ動くのかをセル単位で最後まで追いかけます。
+</div>
+</section>
+
+<section class="method-section">
+<h3>最初に完成図を見る</h3>
+<p>元データの左側に作業列Aを追加します。名前はB列、部署はC列、売上はD列です。「営業部」の行だけを右側へ抽出します。</p>
+
+<figure class="extract-figure">
+<figcaption>図1：元データから「営業部」だけを抜き出す全体像</figcaption>
+<div class="xdemo-layout">
+  <div class="xdemo-block">
+    <div class="xdemo-block-title">元データ＋作業列</div>
+    <div class="table-wrapper">
+    <table class="xdemo-table">
+      <thead><tr><th>A：行番号</th><th>B：名前</th><th>C：部署</th><th>D：売上</th></tr></thead>
+      <tbody>
+        <tr><td class="xd-hit">2</td><td>田中</td><td class="xd-hit">営業部</td><td>120</td></tr>
+        <tr><td></td><td>佐藤</td><td>企画部</td><td>80</td></tr>
+        <tr><td class="xd-hit">4</td><td>鈴木</td><td class="xd-hit">営業部</td><td>200</td></tr>
+        <tr><td></td><td>高橋</td><td>総務部</td><td>60</td></tr>
+        <tr><td class="xd-hit">6</td><td>伊藤</td><td class="xd-hit">営業部</td><td>150</td></tr>
+        <tr><td></td><td>渡辺</td><td>企画部</td><td>90</td></tr>
+        <tr><td></td><td>山本</td><td>総務部</td><td>45</td></tr>
+        <tr><td class="xd-hit">9</td><td>中村</td><td class="xd-hit">営業部</td><td>180</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+  <div class="xdemo-arrow" aria-hidden="true">→</div>
+  <div class="xdemo-block">
+    <div class="xdemo-block-title">抽出結果</div>
+    <div class="table-wrapper">
+    <table class="xdemo-table">
+      <thead><tr><th>名前</th><th>部署</th><th>売上</th></tr></thead>
+      <tbody>
+        <tr><td class="xd-result">田中</td><td>営業部</td><td>120</td></tr>
+        <tr><td class="xd-result">鈴木</td><td>営業部</td><td>200</td></tr>
+        <tr><td class="xd-result">伊藤</td><td>営業部</td><td>150</td></tr>
+        <tr><td class="xd-result">中村</td><td>営業部</td><td>180</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+</figure>
+
+<p>重要なのは、作業列Aの <code>2、4、6、9</code> です。これは連番ではなく、営業部が存在する<strong>シート上の本当の行番号</strong>です。この番号をSMALLが順番に選び、INDEXへ渡します。</p>
+</section>
+
+<section class="method-section">
+<h3><span class="step-badge">STEP 1</span> ROWで「対象データの住所」を作る</h3>
+<p>A2へ次の式を入力し、元データの最終行までコピーします。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">A2：作業列</div>
+<div class="formula-copy-code">=IF(C2="営業部",ROW(),"")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<h4>ROW()だけなら「今いる行」を返す</h4>
+<p>A2に <code>=ROW()</code> と入力すると2、A4なら4、A9なら9が返ります。ROWはセルの値ではなく、セルがある位置を数字にします。</p>
+
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>数式がある行</th><th>ROW()の結果</th><th>意味</th></tr></thead>
+<tbody>
+<tr><td>2行目</td><td><span class="trace-number">2</span></td><td>このデータはシートの2行目</td></tr>
+<tr><td>4行目</td><td><span class="trace-number">4</span></td><td>このデータはシートの4行目</td></tr>
+<tr><td>9行目</td><td><span class="trace-number">9</span></td><td>このデータはシートの9行目</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>IFが「営業部のときだけ」に絞る</h4>
+<p><code>IF(C2="営業部",ROW(),"")</code> は、C2が営業部ならROW()を実行し、違えば空白文字 <code>""</code> を返します。</p>
+
+<figure class="extract-figure">
+<figcaption>図2：作業列を1行ずつ判定する流れ</figcaption>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>行</th><th>C列の部署</th><th>条件判定</th><th>A列の結果</th></tr></thead>
+<tbody>
+<tr><td>2</td><td class="xd-hit">営業部</td><td>営業部 = 営業部 → TRUE</td><td class="xd-result">ROW() → 2</td></tr>
+<tr><td>3</td><td>企画部</td><td>企画部 = 営業部 → FALSE</td><td>空白</td></tr>
+<tr><td>4</td><td class="xd-hit">営業部</td><td>営業部 = 営業部 → TRUE</td><td class="xd-result">ROW() → 4</td></tr>
+<tr><td>5</td><td>総務部</td><td>総務部 = 営業部 → FALSE</td><td>空白</td></tr>
+<tr><td>6</td><td class="xd-hit">営業部</td><td>営業部 = 営業部 → TRUE</td><td class="xd-result">ROW() → 6</td></tr>
+</tbody>
+</table>
+</div>
+</figure>
+
+<div class="xdemo-note-info">
+<strong>作業列の役割は「抽出」ではなく「目印」です</strong><br>
+この時点では名前を取り出していません。営業部がある場所へ、後から見つけられる行番号の目印を置いただけです。
+</div>
+</section>
+
+<section class="method-section">
+<h3><span class="step-badge">STEP 2</span> SMALLで1件目、2件目を決める</h3>
+<p>作業列Aには <code>2、4、6、9</code> が残りました。SMALL関数は、この中から<strong>k番目に小さい数</strong>を返します。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">SMALLの形</div>
+<div class="formula-copy-code">=SMALL(数値の範囲,何番目に小さい数か)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<figure class="extract-figure">
+<figcaption>図3：SMALLが行番号を上から順に取り出す</figcaption>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>欲しい件数</th><th>SMALLの式</th><th>選ばれる行番号</th><th>元データ上の人</th></tr></thead>
+<tbody>
+<tr><td>1件目</td><td><code>=SMALL($A:$A,1)</code></td><td><span class="trace-number">2</span></td><td>2行目の田中</td></tr>
+<tr><td>2件目</td><td><code>=SMALL($A:$A,2)</code></td><td><span class="trace-number">4</span></td><td>4行目の鈴木</td></tr>
+<tr><td>3件目</td><td><code>=SMALL($A:$A,3)</code></td><td><span class="trace-number">6</span></td><td>6行目の伊藤</td></tr>
+<tr><td>4件目</td><td><code>=SMALL($A:$A,4)</code></td><td><span class="trace-number">9</span></td><td>9行目の中村</td></tr>
+</tbody>
+</table>
+</div>
+</figure>
+
+<h4>ROW(A1)が「何件目」を自動で作る</h4>
+<p>数式を下へコピーするたびに1、2、3……と増やすため、SMALLの第2引数へ <code>ROW(A1)</code> を入れます。</p>
+
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>抽出先</th><th>コピー後の式</th><th>ROWの結果</th><th>SMALLの意味</th></tr></thead>
+<tbody>
+<tr><td>G2</td><td><code>ROW(A1)</code></td><td>1</td><td>1番目に小さい行番号</td></tr>
+<tr><td>G3</td><td><code>ROW(A2)</code></td><td>2</td><td>2番目に小さい行番号</td></tr>
+<tr><td>G4</td><td><code>ROW(A3)</code></td><td>3</td><td>3番目に小さい行番号</td></tr>
+<tr><td>G5</td><td><code>ROW(A4)</code></td><td>4</td><td>4番目に小さい行番号</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="xdemo-note-warn">
+<strong>2種類のROWを混同しないでください</strong><br>
+作業列の <code>ROW()</code> は「元データの場所」を返します。<br>
+SMALL内の <code>ROW(A1)</code> は「何件目を取り出すか」を1、2、3……と作ります。
+</div>
+</section>
+
+<section class="method-section">
+<h3><span class="step-badge">STEP 3</span> INDEXで選ばれた行の値を表示する</h3>
+<p>SMALLが返すのは行番号だけです。そこでINDEXへ行番号を渡し、B列の名前を取り出します。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">INDEXの形</div>
+<div class="formula-copy-code">=INDEX(取り出したい範囲,行番号)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<figure class="extract-figure">
+<figcaption>図4：SMALLの答えをINDEXへ渡す</figcaption>
+<div class="flow-diagram extract-role-flow">
+  <div class="extract-role extract-role-small"><strong>SMALLの答え</strong><span>2件目なので<br>行番号「4」</span></div>
+  <div class="extract-arrow" aria-hidden="true">→</div>
+  <div class="extract-role extract-role-index"><strong>INDEX(B:B,4)</strong><span>B列4行目を見る<br>「鈴木」を返す</span></div>
+</div>
+</figure>
+
+<p>名前ならB列、部署ならC列、売上ならD列をINDEXの第1引数に指定します。選ばれた行番号は共通なので、列を変えるだけで同じ行の各項目を取り出せます。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">名前</div>
+<div class="formula-copy-code">=IFERROR(INDEX(B:B,SMALL($A:$A,ROW(A1))),"")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+<div class="formula-copy-row">
+<div class="formula-copy-label">部署</div>
+<div class="formula-copy-code">=IFERROR(INDEX(C:C,SMALL($A:$A,ROW(A1))),"")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+<div class="formula-copy-row">
+<div class="formula-copy-label">売上</div>
+<div class="formula-copy-code">=IFERROR(INDEX(D:D,SMALL($A:$A,ROW(A1))),"")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+</section>
+
+<section class="method-section">
+<h3>長い数式は、いちばん内側から読む</h3>
+<p>完成式を左から読むと複雑に見えます。Excelは内側から計算するので、<code>ROW → SMALL → INDEX → IFERROR</code> の順に追います。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">完成式</div>
+<div class="formula-copy-code">=IFERROR(INDEX(B:B,SMALL($A:$A,ROW(A1))),"")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<div class="formula-anatomy" aria-label="完成式の入れ子構造">
+  <div class="formula-layer layer-iferror">
+    <span class="formula-layer-label">④ IFERROR：対象がなくなった後のエラーを空白にする</span>
+    <code>IFERROR( INDEXの結果 , "" )</code>
+    <div class="formula-layer layer-index">
+      <span class="formula-layer-label">③ INDEX：B列の指定行から名前を返す</span>
+      <code>INDEX(B:B, SMALLの結果)</code>
+      <div class="formula-layer layer-small">
+        <span class="formula-layer-label">② SMALL：作業列からk番目に小さい行番号を返す</span>
+        <code>SMALL($A:$A, ROWの結果)</code>
+        <div class="formula-layer layer-row">
+          <span class="formula-layer-label">① ROW：下へコピーすると1、2、3……を作る</span>
+          <code>ROW(A1)</code>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4>G2の1件目を実際に計算する</h4>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>順番</th><th>計算</th><th>結果</th></tr></thead>
+<tbody>
+<tr><td><span class="trace-number">1</span></td><td><code>ROW(A1)</code></td><td>1</td></tr>
+<tr><td><span class="trace-number">2</span></td><td><code>SMALL($A:$A,1)</code></td><td>2</td></tr>
+<tr><td><span class="trace-number">3</span></td><td><code>INDEX(B:B,2)</code></td><td>田中</td></tr>
+<tr><td><span class="trace-number">4</span></td><td><code>IFERROR("田中","")</code></td><td>田中</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>下へコピーしたときの全体追跡</h4>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>抽出先</th><th>ROWで件数</th><th>SMALLで行番号</th><th>INDEXで名前</th></tr></thead>
+<tbody>
+<tr><td>G2</td><td>1件目</td><td>2</td><td class="xd-result">田中</td></tr>
+<tr><td>G3</td><td>2件目</td><td>4</td><td class="xd-result">鈴木</td></tr>
+<tr><td>G4</td><td>3件目</td><td>6</td><td class="xd-result">伊藤</td></tr>
+<tr><td>G5</td><td>4件目</td><td>9</td><td class="xd-result">中村</td></tr>
+<tr><td>G6</td><td>5件目</td><td>#NUM!</td><td>IFERRORで空白</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="method-section">
+<h3>なぜIFERRORが必要なのか</h3>
+<p>営業部が4件しかないのに5件目を求めると、SMALLには5番目の数がないため <code>#NUM!</code> になります。IFERRORで完成式全体を包み、抽出が終わった後を空白にします。</p>
+
+<div class="xdemo-note-warn">
+<strong>IFERRORは最後に付けるのがおすすめです</strong><br>
+作成途中からIFERRORを付けると、参照ミスまで空白になり原因を見つけにくくなります。まずIFERRORなしで4件が正しく抽出できることを確認し、最後に付けてください。
+</div>
+
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>段階</th><th>おすすめの式</th><th>目的</th></tr></thead>
+<tbody>
+<tr><td>動作確認中</td><td><code>=INDEX(B:B,SMALL($A:$A,ROW(A1)))</code></td><td>エラーが出た場所を確認する</td></tr>
+<tr><td>完成時</td><td><code>=IFERROR(INDEX(B:B,SMALL($A:$A,ROW(A1))),"")</code></td><td>対象終了後だけ空白にする</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="method-section">
+<h3>$記号は「作業列を固定する」ためにある</h3>
+<p><code>$A:$A</code> の$は、数式を横や下へコピーしても作業列Aを動かさないという意味です。</p>
+
+<div class="extract-checklist">
+  <div class="extract-check"><strong><code>$A:$A</code></strong>列Aを完全に固定。部署や売上の抽出式へ横コピーしてもB:BやC:Cへずれません。</div>
+  <div class="extract-check"><strong><code>ROW(A1)</code></strong>固定しない。下へコピーしたときA1 → A2 → A3と変わり、1件目 → 2件目 → 3件目を作ります。</div>
+</div>
+
+<div class="xdemo-note-info">
+<strong>固定するもの・動かすもの</strong><br>
+作業列の範囲は動かしたくない → <code>$A:$A</code><br>
+何件目かは増やしたい → <code>ROW(A1)</code>
+</div>
+</section>
+
+<section class="method-section">
+<h3>条件を変えても3段階の仕組みは同じ</h3>
+<p>変えるのはSTEP 1の条件判定だけです。ROWで行番号を出した後は、SMALLとINDEXをそのまま使えます。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">セルの条件</div>
+<div class="formula-copy-code">=IF(C2=$M$1,ROW(),"")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+<div class="formula-copy-row">
+<div class="formula-copy-label">部分一致</div>
+<div class="formula-copy-code">=IF(AND($M$1&lt;&gt;"",ISNUMBER(SEARCH($M$1,C2))),ROW(),"")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+<div class="formula-copy-row">
+<div class="formula-copy-label">複数条件</div>
+<div class="formula-copy-code">=IF(AND(C2="営業部",D2&gt;=100),ROW(),"")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<p>部分一致では検索セルM1が空白だとSEARCHがすべての行に一致するため、<code>$M$1&lt;&gt;""</code> を先に確認しています。</p>
+</section>
+
+<section class="method-section">
+<h3>実務では範囲を絞ると軽くなる</h3>
+<p>説明では分かりやすさを優先して列全体を使いました。ただし <code>SMALL($A:$A,...)</code> を多数コピーすると、毎回100万行以上を確認します。行数が分かるなら範囲を絞ります。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">範囲を限定</div>
+<div class="formula-copy-code">=IFERROR(INDEX(B:B,SMALL($A$2:$A$1000,ROW(A1))),"")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<p>作業列には実際のシート行番号が入っているため、INDEXはB:Bのままにします。INDEXもB2:B1000へ限定したい場合は、作業列を相対番号に変えます。</p>
+
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">相対番号</div>
+<div class="formula-copy-code">=IF(C2="営業部",ROW()-ROW($C$2)+1,"")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+<div class="formula-copy-row">
+<div class="formula-copy-label">範囲INDEX</div>
+<div class="formula-copy-code">=IFERROR(INDEX($B$2:$B$1000,SMALL($A$2:$A$1000,ROW(A1))),"")</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+
+<div class="xdemo-note-warn">
+<strong>実際の行番号と相対番号を混ぜないこと</strong><br>
+作業列が2、4、6なら <code>INDEX(B:B,...)</code>。作業列が1、3、5の相対番号なら <code>INDEX(B2:B1000,...)</code>。ここを混ぜると1行ずれます。
+</div>
+</section>
+
+<section class="method-section">
+<h3>よくある失敗を先に確認</h3>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>症状</th><th>主な原因</th><th>確認する場所</th></tr></thead>
+<tbody>
+<tr><td>同じ人ばかり出る</td><td><code>ROW(A1)</code> が固定されている</td><td><code>ROW($A$1)</code> にしていないか</td></tr>
+<tr><td>2件目からずれる</td><td>INDEXの範囲と行番号の種類が不一致</td><td>実行番号か相対番号か</td></tr>
+<tr><td>途中から#NUM!</td><td>対象件数を超えた</td><td>最後にIFERRORで包む</td></tr>
+<tr><td>全行が対象になる</td><td>SEARCHの検索セルが空白</td><td><code>$M$1&lt;&gt;""</code> を追加</td></tr>
+<tr><td>横コピーで結果が変</td><td>作業列Aがずれた</td><td><code>$A:$A</code> と$で固定</td></tr>
+<tr><td>何も表示されない</td><td>IFERRORが元のミスを隠している</td><td>一度IFERRORを外してエラーを見る</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>確認は3段階に分ける</h4>
+<div class="extract-checklist">
+  <div class="extract-check"><strong>① 作業列</strong>条件に合う行だけ、正しい行番号が出ているか。</div>
+  <div class="extract-check"><strong>② SMALLだけ</strong><code>=SMALL($A:$A,1)</code> が最初の対象行を返すか。</div>
+  <div class="extract-check"><strong>③ INDEXだけ</strong><code>=INDEX(B:B,2)</code> がB2の名前を返すか。</div>
+  <div class="extract-check"><strong>④ 最後に合体</strong>3つが単独で正しければ完成式へ組み合わせる。</div>
+</div>
+</section>
+
+<section class="legacy-section">
+<h3>なぜ最初の基本としておすすめなのか</h3>
+<p>ROW + SMALL + INDEX方式は最短の式ではありません。しかし、処理が3段階に分かれ、作業列を見れば途中結果を確認できます。旧Excelの複数抽出を初めて理解する方法として非常に優れています。</p>
+
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>特徴</th><th>この方式の利点</th></tr></thead>
+<tbody>
+<tr><td>役割が分離される</td><td>条件判定、順位付け、値の取得を個別に確認できる</td></tr>
+<tr><td>CSE不要</td><td>各行で通常の数式としてEnterだけで確定できる</td></tr>
+<tr><td>COUNTIF不要</td><td>範囲拡張カウントを使わず、各行の条件だけを判定する</td></tr>
+<tr><td>条件を変えやすい</td><td>作業列のIF部分だけを完全一致・部分一致・複数条件へ変更できる</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="xdemo-note">
+<strong>ここまでの要点</strong><br>
+ROW = 対象データの住所を記録<br>
+SMALL = 住所を上から1件ずつ選択<br>
+INDEX = 選ばれた住所の値を表示<br>
+IFERROR = 抽出終了後を空白に整える
+</div>
+
+<h3>次に読む記事：別方式のメリットを比較する</h3>
+<p>この基本形が理解できたら、次は「作業列を減らしたい」「大量データでもっと速くしたい」といった目的別の方式へ進めます。</p>
+
+<a class="link-card" href="article_countif_extract.html">
+<div class="link-card-title">次はこちら：旧ExcelでFILTER関数の代わりに複数抽出する4方式</div>
+<div class="link-card-desc">COUNTIF + MATCH、ROW + SMALL、AGGREGATE、上行参照方式を、分かりやすさ・作業列・速度・大量データ対応で比較します。</div>
+</a>
+</section>
+
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_countif_extract.html">旧ExcelでFILTER関数の代わりに複数抽出する方法 &horbar; 4方式の詳細比較</a></li>
+<li><a href="article_index_match.html">INDEX + MATCH &horbar; 全バージョン対応の王道検索</a></li>
+<li><a href="../latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

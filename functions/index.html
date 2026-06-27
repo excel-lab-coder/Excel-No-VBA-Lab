@@ -352,7 +352,17 @@
         <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
       </div>
       <a class="article-link" href="../functions/latest/article_unique.html">UNIQUE関数</a>
-      <p class="article-summary">重複を消して一意リストを作成します。商品名・担当者・部署名などの一覧化に便利です。</p>
+      <p class="article-summary">FILTERと組み合わせ、条件に合うデータだけから重複なしリストを作る方法を解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../functions/latest/article_unique_filter_sort.html">UNIQUE×FILTER×SORTで条件付きリストを並び替える</a>
+      <p class="article-summary">条件で絞り、重複を消し、SORTであいうえお順に並べる3関数ネストを丁寧に解説します。</p>
     </li>
 
     <li class="article-item">
@@ -467,7 +477,7 @@
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
       </div>
       <a class="article-link" href="../functions/latest/article_sequence.html">SEQUENCE で日付リスト自動生成</a>
-      <p class="article-summary">日付一覧や連番リストを、1セルの数式だけで自動展開します。</p>
+      <p class="article-summary">連番、日付、月初、時間割を1セルからスピル生成する方法を図解します。</p>
     </li>
   </ul>
 
@@ -511,6 +521,17 @@
       <a class="article-link" href="../functions/old/article_index_match_multi.html">INDEX + MATCH + 結合キー列</a>
       <p class="article-summary">複数条件の組み合わせで検索したいとき、旧Excelでも安定して実装できます。</p>
     </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../functions/old/article_countifs_serial_number.html">複数条件に合う行だけ連番を振る方法</a>
+      <p class="article-summary">COUNTIFSで連番の土台を作り、必要なときだけIFで対象外を空白にする考え方を解説します。</p>
+    </li>
+
   </ul>
 
   <h4>🔥 検索・抽出【超絶技巧編】</h4>
@@ -530,15 +551,25 @@
     </div>
   </div>
 
-  <ul class="article-list mb-32" id="list-functions-old-expert">
+  <ul class="article-list expert-pair-grid mb-32" id="list-functions-old-expert">
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 まずはこちら</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 基本を図解</span></span>
+      </div>
+      <a class="article-link" href="../functions/old/article_small_row_index_extract.html">① 旧ExcelでFILTER関数を代用｜ROW・SMALL・INDEX</a>
+      <p class="article-summary">まずはこちら。ROW・SMALL・INDEXの動きを図で追い、旧Excelの複数抽出を土台から理解します。</p>
+    </li>
+
     <li class="article-item highlight">
       <div class="level-bar lv-7">
         <span class="level-label">Lv.7 上級</span>
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="filter_alt"></span></span>
       </div>
-      <a class="article-link" href="../functions/old/article_countif_extract.html">【FILTER代替】VBA不要・CSE不要の複数抽出</a>
-      <p class="article-summary">Excel 2016以前でも通常の関数だけでFILTERと同等の複数行抽出を実現します。</p>
+      <a class="article-link" href="../functions/old/article_countif_extract.html">② 【FILTER代替】4つの複数抽出方式を比較</a>
+      <p class="article-summary">基本を理解した次はこちら。COUNTIF、ROW、AGGREGATE、上行参照方式のメリットと速度を比較します。</p>
     </li>
 
     <li class="article-item highlight">
@@ -591,6 +622,26 @@
       </div>
       <a class="article-link" href="../functions/old/article_midb.html">MID / MIDB関数 — 文字数やバイト数で文字列を抽出する</a>
       <p class="article-summary">文字列の途中から指定した分だけテキストを抜き出す関数です。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 COBOL連携</span></span>
+      </div>
+      <a class="article-link" href="../functions/old/article_wareki_datevalue_serial.html">和暦を西暦日付へ変換｜DATEVALUE関数</a>
+      <p class="article-summary">昭・平・令付きの和暦文字列を、DATEVALUEで日付シリアル値へ変換します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 日付整形</span></span>
+      </div>
+      <a class="article-link" href="../functions/old/article_yyyymmdd_date_serial.html">西暦8桁YYYYMMDDを日付へ変換｜DATE関数</a>
+      <p class="article-summary">19781215のような西暦8桁を、年・月・日に分解して日付シリアル値へ変換します。</p>
     </li>
 
     <li class="article-item">

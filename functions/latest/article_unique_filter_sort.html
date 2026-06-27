@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>UNIQUE×FILTER×SORTで条件付きリストを並び替える｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="ExcelのUNIQUE関数・FILTER関数で作った条件付きの重複なしリストを、SORT関数であいうえお順や降順に並び替える方法を解説します。" name="description">
+<meta content="UNIQUE FILTER SORT 組み合わせ, Excel 重複なし リスト 並び替え, SORT UNIQUE FILTER, スピル 関数 ネスト, Excel あいうえお順 数式" name="keywords">
+<meta content="UNIQUE×FILTER×SORTで条件付きリストを並び替える｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのUNIQUE関数・FILTER関数で作った条件付きの重複なしリストを、SORT関数であいうえお順や降順に並び替える方法を解説します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_unique_filter_sort.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_unique_filter_sort.html" property="og:url">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "UNIQUE×FILTER×SORTで条件付きリストを並び替える",
+  "description": "ExcelのUNIQUE関数・FILTER関数で作った条件付きの重複なしリストを、SORT関数であいうえお順や降順に並び替える方法を解説します。",
+  "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
+  "datePublished": "2026-06-24",
+  "dateModified": "2026-06-24"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type": "ListItem", "position": 2, "name": "関数", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/"},
+    {"@type": "ListItem", "position": 3, "name": "UNIQUE×FILTER×SORT", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_unique_filter_sort.html"}
+  ]
+}
+</script>
+
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#functions">関数</a><span>&gt;</span><strong>UNIQUE × FILTER × SORT</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-2021">2021～</span>
+<span class="badge badge-365" style="margin-left:5px;">365</span>
+<span class="article-date">更新日: 2026-06-24</span>
+</div>
+<h1 class="article-title">UNIQUE×FILTER×SORT：条件付きリストをきれいに並び替える</h1>
+<p class="article-lead">前回は、UNIQUE関数とFILTER関数を組み合わせて「条件付きの重複なしリスト」を作りました。ただ、そのままだと元データの出現順で並ぶため、担当者名や商品名の一覧としては少し見づらいことがあります。</p>
+</div>
+
+<section class="goal-section">
+<h2>リード文：順番がバラバラで見にくい悩み</h2>
+<p><a href="article_unique.html">前回の記事</a>で作った <code>=UNIQUE(FILTER(C3:C14, D3:D14=1))</code> は、条件に合うデータだけから重複なしリストを作れる便利な式です。</p>
+<p>ただし、結果は元データに出てきた順番のままです。担当者一覧や商品一覧として使うなら、あいうえお順や昇順で整っていた方が読みやすくなります。そこで今回の主役が <strong>SORT関数</strong> です。</p>
+</section>
+
+<section class="method-section">
+<h2>結論：3つの関数をネストした数式</h2>
+<p>条件で絞り、重複を消し、最後に並び替える式は次の形です。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(UNIQUE(FILTER(C3:C14, D3:D14=1)))</span>
+</div>
+<p>これで、次の3つの作業がすべて自動になります。</p>
+<div class="xdemo-wrap">
+<div class="xdemo-note-good">
+<strong>この1行で完了する作業</strong><br>
+FILTER：D列が1のデータだけに絞る。<br>
+UNIQUE：絞った結果から重複をなくす。<br>
+SORT：残ったリストをあいうえお順・昇順で並べる。
+</div>
+</div>
+</section>
+
+<section class="method-section">
+<h2>SORT関数の基本とネストの構造</h2>
+<p>SORT関数は、配列を並び替える関数です。基本構文は次の通りです。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(配列, [並べ替えインデックス], [並べ替え順序])</span>
+</div>
+<p>引数を省略した場合、先頭列を基準に昇順で並び替えます。文字ならあいうえお順やA→Z、数値なら小さい順です。</p>
+
+<h3>関数は内側から順番に処理される</h3>
+<p>3つの関数が重なると難しく見えますが、処理順序は内側から外側です。</p>
+<div class="table-responsive">
+<div class="table-wrapper"><table class="comparison-table">
+<caption>処理順序</caption>
+<thead>
+<tr><th scope="col">順番</th><th scope="col">関数</th><th scope="col">役割</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td><code>FILTER</code></td><td>まず、条件に合うものだけを集める</td></tr>
+<tr><td>2</td><td><code>UNIQUE</code></td><td>次に、その中からダブりを消す</td></tr>
+<tr><td>3</td><td><code>SORT</code></td><td>最後に、残ったリストをきれいに並び替える</td></tr>
+</tbody>
+</table></div>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(</span>
+<span class="code-line">  UNIQUE(</span>
+<span class="code-line">    FILTER(C3:C14, D3:D14=1)</span>
+<span class="code-line">  )</span>
+<span class="code-line">)</span>
+</div>
+<p>上のように改行して見ると、内側から順に処理されるイメージがつかみやすくなります。</p>
+</section>
+
+<section class="method-section">
+<h2>降順にしたい場合</h2>
+<p>SORT関数は、第3引数に <code>-1</code> を指定すると降順になります。文字ならZ→A、数値なら大きい順です。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(UNIQUE(FILTER(C3:C14, D3:D14=1)), 1, -1)</span>
+</div>
+<p>第2引数の <code>1</code> は「1列目を基準にする」という指定です。今回のように1列のリストを並べる場合は、1列目を基準にすればOKです。</p>
+<div class="xdemo-note-info">
+<strong>昇順と降順の使い分け</strong><br>
+担当者名や商品名の一覧なら省略形の昇順が読みやすいことが多いです。売上額や件数のような数値ランキングなら、<code>-1</code> の降順が向いています。
+</div>
+</section>
+
+<section class="method-section">
+<h2>まとめ</h2>
+<p>UNIQUE、FILTER、SORTを組み合わせると、手作業で行っていた「フィルター」「重複の削除」「並び替え」を、数式1つで自動化できます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(UNIQUE(FILTER(C3:C14, D3:D14=1)))</span>
+</div>
+<p>元データが増えても、条件付きの重複なしリストが自動で更新され、さらにきれいに並び替えられます。プルダウンリスト、担当者一覧、商品マスタ、対象顧客リストなど、実務でかなり使い回せる形です。</p>
+<div class="xdemo-note-good">
+<strong>スピル関数の強さ</strong><br>
+従来はボタン操作を何度も行っていた作業が、FILTER、UNIQUE、SORTのネストで「更新され続ける一覧」に変わります。VBAなしでここまで自動化できるのが、最新Excelの大きな魅力です。
+</div>
+</section>
+
+<section class="method-section">
+<h2>関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_unique.html">UNIQUE×FILTER &horbar; 条件付きの重複なしリストを作る</a></li>
+<li><a href="article_sort.html">SORT / SORTBY関数 &horbar; 数式で動的に並び替え</a></li>
+<li><a href="article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
+<li><a href="article_textjoin.html">TEXTJOIN &horbar; 複数セルの文字列をまとめる</a></li>
+</ul>
+</section>
+
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="../../samples/index.html">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js"></script>
+</body>
+</html>

@@ -207,8 +207,18 @@
       "subcategory": "modern_search",
       "title": "UNIQUE関数",
       "url": "functions/latest/article_unique.html",
-      "summary": "重複を消して一意リストを作成します。商品名・担当者・部署名などの一覧化に便利です。",
+      "summary": "FILTERと組み合わせ、条件に合うデータだけから重複なしリストを作る方法を解説します。",
       "level": 1,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_search",
+      "title": "UNIQUE×FILTER×SORTで条件付きリストを並び替える",
+      "url": "functions/latest/article_unique_filter_sort.html",
+      "summary": "条件で絞り、重複を消し、SORTであいうえお順に並べる3関数ネストを丁寧に解説します。",
+      "level": 3,
       "tags": ["impact"],
       "is_highlight": true
     },
@@ -305,7 +315,7 @@
       "subcategory": "modern_date",
       "title": "SEQUENCE で日付リスト自動生成",
       "url": "functions/latest/article_sequence.html",
-      "summary": "日付一覧や連番リストを、1セルの数式だけで自動展開します。",
+      "summary": "連番、日付、月初、時間割を1セルからスピル生成する方法を図解します。",
       "level": 2
     },
     {
@@ -325,6 +335,26 @@
       "url": "functions/old/article_index_match_multi.html",
       "summary": "複数条件の組み合わせで検索したいとき、旧Excelでも安定して実装できます。",
       "level": 4
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_search",
+      "title": "複数条件に合う行だけ連番を振る方法",
+      "url": "functions/old/article_countifs_serial_number.html",
+      "summary": "COUNTIFSで連番の土台を作り、必要なときだけIFで対象外を空白にする考え方を解説します。",
+      "level": 3,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_expert",
+      "title": "旧ExcelでFILTER関数を代用する方法｜ROW・SMALL・INDEXで複数行抽出",
+      "url": "functions/old/article_small_row_index_extract.html",
+      "summary": "ROW・SMALL・INDEXの動きを図で追い、旧Excelの複数抽出をセル単位で徹底解説します。",
+      "level": 3,
+      "tags": ["impact"],
+      "is_highlight": true
     },
     {
       "category": "functions",
@@ -381,6 +411,26 @@
       "url": "functions/old/article_midb.html",
       "summary": "文字列の途中から指定した分だけテキストを抜き出す関数です。",
       "level": 2
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_other",
+      "title": "Excelで和暦を西暦日付に変換｜DATEVALUEで昭和・平成・令和をシリアル値へ",
+      "url": "functions/old/article_wareki_datevalue_serial.html",
+      "summary": "昭531215・平100115・令070401などの和暦文字列をDATEVALUEで日付シリアル値へ変換します。",
+      "level": 3,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_other",
+      "title": "Excelで8桁の西暦を日付に変換｜DATE関数でYYYYMMDDをシリアル値へ",
+      "url": "functions/old/article_yyyymmdd_date_serial.html",
+      "summary": "19781215・20250401などの西暦8桁をDATE関数で日付シリアル値へ変換します。",
+      "level": 2,
+      "tags": ["impact"],
+      "is_highlight": true
     },
     {
       "category": "functions",
@@ -1050,6 +1100,26 @@
       "summary": "MERGEBARCODEでExcelの値をQR化。255文字制限に悩む場面との差別化と、全角文字を避ける注意点を整理します。",
       "level": 5,
       "tags": ["impact", "rare"],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "ui",
+      "title": "Excelで最終行・次の空き行へジャンプする方法｜HYPERLINK関数でVBA不要",
+      "url": "others/ui/article_hyperlink_jump_last_row.html",
+      "summary": "HYPERLINK関数で入力済み最終行、次の空き行、指定セル、処理票番号の行へクリック移動します。",
+      "level": 2,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "ui",
+      "title": "Excelで入力欄だけ範囲選択して初期化する方法｜数式を消さずDelete",
+      "url": "others/ui/article_select_input_range.html",
+      "summary": "名前付き範囲で手入力セルだけを選択し、数式や書式を残してDeleteで初期化します。",
+      "level": 3,
+      "tags": ["impact"],
       "is_highlight": true
     },
     {
