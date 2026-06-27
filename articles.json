@@ -63,6 +63,16 @@
       "rarity_id": "choosecols"
     },
     {
+      "category": "functions",
+      "subcategory": "modern_search",
+      "title": "TOROW・WRAPROWS・CHOOSECOLSで複数行データを1行に整形",
+      "url": "functions/latest/article_torow_wraprows_choosecols.html",
+      "summary": "複数行に分かれた1件分のデータを横一列にし、必要な列だけを選んで扱いやすい明細表へ整形します。",
+      "level": 4,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
       "category": "thinking",
       "subcategory": "overview",
       "title": "Excel技術の成長曲線：定番ルートで読む全体像",

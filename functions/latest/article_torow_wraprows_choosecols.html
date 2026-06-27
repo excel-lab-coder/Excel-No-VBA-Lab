@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>TOROW・WRAPROWS・CHOOSECOLSで複数行データを1行に整形｜Excel 2024対応｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="TOROWで複数行データを横一列に平坦化し、WRAPROWSでレコード単位へ戻し、CHOOSECOLSで必要列だけ抽出するExcel 2024対応の整形方法を図解します。" name="description">
+<meta content="TOROW CHOOSECOLS 組み合わせ, WRAPROWS Excel 2024, 複数行 1行 変換 Excel, Excel データ整形 関数, TOROW 使い方, CHOOSECOLS 必要列" name="keywords">
+<meta content="TOROW・WRAPROWS・CHOOSECOLSで複数行データを1行に整形｜Excel 2024対応" property="og:title">
+<meta content="複数行に分かれたレコードをTOROWで平坦化し、必要列だけの表へ整形します。" property="og:description">
+<meta content="article" property="og:type"><meta content="ja_JP" property="og:locale"><meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_torow_wraprows_choosecols.html" property="og:url">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_torow_wraprows_choosecols.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet"><link href="../../article.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"TOROW・WRAPROWS・CHOOSECOLSで複数行データを1行に整形","description":"TOROWで複数行データを横一列に平坦化し、WRAPROWSでレコード単位へ戻し、CHOOSECOLSで必要列だけ抽出する方法を解説します。","author":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"関数","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/index.html"},{"@type":"ListItem","position":3,"name":"TOROW・WRAPROWS・CHOOSECOLSでデータ整形","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_torow_wraprows_choosecols.html"}]}</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div><a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p></div></div></header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../index.html">関数</a><span>&gt;</span><strong>TOROW×WRAPROWS×CHOOSECOLS</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-new">Excel 2024</span><span class="badge badge-365">Microsoft 365</span><span style="display:inline-block;background:#1976d2;color:#fff;font-size:.7em;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:5px;">VBA不要</span></div>
+<h1 class="article-title">TOROW・WRAPROWS・CHOOSECOLSで複数行データを1行に整形<br>&horbar; いったん横一列にして必要列だけ仕上げる</h1></div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> 使うケース：1件が3行ずつ出力されるデータを1行1件へ直す</h2>
+<p>業務システムや帳票から出力したデータが、必ず「1件＝3行」の同じ並びになっていることがあります。見た目は読みやすくても、Excelで集計・検索・並べ替えをするには扱いにくい形です。</p>
+<p>このような<strong>3行ごとに同じ項目が繰り返されるデータ</strong>を、1行1件の明細表へ直すときに、TOROW・WRAPROWS・CHOOSECOLSの組み合わせが使えます。</p>
+
+<figure class="extract-figure"><figcaption>完成イメージ：3行で1件の出力データを、1行で1件の表へ</figcaption>
+<div class="table-wrapper"><table class="xdemo-table"><thead><tr><th>整形前</th><th>処理</th><th>整形後</th></tr></thead><tbody>
+<tr><td>注文1：3行<br>注文2：3行<br>注文3：3行</td><td class="xd-hit">3段階で整形</td><td>注文1：1行<br>注文2：1行<br>注文3：1行</td></tr>
+</tbody></table></div></figure>
+
+<div class="xdemo-note-info"><strong>TOROWは3行専用の関数ではありません</strong><br>今回使える理由は、1件が毎回「3行×3列＝9セル」という固定規則で並んでいるからです。1件ごとに行数が変わるデータには向きません。</div>
+
+<div class="flow-diagram extract-role-flow" aria-label="TOROWからCHOOSECOLSまでの処理">
+<div class="extract-role extract-role-row"><strong>① TOROW</strong><span>すべてのセルを<br>長い1行にする</span></div><div class="extract-arrow">→</div>
+<div class="extract-role extract-role-small"><strong>② WRAPROWS</strong><span>9セルごとに<br>1件へ区切る</span></div><div class="extract-arrow">→</div>
+<div class="extract-role extract-role-index"><strong>③ CHOOSECOLS</strong><span>必要な項目だけ<br>列として残す</span></div>
+</div>
+
+<div class="xdemo-note-good"><strong>最後に完成する式</strong><br><code>=CHOOSECOLS(WRAPROWS(TOROW(B2:D10),9,""),1,2,4,5,7,9)</code><br><br>ここではまだ覚えなくて大丈夫です。以下で内側のTOROWから1段階ずつ確認します。</div>
+</section>
+
+<section class="method-section">
+<h3>今回の元データ：1件が3行×3列</h3>
+<p>B2:D10には注文が3件あります。注文番号から状態まで、1件分の9項目が3行に分かれて同じ順番で並んでいます。</p>
+<figure class="extract-figure"><figcaption>図1：3行ごとに同じ項目が繰り返される</figcaption>
+<div class="table-wrapper"><table class="xdemo-table"><thead><tr><th>行</th><th>B列</th><th>C列</th><th>D列</th><th>意味</th></tr></thead><tbody>
+<tr><td>2</td><td class="xd-hit">P001</td><td>2026/6/1</td><td>A</td><td>注文1：番号・日付・区分</td></tr>
+<tr><td>3</td><td>りんご</td><td>12</td><td>2,400</td><td>注文1：商品・数量・金額</td></tr>
+<tr><td>4</td><td>山田</td><td>X01</td><td>出荷済</td><td>注文1：担当・内部コード・状態</td></tr>
+<tr><td>5</td><td class="xd-hit">P002</td><td>2026/6/2</td><td>B</td><td>注文2：番号・日付・区分</td></tr>
+<tr><td>6</td><td>みかん</td><td>8</td><td>1,600</td><td>注文2：商品・数量・金額</td></tr>
+<tr><td>7</td><td>佐藤</td><td>X02</td><td>確認中</td><td>注文2：担当・内部コード・状態</td></tr>
+<tr><td>8</td><td class="xd-hit">P003</td><td>2026/6/3</td><td>A</td><td>注文3：番号・日付・区分</td></tr>
+<tr><td>9</td><td>バナナ</td><td>15</td><td>3,000</td><td>注文3：商品・数量・金額</td></tr>
+<tr><td>10</td><td>鈴木</td><td>X03</td><td>未処理</td><td>注文3：担当・内部コード・状態</td></tr>
+</tbody></table></div></figure>
+<div class="xdemo-note"><strong>1件分のセル数を先に確認</strong><br>3行×3列＝9セルです。この「9」が、次のWRAPROWSで1件ずつ区切る数字になります。</div>
+</section>
+
+<section class="method-section">
+<h3><span class="step-badge">STEP 1</span> TOROW：元データをいったん長い1行にする</h3>
+<div class="formula-copy-list"><div class="formula-copy-row"><div class="formula-copy-label">全セルを1行へ</div><div class="formula-copy-code">=TOROW(B2:D10)</div><button class="formula-copy-btn" type="button">コピー</button></div></div>
+<p>TOROWは、B2からD10までを<strong>左から右、上から下</strong>の順に読み、27個のセルを横一列に並べます。</p>
+<figure class="extract-figure"><figcaption>図2：3件分のセルを、順番を保ったまま1行へ並べる</figcaption>
+<div class="table-wrapper"><table class="xdemo-table"><tbody><tr><td>P001</td><td>2026/6/1</td><td>A</td><td>りんご</td><td>12</td><td>2,400</td><td>山田</td><td>X01</td><td>出荷済</td><td>P002</td><td>2026/6/2</td><td>…</td></tr></tbody></table></div></figure>
+<p>この時点では、注文1・注文2・注文3がすべて横につながった長い1行です。まだ完成ではありません。</p>
+<div class="xdemo-note-warn"><strong>第3引数は省略する</strong><br><code>TOROW(B2:D10,,TRUE)</code>のようにTRUEを指定すると列方向に読むため、今回の3行1件の順序が崩れます。</div>
+</section>
+
+<section class="method-section">
+<h3><span class="step-badge">STEP 2</span> WRAPROWS：9セルごとに折り返して1行1件へ戻す</h3>
+<div class="formula-copy-list"><div class="formula-copy-row"><div class="formula-copy-label">9セルで1件</div><div class="formula-copy-code">=WRAPROWS(TOROW(B2:D10),9,"")</div><button class="formula-copy-btn" type="button">コピー</button></div></div>
+<p>1件分は3行×3列＝9セルでした。WRAPROWSの第2引数へ9を指定すると、TOROWで作った長い1行を9セルごとに折り返します。</p>
+<figure class="extract-figure"><figcaption>図3：9セルで区切ると、3件が3行に分かれる</figcaption>
+<div class="table-wrapper"><table class="xdemo-table"><thead><tr><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr></thead><tbody>
+<tr><td>P001</td><td>2026/6/1</td><td>A</td><td>りんご</td><td>12</td><td>2,400</td><td>山田</td><td>X01</td><td>出荷済</td></tr>
+<tr><td>P002</td><td>2026/6/2</td><td>B</td><td>みかん</td><td>8</td><td>1,600</td><td>佐藤</td><td>X02</td><td>確認中</td></tr>
+<tr><td>P003</td><td>2026/6/3</td><td>A</td><td>バナナ</td><td>15</td><td>3,000</td><td>鈴木</td><td>X03</td><td>未処理</td></tr>
+</tbody></table></div></figure>
+<p>ここで「1行＝1件」の形になりました。ただし、区分・金額・内部コードなど、今回の一覧には不要な列も残っています。</p>
+<div class="xdemo-note-info"><strong>式の9はどこから来た？</strong><br>1件分のセル数です。元データが4行×5列なら20、2行×6列なら12を指定します。</div>
+</section>
+
+<section class="method-section">
+<h3><span class="step-badge">STEP 3</span> CHOOSECOLS：必要な列だけを取り出す</h3>
+<div class="formula-copy-list"><div class="formula-copy-row"><div class="formula-copy-label">必要な6列を抽出</div><div class="formula-copy-code">=CHOOSECOLS(WRAPROWS(TOROW(B2:D10),9,""),1,2,4,5,7,9)</div><button class="formula-copy-btn" type="button">コピー</button></div></div>
+<p>WRAPROWSで作った9列のうち、必要な「1・2・4・5・7・9列目」だけを指定します。</p>
+<div class="table-wrapper"><table class="compare-table"><thead><tr><th>列番号</th><th>中身</th><th>残す？</th></tr></thead><tbody>
+<tr><td>1</td><td>注文番号</td><td class="xd-result">残す</td></tr>
+<tr><td>2</td><td>日付</td><td class="xd-result">残す</td></tr>
+<tr><td>3</td><td>区分</td><td>除く</td></tr>
+<tr><td>4</td><td>商品名</td><td class="xd-result">残す</td></tr>
+<tr><td>5</td><td>数量</td><td class="xd-result">残す</td></tr>
+<tr><td>6</td><td>金額</td><td>除く</td></tr>
+<tr><td>7</td><td>担当者</td><td class="xd-result">残す</td></tr>
+<tr><td>8</td><td>内部コード</td><td>除く</td></tr>
+<tr><td>9</td><td>状態</td><td class="xd-result">残す</td></tr>
+</tbody></table></div>
+<figure class="extract-figure"><figcaption>図4：必要な列だけの1行1件データが完成</figcaption>
+<div class="table-wrapper"><table class="xdemo-table"><thead><tr><th>注文番号</th><th>日付</th><th>商品名</th><th>数量</th><th>担当者</th><th>状態</th></tr></thead><tbody>
+<tr><td>P001</td><td>2026/6/1</td><td>りんご</td><td>12</td><td>山田</td><td>出荷済</td></tr>
+<tr><td>P002</td><td>2026/6/2</td><td>みかん</td><td>8</td><td>佐藤</td><td>確認中</td></tr>
+<tr><td>P003</td><td>2026/6/3</td><td>バナナ</td><td>15</td><td>鈴木</td><td>未処理</td></tr>
+</tbody></table></div></figure>
+<div class="xdemo-note-info"><strong>列番号は元のB・C・D列ではありません</strong><br>CHOOSECOLSの数字は、STEP 2でできた9列の中で左から何番目かを表します。</div>
+</section>
+
+<section class="method-section">
+<h3>列の順番も同時に変えられる</h3>
+<p>CHOOSECOLSは抽出だけでなく、指定順に列を並べ替えます。</p>
+<div class="formula-copy-list"><div class="formula-copy-row"><div class="formula-copy-label">商品名を先頭へ</div><div class="formula-copy-code">=CHOOSECOLS(WRAPROWS(TOROW(B2:D10),9,""),4,1,2,5,7,9)</div><button class="formula-copy-btn" type="button">コピー</button></div></div>
+<p>結果は「商品名、注文番号、日付、数量、担当者、状態」の順になります。CHOOSECOLSの数字を並べる順番が、そのまま完成表の列順です。</p>
+</section>
+
+<section class="method-section">
+<h3>空白無視「1」は便利だが、列ずれに注意</h3>
+<p><code>TOROW(B2:D10,1)</code>の第2引数1は空白を無視します。しかし、空白が「未入力の項目」なら、そのセルを消すことで後ろの項目が左へずれます。</p>
+<div class="table-wrapper"><table class="compare-table"><thead><tr><th>空白の意味</th><th>TOROWの指定</th><th>理由</th></tr></thead><tbody>
+<tr><td>単なる行間・飾り用セル</td><td><code>TOROW(範囲,1)</code></td><td>消してもレコード構造が変わらない</td></tr>
+<tr><td>住所2、備考など未入力でも必要な項目</td><td><code>TOROW(範囲)</code></td><td>空白位置を残さないと列がずれる</td></tr>
+<tr><td>空白とエラーを両方無視</td><td><code>TOROW(範囲,3)</code></td><td>エラーまで隠すため、通常は慎重に使う</td></tr>
+</tbody></table></div>
+<div class="xdemo-note-warn"><strong>固定項目のレコードでは空白を勝手に消さない</strong><br>1件9セルと決まっているなら、9セルの位置を保つことが最優先です。未入力セルも項目の場所として残します。</div>
+</section>
+
+<section class="method-section">
+<h3>この組み合わせが向くデータ・向かないデータ</h3>
+<div class="table-wrapper"><table class="compare-table"><thead><tr><th>元データ</th><th>おすすめ</th><th>理由</th></tr></thead><tbody>
+<tr><td>1件が毎回3行×3列</td><td class="xd-result">向く</td><td>1件9セルの規則が固定</td></tr>
+<tr><td>帳票レイアウトに不要列が固定で存在</td><td class="xd-result">向く</td><td>CHOOSECOLSで列番号指定できる</td></tr>
+<tr><td>すでに1行1件の整った表</td><td>CHOOSECOLSだけ</td><td>TOROWとWRAPROWSは遠回り</td></tr>
+<tr><td>1件ごとに行数・項目数が変わる</td><td>Power Queryを検討</td><td>固定個数で折り返せない</td></tr>
+<tr><td>不要列が毎回変わる</td><td>FILTERなどを検討</td><td>固定列番号のCHOOSECOLSに不向き</td></tr>
+</tbody></table></div>
+</section>
+
+<section class="method-section">
+<h3>よくあるエラー</h3>
+<div class="table-wrapper"><table class="compare-table"><thead><tr><th>エラー</th><th>原因</th><th>対処</th></tr></thead><tbody>
+<tr><td>#SPILL!</td><td>出力先に値や結合セルがある</td><td>スピル範囲を空ける</td></tr>
+<tr><td>#VALUE!</td><td>CHOOSECOLSの列番号が0または列数超過</td><td>WRAPROWS後の列数を確認</td></tr>
+<tr><td>#N/A</td><td>最後のレコードの項目不足</td><td>WRAPROWSの第3引数へ<code>""</code></td></tr>
+<tr><td>項目が別列へずれる</td><td>TOROWで必要な空白を無視した</td><td>ignoreを省略して位置を残す</td></tr>
+</tbody></table></div>
+</section>
+
+<section class="legacy-section">
+<h3>まとめ：崩す・戻す・選ぶ</h3>
+<div class="xdemo-note"><strong>3関数の役割</strong><br>TOROW＝元の2次元表を横一列へ崩す<br>WRAPROWS＝1件分の項目数で表へ戻す<br>CHOOSECOLS＝必要列だけを選び、列順を仕上げる</div>
+<p>元データの1レコードあたりのセル数が固定なら、この3段階は非常に強力です。最初から完成式だけを覚えず、TOROW、WRAPROWS、CHOOSECOLSの途中結果を順番に確認するのが理解への近道です。</p>
+</section>
+
+<section class="method-section"><h2><span class="icon">🔗</span> 関連記事・公式資料</h2><ul class="line-height-2">
+<li><a href="article_choosecols.html">CHOOSECOLS関数の基本と実務パターン</a></li>
+<li><a href="https://support.microsoft.com/ja-jp/office/torow-%E9%96%A2%E6%95%B0-b90d0964-a7d9-44b7-816b-ffa5c2fe2289" rel="noopener" target="_blank">Microsoft：TOROW関数</a></li>
+<li><a href="https://support.microsoft.com/ja-jp/excel/choosecols-function" rel="noopener" target="_blank">Microsoft：CHOOSECOLS関数</a></li>
+</ul></section>
+</article></main>
+<footer class="site-footer"><div class="site-footer-trust"><p><strong>運営:</strong> Excel × No VBA Lab 編集部。</p><p><strong>検証環境:</strong> Excel 2024 / Microsoft 365、Windows版Excel。</p></div><p>&copy; Excel × No VBA Lab</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js"></script></body></html>
