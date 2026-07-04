@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Word差し込み印刷で郵便番号にハイフンを入れる方法｜Excel TEXT関数とフィールドコード｜Excel &times; No VBA Lab</title>
+<title>Word差し込み印刷で郵便番号と日付を整える方法｜Excel TEXT関数とフィールドコード｜Excel &times; No VBA Lab</title>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
 <script>
@@ -13,10 +13,10 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="Word差し込み印刷の郵便番号を000-0000形式にする方法を解説。ExcelのTEXT関数で印刷用列を作る方法と、Wordのフィールドコードで整える方法を運用別に紹介します。" name="description">
-<meta content="Word 差し込み印刷 郵便番号 ハイフン, Excel TEXT 郵便番号, MERGEFIELD 郵便番号 表示形式, Word フィールドコード 000-0000, 郵便番号 0010001" name="keywords">
-<meta content="Word差し込み印刷で郵便番号にハイフンを入れる方法｜Excel TEXT関数とフィールドコード" property="og:title">
-<meta content="ExcelのTEXT関数で印刷用列を作る方法と、Wordのフィールドコードで郵便番号を整える方法を解説。" property="og:description">
+<meta content="Word差し込み印刷の郵便番号と日付を整える方法を解説。ExcelのTEXT関数で000-0000形式と年月日の印刷用列を作る方法、Word側で整える方法を紹介します。" name="description">
+<meta content="Word 差し込み印刷 郵便番号 日付, Excel TEXT 郵便番号, Excel TEXT 日付, MERGEFIELD 郵便番号 表示形式, Word 日付 7/4/2026" name="keywords">
+<meta content="Word差し込み印刷で郵便番号と日付を整える方法｜Excel TEXT関数とフィールドコード" property="og:title">
+<meta content="ExcelのTEXT関数で郵便番号と日付の印刷用列を作り、Wordで表示が変わる問題を防ぐ方法を解説。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="Excel × No VBA Lab" property="og:site_name">
 <meta content="ja_JP" property="og:locale">
@@ -31,8 +31,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Word差し込み印刷で郵便番号にハイフンを入れる方法",
-  "description": "Word差し込み印刷の郵便番号を000-0000形式にする方法を解説。ExcelのTEXT関数で印刷用列を作る方法と、Wordのフィールドコードで整える方法を運用別に紹介します。",
+  "headline": "Word差し込み印刷で郵便番号と日付を整える方法",
+  "description": "Word差し込み印刷の郵便番号と日付を整える方法を解説。ExcelのTEXT関数で000-0000形式と年月日の印刷用列を作る方法、Word側で整える方法を紹介します。",
   "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
   "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
   "datePublished": "2026-06-22",
@@ -46,7 +46,7 @@
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
     {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},
-    {"@type": "ListItem", "position": 3, "name": "Word差し込み印刷で郵便番号にハイフンを入れる方法", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_postal_code.html"}
+    {"@type": "ListItem", "position": 3, "name": "Word差し込み印刷で郵便番号と日付を整える方法", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_postal_code.html"}
   ]
 }
 </script>
@@ -68,7 +68,7 @@
 <div class="breadcrumb">
 <a href="../../index.html">ホーム</a><span>&gt;</span>
 <a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span>
-<strong>Word差し込み印刷 郵便番号</strong>
+<strong>Word差し込み印刷 郵便番号・日付</strong>
 </div>
 <article class="article-body">
 <div class="article-header">
@@ -76,16 +76,16 @@
 <span class="badge badge-all">全バージョン</span>
 <span class="article-date">更新日: 2026-07-04</span>
 </div>
-<h1 class="article-title">Word差し込み印刷で郵便番号にハイフンを入れる方法</h1>
+<h1 class="article-title">Word差し込み印刷で郵便番号と日付を整える方法</h1>
 </div>
 
 <section class="goal-section">
 <h2><span class="icon">💡</span> やりたいこと</h2>
 <p>Wordの差し込み印刷でExcel住所録を使ったとき、郵便番号が <code>1000001</code> や <code>0010001</code> のようにハイフンなしで表示されることがあります。</p>
-<p>Word上では <code>100-0001</code>、<code>001-0001</code> のように表示したい。この場合は、Excel側に完成済みの印刷用列を作る方法と、Excelを変えずにWord側で整える方法があります。</p>
+<p>日付も、Excelでは「2026年7月4日」と見えているのに、Wordでは <code>7/4/2026</code> と表示されることがあります。郵便番号と日付のどちらも、Excel側に完成済みの印刷用列を作る方法と、Word側で整える方法があります。</p>
 <div class="xdemo-note-good">
 <strong>結論：一般の担当者が使うならExcelの印刷用列が分かりやすいです。</strong><br>
-<code>=TEXT(C2,"000-0000")</code> で表示を完成させ、Wordではその列を差し込みます。共有住所録へ列を追加できない場合は、Word側のフィールドコードを使います。
+郵便番号は <code>=TEXT(C2,"000-0000")</code>、日付は <code>=TEXT(D2,"yyyy年m月d日")</code> で表示を完成させ、Wordではその列を差し込みます。共有住所録へ列を追加できない場合は、Word側のフィールドコードを使います。
 </div>
 </section>
 
@@ -141,18 +141,24 @@ Wordの差し込み印刷は「差し込みフィールドを入れる」操作�
 </section>
 
 <section class="method-section">
-<h3>方法1：Excel側に「郵便番号_印刷用」列を作る</h3>
-<p>C列にハイフンなしの郵便番号が入っている場合は、別列に次の式を入れます。</p>
+<h3>方法1：ExcelのTEXT関数で郵便番号と日付の印刷用列を作る</h3>
+<p>C列にハイフンなしの郵便番号、D列に日付が入っている場合は、別列に次の式を入れます。</p>
 <div class="code-block" data-lang="excel">
 <span class="code-line">=TEXT(C2,"000-0000")</span>
+<span class="code-line">=TEXT(D2,"yyyy年m月d日")</span>
 </div>
-<p>列名を「郵便番号_印刷用」とし、Wordでは元の郵便番号列ではなく、この列を差し込みます。例えば <code>1000001</code> は <code>100-0001</code>、数値として保存された <code>10001</code> は <code>001-0001</code> になります。</p>
+<div class="table-responsive"><div class="table-wrapper"><table class="comparison-table"><caption>TEXT関数で作る印刷用列</caption><thead><tr><th>元の値</th><th>印刷用列の式</th><th>結果</th></tr></thead><tbody>
+<tr><td>郵便番号 <code>4702531</code></td><td><code>=TEXT(C2,"000-0000")</code></td><td><code>470-2531</code></td></tr>
+<tr><td>日付 <code>2026/7/4</code><br>内部値 <code>46207</code></td><td><code>=TEXT(D2,"yyyy年m月d日")</code></td><td><code>2026年7月4日</code></td></tr>
+</tbody></table></div></div>
+<p>列名を「郵便番号_印刷用」「日付_印刷用」とし、Wordでは元の列ではなく印刷用列を差し込みます。郵便番号はハイフン付き、日付は年月日の文字列として完成しているため、Word側で別の形式へ変わりにくくなります。</p>
+<div class="xdemo-note-info"><strong>日付を直接差し込むと <code>7/4/2026</code> になることがあります。</strong><br>2026年7月4日はExcel内部では日付シリアル値 <code>46207</code> です。Wordがこの値を日付として受け取り、自分の既定形式で再表示すると、画像のような <code>7/4/2026</code> になります。データが壊れたのではなく、同じ日付の表示形式が変わった状態です。</div>
 <div class="xdemo-note-good"><strong>後工程の人が迷いにくい方法です。</strong><br>表示がExcel側で完成しているため、Wordでは通常の差し込みフィールドを挿入するだけです。<code>Alt + F9</code> や表示形式スイッチを覚える必要がありません。</div>
-<div class="xdemo-note-warn"><strong>元の郵便番号列は残してください。</strong><br>TEXT関数の結果は文字列です。また、この式はハイフンなしの7桁数値を想定しています。ハイフン付き文字列、全角数字、空白が混ざる住所録は、先に入力形式を統一します。</div>
+<div class="xdemo-note-warn"><strong>元の郵便番号列と日付列は残してください。</strong><br>TEXT関数の結果は文字列です。日付の並び替え、検索、期間計算には元の日付シリアル値を使います。また、郵便番号の式はハイフンなしの7桁数値を想定しているため、ハイフン付き文字列や全角数字が混ざる住所録は先に入力形式を統一します。</div>
 </section>
 
 <section class="method-section">
-<h3>方法2：Wordのフィールドコードで整える</h3>
+<h3>方法2：郵便番号をWordのフィールドコードで整える</h3>
 <p>共有住所録へ列を追加できない場合は、Excelの元データを変えず、Word側で表示形式を指定します。この方法は正攻法ですが、操作はWord中級者向けです。</p>
 <p>Wordの差し込み印刷を使う人でも、多くは次の操作範囲で止まります。</p>
 <ul class="line-height-2">
@@ -439,11 +445,12 @@ ExcelやAccessなどのデータソースから差し込むと、Excel側で見�
 
 <section class="method-section">
 <h3>まとめ</h3>
-<p>一般担当者が使うなら、Excel側に印刷用列を作る方法が分かりやすく、Wordでフィールドコードを編集する必要がありません。</p>
+<p>一般担当者が使うなら、Excel側に郵便番号と日付の印刷用列を作る方法が分かりやすく、Wordでフィールドコードを編集する必要がありません。</p>
 <div class="code-block" data-lang="excel">
 <span class="code-line">=TEXT(C2,"000-0000")</span>
+<span class="code-line">=TEXT(D2,"yyyy年m月d日")</span>
 </div>
-<p>共有住所録へ列を追加できない場合は、Word側で次のフィールドコードを使います。</p>
+<p>共有住所録へ列を追加できない場合、郵便番号はWord側で次のフィールドコードを使えます。日付のフィールドコードは関連記事で詳しく解説しています。</p>
 <div class="code-block" data-lang="word">
 <span class="code-line">{ MERGEFIELD 郵便番号 \# "000'-'0000" }</span>
 </div>
