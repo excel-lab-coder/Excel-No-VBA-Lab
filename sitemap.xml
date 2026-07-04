@@ -211,6 +211,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_groupby_month_employee.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_growth_curve_standard_flow.html</loc>
     <lastmod>2026-05-24</lastmod>
     <changefreq>monthly</changefreq>
@@ -302,7 +308,13 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_unique_filter_sort.html</loc>
-    <lastmod>2026-06-24</lastmod>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_unique_filter.html</loc>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -332,7 +344,7 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_unique.html</loc>
-    <lastmod>2026-06-24</lastmod>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -397,14 +409,26 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_sumifs_month_employee.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_edate_eomonth_sumifs_monthly.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_wareki_datevalue_serial.html</loc>
-    <lastmod>2026-06-27</lastmod>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_yyyymmdd_date_serial.html</loc>
-    <lastmod>2026-06-27</lastmod>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -524,19 +548,19 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_excel_source_design.html</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_postal_code.html</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_number_format.html</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -548,13 +572,13 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_label_basic.html</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_method_comparison.html</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-07-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

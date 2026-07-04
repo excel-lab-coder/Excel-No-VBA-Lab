@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>ExcelのGROUPBY関数で月別集計する方法｜社員番号別の集計も解説｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="ExcelのGROUPBY関数で日付を月別に合計する方法を解説。TEXTで年月へ変換し、HSTACKで社員番号を加え、月別・社員番号別に集計する実務例を紹介します。" name="description">
+<meta content="GROUPBY 関数 月別集計, Excel 月ごと 合計, GROUPBY HSTACK, GROUPBY 社員番号, TEXT yyyymm, VSTACK 見出し" name="keywords">
+<meta content="ExcelのGROUPBY関数で月別集計する方法｜社員番号別の集計も解説" property="og:title">
+<meta content="日付を年月へ変換して集計する基本から、年月と社員番号の2列を使う方法まで、数式を分解して解説します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_groupby_month_employee.html" property="og:url">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_groupby_month_employee.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "ExcelのGROUPBY関数で月別集計する方法｜社員番号別の集計も解説",
+  "description": "GROUPBY関数で日付を月別に合計する基本と、年月・社員番号の2列で集計する方法を解説します。",
+  "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "datePublished": "2026-06-28",
+  "dateModified": "2026-06-28",
+  "mainEntityOfPage": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_groupby_month_employee.html"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type": "ListItem", "position": 2, "name": "関数", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/index.html"},
+    {"@type": "ListItem", "position": 3, "name": "GROUPBY関数で月別集計", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_groupby_month_employee.html"}
+  ]
+}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../index.html">関数</a><span>&gt;</span><strong>GROUPBYで月別集計</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-365">Microsoft 365</span>
+<span class="article-date">更新日: 2026-06-28</span>
+</div>
+<h1 class="article-title">ExcelのGROUPBY関数で月別集計する方法<br>&horbar; 社員番号別の集計も解説</h1>
+<p class="article-lead">日付と価格が並んだ明細から「4月はいくら、5月はいくら」と月ごとの合計を出し、さらに社員番号ごとの内訳まで作る方法を解説します。ポイントは、日付を<code>TEXT</code>で年月へ変換し、複数の基準を<code>HSTACK</code>で横に並べて<code>GROUPBY</code>へ渡すことです。</p>
+</div>
+
+<div class="xdemo-note-warn">
+<strong>対応バージョンに注意</strong><br>
+Microsoft公式の関数一覧では、<strong>GROUPBYは「Microsoft 365」</strong>と表記されています。一方、同じ一覧でHSTACK・VSTACKには「2024」の表記があります。Excelの製品名だけで判断せず、数式バーへ<code>=GROUPBY(</code>と入力して候補に表示されるかを確認してください。表示される環境では本記事の式を使えます。
+</div>
+<div class="xdemo-note-info">
+<strong>GROUPBYが表示されない場合</strong><br>
+<a href="../old/article_sumifs_month_employee.html">SUMIFS関数で月別・社員番号別に集計する方法</a>を使えば、同じサンプルデータから同じ合計結果を作れます。
+</div>
+
+<section class="goal-section">
+<h2>1. はじめに</h2>
+<p>この記事では、次の2段階で集計します。</p>
+<ul class="line-height-2">
+<li>日付を年月に変換し、<strong>月ごとに価格を合計</strong>する</li>
+<li>年月と社員番号を使い、<strong>月別・社員番号別に価格を合計</strong>する</li>
+</ul>
+<div class="xdemo-note-good">
+<strong>最初に結論</strong><br>
+GROUPBYの第1引数に1列を指定すれば、1つの項目で集計されます。<br>
+GROUPBYの第1引数に複数列を指定すれば、その複数列の組み合わせごとに集計されます。
+</div>
+</section>
+
+<section class="method-section">
+<h2>2. サンプルデータ</h2>
+<p>A1:C7に、次のような売上データがあるものとします。1行目は見出し、2行目以降が集計対象です。</p>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>A列：日付</th><th>B列：価格</th><th>C列：社員番号</th></tr></thead>
+<tbody>
+<tr><td>2026/4/25</td><td>1000</td><td>101</td></tr>
+<tr><td>2026/4/26</td><td>2000</td><td>101</td></tr>
+<tr><td>2026/4/27</td><td>1500</td><td>102</td></tr>
+<tr><td>2026/5/1</td><td>3000</td><td>101</td></tr>
+<tr><td>2026/5/2</td><td>2500</td><td>102</td></tr>
+<tr><td>2026/5/3</td><td>1000</td><td>101</td></tr>
+</tbody>
+</table>
+</div>
+<p>実際のデータが7行より多い場合も考え、数式では2行目から99行目までを指定します。</p>
+</section>
+
+<section class="method-section">
+<h2>3. GROUPBY関数の基本</h2>
+<p>GROUPBY関数は、指定した項目ごとにデータをまとめ、合計や平均などを計算できる関数です。ピボットテーブルのような集計表を、数式だけで作れます。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">基本形</div>
+<div class="formula-copy-code">=GROUPBY(グループ化する項目, 集計する値, 集計方法)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>今回の3つの引数は、次の意味です。</p>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>引数</th><th>今回指定する内容</th></tr></thead>
+<tbody>
+<tr><td>グループ化する項目</td><td>年月、または年月＋社員番号</td></tr>
+<tr><td>集計する値</td><td>価格</td></tr>
+<tr><td>集計方法</td><td>合計（SUM）</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="method-section">
+<h2>4. まず1列で月別集計する方法</h2>
+<p>最初は、社員番号を考えず、A列の日付を基準に月別の価格合計を出します。空いているセルへ次の式を入力してください。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">月別に合計</div>
+<div class="formula-copy-code">=GROUPBY(TEXT(A2:A99,"yyyymm"),B2:B99,SUM,0,0)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>この式は、A列の日付を「202604」のような年月へ変換し、同じ年月のB列の価格を合計します。入力した1セルから、年月と合計の2列が自動で展開されます。</p>
+</section>
+
+<section class="method-section">
+<h2>5. 1列集計の数式の意味</h2>
+<p>数式を4つの部分に分けると、何をしているかが見えやすくなります。</p>
+
+<h3><span class="step-badge">1</span> TEXT(A2:A99,"yyyymm")</h3>
+<div class="code-block" data-lang="excel"><span class="code-line">TEXT(A2:A99,"yyyymm")</span></div>
+<p>これは、A列の日付を<code>202604</code>や<code>202605</code>のような年月へ変換する部分です。日付の「日」を取り除いて同じ年月表記にそろえるため、4月の日付を1つのグループとして扱えます。</p>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>元の日付</th><th>変換後</th></tr></thead>
+<tbody>
+<tr><td>2026/4/25</td><td>202604</td></tr>
+<tr><td>2026/4/26</td><td>202604</td></tr>
+<tr><td>2026/5/1</td><td>202605</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>TEXT</code>の結果は文字列ですが、同じ年月をまとめるための見出しとして問題なく使えます。</p>
+
+<h3><span class="step-badge">2</span> B2:B99</h3>
+<div class="code-block" data-lang="excel"><span class="code-line">B2:B99</span></div>
+<p>これは合計する価格の範囲です。GROUPBYの第2引数には、「何を集計したいか」を範囲で指定します。</p>
+
+<h3><span class="step-badge">3</span> SUM</h3>
+<div class="code-block" data-lang="excel"><span class="code-line">SUM</span></div>
+<p>これは集計方法を「合計」にする指定です。ここでは<code>SUM(B2:B99)</code>と計算してから渡すのではなく、関数名の<code>SUM</code>だけを指定します。</p>
+
+<h3><span class="step-badge">4</span> 最後の0,0</h3>
+<div class="code-block" data-lang="excel"><span class="code-line">0,0</span></div>
+<p>1つ目の<code>0</code>は元データに見出しがないものとして、結果にも自動見出しを付けない設定です。2つ目の<code>0</code>は総計を表示しない設定です。見出しは、あとでVSTACKを使ってわかりやすく追加します。</p>
+</section>
+
+<section class="method-section">
+<h2>6. 1列集計の結果イメージ</h2>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>年月</th><th>合計</th></tr></thead>
+<tbody>
+<tr><td>202604</td><td class="xd-result">4500</td></tr>
+<tr><td>202605</td><td class="xd-result">6500</td></tr>
+</tbody>
+</table>
+</div>
+<p>4月は1000＋2000＋1500で4500、5月は3000＋2500＋1000で6500です。この集計では社員番号を基準に含めていないため、<strong>社員番号に関係なく、同じ月の価格がすべて合計</strong>されます。</p>
+</section>
+
+<section class="method-section">
+<h2>7. 見出し付きで表示する方法</h2>
+<p>結果の上に「年月」「合計」という見出しを付けるには、VSTACK関数を使います。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">見出し付き月別集計</div>
+<div class="formula-copy-code">=VSTACK({"年月","合計"},GROUPBY(TEXT(A2:A99,"yyyymm"),B2:B99,SUM,0,0))</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p><code>VSTACK</code>は、配列や範囲を縦に重ねる関数です。ここでは、1行目に<code>{"年月","合計"}</code>を置き、その下へGROUPBYの結果を重ねています。</p>
+</section>
+
+<section class="method-section">
+<h2>8. 2列で月別・社員番号別に集計する方法</h2>
+<p>次は、年月だけでなく社員番号も集計の基準にします。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">年月＋社員番号で合計</div>
+<div class="formula-copy-code">=GROUPBY(HSTACK(TEXT(A2:A99,"yyyymm"),C2:C99),B2:B99,SUM,0,0)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>この式は、<strong>年月と社員番号の2つの組み合わせごと</strong>に、B列の価格を合計します。違いは、GROUPBYの第1引数へHSTACKで作った2列を渡している点です。</p>
+</section>
+
+<section class="method-section">
+<h2>9. なぜ社員番号もグループ化できるのか</h2>
+<p>ここが2列集計の大切なポイントです。GROUPBYの第1引数には、1列だけでなく複数列を渡せます。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">HSTACK(TEXT(A2:A99,"yyyymm"),C2:C99)</span></div>
+<p><strong>HSTACKは、複数の列を横に並べる関数です。</strong>今回の場合は、年月の列と社員番号の列を横に並べて、GROUPBYに渡しています。</p>
+<p>Excel内部では、次のような2列の表を一時的に作っているイメージです。</p>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>年月</th><th>社員番号</th></tr></thead>
+<tbody>
+<tr><td>202604</td><td>101</td></tr>
+<tr><td>202604</td><td>101</td></tr>
+<tr><td>202604</td><td>102</td></tr>
+<tr><td>202605</td><td>101</td></tr>
+<tr><td>202605</td><td>102</td></tr>
+<tr><td>202605</td><td>101</td></tr>
+</tbody>
+</table>
+</div>
+<p>この2列をGROUPBYへ渡すと、Excelは<strong>「年月と社員番号の組み合わせごとにグループ化する」</strong>と判断します。</p>
+<ul class="line-height-2">
+<li>202604・101</li>
+<li>202604・102</li>
+<li>202605・101</li>
+<li>202605・102</li>
+</ul>
+<p>同じ4月でも、社員番号101と102は組み合わせが違うため、別グループとして集計されます。</p>
+<div class="xdemo-note-good">
+<strong>覚え方</strong><br>
+第1引数が1列なら、その1項目ごとに集計。<br>
+第1引数が複数列なら、その複数項目の組み合わせごとに集計。
+</div>
+</section>
+
+<section class="method-section">
+<h2>10. 2列集計の結果イメージ</h2>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>年月</th><th>社員番号</th><th>合計</th></tr></thead>
+<tbody>
+<tr><td>202604</td><td>101</td><td class="xd-result">3000</td></tr>
+<tr><td>202604</td><td>102</td><td class="xd-result">1500</td></tr>
+<tr><td>202605</td><td>101</td><td class="xd-result">4000</td></tr>
+<tr><td>202605</td><td>102</td><td class="xd-result">2500</td></tr>
+</tbody>
+</table>
+</div>
+<p>4月の社員番号101は1000＋2000で3000、社員番号102は1500です。このように、同じ月のデータでも社員番号101と102が別々に集計されます。</p>
+</section>
+
+<section class="method-section">
+<h2>11. 1列集計と2列集計の違い</h2>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>集計方法</th><th>数式</th><th>集計内容</th></tr></thead>
+<tbody>
+<tr><td>1列集計</td><td><code>=GROUPBY(TEXT(A2:A99,"yyyymm"),B2:B99,SUM,0,0)</code></td><td>年月ごとに合計</td></tr>
+<tr><td>2列集計</td><td><code>=GROUPBY(HSTACK(TEXT(A2:A99,"yyyymm"),C2:C99),B2:B99,SUM,0,0)</code></td><td>年月と社員番号ごとに合計</td></tr>
+</tbody>
+</table>
+</div>
+<ul class="line-height-2">
+<li>1列集計では、同じ月の価格がすべて合計されます。</li>
+<li>2列集計では、同じ月でも社員番号が違えば別グループとして集計されます。</li>
+</ul>
+
+<h3>見出し付きのおすすめ式</h3>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">実務でおすすめ</div>
+<div class="formula-copy-code">=VSTACK({"年月","社員番号","合計"},GROUPBY(HSTACK(TEXT(A2:A99,"yyyymm"),C2:C99),B2:B99,SUM,0,0))</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>この式では、集計結果の上に「年月」「社員番号」「合計」という3つの見出しを追加します。別の表やグラフの元データとして使うときも、何の列かがすぐわかります。</p>
+</section>
+
+<section class="method-section">
+<h2>12. 空白行がある場合の対策</h2>
+<p>A2:A99に空白行が含まれる場合、空白の日付までTEXTで変換され、不要な年月が集計結果に出ることがあります。日付が入っている行だけを対象にするには、LETとFILTERを組み合わせます。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">空白行を除外</div>
+<div class="formula-copy-code">=LET(
+  条件,A2:A99&lt;&gt;"",
+  VSTACK(
+    {"年月","社員番号","合計"},
+    GROUPBY(
+      HSTACK(TEXT(FILTER(A2:A99,条件),"yyyymm"),FILTER(C2:C99,条件)),
+      FILTER(B2:B99,条件),
+      SUM,
+      0,
+      0
+    )
+  )
+)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p><code>条件,A2:A99&lt;&gt;""</code>で「A列の日付が空白ではない行」を条件として名前を付けています。その条件を3つのFILTERで共通して使い、日付・社員番号・価格を同じ行だけに絞ってから集計します。</p>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>部分</th><th>役割</th></tr></thead>
+<tbody>
+<tr><td><code>LET(条件,...)</code></td><td>空白ではないという条件に名前を付ける</td></tr>
+<tr><td><code>FILTER(A2:A99,条件)</code></td><td>日付がある行だけを取り出す</td></tr>
+<tr><td><code>FILTER(C2:C99,条件)</code></td><td>同じ行の社員番号だけを取り出す</td></tr>
+<tr><td><code>FILTER(B2:B99,条件)</code></td><td>同じ行の価格だけを取り出す</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="method-section">
+<h2>13. テーブル化して使う方法</h2>
+<p>元データはExcelの「テーブル」にしておくと便利です。A1:C7などデータ範囲内のセルを選び、次のショートカットでテーブルへ変換できます。</p>
+<div class="code-block" data-lang="shortcut"><span class="code-line">Ctrl + T</span></div>
+<p>テーブル名を「売上表」に変更した場合、セル番地の代わりに列名で数式を書けます。</p>
+
+<h3>月別集計</h3>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">テーブル：月別</div>
+<div class="formula-copy-code">=GROUPBY(TEXT(売上表[日付],"yyyymm"),売上表[価格],SUM,0,0)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>売上表の日付を年月へ変換し、価格を月ごとに合計します。</p>
+
+<h3>月別・社員番号別集計</h3>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">テーブル：2列集計</div>
+<div class="formula-copy-code">=GROUPBY(HSTACK(TEXT(売上表[日付],"yyyymm"),売上表[社員番号]),売上表[価格],SUM,0,0)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>売上表の年月と社員番号をHSTACKで横に並べ、その組み合わせごとに価格を合計します。</p>
+
+<h3>見出し付き</h3>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">テーブル：見出し付き</div>
+<div class="formula-copy-code">=VSTACK({"年月","社員番号","合計"},GROUPBY(HSTACK(TEXT(売上表[日付],"yyyymm"),売上表[社員番号]),売上表[価格],SUM,0,0))</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>テーブル化しておくと、下の行へデータを追加したときに対象範囲が自動で広がります。毎月データが増える一覧では、A2:A99のような固定範囲より管理しやすくなります。</p>
+</section>
+
+<section class="method-section">
+<h2>14. よくある間違い</h2>
+<p>次の式は、GROUPBYの引数の位置と内容が間違っています。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">誤った式</div>
+<div class="formula-copy-code">=GROUPBY(A2:A99,"yyyymm",SUM(B2:B99),0,0)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<div class="xdemo-note-warn">
+<strong>間違っている理由</strong>
+<ul class="line-height-2">
+<li><code>"yyyymm"</code>は集計する値の範囲ではなく、ただの文字列です。</li>
+<li>第2引数には、合計したい価格の範囲<code>B2:B99</code>を指定します。</li>
+<li>第3引数には、<code>SUM(B2:B99)</code>ではなく集計方法として<code>SUM</code>を指定します。</li>
+</ul>
+</div>
+<p>正しくは、日付をTEXTで年月へ変換した配列を第1引数へ、価格の範囲を第2引数へ、SUMを第3引数へ渡します。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">正しい式</div>
+<div class="formula-copy-code">=GROUPBY(TEXT(A2:A99,"yyyymm"),B2:B99,SUM,0,0)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>また、<code>#SPILL!</code>が出る場合は、結果が展開されるセル範囲に値や結合セルがないか確認してください。</p>
+</section>
+
+<section class="legacy-section">
+<h2>15. まとめ</h2>
+<p>月別だけで集計する場合は、次の式を使います。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">月別</div>
+<div class="formula-copy-code">=GROUPBY(TEXT(A2:A99,"yyyymm"),B2:B99,SUM,0,0)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>社員番号も含めて集計する場合は、次の式を使います。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">月別＋社員番号別</div>
+<div class="formula-copy-code">=GROUPBY(HSTACK(TEXT(A2:A99,"yyyymm"),C2:C99),B2:B99,SUM,0,0)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>見出し付きで使うなら、次の式がおすすめです。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">おすすめ式</div>
+<div class="formula-copy-code">=VSTACK({"年月","社員番号","合計"},GROUPBY(HSTACK(TEXT(A2:A99,"yyyymm"),C2:C99),B2:B99,SUM,0,0))</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>GROUPBY関数は、ピボットテーブルのような集計を数式だけで作れる便利な関数です。<br>1列だけでなく複数列をグループ化の条件にできるため、月別集計だけでなく、社員番号別、商品別、店舗別などの集計にも応用できます。</p>
+</section>
+
+<section class="method-section">
+<h2>関連記事・公式資料</h2>
+<ul class="line-height-2">
+<li><a href="../old/article_sumifs_month_employee.html">GROUPBYがないExcel向け：SUMIFSで月別・社員番号別に集計</a></li>
+<li><a href="../old/article_edate_eomonth_sumifs_monthly.html">EDATE・EOMONTH・SUMIFSで月の日付条件を深掘り</a></li>
+<li><a href="article_let.html">LET関数で長い数式を読みやすくする方法</a></li>
+<li><a href="article_filter.html">FILTER関数で条件に合う行を抽出する方法</a></li>
+<li><a href="https://support.microsoft.com/ja-jp/excel/groupby-function" rel="noopener" target="_blank">Microsoft：GROUPBY関数</a></li>
+<li><a href="https://support.microsoft.com/ja-jp/excel/hstack-function" rel="noopener" target="_blank">Microsoft：HSTACK関数</a></li>
+</ul>
+</section>
+
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="site-footer-trust">
+<p><strong>運営:</strong> Excel × No VBA Lab 編集部。</p>
+<p><strong>検証環境:</strong> Excel 2024 / Microsoft 365、Windows版Excel。関数の対応状況はMicrosoft公式情報もご確認ください。</p>
+</div>
+<p>&copy; Excel × No VBA Lab</p>
+<p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p>
+</footer>
+<script src="../../script.js?v=20260628"></script>
+</body>
+</html>

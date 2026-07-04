@@ -13,10 +13,10 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="ExcelのUNIQUE関数・FILTER関数で作った条件付きの重複なしリストを、SORT関数であいうえお順や降順に並び替える方法を解説します。" name="description">
-<meta content="UNIQUE FILTER SORT 組み合わせ, Excel 重複なし リスト 並び替え, SORT UNIQUE FILTER, スピル 関数 ネスト, Excel あいうえお順 数式" name="keywords">
+<meta content="ExcelのUNIQUE・FILTER・SORT関数で条件付きの重複なしリストを並び替える方法と、日付列だけをTEXT関数で整える方法を解説します。" name="description">
+<meta content="UNIQUE FILTER SORT 組み合わせ, Excel 重複なし リスト 並び替え, SORT UNIQUE FILTER, スピル 関数 ネスト, Excel あいうえお順 数式, TEXT HSTACK CHOOSECOLS" name="keywords">
 <meta content="UNIQUE×FILTER×SORTで条件付きリストを並び替える｜Excel &times; No VBA Lab" property="og:title">
-<meta content="ExcelのUNIQUE関数・FILTER関数で作った条件付きの重複なしリストを、SORT関数であいうえお順や降順に並び替える方法を解説します。" property="og:description">
+<meta content="ExcelのUNIQUE・FILTER・SORT関数で条件付きの重複なしリストを並び替える方法と、日付列だけをTEXT関数で整える方法を解説します。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="Excel × No VBA Lab" property="og:site_name">
 <meta content="ja_JP" property="og:locale">
@@ -34,11 +34,11 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": "UNIQUE×FILTER×SORTで条件付きリストを並び替える",
-  "description": "ExcelのUNIQUE関数・FILTER関数で作った条件付きの重複なしリストを、SORT関数であいうえお順や降順に並び替える方法を解説します。",
+  "description": "ExcelのUNIQUE・FILTER・SORT関数で条件付きの重複なしリストを並び替える方法と、日付列だけをTEXT関数で整える方法を解説します。",
   "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
   "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
   "datePublished": "2026-06-24",
-  "dateModified": "2026-06-24"
+  "dateModified": "2026-07-04"
 }
 </script>
 <script type="application/ld+json">
@@ -76,7 +76,7 @@
 <div class="article-meta">
 <span class="badge badge-2021">2021～</span>
 <span class="badge badge-365" style="margin-left:5px;">365</span>
-<span class="article-date">更新日: 2026-06-24</span>
+<span class="article-date">更新日: 2026-07-04</span>
 </div>
 <h1 class="article-title">UNIQUE×FILTER×SORT：条件付きリストをきれいに並び替える</h1>
 <p class="article-lead">前回は、UNIQUE関数とFILTER関数を組み合わせて「条件付きの重複なしリスト」を作りました。ただ、そのままだと元データの出現順で並ぶため、担当者名や商品名の一覧としては少し見づらいことがあります。</p>
@@ -84,7 +84,7 @@
 
 <section class="goal-section">
 <h2>リード文：順番がバラバラで見にくい悩み</h2>
-<p><a href="article_unique.html">前回の記事</a>で作った <code>=UNIQUE(FILTER(C3:C14, D3:D14=1))</code> は、条件に合うデータだけから重複なしリストを作れる便利な式です。</p>
+<p><a href="article_unique_filter.html">前回の記事</a>で作った <code>=UNIQUE(FILTER('担当者一覧'!C3:C14,'担当者一覧'!D3:D14="対象"))</code> は、条件に合うデータだけから重複なしリストを作れる便利な式です。</p>
 <p>ただし、結果は元データに出てきた順番のままです。担当者一覧や商品一覧として使うなら、あいうえお順や昇順で整っていた方が読みやすくなります。そこで今回の主役が <strong>SORT関数</strong> です。</p>
 </section>
 
@@ -92,13 +92,13 @@
 <h2>結論：3つの関数をネストした数式</h2>
 <p>条件で絞り、重複を消し、最後に並び替える式は次の形です。</p>
 <div class="code-block" data-lang="excel">
-<span class="code-line">=SORT(UNIQUE(FILTER(C3:C14, D3:D14=1)))</span>
+<span class="code-line">=SORT(UNIQUE(FILTER('担当者一覧'!C3:C14,'担当者一覧'!D3:D14="対象")))</span>
 </div>
 <p>これで、次の3つの作業がすべて自動になります。</p>
 <div class="xdemo-wrap">
 <div class="xdemo-note-good">
 <strong>この1行で完了する作業</strong><br>
-FILTER：D列が1のデータだけに絞る。<br>
+FILTER：「担当者一覧」シートの対象区分が「対象」のデータだけに絞る。<br>
 UNIQUE：絞った結果から重複をなくす。<br>
 SORT：残ったリストをあいうえお順・昇順で並べる。
 </div>
@@ -131,7 +131,7 @@ SORT：残ったリストをあいうえお順・昇順で並べる。
 <div class="code-block" data-lang="excel">
 <span class="code-line">=SORT(</span>
 <span class="code-line">  UNIQUE(</span>
-<span class="code-line">    FILTER(C3:C14, D3:D14=1)</span>
+<span class="code-line">    FILTER('担当者一覧'!C3:C14,'担当者一覧'!D3:D14="対象")</span>
 <span class="code-line">  )</span>
 <span class="code-line">)</span>
 </div>
@@ -142,7 +142,7 @@ SORT：残ったリストをあいうえお順・昇順で並べる。
 <h2>降順にしたい場合</h2>
 <p>SORT関数は、第3引数に <code>-1</code> を指定すると降順になります。文字ならZ→A、数値なら大きい順です。</p>
 <div class="code-block" data-lang="excel">
-<span class="code-line">=SORT(UNIQUE(FILTER(C3:C14, D3:D14=1)), 1, -1)</span>
+<span class="code-line">=SORT(UNIQUE(FILTER('担当者一覧'!C3:C14,'担当者一覧'!D3:D14="対象")),1,-1)</span>
 </div>
 <p>第2引数の <code>1</code> は「1列目を基準にする」という指定です。今回のように1列のリストを並べる場合は、1列目を基準にすればOKです。</p>
 <div class="xdemo-note-info">
@@ -152,10 +152,67 @@ SORT：残ったリストをあいうえお順・昇順で並べる。
 </section>
 
 <section class="method-section">
+<h2>実務補足：日付列の表示を整えて並び替える</h2>
+<p>Excelの日付は、内部では日付シリアル値という数値として保存されています。セルに見えている「2026年6月1日」などの表記は表示形式によるものです。</p>
+<p>FILTER・UNIQUE・SORTで作った一覧の日付を決まった見た目にそろえるには、日付値のまま抽出・重複削除・並び替えを済ませ、最後にTEXT関数で文字列化します。この順番なら、表示を整えながら日付としての正しい並び順も保てます。</p>
+
+<div class="xdemo-note-good">
+<strong>日付値で並べてから、表示を整える</strong><br>
+先にTEXT関数で文字列化すると、月日が1桁と2桁で混在したときに文字列順で並ぶことがあります。正確な日付順が必要なら、元の日付値でSORTを行い、最後に表示用の文字列へ変換するのが安全です。
+</div>
+<div class="xdemo-note-info">
+<strong>DATEVALUEやDATEの結果を文字列へ置き換えない</strong><br>
+日付シリアル値は、並び替え、検索、期間抽出に必要です。計算用の日付列はそのまま残し、Word差し込み印刷や配布用データには別の「日付_表示用」列を用意します。後工程の担当者が表示形式やフィールドコードで悩まない形にして渡すことも、実務設計の一部です。
+</div>
+
+<h3>日付1列を抽出・重複削除・並び替えする</h3>
+<p>C列が日付、D列が抽出条件なら、日付値のまま重複を消して並び替え、最後にTEXT関数で表示用の文字列へ変換します。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(SORT(UNIQUE(FILTER('申込一覧'!C3:C14,'申込一覧'!D3:D14="対象"))),"yyyy年m月d日")</span>
+</div>
+<p>関数は内側から、FILTERで抽出→UNIQUEで重複削除→SORTで日付順に並び替え→TEXTで「年月日」の文字列へ変換、の順に処理されます。</p>
+
+<h3>複数列のうち、日付列だけを文字列にする</h3>
+<p>複数列を返す場合は、まず日付値を含む表をHSTACKで作って重複削除と並び替えを済ませ、最後に日付列だけを文字列化します。次の例ではC列の日付とE～F列を1つの表にし、1列目の日付で昇順に並べます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">  data,SORT(UNIQUE(HSTACK(</span>
+<span class="code-line">    FILTER('申込一覧'!C3:C14,'申込一覧'!D3:D14="対象"),</span>
+<span class="code-line">    FILTER('申込一覧'!E3:F14,'申込一覧'!D3:D14="対象")</span>
+<span class="code-line">  )),1,1),</span>
+<span class="code-line">  HSTACK(</span>
+<span class="code-line">    TEXT(CHOOSECOLS(data,1),"yyyy年m月d日"),</span>
+<span class="code-line">    CHOOSECOLS(data,2,3)</span>
+<span class="code-line">  )</span>
+<span class="code-line">)</span>
+</div>
+<p><code>HSTACK</code>は、日付列と残りの列を横にくっつけ、1つの表にする働きです。LETで重複削除・並び替え済みの表を <code>data</code> と名付け、その1列目だけをTEXTで加工してから、2・3列目と再び横に並べています。</p>
+
+<div class="xdemo-note-info">
+<strong>UNIQUEは行全体、SORTは指定列で判定</strong><br>
+複数列の表をUNIQUEに渡すと、全列の組み合わせが完全に同じ行だけを重複として削除します。一方、<code>SORT(...,1,1)</code> は、完成した表の1列目を基準に昇順で並び替えます。
+</div>
+
+<p>次の式では、「顧客一覧」シートのG列が「発送対象」の行をA～O列から抽出し、その15列すべてが同じ行だけを削除した後、1列目で並び替えます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(UNIQUE(FILTER('顧客一覧'!A2:O100,'顧客一覧'!G2:G100="発送対象","")),1,1)</span>
+</div>
+<p>UNIQUEが効いていないように見えるときは、A～O列のどこかに違いがあります。余分なスペース、非表示の時刻、数値と文字列の違い、小数点以下の値なども別データとして判定されます。一部の列だけで重複を判定したい場合は、CHOOSECOLSで必要な列に絞ってからUNIQUEへ渡します。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SORT(UNIQUE(CHOOSECOLS(FILTER('顧客一覧'!A2:O100,'顧客一覧'!G2:G100="発送対象",""),1,2,3)),1,1)</span>
+</div>
+
+<div class="xdemo-note-warn">
+<strong>並び順とTEXT化の注意</strong><br>
+年月日の文字列をSORTすると、書式によっては日付順にならない場合があります。上の式のように日付値でSORTしてからTEXT化するか、元の日付列とは別に表示用の文字列列を用意してください。また、時刻の違いも残したい場合は、TEXT化する前にUNIQUEを行います。
+</div>
+</section>
+
+<section class="method-section">
 <h2>まとめ</h2>
 <p>UNIQUE、FILTER、SORTを組み合わせると、手作業で行っていた「フィルター」「重複の削除」「並び替え」を、数式1つで自動化できます。</p>
 <div class="code-block" data-lang="excel">
-<span class="code-line">=SORT(UNIQUE(FILTER(C3:C14, D3:D14=1)))</span>
+<span class="code-line">=SORT(UNIQUE(FILTER('担当者一覧'!C3:C14,'担当者一覧'!D3:D14="対象")))</span>
 </div>
 <p>元データが増えても、条件付きの重複なしリストが自動で更新され、さらにきれいに並び替えられます。プルダウンリスト、担当者一覧、商品マスタ、対象顧客リストなど、実務でかなり使い回せる形です。</p>
 <div class="xdemo-note-good">
@@ -167,7 +224,8 @@ SORT：残ったリストをあいうえお順・昇順で並べる。
 <section class="method-section">
 <h2>関連記事</h2>
 <ul class="line-height-2">
-<li><a href="article_unique.html">UNIQUE×FILTER &horbar; 条件付きの重複なしリストを作る</a></li>
+<li><a href="article_unique.html">UNIQUE関数の基本 &horbar; 重複を削除して一意のリストを作る</a></li>
+<li><a href="article_unique_filter.html">UNIQUE×FILTER &horbar; 条件付きの重複なしリストを作る</a></li>
 <li><a href="article_sort.html">SORT / SORTBY関数 &horbar; 数式で動的に並び替え</a></li>
 <li><a href="article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
 <li><a href="article_textjoin.html">TEXTJOIN &horbar; 複数セルの文字列をまとめる</a></li>

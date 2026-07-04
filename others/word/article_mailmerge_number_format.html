@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Word差し込み印刷で日付・金額・数値の表示崩れを直す方法｜Excel側を直さずフィールドコードで整える｜Excel &times; No VBA Lab</title>
+<title>Word差し込み印刷の日付・金額・数値を整える｜Excel TEXT関数とフィールドコード｜Excel &times; No VBA Lab</title>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -11,10 +11,10 @@
   gtag('js', new Date());
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="Wordの差し込み印刷でExcelの表示形式が反映されず、日付・金額・数値が崩れる場合に、MERGEFIELDのフィールドコードで表示形式を指定する方法を解説します。" name="description">
-<meta content="Word 差し込み印刷 日付 表示形式, MERGEFIELD 日付, MERGEFIELD 金額, Word フィールドコード 数値, Excel 表示形式 Word 反映されない" name="keywords">
+<meta content="Word差し込み印刷の日付・金額・郵便番号の表示を、ExcelのTEXT関数で印刷用文字列にする方法と、WordのMERGEFIELDで整える方法の両方を解説します。" name="description">
+<meta content="Word 差し込み印刷 日付 表示形式, Excel TEXT 差し込み印刷, TEXT 郵便番号, MERGEFIELD 日付, MERGEFIELD 金額, Word フィールドコード 数値" name="keywords">
 <meta content="Word差し込み印刷で日付・金額・数値の表示崩れを直す方法" property="og:title">
-<meta content="Excel側の表示形式に頼らず、Word側のフィールドコードで日付・金額・数値の見た目を整える実務手順です。" property="og:description">
+<meta content="ExcelのTEXT関数で印刷用列を作る方法と、Wordのフィールドコードで整える方法を運用別に解説します。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="Excel × No VBA Lab" property="og:site_name">
 <meta content="ja_JP" property="og:locale">
@@ -26,7 +26,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Article","headline":"Word差し込み印刷で日付・金額・数値の表示崩れを直す方法","description":"Wordの差し込み印刷でExcelの表示形式が反映されず、日付・金額・数値が崩れる場合に、MERGEFIELDのフィールドコードで表示形式を指定する方法を解説します。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},"datePublished":"2026-06-22","dateModified":"2026-06-22"}
+{"@context":"https://schema.org","@type":"Article","headline":"Word差し込み印刷で日付・金額・数値の表示崩れを直す方法","description":"Word差し込み印刷の日付・金額・郵便番号の表示を、ExcelのTEXT関数で印刷用文字列にする方法と、WordのMERGEFIELDで整える方法の両方を解説します。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},"datePublished":"2026-06-22","dateModified":"2026-07-04"}
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"現場実務ラボ","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":3,"name":"Word差し込み印刷で日付・金額・数値の表示崩れを直す方法","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_number_format.html"}]}
@@ -39,12 +39,12 @@
 <main class="main-content" id="main-content">
 <div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span><strong>差し込み印刷 表示形式</strong></div>
 <article class="article-body">
-<div class="article-header"><div class="article-meta"><span class="badge badge-all">全バージョン</span><span class="article-date">更新日: 2026-06-22</span></div><h1 class="article-title">Word差し込み印刷で日付・金額・数値の表示崩れを直す方法</h1></div>
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">全バージョン</span><span class="article-date">更新日: 2026-07-04</span></div><h1 class="article-title">Word差し込み印刷で日付・金額・数値の表示崩れを直す方法</h1></div>
 
 <section class="goal-section">
 <h2><span class="icon">💡</span> やりたいこと</h2>
 <p>Excel住所録や請求データでは、日付が <code>2026/6/22</code>、金額が <code>12,000円</code> のようにきれいに見えているのに、Wordへ差し込み印刷すると表示が崩れることがあります。</p>
-<div class="xdemo-note-good"><strong>結論：Word側のMERGEFIELDに表示形式スイッチを付けます。</strong><br>Excel側に印刷用の作業列を増やさず、Wordテンプレート側で「日付は年月日」「金額はカンマ付き」のように指定します。</div>
+<div class="xdemo-note-good"><strong>結論：運用する人に合わせて2つの方法を使い分けます。</strong><br>一般の担当者が使うなら、Excel側にTEXT関数で完成済みの印刷用列を作る方法が分かりやすいです。元のExcelに列を追加できない場合は、Word側のMERGEFIELDに表示形式スイッチを付けます。</div>
 </section>
 
 <section class="method-section">
@@ -58,7 +58,44 @@
 </section>
 
 <section class="method-section">
-<h3>日付の表示形式</h3>
+<h3>具体例：2026年7月4日が「7/4/2026」になる理由</h3>
+<p>画像の例では、Excelで「2026年7月4日」と見えていた日付をそのまま差し込むと、Wordでは <code>7/4/2026</code> と表示されています。</p>
+<p>2026年7月4日は、Excel内部では <strong>46207</strong> という日付シリアル値です。Excelはセルの表示形式で「2026年7月4日」に見せていますが、Wordへ直接差し込むと、Wordは受け取った日付値を自分の既定形式で再表示します。この例では「月/日/年」の形式が使われたため、<code>7/4/2026</code> になっています。</p>
+<div class="table-responsive"><div class="table-wrapper"><table class="comparison-table"><caption>同じ日付が別の見た目になる流れ</caption><thead><tr><th>段階</th><th>値・表示</th><th>意味</th></tr></thead><tbody>
+<tr><td>Excel内部</td><td><code>46207</code></td><td class="text-left">計算や並び替えに使う日付シリアル値</td></tr>
+<tr><td>Excelのセル表示</td><td><code>2026年7月4日</code></td><td class="text-left">Excelの表示形式で整えた見た目</td></tr>
+<tr><td>Wordへ直接差し込み</td><td><code>7/4/2026</code></td><td class="text-left">Word側の既定形式で再表示された同じ日付</td></tr>
+<tr><td>TEXT列を差し込み</td><td><code>2026年7月4日</code></td><td class="text-left">完成済み文字列なので表示が変わりにくい</td></tr>
+</tbody></table></div></div>
+<div class="xdemo-note-warn"><strong><code>7/4/2026</code>は日付シリアル値そのものが表示されたわけではありません。</strong><br>日付シリアル値をWordが日付として解釈し、別の順序で表示した結果です。環境によっては日・月・年など別の形式になるため、見る人には月と日が分かりにくくなることもあります。</div>
+<p>一般担当者へ渡すデータなら、Excel側に次の印刷用列を用意し、Wordではその列を選ぶだけにすると迷いません。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(D2,"yyyy年m月d日")</span>
+</div>
+</section>
+
+<section class="method-section">
+<h3>方法1：Excel側に完成済みの印刷用列を作る</h3>
+<p>後工程の担当者にWordのフィールドコードを編集させたくない場合は、Excel側で表示を完成させます。C列が郵便番号、D列が日付、E列が金額なら、別列に次の式を入れます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(C2,"000-0000")</span>
+<span class="code-line">=TEXT(D2,"yyyy年m月d日")</span>
+<span class="code-line">=TEXT(E2,"#,##0円")</span>
+</div>
+<p>基本はTEXT関数だけで十分です。空白セルが混ざり、空白をそのまま表示したい場合に限って、<code>=IF(C2="","",TEXT(C2,"000-0000"))</code> のようにIF関数を追加します。</p>
+<div class="table-responsive"><div class="table-wrapper"><table class="comparison-table"><caption>Excel側に用意する列</caption><thead><tr><th>元の列</th><th>印刷用の列</th><th>Wordで使う列</th></tr></thead><tbody>
+<tr><td>郵便番号</td><td>郵便番号_印刷用</td><td>郵便番号_印刷用</td></tr>
+<tr><td>請求日</td><td>請求日_印刷用</td><td>請求日_印刷用</td></tr>
+<tr><td>金額</td><td>金額_印刷用</td><td>金額_印刷用</td></tr>
+</tbody></table></div></div>
+<p>Wordでは印刷用列を通常の差し込みフィールドとして挿入するだけです。表示が文字列として完成しているため、日付の順序が変わったり、カンマや先頭ゼロが消えたりしにくくなります。</p>
+<div class="xdemo-note-info"><strong>元の値と印刷用文字列を分けます。</strong><br>TEXT関数の結果は文字列です。日付計算、金額集計、並び替えには元の列を使い、差し込み印刷には印刷用列を使います。</div>
+<div class="xdemo-note-good"><strong>DATEVALUEやDATEの結果は、計算用として残してください。</strong><br>日付シリアル値は、日付順の並び替え、検索、期間抽出、年齢・日数計算に必要です。ただし、その列をWordへ直接差し込むと、環境によって別の日付形式やシリアル値のような表示になることがあります。元の日付列とは別に「請求日_印刷用」を作り、後工程ではその列を選ぶだけにすると運用しやすくなります。</div>
+<div class="xdemo-note-warn"><strong>入力形式を確認してください。</strong><br>郵便番号の式はハイフンなしの7桁数値を想定しています。すでにハイフン付きの値や全角数字が混ざる場合は、入力ルールを統一してから使います。電話番号は形式が複数あるため、最初から文字列で管理する方法が安全です。</div>
+</section>
+
+<section class="method-section">
+<h3>方法2：Word側で日付の表示形式を指定する</h3>
 <p>日付は <code>\@</code> を使って指定します。</p>
 <div class="code-block" data-lang="word">
 <span class="code-line">{ MERGEFIELD 請求日 \@ "yyyy年M月d日" }</span>
@@ -68,7 +105,7 @@
 </section>
 
 <section class="method-section">
-<h3>金額・数値の表示形式</h3>
+<h3>Word側で金額・数値の表示形式を指定する</h3>
 <p>金額や番号などの数値は <code>\#</code> を使って指定します。</p>
 <div class="code-block" data-lang="word">
 <span class="code-line">{ MERGEFIELD 金額 \# "#,##0" }円</span>
@@ -91,16 +128,18 @@
 
 <section class="tips-section">
 <h3>実務でおすすめの使い分け</h3>
-<div class="table-responsive"><div class="table-wrapper"><table class="formula-count-table"><caption>表示形式の担当を分ける</caption><thead><tr><th>内容</th><th>おすすめ</th></tr></thead><tbody>
-<tr><td>データとして必要な値</td><td class="text-left">Excel側で持つ。日付、金額、顧客番号など。</td></tr>
-<tr><td>印刷物だけの見た目</td><td class="text-left">Word側のフィールドコードで整える。年月日、円、カンマ、ゼロ埋めなど。</td></tr>
-<tr><td>例外が多い文言</td><td class="text-left">Excel側に正式な表示列を持たせる方が安全な場合もあります。</td></tr>
+<div class="table-responsive"><div class="table-wrapper"><table class="formula-count-table"><caption>運用別のおすすめ</caption><thead><tr><th>状況</th><th>おすすめ</th></tr></thead><tbody>
+<tr><td>一般の担当者が使う</td><td class="text-left">Excel側に印刷用列を作ります。Wordではフィールドを挿入するだけにします。</td></tr>
+<tr><td>後工程でフィールドコードを触らせたくない</td><td class="text-left">郵便番号・日付・金額をTEXT関数で完成済み文字列にします。</td></tr>
+<tr><td>共有住所録へ列を追加できない</td><td class="text-left">Word側のフィールドコードで表示形式を指定します。</td></tr>
+<tr><td>計算・集計にも使う値</td><td class="text-left">元の日付・金額列を残し、印刷用列と分けます。</td></tr>
+<tr><td>例外が多い文言</td><td class="text-left">Excel側に正式な表示列を持たせ、内容を目視確認できるようにします。</td></tr>
 </tbody></table></div></div>
 </section>
 
 <section class="summary-section">
 <h2><span class="icon">✅</span> まとめ</h2>
-<p>Word差し込み印刷で日付・金額・数値の見た目が崩れる場合は、Excel側を直す前にWord側のフィールドコードを確認します。日付は <code>\@</code>、数値は <code>\#</code> を使うと、テンプレート側で表示を安定させられます。</p>
+<p>一般の担当者が使う差し込み印刷では、Excel側にTEXT関数で印刷用列を作ると、Wordのフィールドコードを意識せずに運用できます。元データへ列を追加できない場合は、日付に <code>\@</code>、数値に <code>\#</code> を指定するWord側の方法を使います。どちらの場合も、計算用の元データは残してください。</p>
 </section>
 
 <section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">

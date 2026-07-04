@@ -86,6 +86,17 @@
 <a class="link-card" href="article_yyyymmdd_date_serial.html"><div class="link-card-title">西暦8桁はDATE関数：YYYYMMDDを日付シリアル値へ変換</div><div class="link-card-desc">19781215のような西暦8桁を、年・月・日に分解して本物の日付へ変換します。</div></a>
 </section>
 
+<section class="method-section">
+<h3>日付シリアル値と印刷用文字列を分ける</h3>
+<p>DATEVALUEの結果は、並び替え、日付検索、期間抽出、年齢計算に必要な本物の日付です。この列をTEXT関数の文字列で置き換えないでください。</p>
+<p>DATEVALUEの結果がB2にあるなら、Word差し込み印刷や配布用には別列を作ります。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(B2,"yyyy年m月d日")</span>
+</div>
+<p>例えば2026年7月4日は日付シリアル値 <code>46207</code> です。Excelでは表示形式によって「2026年7月4日」と見えますが、Wordへ直接差し込むと、Word側の既定形式で <code>7/4/2026</code> と表示されることがあります。データが壊れたのではなく、同じ日付をWordが別形式で表示した状態です。</p>
+<p>計算にはB列の日付シリアル値、表示や差し込みには「日付_印刷用」列を使います。受け取る人がWordのフィールドコードを修正できるとは限らないため、用途に合った表示まで整えて渡すと実務で迷いが減ります。</p>
+</section>
+
 <section class="legacy-section">
 <h3>まとめ</h3>
 <p>和暦は、Excelが認識できる「昭和53年12月15日」の形を作ってDATEVALUEへ渡します。変換後は日付シリアル値になるため、年齢計算・並べ替え・抽出へ利用できます。</p>
@@ -94,6 +105,7 @@
 <li><a href="article_yyyymmdd_date_serial.html">DATE関数で西暦8桁を日付へ変換</a></li>
 <li><a href="../../cobol/formula/01_article_cobol_basic.html">COBOL固定長データの切り出しと整形</a></li>
 <li><a href="article_text_date.html">TEXT関数による和暦表示</a></li>
+<li><a href="../../others/word/article_mailmerge_number_format.html">Word差し込み印刷の日付表示を整える方法</a></li>
 </ul></section>
 </article></main>
 <footer class="site-footer"><div class="site-footer-trust"><p><strong>運営:</strong> Excel × No VBA Lab 編集部。</p><p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel。</p></div><p>&copy; Excel × No VBA Lab</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>

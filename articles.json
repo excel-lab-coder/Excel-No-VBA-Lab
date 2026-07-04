@@ -330,10 +330,40 @@
     },
     {
       "category": "functions",
+      "subcategory": "modern_aggregate",
+      "title": "GROUPBY関数で月別集計｜社員番号別の集計も解説",
+      "url": "functions/latest/article_groupby_month_employee.html",
+      "summary": "年月や社員番号の組み合わせを自動で見つけ、ピボットテーブルのような集計を1つの数式で展開します。",
+      "level": 3,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
       "subcategory": "old_search",
       "title": "INDEX + MATCH（全ver対象）",
       "url": "functions/old/article_index_match.html",
       "summary": "検索キーより左側にある列のデータを取得したい場合など、旧バージョンで強力な検索手法です。",
+      "level": 3,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_aggregate",
+      "title": "SUMIFS関数で月別集計｜社員番号別の集計も解説",
+      "url": "functions/old/article_sumifs_month_employee.html",
+      "summary": "GROUPBYが使えない環境でも、月初日とEDATEを使って月別・社員番号別の合計を作れます。",
+      "level": 2,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_aggregate",
+      "title": "EDATE・EOMONTH・SUMIFSで月別集計",
+      "url": "functions/old/article_edate_eomonth_sumifs_monthly.html",
+      "summary": "月初・月末・翌月初日の作り方と、時刻入り日付を漏らさないSUMIFSの日付条件を解説します。",
       "level": 3,
       "tags": ["impact"],
       "is_highlight": true

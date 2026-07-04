@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>SUMIFS関数で月別集計する方法｜社員番号別の集計も解説｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="GROUPBYが使えないExcelでも、SUMIFS関数で日付データを月別・社員番号別に合計できます。月初日とEDATEを使う安全な期間指定を数式ごとに解説します。" name="description">
+<meta content="SUMIFS 月別集計, Excel 月ごと 合計, SUMIFS 日付 範囲, SUMIFS 社員番号, GROUPBY 代替, Excel 2016 集計" name="keywords">
+<meta content="SUMIFS関数で月別集計する方法｜社員番号別の集計も解説" property="og:title">
+<meta content="GROUPBYがない環境向けに、SUMIFSで月別・社員番号別の価格合計を作る方法を解説します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_sumifs_month_employee.html" property="og:url">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_sumifs_month_employee.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "SUMIFS関数で月別集計する方法｜社員番号別の集計も解説",
+  "description": "GROUPBYが使えないExcelでも、SUMIFS関数で月別・社員番号別に集計する方法を解説します。",
+  "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "datePublished": "2026-06-28",
+  "dateModified": "2026-06-28",
+  "mainEntityOfPage": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_sumifs_month_employee.html"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type": "ListItem", "position": 2, "name": "関数", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/index.html"},
+    {"@type": "ListItem", "position": 3, "name": "SUMIFS関数で月別集計", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_sumifs_month_employee.html"}
+  ]
+}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../index.html">関数</a><span>&gt;</span><strong>SUMIFSで月別集計</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="ver-badge ver-all">Excel 2016以降</span>
+<span class="article-date">更新日: 2026-06-28</span>
+</div>
+<h1 class="article-title">SUMIFS関数で月別集計する方法<br>&horbar; 社員番号別の集計も解説</h1>
+<p class="article-lead">GROUPBY関数が使えない環境でも、SUMIFS関数なら月別集計を作れます。月の開始日以上・翌月の開始日未満という2つの日付条件を指定し、社員番号の条件も追加する方法を順番に解説します。</p>
+</div>
+
+<section class="goal-section">
+<h2>1. GROUPBYがない場合はSUMIFSで集計できる</h2>
+<p>GROUPBYは、元データからグループを自動で見つけて集計表を展開できる便利な関数です。しかし、使えないExcelではSUMIFSを使い、<strong>集計したい年月や社員番号を先に集計表へ並べる</strong>ことで同じ合計を求められます。</p>
+<div class="xdemo-note-good">
+<strong>SUMIFS方式のポイント</strong><br>
+集計表の項目は自分で用意する必要がありますが、Excel 2016・2019・2021・2024・Microsoft 365で使いやすい、安定した方法です。
+</div>
+</section>
+
+<section class="method-section">
+<h2>2. サンプルデータ</h2>
+<p>A1:C7に、次の売上明細があるものとします。</p>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>A列：日付</th><th>B列：価格</th><th>C列：社員番号</th></tr></thead>
+<tbody>
+<tr><td>2026/4/25</td><td>1000</td><td>101</td></tr>
+<tr><td>2026/4/26</td><td>2000</td><td>101</td></tr>
+<tr><td>2026/4/27</td><td>1500</td><td>102</td></tr>
+<tr><td>2026/5/1</td><td>3000</td><td>101</td></tr>
+<tr><td>2026/5/2</td><td>2500</td><td>102</td></tr>
+<tr><td>2026/5/3</td><td>1000</td><td>101</td></tr>
+</tbody>
+</table>
+</div>
+<p>このデータから、まず月ごとの合計を作り、その後で月別・社員番号別の合計を作ります。</p>
+</section>
+
+<section class="method-section">
+<h2>3. SUMIFS関数の基本</h2>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">基本形</div>
+<div class="formula-copy-code">=SUMIFS(合計範囲,条件範囲1,条件1,条件範囲2,条件2,...)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>SUMIFSは、すべての条件に合う行だけを合計する関数です。今回の「2026年4月」を表すには、A列の日付へ次の2条件を指定します。</p>
+<ul class="line-height-2">
+<li>4月1日<strong>以上</strong></li>
+<li>5月1日<strong>未満</strong></li>
+</ul>
+<p>この2つを同時に満たす日付は、4月中の日付だけです。</p>
+</section>
+
+<section class="method-section">
+<h2>4. 集計表へ月初日を入力する</h2>
+<p>E1に「年月」、F1に「合計」と入力します。E2には文字列の<code>202604</code>ではなく、実際の日付として<code>2026/4/1</code>を入力してください。</p>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>E列：年月</th><th>F列：合計</th></tr></thead>
+<tbody>
+<tr><td>2026/4/1</td><td>数式を入力</td></tr>
+<tr><td>2026/5/1</td><td>下へコピー</td></tr>
+</tbody>
+</table>
+</div>
+<p>表示を「202604」や「2026年4月」にしたい場合は、セルの表示形式だけを<code>yyyymm</code>または<code>yyyy"年"m"月"</code>へ変更します。中身を日付のまま保つことが大切です。</p>
+<h3>翌月を自動で作る</h3>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">E3へ入力</div>
+<div class="formula-copy-code">=EDATE(E2,1)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>EDATEは、指定した日付から何か月後・何か月前の日付を返す関数です。ここではE2の1か月後、つまり2026/5/1を作ります。</p>
+</section>
+
+<section class="method-section">
+<h2>5. まず月別だけで合計する</h2>
+<p>F2へ次の式を入力し、下へコピーします。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">月別合計</div>
+<div class="formula-copy-code">=SUMIFS($B$2:$B$99,$A$2:$A$99,"&gt;="&amp;E2,$A$2:$A$99,"&lt;"&amp;EDATE(E2,1))</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>この式は、A列の日付がE2の月初日以上で、E2の翌月初日より前にある行の価格を合計します。</p>
+
+<h3>数式を分解すると</h3>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>数式の部分</th><th>意味</th></tr></thead>
+<tbody>
+<tr><td><code>$B$2:$B$99</code></td><td>合計する価格の範囲</td></tr>
+<tr><td><code>$A$2:$A$99</code></td><td>日付を調べる範囲</td></tr>
+<tr><td><code>"&gt;="&amp;E2</code></td><td>E2の月初日以上</td></tr>
+<tr><td><code>"&lt;"&amp;EDATE(E2,1)</code></td><td>E2の翌月初日より前</td></tr>
+</tbody>
+</table>
+</div>
+<div class="xdemo-note-info">
+<strong>なぜ「月末以下」ではなく「翌月初日未満」？</strong><br>
+日付に時刻が含まれていても、その月の最終日を漏らさず集計できるためです。2月やうるう年の日数を考える必要もありません。
+</div>
+</section>
+
+<section class="method-section">
+<h2>6. 月別集計の結果</h2>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>年月</th><th>合計</th></tr></thead>
+<tbody>
+<tr><td>202604</td><td class="xd-result">4500</td></tr>
+<tr><td>202605</td><td class="xd-result">6500</td></tr>
+</tbody>
+</table>
+</div>
+<p>4月は1000＋2000＋1500で4500、5月は3000＋2500＋1000で6500です。ここでは社員番号を条件に入れていないため、同じ月の価格がすべて合計されます。</p>
+</section>
+
+<section class="method-section">
+<h2>7. 次に月別・社員番号別で合計する</h2>
+<p>H列からJ列へ、集計したい年月と社員番号の組み合わせを先に並べます。H列の日付は各月の1日を入力し、表示形式を<code>yyyymm</code>にします。</p>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>H列：年月</th><th>I列：社員番号</th><th>J列：合計</th></tr></thead>
+<tbody>
+<tr><td>202604</td><td>101</td><td>数式</td></tr>
+<tr><td>202604</td><td>102</td><td>下へコピー</td></tr>
+<tr><td>202605</td><td>101</td><td>下へコピー</td></tr>
+<tr><td>202605</td><td>102</td><td>下へコピー</td></tr>
+</tbody>
+</table>
+</div>
+<p>J2へ次の式を入力します。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">年月＋社員番号</div>
+<div class="formula-copy-code">=SUMIFS($B$2:$B$99,$A$2:$A$99,"&gt;="&amp;H2,$A$2:$A$99,"&lt;"&amp;EDATE(H2,1),$C$2:$C$99,I2)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>月別集計の式へ、<code>$C$2:$C$99,I2</code>という社員番号の条件を追加しています。日付がH2の月内であり、さらに社員番号がI2と同じ行だけが合計されます。</p>
+</section>
+
+<section class="method-section">
+<h2>8. 月別・社員番号別集計の結果</h2>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>年月</th><th>社員番号</th><th>合計</th></tr></thead>
+<tbody>
+<tr><td>202604</td><td>101</td><td class="xd-result">3000</td></tr>
+<tr><td>202604</td><td>102</td><td class="xd-result">1500</td></tr>
+<tr><td>202605</td><td>101</td><td class="xd-result">4000</td></tr>
+<tr><td>202605</td><td>102</td><td class="xd-result">2500</td></tr>
+</tbody>
+</table>
+</div>
+<p>同じ4月でも、社員番号101と102は別の条件で集計されます。GROUPBYのように組み合わせは自動生成されませんが、必要な組み合わせを並べれば同じ結果を作れます。</p>
+</section>
+
+<section class="method-section">
+<h2>9. 実務ではクロス集計表も便利</h2>
+<p>年月を縦、社員番号を横に置くと、少ない入力で見やすい集計表を作れます。</p>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>年月</th><th>101</th><th>102</th></tr></thead>
+<tbody>
+<tr><td>202604</td><td class="xd-result">3000</td><td class="xd-result">1500</td></tr>
+<tr><td>202605</td><td class="xd-result">4000</td><td class="xd-result">2500</td></tr>
+</tbody>
+</table>
+</div>
+<p>E2に月初日、F1とG1に社員番号がある場合、F2へ次の式を入力して右と下へコピーします。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">クロス集計</div>
+<div class="formula-copy-code">=SUMIFS($B$2:$B$99,$A$2:$A$99,"&gt;="&amp;$E2,$A$2:$A$99,"&lt;"&amp;EDATE($E2,1),$C$2:$C$99,F$1)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<ul class="line-height-2">
+<li><code>$E2</code>：E列を固定し、下へコピーすると月だけが変わる</li>
+<li><code>F$1</code>：1行目を固定し、右へコピーすると社員番号だけが変わる</li>
+</ul>
+</section>
+
+<section class="method-section">
+<h2>10. テーブル化すると元データの追加に強くなる</h2>
+<p>元データを選択し、<code>Ctrl + T</code>でテーブル化して、テーブル名を「売上表」にすると次の式になります。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">テーブル版</div>
+<div class="formula-copy-code">=SUMIFS(売上表[価格],売上表[日付],"&gt;="&amp;H2,売上表[日付],"&lt;"&amp;EDATE(H2,1),売上表[社員番号],I2)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>新しい明細をテーブルの下へ追加すると、日付・価格・社員番号の参照範囲が自動で広がります。</p>
+</section>
+
+<section class="method-section">
+<h2>11. よくある間違い</h2>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>間違い</th><th>起きること</th><th>対策</th></tr></thead>
+<tbody>
+<tr><td>年月セルへ文字列の202604を入力</td><td>日付条件と正しく比較できない</td><td>2026/4/1を入力し、表示形式をyyyymmにする</td></tr>
+<tr><td>月末日を毎月手入力</td><td>2月・30日・31日の違いでミスしやすい</td><td>EDATEで翌月初日を求める</td></tr>
+<tr><td>比較演算子とセルを分けて書かない</td><td>条件が正しく伝わらない</td><td><code>"&gt;="&amp;E2</code>のように&amp;でつなぐ</td></tr>
+<tr><td>合計範囲と条件範囲の行数が違う</td><td>#VALUE!や誤集計の原因になる</td><td>すべて2行目から99行目のようにそろえる</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="method-section">
+<h2>12. GROUPBYとSUMIFSの違い</h2>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>比較</th><th>GROUPBY</th><th>SUMIFS</th></tr></thead>
+<tbody>
+<tr><td>集計項目の作成</td><td class="xd-result">自動</td><td>年月・社員番号を先に用意</td></tr>
+<tr><td>結果の展開</td><td class="xd-result">1つの式からスピル</td><td>数式を下や右へコピー</td></tr>
+<tr><td>複数項目の集計</td><td>HSTACKで列を渡す</td><td>条件範囲と条件を追加</td></tr>
+<tr><td>対応環境</td><td>Microsoft公式ではMicrosoft 365</td><td class="xd-result">Excel 2016以降で広く利用可能</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>GROUPBYが使えるなら、一覧を自動生成できるGROUPBYが便利です。</strong>使えない場合や、集計表の行・列を決まった並びにしたい場合はSUMIFSが安定しています。</p>
+</section>
+
+<section class="legacy-section">
+<h2>13. まとめ</h2>
+<p>月別だけで合計する式は次のとおりです。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">月別</div>
+<div class="formula-copy-code">=SUMIFS($B$2:$B$99,$A$2:$A$99,"&gt;="&amp;E2,$A$2:$A$99,"&lt;"&amp;EDATE(E2,1))</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>月別・社員番号別で合計する式は次のとおりです。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">年月＋社員番号</div>
+<div class="formula-copy-code">=SUMIFS($B$2:$B$99,$A$2:$A$99,"&gt;="&amp;H2,$A$2:$A$99,"&lt;"&amp;EDATE(H2,1),$C$2:$C$99,I2)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>SUMIFSでは、年月と社員番号の一覧を自分で用意する必要があります。その代わり、旧バージョンでも使いやすく、集計表の並びを固定しやすいのが強みです。</p>
+</section>
+
+<section class="method-section">
+<h2>関連記事・公式資料</h2>
+<ul class="line-height-2">
+<li><a href="article_edate_eomonth_sumifs_monthly.html">EDATE・EOMONTH・SUMIFSの日付条件を深掘り</a></li>
+<li><a href="../latest/article_groupby_month_employee.html">GROUPBY関数で月別・社員番号別に自動集計する方法</a></li>
+<li><a href="article_countifs_sumifs.html">COUNTIFS・SUMIFS完全ガイド</a></li>
+<li><a href="https://support.microsoft.com/ja-jp/office/sumifs-%E9%96%A2%E6%95%B0-c9e748f5-7ea7-455d-9406-611cebce642b" rel="noopener" target="_blank">Microsoft：SUMIFS関数</a></li>
+</ul>
+</section>
+
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="site-footer-trust">
+<p><strong>運営:</strong> Excel × No VBA Lab 編集部。</p>
+<p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel。</p>
+</div>
+<p>&copy; Excel × No VBA Lab</p>
+<p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p>
+</footer>
+<script src="../../script.js?v=20260628"></script>
+</body>
+</html>

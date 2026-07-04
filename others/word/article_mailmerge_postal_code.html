@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Word差し込み印刷で郵便番号にハイフンを入れる方法｜Excel側に作業列を作らない｜Excel &times; No VBA Lab</title>
+<title>Word差し込み印刷で郵便番号にハイフンを入れる方法｜Excel TEXT関数とフィールドコード｜Excel &times; No VBA Lab</title>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
 <script>
@@ -13,10 +13,10 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="Wordの差し込み印刷で、Excel住所録の郵便番号が1000001や0010001のようにハイフンなしの場合に、Excel側へ作業列を追加せずWordのフィールドコードで000-0000形式に表示する方法を解説。一般的な対応方法との違いも整理します。" name="description">
-<meta content="Word 差し込み印刷 郵便番号 ハイフン, MERGEFIELD 郵便番号 表示形式, Word フィールドコード 000-0000, Excel 住所録 作業列不要, 郵便番号 0010001" name="keywords">
-<meta content="Word差し込み印刷で郵便番号にハイフンを入れる方法｜Excel側に作業列を作らない" property="og:title">
-<meta content="Excel住所録を崩さず、Word側のフィールドコードだけで郵便番号を000-0000形式に整える方法を解説。" property="og:description">
+<meta content="Word差し込み印刷の郵便番号を000-0000形式にする方法を解説。ExcelのTEXT関数で印刷用列を作る方法と、Wordのフィールドコードで整える方法を運用別に紹介します。" name="description">
+<meta content="Word 差し込み印刷 郵便番号 ハイフン, Excel TEXT 郵便番号, MERGEFIELD 郵便番号 表示形式, Word フィールドコード 000-0000, 郵便番号 0010001" name="keywords">
+<meta content="Word差し込み印刷で郵便番号にハイフンを入れる方法｜Excel TEXT関数とフィールドコード" property="og:title">
+<meta content="ExcelのTEXT関数で印刷用列を作る方法と、Wordのフィールドコードで郵便番号を整える方法を解説。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="Excel × No VBA Lab" property="og:site_name">
 <meta content="ja_JP" property="og:locale">
@@ -32,11 +32,11 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": "Word差し込み印刷で郵便番号にハイフンを入れる方法",
-  "description": "Wordの差し込み印刷で、Excel住所録の郵便番号が1000001や0010001のようにハイフンなしの場合に、Excel側へ作業列を追加せずWordのフィールドコードで000-0000形式に表示する方法を解説。一般的な対応方法との違いも整理します。",
+  "description": "Word差し込み印刷の郵便番号を000-0000形式にする方法を解説。ExcelのTEXT関数で印刷用列を作る方法と、Wordのフィールドコードで整える方法を運用別に紹介します。",
   "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
   "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
   "datePublished": "2026-06-22",
-  "dateModified": "2026-06-22"
+  "dateModified": "2026-07-04"
 }
 </script>
 <script type="application/ld+json">
@@ -74,18 +74,18 @@
 <div class="article-header">
 <div class="article-meta">
 <span class="badge badge-all">全バージョン</span>
-<span class="article-date">更新日: 2026-06-22</span>
+<span class="article-date">更新日: 2026-07-04</span>
 </div>
-<h1 class="article-title">Word差し込み印刷で郵便番号にハイフンを入れる方法：Excel側に作業列を作らない</h1>
+<h1 class="article-title">Word差し込み印刷で郵便番号にハイフンを入れる方法</h1>
 </div>
 
 <section class="goal-section">
 <h2><span class="icon">💡</span> やりたいこと</h2>
 <p>Wordの差し込み印刷でExcel住所録を使ったとき、郵便番号が <code>1000001</code> や <code>0010001</code> のようにハイフンなしで表示されることがあります。</p>
-<p>本当はWord上では <code>100-0001</code>、<code>001-0001</code> のように表示したい。ただし、Excel側に「ハイフン付き郵便番号」の作業列は作りたくない。この記事はそのための方法です。</p>
+<p>Word上では <code>100-0001</code>、<code>001-0001</code> のように表示したい。この場合は、Excel側に完成済みの印刷用列を作る方法と、Excelを変えずにWord側で整える方法があります。</p>
 <div class="xdemo-note-good">
-<strong>結論：Excelの住所録は触らず、Word側のフィールドコードで整形します。</strong><br>
-住所録に列を追加したり、既存の表にハイフン入りの作業列を作ったりしなくてよいので、元データの構造を崩さずに運用できます。
+<strong>結論：一般の担当者が使うならExcelの印刷用列が分かりやすいです。</strong><br>
+<code>=TEXT(C2,"000-0000")</code> で表示を完成させ、Wordではその列を差し込みます。共有住所録へ列を追加できない場合は、Word側のフィールドコードを使います。
 </div>
 </section>
 
@@ -131,8 +131,8 @@
 </table></div>
 </div>
 <div class="xdemo-note-good">
-<strong>この記事で採用するのは「Word側のフィールドコードで整える」方法です。</strong><br>
-Excel側に作業列を作る方法はよく使われますが、住所録の表を変えたくない現場では、Word側で表示だけ整える方が壊れにくいです。
+<strong>方法は、住所録を誰が管理し、Wordを誰が操作するかで選びます。</strong><br>
+一般担当者が繰り返し使うならExcel側の印刷用列、共有住所録を変更できないならWord側のフィールドコードが向いています。
 </div>
 <div class="xdemo-note-info">
 <strong>ただし、この方法は意外と知られていません。</strong><br>
@@ -141,7 +141,19 @@ Wordの差し込み印刷は「差し込みフィールドを入れる」操作�
 </section>
 
 <section class="method-section">
-<h3>フィールドコードは正攻法だが、Word中級者向け</h3>
+<h3>方法1：Excel側に「郵便番号_印刷用」列を作る</h3>
+<p>C列にハイフンなしの郵便番号が入っている場合は、別列に次の式を入れます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(C2,"000-0000")</span>
+</div>
+<p>列名を「郵便番号_印刷用」とし、Wordでは元の郵便番号列ではなく、この列を差し込みます。例えば <code>1000001</code> は <code>100-0001</code>、数値として保存された <code>10001</code> は <code>001-0001</code> になります。</p>
+<div class="xdemo-note-good"><strong>後工程の人が迷いにくい方法です。</strong><br>表示がExcel側で完成しているため、Wordでは通常の差し込みフィールドを挿入するだけです。<code>Alt + F9</code> や表示形式スイッチを覚える必要がありません。</div>
+<div class="xdemo-note-warn"><strong>元の郵便番号列は残してください。</strong><br>TEXT関数の結果は文字列です。また、この式はハイフンなしの7桁数値を想定しています。ハイフン付き文字列、全角数字、空白が混ざる住所録は、先に入力形式を統一します。</div>
+</section>
+
+<section class="method-section">
+<h3>方法2：Wordのフィールドコードで整える</h3>
+<p>共有住所録へ列を追加できない場合は、Excelの元データを変えず、Word側で表示形式を指定します。この方法は正攻法ですが、操作はWord中級者向けです。</p>
 <p>Wordの差し込み印刷を使う人でも、多くは次の操作範囲で止まります。</p>
 <ul class="line-height-2">
 <li>Excel住所録を選ぶ。</li>
@@ -221,8 +233,8 @@ ExcelやAccessなどのデータソースから差し込むと、Excel側で見�
 </section>
 
 <section class="method-section">
-<h3>なぜExcel側に作業列を作らない方がよいのか</h3>
-<p>現場では、Excel住所録に <code>=TEXT(A2,"000-0000")</code> や <code>=LEFT(TEXT(A2,"0000000"),3)&amp;"-"&amp;RIGHT(TEXT(A2,"0000000"),4)</code> のような作業列を追加して、その列をWordに差し込む方法も見かけます。小さな個人用ファイルならそれでも動きますが、共有データではおすすめしません。</p>
+<h3>Excel側に作業列を作らない方がよいケース</h3>
+<p>Excel側の印刷用列は分かりやすい方法ですが、共有住所録の列構成を変更できない場合や、CSVを毎回そのまま差し替える場合はWord側で整える方が向いています。</p>
 <div class="table-responsive">
 <div class="table-wrapper"><table class="comparison-table"><caption>Excel側で作業列を作る場合の問題</caption>
 <thead>
@@ -252,8 +264,8 @@ ExcelやAccessなどのデータソースから差し込むと、Excel側で見�
 </table></div>
 </div>
 <div class="xdemo-note-good">
-<strong>Word側で表示だけ整えるのが安全です。</strong><br>
-Excelは住所録としての元データを保ち、Wordは印刷物としての見た目を担当する。役割を分けると、表が崩れにくくなります。
+<strong>変更できない元データにはWord側の方法が有効です。</strong><br>
+印刷用列を安全に追加・維持できる住所録ならExcel側、列構成を固定したい共有データならWord側、と使い分けます。
 </div>
 </section>
 
@@ -377,8 +389,8 @@ Excelは住所録としての元データを保ち、Wordは印刷物として�
 <tr>
 <td><strong>Excelに作業列を作る</strong></td>
 <td>多い</td>
-<td>中</td>
-<td class="text-left">分かりやすいが、住所録に印刷用の列が増えます。共有ファイルやCSV貼り替え運用では壊れやすいです。</td>
+<td>高</td>
+<td class="text-left">一般担当者には最も分かりやすい方法です。印刷用列を維持できる住所録に向きます。</td>
 </tr>
 <tr>
 <td><strong>最初からハイフン付き文字列で管理</strong></td>
@@ -408,8 +420,8 @@ Excelは住所録としての元データを保ち、Wordは印刷物として�
 </table></div>
 </div>
 <div class="xdemo-note-good">
-<strong>この記事の位置づけ：</strong><br>
-Word側フィールドコードは、一般的に一番多い方法ではありません。ただし、住所録を崩したくない運用ではかなり有効な方法です。「知っている人が使う壊れにくい方法」と考えると、実務感に近いです。
+<strong>迷ったときの基準：</strong><br>
+後工程の人がWordに不慣れならExcel側の印刷用列、住所録を変更できないならWord側フィールドコードを選びます。どちらか一方が常に正解ではなく、保守する人に合わせることが大切です。
 </div>
 </section>
 
@@ -427,11 +439,15 @@ Word側フィールドコードは、一般的に一番多い方法ではあり�
 
 <section class="method-section">
 <h3>まとめ</h3>
-<p>Wordの差し込み印刷で、Excel住所録の郵便番号をハイフン付きで表示したい場合は、Excel側に作業列を作らず、Word側で次のフィールドコードを使います。</p>
+<p>一般担当者が使うなら、Excel側に印刷用列を作る方法が分かりやすく、Wordでフィールドコードを編集する必要がありません。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXT(C2,"000-0000")</span>
+</div>
+<p>共有住所録へ列を追加できない場合は、Word側で次のフィールドコードを使います。</p>
 <div class="code-block" data-lang="word">
 <span class="code-line">{ MERGEFIELD 郵便番号 \# "000'-'0000" }</span>
 </div>
-<p>これで <code>1000001</code> は <code>100-0001</code>、<code>0010001</code> は <code>001-0001</code> と表示できます。住所録は住所録としてそのまま保ち、印刷時の見た目はWordで整えるのが、現場では一番壊れにくい運用です。</p>
+<p>どちらも <code>1000001</code> を <code>100-0001</code>、<code>0010001</code> を <code>001-0001</code> と表示できます。利用者のスキルと住所録の管理方法に合わせて選びます。</p>
 </section>
 
 <section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;">

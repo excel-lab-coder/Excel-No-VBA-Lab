@@ -21,7 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Article","headline":"Excel VBA・Excel数式・Word差し込み印刷の使い分け","description":"Excel VBAによる差し込み印刷、Excel数式で作る差し込み印刷風テンプレート、Word差し込み印刷を、自分用・配布用・VBA禁止環境・印刷混入リスク・ファイルサイズの観点で使い分ける方法を解説します。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},"datePublished":"2026-06-22","dateModified":"2026-06-22"}
+{"@context":"https://schema.org","@type":"Article","headline":"Excel VBA・Excel数式・Word差し込み印刷の使い分け","description":"Excel VBAによる差し込み印刷、Excel数式で作る差し込み印刷風テンプレート、Word差し込み印刷を、自分用・配布用・VBA禁止環境・印刷混入リスク・ファイルサイズの観点で使い分ける方法を解説します。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},"datePublished":"2026-06-22","dateModified":"2026-07-04"}
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"現場実務ラボ","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":3,"name":"Excel VBA・Excel数式・Word差し込み印刷の使い分け","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_method_comparison.html"}]}
@@ -34,7 +34,7 @@
 <main class="main-content" id="main-content">
 <div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span><strong>差し込み印刷 使い分け</strong></div>
 <article class="article-body">
-<div class="article-header"><div class="article-meta"><span class="badge badge-all">実務判断</span><span class="article-date">更新日: 2026-06-22</span></div><h1 class="article-title">Excel VBA・Excel数式・Word差し込み印刷の使い分け</h1></div>
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">実務判断</span><span class="article-date">更新日: 2026-07-04</span></div><h1 class="article-title">Excel VBA・Excel数式・Word差し込み印刷の使い分け</h1></div>
 
 <section class="goal-section">
 <h2><span class="icon">💡</span> やりたいこと</h2>
@@ -78,6 +78,7 @@
 <p>Word差し込み印刷は、住所録をExcel、印刷レイアウトをWordに分けられるのが強みです。文書、封筒、ラベル、窓あき封筒のように、Word側で見た目を整えたいものに向いています。</p>
 <div class="xdemo-note-info"><strong>使える人に教えると、自力がつきます。</strong><br>差し込みフィールド、結果のプレビュー、ラベルの更新、フィールドコードまで覚えると、その人が自分で住所録を差し替えて印刷できるようになります。</div>
 <p>作る人の負担は、VBA版ほど重くありません。Wordの機能として用意されているため、基本操作を覚えればテンプレート化できます。ただし、利用者側にも「差し込み元を選ぶ」「プレビューする」「フィールドを更新する」程度の理解は必要です。</p>
+<div class="xdemo-note-good"><strong>利用者の操作をさらに減らすなら、Excel側で表示を完成させます。</strong><br>郵便番号は <code>=TEXT(C2,"000-0000")</code>、日付は <code>=TEXT(D2,"yyyy年m月d日")</code> のように印刷用列を用意すると、Word側でフィールドコードを編集せずに済みます。元の値は計算用に残し、印刷用列だけを差し込みます。</div>
 <p>ここは欠点でもありますが、同時に大きなメリットです。Word差し込み印刷を覚えると、宛名ラベルだけでなく、送付状、案内文、封筒、会員証、参加票、請求書の差し込みなどにも考え方を流用できます。毎回作成者に依頼しなくても、自分で住所録を選び、フィールドを差し替え、印刷物を作れるようになるため、個人のレベルアップにつながりやすい方法です。</p>
 <p>一方で、完全に操作が苦手な人に配るテンプレートとしては、少し説明が必要です。Wordの差し込み印刷は便利ですが、「Excelファイルを選ぶ」「差し込みフィールドを確認する」「結果のプレビューを見る」といった操作を理解してもらう必要があります。</p>
 </section>
@@ -112,6 +113,8 @@
 
 <section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
 <li><a href="article_mailmerge_label_basic.html">Word差し込み印刷で宛名ラベルを作る基本手順</a></li>
+<li><a href="article_mailmerge_excel_source_design.html">差し込み印刷で失敗しにくいExcel住所録の作り方</a></li>
+<li><a href="article_mailmerge_number_format.html">TEXT関数とフィールドコードで表示を整える方法</a></li>
 <li><a href="../print/article_mail_print.html">Excel 宛名1ページ1枚 案内文書印刷 &horbar; スピンボタン＋Print_Area</a></li>
 <li><a href="../print/article_label_print.html">Excel 10面ラベル印刷 &horbar; Print_Area数式で空白シールを自動除外</a></li>
 </ul></section>

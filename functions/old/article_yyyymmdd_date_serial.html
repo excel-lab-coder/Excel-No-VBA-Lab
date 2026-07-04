@@ -64,8 +64,15 @@
 <section class="method-section"><h3>DATE関数の繰り上げに注意</h3>
 <p>DATEは13月を翌年1月、2月30日を3月へ繰り上げます。不正日付を厳密に検査する場合は、変換後のYEAR・MONTH・DAYが元の8桁と一致するか確認してください。</p>
 </section>
+<section class="method-section"><h3>日付シリアル値は残し、表示用の列を別に作る</h3>
+<p>DATE関数で作った日付シリアル値は、日付順の並び替え、検索、期間抽出、日数計算に必要です。表示を整えるために元の列を文字列へ置き換えないでください。</p>
+<p>DATEの結果がB2にあるなら、Word差し込み印刷や配布用には別列を作ります。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=TEXT(B2,"yyyy年m月d日")</span></div>
+<p>例えば2026年7月4日は日付シリアル値 <code>46207</code> です。Excel上では「2026年7月4日」と見えていても、Wordへ直接差し込むと <code>7/4/2026</code> と再表示されることがあります。これは値の破損ではなく、Word側の日付表示形式が使われた結果です。</p>
+<p>計算にはB列、表示や差し込みには「日付_印刷用」列を使います。後工程の人がフィールドコードを直さなくてもよい形で渡すと、環境差による日付表示の混乱を減らせます。</p>
+</section>
 <section class="legacy-section"><h3>まとめ</h3><p>西暦8桁は、LEFT・MID・RIGHTで年・月・日に分解し、DATEへ渡します。変換後は本物の日付シリアル値になるため、並べ替え、期間抽出、年齢計算へ利用できます。</p></section>
-<section class="method-section"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2"><li><a href="article_wareki_datevalue_serial.html">DATEVALUEで和暦を日付へ変換</a></li><li><a href="../../cobol/formula/01_article_cobol_basic.html">COBOL固定長データの切り出しと整形</a></li><li><a href="article_datedif.html">DATEDIFで年齢を計算するときの注意点</a></li></ul></section>
+<section class="method-section"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2"><li><a href="article_wareki_datevalue_serial.html">DATEVALUEで和暦を日付へ変換</a></li><li><a href="../../cobol/formula/01_article_cobol_basic.html">COBOL固定長データの切り出しと整形</a></li><li><a href="article_datedif.html">DATEDIFで年齢を計算するときの注意点</a></li><li><a href="../../others/word/article_mailmerge_number_format.html">Word差し込み印刷の日付表示を整える方法</a></li></ul></section>
 </article></main>
 <footer class="site-footer"><div class="site-footer-trust"><p><strong>運営:</strong> Excel × No VBA Lab 編集部。</p><p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel。</p></div><p>&copy; Excel × No VBA Lab</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
 <script src="../../script.js"></script></body></html>

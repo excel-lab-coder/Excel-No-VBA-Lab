@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>EDATE・EOMONTH・SUMIFSで月別集計｜月初・月末の日付条件を深掘り｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="ExcelのEDATE・EOMONTH関数で翌月、月初、月末を求め、SUMIFSで月別・社員番号別に集計する方法を解説。時刻入り日付を漏らさない条件指定も紹介します。" name="description">
+<meta content="EDATE EOMONTH 違い, SUMIFS 月別集計, Excel 月初 月末 関数, EOMONTH 翌月初日, SUMIFS 日付 時刻, 社員番号別 集計" name="keywords">
+<meta content="EDATE・EOMONTH・SUMIFSで月別集計｜月初・月末の日付条件を深掘り" property="og:title">
+<meta content="翌月・月初・月末の作り方から、時刻入りデータを漏らさないSUMIFSの期間条件まで詳しく解説します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_edate_eomonth_sumifs_monthly.html" property="og:url">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_edate_eomonth_sumifs_monthly.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "EDATE・EOMONTH・SUMIFSで月別集計｜月初・月末の日付条件を深掘り",
+  "description": "EDATE・EOMONTH関数で月初・月末を求め、SUMIFSで月別・社員番号別に集計する方法を解説します。",
+  "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+  "datePublished": "2026-06-28",
+  "dateModified": "2026-06-28",
+  "mainEntityOfPage": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_edate_eomonth_sumifs_monthly.html"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type": "ListItem", "position": 2, "name": "関数", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/index.html"},
+    {"@type": "ListItem", "position": 3, "name": "EDATE・EOMONTH・SUMIFSで月別集計", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_edate_eomonth_sumifs_monthly.html"}
+  ]
+}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../index.html">関数</a><span>&gt;</span><strong>EDATE・EOMONTH・SUMIFS</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="ver-badge ver-all">Excel 2016以降</span>
+<span class="article-date">更新日: 2026-06-28</span>
+</div>
+<h1 class="article-title">EDATE・EOMONTH・SUMIFSで月別集計<br>&horbar; 月初・月末の日付条件を深掘り</h1>
+<p class="article-lead"><code>=EDATE(E2,1)</code>と<code>EOMONTH</code>は、どちらも月を移動する日付関数ですが、返す日付が違います。その違いを理解し、SUMIFSで「指定月かつ指定社員」の価格を漏れなく合計するところまで、実務向けに掘り下げます。</p>
+</div>
+
+<section class="goal-section">
+<h2>1. この記事でわかること</h2>
+<ul class="line-height-2">
+<li>EDATEとEOMONTHの違い</li>
+<li>指定日の月初・月末・翌月初日を求める方法</li>
+<li>SUMIFSで月内の日付だけを合計する考え方</li>
+<li>社員番号など、別の条件を追加する方法</li>
+<li>時刻が含まれる日付を月末で取りこぼさない方法</li>
+</ul>
+<div class="xdemo-note-good">
+<strong>月別集計の基本形</strong><br>
+対象日を「月初日以上、翌月初日未満」で挟みます。月末日以下ではなく翌月初日未満にするのが、安全な日付集計のコツです。
+</div>
+</section>
+
+<section class="method-section">
+<h2>2. サンプルデータと集計条件</h2>
+<p>A列に日付、B列に価格、C列に社員番号があるものとします。</p>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>A列：日付</th><th>B列：価格</th><th>C列：社員番号</th></tr></thead>
+<tbody>
+<tr><td>2026/4/25</td><td>1000</td><td>101</td></tr>
+<tr><td>2026/4/26</td><td>2000</td><td>101</td></tr>
+<tr><td>2026/4/27</td><td>1500</td><td>102</td></tr>
+<tr><td>2026/4/30 18:00</td><td>500</td><td>101</td></tr>
+<tr><td>2026/5/1</td><td>3000</td><td>101</td></tr>
+<tr><td>2026/5/2</td><td>2500</td><td>102</td></tr>
+</tbody>
+</table>
+</div>
+<p>F1に集計する月、G1に社員番号を入力します。</p>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>F1：集計月</th><th>G1：社員番号</th></tr></thead>
+<tbody><tr><td>2026/4/1</td><td>101</td></tr></tbody>
+</table>
+</div>
+<p>F1は実際の日付として入力します。表示だけを<code>yyyymm</code>にすれば、画面上は「202604」と見せられます。</p>
+</section>
+
+<section class="method-section">
+<h2>3. Excelの日付は連続した数値</h2>
+<p>Excelの日付は、内部では「シリアル値」という連続した数値です。1日進むと数値が1増え、時刻は1日未満の小数として加わります。</p>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>表示</th><th>内部の考え方</th></tr></thead>
+<tbody>
+<tr><td>2026/4/30 0:00</td><td>4月30日を表す整数</td></tr>
+<tr><td>2026/4/30 18:00</td><td>4月30日＋0.75</td></tr>
+<tr><td>2026/5/1 0:00</td><td>4月30日の整数＋1</td></tr>
+</tbody>
+</table>
+</div>
+<p>この仕組みがわかると、なぜ「翌月初日未満」が安全なのかを理解できます。</p>
+</section>
+
+<section class="method-section">
+<h2>4. EDATE関数：同じ日を基準に月を移動する</h2>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">基本形</div>
+<div class="formula-copy-code">=EDATE(開始日,月数)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>EDATEは、開始日から指定した月数だけ前後へ移動した日付を返します。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">1か月後</div>
+<div class="formula-copy-code">=EDATE(E2,1)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>E2が2026/4/1なら、結果は2026/5/1です。月初日の一覧を作るときに、そのまま下へコピーできます。</p>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>式</th><th>E2</th><th>結果</th></tr></thead>
+<tbody>
+<tr><td><code>=EDATE(E2,1)</code></td><td>2026/4/1</td><td>2026/5/1</td></tr>
+<tr><td><code>=EDATE(E2,-1)</code></td><td>2026/4/1</td><td>2026/3/1</td></tr>
+<tr><td><code>=EDATE(E2,12)</code></td><td>2026/4/1</td><td>2027/4/1</td></tr>
+</tbody>
+</table>
+</div>
+<div class="xdemo-note-info">
+<strong>存在しない日は月末へ調整される</strong><br>
+E2が2026/1/31の場合、<code>=EDATE(E2,1)</code>の結果は2026/2/28です。「必ず同じ日」ではなく、その月に存在する最も近い月末日へ調整されます。
+</div>
+</section>
+
+<section class="method-section">
+<h2>5. EOMONTH関数：指定月の最終日を返す</h2>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">基本形</div>
+<div class="formula-copy-code">=EOMONTH(開始日,月数)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>EOMONTHは、開始日から指定した月数だけ移動した月の「最終日」を返します。開始日が月の何日であっても、結果は月末です。</p>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>式</th><th>F1</th><th>結果</th></tr></thead>
+<tbody>
+<tr><td><code>=EOMONTH(F1,0)</code></td><td>2026/4/15</td><td>2026/4/30</td></tr>
+<tr><td><code>=EOMONTH(F1,1)</code></td><td>2026/4/15</td><td>2026/5/31</td></tr>
+<tr><td><code>=EOMONTH(F1,-1)</code></td><td>2026/4/15</td><td>2026/3/31</td></tr>
+</tbody>
+</table>
+</div>
+<p>第2引数の<code>0</code>は当月、<code>1</code>は翌月、<code>-1</code>は前月を意味します。</p>
+</section>
+
+<section class="method-section">
+<h2>6. EDATEとEOMONTHの違い</h2>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>関数</th><th>返す日付</th><th>向いている用途</th></tr></thead>
+<tbody>
+<tr><td><code>EDATE</code></td><td>基準日と同じ日を基本に月移動</td><td>月初一覧、契約更新日、期限日</td></tr>
+<tr><td><code>EOMONTH</code></td><td>移動先の月の最終日</td><td>月末、締め日、月初・翌月初日の計算</td></tr>
+</tbody>
+</table>
+</div>
+<div class="xdemo-note">
+<strong>覚え方</strong><br>
+EDATE＝日付を月単位でずらす。<br>
+EOMONTH＝End Of Month、つまり月末を返す。
+</div>
+</section>
+
+<section class="method-section">
+<h2>7. 月初・月末・翌月初日を作る</h2>
+<p>F1に月内の任意の日付が入っていても、EOMONTHを使えば月の境界を正確に作れます。</p>
+
+<h3>当月の月初日</h3>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">月初</div>
+<div class="formula-copy-code">=EOMONTH(F1,-1)+1</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>前月末の翌日なので、必ず当月1日になります。</p>
+
+<h3>当月の月末日</h3>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">月末</div>
+<div class="formula-copy-code">=EOMONTH(F1,0)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>F1が月内の何日でも、その月の最終日を返します。</p>
+
+<h3>翌月の月初日</h3>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">翌月初日</div>
+<div class="formula-copy-code">=EOMONTH(F1,0)+1</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>当月末へ1を足すと、翌月1日になります。月別SUMIFSの上限条件に使います。</p>
+
+<h3>DATE関数で月初を作る方法</h3>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">DATE版</div>
+<div class="formula-copy-code">=DATE(YEAR(F1),MONTH(F1),1)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>YEARとMONTHで年・月を取り出し、日を1にして月初を作る方法です。結果は<code>=EOMONTH(F1,-1)+1</code>と同じです。</p>
+</section>
+
+<section class="method-section">
+<h2>8. EDATEを使った月別・社員番号別SUMIFS</h2>
+<p>F1が必ず月初日なら、EDATEで翌月初日を作れます。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">EDATE版</div>
+<div class="formula-copy-code">=SUMIFS(B:B,A:A,"&gt;="&amp;F1,A:A,"&lt;"&amp;EDATE(F1,1),C:C,G1)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>F1が2026/4/1なら、日付が2026/4/1以上かつ2026/5/1未満で、社員番号がG1と同じ行の価格を合計します。</p>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>条件</th><th>意味</th></tr></thead>
+<tbody>
+<tr><td><code>"&gt;="&amp;F1</code></td><td>4月1日以降</td></tr>
+<tr><td><code>"&lt;"&amp;EDATE(F1,1)</code></td><td>5月1日より前</td></tr>
+<tr><td><code>C:C,G1</code></td><td>社員番号がG1と一致</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="method-section">
+<h2>9. EOMONTHを使ったご指定のSUMIFS式</h2>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">EOMONTH版</div>
+<div class="formula-copy-code">=SUMIFS(B:B,A:A,"&gt;="&amp;F1,A:A,"&lt;"&amp;EOMONTH(F1,0)+1,C:C,G1)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>この式も、F1が2026/4/1なら4月の社員番号101を正しく合計できます。<code>EOMONTH(F1,0)+1</code>が2026/5/1になるためです。</p>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>数式の部分</th><th>役割</th></tr></thead>
+<tbody>
+<tr><td><code>B:B</code></td><td>合計する価格列</td></tr>
+<tr><td><code>A:A,"&gt;="&amp;F1</code></td><td>F1の月初日以上</td></tr>
+<tr><td><code>A:A,"&lt;"&amp;EOMONTH(F1,0)+1</code></td><td>翌月初日より前</td></tr>
+<tr><td><code>C:C,G1</code></td><td>社員番号がG1と同じ</td></tr>
+</tbody>
+</table>
+</div>
+<div class="xdemo-note-warn">
+<strong>F1が月初日であることが前提</strong><br>
+F1が2026/4/15なら、下限が4月15日になり、4月1日から14日までを集計できません。F1へ各月の1日を入力するか、次の安全版を使ってください。
+</div>
+</section>
+
+<section class="method-section">
+<h2>10. F1が月内のどの日でも使える安全版</h2>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">任意の日付対応</div>
+<div class="formula-copy-code">=SUMIFS(B:B,A:A,"&gt;="&amp;EOMONTH(F1,-1)+1,A:A,"&lt;"&amp;EOMONTH(F1,0)+1,C:C,G1)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>下限もEOMONTHから作るため、F1が2026/4/1でも2026/4/15でも、2026/4/30でも結果は同じです。</p>
+<ul class="line-height-2">
+<li><code>EOMONTH(F1,-1)+1</code>：当月の月初日</li>
+<li><code>EOMONTH(F1,0)+1</code>：翌月の月初日</li>
+</ul>
+<p>入力者がF1へ月内のどの日を入れるかわからない帳票では、この安全版がおすすめです。</p>
+</section>
+
+<section class="method-section">
+<h2>11. なぜ「月末以下」ではなく「翌月初日未満」なのか</h2>
+<p>次の条件は、一見すると4月30日まで集計できそうです。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">A:A,"&lt;="&amp;EOMONTH(F1,0)</span></div>
+<p>しかし、EOMONTHが返す4月30日は「2026/4/30 0:00」です。元データに2026/4/30 18:00があると、内部の数値は月末日より0.75大きいため、条件から外れます。</p>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>条件</th><th>4/30 18:00</th><th>判定</th></tr></thead>
+<tbody>
+<tr><td><code>&lt;= 4/30 0:00</code></td><td>上限より後</td><td class="xd-miss">対象外</td></tr>
+<tr><td><code>&lt; 5/1 0:00</code></td><td>上限より前</td><td class="xd-result">対象</td></tr>
+</tbody>
+</table>
+</div>
+<div class="xdemo-note-good">
+<strong>安全な期間条件</strong><br>
+開始日は<code>&gt;=</code>で含め、終了側は次の期間の開始日を<code>&lt;</code>で除外します。この「以上・未満」の組み合わせは、月別だけでなく日別・年別集計にも応用できます。
+</div>
+</section>
+
+<section class="method-section">
+<h2>12. 実務向け：範囲を限定した式</h2>
+<p>B:Bのような列全体参照は書きやすい反面、大量の数式を置くと計算量が増えます。データが99行目までなら、範囲を限定します。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">範囲限定版</div>
+<div class="formula-copy-code">=SUMIFS($B$2:$B$99,$A$2:$A$99,"&gt;="&amp;EOMONTH(F1,-1)+1,$A$2:$A$99,"&lt;"&amp;EOMONTH(F1,0)+1,$C$2:$C$99,G1)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>合計範囲とすべての条件範囲は、同じ2行目から99行目にそろえます。</p>
+</section>
+
+<section class="method-section">
+<h2>13. クロス集計表へコピーできる式</h2>
+<p>E列に月、1行目に社員番号を並べる場合は、混合参照を使います。</p>
+<div class="table-wrapper">
+<table class="xdemo-table">
+<thead><tr><th>年月</th><th>101</th><th>102</th></tr></thead>
+<tbody>
+<tr><td>2026/4/1</td><td>3500</td><td>1500</td></tr>
+<tr><td>2026/5/1</td><td>3000</td><td>2500</td></tr>
+</tbody>
+</table>
+</div>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">右・下へコピー</div>
+<div class="formula-copy-code">=SUMIFS($B$2:$B$99,$A$2:$A$99,"&gt;="&amp;EOMONTH($E2,-1)+1,$A$2:$A$99,"&lt;"&amp;EOMONTH($E2,0)+1,$C$2:$C$99,F$1)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<ul class="line-height-2">
+<li><code>$E2</code>：月が入るE列を固定し、下コピーで行だけ変える</li>
+<li><code>F$1</code>：社員番号が入る1行目を固定し、右コピーで列だけ変える</li>
+</ul>
+</section>
+
+<section class="method-section">
+<h2>14. テーブル化した場合の式</h2>
+<p>元データを<code>Ctrl + T</code>でテーブル化し、テーブル名を「売上表」にすると列名で書けます。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">テーブル版</div>
+<div class="formula-copy-code">=SUMIFS(売上表[価格],売上表[日付],"&gt;="&amp;EOMONTH(F1,-1)+1,売上表[日付],"&lt;"&amp;EOMONTH(F1,0)+1,売上表[社員番号],G1)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>明細を追加すると参照範囲が自動で広がるため、毎月更新する一覧に向いています。</p>
+</section>
+
+<section class="method-section">
+<h2>15. よくある間違いと確認方法</h2>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>症状</th><th>原因</th><th>確認・対策</th></tr></thead>
+<tbody>
+<tr><td>結果が0</td><td>日付が文字列</td><td><code>=ISNUMBER(A2)</code>がTRUEか確認</td></tr>
+<tr><td>月前半が少ない</td><td>F1が月初日ではない</td><td>安全版で下限もEOMONTHから作る</td></tr>
+<tr><td>月末の一部が漏れる</td><td><code>&lt;=月末</code>を使用</td><td><code>&lt;翌月初日</code>へ変更</td></tr>
+<tr><td>#VALUE!</td><td>合計範囲と条件範囲の大きさが違う</td><td>すべて同じ開始行・終了行にする</td></tr>
+<tr><td>数値で表示される</td><td>結果セルが標準表示</td><td>日付の表示形式を設定</td></tr>
+</tbody>
+</table>
+</div>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">日付判定</div>
+<div class="formula-copy-code">=ISNUMBER(A2)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>TRUEならExcelが計算できる日付、FALSEなら文字列の可能性があります。</p>
+</section>
+
+<section class="legacy-section">
+<h2>16. まとめ</h2>
+<div class="table-wrapper">
+<table class="compare-table">
+<thead><tr><th>やりたいこと</th><th>式</th></tr></thead>
+<tbody>
+<tr><td>1か月後の同じ日</td><td><code>=EDATE(E2,1)</code></td></tr>
+<tr><td>当月の月初日</td><td><code>=EOMONTH(F1,-1)+1</code></td></tr>
+<tr><td>当月の月末日</td><td><code>=EOMONTH(F1,0)</code></td></tr>
+<tr><td>翌月の月初日</td><td><code>=EOMONTH(F1,0)+1</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>F1が必ず月初日なら、次の式で月別・社員番号別に合計できます。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">月初日前提</div>
+<div class="formula-copy-code">=SUMIFS(B:B,A:A,"&gt;="&amp;F1,A:A,"&lt;"&amp;EOMONTH(F1,0)+1,C:C,G1)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>F1が月内のどの日でもよい安全版は、次の式です。</p>
+<div class="formula-copy-list">
+<div class="formula-copy-row">
+<div class="formula-copy-label">おすすめ安全版</div>
+<div class="formula-copy-code">=SUMIFS(B:B,A:A,"&gt;="&amp;EOMONTH(F1,-1)+1,A:A,"&lt;"&amp;EOMONTH(F1,0)+1,C:C,G1)</div>
+<button class="formula-copy-btn" type="button">コピー</button>
+</div>
+</div>
+<p>EDATEは月単位の日付移動、EOMONTHは月末を基準に月の境界を作る関数です。SUMIFSと組み合わせると、GROUPBYがない環境でも月別・社員番号別の集計表を安定して作れます。</p>
+</section>
+
+<section class="method-section">
+<h2>関連記事・公式資料</h2>
+<ul class="line-height-2">
+<li><a href="article_sumifs_month_employee.html">SUMIFSで月別・社員番号別に集計する基本</a></li>
+<li><a href="../latest/article_groupby_month_employee.html">GROUPBYで月別・社員番号別に自動集計する方法</a></li>
+<li><a href="https://support.microsoft.com/ja-jp/excel/edate-function" rel="noopener" target="_blank">Microsoft：EDATE関数</a></li>
+<li><a href="https://support.microsoft.com/ja-jp/excel/eomonth-function" rel="noopener" target="_blank">Microsoft：EOMONTH関数</a></li>
+<li><a href="https://support.microsoft.com/ja-jp/office/sumifs-%E9%96%A2%E6%95%B0-c9e748f5-7ea7-455d-9406-611cebce642b" rel="noopener" target="_blank">Microsoft：SUMIFS関数</a></li>
+</ul>
+</section>
+
+</article>
+</main>
+
+<footer class="site-footer">
+<div class="site-footer-trust">
+<p><strong>運営:</strong> Excel × No VBA Lab 編集部。</p>
+<p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel。</p>
+</div>
+<p>&copy; Excel × No VBA Lab</p>
+<p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p>
+</footer>
+<script src="../../script.js?v=20260628"></script>
+</body>
+</html>

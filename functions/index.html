@@ -244,6 +244,7 @@
 
   <div class="xdemo-note-info" style="margin:18px 0;">
     <strong>📌 バージョン表記について：</strong> モダン関数は「Microsoft 365だけ」とは限らず、Excel 2021 / 2024 の買い切り版でも使えるものが増えています。ただし、TEXTSPLIT・CHOOSECOLS・LAMBDA・VSTACK系などは関数ごとに対応範囲が異なり、Microsoft 365でも更新チャネルや職場PCの管理設定で利用開始時期がずれることがあります。本サイトでは厳密な断定よりも、<strong>対応環境ではこの式、未対応なら旧式代替</strong>という実務向けの案内にしています。
+    <br><strong>GROUPBYについて：</strong> Microsoft公式一覧では「Microsoft 365」表記です。数式バーで候補に表示される環境ではGROUPBYの記事を、表示されない環境ではSUMIFSの代替記事を利用してください。
   </div>
 
   <div class="level-legend">
@@ -362,7 +363,17 @@
         <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
       </div>
       <a class="article-link" href="../functions/latest/article_unique.html">UNIQUE関数</a>
-      <p class="article-summary">FILTERと組み合わせ、条件に合うデータだけから重複なしリストを作る方法を解説します。</p>
+      <p class="article-summary">重複を削除して一意のリストを作る基本、スピル、複数列の判定方法を解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../functions/latest/article_unique_filter.html">UNIQUE×FILTERで条件付きリストを作る</a>
+      <p class="article-summary">条件に合うデータだけを抽出し、その結果から重複のない一覧を作ります。</p>
     </li>
 
     <li class="article-item highlight">
@@ -382,6 +393,20 @@
       </div>
       <a class="article-link" href="../functions/latest/article_sort.html">SORT / SORTBY関数</a>
       <p class="article-summary">抽出結果や一覧を、条件に応じて自動で並べ替えます。</p>
+    </li>
+  </ul>
+
+  <h4>📊 集計・分析系</h4>
+
+  <ul class="article-list mb-32" id="list-functions-modern-aggregate">
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 強力な自動集計</span></span>
+      </div>
+      <a class="article-link" href="../functions/latest/article_groupby_month_employee.html">GROUPBY関数で月別集計｜社員番号別の集計も解説</a>
+      <p class="article-summary">年月や社員番号の組み合わせを自動で見つけ、ピボットテーブルのような集計を1つの数式で展開します。未対応環境向けのSUMIFS代替記事も用意しています。</p>
     </li>
   </ul>
 
@@ -509,6 +534,30 @@
   </div>
 
   <h3 class="subcategory-heading">2. 旧式の関数（Excel 2016以前から使える王道手法）</h3>
+
+  <h4>📊 集計・集計表系</h4>
+
+  <ul class="article-list mb-32" id="list-functions-old-aggregate">
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 GROUPBY代替</span></span>
+      </div>
+      <a class="article-link" href="../functions/old/article_sumifs_month_employee.html">SUMIFS関数で月別集計｜社員番号別の集計も解説</a>
+      <p class="article-summary">GROUPBYが使えない環境でも、月初日とEDATEを使って月別・社員番号別の合計を安全に作れます。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 日付条件を深掘り</span></span>
+      </div>
+      <a class="article-link" href="../functions/old/article_edate_eomonth_sumifs_monthly.html">EDATE・EOMONTH・SUMIFSで月別集計</a>
+      <p class="article-summary">月初・月末・翌月初日の作り方と、時刻入り日付も漏らさないSUMIFS条件を詳しく解説します。</p>
+    </li>
+  </ul>
 
   <h4>🔍 検索・抽出系</h4>
 

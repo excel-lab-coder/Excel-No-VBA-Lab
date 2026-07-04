@@ -21,7 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Article","headline":"Word差し込み印刷で宛名ラベルを作る基本手順","description":"Wordの差し込み印刷でExcel住所録から宛名ラベルを作る基本手順を、ラベル設定、宛先リストの接続、差し込みフィールドの挿入、ラベルの更新、プレビュー、印刷まで順番に解説します。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},"datePublished":"2026-06-22","dateModified":"2026-06-22"}
+{"@context":"https://schema.org","@type":"Article","headline":"Word差し込み印刷で宛名ラベルを作る基本手順","description":"Wordの差し込み印刷でExcel住所録から宛名ラベルを作る基本手順を、ラベル設定、宛先リストの接続、差し込みフィールドの挿入、ラベルの更新、プレビュー、印刷まで順番に解説します。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},"datePublished":"2026-06-22","dateModified":"2026-07-04"}
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"現場実務ラボ","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":3,"name":"Word差し込み印刷で宛名ラベルを作る基本手順","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_label_basic.html"}]}
@@ -34,7 +34,7 @@
 <main class="main-content" id="main-content">
 <div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&gt;</span><a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span><strong>Word宛名ラベル 基本</strong></div>
 <article class="article-body">
-<div class="article-header"><div class="article-meta"><span class="badge badge-all">全バージョン</span><span class="article-date">更新日: 2026-06-22</span></div><h1 class="article-title">Word差し込み印刷で宛名ラベルを作る基本手順</h1></div>
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">全バージョン</span><span class="article-date">更新日: 2026-07-04</span></div><h1 class="article-title">Word差し込み印刷で宛名ラベルを作る基本手順</h1></div>
 
 <section class="goal-section">
 <h2><span class="icon">💡</span> やりたいこと</h2>
@@ -45,10 +45,12 @@
 <section class="method-section">
 <h3>準備するExcel住所録</h3>
 <p>Wordへ接続するExcel住所録は、1行1件、1行目が見出しの形にします。途中の空白行、結合セル、メモ行は入れない方が安全です。</p>
-<div class="table-responsive"><div class="table-wrapper"><table class="comparison-table"><caption>住所録の例</caption><thead><tr><th>郵便番号</th><th>住所1</th><th>住所2</th><th>会社名</th><th>氏名</th></tr></thead><tbody>
-<tr><td>1000001</td><td>東京都千代田区千代田</td><td>1-1</td><td>株式会社サンプル</td><td>山田 太郎</td></tr>
-<tr><td>1000002</td><td>東京都千代田区丸の内</td><td>1-2-3</td><td>テスト商事</td><td>佐藤 花子</td></tr>
+<div class="table-responsive"><div class="table-wrapper"><table class="comparison-table"><caption>住所録の例</caption><thead><tr><th>郵便番号</th><th>郵便番号_印刷用</th><th>住所1</th><th>住所2</th><th>会社名</th><th>氏名</th></tr></thead><tbody>
+<tr><td>1000001</td><td>100-0001</td><td>東京都千代田区千代田</td><td>1-1</td><td>株式会社サンプル</td><td>山田 太郎</td></tr>
+<tr><td>1000002</td><td>100-0002</td><td>東京都千代田区丸の内</td><td>1-2-3</td><td>テスト商事</td><td>佐藤 花子</td></tr>
 </tbody></table></div></div>
+<p>郵便番号の表示をExcel側で完成させる場合は、「郵便番号_印刷用」列へ <code>=TEXT(A2,"000-0000")</code> を入れます。日付を差し込む住所録なら、同様に <code>=TEXT(D2,"yyyy年m月d日")</code> で「日付_印刷用」列を作れます。</p>
+<div class="xdemo-note-info"><strong>Wordに不慣れな担当者が使う場合に有効です。</strong><br>印刷用列を差し込めば、Word側で郵便番号や日付のフィールドコードを編集しなくても表示をそろえられます。計算や並び替えには元の列を使い、印刷用列と分けてください。</div>
 </section>
 
 <section class="method-section">
@@ -78,7 +80,7 @@
 <h3>手順3：1面目に差し込みフィールドを入れる</h3>
 <p>まずは1面目だけを作ります。2面目以降を手で作る必要はありません。</p>
 <div class="code-block" data-lang="word">
-<span class="code-line">〒«郵便番号»</span>
+<span class="code-line">〒«郵便番号_印刷用»</span>
 <span class="code-line">«住所1»«住所2»</span>
 <span class="code-line">«会社名»</span>
 <span class="code-line">«氏名» 様</span>
@@ -115,7 +117,7 @@
 <tr><td>全ラベルが同じ宛名になる</td><td class="text-left">「ラベルの更新」を押したか、Next Recordが正しく入っているか確認します。</td></tr>
 <tr><td>ラベル位置がずれる</td><td class="text-left">ラベル品番、プリンター設定、拡大縮小なし印刷を確認します。</td></tr>
 <tr><td>住所がはみ出す</td><td class="text-left">フォントサイズ、行間、住所列の分け方を調整します。</td></tr>
-<tr><td>郵便番号が崩れる</td><td class="text-left">Word側のフィールドコードで表示形式を整えます。</td></tr>
+<tr><td>郵便番号が崩れる</td><td class="text-left">Excelの「郵便番号_印刷用」列を使うか、Word側のフィールドコードで表示形式を整えます。</td></tr>
 </tbody></table></div></div>
 </section>
 
@@ -125,6 +127,8 @@
 <li><a href="article_mailmerge_method_comparison.html">Excel VBA・Excel数式・Word差し込み印刷の使い分け</a></li>
 <li><a href="article_mailmerge_label_next_record.html">Wordラベル差し込みで全ラベルが同じ宛名になる原因と直し方</a></li>
 <li><a href="article_mailmerge_excel_source_design.html">Word差し込み印刷で失敗しにくいExcel住所録の作り方</a></li>
+<li><a href="article_mailmerge_postal_code.html">郵便番号をTEXT関数またはフィールドコードで整える方法</a></li>
+<li><a href="article_mailmerge_number_format.html">日付・金額・数値の表示崩れを直す方法</a></li>
 <li><a href="../print/article_label_print.html">Excel 10面ラベル印刷 &horbar; Print_Area数式で空白シールを自動除外</a></li>
 </ul></section>
 </article>

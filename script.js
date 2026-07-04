@@ -404,6 +404,43 @@
     });
   }
 
+  function initFormulaCopyButtons() {
+    var buttons = document.querySelectorAll('.formula-copy-btn');
+    buttons.forEach(function (btn) {
+      if (btn.dataset.formulaCopyReady === 'true') return;
+      btn.dataset.formulaCopyReady = 'true';
+      btn.setAttribute('aria-label', '数式をコピーする');
+      btn.setAttribute('aria-live', 'polite');
+
+      btn.addEventListener('click', function () {
+        var row = btn.closest('.formula-copy-row');
+        var code = row ? row.querySelector('.formula-copy-code') : null;
+        var textToCopy = code ? code.textContent.trim() : '';
+
+        if (!textToCopy) {
+          btn.textContent = '失敗';
+          announceCopy('コピーする数式が見つかりません');
+          setTimeout(function () { btn.textContent = 'コピー'; }, 1200);
+          return;
+        }
+
+        copyText(textToCopy).then(function () {
+          btn.textContent = 'コピー済み';
+          btn.classList.add('copied');
+          announceCopy('数式をコピーしました');
+          setTimeout(function () {
+            btn.textContent = 'コピー';
+            btn.classList.remove('copied');
+          }, 1600);
+        }).catch(function () {
+          btn.textContent = '失敗';
+          announceCopy('コピーに失敗しました');
+          setTimeout(function () { btn.textContent = 'コピー'; }, 1200);
+        });
+      });
+    });
+  }
+
   window.copyFormula = function (btn) {
     var code = btn && btn.parentElement ? btn.parentElement.querySelector('code') : null;
     var text = code ? code.textContent.trim() : '';
@@ -616,6 +653,7 @@
     initTabs();
     updateRarityBadges();
     initCopyButtons();
+    initFormulaCopyButtons();
     initReadingProgress();
     initArticleFeedback();
     initArticleReadDepth();
