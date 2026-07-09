@@ -12,7 +12,20 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-596JZ3M97H');
+  var gaCobolTitle = 'COBOL Power Query 02 Techniques';
+  var gaCobolPath = location.pathname.replace(/\/index\.html$/, '/');
+  document.title = gaCobolTitle + ' | Excel No VBA Lab';
+  gtag('config', 'G-596JZ3M97H', {
+    'page_title': gaCobolTitle,
+    'page_path': gaCobolPath
+  });
+  gtag('event', 'cobol_page_view', {
+    'article_group': 'cobol',
+    'article_slug': 'pq_02_article_cobol_pq3',
+    'page_title': gaCobolTitle,
+    'page_path': gaCobolPath,
+    'page_location': location.href
+  });
 </script>
 <meta content="パワークエリの標準機能だけでCOBOL帳票を処理する全テクニックを網羅した参考資料。不要行除去・固定長切り出し・縦持ち展開を解説。 エクセルでCOBOL帳票・固定長データを整形したい方向け。" name="description">
 <meta content="パワークエリ COBOL 全テクニック, Power Query 固定長 切り出し, COBOL PQ 参考資料, VBA不要 パワークエリ 帳票, エクセル COBOL, エクセル COBOL帳票, エクセル 固定長データ, Excel COBOL, Excel COBOL帳票 整形, COBOL帳票 Excel関数, COBOL帳票 Power Query, 固定長データ エクセル, MIDB エクセル" name="keywords">

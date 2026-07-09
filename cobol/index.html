@@ -11,7 +11,20 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-596JZ3M97H');
+  var gaCobolTitle = 'COBOL Index';
+  var gaCobolPath = location.pathname.replace(/\/index\.html$/, '/');
+  document.title = gaCobolTitle + ' | Excel No VBA Lab';
+  gtag('config', 'G-596JZ3M97H', {
+    'page_title': gaCobolTitle,
+    'page_path': gaCobolPath
+  });
+  gtag('event', 'cobol_page_view', {
+    'article_group': 'cobol',
+    'article_slug': 'cobol_index',
+    'page_title': gaCobolTitle,
+    'page_path': gaCobolPath,
+    'page_location': location.href
+  });
 </script>
 <meta name="description" content="会社でVBAやマクロが禁止されている環境でも、COBOL帳票や固定長データをExcel関数・Power Query（パワークエリ）で整形する代替手段を体系化。不要行除去、列分割、複数ファイル結合まで実務でそのまま使える形で解説します。">
 <meta name="keywords" content="エクセル COBOL, エクセル COBOL帳票, エクセル 固定長データ, Excel COBOL, Excel COBOL帳票 整形, COBOL帳票 Excel関数, COBOL帳票 Power Query, 固定長データ エクセル, MIDB エクセル">

@@ -12,7 +12,20 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-596JZ3M97H');
+  var gaCobolTitle = 'COBOL Intro 03 Output Patterns';
+  var gaCobolPath = location.pathname.replace(/\/index\.html$/, '/');
+  document.title = gaCobolTitle + ' | Excel No VBA Lab';
+  gtag('config', 'G-596JZ3M97H', {
+    'page_title': gaCobolTitle,
+    'page_path': gaCobolPath
+  });
+  gtag('event', 'cobol_page_view', {
+    'article_group': 'cobol',
+    'article_slug': 'intro_03_article_cobol_output_patterns',
+    'page_title': gaCobolTitle,
+    'page_path': gaCobolPath,
+    'page_location': location.href
+  });
 </script>
 <meta content="実務でよくあるCOBOL帳票データの出力パターンを10種類に分類。1行1レコード型、ページヘッダー混在型、親子構造型、可変明細型、最大8行まで膨らむブロック明細型、主情報と複数付属情報を統合する型、全角半角混在固定長型、半角QR入力へつなげやすい型を、Excel整形の考え方と関連手順つきで解説します。" name="description">
 <meta content="COBOL帳票 パターン, COBOL 出力データ, 固定長データ Excel, COBOL帳票 Excel整形, ページヘッダー混在, 親子構造 帳票, 可変明細 COBOL, 小計 合計 除外, MIDB 固定長, VBA禁止 COBOL" name="keywords">

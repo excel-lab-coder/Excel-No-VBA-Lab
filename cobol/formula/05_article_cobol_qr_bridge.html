@@ -12,7 +12,20 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-596JZ3M97H');
+  var gaCobolTitle = 'COBOL Formula 05 QR Bridge';
+  var gaCobolPath = location.pathname.replace(/\/index\.html$/, '/');
+  document.title = gaCobolTitle + ' | Excel No VBA Lab';
+  gtag('config', 'G-596JZ3M97H', {
+    'page_title': gaCobolTitle,
+    'page_path': gaCobolPath
+  });
+  gtag('event', 'cobol_page_view', {
+    'article_group': 'cobol',
+    'article_slug': 'formula_05_article_cobol_qr_bridge',
+    'page_title': gaCobolTitle,
+    'page_path': gaCobolPath,
+    'page_location': location.href
+  });
 </script>
 <meta content="COBOL帳票や固定長テキストをExcelで整形し、対象者だけを抽出した後、職員番号・対象年月・所属コード・金額など半角項目だけをQR化して別システムへ入力する流れを解説します。" name="description">
 <meta content="COBOL QR, COBOL帳票 QR入力, 固定長データ QRコード, Excel QRリーダー, 半角QR, COBOL帳票 別システム入力, VBA不要 QR入力, QR Automation, Excel COBOL 連携" name="keywords">

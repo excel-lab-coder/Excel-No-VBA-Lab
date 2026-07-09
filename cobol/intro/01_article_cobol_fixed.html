@@ -13,7 +13,20 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-596JZ3M97H');
+  var gaCobolTitle = 'COBOL Intro 01 Fixed Data';
+  var gaCobolPath = location.pathname.replace(/\/index\.html$/, '/');
+  document.title = gaCobolTitle + ' | Excel No VBA Lab';
+  gtag('config', 'G-596JZ3M97H', {
+    'page_title': gaCobolTitle,
+    'page_path': gaCobolPath
+  });
+  gtag('event', 'cobol_page_view', {
+    'article_group': 'cobol',
+    'article_slug': 'intro_01_article_cobol_fixed',
+    'page_title': gaCobolTitle,
+    'page_path': gaCobolPath,
+    'page_location': location.href
+  });
 </script>
 <meta content="COBOL帳票・固定長データの見分け方を解説。区切り文字なし・1行の長さが同じ・ゼロ埋め・余白などの特徴と、MIDB関数による切り出し方の基礎を紹介。 エクセルでCOBOL帳票・固定長データを整形したい方向け。" name="description">
 <meta content="COBOL帳票, 固定長データ, COBOL Excel, MIDB 関数, 固定長 見分け方, テキストデータ 整形, VBA禁止 COBOL, エクセル COBOL, エクセル COBOL帳票, エクセル 固定長データ, Excel COBOL, Excel COBOL帳票 整形, COBOL帳票 Excel関数, COBOL帳票 Power Query, 固定長データ エクセル, MIDB エクセル" name="keywords">
