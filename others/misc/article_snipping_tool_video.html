@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Windows 11 スニッピングツールで画面録画する方法｜追加インストール不可の職場でも使いやすい標準機能｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="Windows 11の標準アプリ「スニッピング ツール」で画面録画を行う方法を現場向けに解説。追加インストール不可の職場でも使いやすく、フリーソフト由来のウイルス・広告・バンドルソフトの心配を増やさずに、操作手順や不具合の再現動画を共有できます。" name="description">
+<meta content="Windows 11 スニッピングツール 画面録画, Windows Shift R, 追加インストール不可, ウイルス対策, 標準機能, 手順書 動画, 現場実務" name="keywords">
+<meta content="Windows 11 スニッピングツールで画面録画する方法｜追加インストール不可の職場でも使いやすい標準機能" property="og:title">
+<meta content="Windows 11標準のスニッピング ツールで、追加インストールなしに短い操作動画を作る実務向け手順。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_snipping_tool_video.html" property="og:url">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<meta content="Windows 11 スニッピングツールで画面録画する方法" name="twitter:title">
+<meta content="追加インストール不可の職場でも使いやすい、Windows標準の画面録画。" name="twitter:description">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" name="twitter:image">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_snipping_tool_video.html" rel="canonical">
+<link href="../../common.css" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<style>
+  .kbd-btn {
+    display: inline-block;
+    padding: 3px 7px;
+    margin: 0 2px;
+    border: 1px solid #b8c2cc;
+    border-radius: 4px;
+    background: #f4f6f8;
+    box-shadow: inset 0 1px 0 #fff, 0 1px 1px rgba(0,0,0,.12);
+    color: #27313b;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: .88em;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .quick-choice {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 18px 0;
+  }
+  .quick-card {
+    border: 1px solid #d8e1ea;
+    border-left: 5px solid #217346;
+    border-radius: 8px;
+    background: #fff;
+    padding: 16px 18px;
+  }
+  .quick-card h3 {
+    margin-top: 0;
+    color: #174f2d;
+    font-size: 1em;
+  }
+  .capture-flow {
+    display: grid;
+    gap: 10px;
+    margin: 18px 0;
+  }
+  .capture-step {
+    border: 1px solid #d8e1ea;
+    border-radius: 8px;
+    background: #f8fbff;
+    padding: 12px 14px;
+  }
+  .capture-step strong {
+    color: #174f2d;
+  }
+  .security-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 14px;
+    margin: 18px 0;
+  }
+  .security-card {
+    border: 1px solid #d8e1ea;
+    border-radius: 8px;
+    background: #fff;
+    padding: 15px 17px;
+  }
+  .security-card h3 {
+    margin-top: 0;
+    color: #174f2d;
+    font-size: 1em;
+  }
+  .recording-template {
+    border: 1px solid #c7ddcf;
+    border-radius: 8px;
+    background: #f6fbf7;
+    padding: 16px 18px;
+    margin: 16px 0;
+  }
+  .recording-template ol {
+    margin-bottom: 0;
+  }
+  .do-dont {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+    margin: 18px 0;
+  }
+  .do-dont > div {
+    border-radius: 8px;
+    padding: 15px 17px;
+    border: 1px solid #d8e1ea;
+    background: #fff;
+  }
+  .do-dont h3 {
+    margin-top: 0;
+    font-size: 1em;
+  }
+  .do-dont .good h3 { color: #17683a; }
+  .do-dont .bad h3 { color: #9a3412; }
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Windows 11なら追加インストール不要：スニッピング ツールで画面録画","description":"Windows 11の標準アプリ「スニッピング ツール」で画面録画を行う方法を現場向けに解説。追加インストール不可の職場でも使いやすく、フリーソフト由来のウイルス・広告・バンドルソフトの心配を増やさずに、操作手順や不具合の再現動画を共有できます。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_snipping_tool_video.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../../index.html">ホーム</a><span>&gt;</span>
+<a href="../../index.html#others">現場実務ラボ</a><span>&gt;</span>
+<a href="../../index.html#others">小技</a><span>&gt;</span>
+<strong>スニッピング ツールで画面録画</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Windows 11</span>
+<span class="article-date">更新日: 2026-07-11</span>
+</div>
+<h1 class="article-title">Windows 11なら追加インストール不要：スニッピング ツールで画面録画</h1>
+</div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> 手順説明は、文章より10秒動画が早い</h2>
+<p>「どのボタンを押したらこうなったのか」「エラーが出る直前に何をしたのか」は、文章だけだと伝わりにくいことがあります。</p>
+<p>スクリーンショットは多くの人が使えます。この記事では一歩進めて、Windows 11標準の<strong>スニッピング ツールによる画面録画</strong>を実務向けに整理します。</p>
+<p>職場では、フリーソフトの追加インストールが禁止されていたり、申請に時間がかかったりします。そういう環境でも、Windows標準機能なら導入のハードルが低く、ウイルス入りの録画ソフトや広告付きインストーラーを探し回る必要もありません。</p>
+<div class="xdemo-note-warn">
+<strong>この記事の結論：</strong><br>
+スクリーンショットは <span class="kbd-btn">Windows</span> + <span class="kbd-btn">Shift</span> + <span class="kbd-btn">S</span>、画面録画は <span class="kbd-btn">Windows</span> + <span class="kbd-btn">Shift</span> + <span class="kbd-btn">R</span>。録画はMP4で保存でき、手順説明・問い合わせ・不具合再現の共有に使えます。
+</div>
+</section>
+
+<section class="method-section">
+<h2>なぜ標準機能が職場向きなのか</h2>
+<div class="security-grid">
+<div class="security-card">
+<h3>追加インストール不要</h3>
+<p>新しいアプリを入れられないPCでも、Windows 11標準の範囲で使える可能性があります。申請待ちで止まりにくいのが強みです。</p>
+</div>
+<div class="security-card">
+<h3>怪しい実行ファイルを避けられる</h3>
+<p>録画ソフトを検索して、知らないサイトから <code>.exe</code> を落とす必要がありません。広告、不要ソフト同梱、偽ダウンロードボタンを踏むリスクを増やしません。</p>
+</div>
+<div class="security-card">
+<h3>説明責任を取りやすい</h3>
+<p>「Windows標準のスニッピング ツールを使った」と説明できます。社内の情報システム部門にも話が通りやすく、手順書にも書きやすいです。</p>
+</div>
+</div>
+<p>もちろん、標準機能だから何でも録画してよいわけではありません。録画データそのものには画面上の情報が入るため、個人情報や機密情報の映り込みには注意します。</p>
+</section>
+
+<section class="method-section">
+<h2>スクリーンショットと録画を使い分ける</h2>
+<div class="quick-choice">
+<div class="quick-card">
+<h3>画面の状態を残すだけ</h3>
+<p><strong>スクリーンショット</strong>で十分です。エラーメッセージ、設定画面、入力例、印刷プレビューなどは画像1枚の方が軽くて扱いやすいです。</p>
+</div>
+<div class="quick-card">
+<h3>操作の流れを見せたい</h3>
+<p><strong>画面録画</strong>にします。クリック順、画面遷移、再現手順、数秒後に出るエラーは、短い動画の方が伝わります。</p>
+</div>
+</div>
+</section>
+
+<section class="method-section">
+<h2>スクリーンショットは簡単に押さえる</h2>
+<div class="capture-flow">
+<div class="capture-step"><strong>1.</strong> <span class="kbd-btn">Windows</span> + <span class="kbd-btn">Shift</span> + <span class="kbd-btn">S</span> を押します。</div>
+<div class="capture-step"><strong>2.</strong> 撮りたい範囲をドラッグします。画面全体ではなく、必要な部分だけで十分です。</div>
+<div class="capture-step"><strong>3.</strong> そのままメール、チャット、Word、Excelなどへ貼り付けます。保存したい場合は通知からスニッピング ツールを開いて保存します。</div>
+</div>
+<p>現場では、まずこの方法だけ覚えれば困りません。メニューを開いた状態など、タイミングが難しい画面はスニッピング ツールの「遅延」機能を使うと撮りやすくなります。</p>
+</section>
+
+<section class="method-section">
+<h2>画面録画の基本手順</h2>
+<div class="capture-flow">
+<div class="capture-step"><strong>1.</strong> <span class="kbd-btn">Windows</span> + <span class="kbd-btn">Shift</span> + <span class="kbd-btn">R</span> を押します。</div>
+<div class="capture-step"><strong>2.</strong> 録画したい範囲をドラッグで選びます。関係ない画面まで入れないのがコツです。</div>
+<div class="capture-step"><strong>3.</strong> <strong>開始</strong>を押して操作します。説明用なら10秒から30秒くらいで十分です。長くても1分以内を目安にします。</div>
+<div class="capture-step"><strong>4.</strong> 終わったら<strong>停止</strong>します。録画内容を確認して、MP4として保存します。</div>
+</div>
+<p>録画は、初期設定では動画フォルダー内の <code>Screen Recordings</code> フォルダーにMP4として保存されます。手順書に貼る、問い合わせに添付する、チーム内で共有する、といった用途ならこの形式で扱いやすいです。</p>
+</section>
+
+<section class="method-section">
+<h2>録画は「短く・狭く・再現だけ」</h2>
+<p>現場の録画で失敗しやすいのは、全部を録ろうとして長くなることです。見る側は、長い動画を最初から最後まで確認する時間がありません。</p>
+<div class="recording-template">
+<h3>おすすめの録画構成</h3>
+<ol>
+<li><strong>最初の2秒：</strong>どの画面・どのファイルで起きているかを見せる。</li>
+<li><strong>次の10秒：</strong>実際にクリックする場所、入力する場所、選ぶメニューだけを操作する。</li>
+<li><strong>最後の3秒：</strong>結果、エラー、期待と違う表示を止めて見せる。</li>
+</ol>
+</div>
+<p>この形にすると、受け取った人が「再現手順」と「結果」をすぐ理解できます。動画編集をしなくても、録る前に流れを決めるだけで見やすくなります。</p>
+<div class="do-dont">
+<div class="good">
+<h3>良い録り方</h3>
+<ul>
+<li>録画範囲を対象ウィンドウだけに絞る。</li>
+<li>操作前に不要な通知を閉じる。</li>
+<li>マウスをゆっくり動かし、クリック位置を見せる。</li>
+<li>一つの動画で一つの現象だけを扱う。</li>
+</ul>
+</div>
+<div class="bad">
+<h3>避けたい録り方</h3>
+<ul>
+<li>デスクトップ全体を録って関係ない情報まで映す。</li>
+<li>メール、チャット、個人名、顧客情報を開いたまま録る。</li>
+<li>5分以上の長い動画で、どこを見ればよいか分からない。</li>
+<li>何度も失敗した部分まで全部入れる。</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section class="tips-section">
+<h2>追加インストール不可の環境で特に便利な場面</h2>
+<table>
+<tr><th>場面</th><th>なぜ録画が効くか</th></tr>
+<tr><td>情報システム部門へ問い合わせる</td><td>「この順番で操作すると止まる」をそのまま見せられます。文章だけより再現確認が早くなります。</td></tr>
+<tr><td>新システムの操作をチームに共有する</td><td>1回だけ録っておけば、同じ説明を何度も口頭で繰り返さずに済みます。</td></tr>
+<tr><td>ExcelやWeb画面の手順書を作る</td><td>動画を見ながら後で静止画に切り出したり、手順文に起こしたりできます。</td></tr>
+<tr><td>外部ソフトの利用申請が通らない</td><td>標準機能で済む範囲なら、録画ソフト選定・インストール・ウイルスチェックの手間を増やしません。</td></tr>
+</table>
+</section>
+
+<section class="tips-section">
+<h2>「ウイルスが心配」を増やさないための考え方</h2>
+<p>画面録画ソフトを探すと、無料をうたうツールがたくさん出てきます。ただ、職場PCでは次のようなリスクがあります。</p>
+<ul>
+<li>偽のダウンロードボタンを押してしまう。</li>
+<li>不要な常駐ソフトや広告ソフトが一緒に入る。</li>
+<li>会社の許可がない録画ツールを入れて、管理ルールに触れる。</li>
+<li>アップデート元や配布元が分からず、後から説明できない。</li>
+</ul>
+<p>スニッピング ツールはWindowsの標準アプリなので、こうした「どこから入れたソフトか分からない」問題を避けやすくなります。録画機能としては派手ではありませんが、現場で必要な短い操作動画には十分です。</p>
+<div class="xdemo-note-warn">
+<strong>大事な線引き：</strong><br>
+標準機能を使うことと、録画データを安全に扱うことは別問題です。録画したMP4には画面上の情報がそのまま入ります。保存先、共有先、削除ルールは社内ルールに合わせます。
+</div>
+</section>
+
+<section class="tips-section">
+<h2>実務での使いどころ</h2>
+<table>
+<tr><th>場面</th><th>おすすめ</th><th>理由</th></tr>
+<tr><td>エラーメッセージを共有したい</td><td>スクリーンショット</td><td>文字が読めれば十分。軽くて送付しやすい。</td></tr>
+<tr><td>ボタンを押す順番を伝えたい</td><td>画面録画</td><td>説明文より、操作の流れを見せた方が早い。</td></tr>
+<tr><td>Excelの設定画面を説明したい</td><td>スクリーンショット</td><td>赤枠やメモを付ければ手順書に使いやすい。</td></tr>
+<tr><td>再現できない不具合を伝えたい</td><td>画面録画</td><td>発生前後の流れを残せる。</td></tr>
+</table>
+</section>
+
+<section class="tips-section">
+<h2>録画前の注意点</h2>
+<ul>
+<li><strong>個人情報・顧客名・金額・ID</strong>が映らない範囲だけを選びます。</li>
+<li>通知、チャット、メール本文が映り込まないように、不要なウィンドウは閉じます。</li>
+<li>長く撮りすぎず、必要な操作だけを短く残します。</li>
+<li>ファイル名には、日付・システム名・現象名を入れると後で探しやすくなります。例：<code>20260711_販売管理_登録エラー.mp4</code></li>
+<li>社内ルールで画面録画や外部共有が制限されている場合は、そのルールを優先します。</li>
+</ul>
+<div class="xdemo-note-warn">
+<strong>録画ボタンが見つからない場合：</strong><br>
+Windows 11のバージョン、スニッピング ツールの更新状況、会社PCの制限によって表示が違うことがあります。アプリが古い場合は、Windows UpdateやMicrosoft Store側の更新対象になっていないか確認します。会社PCでは更新自体が管理者側で制御されている場合もあります。
+</div>
+</section>
+
+<section class="related">
+<h2>関連リンク</h2>
+<ul>
+<li><a href="article_shortcuts.html">実務で本当に使うショートカットキー厳選集</a></li>
+<li><a href="article_statusbar.html">電卓不要！ステータスバー（オートカルク）の最強活用術</a></li>
+<li><a href="https://support.microsoft.com/en-us/windows/apps/use-snipping-tool-to-capture-screenshots" target="_blank" rel="noopener">Microsoft Support: Use Snipping Tool to capture screenshots</a></li>
+<li><a href="https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec" target="_blank" rel="noopener">Microsoft Support: Keyboard shortcuts in Windows</a></li>
+</ul>
+</section>
+
+</article>
+</main>
+<footer class="site-footer">
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+</footer>
+<script src="../../script.js"></script>
+</body>
+</html>

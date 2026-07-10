@@ -225,6 +225,15 @@
     {
       "category": "functions",
       "subcategory": "modern_search",
+      "title": "UNIQUE関数とFILTER関数で条件付きの重複なしリストを作る",
+      "url": "functions/latest/article_unique_filter.html",
+      "summary": "条件に合うデータだけをFILTERで絞り込み、UNIQUEで重複なしリストにする基本形を解説します。",
+      "level": 2,
+      "tags": ["impact"]
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_search",
       "title": "UNIQUE×FILTER×SORTで条件付きリストを並び替える",
       "url": "functions/latest/article_unique_filter_sort.html",
       "summary": "条件で絞り、重複を消し、SORTであいうえお順に並べる3関数ネストを丁寧に解説します。",
@@ -347,6 +356,14 @@
       "level": 3,
       "tags": ["impact"],
       "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_search",
+      "title": "VLOOKUP完全ガイド — 基本から限界まで",
+      "url": "functions/old/article_vlookup.html",
+      "summary": "VLOOKUPの基本構文、よくあるエラー、列番号の落とし穴、使ってはいけない場面まで整理します。",
+      "level": 2
     },
     {
       "category": "functions",
@@ -779,6 +796,15 @@
     },
     {
       "category": "cobol",
+      "subcategory": "formula",
+      "title": "COBOL帳票から対象者だけを抽出し、半角QRで別システムへ入力する実践編",
+      "url": "cobol/formula/05_article_cobol_qr_bridge.html",
+      "summary": "COBOL帳票をExcelで整形し、対象者だけを抽出して半角QRで別システムへ入力する実務フローを解説します。",
+      "level": 7,
+      "tags": ["impact"]
+    },
+    {
+      "category": "cobol",
       "subcategory": "pq",
       "title": "【パワークエリ編】COBOL帳票データの不要行除去と一括結合",
       "url": "cobol/pq/01_article_cobol_pq.html",
@@ -1194,6 +1220,26 @@
     {
       "category": "others",
       "subcategory": "misc",
+      "title": "FILTER関数とリンク図で候補を確認し、連番だけで封筒ラベル印刷する方法",
+      "url": "others/misc/article_linked_picture_filter_serial_label.html",
+      "summary": "FILTER関数とリンク図で候補一覧を見ながら、連番だけで封筒ラベル印刷を行う実務テクニックです。",
+      "level": 3,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "misc",
+      "title": "Windows 11 スニッピングツールで画面録画する方法",
+      "url": "others/misc/article_snipping_tool_video.html",
+      "summary": "追加インストール不可の職場でも使いやすい、Windows標準の画面録画。フリーソフト導入やウイルス不安を増やさず手順共有できます。",
+      "level": 1,
+      "tags": ["impact"],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "misc",
       "title": "【保存版】ユーザー定義の表示形式＆TEXT関数 逆引き一覧",
       "url": "others/misc/article_format.html",
       "summary": "表示形式コードとTEXT関数の使い方を逆引きで整理します。",
@@ -1240,12 +1286,11 @@
     {
       "category": "unlocked",
       "subcategory": "vba",
-      "title": "QRコード一括生成 VBA完全版",
-      "url": "unlocked/coming_soon.html?topic=vba_qr_generate",
-      "summary": "全角文字対応のQRコードをVBAだけで生成する完全版コードは準備中です。公開時は記事⑪の設計メモを補完します。<br><small>対応する本編：QR Automation Lab 記事⑪</small>",
+      "title": "全角QR生成のVBA完全版コード公開",
+      "url": "qr/11_qr_vba_generate.html",
+      "summary": "Excel VBAとWindows標準APIだけで、UTF-8(ECI) / Shift-JIS対応の全角QR生成、BMP出力、セル配置まで行う公開版コードです。<br><small>対応する本編：QR Automation Lab 記事⑪</small>",
       "level": 6,
-      "tags": ["vba", "qr"],
-      "is_prep": true
+      "tags": ["vba", "qr", "rare"]
     },
     {
       "category": "unlocked",
