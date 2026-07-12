@@ -37,7 +37,7 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/intro/01_article_cobol_fixed.html" rel="canonical">
-<link href="../../common.css" rel="stylesheet">
+<link href="../../common.css?v=8" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -118,6 +118,11 @@
 <h1 class="article-title">扱っているデータはCOBOL帳票？固定長データの見分け方と基礎知識</h1>
 <p class="article-summary" data-seo-lead="true">エクセルでCOBOL帳票や固定長データを整形したい方向けに、Excel関数・Power Query・MIDBなどを使って列分割、不要行除去、帳票データ変換を進める実務手順を扱います。</p>
 </div>
+<div class="xdemo-note-danger" role="note" aria-label="MIDBの互換性に関する注意">
+<strong>⚠️ MIDBを使う前の互換性確認</strong><br>
+Microsoftは現在、<a href="https://support.microsoft.com/en-us/excel/functions/mid-function" target="_blank" rel="noopener noreferrer">MIDBを非推奨</a>としています。非推奨は直ちに使用不能という意味ではないため、本シリーズでは既存環境で利用する場合の事例として紹介しています。<br>
+MIDBの例は、Excelへ取り込んだ文字列がCP932／Shift-JIS互換の配置を保ち、レイアウト定義書も同じバイト基準であることが前提です。文字コード、Excelの言語・互換性設定、開始位置を確認し、外字・機種依存文字・サロゲートペア・絵文字などを含む場合は、実データのコピーで切り出し結果を検証してください。
+</div>
 <section class="goal-section">
 <h2><span class="icon">💡</span> この記事の目的</h2>
 <p>「システムから抽出したテキストデータが、Excelで開いても列が分かれない」「謎の文字の羅列になっている」&hellip;&hellip;そんな経験はありませんか？</p>
@@ -172,7 +177,7 @@
 <h2>なぜ「COBOL」でよく固定長が使われるのか？</h2>
 <p>当サイトでも「COBOLデータ整形」として紹介していますが、なぜ古いシステム（メインフレームやオフコンなど）の出力ファイルは固定長が多いのでしょうか。</p>
 <ul style="line-height: 1.8; margin-top: 10px;">
-<li><strong>メモリと処理速度の節約：</strong> 昔のコンピューターは性能が低かったため、「カンマを探してデータを切り分ける」という処理すら負担でした。「何バイト目から何バイト目を読む」と決め打ちできる固定長の方が、圧倒的に高速に処理できたのです。</li>
+<li><strong>処理を単純化しやすい：</strong> 固定長は「何バイト目から何バイト目を読む」と位置を決めて処理できるため、当時の限られた計算資源でも実装しやすい形式でした。</li>
 <li><strong>COBOL言語の仕様：</strong> COBOLというプログラミング言語自体が、データを「何桁の数字」「何桁の文字」といったレコードレイアウト（構造体）で厳格に定義して扱うように設計されているため、出力もそのまま固定長になりやすいという背景があります。</li>
 </ul>
 </section>
@@ -213,7 +218,7 @@
 <td class="text-center-bold">シンプルな固定長<br><span style="font-size:0.82em; font-weight:normal; color:#666;">（全銀データなど）</span></td>
 <td>
 <strong>1行＝1件のデータ</strong>がきれいに並んでいる。不要な行が混ざっておらず、すべての行が同じレイアウト。<br>
-              &rarr; <span class="code-inline">MIDB</span> ＋ <span class="code-inline">TRIM</span> だけで各項目を切り出せる。
+              &rarr; 文字コードとバイト配置を確認できる既存環境では、<span class="code-inline">MIDB</span> ＋ <span class="code-inline">TRIM</span> で各項目を切り出せる。
             </td>
 <td class="text-center"><span style="background:#43a047; color:#fff; padding:3px 10px; border-radius:4px; font-weight:bold; font-size:0.85em;">対応しやすい</span></td>
 </tr>
@@ -244,14 +249,14 @@
 </tr>
 </table>
 <div class="xdemo-note-warn">
-<strong>つまり：</strong>「システムから出た謎のテキストデータ」が<strong>1行＝1レコードのシンプルな固定長</strong>であれば、<span class="code-inline">MIDB</span> ＋ <span class="code-inline">TRIM</span> のテクニックだけでExcel上で処理できます。<br><br>
+<strong>つまり：</strong>「システムから出た謎のテキストデータ」が<strong>1行＝1レコードのシンプルな固定長</strong>で、文字コードとバイト配置を確認できる既存環境なら、<span class="code-inline">MIDB</span> ＋ <span class="code-inline">TRIM</span> はExcel上で処理する方法の一つです。<br><br>
           しかし、実務で遭遇するCOBOL帳票は「ヘッダー混在＋固定行数」パターン、さらには「明細行数が毎回バラバラ」という最凶パターンまで存在し、単純な切り出しだけでは歯が立ちません。当サイトでは、<strong>シンプルなケースから最凶の不規則帳票まで段階的に攻略する方法</strong>を解説しています。
         </div>
 </section>
 <section class="tips-section" style="background:#fcfcfc;">
 <h2>まとめ：固定長データだと分かったら？</h2>
 <p>手元のデータが「固定長データ」だと判明したら、そのままExcelで開いてはいけません。すべての行が<strong>A列の1列だけ</strong>に読み込まれ、1行分の長い文字列がそのまま1つのセルに入ってしまいます。列が分かれていないため、並べ替え・フィルター・集計など、Excelの基本機能がまったく使えない状態です。</p>
-<p>次のステップでは、Excel関数の<strong>MIDB＋TRIM</strong>を使って、この1列の塊から必要な項目を正確に切り出す方法を解説します。</p>
+<p>次のステップでは、互換性の前提を確認したうえでExcel関数の<strong>MIDB＋TRIM</strong>を使い、この1列の塊からレイアウト定義に沿って必要な項目を切り出す方法を解説します。</p>
 <p style="margin-top: 1.5em; font-weight: bold;">➡️ 具体的な切り出し手法はこちらの記事へ</p>
 <ul>
 <li><a href="../formula/01_article_cobol_basic.html">COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）</a></li>
@@ -262,7 +267,7 @@
 </main>
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
-    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
@@ -280,7 +285,7 @@
   </p>
 </footer>
 
-<script src="../../script.js"></script>
+<script src="../../script.js?v=5"></script>
 </body>
 </html>
 

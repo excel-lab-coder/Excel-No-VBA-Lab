@@ -1032,7 +1032,7 @@
     {
       "category": "others",
       "subcategory": "speed",
-      "title": "検索関数の速度とメモリ効率",
+      "title": "検索関数の速度と参照範囲",
       "url": "others/speed/article_01_lookup_speed.html",
       "summary": "VLOOKUP・INDEX+MATCH・XLOOKUPのメモリ消費の違いと、検索設計による高速化を解説します。",
       "level": 5,

@@ -22,7 +22,7 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_xlookup_multi.html" rel="canonical">
-<link href="../../common.css" rel="stylesheet">
+<link href="../../common.css?v=8" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -911,7 +911,7 @@
           </div>
 <div class="limit-card">
 <div class="limit-card-title">❌ 限界④：列全体参照が危険</div>
-<code>D:D</code> のような列全体参照を使うと、約104万行分の配列がメモリに展開され、<strong>極端に遅くなるかフリーズ</strong>します。
+<code>D:D</code> のような列全体参照を配列計算に使うと、約104万セルが評価対象になり、<strong>再計算時間が大きく増える場合があります</strong>。
             CSEでは <code>D2:D10000</code> のように範囲を限定するのが実務ルールでした。
           </div>
 <div class="limit-card">
@@ -1175,7 +1175,7 @@
 <h2><span class="icon">🔗</span> 関数・抽出テクニック 関連記事</h2>
 <p>実務で必須となる検索・抽出系の関数テクニックをカテゴリ別にまとめています。</p>
 <div style="background:#f5f8ff;padding:15px;border-radius:8px;margin-top:15px;">
-<h4 style="margin-top:0;color:#1565c0;border-bottom:1px solid #bbdefb;padding-bottom:5px;">検索・抽出のステップアップ</h4>
+<h4 style="margin-top:0;color:#1565c0;border-bottom:1px solid #bbdefb;padding-bottom:5px;" aria-level="3">検索・抽出のステップアップ</h4>
 <ul style="line-height:1.8;">
 <li><a href="article_xlookup_basic.html">XLOOKUP：VLOOKUPの完全上位互換。左側検索もエラー回避もこれ1つ</a></li>
 <li><a class="font-bold" href="article_xlookup_multi.html">XLOOKUP ネスト（多条件検索）2021～ &larr; この記事</a></li>
@@ -1213,7 +1213,7 @@
 
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
-    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
@@ -1231,6 +1231,6 @@
   </p>
 </footer>
 
-<script src="../../script.js"></script>
+<script src="../../script.js?v=5"></script>
 </body>
 </html>

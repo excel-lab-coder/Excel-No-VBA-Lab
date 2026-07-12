@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta content="10" name="difficulty">
+<meta content="8" name="difficulty">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>【不規則明細・完結編】行数がバラバラなデータの正規化展開｜Excel &times; No VBA Lab</title>
 <!-- Google Analytics -->
@@ -27,16 +27,16 @@
     'page_location': location.href
   });
 </script>
-<meta content="行数がバラバラな不規則明細を持つCOBOL帳票を、Excel数式だけで正規化展開する完結編。VBA不要の超絶技巧。 エクセルでCOBOL帳票・固定長データを整形したい方向け。" name="description">
+<meta content="行数がバラバラな不規則明細を持つCOBOL帳票を、Excel数式だけで正規化展開する完結編。行種判定と親情報の紐付けを扱います。 エクセルでCOBOL帳票・固定長データを整形したい方向け。" name="description">
 <meta content="COBOL不規則明細 正規化, 行数 バラバラ 展開 数式, Excel関数 帳票整形 完結, VBA不要 COBOL, 超絶技巧 Excel, エクセル COBOL, エクセル COBOL帳票, エクセル 固定長データ, Excel COBOL, Excel COBOL帳票 整形, COBOL帳票 Excel関数, COBOL帳票 Power Query, 固定長データ エクセル, MIDB エクセル" name="keywords">
 <meta content="【不規則明細・完結編】行数がバラバラなデータの正規化展開｜Excel &times; No VBA Lab" property="og:title">
-<meta content="行数がバラバラな不規則明細を持つCOBOL帳票を、Excel数式だけで正規化展開する完結編。VBA不要の超絶技巧。" property="og:description">
+<meta content="行数がバラバラな不規則明細を持つCOBOL帳票を、Excel数式だけで正規化展開する完結編。行種判定と親情報の紐付けを扱います。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="Excel × No VBA Lab" property="og:site_name">
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/04_article_cobol_irregular.html" rel="canonical">
-<link href="../../common.css" rel="stylesheet">
+<link href="../../common.css?v=8" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -46,7 +46,7 @@
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": "【不規則明細・完結編】行数がバラバラなデータの正規化展開",
-    "description": "行数がバラバラな不規則明細を持つCOBOL帳票を、Excel数式だけで正規化展開する完結編。VBA不要の超絶技巧。",
+    "description": "行数がバラバラな不規則明細を持つCOBOL帳票を、Excel数式だけで正規化展開する完結編。行種判定と親情報の紐付けを扱います。",
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
     "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
     "datePublished": "2026-03-18",
@@ -268,16 +268,26 @@
 <h1 class="article-title">【不規則明細・完結編】行数がバラバラなデータの「正規化展開」</h1>
 <p class="article-summary" data-seo-lead="true">エクセルでCOBOL帳票や固定長データを整形したい方向けに、Excel関数・Power Query・MIDBなどを使って列分割、不要行除去、帳票データ変換を進める実務手順を扱います。</p>
 </div>
+<aside class="article-context-box" aria-labelledby="article-context-title">
+<h2 id="article-context-title">この記事を始める前に</h2>
+<ul>
+<li><strong>記事タイプ：</strong>設計事例（不規則な明細行数への適用確認）</li>
+<li><strong>先に読む：</strong><a href="01_article_cobol_basic.html">基本編</a> → <a href="02_article_cobol_advanced.html">応用編</a> → <a href="03_article_cobol_expert.html">超絶技巧編</a></li>
+<li><strong>必要な前提：</strong>固定長とバイト位置、親子構造、行種判定、フィルダウン、配列による抽出</li>
+<li><strong>読者が決めること：</strong>ヘッダー・明細・不要行の条件、1明細の行構成、各項目のバイト位置</li>
+<li><strong>そのまま使える部分／要調整：</strong>行種判定から正規化する流れ／判定文字・バイト位置・マルチラインの結合規則</li>
+</ul>
+</aside>
 <!-- ========== 目次 ========== -->
 <div class="toc-box">
-<h3>この記事の内容</h3>
+<h3 aria-level="2">この記事の内容</h3>
 <ol>
 <li><a href="#sec-intro">伝票ごとに明細行数が違う帳票の攻略</a></li>
 <li><a href="#sec-data">今回の帳票データ</a></li>
-<li><a href="#sec-pipeline">超絶技巧編と同じ3ステップで正規化する</a></li>
+<li><a href="#sec-pipeline">既存の3ステップで正規化する</a></li>
 <li><a href="#sec-why">なぜ行数バラバラでも同じ数式で処理できるのか</a></li>
 <li><a href="#sec-speed">速度面の注意</a></li>
-<li><a href="#sec-multiline">本当に難易度が跳ね上がるのは「マルチラインレコード」</a></li>
+<li><a href="#sec-multiline">追加設計が必要な「マルチラインレコード」</a></li>
 <li><a href="#sec-summary">総まとめ</a></li>
 </ol>
 </div>
@@ -287,11 +297,11 @@
 <section class="goal-section" id="sec-intro">
 <h2><span class="icon">💡</span> 伝票ごとに明細行数が違う帳票の攻略</h2>
 <p>前回の<a href="03_article_cobol_expert.html">超絶技巧編</a>では、「ヘッダー行（親情報）を明細行に紐付けるフィルダウン」と「フラグ＋抽出＋MIDB分解」のパイプラインを学びました。</p>
-<p>あの記事で紹介したデータは、各伝票の明細行数がたまたま揃っていました。では<strong>伝票ごとに明細の件数がバラバラだったら？</strong> &horbar; 結論から言えば、<strong>超絶技巧編と全く同じパイプラインがそのまま機能します</strong>。</p>
+<p>あの記事で紹介したデータは、各伝票の明細行数がたまたま揃っていました。本記事では、伝票ごとに明細件数が異なる場合でも、同じ行種判定を使えることをサンプルで確認します。</p>
 <div class="xdemo-note-good">
 <strong>このページのポイント</strong><br>
-          ・明細行数がバラバラでもパイプラインは一切変更不要であることを確認する。<br>
-          ・本当に難易度が跳ね上がる「マルチラインレコード」について、攻略の考え方を押さえる。
+          ・同じ帳票仕様で明細件数だけが異なる場合、既存のパイプラインを適用できることを確認する。<br>
+          ・追加設計が必要な「マルチラインレコード」について、考え方を押さえる。
         </div>
 </section>
 <!-- ==========================================================
@@ -321,15 +331,15 @@
 </div>
 <div class="xdemo-note-info">
 <strong>行種の判定</strong><br>
-          ヘッダー行は「■」で始まり、明細行は先頭付近に「A」があります。区切り線（---）やその他の行はゴミ行です。この判定条件は超絶技巧編と全く同じです。
+          ヘッダー行は「■」で始まり、明細行は先頭付近に「A」があります。区切り線（---）やその他の行は不要行です。本サンプルでは前編と同じ判定条件を使います。
         </div>
 </section>
 <!-- ==========================================================
          パイプライン確認
       ========================================================== -->
 <section class="method-section" id="sec-pipeline">
-<h2>【3】超絶技巧編と同じ3ステップで正規化する</h2>
-<p>超絶技巧編で構築したパイプラインをそのまま適用します。流れを改めて確認しましょう。</p>
+<h2>【3】既存の3ステップで正規化する</h2>
+<p>前編で構築したパイプラインを、本サンプルへ適用します。流れを確認しましょう。</p>
 <div class="pipeline-box">
 <span class="step">貼付シート</span>
 <span class="arrow">&rarr;</span>
@@ -381,7 +391,7 @@
 </div>
 <div class="xdemo-note-good">
 <strong>ポイント</strong><br>
-            フラグもフィルダウンも「今の行がヘッダーか明細かゴミか」を判定しているだけです。伝票ごとの明細が何件あるかという情報は一切参照していません。だから<strong>行数がバラバラでも数式は全く同じ</strong>です。
+            フラグもフィルダウンも「今の行がヘッダーか明細か不要行か」を判定します。本サンプルでは明細件数を判定条件にしていないため、件数が異なっても同じ数式を使えます。
           </div>
 </div>
 <!-- Step 2 -->
@@ -462,7 +472,7 @@
 </table>
 <div class="xdemo-note-good">
 <strong>パイプラインが行数に依存しない理由</strong><br>
-          各ステップ（フラグ・フィルダウン・抽出・MIDB分解）は、すべて<strong>「今の行がヘッダーか明細かゴミか」</strong>という行種の判定だけで動いています。1伝票に明細が何行あるかという情報は一切必要としません。だから行数が固定でもバラバラでも、同じ数式がそのまま機能するのです。
+          各ステップは<strong>「今の行がヘッダーか明細か不要行か」</strong>という行種の判定を使います。本サンプルのように帳票仕様と判定条件が同じなら、伝票ごとの明細件数が異なっても適用できます。
         </div>
 </section>
 <!-- ==========================================================
@@ -470,11 +480,10 @@
       ========================================================== -->
 <section class="method-section" id="sec-why">
 <h2>【4】なぜ行数バラバラでも同じ数式で処理できるのか</h2>
-<p>改めて核心を整理します。パイプライン方式（フラグ＋フィルダウン＋抽出＋MIDB分解）は<strong>「今の行がヘッダーか明細かゴミか」という行種の判定だけで動いています</strong>。1伝票に明細が何行あるかという情報は一切必要としません。</p>
-<p>フラグ列は「3バイト目がAなら明細」と判定し、フィルダウン列は「先頭が■ならヘッダー」と判定する。この2つの判定は各行が自己完結しているため、前後の行数構成に一切影響されません。抽出シートもフラグが付いた行を拾うだけなので、3件でも2件でも4件でも正しく動きます。</p>
+<p>この方式では、フラグ列が「3バイト目がAなら明細」、フィルダウン列が「先頭が■ならヘッダー」と各行を判定し、抽出シートはフラグが付いた行を拾います。明細件数ではなく行種を条件にするため、本サンプルの3件・2件・4件の各伝票を同じ流れで処理できます。</p>
 <div class="xdemo-note">
 <strong>覚えておくべき原則</strong><br>
-          パイプライン方式は行数の規則性に依存しない。行種の判定だけで動く汎用的な手法であり、あらゆる帳票構造に対応できます。
+          行種を安定して判定できる帳票では、明細件数に依存しない処理を組み立てられます。判定文字や行構造が異なる帳票では、条件の調整が必要です。
         </div>
 </section>
 <!-- ==========================================================
@@ -483,21 +492,20 @@
 <section class="method-section" id="sec-speed">
 <h2>【5】速度面の注意</h2>
 <p>超絶技巧編で解説した速度面の注意はここでも同様に当てはまります。</p>
-<p>COBOL帳票は貼付シートの行数が10万〜30万行になることがあります。MIDB分解のような重い計算を全行に適用すると処理が極端に遅くなるため、<strong>貼付シートではフラグとフィルダウンだけを行い、MIDB分解は抽出シート（明細行だけに絞った後）で実行する</strong>のが鉄則です。</p>
+<p>COBOL帳票は貼付シートの行数が10万〜30万行になることがあります。全行にMIDB分解を配置すると計算対象が増えるため、<strong>貼付シートではフラグとフィルダウンを行い、MIDB分解は抽出シート（明細行だけに絞った後）で実行する</strong>構成を基本とします。</p>
 <p>例えば30万行の帳票で明細行が5,000行なら、MIDB分解の対象が60分の1に削減されます。この設計思想がパイプライン方式の速度上の利点です。</p>
 <div class="xdemo-note-info">
 <strong>速度チューニングの詳細</strong><br>
-          MATCH方式による高速参照や、対応環境でのSCAN＋FILTERによるワンステップ処理については<a href="03_article_cobol_expert.html">超絶技巧編</a>を参照してください。
+          MATCH方式による参照や、対応環境でのSCAN＋FILTERによる構成例については<a href="03_article_cobol_expert.html">超絶技巧編</a>を参照してください。
         </div>
 </section>
 <!-- ==========================================================
          マルチラインレコード
       ========================================================== -->
 <section class="method-section" id="sec-multiline">
-<h2>【6】本当に難易度が跳ね上がるのは「1明細が複数行に跨るケース」</h2>
-<p>ここまで見てきたように、伝票ごとの明細「件数」がバラバラなだけであれば、超絶技巧編のパイプラインをそのまま適用するだけで対処できます。</p>
-<p>しかし実務では、さらにやっかいなケースが存在します。それは<strong>「1つの明細データ自体が2行以上に跨って記述されている」</strong>場合です。これが本当に厄介で、パイプラインをそのまま適用しただけでは解決しません。</p>
-<p>COBOL帳票は印刷帳票のイメージをそのまま出力しているため、1つの明細の情報が<strong>人間が見やすいように複数行に分けて記述される</strong>ことがよくあります。例えば以下のような形です。</p>
+<h2>【6】追加設計が必要な「1明細が複数行に跨るケース」</h2>
+<p>「1つの明細データ自体が2行以上に跨って記述されている」場合は、行種判定だけでなく、複数行を1件へまとめる前処理が必要です。</p>
+<p>COBOL帳票は印刷帳票のイメージをそのまま出力しているため、1つの明細の情報が<strong>人間が見やすいように複数行に分けて記述される</strong>場合があります。例えば以下のような形です。</p>
 <div class="code-readonly" data-lang="テキスト">
 <span class="code-line">■伝票 9001 ㈱第一商事</span>
 <span class="code-line">-------------------------------</span>
@@ -509,9 +517,9 @@
 <span class="code-line">        納期: 2026/04/15         &larr; 明細②の3行目</span>
 </div>
 <p>このように<strong>1つの明細が2行・3行に分かれている「マルチラインレコード」</strong>は、印刷レイアウトの都合でごく当たり前に発生します。各行のMIDB位置（何バイト目に何がある）は固定ですが、1行目にはコードと商品名、2行目には数量と単価、3行目には納期&hellip;というように<strong>情報が行をまたいで分散している</strong>のが特徴です。</p>
-<h3 style="color:#b71c1c;border-bottom:2px solid #ffcdd2;padding-bottom:5px;margin-top:25px;">攻略の考え方：貼付シートの作業列で「1行にまとめる」前処理を行う</h3>
+<h3 style="color:#b71c1c;border-bottom:2px solid #ffcdd2;padding-bottom:5px;margin-top:25px;">設計の考え方：貼付シートの作業列で「1行にまとめる」</h3>
 <p>マルチラインレコードに対処するための基本的な考え方は、<strong>貼付シートの作業列を増やして、各行からMIDBで必要な部分だけを切り出し、それらを1行に集約する</strong>というものです。</p>
-<p>COBOL帳票は固定長データであるため、<strong>「明細の1行目は何バイト目にコードがある」「2行目は何バイト目に数量がある」「3行目は何バイト目に納期がある」という位置の規則性は必ず存在します</strong>。この規則性をまず目視で読み解くことが最初のステップです。</p>
+<p>固定長の仕様が確認できるデータでは、<strong>「明細の1行目は何バイト目にコードがある」「2行目は何バイト目に数量がある」「3行目は何バイト目に納期がある」</strong>といった位置の規則を確認できます。まず実データと仕様書を照合して、規則を読み解くことが最初のステップです。</p>
 <p>規則性を把握したら、貼付シートに作業列を追加して各行からMIDBでパーツを切り出します。そして明細の1行目の行に対して、直下の2行目・3行目の情報を作業列で横に集約すれば、<strong>「元は3行に分かれていたデータが、1行のレコードとして揃っている」</strong>状態を作ることができます。あとはその作業列に情報が揃った行だけをフラグで拾い、通常のパイプラインに乗せるだけです。</p>
 <div class="xdemo-note-warn">
 <strong>ただし、実際のパターンは帳票ごとに千差万別です。</strong><br>
@@ -523,7 +531,7 @@
         </div>
 <div class="xdemo-note-good">
 <strong>難易度の目安</strong><br>
-<strong>明細の「件数」がバラバラ</strong>（伝票ごとに明細行数が違う） &rarr; <strong>超絶技巧編と同じ手法で対応可能</strong><br>
+<strong>明細の「件数」がバラバラ</strong>（伝票ごとに明細行数が違う） &rarr; <strong>行種判定を適用できるか確認</strong><br>
 <strong>1明細が「複数行」に跨っている</strong>（マルチラインレコード） &rarr; <strong>規則性の解析＋作業列での結合が必要で、難易度が大きく上がる</strong>
 </div>
 </section>
@@ -532,8 +540,8 @@
       ========================================================== -->
 <section class="goal-section" id="sec-summary" style="margin-top:40px;background:linear-gradient(135deg,#f5f8ff 0%,#e8eaf6 100%);border-radius:10px;padding:24px;">
 <h2><span class="icon">📝</span> 総まとめ</h2>
-<p>伝票ごとの明細行数がバラバラでも、超絶技巧編で学んだ「フラグ＋フィルダウン＋抽出＋MIDB分解」のパイプラインは<strong>全く同じ数式でそのまま機能します</strong>。パイプラインは各行の「種類」だけを判定しており、行数の規則性には依存しないためです。</p>
-<p>本当に難易度が上がるのは「1明細が複数行に跨るマルチラインレコード」のケースです。COBOL帳票は印刷レイアウトに合わせて1明細を複数行に分割することが珍しくなく、この場合は帳票の規則性を自分で読み解き、貼付シートの作業列で1行にまとめる前処理が必要になります。ただし、明細の件数が違うだけであれば恐れる必要はありません。</p>
+<p>本サンプルでは、伝票ごとの明細件数が異なっても「フラグ＋フィルダウン＋抽出＋MIDB分解」を適用できました。明細件数ではなく、各行の種類を判定しているためです。</p>
+<p>一方、「1明細が複数行に跨るマルチラインレコード」では、帳票の規則を読み解き、貼付シートの作業列で1行にまとめる前処理が必要になります。</p>
 <div class="xdemo-note-good">
 <strong>シリーズ全体の振り返り</strong><br>
 <strong><a href="01_article_cobol_basic.html">【基本編】MIDB切り出し・浄化・型変換</a></strong> &hellip; 固定長データの基本的な切り出しと型変換のテンプレ。<br>
@@ -549,7 +557,7 @@
 
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
-    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
@@ -567,7 +575,7 @@
   </p>
 </footer>
 
-<script src="../../script.js"></script>
+<script src="../../script.js?v=5"></script>
 </body>
 </html>
 

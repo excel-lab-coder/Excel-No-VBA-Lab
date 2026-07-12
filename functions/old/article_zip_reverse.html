@@ -22,7 +22,7 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_zip_reverse.html" rel="canonical">
-<link href="../../common.css" rel="stylesheet">
+<link href="../../common.css?v=8" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -91,7 +91,7 @@
 <h1 class="article-title">住所から郵便番号を逆引きする方法（最長一致検索）</h1>
 </div>
 <div class="caution-banner">
-<h3>⚠ このテクニックは「完璧」ではありません</h3>
+<h3 aria-level="2">⚠ このテクニックは「完璧」ではありません</h3>
 <p>巷の簡易的なVLOOKUP方式やワイルドカード方式と比べて<strong>かなり高い精度</strong>を出せますが、日本の住所体系の複雑さにより100%の正解は保証できません。必ず少数テストから始め、結果を目視確認しながら段階的に展開してください。完全に一致しない・おかしな結果が出る場合のために、あえてエラーや警告が出る安全装置も後半で紹介します。</p>
 </div>
 <!-- ===== やりたいこと ===== -->
@@ -272,7 +272,7 @@
 <h2>郵便番号簿シートの準備（utf_all.csv）</h2>
 <h3>ダウンロード</h3>
 <p>日本郵便の公式サイトから<strong>「住所の郵便番号（1レコード1行、UTF-8形式）（CSV形式）」</strong>をダウンロードします。</p>
-<p>ダウンロード先：<a href="https://www.post.japanpost.jp/zipcode/dl/utf-zip.html" target="_blank">https://www.post.japanpost.jp/zipcode/dl/utf-zip.html</a></p>
+<p>ダウンロード先：<a href="https://www.post.japanpost.jp/service/search/zipcode/download/utf-zip.html" rel="noopener" target="_blank">日本郵便：郵便番号データダウンロード</a></p>
 <div class="xdemo-note-info">
 <strong>なぜ utf_all.csv？</strong><br>
         従来の KEN_ALL.CSV は町域名が長い場合に<strong>複数行に分割される</strong>悪名高い仕様でした。UTF-8版では1レコード1行に統一されており、前処理が不要です。
@@ -510,7 +510,7 @@
 </main>
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
-    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
@@ -527,7 +527,7 @@
     <a href="../../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../../script.js"></script>
+<script src="../../script.js?v=5"></script>
 </body>
 </html>
 

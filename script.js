@@ -16,7 +16,14 @@
     var tabNav = document.querySelector('.tab-nav');
 
     if (header) {
-      root.style.setProperty('--header-height', header.offsetHeight + 'px');
+      // The header height itself uses --header-height on desktop.
+      // Reset the inline value before measuring to avoid feeding a stale
+      // measured height back into the next responsive resize.
+      root.style.removeProperty('--header-height');
+      root.style.setProperty(
+        '--header-height',
+        window.matchMedia('(max-width: 768px)').matches ? '0px' : header.offsetHeight + 'px'
+      );
     }
     if (tabNav) {
       root.style.setProperty('--tab-nav-height', tabNav.offsetHeight + 'px');
@@ -146,6 +153,14 @@
     targetButton.setAttribute('tabindex', '0');
     targetPanel.classList.add('active');
     loadDeferredPanelMedia(targetPanel);
+
+    var tabScroller = targetButton.closest('.tab-nav');
+    if (tabScroller && window.matchMedia('(max-width: 768px)').matches) {
+      requestAnimationFrame(function () {
+        var targetLeft = targetButton.offsetLeft - ((tabScroller.clientWidth - targetButton.offsetWidth) / 2);
+        tabScroller.scrollLeft = Math.max(targetLeft, 0);
+      });
+    }
 
     if (updateHash && history.pushState) {
       history.pushState(null, '', '#' + targetId);
@@ -535,68 +550,282 @@
     }
   }
 
+  var ARTICLE_FEEDBACK_FORM = {
+    action: 'https://docs.google.com/forms/d/e/1FAIpQLSdvSi9yzHNaPpu1HCSbSeP4qJwEfY-g633dnh_SD5Xs9kMmdw/formResponse',
+    nameEntry: 'entry.1002031830',
+    emailEntry: 'entry.356247462',
+    categoryEntry: 'entry.1026400745',
+    messageEntry: 'entry.113328341'
+  };
+
+  var ARTICLE_FEEDBACK_REACTIONS = {
+    helpful: {
+      label: '👍 役に立った',
+      category: '情報交換・感想'
+    },
+    correction: {
+      label: '✍ 間違い・分かりにくい',
+      category: '記事への質問・誤り報告'
+    },
+    request: {
+      label: '💡 続編・別例がほしい',
+      category: '記事に関するご質問'
+    }
+  };
+
+  function appendFeedbackField(form, name, value) {
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.value = value;
+    form.appendChild(input);
+  }
+
+  function submitArticleComment(meta, reactionId, comment, allowPublish) {
+    var reaction = ARTICLE_FEEDBACK_REACTIONS[reactionId] || ARTICLE_FEEDBACK_REACTIONS.helpful;
+    var frameName = 'article-feedback-submit-frame';
+    var frame = document.querySelector('iframe[name="' + frameName + '"]');
+
+    if (!frame) {
+      frame = document.createElement('iframe');
+      frame.name = frameName;
+      frame.title = '記事フィードバック送信先';
+      frame.hidden = true;
+      document.body.appendChild(frame);
+    }
+
+    var message = [
+      '【記事末尾の匿名フィードバック】',
+      '記事名: ' + meta.title,
+      '記事URL: ' + location.href.split('#')[0],
+      '反応: ' + reaction.label.replace(/^[^\s]+\s*/, ''),
+      '匿名での掲載許可: ' + (allowPublish ? 'はい' : 'いいえ'),
+      '',
+      comment
+    ].join('\n');
+
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = ARTICLE_FEEDBACK_FORM.action;
+    form.target = frameName;
+    form.hidden = true;
+
+    appendFeedbackField(form, ARTICLE_FEEDBACK_FORM.nameEntry, '匿名フィードバック');
+    appendFeedbackField(form, ARTICLE_FEEDBACK_FORM.emailEntry, 'anonymous-feedback@example.invalid');
+    appendFeedbackField(form, ARTICLE_FEEDBACK_FORM.categoryEntry, reaction.category);
+    appendFeedbackField(form, ARTICLE_FEEDBACK_FORM.messageEntry, message);
+    appendFeedbackField(form, 'fvv', '1');
+    appendFeedbackField(form, 'pageHistory', '0');
+
+    document.body.appendChild(form);
+    form.submit();
+    setTimeout(function () { form.remove(); }, 1200);
+  }
+
   function initArticleFeedback() {
     var meta = getArticleMeta();
     if (!meta) return;
     if (meta.body.querySelector('.article-feedback')) return;
 
-    var storageKey = 'excel_no_vba_lab_helpful_' + meta.path;
-    var alreadyVoted = safeStorageGet(storageKey) === '1';
+    var reactionStorageKey = 'excel_no_vba_lab_feedback_reaction_' + meta.path;
+    var legacyStorageKey = 'excel_no_vba_lab_helpful_' + meta.path;
+    var commentStorageKey = 'excel_no_vba_lab_feedback_comment_' + meta.path;
+    var selectedReaction = safeStorageGet(reactionStorageKey);
+    var commentAlreadySent = safeStorageGet(commentStorageKey) === '1';
+
+    if (!ARTICLE_FEEDBACK_REACTIONS[selectedReaction]) {
+      selectedReaction = safeStorageGet(legacyStorageKey) === '1' ? 'helpful' : '';
+    }
 
     var feedback = document.createElement('aside');
     feedback.className = 'article-feedback';
-    feedback.setAttribute('aria-label', '記事の評価');
+    feedback.setAttribute('aria-label', '記事へのフィードバック');
 
     var textWrap = document.createElement('div');
     textWrap.className = 'article-feedback-text';
 
     var heading = document.createElement('h2');
-    heading.textContent = 'この記事は役に立ちましたか？';
+    heading.textContent = 'この記事はどうでしたか？';
 
     var note = document.createElement('p');
-    note.textContent = 'よかった記事だけ、気軽に押してください。';
+    note.textContent = '選ぶだけでも送信されます。文章は任意・匿名・非公開です。';
 
     textWrap.appendChild(heading);
     textWrap.appendChild(note);
 
-    var actionWrap = document.createElement('div');
-    actionWrap.className = 'article-feedback-actions';
-
-    var button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'article-feedback-btn';
-    button.textContent = alreadyVoted ? '送信済み' : '役に立った';
-    button.setAttribute('aria-pressed', alreadyVoted ? 'true' : 'false');
-    if (alreadyVoted) button.disabled = true;
+    var optionWrap = document.createElement('div');
+    optionWrap.className = 'article-feedback-options';
 
     var status = document.createElement('p');
     status.className = 'article-feedback-status';
     status.setAttribute('role', 'status');
     status.setAttribute('aria-live', 'polite');
-    status.textContent = alreadyVoted ? '評価ありがとうございます。' : '';
+    status.textContent = selectedReaction ? '反応ありがとうございます。よければ一言もお寄せください。' : '';
 
-    button.addEventListener('click', function () {
-      if (button.disabled) return;
+    var commentPanel = document.createElement('div');
+    commentPanel.className = 'article-feedback-comment';
+    commentPanel.hidden = !selectedReaction;
 
-      safeStorageSet(storageKey, '1');
-      button.textContent = '送信済み';
-      button.setAttribute('aria-pressed', 'true');
-      button.disabled = true;
-      status.textContent = '評価ありがとうございます。';
+    var commentLabel = document.createElement('label');
+    commentLabel.className = 'article-feedback-comment-label';
+    commentLabel.textContent = '間違いの指摘、分かりにくかった点、感想など（800文字以内）';
 
-      sendArticleEvent('article_helpful_click', {
+    var textarea = document.createElement('textarea');
+    textarea.className = 'article-feedback-textarea';
+    textarea.maxLength = 800;
+    textarea.rows = 6;
+    textarea.placeholder = '例：○○の説明は△△の場合には当てはまらないと思います。／この手順で解決しました。／別の条件の例も読みたいです。';
+    textarea.disabled = commentAlreadySent;
+    commentLabel.appendChild(textarea);
+
+    var counter = document.createElement('span');
+    counter.className = 'article-feedback-counter';
+    counter.textContent = '0 / 800';
+
+    textarea.addEventListener('input', function () {
+      counter.textContent = textarea.value.length + ' / 800';
+    });
+
+    var publishLabel = document.createElement('label');
+    publishLabel.className = 'article-feedback-publish';
+    var publishCheckbox = document.createElement('input');
+    publishCheckbox.type = 'checkbox';
+    publishCheckbox.disabled = commentAlreadySent;
+    publishLabel.appendChild(publishCheckbox);
+    publishLabel.appendChild(document.createTextNode(' 内容を匿名の「読者の声」として掲載してよい'));
+
+    var honeyLabel = document.createElement('label');
+    honeyLabel.className = 'article-feedback-honeypot';
+    honeyLabel.setAttribute('aria-hidden', 'true');
+    honeyLabel.textContent = '会社名';
+    var honeyInput = document.createElement('input');
+    honeyInput.type = 'text';
+    honeyInput.tabIndex = -1;
+    honeyInput.autocomplete = 'off';
+    honeyLabel.appendChild(honeyInput);
+
+    var commentActions = document.createElement('div');
+    commentActions.className = 'article-feedback-comment-actions';
+
+    var submitButton = document.createElement('button');
+    submitButton.type = 'button';
+    submitButton.className = 'article-feedback-submit';
+    submitButton.textContent = commentAlreadySent ? '送信済み' : '匿名で送る';
+    submitButton.disabled = commentAlreadySent;
+
+    var detailLink = document.createElement('a');
+    detailLink.className = 'article-feedback-detail-link';
+    detailLink.href = 'https://forms.gle/6SnCHNWK6EcRy1XG8';
+    detailLink.target = '_blank';
+    detailLink.rel = 'noopener';
+    detailLink.textContent = '返信が必要な相談はこちら';
+
+    submitButton.addEventListener('click', function () {
+      var comment = textarea.value.trim();
+      if (!comment) {
+        status.textContent = '一言入力してから送信してください。反応だけなら、すでに届いています。';
+        textarea.focus();
+        return;
+      }
+
+      if (honeyInput.value) {
+        textarea.value = '';
+        counter.textContent = '0 / 800';
+        status.textContent = '送信ありがとうございます。';
+        return;
+      }
+
+      if (!navigator.onLine && location.protocol !== 'file:') {
+        status.textContent = '通信できませんでした。接続を確認してもう一度お試しください。';
+        return;
+      }
+
+      if (location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        status.textContent = 'ローカル確認中のため送信していません。公開ページでは匿名で送信されます。';
+        return;
+      }
+
+      submitArticleComment(meta, selectedReaction || 'helpful', comment, publishCheckbox.checked);
+      safeStorageSet(commentStorageKey, '1');
+      textarea.disabled = true;
+      publishCheckbox.disabled = true;
+      submitButton.disabled = true;
+      submitButton.textContent = '送信済み';
+      status.textContent = '送信ありがとうございます。内容は公開されず、運営者だけが確認します。';
+
+      sendArticleEvent('article_comment_submit', {
         event_category: 'article_feedback',
         event_label: meta.path,
         article_title: meta.title,
         article_path: meta.path,
-        article_section: meta.section
+        article_section: meta.section,
+        feedback_reaction: selectedReaction || 'helpful',
+        publish_allowed: publishCheckbox.checked ? 'yes' : 'no'
       });
     });
 
-    actionWrap.appendChild(button);
-    actionWrap.appendChild(status);
+    commentActions.appendChild(submitButton);
+    commentActions.appendChild(detailLink);
+    commentPanel.appendChild(commentLabel);
+    commentPanel.appendChild(counter);
+    commentPanel.appendChild(publishLabel);
+    commentPanel.appendChild(honeyLabel);
+    commentPanel.appendChild(commentActions);
+
+    Object.keys(ARTICLE_FEEDBACK_REACTIONS).forEach(function (reactionId) {
+      var reaction = ARTICLE_FEEDBACK_REACTIONS[reactionId];
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'article-feedback-option';
+      button.textContent = reaction.label;
+      button.setAttribute('data-reaction', reactionId);
+      button.setAttribute('aria-pressed', selectedReaction === reactionId ? 'true' : 'false');
+      if (selectedReaction === reactionId) button.classList.add('selected');
+
+      button.addEventListener('click', function () {
+        var previousReaction = selectedReaction;
+        selectedReaction = reactionId;
+        safeStorageSet(reactionStorageKey, reactionId);
+        if (reactionId === 'helpful') safeStorageSet(legacyStorageKey, '1');
+
+        optionWrap.querySelectorAll('.article-feedback-option').forEach(function (option) {
+          var selected = option.getAttribute('data-reaction') === reactionId;
+          option.classList.toggle('selected', selected);
+          option.setAttribute('aria-pressed', selected ? 'true' : 'false');
+        });
+
+        commentPanel.hidden = false;
+        status.textContent = '反応ありがとうございます。よければ一言もお寄せください。';
+
+        if (previousReaction !== reactionId) {
+          sendArticleEvent('article_feedback_reaction', {
+            event_category: 'article_feedback',
+            event_label: meta.path,
+            article_title: meta.title,
+            article_path: meta.path,
+            article_section: meta.section,
+            feedback_reaction: reactionId
+          });
+
+          if (reactionId === 'helpful') {
+            sendArticleEvent('article_helpful_click', {
+              event_category: 'article_feedback',
+              event_label: meta.path,
+              article_title: meta.title,
+              article_path: meta.path,
+              article_section: meta.section
+            });
+          }
+        }
+      });
+
+      optionWrap.appendChild(button);
+    });
+
     feedback.appendChild(textWrap);
-    feedback.appendChild(actionWrap);
+    feedback.appendChild(optionWrap);
+    feedback.appendChild(status);
+    feedback.appendChild(commentPanel);
 
     var nav = meta.body.querySelector('.stage-nav');
     if (nav && nav.parentNode === meta.body) {

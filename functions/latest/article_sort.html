@@ -21,7 +21,7 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_sort.html" rel="canonical">
-<link href="../../common.css" rel="stylesheet">
+<link href="../../common.css?v=8" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -509,7 +509,7 @@
 <!-- ============================================ -->
 <section class="method-section" id="binary-search">
 <h2>⚡ SORTが切り拓く「バイナリ検索」&boxh;&boxh; 大規模データの速度革命</h2>
-<p>SORT関数の活用法は「見た目の並び替え」だけではありません。SORT で作ったソート済みデータを XLOOKUP や XMATCH の<strong>バイナリ検索モード</strong>に渡すことで、数万〜数十万行の検索を<strong>劇的に高速化</strong>できます。これは実務で最も見落とされがちな、しかし最もインパクトの大きい SORT の使い方です。</p>
+<p>SORT関数の活用法は「見た目の並び替え」だけではありません。SORTで作ったソート済みデータをXLOOKUPやXMATCHの<strong>バイナリ検索モード</strong>に渡すと、数万〜数十万行の検索で線形検索より処理時間を短縮できる場合があります。効果はデータ量、数式数、Excelのバージョン、PC環境で変わるため、実データの複製で計測してください。</p>
 <!-- ----- 線形検索 vs バイナリ検索 ----- -->
 <h3>⑪ 線形検索 vs バイナリ検索 &boxh;&boxh; 何がどう違うのか</h3>
 <div class="xdemo-wrap">
@@ -634,7 +634,7 @@
           作業シートに SORT を1回だけスピルさせ、その結果を参照する構成にすれば、ソート処理は1回きりで済みます。
         </div>
 <!-- ----- INDEX + XMATCH パターン ----- -->
-<h3>⑭ INDEX + XMATCH でも同じ高速化が可能</h3>
+<h3>⑭ INDEX + XMATCH でもバイナリ検索が可能</h3>
 <div class="code-block" data-lang="excel">
 <span class="code-line">=INDEX(_sorted!C:C, XMATCH(A2, _sorted!A:A, 0, 2))</span>
 </div>
@@ -687,12 +687,12 @@
 <tr>
 <td class="text-left">データ数万行 &times; 検索数百回</td>
 <td style="background:#fff8e1;"><strong>バイナリ検索を検討</strong></td>
-<td style="text-align:left;font-size:0.82em;">再計算で数秒〜十数秒かかり始める境界</td>
+<td style="text-align:left;font-size:0.82em;">標準検索が重い場合に実データで比較</td>
 </tr>
 <tr>
 <td class="text-left">データ10万行以上 &times; 検索数百〜数千回</td>
-<td style="background:#fce4ec;"><strong>バイナリ検索を強く推奨</strong></td>
-<td style="text-align:left;font-size:0.82em;">線形検索では「応答なし」が頻発するレベル</td>
+<td style="background:#fce4ec;"><strong>バイナリ検索を比較検討</strong></td>
+<td style="text-align:left;font-size:0.82em;">並び順を保証できる場合の候補</td>
 </tr>
 <tr>
 <td class="text-left">データが頻繁に更新される</td>
@@ -818,7 +818,7 @@
 
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
-    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
@@ -836,6 +836,6 @@
   </p>
 </footer>
 
-<script src="../../script.js"></script>
+<script src="../../script.js?v=5"></script>
 </body>
 </html>

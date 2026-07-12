@@ -21,7 +21,7 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_xlookup_advanced.html" rel="canonical">
-<link href="../../common.css" rel="stylesheet">
+<link href="../../common.css?v=8" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -90,13 +90,13 @@
 <div class="article-meta">
 <span class="badge badge-365">365</span>
 <span class="badge badge-2021">2021～</span>
-<span class="article-date">更新日: 2026-04-23</span>
+<span class="article-date">更新日: 2026-07-11</span>
 </div>
 <h1 class="article-title">XLOOKUP 応用編：複数列一括返却・高速化・後ろから検索</h1>
 </div>
 <!-- シリーズナビ -->
 <div class="series-nav">
-<h4>📚 XLOOKUPシリーズ</h4>
+<h4 aria-level="2">📚 XLOOKUPシリーズ</h4>
 <ul>
 <li><a href="article_xlookup_basic.html">① 基本編</a> &horbar; 構文・引数・動作イメージ</li>
 <li class="current">② 応用編（このページ）&horbar; 複数列返却・第5/6引数・後ろから検索</li>
@@ -319,7 +319,7 @@
 <h3>【2】第5引数・第6引数：一致モードと検索モード</h3>
 <p>XLOOKUPには省略可能な第5・第6引数があり、検索の動作を細かく制御できます。<br>
           通常は省略（完全一致・先頭から線形検索）で問題ありませんが、
-          データの特性に応じて使い分けると大幅な高速化も可能です。</p>
+          データの特性に応じて使い分けると検索負荷を抑えられる場合があります。</p>
 <h4>第5引数：一致モード（match_mode）</h4>
 <div class="xdemo-wrap">
 <div class="table-wrapper"><table class="arg-table"><caption>データテーブル</caption>
@@ -365,7 +365,7 @@
 <td class="arg-val">2</td>
 <td>
 <strong>⚡ バイナリ検索（昇順ソート済みデータ向け）</strong><br>
-<span style="font-size:0.9em;font-weight:normal;">データが昇順に並んでいる場合に使用。大量データで劇的に高速化できる。</span>
+<span style="font-size:0.9em;font-weight:normal;">データが正しく昇順に並んでいる場合に使用。大量データでは線形検索より処理時間を短縮できる場合がある。</span>
 </td>
 </tr>
 <tr class="arg-binary">
@@ -423,15 +423,15 @@
 </p>
 <strong>【まとめ：SORT/SORTBY + XLOOKUP バイナリ検索の利点】</strong>
 <ul style="margin:8px 0 0; padding-left:1.4em; line-height:1.9; font-size:0.95em;">
-<li>元データのソート状態に関わらず<strong>常に正しい結果</strong>が得られる（ヒューマンエラー排除）</li>
-<li>バイナリ検索の<strong>劇的な高速化</strong>をそのまま享受できる</li>
+<li>元データを直接並べ替えず、SORT/SORTBYで作ったソート済み配列を検索対象にできる</li>
+<li>並び順を保証できる場合は、バイナリ検索で<strong>検索負荷を抑えられる可能性がある</strong></li>
 <li>データ追加・更新が発生しても<strong>数式が自動で対応</strong>する</li>
 <li><code>LET</code> と組み合わせることでソート計算の重複を防げる</li>
 </ul>
 <span style="font-size:0.88em; color:#555;">
-            ⚠️ <strong>超大量データ時（目安：50万行以上）の注意と対処法</strong><br>
+            ⚠️ <strong>大量データ時の注意と対処法</strong><br>
             SORT/SORTBY を数式内に直接ネストすると、ブックが再計算されるたびに配列全体を並べ直します。
-            通常のデータ量では体感できませんが、<strong>50万行規模になって初めて速度差が感じられる</strong>ようになるイメージです。<br><br>
+            ソート自体の計算も必要になるため、データ量や検索回数によっては標準検索より重くなることがあります。実際のブックで比較してください。<br><br>
 <strong>✅ 実践的な解決策：作業シートにSORT済みデータを「1回だけ」出力しておく</strong><br>
             別シート（例：<code>作業</code>シート）の空きセル（例：<code>A1</code>）に、一度だけSORTBYの結果を出力しておきます。
           </span>
@@ -521,7 +521,7 @@
 
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
-    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
@@ -539,7 +539,7 @@
   </p>
 </footer>
 
-<script src="../../script.js"></script>
+<script src="../../script.js?v=5"></script>
 </body>
 </html>
 

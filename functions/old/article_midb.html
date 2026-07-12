@@ -21,7 +21,7 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_midb.html" rel="canonical">
-<link href="../../common.css" rel="stylesheet">
+<link href="../../common.css?v=8" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -87,23 +87,28 @@
 <article class="article-body">
 <div class="article-header">
 <div class="article-meta">
-<span class="badge badge-all">全バージョン</span>
+<span class="badge badge-all">既存環境向け</span>
 <span class="article-date">更新日: 2026-04-23</span>
 </div>
 <h1 class="article-title">MID / MIDB 関数 完全ガイド &horbar; 「文字数」と「バイト数」で文字列を自在に抽出する</h1>
 </div>
+<div class="xdemo-note-danger" role="note" aria-label="MIDBの互換性に関する注意">
+<strong>⚠️ MIDBの互換性に関する注意</strong><br>
+Microsoftは現在、<a href="https://support.microsoft.com/en-us/excel/functions/mid-function" target="_blank" rel="noopener noreferrer">MIDBを非推奨</a>としています。非推奨は直ちに使用不能という意味ではないため、本記事では既存環境で利用する場合の事例として数式を残しています。なお、非推奨とされているのは<strong>MIDB</strong>であり、文字数で切り出す<strong>MID</strong>とは区別してください。<br>
+本記事のバイト例は、Excelへ取り込んだ文字列がCP932／Shift-JIS互換の配置を保ち、レイアウト定義書も同じバイト基準であることを前提にしています。文字コード、Excelの言語・互換性設定、開始位置を確認し、外字・機種依存文字・サロゲートペア・絵文字などを含む場合は、実データのコピーで切り出し結果を検証してください。
+</div>
 <!-- ===== 目次 ===== -->
 <div class="toc-box">
-<h4>📖 目次</h4>
+<h4 aria-level="2">📖 目次</h4>
 <ol>
-<li><a href="#diff">MID と MIDB の決定的な違い</a></li>
+<li><a href="#diff">MID と MIDB の違い</a></li>
 <li><a href="#mid-basic">MID関数：文字数で切り出す</a></li>
 <li><a href="#midb-basic">MIDB関数：バイト数で切り出す</a></li>
 <li><a href="#byte-split">全角文字の分断とExcelの挙動</a></li>
 <li><a href="#family">関連関数ファミリー（LEFT/RIGHT/LEN のB付き）</a></li>
 <li><a href="#fixed">実務の核心：固定長データとMIDB</a></li>
 <li><a href="#layout">レイアウト定義書の読み方</a></li>
-<li><a href="#trim">TRIM + MIDB：固定長処理の最強コンビ</a></li>
+<li><a href="#trim">TRIM + MIDB：固定長処理での組み合わせ</a></li>
 <li><a href="#mid-find">MID + FIND：可変位置からの抽出</a></li>
 <li><a href="#patterns">実務パターン集</a></li>
 <li><a href="#vs-new">TEXTBEFORE / TEXTAFTER との比較</a></li>
@@ -112,7 +117,7 @@
 </div>
 <!-- ===== 1. 違い ===== -->
 <section class="goal-section" id="diff">
-<h2><span class="section-num">1</span> MID と MIDB の決定的な違い</h2>
+<h2><span class="section-num">1</span> MID と MIDB の違い</h2>
 <p>文字列の「途中」から指定した分だけテキストを抜き出す関数です。Excelには文字をカウントする基準が2つあります。</p>
 <div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
 <tr>
@@ -137,7 +142,7 @@
 <td class="good">固定長データの処理</td>
 </tr>
 </table></div>
-<p>「123456」のような半角データだけなら結果は同じですが、かなや漢字が混じると結果が大きく変わります。</p>
+<p>上表は、本記事で扱うCP932／Shift-JIS互換の文字配置を前提にした例です。この前提では「123456」のような半角データだけなら結果は同じですが、かなや漢字が混じると結果が変わります。</p>
 </section>
 <!-- ===== 2. MID基本 ===== -->
 <section class="method-section" id="mid-basic">
@@ -164,7 +169,7 @@
 <!-- ===== 3. MIDB基本 ===== -->
 <section class="method-section" id="midb-basic">
 <h2><span class="section-num">3</span> MIDB関数：バイト数で切り出す</h2>
-<p>文字コード（Shift-JIS）における情報サイズ（バイト）を基準に処理します。</p>
+<p>本記事では、CP932／Shift-JIS互換の文字配置におけるバイト数を基準に処理する既存環境の例を扱います。</p>
 <div class="code-block" data-lang="excel">
 <span class="code-line">=MIDB(文字列, 開始バイト位置, バイト数)</span>
 </div>
@@ -187,7 +192,7 @@
 <div class="code-block" data-lang="excel">
 <span class="code-line">=MIDB("ABあいう123", 3, 4)</span>
 </div>
-<p class="code-comment">結果：<code>あい</code> &horbar; 3バイト目から4バイト分。全角「あ」(2バイト)＋「い」(2バイト)＝4バイトで「あい」が返る。</p>
+<p class="code-comment">本記事の前提での結果：<code>あい</code> &horbar; 3バイト目から4バイト分。全角「あ」(2バイト)＋「い」(2バイト)＝4バイトで「あい」が返る。</p>
 </section>
 <!-- ===== 4. 全角分断 ===== -->
 <section class="method-section" id="byte-split">
@@ -195,10 +200,10 @@
 <div class="code-block" data-lang="excel">
 <span class="code-line">=MIDB("ABあいう123", 3, 1)</span>
 </div>
-<p class="code-comment">結果：<code> </code>（半角スペース） &horbar; 「あ」は3-4バイト目の2バイト文字。1バイトだけ抽出すると全角が分断される。</p>
+<p class="code-comment">本記事の前提での結果：<code> </code>（半角スペース） &horbar; 「あ」は3-4バイト目の2バイト文字。1バイトだけ抽出すると全角が分断される。</p>
 <div class="xdemo-note-warn">
           ⚠️ <strong>全角文字を途中で切るとどうなるか</strong><br>
-          「あ」は3バイト目と4バイト目で構成される2バイトの文字です。「3バイト目から1バイトだけ」と指示すると全角文字が分断されてしまいます。Excelはこのような場合、文字化けを防ぐために<strong>自動的に半角スペースに変換</strong>して出力します。固定長データの処理で開始位置やバイト数を間違えると、結果にスペースが紛れ込むことで気づけます。
+          本記事の文字コード前提では、「あ」は3バイト目と4バイト目で構成される2バイトの文字です。「3バイト目から1バイトだけ」と指示すると文字の境界を分断し、半角スペースとして返ることがあります。結果に意図しないスペースが含まれた場合は、開始位置、バイト数、文字コードを確認してください。
         </div>
 <div class="code-block" data-lang="excel">
 <span class="code-line">=MIDB("ABあいう123", 3, 3)</span>
@@ -206,13 +211,13 @@
 <p class="code-comment">結果：<code>あ </code>（「あ」＋半角スペース） &horbar; 3バイトのうち「あ」で2バイト消費し、残り1バイトは「い」を分断するため半角スペースに。</p>
 <div class="xdemo-note">
 <strong>💡 バイト数のズレを検知する方法</strong><br>
-          MIDBの結果に意図しない半角スペースが含まれていたら、それは「全角文字の境界をまたいで切っている」サインです。レイアウト定義書の開始位置やバイト数を再確認してください。
+          MIDBの結果に意図しない半角スペースが含まれていたら、「文字の境界をまたいでいる」可能性があります。レイアウト定義書の開始位置・バイト数と、取り込み後の文字コード前提を再確認してください。
         </div>
 </section>
 <!-- ===== 5. 関連関数ファミリー ===== -->
 <section class="method-section" id="family">
 <h2><span class="section-num">5</span> 関連関数ファミリー（LEFT/RIGHT/LEN のB付き）</h2>
-<p>MID / MIDB と同様に、LEFT / RIGHT / LEN にも「B付き」のバイト版が存在します。固定長データの処理ではこれらをセットで使います。</p>
+<p>MID / MIDB と同様に、LEFT / RIGHT / LEN にも「B付き」のバイト版があります。既存のDBCS互換環境で固定長データを扱う場合に、これらを組み合わせることがあります。</p>
 <div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
 <tr>
 <th scope="col">文字数ベース</th>
@@ -234,8 +239,8 @@
 </div>
 <p class="code-comment">A1 の文字数を返す。LENBとの差で全角文字の数を推定できる。</p>
 <div class="xdemo-note">
-<strong>💡 全角文字の個数を数える公式</strong><br>
-<code>=LENB(A1)-LEN(A1)</code> で全角文字の個数がわかります。全角は2バイト・半角は1バイトなので、バイト数と文字数の差がそのまま全角文字の数になります。
+<strong>💡 本記事の文字コード前提で全角文字数を確認する例</strong><br>
+CP932／Shift-JIS互換で「対象の全角文字は2バイト、半角文字は1バイト」と確認できるデータなら、<code>=LENB(A1)-LEN(A1)</code> を全角文字数の目安にできます。外字・機種依存文字・サロゲートペア・絵文字などを含む場合には一般化せず、実データで確認してください。
           <div class="code-block mt-8" data-lang="excel">
 <span class="code-line">=LENB(A1)-LEN(A1)</span>
 </div>
@@ -245,27 +250,27 @@
 <section class="method-section" id="fixed">
 <h2><span class="section-num">6</span> 実務の核心：固定長データとMIDB</h2>
 <p>普段Excelの中だけで作業している場合、MIDB関数を使う機会はほとんどありません。文字数でカウントするMIDで十分だからです。</p>
-<p>しかし、<strong>ホストコンピュータ（汎用機・COBOL）や古い業務システムから出力されたデータを処理する際</strong>に、MIDB関数が絶対に必要になります。</p>
+<p><strong>ホストコンピュータ（汎用機・COBOL）や古い業務システムから出力されたデータ</strong>を、確認済みのバイト位置で処理する既存環境では、MIDBが選択肢になる場合があります。</p>
 <h3>「固定長ファイル」とは？</h3>
 <p>CSVファイルは「田中,東京,1200」のようにカンマで区切られています。一方、固定長ファイルには区切り文字がありません。代わりに<strong>「1バイト目から6バイト目まではID」「7バイト目から22バイト目までは氏名」のように、情報の入る枠（バイト数）がガチガチに固定</strong>されています。</p>
-<p>全角16バイトの枠に「田中」（4バイト）が入った場合、残り12バイトは自動的にスペースで埋められます。これにより各フィールドの位置が常に一定になり、プログラムで高速に処理できるのです。</p>
+<p>本記事の前提で、16バイトの枠に「田中」（4バイト）が入った場合、出力仕様によって残り12バイトがスペースで埋められます。これにより各フィールドの位置を一定にできます。</p>
 <h3>固定長データの実例</h3>
 <div class="fixed-data">
 123456ﾀﾅｶ ﾀﾛｳ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;000001500000<br>
 789012ﾔﾏﾀﾞ ﾊﾅｺ&nbsp;&nbsp;&nbsp;&nbsp;000000085000<br>
 555555山田　太郎&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;000000300000
         </div>
-<h3>MIDでは正しく切り出せない理由</h3>
+<h3>バイト定義のデータをMIDで切り出すとずれる理由</h3>
 <p>上のデータで氏名部分には半角カナ（1バイト）や全角漢字（2バイト）が混在しています。MID関数は全角も半角も「1文字」と数えるため、3行目の全角「山田　太郎」と1行目の半角カナ「ﾀﾅｶ ﾀﾛｳ」では同じ文字数でもバイト数が異なります。MIDで「7文字目から16文字」と指定すると、行によって抽出位置がズレて後続の「給与」フィールドが正しく取れません。</p>
 <div class="xdemo-note-red">
-<strong>🔴 固定長データに MID を使ってはいけない</strong><br>
-          固定長データの仕様は「バイト数」で定義されています。「文字数」で切り出す MID を使うと、全角・半角が混在する行で必ず位置がズレます。固定長データには必ず MIDB を使ってください。
+<strong>🔴 バイト定義と文字数指定を混同しない</strong><br>
+          バイト単位で定義されたデータを「文字数」で切り出す MID では、全角・半角が混在する行をレイアウトどおりに分割できません。既存環境でMIDBを使う場合も、文字コードと取り込み後のバイト配置を確認してください。新規設計では、Power Queryや取り込み前の変換を含む別方式も検討できます。
         </div>
 </section>
 <!-- ===== 7. レイアウト定義書 ===== -->
 <section class="method-section" id="layout">
 <h2><span class="section-num">7</span> レイアウト定義書の読み方</h2>
-<p>固定長データには必ず「レイアウト定義書（フィールド仕様書）」が付属します。ここにバイト位置とバイト数が記載されており、これをそのまま MIDB の引数にします。</p>
+<p>固定長データを安全に分割するには「レイアウト定義書（フィールド仕様書）」でバイト位置とバイト数を確認します。文字コードと取り込み条件が定義書の前提を保っている場合に、その位置と長さを MIDB の引数として使えます。</p>
 <h3>定義書の例</h3>
 <div class="table-wrapper"><table class="layout-table"><caption>データテーブル</caption>
 <tr><th scope="col">項目名</th><th scope="col">開始バイト</th><th scope="col">バイト数</th><th scope="col">型</th><th scope="col">備考</th></tr>
@@ -293,7 +298,7 @@
 </section>
 <!-- ===== 8. TRIM+MIDB ===== -->
 <section class="method-section" id="trim">
-<h2><span class="section-num">8</span> TRIM + MIDB：固定長処理の最強コンビ</h2>
+<h2><span class="section-num">8</span> TRIM + MIDB：固定長処理での組み合わせ</h2>
 <p>固定長データはフィールドの長さが足りない分をスペースで埋めています。MIDBで切り出した直後の文字列は後ろに大量のスペースがくっついた状態です。</p>
 <span class="code-label">❌ TRIMなし：後ろにスペースが残る</span>
 <div class="code-readonly">
@@ -306,7 +311,7 @@
 <div class="code-block" data-lang="excel">
 <span class="code-line">=TRIM(MIDB(A2, 7, 16))</span>
 </div>
-<p class="code-comment">MIDBで正確なバイト位置から切り出し &rarr; TRIMで先頭・末尾のスペースと連続スペースを除去。</p>
+<p class="code-comment">MIDBで指定したバイト位置から切り出し &rarr; TRIMで先頭・末尾のスペースと連続スペースを除去。</p>
 <div class="xdemo-note-warn">
           ⚠️ <strong>全角スペースは TRIM では消えない</strong><br>
           Excel の TRIM 関数は半角スペース（CHAR(32)）だけを除去します。全角スペース「　」は残ります。ホスト系データには全角スペースが含まれることも多いため、必要に応じて SUBSTITUTE で除去してください。
@@ -354,7 +359,7 @@
 <section class="method-section" id="patterns">
 <h2><span class="section-num">10</span> 実務パターン集</h2>
 <div class="scenario-box">
-<h4>パターン① 社員番号から部署コード・入社年・連番を分離</h4>
+<h4 aria-level="3">パターン① 社員番号から部署コード・入社年・連番を分離</h4>
 <p>社員番号 <code>SL20230015</code> が「部署(2桁)＋入社年(4桁)＋連番(4桁)」の構成。</p>
 <div class="code-block" data-lang="excel">
 <span class="code-line">=MID(A1, 1, 2)</span>
@@ -411,7 +416,7 @@
 <div class="code-block" data-lang="excel">
 <span class="code-line">=LENB(A1)-LEN(A1)</span>
 </div>
-<p>全角文字の個数を返す。「半角カナで統一されるべきフィールドに全角が混入していないか」の検証に使う。結果が0なら全て半角。</p>
+<p>本記事のCP932／Shift-JIS互換前提では、2バイト文字が混入していないかを確認する目安にできます。結果が0でも、異なる文字コードや特殊文字を含むデータで「すべて半角」とは断定しないでください。</p>
 </div>
 </section>
 <!-- ===== 11. TEXTBEFORE/TEXTAFTER ===== -->
@@ -442,27 +447,27 @@
 </table></div>
 <div class="xdemo-note">
 <strong>💡 MID は不要にならない</strong><br>
-          TEXTBEFORE / TEXTAFTER は「区切り文字ベース」の分割に最適です。一方、MID は「固定位置・固定文字数」での切り出しに使います。社員番号の分離や固定フォーマットの解析では依然として MID が主役です。MIDB については固定長データ処理の唯一の手段であり、代替関数は存在しません。
+          TEXTBEFORE / TEXTAFTER は「区切り文字ベース」の分割に向きます。一方、MID は「固定位置・固定文字数」での切り出しに使います。MIDBは、文字コードとバイト配置を確認できる既存の固定長データをExcel関数で扱う方法の一つです。新規設計では、Power Query、取り込み前の文字コード変換、区切り形式への変換なども比較してください。
         </div>
 </section>
 <!-- ===== 12. まとめ ===== -->
 <section class="goal-section" id="summary">
 <h2><span class="section-num">12</span> まとめ</h2>
 <div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
-<tr><th scope="col">場面</th><th scope="col">最適な関数</th></tr>
+<tr><th scope="col">場面</th><th scope="col">方法の例</th></tr>
 <tr><td>固定フォーマット（半角のみ）の切り出し</td><td class="good">MID</td></tr>
 <tr><td>区切り文字での分割</td><td class="good">MID + FIND（または TEXTAFTER/TEXTBEFORE）</td></tr>
-<tr><td>固定長データ（COBOL・ホスト系）の処理</td><td class="good">MIDB + TRIM（＋SUBSTITUTE＋VALUE）</td></tr>
+<tr><td>固定長データ（COBOL・ホスト系）の処理</td><td class="good">既存の互換環境では MIDB + TRIM（＋SUBSTITUTE＋VALUE）</td></tr>
 <tr><td>バイト数の検証</td><td class="good">LENB</td></tr>
-<tr><td>全角文字の個数カウント</td><td class="good">LENB - LEN</td></tr>
+<tr><td>2バイト文字の混在確認</td><td class="good">前提を確認したうえで LENB - LEN を目安にする</td></tr>
 </table></div>
 <div class="xdemo-note-good">
 <strong>✅ 覚えておくべきポイント</strong><br>
           ① <strong>MID は文字数、MIDB はバイト数</strong>。半角だけなら同じ結果だが、全角混在で差が出る。<br>
-          ② <strong>固定長データには必ず MIDB</strong>。MID を使うとバイト位置がズレて正しく切り出せない。<br>
-          ③ <strong>MIDB + TRIM は固定長処理の最強コンビ</strong>。さらに全角スペースがあれば SUBSTITUTE を追加。<br>
-          ④ <strong>LENB でバイト数を検証</strong>。レコード長のチェックや全角文字の混入検知に使える。<br>
-          ⑤ MIDBの結果に意図しないスペースが出たら、<strong>全角文字の境界をまたいで切っているサイン</strong>。
+          ② バイト定義の固定長データでは、文字数で切り出す MID とバイト数で切り出す MIDB を使い分ける。<br>
+          ③ 既存の互換環境では、<strong>MIDB + TRIM</strong>を組み合わせられる。全角スペースがあれば SUBSTITUTE も検討する。<br>
+          ④ <strong>LENB でバイト数を検証</strong>。レコード長のチェックや文字種の違いを確認する手掛かりにできる。<br>
+          ⑤ MIDBの結果に意図しないスペースが出たら、<strong>文字の境界、開始位置、文字コードを再確認</strong>する。
         </div>
 </section>
 <section class="method-section">
@@ -480,7 +485,7 @@
 
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
-    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
@@ -498,7 +503,7 @@
   </p>
 </footer>
 
-<script src="../../script.js"></script>
+<script src="../../script.js?v=5"></script>
 </body>
 </html>
 

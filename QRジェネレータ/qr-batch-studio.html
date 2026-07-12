@@ -132,7 +132,7 @@
   <div class="tool-title-block">
     <p class="tool-kicker">02 / BATCH QR GENERATOR</p>
     <h1>QR Batch Studio</h1>
-    <p class="lead">複数件の一覧からQRコードをまとめて作成。行単位の安全な分割、末尾Enter、通し番号、バイト数表示、一覧印刷に対応します。処理はブラウザ内で完結し、データは外部に送信されません。</p>
+    <p class="lead">複数件の一覧からQRコードをまとめて作成。行単位で分割し、末尾Enter、通し番号、バイト数表示、一覧印刷に対応します。QR本文の生成処理はブラウザ内で行います。</p>
   </div>
 
   <div class="card">
@@ -231,6 +231,7 @@
     <div id="grid"></div>
 
     <div class="note">
+      ※ このページはGoogle Analyticsと外部配信ライブラリを利用しているため、ページ表示に伴う通信は発生します。QR本文を当サイトのサーバーへ保存・送信する処理は実装していませんが、個人情報・機密情報・パスワードは入力しないでください。<br>
       ※ <strong>通し番号・バイト数：</strong>各QRの下にNo.が付きます。「番号の横にバイト数を表示する」をオンにすると「No.3 (87B)」のように容量も並びます。住所表示をオフにしても番号は残るので、読み取る順番が分かります。<br>
       ※ <strong>印刷：</strong>印刷するとQRコードと番号（必要ならバイト数）だけが出力されます（入力欄・見出し・枠線は印刷されません）。横の個数（列数）で1ページに収まる数とQRの大きさが決まります。<br>
       ※ <strong>文字欠け防止：</strong>分割は必ず行（1件）単位。全角・半角が混在しても文字の途中で切れません。<br>
@@ -241,7 +242,7 @@
 </div>
 
 <footer class="tool-footer">
-  <p><a href="../index.html#qr">QR Automation Labへ戻る</a> ｜ Excel × No VBA Lab</p>
+  <p><a href="../index.html#qr">QR Automation Labへ戻る</a> ｜ <a href="../privacy.html">プライバシーポリシー</a> ｜ Excel × No VBA Lab</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>

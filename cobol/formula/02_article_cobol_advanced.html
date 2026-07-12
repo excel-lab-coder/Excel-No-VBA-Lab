@@ -36,7 +36,7 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/02_article_cobol_advanced.html" rel="canonical">
-<link href="../../common.css" rel="stylesheet">
+<link href="../../common.css?v=8" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -98,7 +98,7 @@
 </div>
 <!-- ========== 目次 ========== -->
 <div class="toc-box">
-<h3>この記事の内容</h3>
+<h3 aria-level="2">この記事の内容</h3>
 <ol>
 <li><a href="#sec-intro">関数だけで「悪路」を走破する（基礎ロジック編）</a></li>
 <li><a href="#sec-pipeline">実務で絶対にやるべき「3層シート構成」と自動処理フロー</a></li>
@@ -124,7 +124,7 @@
 <p>実は、不規則なCOBOL帳票を関数で相手にする際、<strong>同じシート内で抽出から切り出し（MIDB）まで全てを書こうとすると、数式がカオスになり一瞬で破綻</strong>します。実務では数式を組む前に、必ず以下の「3層構造（パイプライン）」になるようにExcelファイル（シート構成）を設計します。</p>
 <div class="pipeline-grid">
 <div class="pipeline-card paste">
-<h4>1. 「貼付」シート</h4>
+<h4 aria-level="3">1. 「貼付」シート</h4>
 <p>システムから落としたテキストデータを<strong>右側のB列にただ貼るだけ</strong>の生データシート。</p>
 <p>左側のA列（作業列）にはあらかじめ <code>=IF(条件, ROW(), "")</code> などの<strong>判定フラグ（ROW関数）</strong>を1万行下まで仕込んでおき、右にデータが貼られた瞬間に裏で自動計算させます。</p>
 </div>
@@ -196,7 +196,7 @@
 </tr>
 </table>
 <p style="margin-top:10px;"><code>MIDB</code> 関数を使って「B列の5バイト目がハイフンか」を判定し、もしそうなら <code>ROW()</code> 関数で自分自身の行番号を出力します。</p>
-<p>よくある「<code>COUNTIF</code>」や「<code>MAX($A$1:A1)+1</code>」を使った連番作成のほうが直感的で便利に見えますが、<strong>20万行の大容量データで使うとExcelがフリーズ・激重になる最大の原因</strong>となります。そのため、単独で計算が完結する <code>ROW()</code> をフラグに使うのが大容量データにおける最速の鉄則です。（なぜ急激に重くなるかの詳細な理由は、<a href="#sec-freeze" style="color:#d32f2f;font-weight:bold;text-decoration:underline;">記事末尾の参考コラム</a>をご覧ください）</p>
+<p>「<code>COUNTIF</code>」や「<code>MAX($A$1:A1)+1</code>」のように行ごとに参照範囲が広がる式は、行数が増えるほど再計算負荷が大きくなります。20万行級では、PC性能、Excelのビット数、他の数式、参照範囲によって応答が著しく遅くなる場合があります。そのため、連番そのものが不要なら、単独で計算が完結する <code>ROW()</code> をフラグに使う方法を先に検討します。（負荷が増える理由は、<a href="#sec-freeze" style="color:#d32f2f;font-weight:bold;text-decoration:underline;">記事末尾の参考コラム</a>をご覧ください）</p>
 </div>
 <div class="attack-box">
 <h3 class="attack-title">ステップ2：抽出シートへ「明細行だけ」をワープさせる</h3>
@@ -207,7 +207,7 @@
 <div class="code-block" data-lang="excel">
 <span class="code-line">=FILTER(貼付シート!B:B, MIDB(貼付シート!B:B, 5, 1)="-")</span>
 </div>
-<h4 style="margin:20px 0 5px;color:#f57f17;">解法B：フラグ行番号 ＋ INDEX ＋ SMALL（全ver対応・20万行処理の最速解）</h4>
+<h4 style="margin:20px 0 5px;color:#f57f17;">解法B：フラグ行番号 ＋ INDEX ＋ SMALL（全ver対応・大規模データ向け候補）</h4>
 <p>古いExcelを使わざるを得ない場合や、万単位の超大容量データがある場合は、抽出側の行番号を利用して、ステップ1で付けた貼付シートの「行番号フラグ（A列）」を <code>SMALL</code> 関数で小さい順から探しに行くのが最も安全で高速です。</p>
 <p class="code-label-good">抽出シート!A1セル（抽出先）</p>
 <div class="code-block" data-lang="excel">
@@ -396,7 +396,7 @@
 </table>
 <p>このように行が下に行くほど、Excelが振り返って処理すべきセルの数が雪だるま式に倍増し、計算量が「Nの2乗」として莫大に膨れ上がります。これが大容量データでExcelが応答不能になる最大の理由です。</p>
 <h3 style="margin-top:20px;color:#e65100;">実務での正解：単独セルで完結させる</h3>
-<p>そのため何万行もあるCOBOL帳票の実務においては、「過去の膨大なセルを振り返る関数」を絶対に避けなければなりません。この記事のステップ1でご紹介した <code>=ROW()</code> などをフラグに使う手法は、<strong>他を振り返らず、自分自身の行番号という1つの情報だけを出力して計算が完結する（プログラムの世界で言う O(N) で終わる）</strong>ため、20万行あっても一瞬で計算が完了します。大容量データを関数で処理する本質的で必須のテクニックです。</p>
+<p>何万行もあるCOBOL帳票では、行ごとに参照範囲が拡張する式を大量に配置すると負荷が増えやすいため注意が必要です。この記事のステップ1で紹介した <code>=ROW()</code> などをフラグに使う手法は、各行で参照範囲を拡張しないため、比較的負荷を抑えやすい方法です。ただし、20万行での処理時間はPC性能、Excelのバージョン・ビット数、同じブック内の数式量によって変わるため、実データの複製で計測してください。</p>
 </section>
 
 </article>
@@ -404,7 +404,7 @@
 
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
-    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
@@ -422,7 +422,7 @@
   </p>
 </footer>
 
-<script src="../../script.js"></script>
+<script src="../../script.js?v=5"></script>
 </body>
 </html>
 

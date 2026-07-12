@@ -21,7 +21,7 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_volatile.html" rel="canonical">
-<link href="../../common.css" rel="stylesheet">
+<link href="../../common.css?v=8" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -88,13 +88,14 @@
 <div class="article-header">
 <div class="article-meta">
 <span class="badge badge-all">全バージョン</span>
-<span class="article-date">更新日: 2026-04-23</span>
+<span class="article-date">更新日: 2026-07-11</span>
 </div>
 <h1 class="article-title">Excel 揮発性関数 完全ガイド<br><span style="font-size:.55em;font-weight:400;color:#666;">&horbar; 再計算の3種類・INDIRECT問題・条件付き書式の超揮発性・シート間設計・構成変更時の落とし穴まで全網羅 &horbar;</span></h1>
 </div>
+<div class="xdemo-note-warn"><strong>速度表記について：</strong><br>計算時間はデータ量やブック構成によって変わります。本記事の行数と秒数は仕組みを説明するための例であり、同じ待ち時間を保証するものではありません。</div>
 <!-- ========== 目次 ========== -->
 <div class="toc-box">
-<h3>この記事の内容</h3>
+<h3 aria-level="2">この記事の内容</h3>
 <ol>
 <li><a href="#sec-three">再計算の3種類を理解する</a></li>
 <li><a href="#sec-core">核心：「動く列」と「動かない列」を図で理解する</a></li>
@@ -253,7 +254,7 @@
 </div>
 <div class="xdemo-note-fire">
 <strong>問題の本質はここ</strong><br>
-          B列は動かない。これは良いことです。しかし STEP 2 でA列の30,000個のINDIRECT数式が毎回再計算されること自体がフリーズの原因です。元データが変わっていなくても、INDIRECTを含むA列は「揮発性だから」というだけで必ず全行が動きます。しかもINDIRECTはシングルスレッドなので、マルチコアCPUでも1コアしか使えません。
+          B列は動かない。これは良いことです。しかし STEP 2 でA列の30,000個のINDIRECT数式が再計算対象になること自体が、待ち時間の原因になり得ます。INDIRECTは揮発性関数で、通常の再計算でも再評価されます。また、INDIRECTの計算部分はシングルスレッドです。
         </div>
 <h3>INDEX+MATCH に置き換えた場合</h3>
 <div class="diagram-wrap">
@@ -325,8 +326,8 @@
 </tr>
 <tr>
 <td class="col-item">体感</td>
-<td><span class="diff-ng">数秒〜十数秒フリーズ</span></td>
-<td><span class="diff-ok">一瞬で完了</span></td>
+<td><span class="diff-ng">環境により待ち時間が発生</span></td>
+<td><span class="diff-ok">再計算対象を絞りやすい</span></td>
 </tr>
 <tr>
 <td class="col-item">原因</td>
@@ -354,7 +355,7 @@
 <tr><td><span class="format-code">INFO()</span></td><td><span class="tag-v">揮発性</span></td><td>使用頻度は低い</td></tr>
 <tr><td><span class="format-code">SUMIF()</span></td><td><span class="tag-sv">条件付き揮発性</span></td><td>第1引数と第3引数のサイズが異なると揮発性（<a href="#sec-sumif">詳細</a>）</td></tr>
 </table></div>
-<p style="font-size:.85em;color:#666;">出典：<a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/excel-performance/excel-improving-calculation-performance" target="_blank">Microsoft Learn &mdash; Excel Improving Calculation Performance</a>、<a href="https://www.decisionmodels.com/calcsecretsi.htm" target="_blank">Decision Models &mdash; Volatile Excel Functions</a></p>
+<p style="font-size:.85em;color:#666;">出典：<a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/excel-performance/excel-improving-calculation-performance" rel="noopener" target="_blank">Microsoft Learn &mdash; Excel Improving Calculation Performance</a>、<a href="https://www.decisionmodels.com/calcsecretsi.htm" rel="noopener" target="_blank">Decision Models &mdash; Volatile Excel Functions</a></p>
 </section>
 <!-- ==========================================================
          【4】よくある誤解と真実
@@ -445,7 +446,7 @@
 <section class="method-section" id="sec-onecell">
 <h2>【7】揮発性関数を「1セルに閉じ込める」パターン</h2>
 <div class="scenario-box">
-<h4>シナリオ：1000行の日付列で期限切れかどうかを判定したい</h4>
+<h4 aria-level="3">シナリオ：1000行の日付列で期限切れかどうかを判定したい</h4>
 </div>
 <p class="color-red">❌ 悪い例：1000行すべてに TODAY() を直接書く</p>
 <div class="code-readonly" data-lang="excel">
@@ -512,7 +513,7 @@
 <tr><th scope="col" style="width:8%">#</th><th class="w-25" scope="col">問題</th><th scope="col" style="width:67%">説明</th></tr>
 <tr><td>1</td><td class="col-item">常に揮発性</td><td class="text-left">引数や結果に関係なく、すべての再計算サイクルで再評価される。結果が前回と同じでも計算自体は毎回走る</td></tr>
 <tr><td>2</td><td class="col-item">閉じたブック参照不可</td><td class="text-left">参照先のブックが閉じているとエラー。INDEX/MATCHは閉じたブックでも動作する</td></tr>
-<tr><td>3</td><td class="col-item">シングルスレッド動作</td><td class="text-left">Excelのマルチスレッド再計算を無効化し、1つのCPUコアでしか計算されない。数万行で致命的なボトルネック</td></tr>
+<tr><td>3</td><td class="col-item">シングルスレッド動作</td><td class="text-left">INDIRECTを含む計算部分はシングルスレッドで処理されるため、大量に使うとボトルネックになりやすい</td></tr>
 </table></div>
 <div class="xdemo-note-fire">
 <strong>代替手段を検討してください</strong><br>
@@ -601,7 +602,7 @@
 </table></div>
 <div class="xdemo-note-fire">
 <strong>実務での教訓</strong><br>
-          「数万行の数式が入ったブックを後から構成変更するのは地獄」。シート名、シート構成、名前の定義は<strong>最初の設計段階で確定</strong>させてください。後から変更すると、変更のたびに数万行が再計算されてExcelがフリーズします。どうしても変更が必要な場合は、必ず<strong>手動計算モード</strong>に切り替えてから行ってください。
+          数万行の数式が入ったブックでは、シート名、シート構成、名前の定義を早い段階で固めると安全です。構成変更で再計算が重くなる場合は、バックアップを取ったうえで一時的に<strong>手動計算モード</strong>を検討し、作業後は計算結果を確認して元の設定へ戻してください。
         </div>
 </section>
 <!-- ==========================================================
@@ -751,7 +752,7 @@
             ③の結果が<br>変わった場合<br>&rarr; 出力シートも<br><strong>再度</strong>再計算
           </div>
 </div>
-<p>このような連鎖が発生するため、整形シートから揮発性関数を排除することが最も効果的な対策です。</p>
+<p>このような連鎖が発生する場合は、整形シートの揮発性関数を減らすことが有効な対策候補です。</p>
 <div class="xdemo-note-fire">
 <strong>対策の鉄則</strong><br>
           整形シートは揮発性フリーに設計する。XLOOKUP / INDEX+MATCH 等の非揮発性関数だけで構成する。TODAY()はシートごと1セルに閉じ込め、他はそのセル参照。条件付き書式は最小限にし、補助列で判定させる。
@@ -789,7 +790,7 @@
 <p>どちらも非揮発性ですが、動作の仕組みが異なります。</p>
 <div class="compare-grid">
 <div class="compare-left">
-<h4 class="text-blue-dark">INDEX+MATCH：1行1数式</h4>
+<h4 class="text-blue-dark" aria-level="3">INDEX+MATCH：1行1数式</h4>
 <p><code>=INDEX(元データ!A:A, MATCH(H$1, 元データ!C:C, 0))</code><br><br>
             MATCHが最初の一致行番号を返し、INDEXがその行の値を取得。複数行を抽出するにはSMALL+IF等の追加工夫が必要。行ごとに1つの数式が必要。</p>
 </div>
@@ -836,7 +837,7 @@
 </div>
 <div class="diagram-cell" style="text-align:center;color:#c62828;font-weight:700">
                 ︙ 30,000行すべて再計算 ︙<br>
-<span style="font-size:.8em">シングルスレッドで数秒〜十数秒</span>
+<span style="font-size:.8em">シングルスレッドで待ち時間が発生する場合あり</span>
 </div>
 </div>
 <div class="diagram-col arrow-col">
@@ -880,7 +881,7 @@
 <td>変わったセルに依存するB列の数式すべて</td>
 </tr>
 </table></div>
-<p>つまり、<strong>依存先への連鎖は起きません</strong>が、<strong>INDIRECT数式自体の30,000回の再計算コスト</strong>が問題なのです。しかもINDIRECTはシングルスレッドなので、マルチコアCPUでも1コアしか使えず、計算が直列で走ります。</p>
+<p>つまり、この例では<strong>依存先への連鎖</strong>だけでなく、<strong>INDIRECT数式自体が再評価されるコスト</strong>を確認する必要があります。INDIRECTを含む計算部分はシングルスレッドで処理されます。</p>
 <h3>INDEX+MATCH / FILTER に置き換えた場合の比較</h3>
 <div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
 <tr><th class="w-30" scope="col">方式</th><th scope="col" style="width:28%">元データ変更なし時</th><th scope="col" style="width:22%">マルチスレッド</th><th class="w-20" scope="col">体感</th></tr>
@@ -888,7 +889,7 @@
 <td class="col-item">INDIRECT &times; 30,000</td>
 <td><span class="diff-ng">30,000回</span></td>
 <td><span class="diff-ng">不可（シングルスレッド）</span></td>
-<td><span class="diff-ng">数秒〜十数秒フリーズ</span></td>
+<td><span class="diff-ng">環境により待ち時間が発生</span></td>
 </tr>
 <tr>
 <td class="col-item">INDEX+MATCH &times; 30,000</td>
@@ -905,7 +906,7 @@
 </table></div>
 <div class="xdemo-note-fire">
 <strong>結論</strong><br>
-          「結果が変わらなければB列は動かない」は事実。しかし問題はA列のINDIRECT自体が毎回30,000回も再計算されるコスト。30,000個のINDIRECTがシングルスレッドで毎回再計算されることで、データが変わっていないにもかかわらず数秒〜十数秒のフリーズが発生します。INDEX+MATCHやFILTERに置き換えれば、この無駄な再計算はゼロになります。
+          「結果が変わらなければB列は動かない」としても、A列のINDIRECT自体は通常の再計算で再評価されます。大量に使って待ち時間が発生している場合は、INDEX+MATCHやFILTERに置き換えることで再計算対象を減らせる可能性があります。
         </div>
 </section>
 <!-- ==========================================================
@@ -998,8 +999,8 @@
 <tr><td>8</td><td class="text-left">条件付き書式は「超揮発性」。手動計算モードでも止まらない。画面表示部分だけ再評価だが、印刷プレビューでは全行一括評価。補助列を活用</td></tr>
 <tr><td>9</td><td class="text-left">オートフィルタは揮発性アクション。INDEX+MATCH / FILTERによる別シート抽出が高速</td></tr>
 <tr><td>10</td><td class="text-left">名前の追加/変更/削除は揮発性アクション。一括操作時はフリーズ注意</td></tr>
-<tr><td>11</td><td class="text-left"><strong>ブック構成の変更（シート名変更・行列挿入削除・シート移動削除）は揮発性アクション</strong>。数万行のブックでは必ず手動計算モードで実行する</td></tr>
-<tr><td>12</td><td class="text-left">整形シートは揮発性フリーに設計する。数万行のINDIRECTはデータが変わらなくても毎回フリーズ。出力シートとの連鎖にも注意</td></tr>
+<tr><td>11</td><td class="text-left"><strong>ブック構成の変更（シート名変更・行列挿入削除・シート移動削除）は再計算の契機になる</strong>。重いブックではバックアップ後に手動計算モードも検討し、作業後に元へ戻す</td></tr>
+<tr><td>12</td><td class="text-left">整形シートでは揮発性関数を必要な箇所に限定する。大量のINDIRECTと出力シートへの依存連鎖に注意</td></tr>
 <tr><td>13</td><td class="text-left">揮発性関数は「悪」ではない。少数・浅い依存なら問題ない。排除しすぎて保守性を犠牲にしない</td></tr>
 <tr><td>14</td><td class="text-left">シート名・シート構成・名前の定義は<strong>最初の設計段階で確定</strong>させる。後からの変更は揮発性アクションの嵐になる</td></tr>
 </table></div>
@@ -1019,7 +1020,7 @@
 
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
-    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
@@ -1037,6 +1038,6 @@
   </p>
 </footer>
 
-<script src="../../script.js"></script>
+<script src="../../script.js?v=5"></script>
 </body>
 </html>

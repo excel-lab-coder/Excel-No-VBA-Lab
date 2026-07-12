@@ -31,6 +31,52 @@
 .goal-section p { margin-bottom: 12px; line-height: 1.8; }
 .goal-section p:last-child { margin-bottom: 0; }
 
+/* 記事の位置づけ・前提条件 */
+.article-context-box {
+  background: #f7f9fc;
+  border: 1px solid #cfd8e3;
+  border-left: 5px solid #546e7a;
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin: 18px 0 28px;
+  color: #263238;
+  box-shadow: var(--shadow-sm);
+}
+.article-context-box h2,
+.article-context-box h3 {
+  border: 0 !important;
+  color: #37474f !important;
+  font-size: 1.05em !important;
+  margin: 0 0 10px !important;
+  padding: 0 !important;
+}
+.article-context-box p { margin: 6px 0; line-height: 1.7; }
+.article-context-box ul {
+  margin: 8px 0 0;
+  padding-left: 1.4em;
+  line-height: 1.7;
+}
+.article-context-box li + li { margin-top: 4px; }
+
+/* 技術情報の根拠を短く区別するラベル */
+.evidence-label {
+  display: inline-block;
+  margin: 0 6px 4px 0;
+  padding: 2px 8px;
+  border: 1px solid #b0bec5;
+  border-radius: 999px;
+  background: #eceff1;
+  color: #37474f;
+  font-size: 0.78em;
+  font-weight: 700;
+  line-height: 1.5;
+  vertical-align: middle;
+}
+.evidence-label.official { background: #e3f2fd; border-color: #64b5f6; color: #0d47a1; }
+.evidence-label.measured { background: #e8f5e9; border-color: #81c784; color: #1b5e20; }
+.evidence-label.guideline { background: #fff8e1; border-color: #ffb74d; color: #6d4c41; }
+.evidence-label.experience { background: #f3e5f5; border-color: #ba68c8; color: #6a1b9a; }
+
 /* 注意・ヒント系ボックス（共通プロパティ） */
 .xdemo-note-good,
 .xdemo-note-warn,

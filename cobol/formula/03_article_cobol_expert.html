@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta content="9" name="difficulty">
+<meta content="8" name="difficulty">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>【関数超絶技巧編】凶悪COBOL帳票の撃破｜ヘッダー紐付け・フィルダウンをExcel関数で自動化｜Excel &times; No VBA Lab</title>
 <!-- Google Analytics -->
@@ -36,7 +36,7 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/03_article_cobol_expert.html" rel="canonical">
-<link href="../../common.css" rel="stylesheet">
+<link href="../../common.css?v=8" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -252,23 +252,33 @@
 <h1 class="article-title">【関数超絶技巧編】凶悪COBOL帳票の撃破｜ヘッダー紐付け・フィルダウンをExcel関数で自動化</h1>
 <p class="article-summary" data-seo-lead="true">エクセルでCOBOL帳票や固定長データを整形したい方向けに、Excel関数・Power Query・MIDBなどを使って列分割、不要行除去、帳票データ変換を進める実務手順を扱います。</p>
 </div>
+<aside class="article-context-box" aria-labelledby="article-context-title">
+<h2 id="article-context-title">この記事を始める前に</h2>
+<ul>
+<li><strong>記事タイプ：</strong>設計事例（数式を帳票仕様に合わせて組み立てます）</li>
+<li><strong>先に読む：</strong><a href="01_article_cobol_basic.html">基本編</a> → <a href="02_article_cobol_advanced.html">応用編</a></li>
+<li><strong>必要な前提：</strong>MIDBによる固定長切り出し、IF・ROW、INDEX＋SMALLまたはFILTER、親子構造と行種判定</li>
+<li><strong>読者が決めること：</strong>ヘッダー・明細の判定条件、親情報と各項目のバイト位置</li>
+<li><strong>そのまま使える部分／要調整：</strong>3層シートと処理の流れ／判定文字・列・バイト位置・参照範囲</li>
+</ul>
+</aside>
 <!-- ========== 目次 ========== -->
 <div class="toc-box">
-<h3>この記事の内容</h3>
+<h3 aria-level="2">この記事の内容</h3>
 <ol>
-<li><a href="#sec-intro">Excel関数の限界に挑む「ラスボス」前哨戦</a></li>
+<li><a href="#sec-intro">親情報を明細へ紐付ける設計</a></li>
 <li><a href="#sec-trial3">【試練3】親グループ情報をすべての明細に紐付ける</a></li>
 <li><a href="#sec-fusion">【完成形】親の紐付けと明細フラグの合わせ技</a></li>
-<li><a href="#sec-next">【さらに先へ】明細行の数が「完全にバラバラ」の真のラスボス</a></li>
+<li><a href="#sec-next">【さらに先へ】明細行数が不規則な帳票</a></li>
 </ol>
 </div>
 <!-- ==========================================================
          導入
       ========================================================== -->
 <section class="goal-section" id="sec-intro">
-<h2><span class="icon">💡</span> Excel関数の限界に挑む「ラスボス」前哨戦</h2>
+<h2><span class="icon">💡</span> 親情報を明細へ紐付ける設計</h2>
 <p><a href="02_article_cobol_advanced.html">【応用編】（基礎ロジック編）</a>では、「不要行の除外」と「2行固定の横展開」という基本の不規則帳票の倒し方を学びました。この応用編のテクニックに、今回解説する<strong>「上部にある会社名などの親データを、下にある明細行に引き継ぐ（紐付ける）」</strong>というフィルダウン処理を加えるだけで、実務で遭遇する大抵のCOBOL帳票は処理できるようになります。</p>
-<p>※ちなみに、この「上の行を下にコピーして埋める」作業は、<strong>パワークエリを使える環境であれば『下方向へコピー』という機能で一瞬で終わる</strong>ものです。しかし、関数しか使えない環境でこれを完全自動化するには、独特な思考回路（超絶技巧）が必要になります。</p>
+<p>※ちなみに、この「上の行を下にコピーして埋める」作業は、<strong>パワークエリを使える環境であれば「下方向へコピー」で定型処理にできます</strong>。処理時間はデータ量やPC環境で変わります。関数だけで同じ流れを自動化する場合は、作業列を含む設計が必要になります。</p>
 </section>
 <!-- ==========================================================
          【試練3】親情報のフィルダウン（紐付け）
@@ -287,7 +297,7 @@
 <p>データベースとして成立させるには、すべての明細行に対して「その親が誰なのか（どの会社・どの伝票の明細か）」というキーの列を持たせなければなりません。これを「紐付け」または「フィルダウン（空白埋め）」と呼びます。</p>
 <h3 style="color:#b71c1c;border-bottom:2px solid #ffcdd2;padding-bottom:5px;margin-top:30px;">【攻略法】貼付シートのA列で「自分自身の上のセル」を振り返って引き継ぐ</h3>
 <div class="attack-box">
-<h3 class="attack-title">伝統的で最強の空白埋め数式（全バージョン対応）</h3>
+<h3 class="attack-title">従来関数で行う空白埋め（全バージョン対応）</h3>
 <p>応用編で学んだ「3層シート構成」のうち、<strong>貼付シート側の作業列（A列など）</strong>に、これ専用の数式を仕込みます。ポイントは、「もし今の行がヘッダー行ならその文字を出し、<strong>そうでない（明細行やゴミ行の）場合は、一つ上の自分の作業列（A列）の値をそのまま参照して引き継ぐ</strong>」という、数式によるバケツリレーです。</p>
 <p class="code-label">貼付シート!A2セル（会社名引継ぎ列）</p>
 <div class="code-block" data-lang="excel">
@@ -338,7 +348,7 @@
 </tr>
 </table>
 </div>
-<p>関数が <code>A1</code>、<code>A2</code>&hellip; と計算していく過程において、「もし親行ならB列から取得し直す、親でなければ一つ上のA列（＝自分がさっき保持した親情報）をそのまま下に流す」という仕組みです。これこそが実務で脈々と使われてきた<strong>最強の「関数フィルダウン」</strong>の手法です。あとは抽出シート側で、明細をワープさせた隣の列でこのA列の作業列を拾ってくれば、全てのデータに共通の会社名が紐付きます。</p>
+<p>関数が <code>A1</code>、<code>A2</code>&hellip; と計算していく過程で、「親行ならB列から取得し直し、親行でなければ一つ上のA列に保持した親情報を引き継ぐ」という仕組みです。抽出シート側で明細と一緒にこの作業列を参照すれば、各明細に親情報を紐付けられます。</p>
 <div class="xdemo-note-good">
 <strong>対応環境向け：SCAN関数でスピル展開</strong><br>
             Excel 2024 / Microsoft 365 など <code>SCAN</code> 関数が使える環境では、上から下へ値を記憶しながらスピル展開させる次世代の力技も可能です。
@@ -354,7 +364,7 @@
       ========================================================== -->
 <section class="method-section" id="sec-fusion">
 <h2>【完成形】「親の紐付け」と「明細フラグ（ROW）」の合わせ技で1行のデータに仕上げる</h2>
-<p>ここまで学んだ「不要行の行取り（ROWフラグ）」と、今回の「親情報のフィルダウン（空白埋め）」を組み合わせることで、複雑な帳票が完璧な1行のデータベースとして一発展開されます。</p>
+<p>ここまで学んだ「不要行の行取り（ROWフラグ）」と、今回の「親情報のフィルダウン（空白埋め）」を組み合わせ、複雑な帳票を1明細1行の表へ展開します。</p>
 <div class="attack-box">
 <h3 class="attack-title">貼付シートに「フラグ」と「フィルダウン」の2つの作業列を持つ</h3>
 <p>実務では、貼付シート側に作業列を2つ（A列とB列など）設けて、それぞれの役割を分担させます。判定フラグとなる列を一番左（A列）に置くのが、視認性も高く、抽出関数でキーとする際にも一番自然な配置です。</p>
@@ -586,30 +596,17 @@
 <strong>F列</strong> &hellip; A列（明細データ）からMIDBで金額を切り出し、<code>*1</code> で数値化する。
           </div>
 <h3 style="color:#b71c1c;border-bottom:2px solid #ffcdd2;padding-bottom:5px;margin-top:30px;">なぜ「貼付シート」ではなく「抽出シート」でMIDBを使うのか？</h3>
-<p>この構成にしている理由は、<strong>速度・効率・シンプルさ</strong>の3点に集約されます。</p>
-<p>実務で扱うCOBOL帳票の貼付シートは、ヘッダー行・罫線行・空白行・合計行などのゴミ行を含めると<strong>10万行～30万行に膨れ上がる</strong>ことが珍しくありません。この貼付シートにMIDBやTRIMなどの文字列操作関数を直接埋め込むと、最終的に不要となるゴミ行に対しても毎回すべての関数が再計算されます。これが数十万行&times;複数列に及ぶと、<strong>再計算のたびにExcelの動作が極端に重くなり、最悪の場合フリーズや応答なしに陥ります。</strong></p>
-<p>一方、本記事の方式では、貼付シート側の作業列はIF関数とROW関数という<strong>極めて軽い数式だけ</strong>に留めておき、重い文字列操作（MIDB・TRIM等）は<strong>抽出シート側で「必要な明細行だけ」に対して実行</strong>します。</p>
-<p>例えば、貼付シートが30万行あってもそのうち有効な明細行が5,000行であれば、MIDBが計算されるのはたった5,000回です。30万回と5,000回では、計算負荷に<strong>60倍もの差</strong>が生まれます。</p>
-<div class="xdemo-note-danger">
-<strong>やってはいけないパターン</strong><br>
-            貼付シートのC列の隣（D列・E列&hellip;）に直接 <code>=TRIM(MIDB(C2,11,8))</code> のような数式を30万行分入れること。ゴミ行も含めてすべて計算されるため、動作が致命的に重くなります。
-          </div>
-<div class="xdemo-note-good">
-<strong>本記事の方式のメリット</strong><br>
-            ① 貼付シートの作業列は IF + ROW だけなので<strong>数十万行あっても軽い</strong><br>
-            ② 抽出シートのA列・B列で必要な明細行だけを綺麗に吸い上げる<br>
-            ③ 吸い上げた後の<strong>必要な行だけ</strong>にMIDB・TRIMで整形するので<strong>計算回数が最小限</strong><br>
-            ④ 「抽出&rarr;整形」の流れが一方向なので、数式の構成が<strong>シンプルで読みやすい</strong>
-</div>
-<p style="margin-top:15px;">つまり、<strong>「貼付シートでは仕分けだけ。重い整形処理は抽出シートで、必要な行だけに行う」</strong>という役割分担こそが、大量データでもExcelをフリーズさせずに正確なデータベースを完成させる最大のポイントです。</p>
+<p>目的は、文字列を切り出す対象を必要な明細行に絞り、数式の役割を分けることです。貼付シートがヘッダー行・罫線行・空白行・合計行を含む10万～30万行になる場合、全行・複数列にMIDBやTRIMを配置すると、不要行も計算対象になり、再計算が重くなる可能性があります。</p>
+<p>本記事では貼付シートをIF・ROWによる仕分けに留め、抽出後の明細だけにMIDB・TRIMを適用します。例えば30万行のうち明細が5,000行なら、文字列切り出しの対象数は30万行から5,000行（60分の1）になります。ただし、実際の速度は数式・参照範囲・Excelのバージョン・PC環境でも変わるため、コピーしたブックで確認してください。</p>
+<div class="xdemo-note-good"><strong>本記事の役割分担</strong><br>貼付シートでは行種を判定し、抽出シートでは必要な明細と親情報だけをMIDB・TRIMで整形します。全行へ切り出し式を置く案と、必要行へ絞る案を実測で比較してください。</div>
 </div>
 </section>
 <!-- ==========================================================
          次のステップへ
       ========================================================== -->
 <section class="method-section" id="sec-next">
-<h2>【さらに先へ】明細行の数が「完全にバラバラ」の真のラスボス</h2>
-<p>ここまでマスターすれば大抵の帳票は怖くありませんが、世の中には「ある伝票は明細が1行、別の伝票は3行&hellip;」という、<strong>1レコードの行数が完全に不規則な真のラスボス帳票</strong>が存在します。このような「もう算数（WRAPROWS等）での折り返しすら通用しない」限界の帳票を、関数だけで正規化してデータベース化する究極のパイプライン思想については、別ページの <a href="04_article_cobol_irregular.html" style="color:#d32f2f;font-weight:bold;text-decoration:underline;">【関数限界突破編】完全不規則明細の正規化展開</a> で解説します。</p>
+<h2>【さらに先へ】明細行数が不規則な帳票</h2>
+<p>伝票によって明細が1行、3行&hellip;と異なる帳票では、固定行数を前提としたWRAPROWS等の折り返しは使えません。行種の判定から正規化する設計は、別ページの <a href="04_article_cobol_irregular.html" style="color:#d32f2f;font-weight:bold;text-decoration:underline;">【不規則明細・完結編】完全不規則明細の正規化展開</a> で解説します。</p>
 </section>
 
 </article>
@@ -617,7 +614,7 @@
 
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
-    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
@@ -635,6 +632,6 @@
   </p>
 </footer>
 
-<script src="../../script.js"></script>
+<script src="../../script.js?v=5"></script>
 </body>
 </html>

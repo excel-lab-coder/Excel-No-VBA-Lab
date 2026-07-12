@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="ja">
 <head>
@@ -27,7 +27,7 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
-<link href="../../common.css" rel="stylesheet">
+<link href="../../common.css?v=8" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 
 
@@ -98,7 +98,7 @@
 <section id="sort">
 <h2>並べ替え</h2>
 <div class="step-box">
-<h4>操作手順</h4>
+<h4 aria-level="3">操作手順</h4>
 <p>1. 並べ替えたい列のヘッダーにある<strong>ドロップダウン矢印（▼）</strong>をクリックします。<br>
           2. <strong>「昇順で並べ替え」</strong>または<strong>「降順で並べ替え」</strong>を選択します。<br>
           ※ヘッダーをクリックした状態で<strong>ホーム タブ &rarr; 並べ替え</strong>ボタンでも同じことができます。</p>
@@ -115,7 +115,7 @@
 <h2>重複行の削除</h2>
 <p>Excelの「重複の削除」機能に対応しますが、Power Queryでは「どの列を基準に重複を判定するか」をより直感的に制御できます。</p>
 <div class="step-box">
-<h4>操作手順</h4>
+<h4 aria-level="3">操作手順</h4>
 <p>1. 重複判定の基準にしたい列を選択します（1列でも複数列でもOK。Ctrl+クリックで複数選択）。<br>
           2. <strong>ホーム タブ &rarr; 行の削除 &rarr; 重複の削除</strong> をクリックします。<br>
           3. 選択した列の値が同じ行のうち、最初の1行だけが残り、2行目以降が削除されます。</p>
@@ -186,7 +186,7 @@
 </div>
 </div>
 <div class="step-box">
-<h4>操作手順（フィル下方向）</h4>
+<h4 aria-level="3">操作手順（フィル下方向）</h4>
 <p>1. フィルしたい列のヘッダーをクリックして選択します。<br>
           2. <strong>変換 タブ &rarr; フィル &rarr; 下</strong> をクリックします。<br>
           3. null の部分が、直上の値で埋められます。</p>
@@ -232,7 +232,7 @@
 <h2>実践例 &horbar; 結合セルのある報告書データを整える</h2>
 <p>部署のセルが結合された報告書をPower Queryに取り込み、フィルで空欄を埋め、不要行を除去し、特定の部署だけフィルターする一連の流れを実践してみましょう。</p>
 <div class="step-box">
-<h4>Step 1：フィルで部署の空欄を埋める</h4>
+<h4 aria-level="3">Step 1：フィルで部署の空欄を埋める</h4>
 <p>「部署」列を選択 &rarr; <strong>変換 &rarr; フィル &rarr; 下</strong></p>
 </div>
 <div class="step-box">
@@ -270,7 +270,7 @@
 </main>
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
-    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
@@ -287,7 +287,7 @@
     <a href="../../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../../script.js"></script>
+<script src="../../script.js?v=5"></script>
 </body>
 </html>
 

@@ -34,7 +34,7 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
-<link href="../common.css" rel="stylesheet">
+<link href="../common.css?v=8" rel="stylesheet">
 <link href="../article.css" rel="stylesheet">
 <script type="application/ld+json">
 {
@@ -133,7 +133,7 @@
   </p>
 <p>
 <strong>【推奨】アプローチ①：承認済みのライブラリを活用する</strong><br>
-    GitHub上の <a href="https://github.com/yas78/QRCodeLibVBA" target="_blank">QRCodeLibVBA</a> などを、情報システム部門や管理者が認める手順でVBEにインポートする方法です。実装済みのコードを活用するため、開発・テスト工数が大幅に少なく、バグリスクも低くなります。<strong>外部コードの利用が社内ルール上許可され、承認された導入経路がある場合に検討してください。</strong>
+    GitHub上の <a href="https://github.com/yas78/QRCodeLibVBA" rel="noopener" target="_blank">QRCodeLibVBA</a> などを、情報システム部門や管理者が認める手順でVBEにインポートする方法です。実装済みのコードを活用するため、開発・テスト工数が大幅に少なく、バグリスクも低くなります。<strong>外部コードの利用が社内ルール上許可され、承認された導入経路がある場合に検討してください。</strong>
 </p>
 <p>
 <strong>アプローチ②：VBA＋Windows標準APIで自力実装する（本記事で公開）</strong><br>
@@ -1537,7 +1537,7 @@ End Sub
 <tr class="bg-e8f5e9"><td>VBA＋Windows標準API（本記事の公開版）</td><td class="text-center">&cir;</td><td class="text-center">不要</td><td class="text-center">不要</td><td class="text-center">高</td><td class="text-center">◎</td><td class="text-center">&cir; 最終手段</td></tr>
 </table>
 <div class="xdemo-note-good">
-<strong>✅ まず承認済みライブラリを検討：</strong><a href="https://github.com/yas78/QRCodeLibVBA" target="_blank">QRCodeLibVBA</a> などを、社内ルールに沿って承認された手順で利用できれば、実装は大幅に楽になり、テスト工数もバグリスクも格段に減ります。<strong>外部コード利用が許可されるかどうかは、必ず情報システム部門・管理者に確認してください。</strong>本記事のVBA公開版は、それが不可能な場合の最終手段です。
+<strong>✅ まず承認済みライブラリを検討：</strong><a href="https://github.com/yas78/QRCodeLibVBA" rel="noopener" target="_blank">QRCodeLibVBA</a> などを、社内ルールに沿って承認された手順で利用できれば、実装は大幅に楽になり、テスト工数もバグリスクも格段に減ります。<strong>外部コード利用が許可されるかどうかは、必ず情報システム部門・管理者に確認してください。</strong>本記事のVBA公開版は、それが不可能な場合の最終手段です。
   </div>
 </section>
 <!-- ========================================== -->
@@ -1612,7 +1612,7 @@ End Sub
   </div>
 <div class="scenario-card">
 <span class="sc-label">基本</span>
-<h4>データベース移行</h4>
+<h4 aria-level="3">データベース移行</h4>
 <p>旧システム &rarr; 新システムへ顧客マスタを転記。顧客名（漢字）、住所、電話番号をタブ区切りで1レコードずつQR化。手入力なしでリーダーで読み取るだけ。</p>
 </div>
 <div class="scenario-card">
@@ -1680,7 +1680,7 @@ End Sub
     公開版コードは、外部ライブラリを使わずにQR規格の主要処理をVBA内で構成します。実装を読み替える場合は、文字コード変換、誤り訂正、マスク選択、BMP出力の4箇所が特に影響範囲の大きい部分です。
   </p>
 <div class="xdemo-note-good">
-<strong>✅ ライブラリを使える環境では：</strong>情報システム部門・管理者が承認した導入経路がある場合は、実装済みの <a href="https://github.com/yas78/QRCodeLibVBA" target="_blank">QRCodeLibVBA</a> も選択肢です。本記事の公開版コードは、外部コードを利用できない環境で検証を始めるための最終手段として位置づけます。
+<strong>✅ ライブラリを使える環境では：</strong>情報システム部門・管理者が承認した導入経路がある場合は、実装済みの <a href="https://github.com/yas78/QRCodeLibVBA" rel="noopener" target="_blank">QRCodeLibVBA</a> も選択肢です。本記事の公開版コードは、外部コードを利用できない環境で検証を始めるための最終手段として位置づけます。
   </div>
 </section>
 <!-- ========================================== -->
@@ -1874,7 +1874,7 @@ QR入力で手入力ミスを減らし、バリデーションで異常値や不
 <h2>📋 実践シナリオ</h2>
 <div class="scenario-card">
 <span class="sc-label">基本</span>
-<h4>シナリオA：データベース移行（顧客マスタ500件）</h4>
+<h4 aria-level="3">シナリオA：データベース移行（顧客マスタ500件）</h4>
 <p>1件あたり「顧客コード（半角8字）＋氏名（全角8字）＋住所（全角20字）＋電話（半角11字）」。UTF-8換算で 8+24+60+11+区切り4 = 約107バイト/件。公開版コードのM相当ではバージョン14に2〜3件程度格納できます。500件なら約167〜250枚のQR、A4に6枚配置で約28〜42ページが目安です。読み取り時間は1枚3〜5秒として約8〜21分。</p>
 <p style="color:#1565c0;font-size:.9rem;"><strong>二重チェック例：</strong>新システム側で「顧客コード＋生年月日」のクロスチェック、電話番号桁数チェック、最終QRの件数合計照合を実装 &rarr; 万が一の読み取りエラーも検出可能。</p>
 </div>
@@ -1911,7 +1911,7 @@ QR入力で手入力ミスを減らし、バリデーションで異常値や不
 <tr><td>トリガーモード</td><td class="text-center">マニュアル（推奨）</td><td class="text-center">マニュアル（推奨）</td></tr>
 </table>
 <div class="xdemo-note-danger">
-<strong>🔥 文字コード設定の確認方法：</strong>スキャナの文字コード設定は、二次元メニューコード（UniversalConfig等で作成）を読み取らせることで変更できます。Shift-JISで作ったQRは、オプトエレクトロニクス側を漢字出力モード②＋Shift-JISにします。UTF-8は支援ツールのMOSTを使う漢字出力設定が必要になるため、制限環境では採用可否を先に確認してください。詳細は<a href="https://www.opto.co.jp/products/tool/manual_download/instruction_kanjioutput.html" target="_blank">オプトエレクトロニクス 漢字出力インストラクション</a>を参照。
+<strong>🔥 文字コード設定の確認方法：</strong>スキャナの文字コード設定は、二次元メニューコード（UniversalConfig等で作成）を読み取らせることで変更できます。Shift-JISで作ったQRは、オプトエレクトロニクス側を漢字出力モード②＋Shift-JISにします。UTF-8は支援ツールのMOSTを使う漢字出力設定が必要になるため、制限環境では採用可否を先に確認してください。詳細は<a href="https://www.opto.co.jp/products/tool/manual_download/instruction_kanjioutput.html" rel="noopener" target="_blank">オプトエレクトロニクス 漢字出力インストラクション</a>を参照。
   </div>
 <div class="xdemo-note-info">
 <strong>ℹ️ 設定パターン表はコード直前に移動しました。</strong>ここでは、実機側で追加確認するサフィックス、ディレイ、キーボード言語などの補足項目だけを確認します。
@@ -2118,7 +2118,7 @@ QR入力で手入力ミスを減らし、バリデーションで異常値や不
 <!-- ===== フッター ===== -->
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
-    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。社内制限の無断回避を推奨するものではありません。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong>
@@ -2142,7 +2142,7 @@ QR入力で手入力ミスを減らし、バリデーションで異常値や不
     <a href="../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../script.js"></script>
+<script src="../script.js?v=5"></script>
 
 </body>
 </html>

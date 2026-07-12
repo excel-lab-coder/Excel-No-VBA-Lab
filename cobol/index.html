@@ -49,7 +49,7 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
-<link rel="stylesheet" href="../common.css">
+<link rel="stylesheet" href="../common.css?v=8">
 <link rel="stylesheet" href="../index.css">
 <link rel="stylesheet" href="../article.css">
 <script>
@@ -178,7 +178,7 @@
                        },
                        {
                            "@type":  "Question",
-                           "name":  "不規則明細でも完全自動化できますか？",
+                           "name":  "不規則明細でも定型処理を自動化できますか？",
                            "acceptedAnswer":  {
                                                   "@type":  "Answer",
                                                   "text":  "はい。パターン抽出と例外行ルールを先に定義すれば、多くの帳票で再現可能です。"
@@ -197,7 +197,7 @@
                            "name":  "元データがShift_JISでも対応可能ですか？",
                            "acceptedAnswer":  {
                                                   "@type":  "Answer",
-                                                  "text":  "可能です。取り込み時に文字コードを明示し、UTF-8側で処理する流れを推奨しています。"
+                                                  "text":  "対応候補はありますが、バイト位置で切り出す場合はコードページとレイアウト定義を一致させる必要があります。UTF-8へ変換する場合はバイト数が変わる可能性があるため、位置をそのまま流用せずサンプルで確認してください。"
                                               }
                        }
                    ]
@@ -226,6 +226,10 @@
     <h1>COBOL帳票処理 総合ガイド</h1>
     <p class="article-summary" data-seo-lead="true">エクセルでCOBOL帳票や固定長データを整形したい方向けに、Excel関数・Power Query・MIDBなどを使って列分割、不要行除去、帳票データ変換を進める実務手順を扱います。</p>
 <p class="article-summary">固定長テキストや不規則明細の「読めないデータ」を、分析・転記可能な表に変えるための実務カテゴリです。VBAが使えない、マクロが禁止されている会社でも、関数版とPower Query版を代替手段として選べます。</p>
+    <div class="xdemo-note-danger" role="note" aria-label="MIDBと文字コードの互換性に関する注意">
+      <strong>⚠ MIDBと文字コードの確認</strong><br>
+      Microsoftは現在MIDBを非推奨としています。本カテゴリのMIDB数式は、既存環境でCP932／Shift-JIS互換のバイト配置とレイアウト定義を確認できる場合の事例です。文字コード、外字、特殊文字、バイト位置を実データのコピーで検証し、新規運用ではPower Query等の代替案も比較してください。
+    </div>
   </section>
 
   <section class="method-section">
@@ -296,7 +300,7 @@
         <h4>Excel関数アプローチ</h4>
         <p class="pattern-desc">MIDBやTRIM、スピルを活用した「シート内完結」の解決策。ファイルを配布して「誰でもコピペするだけ」の状態を作りたい場合に最適です。</p>
         <ul class="pattern-features">
-          <li>全角・半角混在もMIDBで正確に切り出し</li>
+          <li>確認済みの文字コードとバイト位置を基にMIDBで切り出し</li>
           <li>コピペした瞬間に結果が出る「即時性」</li>
           <li>VBA・マクロ禁止、Power Query未導入PCでも動作</li>
         </ul>
@@ -317,6 +321,7 @@
   </section>
 
 
+  <p class="level-scale-note">※ Lvは一般的なExcel技能の共通基準ではなく、帳票構造の判定、文字コード、親子関係、数式・Power Query設計を含むこのカテゴリ内の相対的な目安です。</p>
   <div class="level-legend">
     <div class="legend-row-levels">
       <span class="level-legend-item"><span class="lv-dot lv-dot-1"></span>Lv.1 入門</span>
@@ -467,15 +472,26 @@
 
   <section class="method-section method-section-spaced">
     <h2><span class="icon">🛣️</span> 推奨学習ルート</h2>
+    <h3>共通導入</h3>
     <ul class="article-list">
       <li><a class="article-link" href="./intro/01_article_cobol_fixed.html">1. COBOL固定長とは何か</a><p class="article-summary">まず帳票構造を理解。</p></li>
-      <li><a class="article-link" href="./intro/03_article_cobol_output_patterns.html">2. COBOL帳票データの出力パターン集</a><p class="article-summary">サンプルデータあり。自分の帳票がどの構造に近いかを見極める。</p></li>
-      <li><a class="article-link" href="./formula/01_article_cobol_basic.html">3. 固定長データ分割（数式版）</a><p class="article-summary">関数で分割・整形の基本を実装。</p></li>
-      <li><a class="article-link" href="./formula/04_article_cobol_irregular.html">4. 不規則明細・完結編</a><p class="article-summary">実務で難しい崩れ方に対応。</p></li>
-      <li><a class="article-link" href="./pq/01_article_cobol_pq.html">5. COBOL整形（Power Query版）</a><p class="article-summary">更新運用を重視したルート。</p></li>
-      <li><a class="article-link" href="./pq/03_article_cobol_pq_midb_ref.html">6. MIDB相当関数の置換</a><p class="article-summary">レガシー処理を現代化。</p></li>
-      <li><a class="article-link" href="../samples/index.html">7. サンプルデータ集</a><p class="article-summary">可変ブロック明細、主情報と複数付属情報など、全角半角が混在する約300行規模の架空COBOL帳票で練習できます。</p></li>
+      <li><a class="article-link" href="./intro/02_article_cobol_approach.html">2. 3つのアプローチを比較する</a><p class="article-summary">関数・Power Query・VBAの特徴と運用条件を確認。</p></li>
+      <li><a class="article-link" href="./intro/03_article_cobol_output_patterns.html">3. COBOL帳票データの出力パターン集</a><p class="article-summary">自分の帳票がどの構造に近いかを見極める。</p></li>
     </ul>
+    <h3>数式ルート</h3>
+    <ul class="article-list">
+      <li><a class="article-link" href="./formula/01_article_cobol_basic.html">4A. 固定長データ分割・基本編</a><p class="article-summary">文字コードとレイアウトを確認し、基本の分割を実装。</p></li>
+      <li><a class="article-link" href="./formula/02_article_cobol_advanced.html">5A. 不要行除外・縦持ち展開</a><p class="article-summary">行種別の判定と抽出を追加。</p></li>
+      <li><a class="article-link" href="./formula/03_article_cobol_expert.html">6A. 親情報の紐付け・フィルダウン</a><p class="article-summary">応用編のロジックを前提に親子構造へ対応。</p></li>
+      <li><a class="article-link" href="./formula/04_article_cobol_irregular.html">7A. 不規則明細・完結編</a><p class="article-summary">前3記事のパイプラインを不規則な件数へ適用。</p></li>
+    </ul>
+    <h3>Power Queryルート</h3>
+    <ul class="article-list">
+      <li><a class="article-link" href="./pq/01_article_cobol_pq.html">4B. 不要行除去と一括結合</a><p class="article-summary">更新運用を重視した基本ルート。</p></li>
+      <li><a class="article-link" href="./pq/02_article_cobol_pq3.html">5B. 親情報のフィルダウンと明細整形</a><p class="article-summary">GUI操作とM言語を使って帳票構造を整える。</p></li>
+      <li><a class="article-link" href="./pq/03_article_cobol_pq_midb_ref.html">6B. MIDB相当関数の参考資料</a><p class="article-summary">文字コードとバイト位置を確認できる場合の上級資料。</p></li>
+    </ul>
+    <p><a class="article-link" href="../samples/index.html">練習用サンプルデータ集</a> — 各ルートの前後で結果確認に利用できます。</p>
   </section>
 
   <section class="method-section method-section-spaced">
@@ -483,9 +499,9 @@
     <ul class="article-list">
       <li class="article-item"><p class="article-link">Q. COBOL帳票はなぜ扱いづらいのですか？</p><p class="article-summary">A. 紙出力前提の固定桁・改ページ構造になっており、表計算向けの列構造を前提にしていないためです。</p></li>
       <li class="article-item"><p class="article-link">Q. 関数版とPower Query版はどちらを選ぶべき？</p><p class="article-summary">A. 単発分析や軽量処理は関数版、定期運用や大量データはPower Query版が向いています。VBAやマクロが禁止されている場合でも、この2つは現実的な代替手段になります。</p></li>
-      <li class="article-item"><p class="article-link">Q. 不規則明細でも完全自動化できますか？</p><p class="article-summary">A. はい。パターン抽出と例外行ルールを先に定義すれば、多くの帳票で再現可能です。</p></li>
+      <li class="article-item"><p class="article-link">Q. 不規則明細でも定型処理を自動化できますか？</p><p class="article-summary">A. 帳票のパターンと例外行ルールを定義できる場合は、多くの定型部分を自動化できます。形式外の行は確認対象として残す設計が安全です。</p></li>
       <li class="article-item"><p class="article-link">Q. ヘッダー繰り返しはどう除去しますか？</p><p class="article-summary">A. 行判定キー（帳票タイトル、列名、桁数）を使ってフィルタリングします。関数版/PQ版どちらも対応手順があります。</p></li>
-      <li class="article-item"><p class="article-link">Q. 元データがShift_JISでも対応可能ですか？</p><p class="article-summary">A. 可能です。取り込み時に文字コードを明示し、UTF-8側で処理する流れを推奨しています。</p></li>
+      <li class="article-item"><p class="article-link">Q. 元データがShift_JISでも対応可能ですか？</p><p class="article-summary">A. 対応候補はありますが、バイト位置で切り出す場合はコードページとレイアウト定義を一致させる必要があります。UTF-8へ変換する場合はバイト数が変わる可能性があるため、位置をそのまま流用せずサンプルで確認してください。</p></li>
     </ul>
   </section>
 
@@ -503,7 +519,7 @@
 
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
-    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../samples/index.html">サンプルデータ</a></p>
@@ -521,6 +537,6 @@
     <a href="../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../script.js"></script>
+<script src="../script.js?v=5"></script>
 </body>
 </html>

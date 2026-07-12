@@ -48,8 +48,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
 
-<link href="common.css" rel="stylesheet">
-    <link href="index.css?v=3" rel="stylesheet">
+<link href="common.css?v=9" rel="stylesheet">
+    <link href="index.css?v=5" rel="stylesheet">
 
 <script>
   window.ExcelLab = window.ExcelLab || {};
@@ -333,6 +333,16 @@
     </button>
     <button
       aria-selected="false"
+      aria-controls="curated"
+      class="tab-btn tab-btn-curated"
+      data-tab="curated"
+      id="tab-btn-curated"
+      role="tab"
+      tabindex="-1">
+      ⭐ 厳選記事集
+    </button>
+    <button
+      aria-selected="false"
       aria-controls="unlocked"
       class="tab-btn"
       data-tab="unlocked"
@@ -502,7 +512,7 @@
 
         <div class="hero-stat">
           <span class="hero-stat-num num-gold">Lv.1〜8</span>
-          <span class="hero-stat-label">難易度8段階で表示</span>
+          <span class="hero-stat-label">サイト内の相対難易度</span>
         </div>
 
         <div class="hero-stat">
@@ -620,7 +630,7 @@
     <div class="hero-cta-box">
       <p class="hero-cta-msg">
         📖 まずは、あなたのExcelバージョンに合った手法から習得を開始してください。
-        <span class="cta-sub">難易度・対応バージョン・実務でのレア度まで、体系的に整理しています。</span>
+        <span class="cta-sub">本サイトは順番に進む教科書ではなく、操作手順と実務の設計事例を目的別に探す資料集です。Lvは一般的なExcel技能の基準ではなく、サイト内での相対的な目安です。</span>
       </p>
 
       <div class="hero-cta-buttons">
@@ -687,7 +697,7 @@
 
         <p class="desc">
           数十年稼働するCOBOLシステムが<strong>紙印刷前提</strong>で吐き出すデータの塊。「VBAが使えないからエクセルでは無理」と諦めていませんか？<br>
-          <strong>関数だけ・パワークエリだけ</strong>で、毎月の手作業コピペ整形を<strong>完全自動化</strong>する堅牢な仕組みをゼロから構築します。
+          <strong>関数だけ・パワークエリだけ</strong>で、毎月の手作業コピペ整形の<strong>定型部分を自動化</strong>する仕組みをゼロから構築します。例外データは確認対象として残します。
         </p>
 
         <span class="cta">→ COBOL帳票 攻略ガイドへ</span>
@@ -1073,10 +1083,11 @@
           <li><a href="qr/07_qr_full_system.html">QR1回で業務システム全操作を完結</a><span class="rank-badge lv7" aria-label="難易度レベル7、かなり難しい">Lv.7</span><span class="rank-combined" data-rare-id="qr_series" data-rare-prefix="🔥💎"></span></li>
           <li><a href="functions/old/article_countif_extract.html">【FILTER代替】VBA不要・CSE不要の複数抽出</a><span class="rank-badge lv7" aria-label="難易度レベル7、かなり難しい">Lv.7</span><span class="rank-combined" data-rare-id="filter_alt" data-rare-prefix="🔥💎"></span></li>
           <li><a href="others/speed/article_02_formula_techniques.html">数式の速度UPテクニック集</a><span class="rank-badge lv6" aria-label="難易度レベル6、かなり難しい">Lv.6</span><span class="rank-combined" data-rare-id="speed_formula" data-rare-prefix="🔥💎"></span></li>
-          <li><a href="others/speed/article_01_lookup_speed.html">検索関数の速度とメモリ効率</a><span class="rank-badge lv5" aria-label="難易度レベル5、難しい">Lv.5</span><span class="rank-combined" data-rare-id="speed_lookup" data-rare-prefix="🔥💎"></span></li>
+          <li><a href="others/speed/article_01_lookup_speed.html">検索関数の速度と参照範囲</a><span class="rank-badge lv5" aria-label="難易度レベル5、難しい">Lv.5</span><span class="rank-combined" data-rare-id="speed_lookup" data-rare-prefix="🔥💎"></span></li>
           <li><a href="functions/old/article_zip_reverse.html">住所→郵便番号 逆引き（最長一致検索）</a><span class="rank-badge lv7" aria-label="難易度レベル7、かなり難しい">Lv.7</span><span class="rank-combined" data-rare-id="zip_reverse" data-rare-prefix="🔥💎"></span></li>
         </ol>
       </div>
+      <p class="curated-collection-link"><a href="#curated" data-tab-trigger="curated" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">⭐ 厳選記事集をすべて見る</a></p>
     </div>
   </div>
   <!-- FAQセクション -->
@@ -1125,7 +1136,341 @@
 <!-- /tab-panel#home -->
 
 <!-- ==========================================
-     タブ2: 技術の流れ
+     後半タブ: 厳選記事集
+     ========================================== -->
+<div aria-labelledby="tab-btn-curated" class="tab-panel" id="curated" role="tabpanel" tabindex="-1">
+  <section class="curated-intro" aria-labelledby="curated-title">
+    <div class="curated-intro-shell">
+      <div class="curated-intro-copy">
+        <div class="curated-intro-kicker">EDITOR'S SELECTION / FIELD NOTES</div>
+        <h2 id="curated-title">厳選記事集</h2>
+        <p>掲載記事の中から、独自性が高いものと、実務で効果を出しやすいものを選びました。関数の紹介だけでは終わらない、現場での使いどころと設計判断まで読める特集です。</p>
+        <div class="curated-intro-tags" aria-label="選定区分">
+          <span>⭐ 総合おすすめ</span><span>💎 レアテク</span><span>🔥 即戦力</span>
+        </div>
+      </div>
+      <div class="curated-emblem" aria-hidden="true">
+        <span class="curated-emblem-star">★</span>
+        <span class="curated-emblem-main">SELECTED</span>
+        <span class="curated-emblem-sub">EXCEL FIELD NOTES</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="curated-signals" aria-label="厳選記事の特徴">
+    <div class="curated-signal curated-signal-rare">
+      <span class="curated-signal-code">RARE</span>
+      <strong>見つけにくい技術</strong>
+      <p>一般的な入門記事では扱われにくい、現場固有の組み合わせを優先。</p>
+    </div>
+    <div class="curated-signal curated-signal-impact">
+      <span class="curated-signal-code">IMPACT</span>
+      <strong>実務を変える効果</strong>
+      <p>入力、整形、印刷、保守の手作業を減らしやすい記事を選定。</p>
+    </div>
+    <div class="curated-signal curated-signal-design">
+      <span class="curated-signal-code">DESIGN</span>
+      <strong>設計判断まで読める</strong>
+      <p>VBA禁止環境を含め、方式の選び方や調整点まで確認できます。</p>
+    </div>
+  </div>
+
+  <div class="curated-criteria">
+    <strong>選定基準：</strong>独自性、実務効果、再利用性、VBA禁止環境での代替価値を基準にしています。レアテク度の人数表現は、技術の珍しさを直感的に伝えるための目安です。
+  </div>
+
+  <section class="curated-showcase" aria-labelledby="curated-showcase-title">
+    <div class="curated-section-heading">
+      <div>
+        <span class="curated-section-kicker">SIGNATURE PICKS</span>
+        <h3 id="curated-showcase-title">まず見てほしい3つの設計事例</h3>
+      </div>
+      <p>このサイトらしい「制限を別の設計で突破する」記事です。</p>
+    </div>
+    <div class="curated-showcase-grid">
+      <a class="curated-showcase-card showcase-qr" href="qr/07_qr_full_system.html">
+        <span class="curated-pick-number">01</span>
+        <span class="curated-pick-label">QR AUTOMATION</span>
+        <h4>QR1回で定型入力を完結</h4>
+        <p>Tab・Enter・待ち時間・キー変換を組み合わせ、QRを入力手順そのものとして設計します。</p>
+        <span class="curated-pick-link">記事を読む <span aria-hidden="true">→</span></span>
+      </a>
+      <a class="curated-showcase-card showcase-cobol" href="cobol/formula/04_article_cobol_irregular.html">
+        <span class="curated-pick-number">02</span>
+        <span class="curated-pick-label">LEGACY DATA</span>
+        <h4>不規則COBOL帳票を表へ戻す</h4>
+        <p>行数が一定しない親子構造を判定し、関数だけで扱いやすい明細表へ展開します。</p>
+        <span class="curated-pick-link">記事を読む <span aria-hidden="true">→</span></span>
+      </a>
+      <a class="curated-showcase-card showcase-formula" href="functions/old/article_countif_extract.html">
+        <span class="curated-pick-number">03</span>
+        <span class="curated-pick-label">OLD EXCEL</span>
+        <h4>FILTERなしで複数件を抽出</h4>
+        <p>旧ExcelでもVBAやCSEへ頼らず、条件に合う複数行を取り出す方法を比較します。</p>
+        <span class="curated-pick-link">記事を読む <span aria-hidden="true">→</span></span>
+      </a>
+    </div>
+  </section>
+
+  <div class="home-card ranking-card curated-ranking-card">
+    <div class="curated-library-head">
+      <div>
+        <span class="curated-section-kicker">CURATED LIBRARY</span>
+        <h3>目的から選ぶ厳選ライブラリ</h3>
+      </div>
+      <p>総合・希少性・即戦力の3つの視点で切り替えられます。</p>
+    </div>
+    <div class="ranking-tabs curated-tabs" aria-label="厳選記事の表示切り替え">
+      <button class="ranking-tab-btn active" data-ranking="combined" data-ranking-trigger="curated-combined">⭐ 総合おすすめ <span class="curated-tab-count">10</span></button>
+      <button class="ranking-tab-btn" data-ranking="rare" data-ranking-trigger="curated-rare">💎 レアテク <span class="curated-tab-count">13</span></button>
+      <button class="ranking-tab-btn" data-ranking="impact" data-ranking-trigger="curated-impact">🔥 即戦力 <span class="curated-tab-count">14</span></button>
+    </div>
+
+    <div class="ranking-panel active" id="ranking-curated-combined">
+      <p class="curated-panel-lead">希少性と実務効果の両方が高く、このサイトらしさが最も伝わる記事です。</p>
+      <div class="curated-grid">
+        <article class="curated-card curated-card-combined">
+          <div class="curated-card-meta"><span class="curated-category">QR Automation</span><span class="rank-badge lv7">Lv.7</span></div>
+          <h3><a href="qr/07_qr_full_system.html">QR1回で業務システムの全操作を完結</a></h3>
+          <p>Tab・Enter・待ち時間・キー変換を統合し、読み取り1回で定型入力を進める設計です。</p>
+          <div class="curated-card-tags"><span class="rank-combined" data-rare-id="qr_series" data-rare-prefix="🔥💎"></span></div>
+        </article>
+        <article class="curated-card curated-card-combined">
+          <div class="curated-card-meta"><span class="curated-category">旧Excel関数</span><span class="rank-badge lv7">Lv.7</span></div>
+          <h3><a href="functions/old/article_countif_extract.html">FILTER代替 — VBA・CSE不要の複数抽出</a></h3>
+          <p>FILTERが使えないExcelで、複数件抽出を実現する4方式を実務目線で比較します。</p>
+          <div class="curated-card-tags"><span class="rank-combined" data-rare-id="filter_alt" data-rare-prefix="🔥💎"></span></div>
+        </article>
+        <article class="curated-card curated-card-combined">
+          <div class="curated-card-meta"><span class="curated-category">計算速度</span><span class="rank-badge lv6">Lv.6</span></div>
+          <h3><a href="others/speed/article_02_formula_techniques.html">数式の速度UPテクニック集</a></h3>
+          <p>参照範囲、重複計算、LET、作業列など、重いブックを見直す基本をまとめています。</p>
+          <div class="curated-card-tags"><span class="rank-combined" data-rare-id="speed_formula" data-rare-prefix="🔥💎"></span></div>
+        </article>
+        <article class="curated-card curated-card-combined">
+          <div class="curated-card-meta"><span class="curated-category">住所処理</span><span class="rank-badge lv7">Lv.7</span></div>
+          <h3><a href="functions/old/article_zip_reverse.html">住所から郵便番号を逆引きする最長一致検索</a></h3>
+          <p>住所の先頭部分を比較し、最も長く一致した郵便番号候補を関数だけで取得します。</p>
+          <div class="curated-card-tags"><span class="rank-combined" data-rare-id="zip_reverse" data-rare-prefix="🔥💎"></span></div>
+        </article>
+        <article class="curated-card curated-card-combined">
+          <div class="curated-card-meta"><span class="curated-category">ブック設計</span><span class="rank-badge lv4">Lv.4</span></div>
+          <h3><a href="functions/old/article_volatile.html">揮発性関数 — 重いExcelを防ぐ設計</a></h3>
+          <p>INDIRECTやOFFSETの再計算特性を理解し、必要な箇所だけに限定する考え方を解説します。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="volatile"></span></div>
+        </article>
+        <article class="curated-card curated-card-combined">
+          <div class="curated-card-meta"><span class="curated-category">印刷実務</span><span class="rank-badge lv4">Lv.4</span></div>
+          <h3><a href="others/print/article_print_area.html">印刷範囲をデータ量に合わせて自動伸縮</a></h3>
+          <p>名前の管理を使い、データが増減しても空白を増やさず印刷範囲を追従させます。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="print_area"></span></div>
+        </article>
+        <article class="curated-card curated-card-combined">
+          <div class="curated-card-meta"><span class="curated-category">複合検索</span><span class="rank-badge lv3">Lv.3</span></div>
+          <h3><a href="functions/latest/article_xlookup_joined_key.html">検索列2列を1つの検索値で探す</a></h3>
+          <p>「東京」と「001」のような複数列を、結合した検索値1つで照合する実務的な検索設計です。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare">💎 レアテク</span></div>
+        </article>
+        <article class="curated-card curated-card-combined">
+          <div class="curated-card-meta"><span class="curated-category">COBOL × QR</span><span class="rank-badge lv7">Lv.7</span></div>
+          <h3><a href="cobol/formula/05_article_cobol_qr_bridge.html">COBOL帳票から対象者を抽出してQR入力へつなぐ</a></h3>
+          <p>固定長帳票の整形だけで終わらせず、抽出結果を別システムの入力省力化までつなげます。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare">💎 複合設計</span></div>
+        </article>
+        <article class="curated-card curated-card-combined">
+          <div class="curated-card-meta"><span class="curated-category">閉域データ転送</span><span class="rank-badge lv6">Lv.6</span></div>
+          <h3><a href="qr/09_qr_closed_transfer.html">ネットワーク不要・紙のQRで別PCへデータ転送</a></h3>
+          <p>USBメモリやネット接続を使いにくい環境で、QRをデータの受け渡し手段として利用します。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 制約環境向け</span><span class="tag-rare">💎 レアテク</span></div>
+        </article>
+        <article class="curated-card curated-card-combined">
+          <div class="curated-card-meta"><span class="curated-category">Word × QR</span><span class="rank-badge lv5">Lv.5</span></div>
+          <h3><a href="others/word/article_mailmerge_qrcode.html">Word差し込み印刷でQRコードを差し込む</a></h3>
+          <p>Excelの値をWord側でQR化し、宛名・案内・個別票へレコードごとに差し込みます。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare">💎 レアテク</span></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="ranking-panel" id="ranking-curated-rare">
+      <p class="curated-panel-lead">一般的な関数紹介では扱われにくい、現場固有・複合型のテクニックです。</p>
+      <div class="curated-grid">
+        <article class="curated-card curated-card-rare">
+          <div class="curated-card-meta"><span class="curated-category">COBOL帳票</span><span class="rank-badge lv8">Lv.8</span></div>
+          <h3><a href="cobol/formula/04_article_cobol_irregular.html">不規則明細・完結編 — 行数バラバラの正規化展開</a></h3>
+          <p>不規則な明細ブロックを、数式だけで扱いやすい表へ展開します。</p>
+          <div class="curated-card-tags"><span class="tag-rare" data-rare-id="cobol_irregular"></span></div>
+        </article>
+        <article class="curated-card curated-card-rare">
+          <div class="curated-card-meta"><span class="curated-category">COBOL帳票</span><span class="rank-badge lv8">Lv.8</span></div>
+          <h3><a href="cobol/formula/03_article_cobol_expert.html">凶悪COBOL帳票のヘッダー紐付け・フィルダウン</a></h3>
+          <p>複数行ヘッダーと明細を関数で結び、整形を自動化する超上級編です。</p>
+          <div class="curated-card-tags"><span class="tag-rare" data-rare-id="cobol_expert"></span></div>
+        </article>
+        <article class="curated-card curated-card-rare">
+          <div class="curated-card-meta"><span class="curated-category">QR機器</span><span class="rank-badge lv5">Lv.5</span></div>
+          <h3><a href="qr/08_qr_hardware_revised_honeywell.html">実機検証を基にしたQRリーダーの選び方</a></h3>
+          <p>実際に試した機種を中心に、USB-HID接続と設定の考え方を整理します。</p>
+          <div class="curated-card-tags"><span class="tag-rare" data-rare-id="qr_hardware"></span></div>
+        </article>
+        <article class="curated-card curated-card-rare">
+          <div class="curated-card-meta"><span class="curated-category">Power Query</span><span class="rank-badge lv7">Lv.7</span></div>
+          <h3><a href="cobol/pq/03_article_cobol_pq_midb_ref.html">M言語でMIDB相当の自作関数を作る</a></h3>
+          <p>Text.ToBinaryとBinary.Rangeを組み合わせ、バイト単位で固定長文字列を切り出します。</p>
+          <div class="curated-card-tags"><span class="tag-rare" data-rare-id="cobol_pq_midb"></span></div>
+        </article>
+        <article class="curated-card curated-card-rare">
+          <div class="curated-card-meta"><span class="curated-category">図形・UI</span><span class="rank-badge lv6">Lv.6</span></div>
+          <h3><a href="others/ui/article_shape_circle.html">セルの文字を図形の○で自動表示</a></h3>
+          <p>名前の管理とリンク図形を利用し、入力値に応じて○印を表示・非表示にします。</p>
+          <div class="curated-card-tags"><span class="tag-rare" data-rare-id="shape_circle"></span></div>
+        </article>
+        <article class="curated-card curated-card-rare">
+          <div class="curated-card-meta"><span class="curated-category">ラベル印刷</span><span class="rank-badge lv4">Lv.4</span></div>
+          <h3><a href="others/print/article_label_scrap.html">使いかけラベルシールを途中位置から印刷</a></h3>
+          <p>余ったラベルを捨てず、開始位置を指定して残り面へ正しく印刷します。</p>
+          <div class="curated-card-tags"><span class="tag-rare" data-rare-id="label_scrap"></span></div>
+        </article>
+        <article class="curated-card curated-card-rare">
+          <div class="curated-card-meta"><span class="curated-category">Power Query</span><span class="rank-badge lv5">Lv.5</span></div>
+          <h3><a href="powerquery/advanced/article_pq_parameter_query.html">セルの値で結果を切り替えるパラメータクエリ</a></h3>
+          <p>Excelセルの値を条件やファイルパスとしてPower Queryへ渡します。</p>
+          <div class="curated-card-tags"><span class="tag-rare" data-rare-id="pq_parameter"></span></div>
+        </article>
+        <article class="curated-card curated-card-rare">
+          <div class="curated-card-meta"><span class="curated-category">QR Automation</span><span class="rank-badge lv3">Lv.3</span></div>
+          <h3><a href="qr/01_qr_barcode_control.html">QRにTab・Enterを埋め込む入力制御</a></h3>
+          <p>QRリーダーをキーボードとして使い、読み取り後のセル移動まで設計します。</p>
+          <div class="curated-card-tags"><span class="tag-rare" data-rare-id="qr_generate"></span></div>
+        </article>
+        <article class="curated-card curated-card-rare">
+          <div class="curated-card-meta"><span class="curated-category">QRキー変換</span><span class="rank-badge lv5">Lv.5</span></div>
+          <h3><a href="qr/04_qr_key_conversion.html">QR内の1文字をF2・Escなどのキー操作へ変換</a></h3>
+          <p>特定文字を特殊キーへ割り当て、単なる文字入力を操作命令へ広げる考え方です。</p>
+          <div class="curated-card-tags"><span class="tag-rare">💎 レアテク</span></div>
+        </article>
+        <article class="curated-card curated-card-rare">
+          <div class="curated-card-meta"><span class="curated-category">QR生成</span><span class="rank-badge lv8">Lv.8</span></div>
+          <h3><a href="qr/11_qr_vba_generate.html">外部ライブラリなしで全角QRを生成する完全版コード</a></h3>
+          <p>Excel VBAとWindows標準APIを使い、QR生成・BMP出力・セル配置まで組み立てます。</p>
+          <div class="curated-card-tags"><span class="tag-rare">💎 レアテク</span><span class="tag-vba">VBA使用</span></div>
+        </article>
+        <article class="curated-card curated-card-rare">
+          <div class="curated-card-meta"><span class="curated-category">基幹系キー入力</span><span class="rank-badge lv6">Lv.6</span></div>
+          <h3><a href="qr/18_qr_num_enter_numpad_enter.html">通常EnterとテンキーEnterを切り分ける</a></h3>
+          <p>通常Enterでは確定できない画面に向け、Num Enterの表記と実機での確認方法を整理します。</p>
+          <div class="curated-card-tags"><span class="tag-rare">💎 レアテク</span></div>
+        </article>
+        <article class="curated-card curated-card-rare">
+          <div class="curated-card-meta"><span class="curated-category">Word × QR</span><span class="rank-badge lv5">Lv.5</span></div>
+          <h3><a href="others/word/article_mailmerge_qrcode.html">差し込みデータからレコード別QRを作る</a></h3>
+          <p>MERGEBARCODEを使い、Excelの値をWord差し込み印刷のQRへ変換します。</p>
+          <div class="curated-card-tags"><span class="tag-rare">💎 レアテク</span></div>
+        </article>
+        <article class="curated-card curated-card-rare">
+          <div class="curated-card-meta"><span class="curated-category">エラー分岐</span><span class="rank-badge lv2">Lv.2</span></div>
+          <h3><a href="functions/old/article_errortype.html">ERROR.TYPEでエラーの種類ごとに処理を分ける</a></h3>
+          <p>#N/Aや#DIV/0!などを区別し、原因に合わせたメッセージや処理へ分岐します。</p>
+          <div class="curated-card-tags"><span class="tag-rare">💎 レア関数</span></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="ranking-panel" id="ranking-curated-impact">
+      <p class="curated-panel-lead">幅広い現場で使いやすく、手作業や保守負担を減らしやすい記事です。</p>
+      <div class="curated-grid">
+        <article class="curated-card curated-card-impact">
+          <div class="curated-card-meta"><span class="curated-category">新しい関数</span><span class="rank-badge lv1">Lv.1</span></div>
+          <h3><a href="functions/latest/article_xlookup_basic.html">XLOOKUP基本編 — 検索関数の標準形</a></h3>
+          <p>左右どちらの列も検索でき、見つからない場合の表示も1本の式で指定できます。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span></div>
+        </article>
+        <article class="curated-card curated-card-impact">
+          <div class="curated-card-meta"><span class="curated-category">新しい関数</span><span class="rank-badge lv2">Lv.2</span></div>
+          <h3><a href="functions/latest/article_filter.html">FILTER関数 — 条件に合う行を一括抽出</a></h3>
+          <p>従来の複雑な配列数式を置き換え、条件抽出結果を自動で展開します。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span></div>
+        </article>
+        <article class="curated-card curated-card-impact">
+          <div class="curated-card-meta"><span class="curated-category">数式設計</span><span class="rank-badge lv3">Lv.3</span></div>
+          <h3><a href="functions/latest/article_let.html">LET関数 — 重複計算をまとめて読みやすくする</a></h3>
+          <p>数式内の中間結果に名前を付け、同じ計算の繰り返しを減らします。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span></div>
+        </article>
+        <article class="curated-card curated-card-impact">
+          <div class="curated-card-meta"><span class="curated-category">旧Excel関数</span><span class="rank-badge lv3">Lv.3</span></div>
+          <h3><a href="functions/old/article_index_match.html">INDEX＋MATCH — 旧Excel対応の検索基本形</a></h3>
+          <p>XLOOKUPがない環境でも、列位置に縛られにくい検索式を作れます。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span></div>
+        </article>
+        <article class="curated-card curated-card-impact">
+          <div class="curated-card-meta"><span class="curated-category">Power Query</span><span class="rank-badge lv1">Lv.1</span></div>
+          <h3><a href="powerquery/basic/article_powerquery_intro.html">Power QueryとVBAの違い — 自動化の入口</a></h3>
+          <p>取込・整形・結合を繰り返す仕事で、どこまでPower Queryに任せられるか整理します。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span></div>
+        </article>
+        <article class="curated-card curated-card-impact">
+          <div class="curated-card-meta"><span class="curated-category">Power Query</span><span class="rank-badge lv5">Lv.5</span></div>
+          <h3><a href="powerquery/advanced/article_pq_parameter_query.html">パラメータクエリ — セル値で更新条件を変更</a></h3>
+          <p>担当者や対象月をセルで切り替え、クエリを編集せず結果を更新できます。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="pq_parameter"></span></div>
+        </article>
+        <article class="curated-card curated-card-impact">
+          <div class="curated-card-meta"><span class="curated-category">Word連携</span><span class="rank-badge lv3">Lv.3</span></div>
+          <h3><a href="others/word/article_mailmerge_postal_code.html">差し込み印刷の郵便番号と日付を正しく整形</a></h3>
+          <p>Excel側で表示用文字列を用意し、Word差し込み時のゼロ落ちや日付崩れを防ぎます。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare">💎 レアテク</span></div>
+        </article>
+        <article class="curated-card curated-card-impact">
+          <div class="curated-card-meta"><span class="curated-category">QR Automation</span><span class="rank-badge lv7">Lv.7</span></div>
+          <h3><a href="qr/07_qr_full_system.html">QR1回で業務システムの定型入力を短縮</a></h3>
+          <p>マクロを使えない入力画面で、QRリーダーのキー送信機能を活用します。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="qr_series"></span></div>
+        </article>
+        <article class="curated-card curated-card-impact">
+          <div class="curated-card-meta"><span class="curated-category">複合検索</span><span class="rank-badge lv3">Lv.3</span></div>
+          <h3><a href="functions/latest/article_xlookup_joined_key.html">複数列を結合条件にしたXLOOKUP</a></h3>
+          <p>補助列を増やす方法も含め、2列以上の組み合わせを1つのキーとして検索します。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span></div>
+        </article>
+        <article class="curated-card curated-card-impact">
+          <div class="curated-card-meta"><span class="curated-category">配列整形</span><span class="rank-badge lv4">Lv.4</span></div>
+          <h3><a href="functions/latest/article_torow_wraprows_choosecols.html">複数行データを1行へ並べ直して必要列だけ抽出</a></h3>
+          <p>TOROW・WRAPROWS・CHOOSECOLSを組み合わせ、繰り返し形式のデータを明細表へ整えます。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span></div>
+        </article>
+        <article class="curated-card curated-card-impact">
+          <div class="curated-card-meta"><span class="curated-category">COBOL × QR</span><span class="rank-badge lv7">Lv.7</span></div>
+          <h3><a href="cobol/formula/05_article_cobol_qr_bridge.html">固定長帳票の対象者を別システムへQR入力</a></h3>
+          <p>帳票から対象者だけを抽出し、半角QRを介して次の入力作業まで短縮します。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 業務連携</span></div>
+        </article>
+        <article class="curated-card curated-card-impact">
+          <div class="curated-card-meta"><span class="curated-category">閉域データ転送</span><span class="rank-badge lv6">Lv.6</span></div>
+          <h3><a href="qr/09_qr_closed_transfer.html">紙のQRでネットワーク分離PCへデータを渡す</a></h3>
+          <p>ネット接続や外部記憶媒体を使いにくい環境で、少量データを物理的に受け渡します。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 制約環境向け</span></div>
+        </article>
+        <article class="curated-card curated-card-impact">
+          <div class="curated-card-meta"><span class="curated-category">入力シート設計</span><span class="rank-badge lv3">Lv.3</span></div>
+          <h3><a href="others/ui/article_select_input_range.html">入力欄だけ選択して数式を消さずに初期化</a></h3>
+          <p>名前付き範囲で手入力セルだけをまとめて選び、Deleteで安全に入力値を消します。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span></div>
+        </article>
+        <article class="curated-card curated-card-impact">
+          <div class="curated-card-meta"><span class="curated-category">Word × QR</span><span class="rank-badge lv5">Lv.5</span></div>
+          <h3><a href="others/word/article_mailmerge_qrcode.html">Word差し込み印刷へQRコードを追加</a></h3>
+          <p>宛名や管理番号と一緒に、レコードごとに異なるQRを差し込みます。</p>
+          <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span></div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /tab-panel#curated -->
+
+<!-- ==========================================
+     タブ3: 技術の流れ
      ========================================== -->
 <div aria-labelledby="tab-btn-thinking" class="tab-panel" id="thinking" role="tabpanel" tabindex="-1">
   <p class="more-link more-link-subtle"><a href="./thinking/index.html">技術の流れ一覧を見る</a></p>
@@ -2785,7 +3130,7 @@
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="speed_lookup"></span></span>
       </div>
-      <a class="article-link" href="others/speed/article_01_lookup_speed.html">検索関数の速度とメモリ効率</a>
+      <a class="article-link" href="others/speed/article_01_lookup_speed.html">検索関数の速度と参照範囲</a>
       <p class="article-summary">VLOOKUP・INDEX+MATCH・XLOOKUPのメモリ消費の違いと、検索設計による高速化を解説します。</p>
     </li>
 
@@ -3182,7 +3527,7 @@
 <!-- ========== フッター ========== -->
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
-    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="samples/index.html">サンプルデータ集</a></p>
@@ -3203,7 +3548,7 @@
 </footer>
 
 
-<script src="script.js" defer></script>
+<script src="script.js?v=6" defer></script>
 
 </body>
 </html>

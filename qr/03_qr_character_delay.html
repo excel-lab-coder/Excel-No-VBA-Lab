@@ -35,7 +35,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
 
-<link href="../common.css" rel="stylesheet">
+<link href="../common.css?v=8" rel="stylesheet">
 <link href="../article.css" rel="stylesheet">
 
 <script type="application/ld+json">
@@ -150,13 +150,13 @@ Webシステムでも、入力欄の制御、JavaScriptの処理、画面描画�
 QRリーダーの送信速度がシステムの処理速度を上回ると文字が欠ける現象は、Excelでも業務システムでも同じように発生します。
 </div>
 
-<video src="../video/qr_03_delay_demo_captioned.mp4?v=20260502031700" autoplay loop muted playsinline controls poster="../image/hero_qr-1024.webp" style="width:100%; border-radius:8px; border:1px solid #ddd;"></video>
+<video src="../video/qr_03_delay_demo_captioned.mp4?v=20260502031700" aria-label="QRリーダーの文字間ディレイ調整を示す無音の字幕付きデモ動画" autoplay loop muted playsinline controls poster="../image/hero_qr-1024.webp" style="width:100%; border-radius:8px; border:1px solid #ddd;"></video>
 <p class="text-sm-gray" style="text-align:center; margin-top:8px;">
 【業務システム応用イメージ】ディレイなしでは処理落ちにより入力漏れが発生することがあります。適切なディレイを入れることで、全項目が正確に入力されやすくなります。
 </p>
 
 <div class="timeline-box">
-<h4>❌ ディレイなし（初期設定）&horbar; 文字欠けが発生</h4>
+<h4 aria-level="3">❌ ディレイなし（初期設定）&horbar; 文字欠けが発生</h4>
 <div class="timeline-row">
 <span class="tl-label">リーダー</span>
 <span class="tl-bar tl-send">A</span><span class="tl-gap"></span>
@@ -333,7 +333,7 @@ ms指定の機種では、まず <strong>20 ms前後</strong> で設定してテ
 
 <div class="maker-card">
 <span class="maker-name">共通：まず確認する設定名</span>
-<h4>Inter-character Delay / Character Delay / Keystroke Delay</h4>
+<h4 aria-level="3">Inter-character Delay / Character Delay / Keystroke Delay</h4>
 
 <p>
 メーカーによって呼び方は少し違いますが、探すべき項目はおおむね以下です。
@@ -845,7 +845,7 @@ Tab、Enter、ファンクションキー、待機時間を組み合わせると
 
 <footer class="site-footer">
 <div class="site-footer-trust" aria-label="運営情報と検証方針">
-<p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+<p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
 <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
 <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong>
@@ -872,7 +872,7 @@ Tab、Enter、ファンクションキー、待機時間を組み合わせると
   </p>
 </footer>
 
-<script src="../script.js"></script>
+<script src="../script.js?v=5"></script>
 
 </body>
 </html>

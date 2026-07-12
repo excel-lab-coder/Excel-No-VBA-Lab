@@ -23,7 +23,7 @@
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countif_extract.html" property="og:url">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countif_extract.html" rel="canonical">
-<link href="../../common.css" rel="stylesheet">
+<link href="../../common.css?v=8" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -92,7 +92,7 @@
     <span style="display:inline-block;background:#e53935;color:#fff;font-size:.7em;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:5px;">CSE不要</span>
     <span style="display:inline-block;background:#1976d2;color:#fff;font-size:.7em;padding:2px 6px;border-radius:3px;font-weight:700;margin-left:5px;">VBA不要</span>
   </div>
-  <h1 class="article-title">旧ExcelでFILTER関数の代わりに複数抽出する方法<br>&horbar; 分かりやすい方法から最速方式まで課題解決で解説</h1>
+  <h1 class="article-title">旧ExcelでFILTER関数の代わりに複数抽出する方法<br>&horbar; 分かりやすさと計算負荷を比較して解説</h1>
 </div>
 
 <section class="goal-section">
@@ -114,9 +114,13 @@
 <div class="xdemo-note">
 <strong>この記事の流れ：</strong><br>
 複数抽出を初めて作る場合は、仕組みが追いやすい <strong>対象行だけROW + SMALL + INDEX</strong> を基本としておすすめします。<br>
-この記事では、COUNTIF方式から始めて、ROW方式、作業列を減らす方式、最速方式まで詳しく比較します。<br><br>
-そこから、<strong>COUNTIFをやめる方法</strong>、<strong>作業列を減らす方法</strong>、最後に <strong>最速の上行参照方式</strong> へ順番に改善していきます。<br><br>
+この記事では、COUNTIF方式から始めて、ROW方式、作業列を減らす方式、参照範囲を抑えた方式まで詳しく比較します。<br><br>
+そこから、<strong>COUNTIFをやめる方法</strong>、<strong>作業列を減らす方法</strong>、最後に <strong>上行参照方式</strong> へ順番に改善していきます。<br><br>
 以前よく見かける <strong>COUNTIF + SMALL + INDEX</strong> は、COUNTIFとSMALLを重ねるだけで実務上のメリットが薄いため、この記事では方式として採用しません。
+</div>
+<div class="xdemo-note-warn">
+<strong>速度表記について：</strong><br>
+計算速度はデータ量やブック構成によって変わります。本記事では、一般に計算負荷を抑えやすい構成を「基本形」として紹介します。重い場合は、実際のブックのコピーで比較してください。
 </div>
 
 <a class="link-card" href="article_small_row_index_extract.html">
@@ -153,9 +157,9 @@
 </div>
 
 <div class="choice-card best">
-<span class="choice-card-label">第2候補・どうしても高速化</span>
+<span class="choice-card-label">第2候補・再計算が重い場合</span>
 <span class="choice-card-title">上行参照で連番<br>+ INDEX + MATCH</span>
-<p>最速クラスですが、作業列の番号が分かりにくい方式です。<br>方法2で速度が足りない場合に検討します。</p>
+<p>本記事の比較では負荷を抑えやすい方式ですが、作業列の番号が分かりにくくなります。<br>方法2で速度が足りない場合に検討します。</p>
 </div>
 </div>
 
@@ -223,7 +227,7 @@
 <section class="method-section">
 <h3>方法比較：どれを使うべきか</h3>
 
-<p>ここでは、あえて「分かりやすいが重い方法」から「最速方式」へ並べています。<br>
+<p>ここでは、あえて「分かりやすいが重い方法」から「参照負荷を抑えやすい方法」へ並べています。<br>
 1つずつ問題点を解決していく流れで見ると、なぜ速くなるのかが分かりやすくなります。</p>
 
 <div class="wide-compare-wrap">
@@ -239,13 +243,13 @@
 </tr>
 <tr><td class="compare-row-head">位置づけ</td><td class="method-mid">理解用<br>基本は使わない</td><td class="method-good">第1候補<br>通常の基本</td><td class="method-light">元データの<br>作業列が不要</td><td class="method-best">第2候補<br>速度特化の上級版</td></tr>
 <tr><td class="compare-row-head">おすすめ度</td><td class="method-mid"><span class="mark-mid">★☆☆☆☆</span><br>分かりやすさだけ</td><td class="method-good"><span class="mark-good">★★★★★</span><br>基本のおすすめ</td><td class="method-light"><span class="mark-good">★★★★☆</span><br>作業列を置けない場合</td><td class="method-best"><span class="mark-good">★★★★☆</span><br>高速化する場合</td></tr>
-<tr><td class="compare-row-head">速度</td><td class="method-mid">低速<br>COUNTIFがボトルネック</td><td class="method-good">中速<br>SMALLの順位計算が必要</td><td class="method-light">中〜高速<br>行番号だけなら実用的</td><td class="method-best">最速<br>COUNTIFもSMALLも使わない</td></tr>
+<tr><td class="compare-row-head">計算負荷の傾向</td><td class="method-mid">高め<br>COUNTIFがボトルネックになりやすい</td><td class="method-good">中程度<br>SMALLの順位計算が必要</td><td class="method-light">中〜低め<br>行番号だけなら実用的</td><td class="method-best">低め<br>COUNTIFもSMALLも使わない</td></tr>
 <tr><td class="compare-row-head">作業列</td><td class="method-mid">元データ左側に必要</td><td class="method-good">元データ左側に必要</td><td class="method-light">元データ側は不要<br>抽出側左に行番号列</td><td class="method-best">元データ左側に必要</td></tr>
 <tr><td class="compare-row-head">ファイルサイズ</td><td class="method-mid">作業列1列分増える</td><td class="method-good">作業列1列分増える</td><td class="method-light"><span class="mark-good">小さくしやすい</span><br>元データ側に大量の作業列を持たない</td><td class="method-best">作業列1列分増える</td></tr>
 <tr><td class="compare-row-head">完全一致</td><td class="method-mid"><code>=IF(C2="営業部",COUNTIF($C$2:C2,"営業部"),"")</code></td><td class="method-good"><code>=IF(C2="営業部",ROW(),"")</code></td><td class="method-light"><code>ROW範囲/(部署範囲="営業部")</code></td><td class="method-best"><code>=IF(C3="営業部",A2+1,A2)</code></td></tr>
 <tr><td class="compare-row-head">あいまい検索</td><td class="method-mid">COUNTIFのワイルドカードで可能<br>ただし範囲拡張が重い</td><td class="method-good"><code>=IF(ISNUMBER(SEARCH($M$1,C2)),ROW(),"")</code></td><td class="method-light"><code>ROW範囲/ISNUMBER(SEARCH($M$1,部署範囲))</code></td><td class="method-best"><code>=IF(ISNUMBER(SEARCH($M$1,C3)),A2+1,A2)</code></td></tr>
-<tr><td class="compare-row-head">メリット</td><td class="method-mid">連番が分かりやすい<br>学習用に向く</td><td class="method-good">対象行だけROWで分かりやすい<br>あいまい検索に強い</td><td class="method-light">作業列が少ない<br>ファイルサイズを小さくしやすい</td><td class="method-best">最速クラス<br>大量データに強い</td></tr>
-<tr><td class="compare-row-head">デメリット</td><td class="method-mid">COUNTIFの範囲拡張が重い</td><td class="method-good">抽出側でSMALLを使う</td><td class="method-light">AGGREGATE式が長い<br>最速ではない</td><td class="method-best">作業列の番号の考え方が少し難しい</td></tr>
+<tr><td class="compare-row-head">メリット</td><td class="method-mid">連番が分かりやすい<br>学習用に向く</td><td class="method-good">対象行だけROWで分かりやすい<br>あいまい検索に強い</td><td class="method-light">作業列が少ない<br>ファイルサイズを小さくしやすい</td><td class="method-best">参照負荷を抑えやすい<br>大量データでの候補</td></tr>
+<tr><td class="compare-row-head">デメリット</td><td class="method-mid">COUNTIFの範囲拡張が重い</td><td class="method-good">抽出側でSMALLを使う</td><td class="method-light">AGGREGATE式が長い<br>速度優先の方式ではない</td><td class="method-best">作業列の番号の考え方が少し難しい</td></tr>
 <tr><td class="compare-row-head">向いている場面</td><td class="method-mid">小規模データ<br>仕組み説明</td><td class="method-good">あいまい検索<br>COUNTIF回避</td><td class="method-light">ファイル軽量化<br>元表を崩したくない</td><td class="method-best">10万行級の住所録・顧客リスト・明細</td></tr>
 </table>
 </div>
@@ -254,15 +258,15 @@
 <p class="compare-note">※ PCでは比較表だけ横幅を広く使って表示します。スマホや幅の狭い画面では横にスクロールできます。</p>
 
 <div class="xdemo-note-info">
-<strong>速度の基本順位（速い → 遅い）</strong><br>
+<strong>この記事の比較条件で軽くなりやすかった順</strong><br>
 <strong>上行参照 + MATCH ＞ ROW + SMALL ＞ COUNTIF + MATCH</strong><br><br>
-方法4は作業列を上の1セルから作り、MATCHで連番の位置を探すだけなので最速です。<br>
+方法4は作業列が直上セルだけを参照し、COUNTIFとSMALLを使わないため、本記事の比較条件では負荷を抑えやすい方式です。<br>
 方法2はCOUNTIFを使わないため軽くなりますが、抽出するたびにSMALLが範囲全体から「k番目に小さい数」を選ぶため中速です。<br>
 方法1は最後にMATCHを使っていても、元データ側のCOUNTIFが広がる範囲を繰り返し数えるため、全体では遅くなりやすいです。ここでいうCOUNTIFの遅さは、<strong>作業列を作る段階</strong>の話です。
 </div>
 
 <div class="flow-diagram extract-role-flow" aria-label="複数抽出方式の速度順位">
-  <div class="extract-role extract-role-index"><strong>最速：MATCH方式</strong><span>上行参照で連番<br>位置を探すだけ</span></div>
+  <div class="extract-role extract-role-index"><strong>低負荷候補：MATCH方式</strong><span>上行参照で連番<br>位置を探すだけ</span></div>
   <div class="extract-arrow" aria-hidden="true">＞</div>
   <div class="extract-role extract-role-small"><strong>中速：SMALL方式</strong><span>範囲から毎回<br>k番目を順位計算</span></div>
   <div class="extract-arrow" aria-hidden="true">＞</div>
@@ -270,9 +274,9 @@
 </div>
 
 <div class="xdemo-note-good">
-<strong>速度順位とおすすめ順位は別です</strong><br>
+<strong>計算負荷の傾向とおすすめ順位は別です</strong><br>
 <strong>第1候補：</strong>作業列に対象行だけが表示され、仕組みを確認しやすいROW + SMALL + INDEX方式。<br>
-<strong>第2候補：</strong>どうしても高速化したい場合の上行参照 + MATCH方式。高速ですが、条件外行にも番号が残るため作業列が直感的ではありません。<br>
+<strong>第2候補：</strong>実際に再計算が重い場合の上行参照 + MATCH方式。比較条件では軽くなりましたが、条件外行にも番号が残るため作業列が直感的ではありません。<br>
 <strong>別の選択肢：</strong>元データ側へ作業列を追加できない場合のAGGREGATE方式。<br>
 <strong>基本は使わない：</strong>COUNTIF方式。連番が分かりやすい以外に、方法2より優先する実務上のメリットがありません。
 </div>
@@ -282,7 +286,7 @@
 COUNTIFで作業列を作るときに、広がる範囲を各行で何度も数え直します。<br>
 その抽出側へSMALLを組み合わせると、今度は結果を1セル出すたびに、作業列全体から「k番目に小さい数」を順位計算します。<br><br>
 つまり、<strong>作業列ではCOUNTIFの範囲拡張、抽出側ではSMALLの順位計算</strong>という2つの負担が重なります。<br>
-速度の目安は、<strong>上行参照 + MATCH ＞ ROW + SMALL ＞ COUNTIF + MATCH ＞ COUNTIF + SMALL</strong> です。COUNTIF + SMALLは、COUNTIF方式とSMALL方式の弱点を両方持つため、この記事では採用していません。
+この記事の比較条件では、<strong>上行参照 + MATCH ＞ ROW + SMALL ＞ COUNTIF + MATCH ＞ COUNTIF + SMALL</strong> の順に軽くなる傾向でした。COUNTIF + SMALLは、COUNTIF方式とSMALL方式の負荷が重なるため、この記事では採用していません。
 </div>
 
 <p class="compare-note">※ AGGREGATE方式は、式を各列へ直接書くか、行番号を1列だけ計算してINDEX参照するかで速度が大きく変わるため、この単純順位とは別に考えます。</p>
@@ -434,11 +438,11 @@ COUNTIF方式は、下の行へ行くほど参照範囲が広がります。<br>
 </div>
 
 <div class="xdemo-note-warn">
-<strong>それでもSMALL方式が「最速」ではない理由：</strong><br>
+<strong>SMALL方式より軽くなる候補がある理由：</strong><br>
 SMALLは、抽出結果を1セル表示するたびに、作業列の範囲から「k番目に小さい行番号」を探します。<br>
 抽出結果が100行・4列なら、同じ作業列に対するSMALLの順位計算が最大400回発生します。<br><br>
 一方、方法4のMATCH方式は、軽い上行参照で作った連番から目的の番号の位置を探すだけです。<br>
-そのため、速度は基本的に <strong>上行参照 + MATCH ＞ ROW + SMALL ＞ COUNTIF + MATCH</strong> となります。COUNTIFの作業列にSMALLまで組み合わせる場合は、両方の負担が重なるため、さらに遅くなりやすくなります。<br>
+そのため、本記事の比較条件では <strong>上行参照 + MATCH ＞ ROW + SMALL ＞ COUNTIF + MATCH</strong> の順に軽くなる傾向でした。COUNTIFの作業列にSMALLまで組み合わせる場合は、両方の負担が重なるため、さらに遅くなりやすくなります。<br>
 SMALL方式を軽くするには、<code>$A:$A</code> ではなく <code>$A$2:$A$1000</code> のように範囲を絞るか、行番号を1列だけ計算して各列はINDEX参照にします。
 </div>
 </section>
@@ -519,13 +523,13 @@ AGGREGATEの最後の引数は「何番目に小さい値を返すか」です�
 
 <div class="xdemo-note-green">
 <strong>方法3の結論：</strong><br>
-AGGREGATE方式は最速ではありません。<br>
+AGGREGATE方式は速度だけを優先する方法ではありません。<br>
 しかし、元データ側に作業列を追加しなくてよいため、ファイルサイズを小さくしやすく、表の構造も崩しにくいです。
 </div>
 </section>
 
 <section class="method-section">
-<h3><span class="speed-rank rank-fast">最速・上級者向け</span>方法4：上行参照で連番 + INDEX + MATCH</h3>
+<h3><span class="speed-rank rank-fast">低負荷候補・上級者向け</span>方法4：上行参照で連番 + INDEX + MATCH</h3>
 
 <table class="mini-procon">
 <tr><th>向いている</th><td class="best">大量データ、速度最優先、再計算を軽くしたいブック、10万行級の住所録・顧客リスト・明細データ</td></tr>
@@ -533,11 +537,11 @@ AGGREGATE方式は最速ではありません。<br>
 <tr><th>デメリット</th><td class="con">・作業列が必要<br>・条件外行にも番号が残る<br>・COUNTIF方式より連番の作り方が少し分かりにくい</td></tr>
 </table>
 
-<p>最後に、最速方式です。<br>
+<p>最後に、本記事の比較では負荷を抑えやすい方式です。<br>
 COUNTIFもSMALLも使わず、作業列はすぐ上のセルだけを参照して連番を作ります。</p>
 
 <div class="xdemo-note-warn">
-<strong>最速ですが、少し分かりにくいです：</strong><br>
+<strong>負荷を抑えやすい一方、少し分かりにくいです：</strong><br>
 COUNTIF方式は「何件目か」を数えるので分かりやすいです。<br>
 一方、上行参照方式は、条件に合わない行にも直前の番号が残ります。
 </div>
@@ -589,7 +593,7 @@ MATCH関数は上から探して最初に見つかった位置を返すため問
 
 <div class="xdemo-note-green">
 <strong>方法4の結論：</strong><br>
-COUNTIFもSMALLも使わないため最速ですが、条件外行にも番号が残り、作業列の仕組みが分かりにくくなります。<br>
+COUNTIFもSMALLも使わないため参照負荷を抑えやすい一方、条件外行にも番号が残り、作業列の仕組みが分かりにくくなります。<br>
 通常は方法2のROW + SMALL + INDEXを使い、それでは速度が足りない大量データの場合に限って方法4を検討するのがおすすめです。
 </div>
 </section>
@@ -671,10 +675,10 @@ SEARCH/FINDで条件判定し、対象行だけROW番号を出します。<br>
 </div>
 
 <div class="choice-card best">
-<span class="choice-card-label">第2候補・どうしても高速化</span>
+<span class="choice-card-label">第2候補・再計算が重い場合</span>
 <span class="choice-card-title">上行参照で連番<br>+ INDEX + MATCH</span>
 <p>
-高速ですが、作業列の仕組みが分かりにくい方式です。<br>
+比較条件では軽くなりましたが、作業列の仕組みが分かりにくい方式です。<br>
 方法2では速度が足りない場合に使います。
 </p>
 </div>
@@ -686,7 +690,7 @@ SEARCH/FINDで条件判定し、対象行だけROW番号を出します。<br>
 旧ExcelでFILTER関数の代わりに複数抽出するなら、まず <strong>COUNTIFの範囲拡張カウントを避ける</strong> のが重要です。<br><br>
 
 <strong>第1候補・基本のおすすめ：</strong>対象行だけROW + SMALL + INDEX<br>
-<strong>第2候補・どうしても高速化：</strong>上行参照で連番 + INDEX + MATCH<br>
+<strong>第2候補・再計算が重い場合：</strong>上行参照で連番 + INDEX + MATCH<br>
 <strong>元データの作業列が不要：</strong>AGGREGATEで行番号だけ抽出 + INDEX参照<br>
 <strong>理解用・基本は使わない：</strong>COUNTIF + INDEX + MATCH<br><br>
 
@@ -753,7 +757,7 @@ FILTER関数が使える環境では、基本的にはFILTER関数を使うの�
 
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
-    <p><strong>運営:</strong> Excel × No VBA Lab 編集部。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
@@ -771,6 +775,6 @@ FILTER関数が使える環境では、基本的にはFILTER関数を使うの�
   </p>
 </footer>
 
-<script src="../../script.js"></script>
+<script src="../../script.js?v=5"></script>
 </body>
 </html>
