@@ -739,7 +739,7 @@
     {
       "category": "cobol",
       "subcategory": "intro",
-      "title": "COBOL帳票処理の3大アプローチ：本当の難易度と完成時のメリット",
+      "title": "COBOL帳票処理の3大アプローチ：難易度と完成時のメリット",
       "url": "cobol/intro/02_article_cobol_approach.html",
       "summary": "VBA禁止・マクロ禁止環境で困ったときの代替手段として、関数・Power Query・VBAを比較します。",
       "level": 1,
@@ -925,7 +925,7 @@
     {
       "category": "qr",
       "subcategory": "transfer",
-      "title": "⑩ QRコードでシステム間データ移行 — 旧システムから新システムへ読み取るだけで引っ越し完了",
+      "title": "⑩ QRコードによるシステム間データ移行を検証する",
       "url": "qr/10_qr_system_migration.html",
       "summary": "APIもCSVインポートもなく、VBA・マクロも禁止された新システムへQRリーダーで流し込む移行手法です。",
       "level": 7,

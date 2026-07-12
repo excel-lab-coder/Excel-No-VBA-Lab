@@ -223,9 +223,13 @@
   </nav>
 
   <section class="method-section">
-    <h1>COBOL帳票処理 総合ガイド</h1>
+    <h1>固定長・レガシー帳票処理（COBOL系）総合ガイド</h1>
     <p class="article-summary" data-seo-lead="true">エクセルでCOBOL帳票や固定長データを整形したい方向けに、Excel関数・Power Query・MIDBなどを使って列分割、不要行除去、帳票データ変換を進める実務手順を扱います。</p>
 <p class="article-summary">固定長テキストや不規則明細の「読めないデータ」を、分析・転記可能な表に変えるための実務カテゴリです。VBAが使えない、マクロが禁止されている会社でも、関数版とPower Query版を代替手段として選べます。</p>
+    <div class="xdemo-note-info" role="note" aria-label="COBOL帳票という表記について">
+      <strong>「COBOL帳票」という表記について</strong><br>
+      本サイトでは、COBOL系基幹システムでよく見られる固定長データや紙帳票型テキストを、便宜上「COBOL帳票」と表記しています。固定長はCOBOL以外でも使われ、COBOLシステムがCSV等を出力する場合もあります。実際の形式はレイアウト仕様書と実データで確認してください。
+    </div>
     <div class="xdemo-note-danger" role="note" aria-label="MIDBと文字コードの互換性に関する注意">
       <strong>⚠ MIDBと文字コードの確認</strong><br>
       Microsoftは現在MIDBを非推奨としています。本カテゴリのMIDB数式は、既存環境でCP932／Shift-JIS互換のバイト配置とレイアウト定義を確認できる場合の事例です。文字コード、外字、特殊文字、バイト位置を実データのコピーで検証し、新規運用ではPower Query等の代替案も比較してください。
@@ -368,7 +372,7 @@
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-prereq">📖 前提知識 — 必ず先に読む</span></span>
       </div>
-      <a class="article-link" href="../cobol/intro/02_article_cobol_approach.html">COBOL帳票処理の3大アプローチ：本当の難易度と完成時のメリット</a>
+      <a class="article-link" href="../cobol/intro/02_article_cobol_approach.html">COBOL帳票処理の3大アプローチ：難易度と完成時のメリット</a>
       <p class="article-summary">関数・Power Query・VBAなど、複数のアプローチを難易度と工数で比較します。</p>
     </li>
 

@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>QRコードでシステム間データ移行！旧システムから新システムへ読み取るだけで引っ越し完了｜Excel &times; No VBA Lab</title>
+<title>QRコードによるシステム間データ移行を検証する｜Excel &times; No VBA Lab</title>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
 <script>
@@ -14,10 +14,10 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="旧システムのデータをExcelでQRコード化し、新システムへQRリーダーで読み取るだけで移行。APIやCSVインポートが使えず、VBA・マクロも禁止されている会社での代替手段として、フィールドマッピングやキー操作設計まで解説します。" name="description">
+<meta content="旧システムの半角データをExcelでQRコード化し、新システムへQRリーダーで入力する移行候補を検証。APIやCSVインポートが使えない環境を想定し、フィールドマッピング、キー操作設計、照合・復旧上の注意まで解説します。" name="description">
 <meta content="QRコード システム移行, データ移行 Excel, 旧システム 新システム, バーコードリーダー, フィールドマッピング, OPI-3601 ALX-3601 L-46X, オプトエレクトロニクス, VBAなし, Excel QRコード, Excel QRリーダー, Excel バーコードリーダー, QRコード Excel入力, QRリーダー Excel入力, バーコードリーダー Excel入力, Excel QRコード 作成, QRコード 自動入力 Excel, Webシステム QRリーダー, 業務システム バーコードリーダー, Opticon, OPTOELECTRONICS, 株式会社オプトエレクトロニクス, Zebra, ゼブラ, Zebra Technologies, ゼブラ・テクノロジーズ, Honeywell, ハネウェル, Honeywell International, ハネウェル・インターナショナル, QRリーダー メーカー, バーコードリーダー メーカー" name="keywords">
-<meta content="QRコードでシステム間データ移行！旧システムから新システムへ読み取るだけで引っ越し完了｜Excel &times; No VBA Lab" property="og:title">
-<meta content="旧システムのデータをExcelでQRコード化し、新システムへQRリーダーで読み取るだけで移行する方法を解説。VBA・マクロ禁止環境での代替手段として、全角対応の導線も整理します。" property="og:description">
+<meta content="QRコードによるシステム間データ移行を検証する｜Excel &times; No VBA Lab" property="og:title">
+<meta content="旧システムの半角データをQRリーダーで新システムへ入力する移行候補と、検証・照合・復旧上の注意を解説します。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
@@ -32,12 +32,12 @@
   {
     "@context":"https://schema.org",
     "@type":"Article",
-    "headline":"QRコードでシステム間データ移行！旧システムから新システムへ読み取るだけで引っ越し完了",
-    "description":"旧システムのデータをExcelでQRコード化し、新システムへQRリーダーで読み取るだけで移行する方法を解説。APIやCSVインポートが使えず、VBA・マクロも禁止されている会社での代替手段として、フィールドマッピング・キー操作設計・全角対応まで網羅。",
+    "headline":"QRコードによるシステム間データ移行を検証する",
+    "description":"旧システムの半角データをExcelでQRコード化し、新システムへQRリーダーで入力する移行候補を、検証・照合・復旧上の注意とともに解説。",
     "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
     "publisher":{"@type":"Organization","name":"Excel × No VBA Lab"},
     "datePublished":"2026-04-17",
-    "dateModified":"2026-05-14",
+    "dateModified":"2026-07-12",
     "mainEntityOfPage":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/10_qr_system_migration.html"
   }
   </script>
@@ -57,13 +57,13 @@
     "@context":"https://schema.org",
     "@type":"HowTo",
     "name":"QRコードで旧システムから新システムへデータを移行する方法",
-    "description":"旧システムのデータをExcelでQRプログラムに変換し、新システムの入力画面にQRリーダーで読み取るだけで移行する手順。",
+    "description":"旧システムの半角データをExcelでQR入力用文字列に変換し、新システムへの入力候補として段階的に検証する手順。",
     "step":[
       {"@type":"HowToStep","position":1,"name":"旧システムからデータをエクスポートする","text":"CSVやコピーでデータをExcelに取り込む。"},
       {"@type":"HowToStep","position":2,"name":"新システムの入力画面を操作分析する","text":"Tab・Enter・特殊キーの遷移順序を洗い出す。"},
       {"@type":"HowToStep","position":3,"name":"フィールドマッピング表を作成する","text":"旧データ項目と新画面フィールドの対応を一覧にする。"},
       {"@type":"HowToStep","position":4,"name":"QRプログラム数式を組み立てる","text":"データ＋キー操作を結合する数式を作成する。"},
-      {"@type":"HowToStep","position":5,"name":"テスト移行で検証し本番実行する","text":"テスト環境で数件検証後、全件を読み取り移行する。"}
+      {"@type":"HowToStep","position":5,"name":"段階テスト、照合、復旧手順を確認する","text":"テスト環境で段階的に検証し、バックアップ、停止・再開、件数・合計値の照合、ロールバック手順を承認した上で本番可否を判断する。"}
     ]
   }
   </script>
@@ -94,8 +94,13 @@
 <span class="badge badge-all">全バージョン</span>
 <span class="badge badge-maniac">QR連携/システム移行/フィールドマッピング</span>
 </div>
-<h1 class="article-title">QRコードでシステム間データ移行！<br>旧システムから新システムへ、読み取るだけで引っ越し完了</h1>
+<h1 class="article-title">QRコードでシステム間データ移行<br>旧システムから新システムへの入力手段を検証する</h1>
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。APIやCSVインポートが使えず、VBA・マクロも禁止されている会社の移行作業では、QRリーダー入力が代替手段になる場合があります。</p>
+</div>
+
+<div class="xdemo-note-danger">
+<strong>⚠️ 検証・実験的手法です</strong><br>
+        QRリーダーのキーボード入力は、画面の読み込み完了、登録成功、警告ダイアログ、通信エラーを自動判定しません。誤った画面で実行すると更新・削除など別の操作になる可能性もあります。本番可否は、システム管理者の承認、移行前バックアップ、検証環境、件数・合計値の照合、エラーログ、停止・再開、ロールバック手順を用意してから判断してください。
 </div>
 
 <section class="method-section qr-control-guide">
@@ -106,7 +111,7 @@
       <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
     </thead>
     <tbody>
-      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span> または <span class="code-inline">CHAR(13)</span></td><td>リーダー設定とExcelのEnter移動設定で変わるため、1件の試験で採用値を決めます。</td></tr>
       <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
       <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
       <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
@@ -125,7 +130,7 @@
 <strong>⚠️ 実務でのシステム移行は、ほとんどの場合「全角文字」を含みます</strong><br>
           顧客名、商品名、住所、備考欄&horbar;&horbar;業務システムのデータには日本語（全角文字）がほぼ必ず含まれます。バーコードコントロール（ActiveX）は<strong>半角文字しか扱えない</strong>ため、現実のシステム移行でそのまま使えるケースは限定的です。
         </div>
-<p>本記事では、バーコードコントロール＋キーボードエミュレーション方式での「半角データのシステム移行」を解説します。<strong>フィールドマッピング・キー操作設計・Sleepの配置・移行バッチの組み立て</strong>といった設計思想は、全角対応の場合でもそのまま活きる共通技術です。</p>
+<p>本記事では、バーコードコントロール＋キーボードエミュレーション方式での「半角データのシステム移行」を解説します。<strong>フィールドマッピング・キー操作設計・固定待機の配置・移行バッチの組み立て</strong>といった設計思想は、全角対応の場合にも応用できます。ただし固定待機は処理完了の検知ではないため、結果確認は別に必要です。</p>
 <p>しかし正直に言えば、<strong>本シリーズの本命は次の記事⑪</strong>です。</p>
 <div class="xdemo-note-good">
 <strong>💡 記事⑪「全角QR生成のVBA完全版コード」が本命です</strong><br>
@@ -142,7 +147,7 @@
 <tr><td>全角文字</td><td style="color:#c62828;font-weight:bold">✕ 使えない</td><td style="color:#2e7d32;font-weight:bold">&cir; 使える</td></tr>
 <tr><td>外部ライブラリ</td><td>不要。ただしAccess由来のMicrosoft Barcode Controlが使えるOffice構成と、ActiveX利用が許可された設定が前提</td><td>不要</td></tr>
 <tr><td>閉域環境</td><td>&cir;</td><td style="color:#2e7d32;font-weight:bold">&cir; 最適</td></tr>
-<tr class="recommend"><td>学べること</td><td><strong>設計技法</strong>：画面分析・マッピング・キー操作設計・Sleep配置</td><td><strong>実装技法</strong>：UTF-8(ECI) / Shift-JIS変換・RS符号・BMP出力・セル配置・全角QR生成</td></tr>
+<tr class="recommend"><td>学べること</td><td><strong>設計技法</strong>：画面分析・マッピング・キー操作設計・固定待機の配置</td><td><strong>実装技法</strong>：UTF-8(ECI) / Shift-JIS変換・RS符号・BMP出力・セル配置・全角QR生成</td></tr>
 <tr><td>実務での出番</td><td>半角のみのコード・数値データの移行</td><td><strong>日本語を含む実データの移行（＝ほとんどの現場）</strong></td></tr>
 </tbody>
 </table>
@@ -160,7 +165,7 @@
 <li><strong>QR移行の位置づけ：</strong>API・CSV・RPA等との比較で「いつQRが有効か」を判断する</li>
 <li><strong>画面操作の分析手法：</strong>新システムの入力画面を1キーずつ分解する</li>
 <li><strong>フィールドマッピング：</strong>旧データ項目と新画面フィールドの対応付け</li>
-<li><strong>QRプログラム数式の設計：</strong>データ＋Tab＋Enter＋Sleep＋特殊キーを1つの数式にまとめる</li>
+<li><strong>QRプログラム数式の設計：</strong>データ＋Tab＋Enter＋固定待機＋特殊キーを1つの数式にまとめる</li>
 <li><strong>テスト&rarr;本番移行の進め方：</strong>段階的テストと所要時間の見積もり</li>
 </ul>
 </section>
@@ -188,7 +193,7 @@
 <tbody>
 <tr><td>受信側の入力先</td><td>Excelのセル（Tab/Enterで移動）</td><td>業務システムの入力画面（Tab/Enter＋特殊キー操作）</td></tr>
 <tr><td>画面遷移</td><td>なし</td><td>メニュー選択&rarr;画面遷移&rarr;登録&rarr;次画面</td></tr>
-<tr><td>待ち時間</td><td>不要</td><td>画面遷移のSleep（記事⑥）が必要</td></tr>
+<tr><td>待ち時間</td><td>通常は不要</td><td>画面遷移に固定待機（記事⑥）を入れる場合がある。完了検知ではない</td></tr>
 <tr><td>特殊キー操作</td><td>Tab・Enterのみ</td><td>F2・Esc・矢印キー・Delete等（記事④⑤）</td></tr>
 <tr><td>フィールド順序</td><td>Excel列順＝データ順</td><td>画面のTab順序と旧データの列順が異なる場合あり</td></tr>
 <tr><td>繰り返し</td><td>QRを順番に読むだけ</td><td>1件ごとに「新規登録&rarr;入力&rarr;保存」のサイクル</td></tr>
@@ -218,7 +223,7 @@
 <tr><td>④ 数式設計</td><td>QRプログラム数式を組み立てる</td><td>QR生成シート</td><td>1〜2時間</td></tr>
 <tr><td>⑤ テスト＆本番</td><td>テスト環境で数件検証 &rarr; 全件移行</td><td>移行完了</td><td>件数による</td></tr>
 </table>
-<p>全体で1〜2日あれば、数百件規模の移行が完了します。手入力なら数週間かかるような作業が、設計1日＋実行数時間で終わる計算です。</p>
+<p>上表の時間は、画面とデータ構造が単純な小規模試験の作業例です。実際の完了時期は、承認、データ洗浄、例外処理、バックアップ、照合、再試行、担当者レビューで大きく変わります。最初に代表データ10件程度で一連の作業時間とエラー率を測り、その結果から余裕を持って見積もります。</p>
 </section>
 <!-- ===== フェーズ①：データ抽出 ===== -->
 <section class="tips-section">
@@ -262,7 +267,7 @@
 </thead>
 <tbody>
 <tr><td class="text-center">1</td><td>メニュー画面</td><td>「2」（新規登録）</td><td>2</td><td>メニュー番号で選択</td></tr>
-<tr><td class="text-center">2</td><td>画面遷移中</td><td>（3秒待機）</td><td>!</td><td>Sleep（記事⑥）</td></tr>
+<tr><td class="text-center">2</td><td>画面遷移中</td><td>（3秒の固定待機例）</td><td>!</td><td>記事⑥。画面完了の検知ではない</td></tr>
 <tr><td class="text-center">3</td><td>顧客コード欄にカーソル</td><td>コード入力</td><td>(データ)</td><td>半角英数</td></tr>
 <tr><td class="text-center">4</td><td>顧客コード欄</td><td>Tab</td><td>CHAR(9)</td><td>次フィールドへ</td></tr>
 <tr><td class="text-center">5</td><td>顧客名欄（自動表示）</td><td>Tab</td><td>CHAR(9)</td><td>スキップ（自動入力欄）</td></tr>
@@ -273,7 +278,7 @@
 <tr><td class="text-center">10</td><td>備考欄</td><td>（空でスキップ）</td><td>CHAR(9)</td><td>Tab で通過</td></tr>
 <tr><td class="text-center">11</td><td>登録ボタンにフォーカス</td><td>Enter</td><td>CHAR(13)</td><td>登録実行</td></tr>
 <tr><td class="text-center">12</td><td>確認ダイアログ</td><td>Enter</td><td>CHAR(13)</td><td>「はい」を確定</td></tr>
-<tr><td class="text-center">13</td><td>登録完了&rarr;メニューに戻る</td><td>（3秒待機）</td><td>!</td><td>画面遷移待ち</td></tr>
+<tr><td class="text-center">13</td><td>登録操作後&rarr;メニューへ戻る想定</td><td>（3秒の固定待機例）</td><td>!</td><td>結果確認は別途必要</td></tr>
 </tbody>
 </table>
 </div>
@@ -285,7 +290,7 @@
 <tr><td>ドロップダウン選択</td><td>区分・カテゴリ等</td><td>&darr;キー回数 or 頭文字入力（記事④⑤）</td></tr>
 <tr><td>日付欄の書式変換</td><td>自動で「/」が入る欄</td><td>「20260417」のように数字だけ入力</td></tr>
 <tr><td>既存値のクリア</td><td>デフォルト値が入っている欄</td><td>Delete(`) で消してから入力</td></tr>
-<tr><td>画面遷移の待ち時間差</td><td>初回は遅いが2回目以降は速い</td><td>最も遅いケースに合わせてSleep設定</td></tr>
+<tr><td>画面遷移の待ち時間差</td><td>初回や混雑時だけ遅くなる場合がある</td><td>遅い条件で固定待機を試験し、結果確認と停止手順も用意</td></tr>
 </table>
 </section>
 <!-- ===== フェーズ③：マッピング ===== -->
@@ -354,14 +359,14 @@
 </thead>
 <tbody>
 <tr><td>メニュー選択</td><td><span class="code-inline">"2" & CHAR(13)</span></td><td>「2」入力 &rarr; Enter で新規登録画面へ</td><td>⑦</td></tr>
-<tr><td>画面遷移待ち</td><td><span class="code-inline">"!"</span></td><td>3秒Sleep</td><td>⑥</td></tr>
+<tr><td>画面遷移待ち</td><td><span class="code-inline">"!"</span></td><td>3秒の固定待機例（完了検知ではない）</td><td>⑥</td></tr>
 <tr><td>顧客コード</td><td><span class="code-inline">A2 & CHAR(9)</span></td><td>データ入力 &rarr; Tab</td><td>②</td></tr>
 <tr><td>顧客名スキップ</td><td><span class="code-inline">CHAR(9)</span></td><td>自動表示欄を Tab で通過</td><td>②</td></tr>
 <tr><td>電話番号</td><td><span class="code-inline">SUBSTITUTE(B2,"-","") & CHAR(9)</span></td><td>ハイフン除去して入力 &rarr; Tab</td><td>&mdash;</td></tr>
 <tr><td>区分選択</td><td><span class="code-inline">REPT("^",C2) & CHAR(9)</span></td><td>&darr;キーをC2回 &rarr; Tab</td><td>④⑤</td></tr>
 <tr><td>備考</td><td><span class="code-inline">IF(D2="","",D2) & CHAR(9)</span></td><td>備考があれば入力 &rarr; Tab</td><td>&mdash;</td></tr>
 <tr><td>登録実行</td><td><span class="code-inline">CHAR(13) & CHAR(13)</span></td><td>Enter（登録）&rarr; Enter（確認ダイアログ）</td><td>②</td></tr>
-<tr><td>画面遷移待ち</td><td><span class="code-inline">"!"</span></td><td>3秒Sleep で メニューに戻る</td><td>⑥</td></tr>
+<tr><td>登録操作後の待機</td><td><span class="code-inline">"!"</span></td><td>3秒の固定待機例。メニュー復帰と登録結果は別に確認</td><td>⑥</td></tr>
 </tbody>
 </table>
 <div class="xdemo-note-info">
@@ -386,25 +391,29 @@
 </div>
 <table class="format-table">
 <tr><th>段階</th><th>テスト内容</th><th>確認ポイント</th><th>失敗時の対処</th></tr>
-<tr><td>Step 1</td><td>メニュー&rarr;画面遷移のみ</td><td>Sleepの長さが足りているか</td><td>! を追加してSleep延長</td></tr>
+<tr><td>Step 1</td><td>メニュー&rarr;画面遷移のみ</td><td>固定待機後に目的画面が確実に表示されるか</td><td>待機を増やすだけでなく、遅延時の停止手順を決める</td></tr>
 <tr><td>Step 2</td><td>最初の2〜3フィールドだけ入力</td><td>Tab順序は正しいか、自動入力欄のスキップは正しいか</td><td>Tab/データの順序を修正</td></tr>
 <tr><td>Step 3</td><td>全フィールド入力＋登録まで（1件）</td><td>全フィールドに正しい値が入り、登録されたか</td><td>マッピング or 変換式を修正</td></tr>
-<tr><td>Step 4</td><td>連続3件を実行</td><td>2件目以降もサイクルが正しいか</td><td>末尾のSleepを調整</td></tr>
+<tr><td>Step 4</td><td>連続3件を実行</td><td>2件目以降もサイクルと登録結果が正しいか</td><td>末尾の固定待機と結果確認方法を調整</td></tr>
 <tr><td>Step 5</td><td>10件バッチ</td><td>文字欠けなし、速度安定か</td><td>ディレイ調整（記事③）</td></tr>
 </table>
-<p>Step 5まで問題なければ、新システムのバックアップを取得した上で、QR-001から順番に全件読み取りで本番移行を実行します。10件ごとに新システム側で件数を確認し、全件完了後にサンプル数件を目視照合すれば十分です。</p>
+<p>Step 5まで問題がなくても、それだけで全件実行へは進みません。移行責任者の承認、新システムのバックアップ、転送単位ごとのID、処理済み・失敗・未処理の記録、途中停止と再開、ロールバックの手順を確認します。本番では小さなバッチごとに件数と業務上の合計値を照合し、完了後は全件数・必須項目・エラー一覧を確認した上で、代表データを項目単位でも照合します。</p>
 </div>
 </section>
 <!-- ===== 所要時間 ===== -->
 <section class="method-section">
-<h2>所要時間の見積もり</h2>
+<h2>キー入力時間の理論見積もり</h2>
+<div class="xdemo-note-warn">
+<strong>⚠️ 移行完了時間ではありません</strong><br>
+          下表は、各操作が想定どおり進み、エラーや例外が発生しない場合の入力時間例です。データ抽出・洗浄、承認、バックアップ、QR生成、照合、エラー調査、再実行、ロールバックは含みません。実環境で代表データを測定してから見積もってください。
+</div>
 <table class="format-table">
-<tr><th>1件あたりの実行時間</th><th>内訳</th><th>100件</th><th>500件</th><th>1,000件</th></tr>
+<tr><th>1件あたりの入力時間例</th><th>仮定した内訳</th><th>100件</th><th>500件</th><th>1,000件</th></tr>
 <tr><td>約8秒（画面遷移なし）</td><td>読取1s + 入力3s + 登録1s + 待機3s</td><td class="text-center">約13分</td><td class="text-center">約67分</td><td class="text-center">約2.2時間</td></tr>
 <tr><td>約12秒（画面遷移1回）</td><td>読取1s + 遷移3s + 入力3s + 登録1s + 遷移3s + 余裕1s</td><td class="text-center">約20分</td><td class="text-center">約100分</td><td class="text-center">約3.3時間</td></tr>
 <tr><td>約18秒（画面遷移2回+重い処理）</td><td>読取1s + 遷移3s + 入力4s + 確認2s + 登録1s + 処理4s + 遷移3s</td><td class="text-center">約30分</td><td class="text-center">約150分</td><td class="text-center">約5時間</td></tr>
 </table>
-<p>1,000件でも半日あれば完了します。手入力なら1件3分 &times; 1,000件 = 50時間（6日以上）かかる作業です。</p>
+<p>例えば上表では1,000件のキー入力部分が約2.2〜5時間という計算になりますが、これは移行全体の所要時間ではありません。手入力との比較も、項目数、確認方法、エラー率、担当者の操作時間を同じ条件で測った場合に限って判断できます。</p>
 </section>
 <!-- ===== 実践シナリオ ===== -->
 <section class="method-section">
@@ -417,7 +426,7 @@
 <tbody>
 <tr><td>データ項目</td><td>顧客コード(8) ＋ 電話番号(11) ＋ 担当者コード(4) ＋ 区分(1桁&rarr;DD) ＋ 登録日(8) ＝ 計約32文字 ＋ 操作約25文字 ＝ <strong>約57文字/件</strong></td></tr>
 <tr><td>1件あたり実行時間</td><td>約12秒</td></tr>
-<tr><td>全体所要時間</td><td>350件 &times; 12秒 ＝ 4,200秒 &fallingdotseq; <strong>約70分</strong></td></tr>
+<tr><td>キー入力の理論時間</td><td>350件 &times; 12秒 ＝ 4,200秒 &fallingdotseq; <strong>約70分</strong>（準備・照合・再実行を除く）</td></tr>
 </tbody>
 </table>
 <h3>QR数式</h3>
@@ -432,11 +441,11 @@
   & CHAR(13) & CHAR(13)
   & "!"</pre>
 </div>
-<h3>タイムライン（1件の流れ）</h3>
+<h3>タイムライン（正常に進んだ1件の例）</h3>
 <table class="format-table">
 <tr><th>時間</th><th>QR内の送信内容</th><th>画面の動き</th></tr>
 <tr><td>0.0s</td><td>"3" &rarr; Enter</td><td>メニューから「3:顧客登録」を選択</td></tr>
-<tr><td>0.1&ndash;3.1s</td><td>! (Sleep 3秒)</td><td>顧客登録画面が開く</td></tr>
+<tr><td>0.1&ndash;3.1s</td><td>!（3秒の固定待機例）</td><td>この例では顧客登録画面が開く想定。表示完了は検知しない</td></tr>
 <tr><td>3.1s</td><td>"CUS-0042" &rarr; Tab</td><td>顧客コード入力 &rarr; 次フィールドへ</td></tr>
 <tr><td>3.3s</td><td>Tab</td><td>顧客名（自動表示）をスキップ</td></tr>
 <tr><td>3.4s</td><td>"0312345678" &rarr; Tab</td><td>電話番号入力 &rarr; 次フィールドへ</td></tr>
@@ -445,17 +454,17 @@
 <tr><td>4.0s</td><td>"20260417" &rarr; Tab</td><td>登録日入力 &rarr; 登録ボタンへ</td></tr>
 <tr><td>4.2s</td><td>Enter</td><td>登録ボタン押下</td></tr>
 <tr><td>4.3s</td><td>Enter</td><td>確認ダイアログ「はい」</td></tr>
-<tr><td>4.4&ndash;7.4s</td><td>! (Sleep 3秒)</td><td>登録処理 &rarr; メニュー画面に戻る</td></tr>
+<tr><td>4.4&ndash;7.4s</td><td>!（3秒の固定待機例）</td><td>この例ではメニュー画面へ戻る想定。登録成功は別に確認</td></tr>
 </table>
-<p>1件約7.4秒。350件で約43分。途中確認の時間を入れても70分以内で完了します。</p>
+<p>この正常系だけなら1件約7.4秒、350件で約43分という計算です。ただし、約70分を移行完了の約束にはできません。準備、承認、バッチごとの件数・合計照合、エラー対応、再実行、最終確認の時間を別に見積もります。</p>
 </section>
 <!-- ===== 移行パターン別ガイド ===== -->
 <section class="method-section">
 <h2>移行パターン別の設計ガイド</h2>
 <table class="format-table">
 <tr><th>移行パターン</th><th>特徴</th><th>設計のポイント</th><th>使う技術</th></tr>
-<tr><td>デスクトップ &rarr; デスクトップ</td><td>Tab順序が安定、動作が速い</td><td>Sleep短め（1〜2秒）、ディレイ低めでOK</td><td>②④⑥</td></tr>
-<tr><td>デスクトップ &rarr; Webシステム</td><td>画面読み込みに時間がかかる</td><td>Sleep長め（3〜5秒）、Tab順序が変わることがある</td><td>②④⑤⑥</td></tr>
+<tr><td>デスクトップ &rarr; デスクトップ</td><td>Tab順序が比較的安定する場合がある</td><td>固定待機とディレイは実測で決め、結果確認を別に用意</td><td>②④⑥</td></tr>
+<tr><td>デスクトップ &rarr; Webシステム</td><td>通信や画面読み込みで時間が変動する</td><td>固定待機だけに依存せず、遅延・警告・セッション切れ時の停止手順を用意</td><td>②④⑤⑥</td></tr>
 <tr><td>Excel &rarr; 業務システム</td><td>データ加工が容易</td><td>SUBSTITUTE・TEXT等で書式変換してからQR化</td><td>②③⑥⑦</td></tr>
 <tr><td>閉域旧システム &rarr; 閉域新システム</td><td>紙経由の二段階移行</td><td>旧&rarr;Excel（記事⑨）&rarr;QR化&rarr;新システム（本記事）</td><td>⑨＋本記事</td></tr>
 <tr><td>複数旧システム &rarr; 1つの新システム</td><td>データ形式がバラバラ</td><td>旧システムごとに別のマッピング表・数式を作成</td><td>全技術</td></tr>
@@ -466,7 +475,7 @@
 <h2>トラブルシューティング（移行特有の問題）</h2>
 <table class="format-table">
 <tr><th>症状</th><th>原因</th><th>対処法</th></tr>
-<tr><td>2件目以降でフィールドがずれる</td><td>1件目の登録後、メニューに戻りきる前に2件目が始まる</td><td>末尾のSleepを長くする（! を追加）</td></tr>
+<tr><td>2件目以降でフィールドがずれる</td><td>1件目の登録後、目的画面へ戻る前に2件目が始まる</td><td>処理を停止して影響範囲を確認。固定待機とバッチ分割を見直す</td></tr>
 <tr><td>ドロップダウンの選択がずれる</td><td>&darr;キー回数の計算ミス、または初期値が「1番目」</td><td>初期状態を確認し、REPT回数を&plusmn;1調整</td></tr>
 <tr><td>日付欄に正しく入力されない</td><td>新システムが「/」を自動挿入する</td><td>TEXT関数の書式を新システムに合わせる</td></tr>
 <tr><td>確認ダイアログが出ない件がある</td><td>データ内容により確認の有無が変わる</td><td>IF関数で条件分岐（Enter追加/省略）</td></tr>
@@ -480,12 +489,13 @@
 <h2>この記事で学んだこと &horbar; まとめ</h2>
 <table class="format-table">
 <tr><th>項目</th><th>内容</th></tr>
-<tr><td>QR移行の利点</td><td>新システム側にAPI・インポート機能不要。キーボード入力できる画面があれば移行可能</td></tr>
-<tr><td>全体フロー</td><td>データ抽出 &rarr; 画面分析 &rarr; マッピング &rarr; 数式設計 &rarr; テスト＆本番（5フェーズ）</td></tr>
+<tr><td>QR移行の位置づけ</td><td>API・インポート機能が使えない場合の入力候補。キーボード入力できても、画面状態・権限・入力規則・承認を含む検証が必要</td></tr>
+<tr><td>全体フロー</td><td>データ抽出 &rarr; 画面分析 &rarr; マッピング &rarr; 数式設計 &rarr; 段階テスト・照合・本番可否判断（5フェーズ）</td></tr>
 <tr><td>画面分析の重要性</td><td>新システムの操作を1キーずつ分解し、QRプログラムに変換する</td></tr>
 <tr><td>フィールドマッピング</td><td>旧データ列と新画面フィールドを対応付け、変換処理を定義する</td></tr>
 <tr><td>1QR＝1レコードが原則</td><td>登録&rarr;画面遷移のサイクルがあるため、レコード途中での分割は避ける</td></tr>
-<tr><td>所要時間目安</td><td>1件8〜18秒 &rarr; 1,000件でも半日以内</td></tr>
+<tr><td>時間の見方</td><td>1件8〜18秒は正常系のキー入力試算。準備・承認・照合・エラー対応を含む移行完了時間ではない</td></tr>
+<tr><td>本番条件</td><td>バックアップ、転送単位の記録、停止・再開、件数・合計値照合、ロールバック手順を事前に承認</td></tr>
 <tr><td>全角文字の制約</td><td>バーコードコントロールは半角のみ &rarr; 記事⑪のVBA自力生成で全角対応</td></tr>
 <tr><td>使う全技術</td><td>記事①〜⑦の全技術と⑨の閉域転送手法を総動員</td></tr>
 </table>
@@ -531,7 +541,7 @@
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で固定時間を空ける</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>

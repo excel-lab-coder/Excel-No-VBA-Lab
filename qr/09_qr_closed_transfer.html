@@ -37,7 +37,7 @@
     "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
     "publisher":{"@type":"Organization","name":"Excel × No VBA Lab"},
     "datePublished":"2026-04-17",
-    "dateModified":"2026-05-14",
+    "dateModified":"2026-07-12",
     "mainEntityOfPage":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/09_qr_closed_transfer.html"
   }
   </script>
@@ -61,9 +61,9 @@
     "step":[
       {"@type":"HowToStep","position":1,"name":"転送データの文字種を判定する","text":"全角文字を含む場合はVBA生成方式を、半角のみならバーコードコントロール方式を選択する。"},
       {"@type":"HowToStep","position":2,"name":"転送データをTab区切り＋Enter末尾の文字列に変換する","text":"送信側Excelで1レコード＝Tab区切り＋Enter末尾の文字列を作る。"},
-      {"@type":"HowToStep","position":3,"name":"255文字以内に分割しQRコードを生成する","text":"TEXTJOINで全連結後、MID関数で255文字ずつ分割し、それぞれの文字列からQRコードを生成する。"},
-      {"@type":"HowToStep","position":4,"name":"QRコードを印刷し受信側PCで読み取る","text":"通し番号付きでA4用紙に印刷し、受信側PCでQR-001から順番にリーダーで読み取る。"},
-      {"@type":"HowToStep","position":5,"name":"転送データを検証する","text":"件数カウント・チェックサムで送受信データの一致を確認する。"}
+      {"@type":"HowToStep","position":3,"name":"レコード単位でQR本文を分割する","text":"1レコードを途中で切らず、管理ヘッダーを含めても255文字以内になる件数でQR本文を分ける。"},
+      {"@type":"HowToStep","position":4,"name":"管理情報付きQRを印刷して検証用シートで読み取る","text":"転送ID・連番・総数・本文文字数・簡易検算値をQR本文へ埋め込み、受信側の検証用シートへ番号順に読み取る。"},
+      {"@type":"HowToStep","position":5,"name":"欠番・重複・件数・検算値を照合する","text":"転送ID、連番、総数、本文文字数、簡易検算値、総件数と業務上の合計値を照合してからデータを確定する。"}
     ]
   }
   </script>
@@ -98,6 +98,11 @@
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
 </div>
 
+<div class="xdemo-note-danger">
+<strong>⚠️ 検証・実験的手法です</strong><br>
+          QRをキーボード入力として送る方法は、受信画面の状態や保存完了を判定できません。本記事は、小規模な半角データを<strong>検証用シートへ移す試験</strong>を想定しています。本番運用では、組織の承認、バックアップ、転送ID、欠番・重複検査、件数・合計値の照合、やり直し手順を先に決めてください。QRはネットワークやUSBの制限を技術的に回避する手段ではなく、紙によるデータ移送として承認対象になり得ます。
+</div>
+
 <section class="method-section qr-control-guide">
   <h2><span class="icon">↵</span> Enter / Tab の共通整理</h2>
   <p>QR入力では、読み取り先によって最初に試す制御を分けます。Num Enter は Excel の CHAR 関数では生成できないため、必要な場合はQRリーダー側のキー変換で確認します。</p>
@@ -106,12 +111,13 @@
       <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
     </thead>
     <tbody>
-      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span> または <span class="code-inline">CHAR(13)</span></td><td>リーダー設定とExcelのEnter移動設定で変わるため、1件の試験で採用値を決めます。</td></tr>
       <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
       <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
       <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
     </tbody>
   </table>
+  <p class="text-sm-gray">このページの数式例は、検証条件をそろえるためレコード末尾を <span class="code-inline">CHAR(13)</span> に統一しています。対象リーダーと受信側Excelで1件を試し、<span class="code-inline">CHAR(10)</span> が必要な環境では送信式・再検算式の末尾をすべて同じ値へ変更してください。</p>
 </section>
 <!-- ===== 機種限定告知 ===== -->
 <div class="xdemo-note-danger">
@@ -190,17 +196,17 @@
 </table>
 <div class="xdemo-note-warn">
 <strong>⚠️ 現実的なアドバイス</strong><br>
-          日本の業務データの多くは全角文字を含みます。半角のみで完結するデータ（コード・数値・日付だけの管理台帳等）であれば本記事の方法がシンプルで最適ですが、そうでなければ記事⑪の公開版コードを確認してください。<strong>半角列のみQRで転送し、全角列は受信側でVLOOKUP等のマスタ参照で補完する</strong>という折衷案も有効です。
+          日本の業務データの多くは全角文字を含みます。半角のみで完結するデータ（コード・数値・日付だけの管理台帳等）では本記事の方法が候補になります。全角を含む場合は記事⑪の公開版コードと検証条件を確認してください。<strong>半角列のみQRで転送し、全角列は受信側の承認済みマスタから補完する</strong>という折衷案もあります。
         </div>
 </section>
 <!-- ===== ゴール ===== -->
 <section class="goal-section">
 <h2><span class="icon">💡</span> この記事の目的</h2>
 <p>記事①〜⑦では<strong>1台のPC上</strong>でQRリーダーを使い、業務入力を自動化しました。しかし現場には<strong>「ネットワークに繋がっていないPC同士でデータを受け渡したい」</strong>という要望が数多くあります。</p>
-<p>セキュリティポリシーでUSBメモリ禁止、インターネット接続なし、メール不可&horbar;&horbar;そんな<strong>閉域環境</strong>でも、QRコードを紙に印刷して物理的に持ち運べばデータ転送が可能です。本記事では<strong>半角文字のみで構成されるデータ</strong>を対象に、バーコードコントロールを使った全手順を解説します。</p>
+<p>セキュリティポリシーでUSBメモリ禁止、インターネット接続なし、メール不可&horbar;&horbar;そんな<strong>閉域環境</strong>で、承認された物理移送の候補としてQR印刷を検証する場合があります。本記事では<strong>半角文字のみで構成されるデータ</strong>を対象に、バーコードコントロールを使う手順を解説します。</p>
 <ul>
 <li><strong>閉域環境でのQR転送の仕組み：</strong>なぜ紙＋QRコードで転送できるのか</li>
-<li><strong>送信側の数式設計：</strong>Tab/Enter埋め込み &rarr; TEXTJOIN連結 &rarr; MID分割</li>
+<li><strong>送信側の数式設計：</strong>Tab/Enter埋め込み &rarr; レコード単位の分割 &rarr; 管理ヘッダー付与</li>
 <li><strong>QR生成・印刷レイアウト：</strong>通し番号・ヘッダー情報・推奨サイズを含む印刷設計</li>
 <li><strong>受信側のリーダー読み取り：</strong>OPI-3601・ALX-3601・L-46Xでの読み取り手順と設定</li>
 <li><strong>セキュリティ考慮：</strong>紙＝物理的なデータ持ち出しであることの運用ルール</li>
@@ -218,7 +224,7 @@
 <div class="arch-arrow">&rarr; 紙を運搬 &rarr;</div>
 <div class="arch-box arch-paper">
               A4用紙<br>
-<span class="arch-label">QR-001〜QR-021（通し番号付き）</span>
+<span class="arch-label">QR-001〜QR-総数（通し番号付き）</span>
 </div>
 <div class="arch-arrow">&rarr; リーダーで読取 &rarr;</div>
 <div class="arch-box arch-receive">
@@ -250,7 +256,7 @@
 </table>
 <div class="xdemo-note-info">
 <strong>📝 「紙がネットワークの代わり」という発想</strong><br>
-          1枚のQRコードに収まるデータ量はバーコードコントロール使用時で半角255文字。複数QRに分割すれば数百〜数千件のデータも転送できます。ネットワーク接続やUSBメモリは不要ですが、送信側PCで Microsoft Barcode Control が表示され、ActiveXの利用が許可されていることが前提です。
+          1枚のQRコードに収まるデータ量は、ここで使うバーコードコントロールでは半角255文字です。複数QRに分ければデータ量を増やせますが、枚数が増えるほど欠番・重複・順序違いと紙の管理負担も増えます。ネットワーク接続やUSBメモリは不要ですが、送信側PCで Microsoft Barcode Control が表示され、ActiveXの利用と紙によるデータ移送が許可されていることが前提です。
         </div>
 </section>
 <!-- ===== 閉域環境とは ===== -->
@@ -263,7 +269,7 @@
 <tr><td>メール／クラウド不可</td><td>医療機関、防衛関連</td><td>CD-R焼き・FAX</td><td>手間・画質劣化</td></tr>
 <tr><td>専用ソフト導入不可</td><td>資産管理でインストール制限</td><td>IT部門に依頼</td><td>導入まで数ヶ月</td></tr>
 </table>
-<p>QRコード転送はこれらすべての制約をクリアします。必要なのは<strong>送信側のExcel＋Access由来のバーコードコントロール</strong>、<strong>プリンター</strong>、<strong>受信側のExcel</strong>、<strong>QRリーダー</strong>です。Excelだけしか入っていない送信側PCではバーコードコントロールが表示されない場合があります。Microsoft 365 / Office 2024環境では、ActiveX設定を確認し、必要に応じて許可できるか確認してください。</p>
+<p>QRコード転送は、これらの環境で検討できる<strong>物理移送の候補</strong>です。ただし、USB禁止やネットワーク分離の目的まで自動的に満たすわけではなく、組織の情報持ち出し規程と承認が優先されます。必要なのは<strong>送信側のExcel＋Access由来のバーコードコントロール</strong>、<strong>プリンター</strong>、<strong>受信側のExcel</strong>、<strong>QRリーダー</strong>です。Excelだけしか入っていない送信側PCではバーコードコントロールが表示されない場合があります。Microsoft 365 / Office 2024環境では、ActiveX設定と管理者ポリシーを確認してください。</p>
 </section>
 <!-- ===== 前提条件 ===== -->
 <section class="method-section">
@@ -301,7 +307,7 @@
 </table>
 <div class="xdemo-note-info">
 <strong>📝 ディレイの調整ポイント</strong><br>
-          通常の業務入力（記事③）ではディレイ20msを推奨していますが、閉域転送ではQR1枚あたり最大255文字を一括送信するため、ディレイが大きいと1枚の読み取りに <span class="code-inline">255 &times; 20ms = 約5秒</span> かかります。受信側PCのスペックに余裕があれば5msに下げると <span class="code-inline">255 &times; 5ms = 約1.3秒</span> で高速転送できます。文字抜けが発生する場合のみ値を上げてください。
+          5〜10msは試験開始値の例です。<span class="code-inline">255 &times; 5ms = 約1.3秒</span> はキー送信時間だけの計算で、QRの認識、画面処理、確認時間は含みません。PC性能だけでなく、入力先アプリ、接続方式、常駐ソフト、リーダー設定でも結果が変わります。検証用データを繰り返し読み、1文字でも欠ける場合は値を上げてください。欠けなかった最小値をそのまま本番値にせず、余裕を持たせます。
         </div>
 </section>
 <!-- ===== 送信側 手順 ===== -->
@@ -328,9 +334,9 @@
 <li>1レコードあたりの文字数を概算（上記例は約35文字/件）</li>
 </ul>
 <div class="xdemo-note-info">
-<strong>📝 半角チェック数式</strong><br>
-            データに全角文字が混入していないか一括チェックできます。<br>
-<span class="code-inline">=IF(SUMPRODUCT((LEN(A2:D151)*2-LENB(A2:D151)))&lt;&gt;0,"⚠ 全角あり&rarr;記事⑪","&checkmark; 半角のみ&rarr;本記事でOK")</span>
+<strong>📝 ASCII範囲のチェック数式</strong><br>
+            Step 2でE列を作成した後、次の式を別列へ入れて行ごとにコピーします。LENBは互換設定の影響を受けるため、この判定には使いません。<br>
+<span class="code-inline">=IF(SUMPRODUCT(--(IFERROR(UNICODE(MID(E2,ROW($1:$255),1)),0)&gt;127))&gt;0,"⚠ ASCII外あり&rarr;記事⑪","&checkmark; ASCII範囲")</span>
 </div>
 </div>
 <!-- STEP 2 -->
@@ -345,141 +351,182 @@
 <p>各レコードを<strong>Tab区切り＋Enter末尾</strong>の文字列に変換します。</p>
 <div class="formula-box">
 <button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-<code>=A2 & CHAR(9) & B2 & CHAR(9) & C2 & CHAR(9) & D2 & CHAR(13)</code>
+<code>=A2 & CHAR(9) & B2 & CHAR(9) & C2 & CHAR(9) & TEXT(D2,"yyyy-mm-dd") & CHAR(13)</code>
 </div>
 <p>E2セルには <span class="code-inline">PRD-001[TAB]50[TAB]A-12[TAB]2026-04-17[ENTER]</span> が格納されます。</p>
 <ul class="checklist">
 <li>E2に数式を入力し、E列の最終行までコピー</li>
 <li><span class="code-inline">=LEN(E2)</span> で1レコードの文字数を確認</li>
+<li>商品コードなどの先頭ゼロを残す列は元セルを文字列にするか、<span class="code-inline">TEXT</span>で桁数を明示する</li>
 </ul>
 </div>
 <!-- STEP 3 -->
 <div class="setup-step">
 <div class="setup-step-header">
 <span class="step-number">3</span>
-<span class="step-title">全レコードを1つの文字列に連結する（F1）</span>
+<span class="step-title">管理値と1QRあたりの件数を決める（F列）</span>
 <span class="step-time">所要 2分</span>
 <span class="level-badge level-send">送信側</span>
 </div>
-<div class="formula-box">
-<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-<code>=TEXTJOIN("", TRUE, E2:E151)</code>
-</div>
-<div class="xdemo-note-warn">
-<strong>⚠️ Excel 2016の場合:</strong> TEXTJOIN が使えない環境があります。候補に出ない場合は、E列を <code>&amp;</code> で連結する、または件数を小分けにして <code>&amp; CHAR(9) &amp;</code> を使う方式に切り替えてください。
-</div>
-<p>150レコード &times; 35文字 ＝ 約5,250文字の長い文字列がF1に格納されます。</p>
+<p>先に総件数、転送ID、1QRへ入れるレコード数、総QR数を用意します。以下は1レコード約35文字の例です。</p>
+<table class="format-table">
+<tr><th>セル</th><th>内容</th><th>入力例</th></tr>
+<tr><td>F1</td><td>総レコード数</td><td><span class="code-inline">=COUNTA(A2:A151)</span></td></tr>
+<tr><td>F2</td><td>転送ID（同じ日の別転送と重ならない値）</td><td><span class="code-inline">TR-20260712-A</span></td></tr>
+<tr><td>F3</td><td>1QRあたりのレコード数</td><td><span class="code-inline">6</span></td></tr>
+<tr><td>F4</td><td>総QR数</td><td><span class="code-inline">=ROUNDUP(F1/F3,0)</span></td></tr>
+</table>
+<p>管理ヘッダーにも文字数を使うため、255文字をすべてデータへ割り当てません。この例では35文字 &times; 6件＝約210文字とし、残りを転送IDなどに使います。</p>
 <ul class="checklist">
-<li>F1にTEXTJOIN数式を入力</li>
-<li><span class="code-inline">=LEN(F1)</span> で全体の文字数を確認</li>
+<li>転送IDを作業ごとに変え、送信記録にも残す</li>
+<li>最長レコードを基準に、管理ヘッダー込みで255文字以内になる件数を選ぶ</li>
+<li>A列は途中空白のない一意なキー列とし、A2:A151は実データだけの範囲にする。途中空白がある場合は先にExcelテーブル等で対象行を確定する</li>
+<li>転送IDは半角英数字とハイフンなどに限定し、データと転送IDにTab・CR・LFを含めない。必要なら事前に置換規則と復元手順を決める</li>
 </ul>
 </div>
 <!-- STEP 4 -->
 <div class="setup-step">
 <div class="setup-step-header">
 <span class="step-number">4</span>
-<span class="step-title">MID関数で255文字ずつ分割する（G列）</span>
+<span class="step-title">レコード単位でQR本文を分ける（G列）</span>
 <span class="step-time">所要 5分</span>
 <span class="level-badge level-send">送信側</span>
 </div>
 <div class="formula-box">
 <button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-<code>=IF((ROW()-1)*255+1 &gt; LEN($F$1), "", MID($F$1, (ROW()-1)*255+1, 255))</code>
+<code>=IF((ROW(A1)-1)*$F$3+1&gt;$F$1,"",TEXTJOIN("",TRUE,INDEX($E$2:$E$151,(ROW(A1)-1)*$F$3+1):INDEX($E$2:$E$151,MIN(ROW(A1)*$F$3,$F$1))))</code>
 </div>
-<p>G1セルに入力し、下方向に十分な行数コピーします。必要QR枚数は次の数式で算出できます。</p>
-<div class="formula-box">
-<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-<code>=ROUNDUP(LEN(F1)/255, 0)</code>
-</div>
-<p>5,250文字なら <strong>21枚</strong>（A4用紙3枚程度）です。</p>
+<p>G1セルに入力し、F4で求めた総QR数までコピーします。1レコードを丸ごと連結するため、QR境界でレコードが途中切れしません。</p>
 <ul class="checklist">
-<li>G1に数式を入力し、30行程度にコピー</li>
-<li>空白行が出た時点で分割完了（それ以降のQRは不要）</li>
-<li>各G列セルの文字数が255以下であることを確認</li>
+<li>G1に数式を入力し、F4行までコピー</li>
+<li>最終QR以外はF3件、最終QRは残り件数になっていることを確認</li>
+<li>TEXTJOINがないExcel 2016環境では、小分けした範囲を <code>&amp;</code> で連結するか、別の検証済み手段を使う</li>
 </ul>
 <div class="xdemo-note-warn">
-<strong>⚠️ レコード途中での切断について</strong><br>
-            MID関数で機械的に255文字で切ると、1レコードの途中で分割される場合があります。受信側ではQRを<strong>通し番号順に連続読み取り</strong>するため、途中で切れても前のQRの続きとして自動連結され、結果として正しく入力されます。ただし実運用では<strong>必ずテスト読み取りで確認</strong>してください。
+<strong>⚠️ 255文字ごとのMID分割は動作デモに限定</strong><br>
+            全連結文字列をMID関数で機械的に切る方法は、1枚の欠落・重複・順序違いでレコード境界まで崩れ、見た目では気づけないことがあります。「順番に読めば必ず元に戻る」とは扱わず、実務では上記のレコード単位を基本にします。
           </div>
 </div>
 <!-- STEP 5 -->
 <div class="setup-step">
 <div class="setup-step-header">
 <span class="step-number">5</span>
-<span class="step-title">通し番号を付与する（H列）</span>
+<span class="step-title">管理ヘッダーと簡易検算値を付ける（H〜J列）</span>
 <span class="step-time">所要 1分</span>
 <span class="level-badge level-send">送信側</span>
 </div>
+<p>H列でQR本文の簡易検算値を作り、I列に管理ヘッダーと本文を連結します。J列は紙面に印刷する見える番号です。</p>
 <div class="formula-box">
 <button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-<code>=IF(G1="", "", "QR-" & TEXT(ROW(), "000"))</code>
+<code>=IF(G1="","",MOD(SUMPRODUCT(ROW($1:$255)*IFERROR(CODE(MID(G1,ROW($1:$255),1)),0)),100000))</code>
 </div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=IF(G1="","","#QR"&CHAR(9)&$F$2&CHAR(9)&TEXT(ROW(A1),"000")&CHAR(9)&TEXT($F$4,"000")&CHAR(9)&$F$1&CHAR(9)&MIN($F$3,$F$1-(ROW(A1)-1)*$F$3)&CHAR(9)&LEN(G1)&CHAR(9)&TEXT(H1,"00000")&CHAR(13)&G1)</code>
+</div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=IF(I1="","","QR-"&TEXT(ROW(A1),"000")&" / "&TEXT($F$4,"000"))</code>
+</div>
+<p>QRの先頭には <span class="code-inline">#QR [Tab] 転送ID [Tab] 連番 [Tab] 総QR数 [Tab] 総レコード数 [Tab] 当該QR件数 [Tab] 本文文字数 [Tab] 位置加重の簡易検算値 [Enter]</span> が入ります。受信側ではこの行が管理行として残ります。</p>
 <ul class="checklist">
-<li>H列に通し番号を生成</li>
-<li>通し番号は読み取り順序管理に<strong>必須</strong></li>
+<li><span class="code-inline">=LEN(I1)</span> を各行で確認し、255を超える場合はF3を減らす</li>
+<li>F3を1まで減らしても255を超えるレコードはこの方式では転送しない。項目削減、短い識別子への置換、別の承認済み移送手段を検討する</li>
+<li>J列の見える番号と、I列に埋め込んだ連番の両方を使う</li>
+<li>簡易検算値は偶然一致する可能性があるため、件数・金額等の業務上の合計値も照合する</li>
 </ul>
 <div class="xdemo-note-danger">
-<strong>🔥 通し番号なしでは運用できません</strong><br>
-            QRを読み取る順序を間違えるとデータの並びが崩壊します。各QRの横に<strong>大きく番号を印刷</strong>してください。
+<strong>🔥 見える通し番号だけでは不足します</strong><br>
+            紙面の番号は読み取り順の補助にすぎません。転送ID・連番・総QR数・総レコード数をQR本文にも入れ、受信後に1〜総QR数が一度ずつ存在することを確認してください。確認が終わるまで管理行を削除せず、業務用シートへ直接読み込まないでください。
           </div>
 </div>
 </section>
 <!-- ===== QR生成・印刷 ===== -->
 <section class="method-section">
 <h2>QRコードの生成と印刷レイアウト</h2>
-<p>記事①で設定したバーコードコントロール（Style = 11: QR Code）のLinkedCellをG1, G2, G3&hellip; と切り替えてQRコードを生成します。</p>
+<p>記事①で設定したバーコードコントロール（Style = 11: QR Code）のLinkedCellを、管理ヘッダーを含むI1, I2, I3&hellip; に切り替えてQRコードを生成します。</p>
 <table class="key-table">
 <thead>
 <tr><th>項目</th><th>推奨値</th><th>理由</th></tr>
 </thead>
 <tbody>
-<tr><td>QRサイズ</td><td><strong>3cm &times; 3cm 以上</strong></td><td>OPI-3601／ALX-3601の読み取り距離で確実に読める最低サイズ</td></tr>
+<tr><td>QRサイズ</td><td><strong>3cm &times; 3cmを試験開始例にする</strong></td><td>必要寸法は文字数、QRバージョン、印刷品質、距離、機種で変わるため、実際の印刷物で決める</td></tr>
 <tr><td>1ページあたりQR数</td><td>6〜8枚（A4縦）</td><td>余白・通し番号ラベルのスペース確保</td></tr>
 <tr><td>通し番号</td><td>QR-001, QR-002, &hellip;</td><td>読み取り順序の管理に必須</td></tr>
 <tr><td>ヘッダー情報</td><td>転送日・総件数・ページ番号・送信者名</td><td>受信側での照合・証跡として</td></tr>
-<tr><td>印刷品質</td><td>600dpi以上</td><td>QRの細かいモジュール（ドット）を正確に再現するため</td></tr>
+<tr><td>印刷品質</td><td>プリンターの高品質設定（例：600dpi）</td><td>600dpiを一律の必須条件とはせず、にじみ・欠け・縮小のない実物で読み取りを確認する</td></tr>
 <tr><td>用紙</td><td>普通紙（白）</td><td>光沢紙は反射で読み取りにくい場合がある</td></tr>
 </tbody>
 </table>
 <div class="xdemo-note-good">
 <strong>💡 L-46X使用時の追加メリット</strong><br>
-          L-46Xは最大100fpsの高速撮像と30万画素CMOSセンサを搭載しているため、QRサイズが2cm&times;2cm程度の小さいコードでも安定して読み取れます。A4用紙1枚に10〜12枚のQRを配置できるため、印刷枚数を削減できます。
+          本記事で試したL-46Xでは、小さめのQRでも読み取れる条件がありました。ただし2cm&times;2cmやA4用紙10〜12枚配置を一律の保証値にはできません。実際の文字数、プリンター、用紙、読み取り距離で連続試験し、余白を含めて安定するサイズを採用してください。
         </div>
 </section>
 <!-- ===== 受信側 手順 ===== -->
 <section class="tips-section">
-<h2>受信側：QRリーダーで読み取り &rarr; Excelに自動入力</h2>
+<h2>受信側：検証用シートへ読み取り &rarr; 照合後に確定</h2>
 <div class="flow-diagram">
-<span class="flow-step">① Excelを開き A1を選択</span>
+<span class="flow-step">① 空の検証用シートを文字列書式にしてA1を選択</span>
 <span class="flow-arrow">&rarr;</span>
 <span class="flow-step">② QR-001を読み取り</span>
 <span class="flow-arrow">&rarr;</span>
-<span class="flow-step">③ 自動入力を確認</span>
+<span class="flow-step">③ 管理行と入力を確認</span>
 <span class="flow-arrow">&rarr;</span>
 <span class="flow-step">④ QR-002&hellip; 繰り返し</span>
 <span class="flow-arrow">&rarr;</span>
-<span class="flow-step">⑤ 最終QRまで完了</span>
+<span class="flow-step">⑤ 欠番・重複・件数・合計を照合</span>
 </div>
-<p>QR-001から番号順にリーダーで読み取っていくだけです。1枚読み取るごとにExcelのカーソルはデータ末尾に自動移動します。次のQRを読み取ると、そこから続きが入力されます。</p>
-<h3>読み取りにかかる時間の目安</h3>
+<p>QR-001から番号順に、業務用シートではなく空の検証用シートへ読み取ります。先頭ゼロや日付がExcelに自動変換されないよう、読み取り前に使用列（この例ではA:H列）の表示形式を<strong>「文字列」</strong>へ変更します。各QRの先頭に <span class="code-inline">#QR</span> の管理行が入るため、転送IDが同じか、連番が001から総QR数まで一度ずつあるかを確認できます。確認が終わるまでは管理行を残し、誤りがあれば空のシートからやり直します。</p>
+<table class="format-table">
+<tr><th>確定前の確認</th><th>判定</th></tr>
+<tr><td>転送ID</td><td>すべての <span class="code-inline">#QR</span> 行が送信記録の転送IDと一致する</td></tr>
+<tr><td>連番と総QR数</td><td>001から総QR数までが各1回だけ存在し、欠番・重複・逆順がない</td></tr>
+<tr><td>総件数・当該QR件数</td><td>全管理行の総レコード数が送信記録と一致し、各管理行の直後に指定件数のデータ行がある</td></tr>
+<tr><td>本文文字数・簡易検算値</td><td>各管理行の次から次の管理行直前までを同じTab・Enterで再構成し、送信側の値と一致する</td></tr>
+<tr><td>業務上の照合</td><td>総レコード数に加え、数量・金額・日付別件数など意味のある合計が送信元と一致する</td></tr>
+<tr><td>確定</td><td>すべて一致した後にコピーを保存し、<span class="code-inline">#QR</span> 管理行を除外して業務用データへ渡す</td></tr>
+</table>
+<h3>受信後の再検算例（最初のQRが6レコードの場合）</h3>
+<p>管理行が1行目、データが2〜7行目に入った例です。管理行は A1=<span class="code-inline">#QR</span>、B1=転送ID、C1=連番、D1=総QR数、E1=総レコード数、F1=当該QR件数、G1=本文文字数、H1=簡易検算値となります。J1で本文を再構成します。</p>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=TEXTJOIN("",TRUE,A2:A7&CHAR(9)&B2:B7&CHAR(9)&C2:C7&CHAR(9)&D2:D7&CHAR(13))</code>
+</div>
+<div class="formula-box">
+<button class="copy-btn" onclick="copyFormula(this)">コピー</button>
+<code>=AND(LEN(J1)=VALUE(G1),MOD(SUMPRODUCT(ROW($1:$255)*IFERROR(CODE(MID(J1,ROW($1:$255),1)),0)),100000)=VALUE(H1))</code>
+</div>
+<p class="text-sm-gray">次のQRでは、その管理行のF列にある件数だけを範囲へ含めます。列数や日付書式が異なる場合は、送信側のレコード生成式と同じTab・Enter構成に直してください。この再検算を手順化できない件数・重要度なら、本方式で大量転送しないでください。</p>
+<p class="text-sm-gray">簡易検算値は入力ミスを見つけやすくする補助で、暗号学的な改ざん検知ではありません。重要データでは、承認済みのハッシュ値や電子署名を別経路で照合してください。</p>
+<div class="xdemo-note-warn">
+<strong>⚠️ 読み取り成功ブザーは「転送完了」の合図ではありません</strong><br>
+          ブザーは通常、コードを認識できたことを示すもので、入力先が全文字を受け取ったことや保存が完了したことまでは保証しません。文字列の入力が止まり、管理行とレコード数が増えたことを目視してから次へ進んでください。
+</div>
+<h3>キー送信時間の概算（準備・照合・再読取を除く）</h3>
 <table class="format-table">
 <tr><th>条件</th><th>OPI-3601 / ALX-3601<br>（ディレイ10ms）</th><th>L-46X<br>（ディレイ5ms）</th></tr>
 <tr><td>QR1枚（255文字）の転送時間</td><td class="text-center">255 &times; 10ms &fallingdotseq; 約2.6秒</td><td class="text-center">255 &times; 5ms &fallingdotseq; 約1.3秒</td></tr>
-<tr><td>読み取り動作（トリガ〜デコード）</td><td class="text-center">約0.5秒</td><td class="text-center">約0.3秒</td></tr>
+<tr><td>読み取り動作（計算上の仮定例）</td><td class="text-center">1枚あたり0.5秒と仮定</td><td class="text-center">1枚あたり0.3秒と仮定</td></tr>
 <tr><td>QR1枚の合計時間</td><td class="text-center"><strong>約3秒</strong></td><td class="text-center"><strong>約1.6秒</strong></td></tr>
-<tr><td>21枚（150件・35文字/件）の合計</td><td class="text-center"><strong>約63秒（約1分）</strong></td><td class="text-center"><strong>約34秒</strong></td></tr>
-<tr><td>100枚（500件・50文字/件）の合計</td><td class="text-center"><strong>約5分</strong></td><td class="text-center"><strong>約2.7分</strong></td></tr>
+<tr><td>25枚（150件を6件ずつ分割）の合計</td><td class="text-center"><strong>約75秒</strong></td><td class="text-center"><strong>約40秒</strong></td></tr>
+<tr><td>100枚を読んだ場合の計算例</td><td class="text-center"><strong>約5分</strong></td><td class="text-center"><strong>約2.7分</strong></td></tr>
 </table>
+<p class="text-sm-gray">上表は文字数&times;キャラクタ間ディレイに、1枚あたり0.5秒／0.3秒の読み取り動作を仮定した計算例です。実測値や保証値ではありません。印刷、運搬、承認、読み取り位置合わせ、入力確認、照合、エラー時のやり直しは含まないため、作業全体の完了時間ではありません。</p>
 <div class="xdemo-note-good">
 <strong>💡 連続読み取りのコツ</strong><br>
-          前のQRの転送が完了する前に次のQRを読み取ると、データが混在する恐れがあります。リーダーの<strong>「読み取り成功ブザー」が鳴ってから</strong>次のQRに移る習慣をつけてください。L-46Xではバイブレーション機能（振動）も確認に使えます。ハンズフリースタンド（STD-46）を使えば紙をかざすだけで読み取れ、大量QRの際に手の疲労を軽減できます。
+          前のQRのキー送信中に次のQRを読むとデータが混在する恐れがあります。ブザーだけで判断せず、入力が止まったことと管理行の連番を確認して次へ進みます。L-46Xのバイブレーションやハンズフリースタンドは読み取り動作の補助になりますが、受信内容の照合は別に必要です。
         </div>
 </section>
 <!-- ===== 転送可能データ量 ===== -->
 <section class="method-section">
-<h2>転送可能なデータ量の目安</h2>
+<h2>転送量とキー送信時間の理論目安</h2>
+<div class="xdemo-note-warn">
+<strong>⚠️ 下表は255文字を隙間なく使った場合の下限計算です</strong><br>
+          管理ヘッダー、レコード単位の区切り、印刷・運搬・照合・再読取の時間を含みません。本記事の安全側の構成では、実際のQR枚数と作業時間は表より増えます。
+</div>
 <table class="format-table">
-<tr><th>1レコード<br>文字数</th><th>1QRあたり<br>レコード数</th><th>100件に<br>必要なQR</th><th>500件に<br>必要なQR</th><th>500件 所要時間<br>（ディレイ10ms）</th><th>500件 所要時間<br>（ディレイ5ms）</th></tr>
+<tr><th>1レコード<br>文字数</th><th>1QRあたり<br>理論件数</th><th>100件の<br>理論最少QR</th><th>500件の<br>理論最少QR</th><th>500件 時間例<br>（10ms＋0.5秒/QR）</th><th>500件 時間例<br>（5ms＋0.3秒/QR）</th></tr>
 <tr><td class="text-center">20文字</td><td class="text-center">12件</td><td class="text-center">9枚</td><td class="text-center">42枚</td><td class="text-center">約2分</td><td class="text-center">約1分</td></tr>
 <tr><td class="text-center">35文字</td><td class="text-center">7件</td><td class="text-center">15枚</td><td class="text-center">72枚</td><td class="text-center">約3.5分</td><td class="text-center">約2分</td></tr>
 <tr><td class="text-center">50文字</td><td class="text-center">5件</td><td class="text-center">20枚</td><td class="text-center">100枚</td><td class="text-center">約5分</td><td class="text-center">約2.7分</td></tr>
@@ -488,8 +535,8 @@
 <tr><td class="text-center">255文字</td><td class="text-center">1件</td><td class="text-center">100枚</td><td class="text-center">500枚</td><td class="text-center">約25分</td><td class="text-center">約13分</td></tr>
 </table>
 <div class="xdemo-note-warn">
-<strong>⚠️ 現実的な上限の目安</strong><br>
-          QR枚数が<strong>100枚を超える</strong>場合は、紙の管理・読み取り順序の管理・やり直しリスクが急激に増加します。100枚以上になる場合は、データを優先度でフィルタして転送量を減らす、複数日に分けて転送する、セキュリティ部門にUSBメモリの一時許可を申請するなどの代替策も検討してください。
+<strong>⚠️ 100枚は方式を見直す目安例</strong><br>
+          QR枚数が増えるほど、紙の管理・読み取り順序・照合・やり直しの負担も増えます。本記事では100枚を超える見積もりになった時点を再検討の目安例とし、転送量を減らす、小さな承認済みバッチに分ける、セキュリティ部門に別の移送手段を相談するなどを検討します。100枚未満なら安全という意味ではありません。
         </div>
 </section>
 <!-- ===== 実践シナリオ ===== -->
@@ -503,34 +550,44 @@
 <tbody>
 <tr><td>データ構造</td><td>製品ID（8文字）＋ 検査値1（5文字）＋ 検査値2（5文字）＋ 合否（2文字）＋ 日付（10文字）＝ 約30文字 ＋ Tab&times;4 ＋ Enter&times;1 ＝ <strong>約35文字/件</strong></td></tr>
 <tr><td>全データ文字数</td><td>35 &times; 150 ＝ <strong>5,250文字</strong></td></tr>
-<tr><td>必要QR枚数</td><td>5,250 &divide; 255 ＝ <strong>21枚</strong>（A4用紙3枚）</td></tr>
+<tr><td>必要QR枚数</td><td>6件ずつに分けるため 150 &divide; 6 ＝ <strong>25枚</strong>（管理ヘッダー込みで各255文字以内か確認）</td></tr>
 <tr><td>受信側リーダー</td><td>ALX-3601（ディレイ10ms）</td></tr>
-<tr><td>所要時間</td><td>21枚 &times; 約3秒 &fallingdotseq; <strong>約63秒（約1分）</strong></td></tr>
+<tr><td>キー送信の概算</td><td>25枚 &times; 約3秒 &fallingdotseq; <strong>約75秒</strong>。印刷・運搬・照合・再読取は別</td></tr>
 </tbody>
 </table>
 <h3>数式まとめ</h3>
 <div class="sample-box">
-<pre>' E列：1レコード文字列
-=A2 & CHAR(9) & B2 & CHAR(9) & C2 & CHAR(9) & D2 & CHAR(9) & E2 & CHAR(13)
+<pre>' F列：1レコード文字列（A〜E列が元データ）
+=A2 & CHAR(9) & B2 & CHAR(9) & C2 & CHAR(9) & D2 & CHAR(9) & TEXT(E2,"yyyy-mm-dd") & CHAR(13)
 
-' F1：全連結
-=TEXTJOIN("", TRUE, E2:E151)
+' G列：管理値
+G1（総件数）      =COUNTA(A2:A151)
+G2（転送ID）      TR-20260712-A
+G3（1QRの件数）   6
+G4（総QR数）      =ROUNDUP(G1/G3,0)
 
-' G列：255文字ずつ分割
-=IF((ROW()-1)*255+1 &gt; LEN($F$1), "", MID($F$1, (ROW()-1)*255+1, 255))
+' H列：レコード単位のQR本文
+=IF((ROW(A1)-1)*$G$3+1&gt;$G$1,"",TEXTJOIN("",TRUE,INDEX($F$2:$F$151,(ROW(A1)-1)*$G$3+1):INDEX($F$2:$F$151,MIN(ROW(A1)*$G$3,$G$1))))
 
-' H列：通し番号
-=IF(G1="", "", "QR-" & TEXT(ROW(), "000"))
+' I列：本文の簡易検算値
+=IF(H1="","",MOD(SUMPRODUCT(ROW($1:$255)*IFERROR(CODE(MID(H1,ROW($1:$255),1)),0)),100000))
 
-' 全角チェック（半角のみならOK）
-=IF(SUMPRODUCT((LEN(A2:D151)*2-LENB(A2:D151)))&lt;&gt;0,"⚠ 全角あり&rarr;記事⑪","&checkmark; OK")
+' J列：管理ヘッダーを含むQR文字列（バーコードコントロールのLinkedCell）
+=IF(H1="","","#QR"&CHAR(9)&$G$2&CHAR(9)&TEXT(ROW(A1),"000")&CHAR(9)&TEXT($G$4,"000")&CHAR(9)&$G$1&CHAR(9)&MIN($G$3,$G$1-(ROW(A1)-1)*$G$3)&CHAR(9)&LEN(H1)&CHAR(9)&TEXT(I1,"00000")&CHAR(13)&H1)
+
+' K列：紙面に印刷する通し番号
+=IF(J1="","","QR-"&TEXT(ROW(A1),"000")&" / "&TEXT($G$4,"000"))
+
+' ASCII範囲チェック（別列へ入れて行ごとにコピー）
+=IF(SUMPRODUCT(--(IFERROR(UNICODE(MID(F2,ROW($1:$255),1)),0)&gt;127))&gt;0,"⚠ ASCII外あり&rarr;記事⑪","&checkmark; ASCII範囲")
 
 ' 検証用
 件数:     =COUNTA(A2:A151)              &rarr; 150
-QR枚数:   =ROUNDUP(LEN(F1)/255, 0)     &rarr; 21</pre>
+QR枚数:   =ROUNDUP(G1/G3,0)            &rarr; 25
+文字数:   =LEN(J1)                     &rarr; 全行255以下を確認</pre>
 </div>
 <div class="xdemo-note-warn">
-<strong>⚠️ TEXTJOINが使えない場合:</strong> Excel 2016では使えない環境があります。使えない場合は、レコード数を分割しながら <code>&amp;</code> や <code>&amp; CHAR(9) &amp;</code> で連結してください。
+<strong>⚠️ TEXTJOINが使えない場合:</strong> Excel 2016では使えない環境があります。使えない場合は、1QR分のレコード範囲を <code>&amp;</code> で連結してください。全データを1本にして255文字ごとに切る方式には戻さず、レコード境界を保ちます。
 </div>
 <div class="xdemo-note-info">
 <strong>📝 もしこのシナリオのデータに「製品名（日本語）」列があったら？</strong><br>
@@ -549,9 +606,10 @@ QR枚数:   =ROUNDUP(LEN(F1)/255, 0)     &rarr; 21</pre>
 <tr><td>余計な改行が入る</td><td>リーダーのサフィックスがON</td><td>SET &rarr; RY（サフィックスなし）&rarr; END</td><td>②</td></tr>
 <tr><td>QRが生成されない</td><td>LinkedCellの文字数が255超</td><td><span class="code-inline">=LEN()</span>で確認し分割を見直す</td><td>①</td></tr>
 <tr><td>全角文字が文字化け</td><td>バーコードコントロールの半角制限</td><td>全角列を除外するか記事⑪の公開版コードを確認する</td><td>⑪</td></tr>
-<tr><td>読み取り順序を間違えた</td><td>通し番号を確認しなかった</td><td>受信側データをクリアしQR-001から再読み取り</td><td>&horbar;</td></tr>
-<tr><td>件数が少ない</td><td>QRの読み漏れ</td><td>COUNTAで確認し、不足分のQRを特定して再読み取り</td><td>&horbar;</td></tr>
-<tr><td>件数が多い</td><td>同じQRを重複読み取り</td><td>重複行を削除。通し番号で正しい範囲だけ残す</td><td>&horbar;</td></tr>
+<tr><td>読み取り順序を間違えた</td><td>管理行の連番が逆順</td><td>途中修正せず、空の検証用シートへQR-001から再読み取り</td><td>&horbar;</td></tr>
+<tr><td>件数が少ない</td><td>QRの読み漏れ・文字欠け</td><td><span class="code-inline">#QR</span> 行の欠番と本文文字数を確認し、ディレイを上げて空のシートから再試験</td><td>&horbar;</td></tr>
+<tr><td>件数が多い</td><td>同じQRを重複読み取り</td><td>管理行の重複番号を確認。正当な同一データ行を値だけで重複削除せず、空のシートから再読み取り</td><td>&horbar;</td></tr>
+<tr><td>簡易検算値が違う</td><td>欠字・記号変換・区切りの変化</td><td>該当QRを含む転送を確定せず、キーボード言語とディレイを見直して再試験</td><td>&horbar;</td></tr>
 <tr><td>記号が化ける</td><td>キーボード言語がUSのまま</td><td>SET &rarr; PM（日本語キーボード）&rarr; END</td><td>④</td></tr>
 <tr><td>リーダーが反応しない</td><td>USB未認識 or スリープ状態</td><td>USB抜き差し。トリガキーを押して復帰を確認</td><td>⑧</td></tr>
 </table>
@@ -564,7 +622,7 @@ QR枚数:   =ROUNDUP(LEN(F1)/255, 0)     &rarr; 21</pre>
 <tr><th>懸念事項</th><th>リスク</th><th>対策</th></tr>
 <tr><td>QR印刷物の持ち出し管理</td><td>紛失・盗難で情報漏洩</td><td>通し番号で枚数管理。使用後はシュレッダー処理。「受領印＋返却確認」の運用ルール</td></tr>
 <tr><td>転送内容の機密性</td><td>スマホ等で読めば中身がわかる</td><td>機密データは管理者立ち会いで転送。QR印刷物の取り扱い区分を設定</td></tr>
-<tr><td>改ざん防止</td><td>印刷後に差し替え・追加の可能性</td><td>チェックサム照合で検知。厳格な場合はQR枚数とチェックサムを別紙に記録し封印</td></tr>
+<tr><td>改ざん防止</td><td>印刷後に差し替え・追加の可能性</td><td>記事内の簡易検算値だけでは改ざん検知に不十分。重要データは承認済みハッシュ値・電子署名を別経路で照合し、QR枚数を記録して封印</td></tr>
 <tr><td>承認フロー</td><td>無断持ち出し</td><td>「何を・いつ・誰が・どこへ」転送したか記録。上長承認を事前に取得</td></tr>
 <tr><td>受信側での保存</td><td>復元データが管理外に流出</td><td>受信側PCでのファイル保存先・アクセス権を事前に決定</td></tr>
 </table>
@@ -580,14 +638,15 @@ QR枚数:   =ROUNDUP(LEN(F1)/255, 0)     &rarr; 21</pre>
 <tr><th>項目</th><th>内容</th></tr>
 <tr><td>全角文字の対応</td><td>バーコードコントロールは半角のみ。全角にはVBA＋Windows標準APIでの自力生成＋USB COM受信が必要になるため、記事⑪の公開版コードと検証手順を確認する。</td></tr>
 <tr><td>閉域環境とは</td><td>ネットワーク・USB等が使えない隔離されたIT環境</td></tr>
-<tr><td>QR転送の原理</td><td>Excel &rarr; QR文字列 &rarr; 紙に印刷 &rarr; 物理運搬 &rarr; 別PCでリーダー読取 &rarr; Excelに自動入力</td></tr>
+<tr><td>QR転送の原理</td><td>Excel &rarr; 管理情報付きQR &rarr; 紙に印刷 &rarr; 承認された物理運搬 &rarr; 検証用シートで読取 &rarr; 照合後に確定</td></tr>
 <tr><td>1QRの上限</td><td>半角255文字（バーコードコントロールの制限）</td></tr>
-<tr><td>送信側の数式</td><td>CHAR(9)でTab、CHAR(13)でEnter &rarr; TEXTJOIN連結（Excel 2016で使えない場合は &amp; 連結）&rarr; MID 255文字分割</td></tr>
-<tr><td>必要QR枚数</td><td><span class="code-inline">=ROUNDUP(LEN(全連結セル)/255, 0)</span></td></tr>
-<tr><td>受信側リーダー設定</td><td>サフィックスOFF、ディレイ5〜10ms前後、日本語キーボード。OPI系では RY / LB / PM を使用</td></tr>
+<tr><td>送信側の数式</td><td>CHAR(9)でTab、検証済みのCHAR(10)またはCHAR(13)で行移動 &rarr; レコード単位でTEXTJOIN &rarr; 転送ID・連番・総QR数・総レコード数・当該QR件数・文字数・位置加重の簡易検算値を付与</td></tr>
+<tr><td>必要QR枚数</td><td><span class="code-inline">=ROUNDUP(総件数/1QRの件数, 0)</span>。管理ヘッダー込みで各QRが255文字以下か別途確認</td></tr>
+<tr><td>受信側リーダー設定</td><td>サフィックスOFF、ディレイ5〜10msは試験開始例、日本語キーボード。1文字でも欠ける場合は余裕を持ってディレイを上げる</td></tr>
 <tr><td>本記事の実機検証</td><td>OPI-3601、ALX-3601、L-46X（オプトエレクトロニクス社）。Zebra / Honeywell は本記事のバーコードを流用せず、各ツールで同等設定を作成して確認する</td></tr>
-<tr><td>読み取り速度</td><td>1枚 約1.6〜3秒 &rarr; 21枚（150件）で約1分</td></tr>
-<tr><td>制約</td><td>半角文字のみ（全角は記事⑪参照）。QR 100枚超は紙管理が煩雑</td></tr>
+<tr><td>読み取り速度</td><td>文字数&times;ディレイでキー送信時間は概算できるが、準備・運搬・照合・再読取を含む完了時間ではない</td></tr>
+<tr><td>受信後の確認</td><td>検証用シートを文字列書式にし、管理行、再構成した本文の文字数・簡易検算値、総件数、業務上の合計を照合してから確定</td></tr>
+<tr><td>制約</td><td>本記事の数式例はASCII範囲のデータを対象（ASCII外は記事⑪参照）。枚数が増えるほど欠番・重複・紙管理の負担が増える</td></tr>
 <tr><td>セキュリティ</td><td>紙＝物理的データ持ち出し。情報セキュリティ担当者に事前確認必須</td></tr>
 </table>
 <div class="flow-diagram">
@@ -631,7 +690,7 @@ QR枚数:   =ROUNDUP(LEN(F1)/255, 0)     &rarr; 21</pre>
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で固定時間を空ける</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
         <li class="current"><span class="lv-adv">[応用]</span> <strong>⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行（この記事）</strong></li>

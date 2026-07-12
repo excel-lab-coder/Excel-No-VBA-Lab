@@ -70,7 +70,7 @@
       <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
     </thead>
     <tbody>
-      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span> または <span class="code-inline">CHAR(13)</span></td><td>リーダー設定とExcelのEnter移動設定で変わるため、1件の試験で採用値を決めます。</td></tr>
       <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
       <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
       <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
@@ -86,8 +86,12 @@
 <li>PrintScreen を送ったのに、<strong>まだ前の画面のままキャプチャされてしまう</strong></li>
 <li>帳票の印刷ボタンを押した後、<strong>用紙が出てくるまで次の操作を待ちたい</strong></li>
 </ul>
-<p>これらはすべて<strong>「QRリーダーの送信速度が、システムの処理速度より速すぎる」</strong>ことが原因です。</p>
-<p><strong>Sleep（一時停止）</strong>は、QRリーダーのデータ送信を<strong>「秒」単位で一時停止</strong>させる機能です。③のキャラクター間ディレイ（ミリ秒単位の微調整）とは別物で、<strong>「システムが処理を完了するまでじっと待つ」</strong>ために使います。</p>
+<p>これらの症状では、<strong>QRリーダーの送信が、システムの画面遷移より先へ進んでいる</strong>可能性があります。ただし、フォーカス、入力規則、通信エラーなど別の原因もあるため、固定待機だけで解決すると決めつけずに切り分けます。</p>
+<p><strong>Sleep（一時停止）</strong>は、QRリーダーのデータ送信を<strong>指定した秒数だけ固定停止</strong>させる機能です。③のキャラクター間ディレイ（ミリ秒単位の微調整）とは別物です。</p>
+<div class="xdemo-note-danger">
+<strong>⚠ Sleepは処理完了を検知しません</strong><br>
+Sleepで確認できるのは時間が経過したことだけです。保存完了、画面遷移、通信終了、エラーの有無は認識できません。処理時間が変動する画面では、固定待機だけで次の入力へ進めず、画面確認、結果照合、人による確認、QRの分割などを組み合わせてください。
+</div>
 
 <div class="xdemo-note-warn">
 <strong>⚠️ 本記事の Sleep 記号方式はメーカー共通仕様ではありません</strong><br>
@@ -132,7 +136,7 @@
 <tr>
 <td><strong>典型的な考え方</strong></td>
 <td>文字欠けしない範囲まで、環境に合わせて少しずつ遅くする</td>
-<td>画面遷移や印刷完了など、処理が終わるまで秒単位で待つ</td>
+<td>想定時間を見込み、操作間に固定時間の余裕を入れる。完了検知ではない</td>
 </tr>
 <tr>
 <td><strong>主な使用場面</strong></td>
@@ -149,8 +153,8 @@
 <div class="xdemo-note-info">
 <strong>📝 一言でまとめると</strong><br>
 <strong>ディレイ</strong> ＝ 文字と文字の間の「小さな間」。文字欠け防止。<br>
-<strong>Sleep</strong> ＝ 操作と操作の間の「大きな待ち」。システムの処理完了待ち。<br>
-目的が違うため、業務システム連携では<strong>両方を併用する</strong>考え方が基本です。
+<strong>Sleep</strong> ＝ 操作と操作の間に入れる固定時間待機。処理完了は検知しない。<br>
+目的が違うため、文字欠けと操作間隔の両方に対策が必要な環境では併用します。
 </div>
 </section>
 
@@ -186,7 +190,7 @@
 <tr>
 <td><strong>ダイアログの表示待ち</strong></td>
 <td>F5 等でダイアログが開くまで</td>
-<td>表示が完了するまで待つ</td>
+<td>通常の表示時間を測り、固定時間の余裕を入れる。表示完了は別に確認</td>
 <td>検索ダイアログが表示されてから品番を入力開始</td>
 </tr>
 <tr>
@@ -221,11 +225,11 @@ Excel のセル入力は PC のローカル処理なので比較的速く完了�
 </div>
 <div class="timeline-item sleep-item">
 <div class="tl-time">0.3秒 〜 3.3秒 【Sleep 3秒】</div>
-<strong>リーダーが送信を完全停止。</strong>この間に業務システムがサーバーと通信し、結果画面を描画する。
+<strong>リーダーが送信を固定時間だけ停止。</strong>この間に業務システム側の処理が進む想定だが、完了は判定しない。
 </div>
 <div class="timeline-item">
 <div class="tl-time">3.3秒</div>
-Sleep 終了。トリガー文字 <span class="trigger-char">|</span> を検出 &rarr; PrintScreen のスキャンコードを送信（結果画面がキャプチャされる）
+Sleep 終了。トリガー文字 <span class="trigger-char">|</span> を検出 &rarr; PrintScreen のスキャンコードを送信（その時点で表示中の画面をキャプチャ）
 </div>
 </div>
 
@@ -250,7 +254,7 @@ Sleep 終了。トリガー文字 <span class="trigger-char">|</span> を検出 
 <video src="../video/qr_06_sleep_demo_captioned.mp4?v=20260502031704" aria-label="QRリーダーのSleep待機を示す無音の字幕付きデモ動画" autoplay loop muted playsinline controls poster="../image/hero_qr-1024.webp" style="width:100%; border-radius:8px; border:1px solid #ddd;"></video>
 </div>
 
-<p class="text-sm-gray" style="text-align:center; margin-top:8px;">【Sleepとキー変換の活用】PageDownキーへの変換で画面をスクロールし、Sleep機能でシステムの登録処理を待機しています。</p>
+<p class="text-sm-gray" style="text-align:center; margin-top:8px;">【Sleepとキー変換の活用】PageDownキーへの変換で画面をスクロールし、Sleep機能で登録操作後に固定時間を空ける動作例です。登録完了を検知するものではありません。</p>
 
 <div class="xdemo-note-info">
 <strong>📝 Sleep 中、リーダーはどうなっている？</strong><br>
@@ -437,7 +441,7 @@ F5 検索起動 &rarr; <strong>2秒待ち</strong> &rarr; 入力 &rarr; 確定
 </h3>
 <div class="difficulty"><span class="star-on">&starf;&starf;&starf;&starf;</span><span class="star-off">&star;</span></div>
 <div class="scenario-box">
-<strong>使用場面：</strong>業務システムで F5 キーを押して検索ダイアログを開く &rarr; ダイアログの表示完了を待つ &rarr; 品番を入力 &rarr; NUM Enter で検索実行。
+<strong>使用場面：</strong>業務システムで F5 キーを押して検索ダイアログを開く &rarr; 固定時間を空ける &rarr; 品番を入力 &rarr; NUM Enter で検索実行。
 </div>
 <div class="flow-diagram">
 <span class="flow-step">{ &rarr; F5 検索起動</span>
@@ -452,7 +456,7 @@ F5 検索起動 &rarr; <strong>2秒待ち</strong> &rarr; 入力 &rarr; 確定
 <button class="copy-btn" onclick="copyFormula(this)">コピー</button>
 <code>="{" & "!!" & A1 & "~"</code>
 </div>
-<p>F5 を押した直後にデータを送ると、ダイアログが開く前に文字列が前の画面に入力されてしまいます。Sleep でダイアログが完全に表示されるのを待ちます。</p>
+<p>F5 を押した直後にデータを送ると、ダイアログが開く前に文字列が前の画面へ入ることがあります。Sleepで通常の表示時間より長い間隔を空けますが、表示完了は判定できません。変動が大きい場合はQRを分け、人が表示を確認してから次を読みます。</p>
 
 <hr class="pattern-divider">
 
@@ -519,7 +523,7 @@ F5 検索起動 &rarr; <strong>2秒待ち</strong> &rarr; 入力 &rarr; 確定
 </div>
 <div class="xdemo-note-danger">
 <strong>🔥 全体の所要時間に注意</strong><br>
-Sleep を多用すると、スキャン完了まで数秒以上かかります。現場でスキャンしてから何秒も反応がないと「壊れた？」と思われるため、<strong>事前に作業者へ「スキャン後は送信完了まで待つ」ことを周知</strong>しておくことが重要です。
+Sleep を多用すると、キー送信終了まで数秒以上かかります。現場で何秒も反応がないと再スキャンして重複入力する恐れがあるため、待機中の扱いと停止方法を事前に周知します。キー送信終了と業務処理完了は別です。
 </div>
 
 <hr class="pattern-divider">
@@ -544,11 +548,11 @@ Sleep を多用すると、スキャン完了まで数秒以上かかります�
 </div>
 <div class="formula-box">
 <button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-<code>=CHAR(1) & "!" & A1 & "~"</code>
+<code>="@" & "!" & A1 & "~"</code>
 </div>
 <div class="xdemo-note-info">
-<strong>📝 CHAR(1) = Ctrl+A ではなく Alt+Tab？</strong><br>
-Alt+Tab はキー変換で送る必要があります（④で設定）。上の数式は説明のための簡略表記です。実際には Alt+Tab の組み合わせキーをトリガー文字に割り当て、その後に Sleep を挟みます。修飾キーの組み合わせ送信に対応した上位機種が必要です。
+<strong>📝 @をAlt+Tabへ割り当てる例</strong><br>
+Alt+Tabは文字コードではなく修飾キーを含むキーイベントです。この例では、通常データで使わない <code>@</code> を予約文字にし、対応リーダーのキー変換でAlt+Tabへ割り当てます。その後に <code>!</code> の固定待機を挟みます。予約文字の重複と対応機種を必ず確認してください。
 </div>
 </section>
 
@@ -558,7 +562,7 @@ Alt+Tab はキー変換で送る必要があります（④で設定）。上の
 <ol>
 <li><strong>手動で操作し、ストップウォッチで計測する</strong><br>実際に業務システムを手動で操作し、「確定ボタンを押してから次の画面が完全に表示されるまで」の時間を複数回計測します。</li>
 <li style="margin-top:12px;"><strong>最大値に余裕を足した値を Sleep に設定</strong><br>計測値の中で一番遅かった時間を基準にし、少し余裕を足して Sleep を設定します。</li>
-<li style="margin-top:12px;"><strong>QRをスキャンして連続テスト</strong><br>連続で成功すれば OK。1回でも失敗したら Sleep を追加してやり直します。</li>
+<li style="margin-top:12px;"><strong>QRをスキャンして条件別にテスト</strong><br>連続成功は初期確認です。1回でも失敗したら原因を切り分け、固定待機の追加だけでなくQR分割や人の確認も検討します。</li>
 <li style="margin-top:12px;"><strong>ピーク時間帯でも再テスト</strong><br>業務システムは時間帯によってレスポンスが変動します。最も遅くなる時間帯（昼休み明け、月末締めなど）でテストしてください。</li>
 </ol>
 <div class="xdemo-note-good">
@@ -568,8 +572,8 @@ Alt+Tab はキー変換で送る必要があります（④で設定）。上の
 </section>
 
 <section class="method-section">
-<h2>注意：ディレイと Sleep は「両方設定する」が正解</h2>
-<p>Sleep を設定したからといってディレイが不要になるわけではありません。<strong>両方を併用する</strong>のが正しい設定です。</p>
+<h2>注意：ディレイとSleepは目的に応じて組み合わせる</h2>
+<p>Sleepを設定しても文字欠け対策のディレイが不要になるわけではありません。文字欠けと操作間隔の両方が問題になる環境では併用し、不要な環境ではむやみに増やしません。</p>
 
 <table class="format-table">
 <tr><th>設定項目</th><th>役割</th><th>考え方</th></tr>
@@ -585,7 +589,7 @@ Alt+Tab はキー変換で送る必要があります（④で設定）。上の
 </tr>
 <tr>
 <td class="text-center"><strong>Sleep</strong></td>
-<td>特定の操作後の大きな待ち。業務システムの画面遷移・印刷を待つ。</td>
+<td>特定の操作後に入れる固定時間の間隔。画面遷移・印刷の完了は検知しない。</td>
 <td>手動操作で処理時間を測り、最大値に余裕を足して設定します。</td>
 </tr>
 </table>
@@ -626,7 +630,7 @@ Alt+Tab はキー変換で送る必要があります（④で設定）。上の
 
 <div class="xdemo-note-danger" style="border-left-color: #ff9800; background: #fff3e0;">
 <strong>🔥 正直に言うと&hellip;</strong><br>
-Sleep が必要な業務フローを安価なリーダーで無理やり回すのは、現場のストレスを増やすだけです。「Sleep 対応の業務用リーダーへの投資」は、作業者の時間単価を考えれば<strong>すぐに元が取れる投資</strong>です。
+Sleep が必要な業務フローを待機機能の弱いリーダーで組むと、分割操作や確認の負担が増える場合があります。業務用リーダーの費用対効果は、作業量、設定・保守時間、失敗時の影響を含めて比較してください。
 </div>
 </section>
 
@@ -639,8 +643,8 @@ Sleep が必要な業務フローを安価なリーダーで無理やり回す�
 <tbody>
 <tr>
 <td>Sleep 後のデータが前の画面に入力されている</td>
-<td>Sleep の秒数が足りない（画面遷移が完了していない）</td>
-<td>Sleep を追加して再テスト</td>
+<td>固定待機より画面遷移が長い、または別画面へフォーカスした</td>
+<td>処理を止めて影響を確認。待機延長、QR分割、画面確認のいずれかで再設計</td>
 </tr>
 <tr>
 <td>Sleep が効かない（全く待機しない）</td>
@@ -665,7 +669,7 @@ Sleep が必要な業務フローを安価なリーダーで無理やり回す�
 <tr>
 <td>時間帯によって成功率が変わる</td>
 <td>サーバー負荷でシステムの応答速度が変動</td>
-<td>最も遅い時間帯に合わせて Sleep を設定。余裕を持った値にする</td>
+<td>遅い時間帯で再測定。変動が大きければ固定待機だけに頼らずQRを分割</td>
 </tr>
 <tr>
 <td>Zebraで可変人数や可変マーカーがうまく動かない</td>
@@ -682,11 +686,11 @@ Sleep が必要な業務フローを安価なリーダーで無理やり回す�
 <tr><th class="w-30">項目</th><th>内容</th></tr>
 <tr>
 <td class="text-center">Sleep とは</td>
-<td>QRリーダーのデータ送信を<strong>「秒」単位で一時停止</strong>する機能。業務システムの処理完了を待つために使う。</td>
+<td>QRリーダーのデータ送信を<strong>「秒」単位で固定停止</strong>する機能。操作の間隔を空けるために使い、処理完了は検知しない。</td>
 </tr>
 <tr>
 <td class="text-center">ディレイとの違い</td>
-<td>ディレイ＝ミリ秒単位・全文字に均等・文字欠け防止。Sleep＝秒単位・任意位置・処理完了待ち。目的が違うため、<strong>両方を併用する</strong>考え方が基本。</td>
+<td>ディレイ＝ミリ秒単位・全文字に均等・文字欠け対策。Sleep＝秒単位・任意位置・固定時間待機。必要な症状が両方ある場合に併用する。</td>
 </tr>
 <tr>
 <td class="text-center">本記事の方式</td>
@@ -735,7 +739,7 @@ Sleep が必要な業務フローを安価なリーダーで無理やり回す�
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
-        <li class="current"><span class="lv-adv">[応用]</span> <strong>⑥ Sleep（一時停止）で処理完了を待つ（この記事）</strong></li>
+        <li class="current"><span class="lv-adv">[応用]</span> <strong>⑥ Sleep（一時停止）で固定時間を空ける（この記事）</strong></li>
         <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>

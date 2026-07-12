@@ -45,7 +45,7 @@
     "logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}
   },
   "datePublished":"2026-05-14",
-  "dateModified":"2026-05-14",
+  "dateModified":"2026-07-12",
   "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/17_qr_reader_recommendation_opticon_zebra_honeywell.html"}
 }
 </script>
@@ -100,11 +100,16 @@
       </p>
 
       <p class="article-summary">
-        結論からいうと、QR自動入力自体は <strong>Opticon・Zebra・Honeywell のどれでも可能</strong>です。
+        検証した機種・構成では、Opticon・Zebra・Honeywellはいずれも<strong>基本的なQRキーボード入力の候補</strong>になりました。
         差が出るのは、TabやEnterが使えるかではなく、Excel側で入力ストリームを作り、Sleep、NumEnter、Pause、設定復旧まで含めて運用しやすいかです。
       </p>
 
-      <p class="text-sm-gray">最終更新: 2026-05-14 ｜ 読了目安: 12分</p>
+      <p class="text-sm-gray">最終更新: 2026-07-12 ｜ 読了目安: 12分</p>
+    </div>
+
+    <div class="xdemo-note-warn">
+      <strong>⚠️ 比較範囲を限定しています</strong><br>
+      本記事は2026年7月12日までに確認した OPI-3601・ALX-3601・L-46X、Zebra DS2208、Honeywell Xenon 1900g と、当時の設定ツール・設定内容を基にした用途別評価です。メーカー全製品の順位ではなく、機種、ファームウェア、接続方式、ライセンス、入力先アプリが変われば結果も変わります。購入前に候補機を同じQR・同じ画面で比較してください。
     </div>
 
 <section class="method-section qr-control-guide">
@@ -115,7 +120,7 @@
       <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
     </thead>
     <tbody>
-      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span> または <span class="code-inline">CHAR(13)</span></td><td>リーダー設定とExcelのEnter移動設定で変わるため、1件の試験で採用値を決めます。</td></tr>
       <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
       <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
       <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
@@ -544,9 +549,8 @@
       <h2>最終結論</h2>
 
       <p>
-        QR自動入力は、Opticon・Zebra・Honeywellのどれでも実現できます。
-        Tabや通常Enterについては、Excelの <span class="code-inline">CHAR</span> 関数でQRコード内に直接含められるため、
-        リーダー側で特別なキー変換を増やす必要はありません。
+        検証した機種・設定では、Opticon・Zebra・HoneywellはいずれもQRキーボード入力の候補になりました。
+        Tabや改行・復帰はExcelの <span class="code-inline">CHAR(9)</span>、<span class="code-inline">CHAR(10)</span>、<span class="code-inline">CHAR(13)</span> をQR内に含めて試せますが、入力先が期待するEnter動作になるかは画面ごとに確認します。
       </p>
 
       <p>
@@ -557,8 +561,8 @@
       <div class="xdemo-note-good">
         <strong>まとめ：</strong>
         <ul>
-          <li>基本的なQR自動入力は、Opticon・Zebra・Honeywellのどれでも可能</li>
-          <li>TabやEnterは、Excelの <span class="code-inline">CHAR(9)</span> や <span class="code-inline">CHAR(13)</span> で対応可能</li>
+          <li>検証した機種・設定では、3社とも基本的なQRキーボード入力の候補</li>
+          <li>Tabや改行・復帰は <span class="code-inline">CHAR(9)</span>、<span class="code-inline">CHAR(10)</span>、<span class="code-inline">CHAR(13)</span> を試し、入力先ごとに動作確認</li>
           <li>NumEnterやPauseも基本的には各社対応候補だが、設定のしやすさに差がある</li>
           <li>ストリーミング方式で柔軟に使うなら Opticon</li>
           <li>紙の設定QR・設定バーコードで現場展開するなら Opticon または Zebra</li>
@@ -570,7 +574,7 @@
       <p>
         単なるQRリーダー比較ではなく、
         <strong>Excelで作成したQRコードを入力操作の流れとして使う</strong>
-        という観点では、Opticonを第一候補にするのが自然です。
+        という本記事の検証用途では、Opticonが第一候補になりました。
       </p>
     </section>
 
@@ -606,7 +610,7 @@
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で固定時間を空ける</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>

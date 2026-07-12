@@ -50,7 +50,7 @@
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
     "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
     "datePublished": "2026-03-20",
-    "dateModified": "2026-03-20"
+    "dateModified":"2026-07-12"
   }
   </script>
 <script type="application/ld+json">
@@ -244,7 +244,7 @@
 <span class="badge badge-maniac">パワークエリ</span>
 <span class="badge badge-maniac">M言語</span>
 <span class="badge badge-maniac">COBOL/マニアック</span>
-<span class="article-date">更新日: 2026-04-23</span>
+<span class="article-date">更新日: 2026-07-12</span>
 </div>
 <h1 class="article-title">【参考資料】パワークエリでCOBOL帳票を処理する全テクニック<br>
 <small style="font-size:0.5em;color:#607d8b;">&horbar; 自作関数なしでどこまでできるか ＋ MIDB自作関数の実装 &horbar;</small></h1>
@@ -499,8 +499,8 @@
 <span class="code-line">Text.Trim( fx_MIDB([Column1], 29, 40) )   // &rarr; "東京都新宿区西新宿１丁目"</span>
 </div>
 <div class="xdemo-note-good">
-<strong>💡 レイアウト定義書があるなら問題は発生しません。</strong><br>
-          「中身のデータ長が毎行違う」ことと「フィールドのバイト枠が固定」であることは矛盾しません。枠が固定なので fx_MIDB（自作関数）+ Text.Trim で必ず正しく取り出せます。
+<strong>💡 レイアウト定義書と実データを照合します。</strong><br>
+          「中身のデータ長が毎行違う」ことと「フィールドのバイト枠が固定」であることは矛盾しません。文字コード、開始位置、バイト長が仕様と一致していれば、fx_MIDB（自作関数）+ Text.Trim で切り出せます。外字や例外行を含むコピーで結果を検証してください。
         </div>
 <h3 style="color: #00838f; border-bottom: 2px solid #b2ebf2; padding-bottom: 5px; margin-top: 30px;">ケース②：レイアウト定義書がない &rarr; データ中の「目印」で切り出す</h3>
 <p>バイト位置がわからなければfx_MIDB（自作関数）は使えません。この場合は、データの中にある記号やパターンを「目印」として頼りに切り出します。パワークエリには目印ベースの切り出しに使える標準関数が揃っています。</p>
@@ -631,7 +631,7 @@
 <!-- ======== 核心技術 ======== -->
 <section class="method-section">
 <h2>核心技術：バイナリ経由のバイト位置切り出し</h2>
-<p>M言語で文字列をShift_JIS（コードページ932）のバイナリに変換すると、半角＝1バイト・全角＝2バイトの世界になります。このバイナリをバイト位置で切り出して文字列に戻せば、ExcelのMIDBと完全に同じ結果が得られます。</p>
+<p>M言語では文字列を指定したコードページのバイナリへ変換し、<code>Binary.Range</code> でバイト位置を切り出せます。コードページ932では多くの半角文字が1バイト、多くの全角文字が2バイトになりますが、文字種や変換不能文字による例外があります。ExcelのMIDBと同一と決めつけず、実データで照合してください。</p>
 <div class="pipeline-box">
 <span class="step">文字列（text）</span>
 <span class="arrow">&rarr;</span>
@@ -713,7 +713,7 @@
     担当者名 <span class="cm-op">=</span> <span class="cm-func">Text.Trim</span>(<span class="cm-func">Text.FromBinary</span>(<span class="cm-func">Binary.Range</span>(bin, <span class="cm-number">28</span>, <span class="cm-number">8</span>), <span class="cm-number">932</span>))
 <span class="cm-keyword">in</span>
     [店舗ID=店舗ID, 店舗名=店舗名, 売上金額=売上金額, 担当者名=担当者名]</div>
-<p>レコード型の列が追加されるので、展開ボタン（&hArr;）で各列に展開します。<code>Text.ToBinary</code> が行あたり1回になり、最大4倍高速です。</p>
+<p>レコード型の列が追加されるので、展開ボタン（&hArr;）で各列に展開します。<code>Text.ToBinary</code> の重複呼び出しを減らせるため、データ量や変換内容によっては処理時間の短縮が期待できます。効果は環境ごとに更新時間を測定してください。</p>
 <div class="xdemo-note">
 <strong>📌 目安：</strong>数千行&hellip;意識不要。数万行&hellip;先にフィルターで不要行除去。5万行以上&hellip;一括変換推奨。
         </div>
@@ -735,8 +735,8 @@
 <table class="compare-table">
 <thead><tr><th>エンコーディング</th><th>コードページ</th><th>全角1文字</th><th>備考</th></tr></thead>
 <tbody>
-<tr><td class="label-col">Shift_JIS</td><td><code>932</code></td><td>2バイト</td><td>日本のCOBOL帳票の大多数。本資料の前提。</td></tr>
-<tr><td class="label-col">UTF-8</td><td><code>65001</code></td><td>3バイト</td><td>最近のシステムで増加中。3バイト計算になるため注意。</td></tr>
+<tr><td class="label-col">CP932 / Shift_JIS互換</td><td><code>932</code></td><td>多くの全角文字は2バイト</td><td>本資料で検証する前提。元ファイルの仕様確認が必要。</td></tr>
+<tr><td class="label-col">UTF-8</td><td><code>65001</code></td><td>文字により1〜4バイト</td><td>文字ごとにバイト数が変わるため、CP932の位置を流用しない。</td></tr>
 <tr><td class="label-col">EUC-JP</td><td><code>20932</code></td><td>2バイト</td><td>UNIX系COBOL帳票で稀に使用。</td></tr>
 </tbody>
 </table>
@@ -746,7 +746,7 @@
 <h2>🔧 よくあるトラブル</h2>
 <div class="pq-step-box-red">
 <h3 class="pq-step-title-red">文字化けする</h3>
-<p>全角文字の途中を切り出しています。全角項目は偶数バイト位置から偶数バイト数で切り出してください。</p>
+<p>全角文字の途中を切り出している可能性があります。開始位置と長さをレイアウト仕様書・実データで確認し、文字の途中を避けてください。先行する半角文字や末尾スペースによって開始位置・項目長は奇数にもなるため、偶数・奇数だけでは判断できません。</p>
 </div>
 <div class="pq-step-box-red">
 <h3 class="pq-step-title-red">Expression.Error（範囲外）</h3>
@@ -819,7 +819,7 @@
 <p><strong>GUI操作：</strong>[ホーム] &rarr; [列の分割] &rarr; [区切り記号による分割] &rarr; 区切り記号を選択（タブ / カンマ / スペース等）。スペース区切りの場合は「連続する区切り記号を1つとして扱う」オプションにチェックを入れると、複数スペースをまとめて処理できます。</p>
 <div class="xdemo-note-warn">
 <strong>⚠ ただしCOBOL帳票では稀なケースです：</strong><br>
-            COBOL帳票の出力は基本的に固定長でフィールドを隙間なく詰めるのが標準です。タブやカンマやパイプで区切って出力されるケースはかなり稀であり、該当するのはホスト側でCSV/TSV形式に変換された後のデータや、中間処理で区切り文字を付与して出力し直されたデータに限られます。COBOL帳票の「生データ」としてはまず見かけないため、本編のパターンには含めていません。
+            本シリーズは固定長または紙帳票型テキストを対象にしています。ただし、COBOL系システムでもCSV・TSV・区切り文字付きで出力される場合があります。区切り形式なら、固定長切り出しより先にPower Queryの区切り列分割を検討してください。
           </div>
 </div>
 </section>

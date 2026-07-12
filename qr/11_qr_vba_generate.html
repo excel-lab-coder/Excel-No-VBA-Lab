@@ -46,7 +46,7 @@
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
   "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
   "datePublished":"2026-04-17",
-  "dateModified":"2026-06-23",
+  "dateModified":"2026-07-12",
   "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html"}
 }
 </script>
@@ -93,7 +93,12 @@
 </div>
 <h1 class="article-title">全角QR生成のVBA完全版コード<br><small>&horbar; 外部ライブラリなしでBMP生成・セル配置まで行う公開版</small></h1>
 <p class="article-summary" data-seo-lead="true">この記事では、全角文字を含むQRコードをExcel VBAとWindows標準APIだけで生成する公開版コードを掲載します。閉域・制限環境では、Shift-JISでQRを作り、オプトエレクトロニクス側は漢字出力モード②とShift-JIS設定でExcelなどへ出力する運用を中心に整理します。UTF-8はMOSTが必要です。EdgeなどへShift-JISをそのまま出すと文字化けしやすく、旧IME設定で暫定回避できる場合はありますが、「～」などが「?」になる制限があります。なお、本記事は社内ルールや情報システム部門の管理を回避するためのものではなく、承認済み環境で代替入力手段を検討するための技術メモです。</p>
-<p style="color:#666;font-size:.88rem;">最終更新: 2026-06-23 ｜ 読了目安: 30分 ｜ 前提: <a href="09_qr_closed_transfer.html">⑨ 閉域環境データ転送</a>、<a href="10_qr_system_migration.html">⑩ システム間データ移行</a></p>
+<p style="color:#666;font-size:.88rem;">最終更新: 2026-07-12 ｜ 読了目安: 30分 ｜ 前提: <a href="09_qr_closed_transfer.html">⑨ 閉域環境データ転送</a>、<a href="10_qr_system_migration.html">⑩ システム間データ移行</a></p>
+</div>
+
+<div class="xdemo-note-danger">
+<strong>⚠️ 検証・実験的なQRエンコーダー実装です</strong><br>
+「完全版」は掲載コードが生成からBMP配置まで一式そろっているという記事上の呼称で、QR規格への適合認証や全データ・全リーダーでの動作保証を意味しません。重要データへ使う前に、既知のテスト文字列、文字数境界、記号・日本語、複数のデコーダー、印刷物で往復照合し、元文字列との完全一致を確認してください。可能なら承認済みの既存ライブラリを優先します。
 </div>
 
 <section class="method-section" style="background:#e8f5e9;border:2px solid #2e7d32;">
@@ -113,7 +118,7 @@
       <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
     </thead>
     <tbody>
-      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span> または <span class="code-inline">CHAR(13)</span></td><td>リーダー設定とExcelのEnter移動設定で変わるため、1件の試験で採用値を決めます。</td></tr>
       <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
       <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
       <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
@@ -2087,7 +2092,7 @@ QR入力で手入力ミスを減らし、バリデーションで異常値や不
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で固定時間を空ける</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>

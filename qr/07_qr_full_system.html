@@ -79,7 +79,12 @@
 </div>
 <h1 class="article-title">QRリーダー設定の全体像！<br>Webシステム入力向けフルシステム構築ガイド</h1>
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。会社でVBAやマクロが禁止され、Power Queryでは届かないWebシステム入力を減らしたい場面で、QRリーダーを代替手段として使う設計です。</p>
-<p style="color:#666;font-size:.88rem;">最終更新: 2026-05-14 ｜ 読了目安: 15分</p>
+<p style="color:#666;font-size:.88rem;">最終更新: 2026-07-12 ｜ 読了目安: 15分</p>
+</div>
+
+<div class="xdemo-note-danger">
+<strong>⚠️ 高度なキー自動入力は検証用画面から試してください</strong><br>
+QRリーダーは通常、現在の画面状態、登録成功、警告表示、通信完了を認識しません。SleepやInter-function Delayは一定時間止める機能であり、処理完了の検知ではありません。登録・更新・削除につながる操作は、架空データ、復旧手順、停止方法、結果照合を用意してから試します。
 </div>
 
 <section class="method-section qr-control-guide">
@@ -90,7 +95,7 @@
       <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
     </thead>
     <tbody>
-      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span> または <span class="code-inline">CHAR(13)</span></td><td>リーダー設定とExcelのEnter移動設定で変わるため、1件の試験で採用値を決めます。</td></tr>
       <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
       <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
       <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
@@ -220,8 +225,8 @@ PCには専用ドライバーのインストールが不要なケースが多く
 </tr>
 <tr>
 <td class="text-center"><span class="level-badge level-full">Lv.3 フルシステム</span></td>
-<td>画面遷移待ち、PrintScreen、印刷待ち、登録完了待ちまで含む運用</td>
-<td>Lv.2 ＋ Sleep</td>
+<td>画面遷移や印刷操作の前後に固定待機を入れ、結果を別に確認する運用</td>
+<td>Lv.2 ＋ 固定待機</td>
 <td>約60分</td>
 <td>① ② ③ ④ ⑤ ⑥</td>
 </tr>
@@ -358,7 +363,7 @@ OPI-3601 / ALX-3601 / L-46X の検証では、基本はキャラクター間デ�
 <strong>✅ 判断の目安：</strong><br>
 文字と文字の取りこぼしなら <strong>キャラクター間ディレイ</strong>、<br>
 Tab / Enter 直後だけ不安定なら、機種に応じて <strong>Inter-function Delay 相当の設定</strong> を確認、<br>
-画面遷移・検索・登録完了を待つなら <strong>Sleep またはQR分割</strong>、という切り分けが安全です。
+画面遷移・検索のために一定時間を空けるなら <strong>Sleep またはQR分割</strong>を検討し、登録完了は画面や件数で別に確認します。
 </div>
 </div>
 
@@ -458,7 +463,7 @@ NUM Enter以外に必要なキー変換を追加します。必要なものだ�
 <span class="level-badge level-full">Lv.3</span>
 </div>
 <p>
-Webシステムの画面遷移、印刷出力、PrintScreen、登録完了待ちなどのために「秒」単位の待機を設定します。
+Webシステムの画面遷移、印刷出力、PrintScreenなどの前後に「秒」単位の固定待機を設定します。登録完了そのものを判定する機能ではありません。
 </p>
 <ul class="checklist">
 <li>方式A（トリガー文字）の場合：Sleepのトリガー文字を決定する</li>
@@ -470,7 +475,7 @@ Webシステムの画面遷移、印刷出力、PrintScreen、登録完了待ち
 <div class="xdemo-note-warn">
 <strong>⚠️ Sleep方式は機種依存です</strong><br>
 <code>!</code> や <code>?</code> を使ったSleepマーカー方式は、すべてのメーカーで同じように使えるとは限りません。
-本番投入前に、必ず対象リーダーと対象Webシステムで確認してください。
+本番投入前に、必ず対象リーダーと対象Webシステムで確認してください。また、設定時間が過ぎても画面処理が終わっていない場合があるため、重要操作ではQRを分割して人が結果を確認してから次を読む方法を優先します。
 </div>
 </div>
 
@@ -487,15 +492,13 @@ Webシステムの画面遷移、印刷出力、PrintScreen、登録完了待ち
 <ul class="checklist">
 <li>実際に運用するQRコードを用意する</li>
 <li>本番と同じWebシステム画面、または検証用画面を開く</li>
-<li><strong>10回連続</strong>でスキャンし、1回もエラーがないことを確認</li>
+<li><strong>10回連続</strong>は初期確認として行い、長文・短文・空欄・遅い時間帯など代表条件も追加する</li>
 <li>エラーが出た場合は、ディレイ・Sleep・キー変換・フォーカス位置を見直す</li>
 <li>業務システムの場合、ピーク時間帯にも再テストする</li>
 </ul>
 <div class="xdemo-note-danger">
-<strong>🔥 「9回成功・1回失敗」はNGです</strong><br>
-成功率90%は、100回スキャンすれば10回失敗するということです。
-現場では1回の失敗が手戻り・誤データの原因になります。
-<strong>10回中10回成功するまで設定を追い込んでください。</strong>
+<strong>🔥 10回中10回でも本番保証にはなりません</strong><br>
+1回でも失敗した設定は見直しが必要です。一方、10回すべて成功しても、長時間運用や混雑時の失敗率までは確定できません。運用量に応じて試験回数と条件を増やし、入力後の件数・内容照合と停止手順を残してください。
 </div>
 </div>
 
@@ -805,7 +808,7 @@ Zebraの123Scan、HoneywellのEZConfig、OpticonのUniversalConfigなど、メ�
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で固定時間を空ける</a></li>
         <li class="current"><span class="lv-adv">[応用]</span> <strong>⑦ QRリーダー設定の全体像！フルシステム構築ガイド（この記事）</strong></li>
         <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>

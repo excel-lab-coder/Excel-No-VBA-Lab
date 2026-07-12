@@ -114,7 +114,7 @@
                     },
                     {
                         "@type":  "CreativeWork",
-                        "name":  "記事⑥ Sleep（一時停止）で処理完了を待つ",
+                        "name":  "記事⑥ Sleep（一時停止）で固定時間を空ける",
                         "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/06_qr_sleep_revised_honeywell.html",
                         "position":  6
                     },
@@ -396,7 +396,7 @@
         <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
       </thead>
       <tbody>
-        <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+        <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span> または <span class="code-inline">CHAR(13)</span></td><td>リーダー設定とExcelのEnter移動設定で変わるため、1件の試験で採用値を決めます。</td></tr>
         <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
         <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
         <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
@@ -534,7 +534,7 @@
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
       </div>
-      <a class="article-link" href="../qr/10_qr_system_migration.html">⑩ QRコードでシステム間データ移行 — 旧システムから新システムへ読み取るだけで引っ越し完了</a>
+      <a class="article-link" href="../qr/10_qr_system_migration.html">⑩ QRコードによるシステム間データ移行を検証する</a>
       <p class="article-summary">APIもCSVインポートもない新システムに、QRリーダーでデータを流し込む移行手法です。</p>
     </li>
 

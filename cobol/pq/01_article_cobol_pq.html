@@ -50,7 +50,7 @@
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
     "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
     "datePublished": "2026-03-18",
-    "dateModified": "2026-03-18"
+    "dateModified":"2026-07-12"
   }
   </script>
 <script type="application/ld+json">
@@ -162,7 +162,7 @@
 <span class="badge badge-all">Excel 2016以降</span>
 <span class="badge badge-maniac">パワークエリ</span>
 <span class="badge badge-maniac">COBOL/マニアック</span>
-<span class="article-date">更新日: 2026-04-23</span>
+<span class="article-date">更新日: 2026-07-12</span>
 </div>
 <h1 class="article-title">【パワークエリ編】COBOL帳票データの不要行除去と一括結合</h1>
 <p class="article-summary" data-seo-lead="true">エクセルでCOBOL帳票や固定長データを整形したい方向けに、Excel関数・Power Query・MIDBなどを使って列分割、不要行除去、帳票データ変換を進める実務手順を扱います。VBAが使えない、マクロが禁止されている会社では、定期的なCOBOL帳票整形の代替手段としてPower Queryを検討できます。</p>
@@ -243,8 +243,8 @@
 </div>
 <div class="pq-step-box">
 <h3 class="pq-step-title">4. 複数ファイルのフォルダ一括結合が可能</h3>
-<p>これは関数では絶対にできないパワークエリ独自の強みです。[データ] &rarr; [データの取得] &rarr; [フォルダーから] でフォルダを指定すると、<strong>何十個・何百個のテキストファイルが縦に結合された状態で取り込まれます</strong>。</p>
-<p>上記の不要行除去・フィルダウン・MIDB分解をクエリに設定しておけば、<strong>来月新しいファイルをフォルダに入れて「更新」ボタンを押すだけで、すべての整形処理が全自動で完了</strong>します。</p>
+<p>複数ファイルを関数だけで直接取り込むのは難しく、Power Queryのフォルダー取得が有力です。[データ] &rarr; [データの取得] &rarr; [フォルダーから] で対象フォルダーを指定し、同じ構造のファイルを結合できます。</p>
+<p>不要行除去・フィルダウン・バイト切り出しをクエリに設定しておけば、新しいファイルを追加して更新できます。ただし、列構成の変更、壊れたファイル、文字コード違いが混ざるとエラーになるため、更新結果の件数と例外を確認してください。</p>
 </div>
 <div class="xdemo-note-good">
 <strong>💡 関数パイプラインとの比較：</strong><br>
@@ -284,15 +284,15 @@
 <p>最初の壁を越えるコストをかけるかどうかは、処理の頻度と規模で判断してください。定期的に大量の帳票を処理する業務であれば、パワークエリへの移行は十分に元が取れます。単発の処理であれば、本シリーズの関数パイプラインで対応するのが現実的です。マクロ禁止で困ったときも、まず処理の頻度とファイル数から代替手段を選ぶと判断しやすくなります。</p>
 <div class="pq-step-box" style="border-left-color: #66bb6a;">
 <h3 class="pq-step-title" style="color: #2e7d32; border-bottom-color: #c8e6c9;">パワークエリが有利な場面</h3>
-<p><strong>定期的・反復的な帳票処理</strong> &horbar; 「更新」ボタンで全自動化できる。</p>
-<p><strong>複数ファイルの一括結合</strong> &horbar; フォルダ指定だけで数百ファイルを統合。関数では不可能。</p>
+<p><strong>定期的・反復的な帳票処理</strong> &horbar; 設定済みの変換手順を「更新」で再実行できる。</p>
+<p><strong>複数ファイルの一括結合</strong> &horbar; 同じ構造のファイルをフォルダー単位で統合しやすい。</p>
 <p><strong>不要行の除去</strong> &horbar; フィルター操作だけで完了。フラグ列の設計が不要。</p>
 <p><strong>フィルダウン</strong> &horbar; 標準機能でクリック一発。数式を書く必要がない。</p>
 </div>
 <div class="pq-step-box" style="border-left-color: #ef5350;">
 <h3 class="pq-step-title" style="color: #c62828; border-bottom-color: #ffcdd2;">関数パイプラインが有利な場面</h3>
 <p><strong>単発・少頻度の帳票処理</strong> &horbar; 自作関数を作るコストをかけずにすぐ処理できる。</p>
-<p><strong>MIDBをそのまま使える安心感</strong> &horbar; バイト位置の切り出しが標準関数で確実に動く。</p>
+<p><strong>既存のMIDB数式を利用できる場合</strong> &horbar; 互換環境と文字コードを確認済みなら、レイアウト定義のバイト位置を式へ反映しやすい。</p>
 <p><strong>M言語の学習コストを避けたい場合</strong> &horbar; Excel関数の知識だけで完結する。</p>
 </div>
 <div class="xdemo-note-good" style="margin-top: 20px;">

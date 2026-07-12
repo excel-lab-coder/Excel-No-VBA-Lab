@@ -50,7 +50,7 @@
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
     "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
     "datePublished": "2026-03-18",
-    "dateModified": "2026-03-18"
+    "dateModified":"2026-07-12"
   }
   </script>
 <script type="application/ld+json">
@@ -263,7 +263,7 @@
 <span class="badge badge-maniac" style="background-color:#455a64;color:#fff;">難易度：&starf;&starf;&starf;&starf;&star;（実践応用）</span>
 <span class="badge badge-all">全バージョン対応あり</span>
 <span class="badge badge-maniac">COBOL/マニアック</span>
-<span class="article-date">更新日: 2026-04-23</span>
+<span class="article-date">更新日: 2026-07-12</span>
 </div>
 <h1 class="article-title">【不規則明細・完結編】行数がバラバラなデータの「正規化展開」</h1>
 <p class="article-summary" data-seo-lead="true">エクセルでCOBOL帳票や固定長データを整形したい方向けに、Excel関数・Power Query・MIDBなどを使って列分割、不要行除去、帳票データ変換を進める実務手順を扱います。</p>
@@ -400,8 +400,9 @@
 <p>抽出シートでは、フラグ列に値がある行（＝明細行）だけを取り出します。</p>
 <p class="code-label-good">Excel 2021 / 2024 / Microsoft 365 などの場合（FILTER関数）</p>
 <div class="code-block" data-lang="excel">
-<span class="code-line">=FILTER(貼付シート!B:C, 貼付シート!A:A&lt;&gt;"")</span>
+<span class="code-line">=FILTER(貼付シート!B2:C50000, 貼付シート!A2:A50000&lt;&gt;"")</span>
 </div>
+<p class="text-sm-gray">50000行は例です。実データの最大行に合わせて調整するか、Excelテーブルの構造化参照を使ってください。</p>
 <p class="code-label-good">全バージョン対応（INDEX + SMALL + IFERROR）</p>
 <p class="code-label">抽出シート!A2（元データ）</p>
 <div class="code-block" data-lang="excel">

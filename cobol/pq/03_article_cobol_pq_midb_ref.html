@@ -52,7 +52,7 @@
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
     "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
     "datePublished": "2026-03-20",
-    "dateModified": "2026-03-20"
+    "dateModified":"2026-07-12"
   }
   </script>
 <script type="application/ld+json">
@@ -145,7 +145,7 @@
 <span class="badge badge-maniac">パワークエリ</span>
 <span class="badge badge-maniac">M言語</span>
 <span class="badge badge-maniac">COBOL/マニアック</span>
-<span class="article-date">更新日: 2026-04-23</span>
+<span class="article-date">更新日: 2026-07-12</span>
 </div>
 <h1 class="article-title">【参考資料】M言語でMIDB相当の自作関数を作る<br><small style="font-size:0.55em;color:#607d8b;">&horbar; パワークエリ最大の壁を越えるための完全テクニック集 &horbar;</small></h1>
 <p class="article-summary" data-seo-lead="true">エクセルでCOBOL帳票や固定長データを整形したい方向けに、Excel関数・Power Query・MIDBなどを使って列分割、不要行除去、帳票データ変換を進める実務手順を扱います。</p>
@@ -241,10 +241,10 @@
           </div>
 </div>
 <div class="xdemo-note-warn">
-<strong>💬 引数の対応関係（ExcelのMIDBと完全に同じ）：</strong><br>
+<strong>💬 MIDBに近い引数構成：</strong><br>
 <code>fx_MIDB(文字列, 開始バイト位置, バイト数)</code><br>
-          ・<strong>開始バイト位置</strong>：1始まり（先頭は1）。ExcelのMIDBと同じ。<br>
-          ・<strong>バイト数</strong>：切り出すバイト数。半角1バイト、全角2バイト。<br><br>
+          ・<strong>開始バイト位置</strong>：利用者が指定するときは1始まり（先頭は1）。関数内部でBinary.Range用の0始まりへ変換します。<br>
+          ・<strong>バイト数</strong>：切り出すバイト数。コードページ932では多くの半角文字が1バイト、多くの全角文字が2バイトですが、文字種と変換可否を実データで確認します。<br><br>
           文字コードとレイアウト定義のバイト基準が一致していれば、PICTURE句やレイアウト定義書の位置を利用できます。外字や変換不能文字を含む場合は、そのまま流用せず結果を照合してください。
         </div>
 </section>
@@ -521,7 +521,7 @@
 <div class="pq-step-box">
 <h3 class="pq-step-title">症状：切り出し結果が文字化けする</h3>
 <p><strong>原因：</strong> 全角文字の途中（2バイトの1バイト目だけ、または2バイト目だけ）を切り出している。開始位置やバイト数が1バイトずれると、全角文字の境界をまたいでしまいます。</p>
-<p><strong>対処：</strong> COBOL帳票のレイアウト定義書を再確認し、全角項目の開始バイト位置と長さが偶数バイトで揃っているか確認してください。全角項目は必ず2の倍数のバイト位置から、2の倍数のバイト数で切り出す必要があります。</p>
+<p><strong>対処：</strong> COBOL帳票のレイアウト定義書と実データを再確認し、文字の途中から切り始めていないか、末尾を途中で切っていないかを確認してください。先頭に半角文字が奇数個あれば全角文字が偶数ではない位置から始まることもあり、項目末尾の半角スペースを含めて奇数バイト長になる場合もあります。偶数・奇数だけでは判断できません。</p>
 </div>
 <div class="pq-step-box">
 <h3 class="pq-step-title">症状：Expression.Error - 引数が範囲外</h3>

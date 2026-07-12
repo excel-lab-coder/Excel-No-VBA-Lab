@@ -50,7 +50,7 @@
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
     "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
     "datePublished": "2026-03-18",
-    "dateModified": "2026-03-18"
+    "dateModified":"2026-07-12"
   }
   </script>
 <script type="application/ld+json">
@@ -91,7 +91,7 @@
 <span class="badge badge-maniac" style="background-color:#d32f2f;">難易度：&starf;&starf;&starf;&star;&star;</span>
 <span class="badge badge-all">全バージョン対応あり</span>
 <span class="badge badge-maniac">COBOL/マニアック</span>
-<span class="article-date">更新日: 2026-04-23</span>
+<span class="article-date">更新日: 2026-07-12</span>
 </div>
 <h1 class="article-title">【関数応用編】不規則なCOBOL帳票の撃破（不要行の除外・縦持ちデータの横展開）</h1>
 <p class="article-summary" data-seo-lead="true">エクセルでCOBOL帳票や固定長データを整形したい方向けに、Excel関数・Power Query・MIDBなどを使って列分割、不要行除去、帳票データ変換を進める実務手順を扱います。</p>
@@ -205,15 +205,16 @@
 <p>最新の環境なら、ステップ1の作業列すら見に行かず、この数式一つで条件判定から抽出まで（スピルで）完結します。</p>
 <p class="code-label-good">抽出シート!A1セルに入力</p>
 <div class="code-block" data-lang="excel">
-<span class="code-line">=FILTER(貼付シート!B:B, MIDB(貼付シート!B:B, 5, 1)="-")</span>
+<span class="code-line">=FILTER(貼付シート!B2:B50000, MIDB(貼付シート!B2:B50000, 5, 1)="-")</span>
 </div>
+<p class="excel-demo-note"><code>50000</code> は例です。実データの最大行に合わせて調整するか、Excelテーブルの列参照を使ってください。FILTERやMIDBで全列を指定すると、100万行超が評価対象になり再計算負荷が増える場合があります。</p>
 <h4 style="margin:20px 0 5px;color:#f57f17;">解法B：フラグ行番号 ＋ INDEX ＋ SMALL（全ver対応・大規模データ向け候補）</h4>
-<p>古いExcelを使わざるを得ない場合や、万単位の超大容量データがある場合は、抽出側の行番号を利用して、ステップ1で付けた貼付シートの「行番号フラグ（A列）」を <code>SMALL</code> 関数で小さい順から探しに行くのが最も安全で高速です。</p>
+<p>古いExcelを使う場合は、抽出側の行番号を利用して、ステップ1で付けた貼付シートの「行番号フラグ（A列）」を <code>SMALL</code> 関数で小さい順から探す方法が候補になります。</p>
 <p class="code-label-good">抽出シート!A1セル（抽出先）</p>
 <div class="code-block" data-lang="excel">
-<span class="code-line">=IFERROR(INDEX(貼付シート!B:B, SMALL(貼付シート!A:A, ROW(A1))), "")</span>
+<span class="code-line">=IFERROR(INDEX(貼付シート!B:B, SMALL(貼付シート!$A$2:$A$50000, ROW(A1))), "")</span>
 </div>
-<p style="margin-top:10px;"><code>SMALL</code> 関数が「貼付シートのA列の中で、一番小さい行番号、次に小さい行番号&hellip;」と順番に拾ってくるため、空白の行（ゴミ行）が見事にジャンプされ、上に詰まった状態で綺麗なデータとしてワープしてきます。重い累積計算を避けた、レガシー環境での究極の抽出術です。</p>
+<p style="margin-top:10px;"><code>SMALL</code> 関数が「貼付シートのA列の中で、一番小さい行番号、次に小さい行番号&hellip;」と順番に拾うため、空白行を飛ばして上に詰めた結果を作れます。参照上限の <code>50000</code> は実データ量に合わせて調整してください。</p>
 </div>
 </section>
 <!-- ==========================================================
@@ -328,12 +329,12 @@
 
 <p class="code-label-good">抽出シート!B1セル（1行目データ：SMALLの「順位」にA列の連番を使う）</p>
 <div class="code-block" data-lang="excel">
-  <span class="code-line">=INDEX(貼付シート!B:B, SMALL(貼付シート!A:A, $A1))</span>
+  <span class="code-line">=INDEX(貼付シート!B:B, SMALL(貼付シート!$A$2:$A$50000, $A1))</span>
 </div>
 
 <p class="code-label-good">抽出シート!C1セル（2行目データ：取得した行番号に ＋1 する）</p>
 <div class="code-block" data-lang="excel">
-  <span class="code-line">=INDEX(貼付シート!B:B, SMALL(貼付シート!A:A, $A1) + 1)</span>
+  <span class="code-line">=INDEX(貼付シート!B:B, SMALL(貼付シート!$A$2:$A$50000, $A1) + 1)</span>
 </div>
 <div class="excel-demo-note">
   <strong>試練1とロジックはほぼ同じです。</strong><br>

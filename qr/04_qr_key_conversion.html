@@ -46,7 +46,7 @@
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
   "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
   "datePublished":"2026-04-18",
-  "dateModified":"2026-05-14",
+  "dateModified":"2026-07-12",
   "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/04_qr_key_conversion.html"}
 }
 </script>
@@ -93,7 +93,7 @@
 </div>
 <h1 class="article-title">QRコード &rarr; キー変換テクニック<br><small>&horbar; テンキーEnter・ファンクションキーをQRから送信する</small></h1>
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
-<p style="color:#666;font-size:.88rem;">最終更新: 2026-05-14 ｜ 読了目安: 12分 ｜ 前提: <a href="01_qr_barcode_control.html">①</a> <a href="02_qr_tab_enter.html">②</a> <a href="03_qr_character_delay.html">③</a></p>
+<p style="color:#666;font-size:.88rem;">最終更新: 2026-07-12 ｜ 読了目安: 12分 ｜ 前提: <a href="01_qr_barcode_control.html">①</a> <a href="02_qr_tab_enter.html">②</a> <a href="03_qr_character_delay.html">③</a></p>
 </div>
 
 <section class="method-section qr-control-guide">
@@ -104,7 +104,7 @@
       <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
     </thead>
     <tbody>
-      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span> または <span class="code-inline">CHAR(13)</span></td><td>リーダー設定とExcelのEnter移動設定で変わるため、1件の試験で採用値を決めます。</td></tr>
       <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
       <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
       <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
@@ -118,13 +118,13 @@
 <h2><span class="icon">🎯</span> この記事のゴール</h2>
 <p>
     ②で突き当たった<strong>「テンキーEnterが送れない」「ファンクションキーが送れない」</strong>という限界。
-    CHAR関数はASCII（0〜127）の範囲しか扱えないため、通常はQRリーダーからテンキーEnter（NUM Enter）や、PrintScreen、Pauseキー、PageDown、PageUpといった<strong>非ASCIIの特殊キーは原理的に出力できません</strong>。これがこれまでの自動化における最大の「壁」でした。
+    ExcelのCHAR関数は1〜255の数値から、利用環境の文字セットに対応する文字を返します。ただし、文字コードをQRへ入れることと、テンキーEnter、PrintScreen、Pause、PageDown、PageUpなどの<strong>物理キーイベントを送ることは別</strong>です。
   </p>
 <p>
     しかし、この記事ではQRリーダーが持つ<strong>「キー変換（リマップ）」機能</strong>を利用して、この壁を突破します。Tabは <span class="code-inline">CHAR(9)</span>、通常Enterは <span class="code-inline">CHAR(13)</span> / <span class="code-inline">CHAR(10)</span> で済む場合が多いため、キー変換はNumEnter、PageUp・PageDown、Home、Fキー、Pauseなど、CHAR関数で扱いにくいキーに絞るのが基本です。
   </p>
 <div class="xdemo-note-good">
-<strong>🔥 究極の自動化の実現:</strong>
+<strong>🔥 キー変換による操作の拡張:</strong>
     特定の文字（例：<span class="code-inline">/</span> や <span class="code-inline">|</span>）を、リーダー側でNUM EnterやPrintScreenなどの「CHAR関数では出しにくい特殊キー」に変換するよう設定します。これにより、<strong>PC上の画面遷移、ショートカットの発動、画面キャプチャなど、通常のQR文字列だけでは難しい操作</strong>を組み込めます。VBAやRPAを使わずに入力手順を広げるための応用技です。
   </div>
 <div class="xdemo-note-info">
@@ -136,17 +136,17 @@
 <!-- 問題の整理 -->
 <!-- ========================================== -->
 <section class="method-section">
-<h2>🚧 CHAR関数の限界 &horbar; 送れないキー一覧</h2>
-<p>まず、CHAR関数（ASCII）で送れるキーと送れないキーを整理します。</p>
+<h2>🚧 CHAR関数とキーイベントの違い</h2>
+<p>CHAR関数で文字・制御文字を作れることと、Windowsへ特定キーの押下イベントを送れることは同じではありません。Microsoft公式ではCHARの引数は1〜255とされていますが、QRリーダーがどう出力するかは機種・設定・入力先に依存します。<a href="https://support.microsoft.com/en-us/excel/char-function" target="_blank" rel="noopener noreferrer">Microsoft CHAR関数の説明</a></p>
 <table class="compare-table">
 <thead>
 <tr><th>キー</th><th>CHAR関数で送れる？</th><th>現場で必要になるシーン</th></tr>
 </thead>
 <tbody>
-<tr><td class="text-left">Tab</td><td><span class="circle">&cir;</span> CHAR(9)</td><td>セル横移動</td></tr>
-<tr><td class="text-left">メインEnter（CR/LF）</td><td><span class="circle">&cir;</span> CHAR(13)/CHAR(10)</td><td>セル改行</td></tr>
-<tr><td class="text-left">ESC</td><td><span class="circle">&cir;</span> CHAR(27)</td><td>編集キャンセル</td></tr>
-<tr><td class="text-left">Ctrl+S, Ctrl+C 等</td><td><span class="circle">&cir;</span> CHAR(1)〜(26)</td><td>保存・コピーなど</td></tr>
+<tr><td class="text-left">Tab</td><td><span class="circle">&cir;</span> CHAR(9)をまず試す</td><td>セル横移動。入力先で確認</td></tr>
+<tr><td class="text-left">メインEnter（CR/LF）</td><td><span class="circle">&cir;</span> CHAR(13)/CHAR(10)をまず試す</td><td>改行・確定動作は入力先で確認</td></tr>
+<tr><td class="text-left">ESC</td><td><span class="circle">△</span> CHAR(27)は制御文字ESC</td><td>Escキーイベントとして扱われるかは別確認</td></tr>
+<tr class="bg-red-light"><td class="text-left">Ctrl+S, Ctrl+C 等</td><td><span class="cross">✕</span> CHAR(1)〜(26)と同一視しない</td><td>修飾キーを含むキー変換設定が必要</td></tr>
 <tr class="bg-red-light"><td class="text-left"><strong>テンキーEnter</strong></td><td><span class="cross">✕</span></td><td><strong>業務システムの入力確定（これが最多）</strong></td></tr>
 <tr class="bg-red-light"><td class="text-left"><strong>F1〜F12</strong></td><td><span class="cross">✕</span></td><td>F2=セル編集、F5=ジャンプ、業務システムのファンクション操作</td></tr>
 <tr class="bg-red-light"><td class="text-left"><strong>矢印キー（&uarr;&darr;&larr;&rarr;）</strong></td><td><span class="cross">✕</span></td><td>カーソル微調整、ドロップダウン選択</td></tr>
@@ -155,6 +155,10 @@
 <tr class="bg-red-light"><td class="text-left"><strong>Delete</strong></td><td><span class="cross">✕</span></td><td>セル内容削除（CHAR(127)=DELとは異なる場合がある）</td></tr>
 </tbody>
 </table>
+<div class="xdemo-note-warn">
+<strong>⚠ 制御文字をCtrlキー操作として扱わないでください：</strong><br>
+QR内にCHAR(1)〜CHAR(26)の制御文字を格納しても、それだけで「Ctrlキーを押しながらA〜Zを押した」というキーボードイベントになるとは限りません。対応機種では、メーカー設定ツール、ADF、キーイベント設定などで、予約文字を目的のキー操作へ明示的に割り当てます。
+</div>
 <div class="xdemo-note-danger">
 <strong>🔥 特にテンキーEnter:</strong> 業務システム（基幹系・POS・医療システムなど）では「テンキーEnterでしか確定できない」ものが非常に多く、QR自動入力で最も頻繁にぶつかる壁です。
   </div>
@@ -370,7 +374,7 @@
 </tr>
 <tr>
 <td>帳票出力待ち・画面遷移待ちなど秒単位の停止が必要</td>
-<td><a href="06_qr_sleep_revised_honeywell.html"><strong>⑥ Sleep（一時停止）で処理完了を待つ</strong></a></td>
+<td><a href="06_qr_sleep_revised_honeywell.html"><strong>⑥ Sleep（一時停止）で固定時間を空ける</strong></a></td>
 </tr>
 <tr>
 <td>全テクニックを組み合わせた完成形を見たい</td>
@@ -395,7 +399,7 @@
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li class="current"><span class="lv-adv">[応用]</span> <strong>④ QRコード → キー変換テクニック（この記事）</strong></li>
         <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で固定時間を空ける</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>

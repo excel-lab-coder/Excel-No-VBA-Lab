@@ -60,7 +60,7 @@
       }
     },
     "datePublished": "2026-03-18",
-    "dateModified": "2026-05-03"
+    "dateModified":"2026-07-12"
   }
   </script>
 <script type="application/ld+json">
@@ -247,7 +247,7 @@
 <span class="badge badge-maniac" style="background-color:#000;color:#fff;">難易度：&starf;&starf;&starf;&starf;&star;（超高度）</span>
 <span class="badge badge-all">全バージョン対応あり</span>
 <span class="badge badge-maniac">COBOL/マニアック</span>
-<span class="article-date">更新日: 2026-05-03</span>
+<span class="article-date">更新日: 2026-07-12</span>
 </div>
 <h1 class="article-title">【関数超絶技巧編】凶悪COBOL帳票の撃破｜ヘッダー紐付け・フィルダウンをExcel関数で自動化</h1>
 <p class="article-summary" data-seo-lead="true">エクセルでCOBOL帳票や固定長データを整形したい方向けに、Excel関数・Power Query・MIDBなどを使って列分割、不要行除去、帳票データ変換を進める実務手順を扱います。</p>
@@ -437,21 +437,22 @@
 <p class="code-label-good">解法1：FILTER関数（Excel 2021 / 2024 / Microsoft 365 など）</p>
 <p class="code-label">抽出!A2（明細）</p>
 <div class="code-block" data-lang="excel">
-<span class="code-line">=FILTER(貼付!C:C, 貼付!A:A&lt;&gt;"")</span>
+<span class="code-line">=FILTER(貼付!C2:C50000, 貼付!A2:A50000&lt;&gt;"")</span>
 </div>
 <p class="code-label">抽出!B2（親情報）</p>
 <div class="code-block" data-lang="excel">
-<span class="code-line">=FILTER(貼付!B:B, 貼付!A:A&lt;&gt;"")</span>
+<span class="code-line">=FILTER(貼付!B2:B50000, 貼付!A2:A50000&lt;&gt;"")</span>
 </div>
 <p class="code-label-good">解法2：INDEX+SMALL（全バージョン対応）</p>
 <p class="code-label">抽出!A2（明細）</p>
 <div class="code-block" data-lang="excel">
-<span class="code-line">=IFERROR(INDEX(貼付!C:C, SMALL(貼付!A:A, ROW(A1))), "")</span>
+<span class="code-line">=IFERROR(INDEX(貼付!C:C, SMALL(貼付!A$2:A$50000, ROW(A1))), "")</span>
 </div>
 <p class="code-label">抽出!B2（親情報）</p>
 <div class="code-block" data-lang="excel">
-<span class="code-line">=IFERROR(INDEX(貼付!B:B, SMALL(貼付!A:A, ROW(A1))), "")</span>
+<span class="code-line">=IFERROR(INDEX(貼付!B:B, SMALL(貼付!A$2:A$50000, ROW(A1))), "")</span>
 </div>
+<p class="text-sm-gray">50000行は例です。実データの最大行に合わせて調整するか、Excelテーブルの構造化参照を使ってください。</p>
 <div class="xdemo-note-warn">
 <strong>INDEX+SMALL方式で IFERROR が必須な理由</strong><br>
             INDEX+SMALL方式では、数式を明細の件数よりも多くの行にコピーした場合、SMALLが参照できる値を失い <code>#NUM!</code> エラーになります。<code>IFERROR</code> で囲んで空文字 <code>""</code> を返すことで、データがない行を空白にして見た目を綺麗に保ちます。一方、FILTER関数はスピルで必要な行数だけ自動展開されるため、この処理は不要です。

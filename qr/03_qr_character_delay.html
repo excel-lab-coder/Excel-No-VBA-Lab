@@ -48,7 +48,7 @@
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
   "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
   "datePublished":"2026-04-17",
-  "dateModified":"2026-05-14",
+  "dateModified":"2026-07-12",
   "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/03_qr_character_delay.html"}
 }
 </script>
@@ -96,7 +96,7 @@
 </div>
 <h1 class="article-title">キャラクター間ディレイ<br><small>&horbar; QRスキャンの文字欠けを防ぐ設定</small></h1>
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
-<p style="color:#666;font-size:.88rem;">最終更新: 2026-05-14 ｜ 読了目安: 10分 ｜ 前提: <a href="01_qr_barcode_control.html">①</a> <a href="02_qr_tab_enter.html">②</a></p>
+<p style="color:#666;font-size:.88rem;">最終更新: 2026-07-12 ｜ 読了目安: 10分 ｜ 前提: <a href="01_qr_barcode_control.html">①</a> <a href="02_qr_tab_enter.html">②</a></p>
 </div>
 
 <section class="method-section qr-control-guide">
@@ -107,7 +107,7 @@
       <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
     </thead>
     <tbody>
-      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span> または <span class="code-inline">CHAR(13)</span></td><td>リーダー設定とExcelのEnter移動設定で変わるため、1件の試験で採用値を決めます。</td></tr>
       <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
       <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
       <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
@@ -589,14 +589,13 @@ Amazonや楽天などで販売されている安価なリーダーでも、付�
 
 <h3>STEP 4：連続スキャンテスト</h3>
 <p>
-1回で成功したら、<strong>最低10回連続</strong>でスキャンしてください。
-A2〜A11まで10行のデータが正しく入力されれば合格です。
+1回で成功したら、まず<strong>10回連続</strong>でスキャンしてください。
+A2〜A11まで10行のデータが正しく入力されることを初期確認にし、実際の文字数・空欄・記号・混雑時間帯でも試します。
 </p>
 
 <div class="xdemo-note-good">
-<strong>✅ なぜ10回なのか:</strong>
-文字欠けは毎回起きるわけではなく「10回に1回」程度の頻度で発生することがあります。
-1回の成功で安心せず、必ず連続テストをしてください。
+<strong>✅ 10回は最初の目安:</strong>
+文字欠けは毎回同じ条件で起きるとは限りません。1回の成功で判断せず連続テストを行います。ただし10回すべて成功しても長時間運用の無欠損を保証するものではないため、運用量と影響に応じて回数・条件を増やしてください。
 </div>
 
 <h3>STEP 5：実運用シート・実画面でテスト</h3>
@@ -786,7 +785,7 @@ Tab・Enterで入力欄を移動し、ディレイで文字欠けを防ぎ、安
 </tr>
 <tr>
 <td>検索後・登録後・画面遷移後に待機が必要</td>
-<td><a href="06_qr_sleep_revised_honeywell.html"><strong>⑥ Sleep（一時停止）で処理完了を待つ</strong></a></td>
+<td><a href="06_qr_sleep_revised_honeywell.html"><strong>⑥ Sleep（一時停止）で固定時間を空ける</strong></a></td>
 </tr>
 <tr>
 <td>全テクニックを組み合わせた完成形を見たい</td>
@@ -808,7 +807,7 @@ Tab・Enterで入力欄を移動し、ディレイで文字欠けを防ぎ、安
         <li class="current"><span class="lv-basic">[基本]</span> <strong>③ キャラクター間ディレイ ― 文字欠けを防ぐ設定（この記事）</strong></li>
         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で固定時間を空ける</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>

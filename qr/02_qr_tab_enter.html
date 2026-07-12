@@ -46,7 +46,7 @@
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
   "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
   "datePublished":"2026-04-17",
-  "dateModified":"2026-05-14",
+  "dateModified":"2026-07-12",
   "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/02_qr_tab_enter.html"}
 }
 </script>
@@ -93,7 +93,7 @@
 </div>
 <h1 class="article-title">Tab・Enter埋め込みの詳細と実践パターン<br><small>&horbar; 複数セル自動入力を完全マスターする</small></h1>
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。VBAやマクロが禁止されているExcel環境でも、Tab/EnterをQRに埋め込めば手入力を減らせる場合があります。</p>
-<p style="color:#666;font-size:.88rem;">最終更新: 2026-05-14 ｜ 読了目安: 12分 ｜ 前提: <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></p>
+<p style="color:#666;font-size:.88rem;">最終更新: 2026-07-12 ｜ 読了目安: 12分 ｜ 前提: <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></p>
 </div>
 
 <section class="method-section qr-control-guide">
@@ -104,7 +104,7 @@
       <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
     </thead>
     <tbody>
-      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span> または <span class="code-inline">CHAR(13)</span></td><td>リーダー設定とExcelのEnter移動設定で変わるため、1件の試験で採用値を決めます。</td></tr>
       <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
       <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
       <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
@@ -313,14 +313,14 @@ QRリーダーはPCから見るとキーボードとして動作するため、E
 <div class="scenario-card">
 <span class="sc-label sc-label-adv">応用</span>
 <h4>パターンD：入力 &rarr; 保存 &rarr; 次行で待機</h4>
-<p>データ入力後に自動保存し、次の行のA列で待機させます。連続スキャン運用の定番パターン。</p>
+<p>データ入力後に、リーダー側のキー変換を使って保存操作を送る応用例です。次の行のA列へ移動した後、予約文字をCtrl+Sへ変換します。</p>
 <div class="formula-box">
 <button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-      =A1&CHAR(9)&B1&CHAR(9)&C1&CHAR(10)&CHAR(19)
+      =A1&CHAR(9)&B1&CHAR(9)&C1&CHAR(10)&"^"
     </div>
-<p>3項目入力 &rarr; Enter（次行A列へ） &rarr; 対応リーダーではCtrl+S相当の保存。保存が完了した時点でカーソルは次の行にいるので、すぐ次のQRをスキャンできます。</p>
+<p>3項目入力 &rarr; Enter（次行A列へ） &rarr; リーダーで <code>^</code> をCtrl+Sへ変換、という流れです。保存完了を検知する仕組みではないため、連続読み取りの間隔は実機で調整してください。</p>
 <div class="xdemo-note-warn">
-<strong>⚠️:</strong> <span class="code-inline">CHAR(19)</span> は、対応するUSB-HIDリーダーと設定ではCtrl+S相当として扱える場合があります。すべてのリーダーで保証されるわけではないため、メモ帳、Excelのコピー、検証用ファイルで必ず確認してください。
+<strong>⚠️ キー変換が前提：</strong>制御文字とCtrl+Sのキーイベントは同じではありません。対応リーダーで <code>^</code> をCtrl+Sへ割り当て、<code>^</code> が通常データに含まれないことを確認したうえで、保存済みの検証用ファイルで試してください。
     </div>
 </div>
 <!-- パターンE -->
@@ -490,7 +490,7 @@ QRリーダーはPCから見るとキーボードとして動作するため、E
 <tr>
 <td class="text-center">1</td>
 <td><strong>文字が途中で欠ける・飛ぶ</strong></td>
-<td>リーダーの送信速度がExcelの処理速度を超えている</td>
+<td>キャラクタ間ディレイ不足、フォーカス移動、IMEなどが候補</td>
 </tr>
 <tr>
 <td class="text-center">2</td>
@@ -500,16 +500,16 @@ QRリーダーはPCから見るとキーボードとして動作するため、E
 <tr>
 <td class="text-center">3</td>
 <td><strong>F2キーやファンクションキーを送りたい</strong></td>
-<td>CHAR関数はASCII制御文字（0〜127）しか扱えず、ファンクションキーはASCIIに存在しない</td>
+<td>CHAR関数は1〜255の文字コードを返す関数で、F2などの物理キーイベントを生成する関数ではない</td>
 </tr>
 <tr>
 <td class="text-center">4</td>
 <td><strong>Excelの計算や画面描画が追いつかない</strong></td>
-<td>QRリーダーは一瞬で全文字を送り込むため、重いシートだと処理落ちする</td>
+<td>リーダーの送信間隔が短いと、重いシートでは入力を取りこぼす場合がある</td>
 </tr>
 </table>
 <p>
-    これらはすべて<strong>CHAR関数とリーダーの初期設定だけでは解決できない問題</strong>です。ここで「QRコード入力なんてこの程度か&hellip;」と諦める人が非常に多いのですが、<strong>実はこれらの問題はすべて解決できます。</strong>
+    これらは<strong>CHAR関数とリーダーの初期設定だけでは解決しにくい問題</strong>です。対応機種のキー変換、ディレイ調整、QR分割で改善できる場合がありますが、入力先アプリと実機で確認します。
 </p>
 <div class="breakthrough-box">
 <h3>💡 諦めるのはまだ早い &horbar; 全部解決できます</h3>
@@ -616,7 +616,7 @@ QRリーダーはPCから見るとキーボードとして動作するため、E
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で固定時間を空ける</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>

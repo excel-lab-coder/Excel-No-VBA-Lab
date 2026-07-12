@@ -50,7 +50,7 @@
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
   "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
   "datePublished":"2026-04-18",
-  "dateModified":"2026-05-14",
+  "dateModified":"2026-07-12",
   "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/08_qr_hardware_revised_honeywell.html"}
 }
 </script>
@@ -98,7 +98,7 @@
 </div>
 <h1 class="article-title">QRリーダーの選び方と接続方法<br><small>&horbar; 検証済み機種 ＆ メーカー別特徴ガイド</small></h1>
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
-<p style="color:#666;font-size:.88rem;">最終更新: 2026-05-14 ｜ 読了目安: 15分</p>
+<p style="color:#666;font-size:.88rem;">最終更新: 2026-07-12 ｜ 読了目安: 15分</p>
 </div>
 
 <section class="method-section qr-control-guide">
@@ -109,7 +109,7 @@
       <tr><th>用途</th><th>まず試すもの</th><th>備考</th></tr>
     </thead>
     <tbody>
-      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span></td><td>ExcelのEnter移動設定やリーダーのサフィックスに依存します。</td></tr>
+      <tr><td>Excelで次行へ移動</td><td><span class="code-inline">CHAR(10)</span> または <span class="code-inline">CHAR(13)</span></td><td>リーダー設定とExcelのEnter移動設定で変わるため、1件の試験で採用値を決めます。</td></tr>
       <tr><td>Webフォームの確定・検索</td><td><span class="code-inline">CHAR(13)</span></td><td>画面ごとに差があるため、検証画面で確認します。</td></tr>
       <tr><td>基幹系の確定</td><td>Num Enter</td><td>CHAR関数では生成できません。QRリーダー側のキー変換が必要です。</td></tr>
       <tr><td>Tab移動</td><td><span class="code-inline">CHAR(9)</span></td><td>多くのExcel/Webフォームで安定しやすい制御です。</td></tr>
@@ -126,7 +126,7 @@
 
 <div class="xdemo-note-danger">
 <strong>⚠️ 本シリーズの検証環境について &horbar; 正直にお伝えします</strong><br>
-本シリーズで紹介しているサフィックス設定・キャラクター間ディレイ・キー変換・Sleepなどの主要検証は、
+以下は<strong>2026年7月12日までに筆者が試した個体・設定</strong>での結果です。同じメーカーでも機種、ファームウェア、設定ツール、接続方式で挙動が変わる可能性があり、メーカー全製品への評価ではありません。本シリーズで紹介しているサフィックス設定・キャラクター間ディレイ・キー変換・Sleepなどの主要検証は、
 <strong>オプトエレクトロニクス社（Opticon）の以下3機種</strong>を中心に行っています。<br>
 <strong>① OPI-3601</strong> ／
 <strong>② ALX-3601</strong> ／
@@ -137,7 +137,7 @@
 
 一方、<strong>Zebra DS2208</strong> については、筆者が確認した限りでは、USB-HID入力・123Scan・ADFによる設定が分かりやすく、
 固定順序の入力制御、Tab / Enter / Pause系の定型処理は組みやすい印象です。<br>
-画面遷移や処理待ちは <strong>Pause / Sleep 相当の待機を入れれば多くの場合は対応しやすい</strong>ですが、
+画面遷移では <strong>Pause / Sleep 相当の固定待機を入れられる場合</strong>がありますが、処理完了を検知する機能ではありません。
 <strong>1文字ごとの送信速度そのものを細かく遅くしたい場合</strong>は対応に困る場面があります。
 キャラクター間ディレイは抑えられる速度に限界があり、<strong>オプトエレクトロニクス系に比べると高速寄りになりやすい</strong>印象です。<br><br>
 
@@ -149,7 +149,7 @@
 <strong>Honeywell Xenon 1900g</strong> については、EZConfig / Data Formatter を使った一部検証を行いました。<br>
 現時点の確認では、<strong>Search / Send / Delay / Suppress</strong> を組み合わせることで、<code>!</code> の前まで送信し、待機し、<code>!</code> を出力せず、後続データを送るような処理は作れました。<br>
 また、Honeywellは<strong>キャラクター間ディレイをかなり細かく、極端に遅く設定できる</strong>点が大きな特徴です。<br><br>
-さらに、NumEnterは <strong>Insert &rarr; Key Strokes</strong> 側で設定できることを確認しています。Tabや通常Enterは <strong>CHAR(9) / CHAR(13)</strong> でQR側に直接入れられる場合が多いため、NumEnter、PageUp・PageDown・Home、Pause系など、CHAR関数で扱いにくいキーを中心にキー変換へ回す考え方が安全です。<br><br>
+さらに、検証したXenon 1900gの構成では、NumEnterを <strong>Insert &rarr; Key Strokes</strong> 側で設定できることを確認しています。Tabや通常Enterは <strong>CHAR(9) / CHAR(13)</strong> でQR側に直接入れられる場合が多いため、NumEnter、PageUp・PageDown・Home、Pause系など、CHAR関数で扱いにくいキーを中心にキー変換へ回す考え方が安全です。<br><br>
 ただし、Honeywellは設定そのものがZebraより難しく、<strong>紙の設定QRだけで高度なFormatter設定を現場配布・復元できるかは未確定</strong>です。
 設定ツールを使える担当者が個別に作り込むなら強い一方、標準設定として横展開するには追加検証が必要です。<br><br>
 Keyence・デンソーウェーブなどは筆者未所有・未検証のため、本記事では参考情報にとどめます。
@@ -1038,7 +1038,7 @@ Zebraは<a href="14_qr_zebra_adf_variable_pause_revised_ranked.html">⑭ Zebra A
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で処理完了を待つ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で固定時間を空ける</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
         <li class="current"><span class="lv-adv">[応用]</span> <strong>⑧ QRリーダーの選び方と接続方法（この記事）</strong></li>
         <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>

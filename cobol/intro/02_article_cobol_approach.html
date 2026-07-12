@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta content="2" name="difficulty">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>COBOL帳票処理の3大アプローチ：本当の難易度と完成時のメリット｜Excel &times; No VBA Lab</title>
+<title>COBOL帳票処理の3大アプローチ：難易度と完成時のメリット｜Excel &times; No VBA Lab</title>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
 <script>
@@ -46,12 +46,12 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "COBOL帳票処理の3大アプローチ：本当の難易度と完成時のメリット",
+    "headline": "COBOL帳票処理の3大アプローチ：難易度と完成時のメリット",
     "description": "VBA・パワークエリ・ワークシート関数の3つの視点からCOBOL帳票処理を比較。VBA禁止・マクロ禁止環境で困ったときの代替手段として、Power Queryと関数の使い分けを解説。",
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
     "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
     "datePublished": "2026-03-28",
-    "dateModified": "2026-03-28"
+    "dateModified":"2026-07-12"
   }
   </script>
 <script type="application/ld+json">
@@ -92,10 +92,13 @@
 <div class="article-meta">
 <span class="badge badge-all">全バージョン</span>
 <span class="badge badge-maniac">コラム</span>
-<span class="article-date">更新日: 2026-04-23</span>
+<span class="article-date">更新日: 2026-07-12</span>
 </div>
-<h1 class="article-title">COBOL帳票処理の3大アプローチ：本当の難易度と完成時のメリット</h1>
+<h1 class="article-title">COBOL帳票処理の3大アプローチ：難易度と完成時のメリット</h1>
 <p class="article-summary" data-seo-lead="true">エクセルでCOBOL帳票や固定長データを整形したい方向けに、Excel関数・Power Query・MIDBなどを使って列分割、不要行除去、帳票データ変換を進める実務手順を扱います。会社でVBAやマクロが禁止されて困ったときも、関数版とPower Query版の違いを理解しておくと代替手段を選びやすくなります。</p>
+</div>
+<div class="xdemo-note-info">
+<strong>希少性の人数表現について：</strong>この記事の「100人に1人」「1000人に1人」等は調査統計ではなく、技術の珍しさを読み物として直感的に示す演出的な目安です。実際の人材比率を示す数値ではありません。
 </div>
 <style>
   .article-demo-container {
@@ -185,7 +188,7 @@
 <tr><th>得意なこと</th><td>
 <ul style="margin-top:0; padding-left:1.5em;">
 <li><strong>複数ファイルの一括結合（フォルダ取得）：</strong>指定した「フォルダ」から取得することで、複数月や複数部署に分かれたテキストファイルを全自動で1つにガッチャンコできます。</li>
-<li><strong>Excelの上限行数（104万行）の突破：</strong>データ量が膨大でも、シートに出力せず「接続の作成」のみにして裏側で集計を行うことで、Excelの物理的な行数制限を完全に無視できます。</li>
+<li><strong>ワークシートへ展開しない処理：</strong>接続またはデータモデルとして処理すれば、ワークシートの104万行を超えるデータを扱える場合があります。ただし、処理可能量はExcelの32/64ビット、利用可能メモリ、変換内容、データモデル等に左右されます。<a href="https://support.microsoft.com/en-US/Excel/power-query-specifications-and-limits-in-excel" target="_blank" rel="noopener noreferrer">MicrosoftのPower Query仕様と制限</a>も確認してください。</li>
 </ul>
 </td></tr>
 <tr><th>現場のリアルな罠</th><td>
@@ -194,10 +197,10 @@
               パワークエリのテキスト切り出し機能はすべて<strong>「文字数」</strong>で数えます。全角と半角が混在するデータ（Shift-JISのバイト数で区切られたもの）を処理しようとすると、列の開始位置がズレてしまいます。これを解決するには、文字コードを判定してバイト数を計算する複雑なカスタム関数（M言語）の自作が必要になります。
             </div>
 </td></tr>
-<tr class="benefit-row"><th>【完成時のメリット】<br>圧倒的なスケーラビリティ</th><td>
+<tr class="benefit-row"><th>【完成時のメリット】<br>大量データへの対応力</th><td>
 <strong>「フォルダに入れて更新」だけの手軽さと大容量対応</strong><br>
             毎月のデータがどんどん増えたりファイルが小分けにされていたりしても、<strong>「所定のフォルダにファイルを入れて更新ボタンを押すだけ」</strong>という超シンプルな運用が可能です。<br>
-            VBAのようなセキュリティ警告も出ず、100万行を超えるビッグデータでも平然と捌けるため、大量のデータを扱う定型業務においては無類の強さを発揮します。
+            ワークシートへ直接展開しない構成なら、104万行を超えるデータを扱える場合もあり、大量データの定型処理で有力です。ただし、実際の処理量と速度はExcelのビット数、利用可能メモリ、変換内容、読込先などに左右されます。
           </td></tr>
 </table>
 <div class="xdemo-note-good" style="margin-top: 20px;">
@@ -216,10 +219,10 @@
 <h2>3. ワークシート関数による処理</h2>
 <span class="rarity-badge">職場の遭遇率：1000人に1人</span>
 </div>
-<p>VBAが禁止され、パワークエリが全角混在データで詰むとなれば、残る手段は<strong>「気合いの入った数式（関数）」</strong>のみです。</p>
+<p>VBAが禁止され、Power QueryのGUI操作だけではバイト位置の切り出しが難しい場合は、ワークシート関数も有力な選択肢になります。</p>
 <table class="format-table">
 <tr><th>得意なこと</th><td>
-            Excelのセル上で直接動くため、VBA禁止環境でも誰のPCでも確実に動作します。また、<code>MIDB</code>関数がそのまま使えるため、全角・半角が混ざるデータでもレイアウト定義書通りに正確に切り出すことができます。
+            Excelのセル上で直接動くため、VBA禁止環境でも採用しやすい方法です。ただし、Excelのバージョン、互換設定、文字コード、MIDBの提供状況によって結果は変わります。既存環境でレイアウト定義と実データを照合できる場合に限り、MIDBによるバイト位置切り出しを候補にします。
           </td></tr>
 <tr><th>現場のリアルな罠</th><td>
 <div class="xdemo-note-warn" style="margin-top:0;">
@@ -230,10 +233,9 @@
             </div>
 </td></tr>
 <tr class="benefit-row"><th>【完成時のメリット】<br>究極の手軽さと<br>ポータビリティ</th><td>
-<strong>作り手の高度な設計が、使い手の「ITスキル不足」を完全にカバーする</strong><br>
-            完成してしまえば、テキストデータを特定のセルに<strong>「貼り付けるだけ」で、即座に1行化されたきれいな表が完成</strong>します。「データソースのパス設定って何？」「すべて更新ボタンはどこ？」といった、パワークエリすら触れないITリテラシー層であっても、「A列にコピペする」だけなら絶対に迷いません。<br><br>
-            環境に依存しない究極のポータビリティに加え、<strong>「作り手のスキルによって、使う側の圧倒的なスキル不足を無かったことにできる」</strong>のが、数式アプローチ最大の恩恵です。<br><br>
-            ただし、処理対象は<strong>「シートに貼り付けた1ファイル分のデータ」が基本</strong>です。複数ファイルを一括で結合したい場面ではパワークエリの「フォルダ取得」が圧倒的に有利なため、扱うファイル数や運用体制に応じて使い分けるのが現実的です。
+<strong>完成後の利用者操作を少なくできる</strong><br>
+            帳票仕様に合わせて数式を設計できれば、利用者側の操作を「指定セルへ貼り付ける」程度まで減らせます。ただし、貼り付け位置、対象範囲、例外行、出力件数を確認する手順は残してください。<br><br>
+            数式アプローチは配布しやすい一方、処理対象は<strong>「シートに貼り付けた1ファイル分のデータ」が基本</strong>です。複数ファイルを一括で結合したい場面ではPower Queryのフォルダー取得が有力なため、ファイル数や運用体制に応じて使い分けるのが現実的です。
           </td></tr>
 </table>
 </section>
@@ -253,7 +255,7 @@
 </tr>
 <tr>
 <th class="sys-wall-th">外注費と予算の壁<br>（ベンダーロックイン）</th>
-<td>システム保守がすべて外部ベンダーに丸投げされている場合、「CSV出力を1本追加する」という小さな依頼でも、要件定義・回帰テストを含めて数百万円の見積もりと数ヶ月の期間が平気で提示されます。「現場のちょっとした集計作業を楽にしたい」という理由だけでは、多くの場合、費用対効果が合わず稟議が通りません。</td>
+<td>システム保守を外部ベンダーへ委託している場合、「CSV出力を1本追加する」依頼でも、要件定義・権限調整・回帰テストを含めると相応の費用と期間が必要になることがあります。「現場の集計作業を少し楽にしたい」という目的だけでは、費用対効果の説明が難しい場合があります。</td>
 </tr>
 </table>
 <div class="xdemo-note-good" style="margin-top: 20px;">
@@ -267,12 +269,12 @@
 <p>これらすべてを扱えるスキルがあったとしても、環境と目的に応じて最適なツールは変わります。</p>
 <ul style="line-height: 1.8;">
 <li>VBAが自由に使える環境で、利用者に一切の操作をさせたくないなら ➡️ <strong>VBA</strong></li>
-<li><strong>VBA禁止環境</strong>で、複数ファイルの一括結合や100万行超えの大容量データを扱う必要があるなら ➡️ <strong>パワークエリ</strong></li>
+<li><strong>VBA禁止環境</strong>で、複数ファイルの一括結合やワークシート上限を超えるデータを扱う必要があるなら ➡️ <strong>パワークエリを候補にする</strong>（PC環境と読込先を確認）</li>
 <li><strong>VBA禁止環境</strong>で全角半角が混在しており、ITリテラシーが低い同僚でも「コピペだけ」で使えるようにしたいなら ➡️ <strong>数式（関数＋スピル）</strong></li>
 </ul>
 <div class="xdemo-note-good" style="margin-top: 20px;">
-<strong>VBA禁止環境では「パワークエリ」と「数式」の二刀流が最強</strong><br>
-          パワークエリは複数ファイルのフォルダ一括取得や大容量データに圧倒的な強みを持ちますが、全角半角混在のバイト切り出しは苦手です。数式は1ファイルのコピペ処理に限られますが、<code>MIDB</code>による正確なバイト切り出しと「貼り付けるだけ」の究極の手軽さがあります。<br><br>
+<strong>VBA禁止環境では「パワークエリ」と「数式」の二刀流が有効</strong><br>
+          パワークエリは複数ファイルのフォルダ一括取得や大量データ処理で有力ですが、画面操作だけで全角半角混在のバイト位置を扱うのは難しい場合があります。数式はシート上のデータが対象ですが、互換条件を確認した <code>MIDB</code> でバイト位置を扱え、「貼り付けて再計算」という簡単な運用にできます。<br><br>
           どちらか一方で全てを賄おうとするのではなく、<strong>業務の性質に応じて両方を使い分けられること</strong>が、VBA禁止・マクロ禁止環境における最も実戦的なスキルセットです。
         </div>
 <p style="margin-top: 1.5em; font-weight: bold;">➡️ 次のステップ：数式でどうやってアプローチするのか？</p>
