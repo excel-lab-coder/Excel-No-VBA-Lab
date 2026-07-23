@@ -2,914 +2,458 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/</loc>
-    <lastmod>2026-07-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/about.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/disclaimer.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/privacy.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/samples/</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/</loc>
-    <lastmod>2026-07-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/</loc>
-    <lastmod>2026-07-11</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/QR%E3%82%B8%E3%82%A7%E3%83%8D%E3%83%AC%E3%83%BC%E3%82%BF/qr-quick-maker.html</loc>
-    <lastmod>2026-06-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/QR%E3%82%B8%E3%82%A7%E3%83%8D%E3%83%AC%E3%83%BC%E3%82%BF/qr-batch-studio.html</loc>
-    <lastmod>2026-06-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/troubleshoot/</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/unlocked/</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/01_article_cobol_basic.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/02_article_cobol_advanced.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/03_article_cobol_expert.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/04_article_cobol_irregular.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/05_article_cobol_qr_bridge.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/intro/01_article_cobol_fixed.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/intro/02_article_cobol_approach.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/intro/03_article_cobol_output_patterns.html</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/pq/01_article_cobol_pq.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/pq/02_article_cobol_pq3.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/pq/03_article_cobol_pq_midb_ref.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_choosecols.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_torow_wraprows_choosecols.html</loc>
-    <lastmod>2026-06-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_concat.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_filter.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_ifs.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_let.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_let_if.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_let_iferror.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_sequence.html</loc>
-    <lastmod>2026-06-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_groupby_month_employee.html</loc>
-    <lastmod>2026-06-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_growth_curve_standard_flow.html</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_breakthrough_moments.html</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage1_functions_printing.html</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage2_vba_macro_recording.html</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage3_vba_internal_design.html</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage3_vba_web_automation.html</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage4_no_macro_powerquery.html</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage5_qr_input_design_shift.html</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_spill_design_shift.html</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_vba_omnipotence_trap.html</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_function_depth_before_vba.html</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_no_vba_thinking.html</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_powerquery_design_shift.html</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_cobol_structure_shift.html</loc>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_sort.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_unique_filter_sort.html</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_unique_filter.html</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_switch.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_textbefore.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_textjoin.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_textsplit.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_unique.html</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_xlookup_advanced.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_xlookup_basic.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_xlookup_multi.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_xlookup_joined_key.html</loc>
-    <lastmod>2026-06-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_xlookup_vs.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_xmatch.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countif_extract.html</loc>
-    <lastmod>2026-06-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_small_row_index_extract.html</loc>
-    <lastmod>2026-06-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countifs_serial_number.html</loc>
-    <lastmod>2026-06-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countifs_sumifs.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_sumifs_month_employee.html</loc>
-    <lastmod>2026-06-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_edate_eomonth_sumifs_monthly.html</loc>
-    <lastmod>2026-06-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_wareki_datevalue_serial.html</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_yyyymmdd_date_serial.html</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_datedif.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_errortype.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_iferror.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_match.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_match_multi.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_midb.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_substitute.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_text_date.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_vlookup.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_volatile.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_zip_reverse.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_format.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_linked_picture_filter_serial_label.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_shortcuts.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_snipping_tool_video.html</loc>
-    <lastmod>2026-07-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_statusbar.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_label_print.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_label_scrap.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_mail_print.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_print_area.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_excel_source_design.html</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_postal_code.html</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_number_format.html</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_textbox_wrap.html</loc>
-    <lastmod>2026-06-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_label_basic.html</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_method_comparison.html</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_label_next_record.html</loc>
-    <lastmod>2026-06-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_qrcode.html</loc>
-    <lastmod>2026-06-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/speed/article_01_lookup_speed.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/speed/article_02_formula_techniques.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/speed/article_memory_swap.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_form_controls.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_hyperlink_jump_last_row.html</loc>
-    <lastmod>2026-06-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_select_input_range.html</loc>
-    <lastmod>2026-06-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_shape_circle.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_add_columns.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_column_delete.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_group_pivot.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_import_patterns.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_merge_append.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_m_language.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_number_date.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_parameter_query.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_row_operations.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_split_column.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_text_operations.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pdf_overview.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pdf_powerquery_advanced.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pdf_powerquery_basic.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pdf_word.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_powerquery_intro.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_powerquery_intro_deep.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pq_data_type.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pq_editor_ui.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pq_editor_ui_2.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pq_fill.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pq_first_steps.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pq_management.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/00_qr_reader_excel_input_basics.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/01_qr_barcode_control.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/02_qr_tab_enter.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/03_qr_character_delay.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/04_qr_key_conversion.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/05_qr_key_practice.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/06_qr_sleep_revised_honeywell.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/07_qr_full_system.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/08_qr_hardware_revised_honeywell.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/09_qr_closed_transfer.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/10_qr_system_migration.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html</loc>
-    <lastmod>2026-06-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/12_qr_existing_reader_check.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/13_qr_reader_design_philosophy_current_research_v5.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/14_qr_zebra_adf_variable_pause_revised_ranked.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/16_qr_opticon_universalconfig_streaming_control.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/17_qr_reader_recommendation_opticon_zebra_honeywell.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/18_qr_num_enter_numpad_enter.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/19_qr_rpa_selenium_excel_qr_alternative.html</loc>
-    <lastmod>2026-05-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_file_rename.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_uia_automation.html</loc>
-    <lastmod>2026-05-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
 </urlset>
