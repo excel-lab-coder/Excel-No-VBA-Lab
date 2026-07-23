@@ -30,4 +30,3 @@ User-agent: Googlebot
 Allow: /
 
 Sitemap: https://excel-lab-coder.github.io/Excel-No-VBA-Lab/sitemap.xml
-Sitemap: https://excel-lab-coder.github.io/Excel-No-VBA-Lab/sitemap.txt
