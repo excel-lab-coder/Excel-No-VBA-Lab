@@ -357,11 +357,11 @@ pre,
 
 .article-feedback {
   margin: 42px 0 28px;
-  padding: 22px 24px;
+  padding: 26px 28px;
   border: 1px solid #d7e5f1;
   border-left: 5px solid var(--color-accent);
-  border-radius: 10px;
-  background: #f7fbff;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f7fbff 0%, #eef7ff 100%);
   box-shadow: 0 8px 20px rgba(26, 61, 92, 0.07);
 }
 .article-feedback-text h2 {
@@ -421,9 +421,12 @@ pre,
   font-weight: 700;
 }
 .article-feedback-comment {
-  margin-top: 16px;
-  padding-top: 17px;
+  margin-top: 18px;
+  padding: 18px;
   border-top: 1px solid #d7e5f1;
+  border: 1px solid #cfdeeb;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.86);
 }
 .article-feedback-comment[hidden] { display: none; }
 .article-feedback-comment-label {
@@ -476,7 +479,7 @@ pre,
 }
 .article-feedback-submit {
   appearance: none;
-  min-width: 132px;
+  min-width: 230px;
   padding: 10px 19px;
   border: 0;
   border-radius: 8px;
@@ -496,9 +499,20 @@ pre,
   box-shadow: none;
 }
 .article-feedback-detail-link {
-  color: #526579;
-  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 7px 11px;
+  border-radius: 7px;
+  background: #edf3f8;
+  color: #365b7c;
+  font-size: 0.82rem;
   font-weight: 700;
+  text-decoration: none;
+}
+.article-feedback-detail-link:hover {
+  background: #e2edf6;
+  text-decoration: underline;
 }
 .article-feedback-honeypot {
   position: absolute !important;

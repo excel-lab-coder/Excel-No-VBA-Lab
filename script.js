@@ -559,12 +559,20 @@
   };
 
   var ARTICLE_FEEDBACK_REACTIONS = {
+    question: {
+      label: '❓ ちょっと質問したい',
+      category: '記事に関するご質問'
+    },
+    stuck: {
+      label: '🤔 うまくいかない',
+      category: '記事への質問・誤り報告'
+    },
     helpful: {
       label: '👍 役に立った',
       category: '情報交換・感想'
     },
     correction: {
-      label: '✍ 間違い・分かりにくい',
+      label: '✍ 間違いかも',
       category: '記事への質問・誤り報告'
     },
     request: {
@@ -582,7 +590,7 @@
   }
 
   function submitArticleComment(meta, reactionId, comment, allowPublish) {
-    var reaction = ARTICLE_FEEDBACK_REACTIONS[reactionId] || ARTICLE_FEEDBACK_REACTIONS.helpful;
+    var reaction = ARTICLE_FEEDBACK_REACTIONS[reactionId] || ARTICLE_FEEDBACK_REACTIONS.question;
     var frameName = 'article-feedback-submit-frame';
     var frame = document.querySelector('iframe[name="' + frameName + '"]');
 
@@ -595,7 +603,7 @@
     }
 
     var message = [
-      '【記事末尾の匿名フィードバック】',
+      '【記事末尾の匿名質問・コメント】',
       '記事名: ' + meta.title,
       '記事URL: ' + location.href.split('#')[0],
       '反応: ' + reaction.label.replace(/^[^\s]+\s*/, ''),
@@ -645,10 +653,10 @@
     textWrap.className = 'article-feedback-text';
 
     var heading = document.createElement('h2');
-    heading.textContent = 'この記事はどうでしたか？';
+    heading.textContent = '気軽に質問・コメントしてください';
 
     var note = document.createElement('p');
-    note.textContent = '選ぶだけでも送信されます。文章は任意・匿名・非公開です。';
+    note.textContent = '名前・メールアドレスは不要です。1行だけでもOK。内容は運営者だけが確認します。';
 
     textWrap.appendChild(heading);
     textWrap.appendChild(note);
@@ -660,21 +668,21 @@
     status.className = 'article-feedback-status';
     status.setAttribute('role', 'status');
     status.setAttribute('aria-live', 'polite');
-    status.textContent = selectedReaction ? '反応ありがとうございます。よければ一言もお寄せください。' : '';
+    status.textContent = selectedReaction ? '種類を選択済みです。下の入力欄から送れます。' : '';
 
     var commentPanel = document.createElement('div');
     commentPanel.className = 'article-feedback-comment';
-    commentPanel.hidden = !selectedReaction;
+    commentPanel.hidden = false;
 
     var commentLabel = document.createElement('label');
     commentLabel.className = 'article-feedback-comment-label';
-    commentLabel.textContent = '間違いの指摘、分かりにくかった点、感想など（800文字以内）';
+    commentLabel.textContent = '質問・困っている点・記事の感想（800文字以内）';
 
     var textarea = document.createElement('textarea');
     textarea.className = 'article-feedback-textarea';
     textarea.maxLength = 800;
     textarea.rows = 6;
-    textarea.placeholder = '例：○○の説明は△△の場合には当てはまらないと思います。／この手順で解決しました。／別の条件の例も読みたいです。';
+    textarea.placeholder = '例：Excel 2021で手順3から進めません。／この場合はどうなりますか？／この手順で解決しました。';
     textarea.disabled = commentAlreadySent;
     commentLabel.appendChild(textarea);
 
@@ -710,7 +718,7 @@
     var submitButton = document.createElement('button');
     submitButton.type = 'button';
     submitButton.className = 'article-feedback-submit';
-    submitButton.textContent = commentAlreadySent ? '送信済み' : '匿名で送る';
+    submitButton.textContent = commentAlreadySent ? '送信済み' : '質問・コメントを匿名で送る';
     submitButton.disabled = commentAlreadySent;
 
     var detailLink = document.createElement('a');
@@ -718,12 +726,12 @@
     detailLink.href = 'https://forms.gle/6SnCHNWK6EcRy1XG8';
     detailLink.target = '_blank';
     detailLink.rel = 'noopener';
-    detailLink.textContent = '返信が必要な相談はこちら';
+    detailLink.textContent = '個別の返信が必要な方 → お問い合わせフォーム';
 
     submitButton.addEventListener('click', function () {
       var comment = textarea.value.trim();
       if (!comment) {
-        status.textContent = '一言入力してから送信してください。反応だけなら、すでに届いています。';
+        status.textContent = '質問やコメントを1行入力してから送信してください。';
         textarea.focus();
         return;
       }
@@ -745,7 +753,7 @@
         return;
       }
 
-      submitArticleComment(meta, selectedReaction || 'helpful', comment, publishCheckbox.checked);
+      submitArticleComment(meta, selectedReaction || 'question', comment, publishCheckbox.checked);
       safeStorageSet(commentStorageKey, '1');
       textarea.disabled = true;
       publishCheckbox.disabled = true;
@@ -759,7 +767,7 @@
         article_title: meta.title,
         article_path: meta.path,
         article_section: meta.section,
-        feedback_reaction: selectedReaction || 'helpful',
+        feedback_reaction: selectedReaction || 'question',
         publish_allowed: publishCheckbox.checked ? 'yes' : 'no'
       });
     });
@@ -794,8 +802,7 @@
           option.setAttribute('aria-pressed', selected ? 'true' : 'false');
         });
 
-        commentPanel.hidden = false;
-        status.textContent = '反応ありがとうございます。よければ一言もお寄せください。';
+        status.textContent = '種類を選択しました。下の入力欄から送れます。';
 
         if (previousReaction !== reactionId) {
           sendArticleEvent('article_feedback_reaction', {
