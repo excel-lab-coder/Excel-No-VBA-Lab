@@ -121,7 +121,7 @@
     </nav>
   </div>
 </header>
-<div class="wrap">
+<main class="wrap" id="main-content">
   <div class="tool-title-block">
     <p class="tool-kicker">01 / SINGLE QR GENERATOR</p>
     <h1>QR Quick Maker</h1>
@@ -171,8 +171,8 @@
 
     <div class="result">
       <div id="qrwrap"></div>
-      <div class="meta" id="meta"></div>
-      <div class="err" id="err"></div>
+      <div class="meta" id="meta" role="status" aria-live="polite"></div>
+      <div class="err" id="err" role="alert"></div>
       <div class="dlrow">
         <a class="dlbtn" id="dlpng" download="qrcode.png">PNGで保存</a>
         <button class="dlbtn" id="printBtn" type="button">印刷する</button>
@@ -203,7 +203,7 @@
       ※ 印刷時にページ上下へ日付やURLが入る場合は、ブラウザの印刷設定で「ヘッダーとフッター」をオフにしてください。
     </div>
   </div>
-</div>
+</main>
 
 <footer class="tool-footer">
   <p><a href="../index.html#qr">QR Automation Labへ戻る</a> ｜ <a href="../privacy.html">プライバシーポリシー</a> ｜ Excel × No VBA Lab</p>
@@ -265,10 +265,18 @@
       : ('この設定での目安残り：約 '+remain+' バイト');
   }
 
+  function clearResult(){
+    $('qrwrap').textContent="";
+    $('dlpng').removeAttribute('href');
+    $('printImg').removeAttribute('src');
+    $('printText').textContent="";
+  }
+
   function generate(){
     $('err').textContent=""; $('meta').textContent="";
+    clearResult();
     var text=$('text').value;
-    if(!text){ $('err').textContent="文字列を入力してください。"; return; }
+    if(!text){ $('err').textContent="文字列を入力してください。"; return false; }
     var encMode=$('enc').value, ecc=$('ecc').value;
     var scale=Math.max(2, Math.min(16, parseInt($('scale').value,10)||6));
 
@@ -286,12 +294,14 @@
         '／モジュール数：'+moduleCount+'×'+moduleCount+'／誤り訂正：'+ecc;
       $('printImg').src=img;
       $('printText').textContent=text;
+      return true;
     }catch(e){
       $('err').textContent='データが多すぎて、最大サイズ（バージョン40）に収まりません。文字を減らすか、誤り訂正レベルを下げてください。';
+      return false;
     }
   }
 
-  function doPrint(){ generate(); if($('printImg').src){ window.print(); } }
+  function doPrint(){ if(generate()){ window.print(); } }
 
   $('gen').addEventListener('click', generate);
   $('printBtn').addEventListener('click', doPrint);
