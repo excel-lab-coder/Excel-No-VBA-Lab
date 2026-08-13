@@ -934,12 +934,12 @@
     {
       "category": "qr",
       "subcategory": "transfer",
-      "title": "⑪ 全角QR生成のVBA完全版コード公開",
+      "title": "⑪ 全角QR生成VBA記事（動作再確認のため一時非公開）",
       "url": "qr/11_qr_vba_generate.html",
-      "summary": "Excel VBAとWindows標準APIだけで、UTF-8(ECI) / Shift-JIS対応の全角QR生成、BMP出力、セル配置まで行う公開版コードです。",
+      "summary": "掲載内容とコードの動作を再確認するため、本文を取り下げています。URLは今後の再検討に備えて保持しています。",
       "level": 8,
-      "tags": ["rare"],
-      "is_highlight": true
+      "tags": ["reviewing"],
+      "is_prep": true
     },
     {
       "category": "qr",
@@ -1286,11 +1286,12 @@
     {
       "category": "unlocked",
       "subcategory": "vba",
-      "title": "全角QR生成のVBA完全版コード公開",
+      "title": "全角QR生成VBA記事（動作再確認のため一時非公開）",
       "url": "qr/11_qr_vba_generate.html",
-      "summary": "Excel VBAとWindows標準APIだけで、UTF-8(ECI) / Shift-JIS対応の全角QR生成、BMP出力、セル配置まで行う公開版コードです。<br><small>対応する本編：QR Automation Lab 記事⑪</small>",
+      "summary": "掲載内容とコードの動作を再確認するため、本文を取り下げています。<br><small>QR Automation Lab 記事⑪</small>",
       "level": 6,
-      "tags": ["vba", "qr", "rare"]
+      "tags": ["vba", "qr", "reviewing"],
+      "is_prep": true
     },
     {
       "category": "unlocked",
