@@ -1,0 +1,870 @@
+Attribute VB_Name = "UIA_SimpleFocusedInspector"
+Option Explicit
+
+' =====================================================================
+' UI Automation 要素確認・簡易版
+' ---------------------------------------------------------------------
+' F8を1回押した時点で、フォーカス中のUIA要素を1件だけ記録します。
+' マウス座標や連続監視は使用しません。Escで中止できます。
+'
+' 前提:
+'   Windows版Excel専用
+'   VBE「ツール」→「参照設定」→「UIAutomationClient」
+'
+' 実行するマクロ:
+'   UIA_フォーカス要素を1件記録
+'
+' 手順:
+'   1. 記録先にしたいExcelブックを前面にしてマクロを実行
+'   2. 案内のOKを押したら、対象画面へ移動
+'   3. 入力欄はクリック、ボタン等はTabでフォーカス
+'   4. F8を1回押す（中止はEsc）
+'   5. UIA_要素一覧へ1行だけ記録して、すぐ終了
+'   6. RunnerCode列を実行専用モジュールのBuildScenarioへ貼付
+' =====================================================================
+
+#If VBA7 Then
+    Private Declare PtrSafe Sub Sleep Lib "kernel32" ( _
+        ByVal dwMilliseconds As Long)
+    Private Declare PtrSafe Function SetForegroundWindow Lib "user32" ( _
+        ByVal hwnd As LongPtr) As Long
+    Private Declare PtrSafe Function GetAsyncKeyState Lib "user32" ( _
+        ByVal vKey As Long) As Integer
+#Else
+    Private Declare Sub Sleep Lib "kernel32" ( _
+        ByVal dwMilliseconds As Long)
+    Private Declare Function SetForegroundWindow Lib "user32" ( _
+        ByVal hwnd As Long) As Long
+    Private Declare Function GetAsyncKeyState Lib "user32" ( _
+        ByVal vKey As Long) As Integer
+#End If
+
+Private Const OUTPUT_SHEET As String = "UIA_要素一覧"
+Private Const VK_ESCAPE As Long = 27
+Private Const VK_F8 As Long = 119
+
+' UIA Pattern IDs
+Private Const UIA_INVOKE_PATTERN_ID As Long = 10000
+Private Const UIA_VALUE_PATTERN_ID As Long = 10002
+Private Const UIA_EXPAND_COLLAPSE_PATTERN_ID As Long = 10005
+Private Const UIA_SELECTION_ITEM_PATTERN_ID As Long = 10010
+Private Const UIA_TEXT_PATTERN_ID As Long = 10014
+Private Const UIA_TOGGLE_PATTERN_ID As Long = 10015
+
+' ControlType IDs
+Private Const UIA_CT_BUTTON As Long = 50000
+Private Const UIA_CT_CALENDAR As Long = 50001
+Private Const UIA_CT_CHECKBOX As Long = 50002
+Private Const UIA_CT_COMBOBOX As Long = 50003
+Private Const UIA_CT_EDIT As Long = 50004
+Private Const UIA_CT_HYPERLINK As Long = 50005
+Private Const UIA_CT_IMAGE As Long = 50006
+Private Const UIA_CT_LISTITEM As Long = 50007
+Private Const UIA_CT_LIST As Long = 50008
+Private Const UIA_CT_MENUITEM As Long = 50011
+Private Const UIA_CT_RADIOBUTTON As Long = 50013
+Private Const UIA_CT_TABITEM As Long = 50019
+Private Const UIA_CT_TEXT As Long = 50020
+Private Const UIA_CT_TREEITEM As Long = 50024
+Private Const UIA_CT_GROUP As Long = 50026
+Private Const UIA_CT_DATAITEM As Long = 50029
+Private Const UIA_CT_DOCUMENT As Long = 50030
+Private Const UIA_CT_SPLITBUTTON As Long = 50031
+Private Const UIA_CT_WINDOW As Long = 50032
+Private Const UIA_CT_PANE As Long = 50033
+
+Private mUIA As CUIAutomation
+
+
+' =====================================================================
+' 公開マクロ：1回につき1要素だけ取得
+' =====================================================================
+Public Sub UIA_フォーカス要素を1件記録()
+
+    Dim outputBook As Workbook
+    Dim outputSheet As Worksheet
+    Dim target As IUIAutomationElement
+    Dim parentElement As IUIAutomationElement
+    Dim windowElement As IUIAutomationElement
+    Dim nextRow As Long
+    Dim automationId As String
+    Dim elementName As String
+    Dim controlTypeId As Long
+    Dim controlType As String
+    Dim className As String
+    Dim frameworkId As String
+    Dim patterns As String
+    Dim canSetText As Boolean
+    Dim defaultAction As String
+    Dim parentAutomationId As String
+    Dim parentName As String
+    Dim windowTitle As String
+    Dim processId As Long
+    Dim statusText As String
+    Dim runnerIssue As String
+    Dim errorNumber As Long
+    Dim errorDescription As String
+    Dim previousCancelKey As XlEnableCancelKey
+    Dim cancelKeyChanged As Boolean
+    Dim captureRequested As Boolean
+
+    On Error GoTo Failed
+
+    Set outputBook = Application.ActiveWorkbook
+
+    If outputBook Is Nothing Then
+        Err.Raise vbObjectError + 4100, , _
+                  "記録先にするExcelブックが開かれていません。"
+    End If
+
+    If UCase$(outputBook.Name) = "PERSONAL.XLSB" Or outputBook.IsAddin Then
+        Err.Raise vbObjectError + 4101, , _
+                  "通常のExcelブックを前面にしてから実行してください。"
+    End If
+
+    Set outputSheet = EnsureOutputSheet(outputBook)
+    SetupOutputSheet outputSheet
+
+    ' F8を押した後の遅れを減らすため、待機前に初期化しておく
+    EnsureUIA
+
+    MsgBox _
+        "OKを押したあと、対象画面へ移動してください。" & _
+        vbCrLf & vbCrLf & _
+        "入力欄：クリックして文字カーソルを表示" & vbCrLf & _
+        "ボタン・チェックボックス：Tabキーでフォーカス" & vbCrLf & vbCrLf & _
+        "準備できたらF8を1回押してください。" & vbCrLf & _
+        "その時点の要素を1件だけ取得して終了します。" & vbCrLf & _
+        "中止する場合はEscを押してください。", _
+        vbInformation, "UIA要素を1件記録"
+
+    previousCancelKey = Application.EnableCancelKey
+    Application.EnableCancelKey = xlErrorHandler
+    cancelKeyChanged = True
+    Application.StatusBar = _
+        "UIA取得待機中：対象へフォーカスしてF8／Escで中止"
+
+    captureRequested = WaitForCaptureKey()
+
+    Application.EnableCancelKey = previousCancelKey
+    cancelKeyChanged = False
+    Application.StatusBar = False
+
+    If Not captureRequested Then
+        SetForegroundWindow Application.hwnd
+        MsgBox "取得を中止しました。", vbInformation, "UIA要素を1件記録"
+        Exit Sub
+    End If
+
+    Set target = mUIA.GetFocusedElement
+
+    If target Is Nothing Then
+        Err.Raise vbObjectError + 4102, , _
+                  "フォーカス中のUIA要素を取得できませんでした。"
+    End If
+
+    ' Excelへ戻す前に、外部画面の情報をすべて変数へ退避する
+    Set parentElement = GetParentElement(target)
+    Set windowElement = GetWindowElement(target)
+
+    automationId = SafeAutomationId(target)
+    elementName = SafeName(target)
+    controlTypeId = SafeControlType(target)
+    controlType = ControlTypeName(controlTypeId)
+    className = SafeClassName(target)
+    frameworkId = SafeFrameworkId(target)
+    patterns = SupportedPatterns(target)
+    canSetText = CanSetTextValue(target)
+    defaultAction = DefaultActionFor(target, patterns, canSetText)
+
+    If Not parentElement Is Nothing Then
+        parentAutomationId = SafeAutomationId(parentElement)
+        parentName = SafeName(parentElement)
+    End If
+
+    If Not windowElement Is Nothing Then
+        windowTitle = SafeName(windowElement)
+        processId = SafeProcessId(windowElement)
+    Else
+        processId = SafeProcessId(target)
+    End If
+
+    statusText = BuildStatusText( _
+        controlTypeId, patterns, canSetText)
+    runnerIssue = RunnerSelectorIssue( _
+        SuggestedWindowKeyword(windowTitle), _
+        automationId, elementName, controlTypeId)
+
+    If Len(runnerIssue) > 0 Then
+        statusText = statusText & "／実行設定不可: " & runnerIssue
+    End If
+
+    nextRow = outputSheet.Cells(outputSheet.Rows.Count, 1).End(xlUp).Row + 1
+    If nextRow < 2 Then nextRow = 2
+
+    outputSheet.Cells(nextRow, 1).Value = Now
+    WriteCellText outputSheet.Cells(nextRow, 2), windowTitle
+    WriteCellText outputSheet.Cells(nextRow, 3), automationId
+    WriteCellText outputSheet.Cells(nextRow, 4), elementName
+    outputSheet.Cells(nextRow, 5).Value = controlTypeId
+    outputSheet.Cells(nextRow, 6).Value = controlType
+    WriteCellText outputSheet.Cells(nextRow, 7), className
+    WriteCellText outputSheet.Cells(nextRow, 8), frameworkId
+    outputSheet.Cells(nextRow, 9).Value = patterns
+    outputSheet.Cells(nextRow, 10).Value = IIf(canSetText, "○", "×")
+    outputSheet.Cells(nextRow, 11).Value = defaultAction
+    WriteCellText outputSheet.Cells(nextRow, 12), parentAutomationId
+    WriteCellText outputSheet.Cells(nextRow, 13), parentName
+    outputSheet.Cells(nextRow, 14).Value = processId
+    outputSheet.Cells(nextRow, 15).Value = statusText
+    WriteCellText outputSheet.Cells(nextRow, 16), _
+        BuildRunnerCode( _
+            windowTitle, automationId, elementName, controlTypeId, _
+            className, frameworkId, defaultAction)
+
+    ColorResultRow _
+        outputSheet, nextRow, controlTypeId, canSetText, patterns, _
+        (Len(runnerIssue) = 0)
+
+    Application.StatusBar = False
+    ShowExcelResult outputBook, outputSheet, nextRow
+    Beep
+
+    MsgBox _
+        "1件記録しました。" & vbCrLf & vbCrLf & _
+        "ControlType: " & controlType & vbCrLf & _
+        "Name: " & elementName & vbCrLf & _
+        "CanSetText: " & IIf(canSetText, "○", "×") & vbCrLf & _
+        "判定: " & statusText, _
+        vbInformation, "UIA取得結果"
+    Exit Sub
+
+Failed:
+    errorNumber = Err.Number
+    errorDescription = Err.Description
+
+    On Error Resume Next
+    If cancelKeyChanged Then
+        Application.EnableCancelKey = previousCancelKey
+    End If
+    Application.StatusBar = False
+
+    If Not outputBook Is Nothing Then
+        SetForegroundWindow Application.hwnd
+    End If
+    On Error GoTo 0
+
+    If errorNumber = 18 Then
+        MsgBox "取得を中止しました。", vbInformation, "UIA要素を1件記録"
+        Exit Sub
+    End If
+
+    MsgBox _
+        "要素を記録できませんでした。" & vbCrLf & _
+        errorNumber & ": " & errorDescription, _
+        vbExclamation, "UIA取得エラー"
+
+End Sub
+
+
+' =====================================================================
+' F8を押した瞬間だけ取得へ進む。Escなら何も記録せず終了する
+' =====================================================================
+Private Function WaitForCaptureKey() As Boolean
+
+    Dim f8WasDown As Boolean
+    Dim f8IsDown As Boolean
+
+    ' マクロ開始に使ったF8が残っていても、即取得しないようにする
+    Do While KeyIsDown(VK_F8)
+        If KeyIsDown(VK_ESCAPE) Then
+            WaitForKeyRelease VK_ESCAPE
+            WaitForCaptureKey = False
+            Exit Function
+        End If
+
+        DoEvents
+        Sleep 20
+    Loop
+
+    Do
+        ' 中止を優先して判定する
+        If KeyIsDown(VK_ESCAPE) Then
+            WaitForKeyRelease VK_ESCAPE
+            WaitForCaptureKey = False
+            Exit Function
+        End If
+
+        f8IsDown = KeyIsDown(VK_F8)
+
+        If f8IsDown And Not f8WasDown Then
+            WaitForCaptureKey = True
+            Exit Function
+        End If
+
+        f8WasDown = f8IsDown
+        DoEvents
+        Sleep 20
+    Loop
+
+End Function
+
+
+Private Sub WaitForKeyRelease(ByVal virtualKey As Long)
+
+    Do While KeyIsDown(virtualKey)
+        DoEvents
+        Sleep 20
+    Loop
+
+End Sub
+
+
+Private Function KeyIsDown(ByVal virtualKey As Long) As Boolean
+
+    KeyIsDown = _
+        ((CLng(GetAsyncKeyState(virtualKey)) And &H8000&) <> 0)
+
+End Function
+
+
+Private Sub EnsureUIA()
+
+    If mUIA Is Nothing Then Set mUIA = New CUIAutomation
+
+End Sub
+
+
+' =====================================================================
+' 保存先シート
+' =====================================================================
+Private Function EnsureOutputSheet( _
+    ByVal outputBook As Workbook) As Worksheet
+
+    Dim existingSheet As Object
+
+    On Error Resume Next
+    Set EnsureOutputSheet = outputBook.Worksheets(OUTPUT_SHEET)
+    On Error GoTo 0
+
+    If Not EnsureOutputSheet Is Nothing Then Exit Function
+
+    On Error Resume Next
+    Set existingSheet = outputBook.Sheets(OUTPUT_SHEET)
+    On Error GoTo 0
+
+    If Not existingSheet Is Nothing Then
+        Err.Raise vbObjectError + 4110, , _
+                  "同名のシートがありますが、ワークシートではありません。"
+    End If
+
+    If outputBook.ProtectStructure Then
+        Err.Raise vbObjectError + 4111, , _
+                  "ブック構成が保護されているため、一覧シートを作成できません。"
+    End If
+
+    Set EnsureOutputSheet = outputBook.Worksheets.Add( _
+        After:=outputBook.Sheets(outputBook.Sheets.Count))
+    EnsureOutputSheet.Name = OUTPUT_SHEET
+
+End Function
+
+
+Private Sub SetupOutputSheet(ByVal ws As Worksheet)
+
+    Dim headers As Variant
+    Dim i As Long
+
+    headers = Array( _
+        "CapturedAt", "WindowTitle", "AutomationId", "Name", _
+        "ControlTypeId", "ControlType", "ClassName", "FrameworkId", _
+        "Patterns", "CanSetText", "DefaultAction", _
+        "ParentAutomationId", "ParentName", "ProcessId", "Status", _
+        "RunnerCode")
+
+    If Len(CStr(ws.Cells(1, 1).Value)) = 0 Then
+        For i = LBound(headers) To UBound(headers)
+            ws.Cells(1, i + 1).Value = headers(i)
+        Next i
+
+        With ws.Range("A1:P1")
+            .Font.Bold = True
+            .Font.Color = RGB(255, 255, 255)
+            .Interior.Color = RGB(31, 78, 121)
+        End With
+
+        ws.Columns("A").ColumnWidth = 20
+        ws.Columns("B").ColumnWidth = 34
+        ws.Columns("C:D").ColumnWidth = 24
+        ws.Columns("E:F").ColumnWidth = 16
+        ws.Columns("G:H").ColumnWidth = 18
+        ws.Columns("I").ColumnWidth = 36
+        ws.Columns("J:K").ColumnWidth = 16
+        ws.Columns("L:M").ColumnWidth = 24
+        ws.Columns("N").ColumnWidth = 12
+        ws.Columns("O").ColumnWidth = 38
+        ws.Columns("P").ColumnWidth = 100
+        ws.Rows(1).WrapText = True
+    End If
+
+    ' 旧版で作成済みの一覧にもRunnerCode列を追加する
+    If Len(CStr(ws.Cells(1, 16).Value)) = 0 Then
+        ws.Cells(1, 16).Value = "RunnerCode"
+
+        With ws.Cells(1, 16)
+            .Font.Bold = True
+            .Font.Color = RGB(255, 255, 255)
+            .Interior.Color = RGB(31, 78, 121)
+        End With
+
+        ws.Columns("P").ColumnWidth = 100
+    End If
+
+    On Error Resume Next
+    If ws.AutoFilterMode Then ws.AutoFilterMode = False
+    ws.Range("A1:P1").AutoFilter
+    On Error GoTo 0
+
+End Sub
+
+
+Private Sub WriteCellText( _
+    ByVal targetCell As Range, _
+    ByVal textValue As String)
+
+    targetCell.NumberFormat = "@"
+    targetCell.Value2 = textValue
+
+End Sub
+
+
+Private Sub ColorResultRow( _
+    ByVal ws As Worksheet, _
+    ByVal rowNumber As Long, _
+    ByVal controlTypeId As Long, _
+    ByVal canSetText As Boolean, _
+    ByVal patterns As String, _
+    ByVal runnerReady As Boolean)
+
+    Dim rowRange As Range
+    Set rowRange = ws.Range(ws.Cells(rowNumber, 1), ws.Cells(rowNumber, 16))
+
+    If Not runnerReady Then
+        rowRange.Interior.Color = RGB(255, 242, 204)
+    ElseIf canSetText Then
+        rowRange.Interior.Color = RGB(226, 239, 218)
+    ElseIf controlTypeId = UIA_CT_PANE Or Len(patterns) = 0 Then
+        rowRange.Interior.Color = RGB(255, 242, 204)
+    Else
+        rowRange.Interior.Color = RGB(221, 235, 247)
+    End If
+
+End Sub
+
+
+' =====================================================================
+' 実行専用モジュールへ貼り付ける1行を生成
+' =====================================================================
+Private Function BuildRunnerCode( _
+    ByVal windowTitle As String, _
+    ByVal automationId As String, _
+    ByVal elementName As String, _
+    ByVal controlTypeId As Long, _
+    ByVal className As String, _
+    ByVal frameworkId As String, _
+    ByVal defaultAction As String) As String
+
+    Dim stepName As String
+    Dim windowKeyword As String
+    Dim runnerClassName As String
+    Dim valueOrSource As String
+    Dim runnerAction As String
+    Dim selectorIssue As String
+
+    stepName = elementName
+    If Len(stepName) = 0 Then stepName = ControlTypeName(controlTypeId)
+    windowKeyword = SuggestedWindowKeyword(windowTitle)
+    selectorIssue = RunnerSelectorIssue( _
+        windowKeyword, automationId, elementName, controlTypeId)
+
+    If Len(selectorIssue) > 0 Then
+        BuildRunnerCode = "' RunnerCode生成不可: " & selectorIssue
+        Exit Function
+    End If
+
+    ' Web画面のClassNameは動的な場合が多いため、Chrome系では既定で使わない
+    If StrComp(frameworkId, "Chrome", vbTextCompare) = 0 Then
+        runnerClassName = ""
+    Else
+        runnerClassName = className
+    End If
+
+    If defaultAction = "SET_TEXT" Then
+        valueOrSource = "ここに入力する文字"
+    End If
+
+    Select Case defaultAction
+        Case "SET_TEXT", "CLICK", "CHECK_ON", "CHECK_OFF", _
+             "SELECT", "EXPAND", "COLLAPSE", "WAIT"
+            runnerAction = defaultAction
+
+        Case Else
+            ' 読取り系は保存先指定が必要になるため、簡易Runnerでは出現待ちにする
+            runnerAction = "WAIT"
+    End Select
+
+    BuildRunnerCode = _
+        "AddScenarioStep steps, " & VbaString(stepName) & ", " & _
+        VbaString(runnerAction) & ", " & VbaString(windowKeyword) & ", " & _
+        VbaString(automationId) & ", " & VbaString(elementName) & ", " & _
+        CStr(controlTypeId) & ", " & VbaString(runnerClassName) & _
+        ", 1, " & VbaString(valueOrSource) & ", 10"
+
+End Function
+
+
+Private Function RunnerSelectorIssue( _
+    ByVal windowKeyword As String, _
+    ByVal automationId As String, _
+    ByVal elementName As String, _
+    ByVal controlTypeId As Long) As String
+
+    If Len(Trim$(windowKeyword)) = 0 Then
+        RunnerSelectorIssue = "WindowKeywordが空"
+    ElseIf Len(automationId) = 0 And Len(elementName) = 0 Then
+        RunnerSelectorIssue = "AutomationIdとNameが空"
+    ElseIf controlTypeId <= 0 Then
+        RunnerSelectorIssue = "ControlTypeIdが未設定"
+    End If
+
+End Function
+
+
+Private Function SuggestedWindowKeyword( _
+    ByVal windowTitle As String) As String
+
+    Dim separatorPosition As Long
+
+    ' Edge等がタイトルへ含めるゼロ幅スペースを除外する
+    windowTitle = Replace(windowTitle, ChrW$(&H200B), "")
+    separatorPosition = InStr(1, windowTitle, " - ", vbBinaryCompare)
+
+    If separatorPosition > 1 Then
+        SuggestedWindowKeyword = Left$(windowTitle, separatorPosition - 1)
+    Else
+        SuggestedWindowKeyword = windowTitle
+    End If
+
+End Function
+
+
+Private Function VbaString(ByVal textValue As String) As String
+
+    textValue = Replace(textValue, vbCr, " ")
+    textValue = Replace(textValue, vbLf, " ")
+    VbaString = Chr$(34) & _
+        Replace(textValue, Chr$(34), Chr$(34) & Chr$(34)) & Chr$(34)
+
+End Function
+
+
+Private Sub ShowExcelResult( _
+    ByVal outputBook As Workbook, _
+    ByVal outputSheet As Worksheet, _
+    ByVal rowNumber As Long)
+
+    On Error Resume Next
+    Application.Visible = True
+    outputBook.Activate
+    outputSheet.Activate
+    Application.Goto outputSheet.Cells(rowNumber, 1), True
+    SetForegroundWindow Application.hwnd
+    On Error GoTo 0
+
+End Sub
+
+
+' =====================================================================
+' 親要素・ウィンドウ取得
+' =====================================================================
+Private Function GetParentElement( _
+    ByVal target As IUIAutomationElement) As IUIAutomationElement
+
+    Dim walker As IUIAutomationTreeWalker
+
+    On Error GoTo Failed
+    Set walker = mUIA.ControlViewWalker
+    Set GetParentElement = walker.GetParentElement(target)
+    Exit Function
+
+Failed:
+    Err.Clear
+
+End Function
+
+
+Private Function GetWindowElement( _
+    ByVal target As IUIAutomationElement) As IUIAutomationElement
+
+    Dim walker As IUIAutomationTreeWalker
+    Dim current As IUIAutomationElement
+    Dim parentElement As IUIAutomationElement
+    Dim depth As Long
+
+    On Error GoTo Failed
+
+    Set walker = mUIA.ControlViewWalker
+    Set current = target
+
+    For depth = 0 To 40
+        If SafeControlType(current) = UIA_CT_WINDOW Then
+            Set GetWindowElement = current
+            Exit Function
+        End If
+
+        Set parentElement = walker.GetParentElement(current)
+        If parentElement Is Nothing Then Exit For
+
+        Set current = parentElement
+        Set parentElement = Nothing
+    Next depth
+
+    Exit Function
+
+Failed:
+    Err.Clear
+
+End Function
+
+
+' =====================================================================
+' 対応Patternと入力可否
+' =====================================================================
+Private Function SupportedPatterns( _
+    ByVal target As IUIAutomationElement) As String
+
+    Dim result As String
+
+    AddPattern result, target, UIA_VALUE_PATTERN_ID, "Value"
+    AddPattern result, target, UIA_TOGGLE_PATTERN_ID, "Toggle"
+    AddPattern result, target, UIA_INVOKE_PATTERN_ID, "Invoke"
+    AddPattern result, target, UIA_SELECTION_ITEM_PATTERN_ID, "SelectionItem"
+    AddPattern result, target, UIA_EXPAND_COLLAPSE_PATTERN_ID, "ExpandCollapse"
+    AddPattern result, target, UIA_TEXT_PATTERN_ID, "Text"
+
+    SupportedPatterns = result
+
+End Function
+
+
+Private Sub AddPattern( _
+    ByRef result As String, _
+    ByVal target As IUIAutomationElement, _
+    ByVal patternId As Long, _
+    ByVal patternName As String)
+
+    If HasPattern(target, patternId) Then
+        If Len(result) > 0 Then result = result & ","
+        result = result & patternName
+    End If
+
+End Sub
+
+
+Private Function HasPattern( _
+    ByVal target As IUIAutomationElement, _
+    ByVal patternId As Long) As Boolean
+
+    Dim invokePattern As IUIAutomationInvokePattern
+    Dim valuePattern As IUIAutomationValuePattern
+    Dim expandPattern As IUIAutomationExpandCollapsePattern
+    Dim selectionPattern As IUIAutomationSelectionItemPattern
+    Dim textPattern As IUIAutomationTextPattern
+    Dim togglePattern As IUIAutomationTogglePattern
+
+    On Error GoTo NotAvailable
+
+    Select Case patternId
+        Case UIA_INVOKE_PATTERN_ID
+            Set invokePattern = target.GetCurrentPattern(patternId)
+            HasPattern = Not invokePattern Is Nothing
+
+        Case UIA_VALUE_PATTERN_ID
+            Set valuePattern = target.GetCurrentPattern(patternId)
+            HasPattern = Not valuePattern Is Nothing
+
+        Case UIA_EXPAND_COLLAPSE_PATTERN_ID
+            Set expandPattern = target.GetCurrentPattern(patternId)
+            HasPattern = Not expandPattern Is Nothing
+
+        Case UIA_SELECTION_ITEM_PATTERN_ID
+            Set selectionPattern = target.GetCurrentPattern(patternId)
+            HasPattern = Not selectionPattern Is Nothing
+
+        Case UIA_TEXT_PATTERN_ID
+            Set textPattern = target.GetCurrentPattern(patternId)
+            HasPattern = Not textPattern Is Nothing
+
+        Case UIA_TOGGLE_PATTERN_ID
+            Set togglePattern = target.GetCurrentPattern(patternId)
+            HasPattern = Not togglePattern Is Nothing
+    End Select
+
+    Exit Function
+
+NotAvailable:
+    Err.Clear
+
+End Function
+
+
+Private Function CanSetTextValue( _
+    ByVal target As IUIAutomationElement) As Boolean
+
+    Dim valuePattern As IUIAutomationValuePattern
+
+    On Error GoTo NotAvailable
+    Set valuePattern = target.GetCurrentPattern(UIA_VALUE_PATTERN_ID)
+    CanSetTextValue = Not valuePattern.CurrentIsReadOnly
+    Exit Function
+
+NotAvailable:
+    Err.Clear
+
+End Function
+
+
+Private Function DefaultActionFor( _
+    ByVal target As IUIAutomationElement, _
+    ByVal patterns As String, _
+    ByVal canSetText As Boolean) As String
+
+    If canSetText Then
+        DefaultActionFor = "SET_TEXT"
+    ElseIf InStr(patterns, "Toggle") > 0 Then
+        DefaultActionFor = "CHECK_ON"
+    ElseIf InStr(patterns, "Invoke") > 0 Then
+        DefaultActionFor = "CLICK"
+    ElseIf InStr(patterns, "SelectionItem") > 0 Then
+        DefaultActionFor = "SELECT"
+    ElseIf InStr(patterns, "ExpandCollapse") > 0 Then
+        DefaultActionFor = "EXPAND"
+    ElseIf InStr(patterns, "Value") > 0 Then
+        DefaultActionFor = "READ_VALUE"
+    ElseIf InStr(patterns, "Text") > 0 Then
+        DefaultActionFor = "READ_TEXT"
+    Else
+        DefaultActionFor = "READ_NAME"
+    End If
+
+End Function
+
+
+Private Function BuildStatusText( _
+    ByVal controlTypeId As Long, _
+    ByVal patterns As String, _
+    ByVal canSetText As Boolean) As String
+
+    If canSetText Then
+        BuildStatusText = "入力可能"
+    ElseIf controlTypeId = UIA_CT_PANE Then
+        BuildStatusText = _
+            "Paneを取得：入力欄へフォーカスして再実行してください"
+    ElseIf Len(patterns) = 0 Then
+        BuildStatusText = "取得済み：操作Patternなし"
+    Else
+        BuildStatusText = "取得済み"
+    End If
+
+End Function
+
+
+' =====================================================================
+' 安全なプロパティ取得
+' =====================================================================
+Private Function SafeName(ByVal target As IUIAutomationElement) As String
+    On Error GoTo Failed
+    SafeName = target.CurrentName
+    Exit Function
+Failed:
+    Err.Clear
+End Function
+
+
+Private Function SafeAutomationId( _
+    ByVal target As IUIAutomationElement) As String
+    On Error GoTo Failed
+    SafeAutomationId = target.CurrentAutomationId
+    Exit Function
+Failed:
+    Err.Clear
+End Function
+
+
+Private Function SafeClassName( _
+    ByVal target As IUIAutomationElement) As String
+    On Error GoTo Failed
+    SafeClassName = target.CurrentClassName
+    Exit Function
+Failed:
+    Err.Clear
+End Function
+
+
+Private Function SafeFrameworkId( _
+    ByVal target As IUIAutomationElement) As String
+    On Error GoTo Failed
+    SafeFrameworkId = target.CurrentFrameworkId
+    Exit Function
+Failed:
+    Err.Clear
+End Function
+
+
+Private Function SafeControlType( _
+    ByVal target As IUIAutomationElement) As Long
+    On Error GoTo Failed
+    SafeControlType = target.CurrentControlType
+    Exit Function
+Failed:
+    Err.Clear
+End Function
+
+
+Private Function SafeProcessId( _
+    ByVal target As IUIAutomationElement) As Long
+    On Error GoTo Failed
+    SafeProcessId = target.CurrentProcessId
+    Exit Function
+Failed:
+    Err.Clear
+End Function
+
+
+Private Function ControlTypeName(ByVal controlTypeId As Long) As String
+
+    Select Case controlTypeId
+        Case UIA_CT_BUTTON: ControlTypeName = "Button"
+        Case UIA_CT_CALENDAR: ControlTypeName = "Calendar"
+        Case UIA_CT_CHECKBOX: ControlTypeName = "CheckBox"
+        Case UIA_CT_COMBOBOX: ControlTypeName = "ComboBox"
+        Case UIA_CT_EDIT: ControlTypeName = "Edit"
+        Case UIA_CT_HYPERLINK: ControlTypeName = "Hyperlink"
+        Case UIA_CT_IMAGE: ControlTypeName = "Image"
+        Case UIA_CT_LISTITEM: ControlTypeName = "ListItem"
+        Case UIA_CT_LIST: ControlTypeName = "List"
+        Case UIA_CT_MENUITEM: ControlTypeName = "MenuItem"
+        Case UIA_CT_RADIOBUTTON: ControlTypeName = "RadioButton"
+        Case UIA_CT_TABITEM: ControlTypeName = "TabItem"
+        Case UIA_CT_TEXT: ControlTypeName = "Text"
+        Case UIA_CT_TREEITEM: ControlTypeName = "TreeItem"
+        Case UIA_CT_GROUP: ControlTypeName = "Group"
+        Case UIA_CT_DATAITEM: ControlTypeName = "DataItem"
+        Case UIA_CT_DOCUMENT: ControlTypeName = "Document"
+        Case UIA_CT_SPLITBUTTON: ControlTypeName = "SplitButton"
+        Case UIA_CT_WINDOW: ControlTypeName = "Window"
+        Case UIA_CT_PANE: ControlTypeName = "Pane"
+        Case Else: ControlTypeName = "ControlType(" & controlTypeId & ")"
+    End Select
+
+End Function

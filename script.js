@@ -5,6 +5,82 @@
   'use strict';
 
   var INDEX_STATE_KEY = 'excel_no_vba_lab_index_state_v1';
+  var STUDY_SURVEY_URL = 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c992TlUQzE1T1ozS1lZUVk0Q05YU1Y3RE9EUVRHMS4u';
+
+  function initStudySurveyNotice() {
+    if (document.querySelector('.site-survey-notice')) return;
+
+    var style = document.createElement('style');
+    style.setAttribute('data-site-survey-styles', '');
+    style.textContent = [
+      '.site-survey-notice{position:relative;z-index:140;width:100%;background:linear-gradient(90deg,#e8f6ee 0%,#f5fbf7 55%,#eef7ff 100%);border-bottom:1px solid #b7d8c4;color:#244535;font-family:inherit;box-shadow:0 2px 8px rgba(33,115,70,.08)}',
+      '.site-survey-notice__inner{width:min(100%,1200px);margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:13px}',
+      '.site-survey-notice__badge{display:inline-flex;align-items:center;flex:0 0 auto;padding:4px 9px;border-radius:999px;background:#217346;color:#fff;font-size:.72rem;font-weight:800;line-height:1.35;letter-spacing:.03em;white-space:nowrap}',
+      '.site-survey-notice__copy{display:flex;align-items:baseline;flex-wrap:wrap;gap:3px 9px;min-width:0;line-height:1.45}',
+      '.site-survey-notice__title{color:#173f2a;font-size:.9rem;font-weight:800}',
+      '.site-survey-notice__meta{color:#557064;font-size:.76rem}',
+      '.site-survey-notice__button{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;min-height:36px;margin-left:auto;padding:7px 14px;border:1px solid #217346;border-radius:7px;background:#fff;color:#185c37;font-size:.8rem;font-weight:800;line-height:1.3;text-decoration:none;white-space:nowrap;box-shadow:0 1px 4px rgba(33,115,70,.12);transition:background .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease}',
+      '.site-survey-notice__button:hover{background:#217346;color:#fff;text-decoration:none;transform:translateY(-1px);box-shadow:0 3px 8px rgba(33,115,70,.2)}',
+      '.site-survey-notice__button:focus-visible{outline:3px solid rgba(33,115,70,.3);outline-offset:2px}',
+      '@media(max-width:640px){.site-survey-notice__inner{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 10px;padding:9px 12px}.site-survey-notice__badge{grid-column:1;justify-self:start;font-size:.68rem}.site-survey-notice__copy{grid-column:1;display:block}.site-survey-notice__title{display:block;font-size:.8rem}.site-survey-notice__meta{display:block;margin-top:1px;font-size:.68rem}.site-survey-notice__button{grid-column:2;grid-row:1 / 3;min-height:42px;margin-left:0;padding:8px 12px;font-size:.76rem}}',
+      '@media(max-width:390px){.site-survey-notice__meta{display:none}.site-survey-notice__button{grid-row:1 / 3;padding-inline:10px}}',
+      '@media print{.site-survey-notice{display:none!important}}'
+    ].join('');
+    document.head.appendChild(style);
+
+    var notice = document.createElement('aside');
+    notice.className = 'site-survey-notice';
+    notice.setAttribute('aria-label', 'オンラインExcel勉強会アンケートのお知らせ');
+
+    var inner = document.createElement('div');
+    inner.className = 'site-survey-notice__inner';
+
+    var badge = document.createElement('span');
+    badge.className = 'site-survey-notice__badge';
+    badge.textContent = '📣 アンケート実施中';
+
+    var copy = document.createElement('div');
+    copy.className = 'site-survey-notice__copy';
+
+    var title = document.createElement('strong');
+    title.className = 'site-survey-notice__title';
+    title.textContent = '無料のオンラインExcel勉強会について';
+
+    var meta = document.createElement('span');
+    meta.className = 'site-survey-notice__meta';
+    meta.textContent = '匿名・約2～3分。皆さまの声をお聞かせください。';
+
+    var link = document.createElement('a');
+    link.className = 'site-survey-notice__button';
+    link.href = STUDY_SURVEY_URL;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.textContent = '回答する →';
+    link.setAttribute('aria-label', 'オンラインExcel勉強会アンケートに回答する（Microsoft Forms、新しいタブ）');
+    link.addEventListener('click', function () {
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'study_survey_open', {
+          event_category: 'study_survey',
+          event_label: location.pathname,
+          link_location: 'sitewide_notice'
+        });
+      }
+    });
+
+    copy.appendChild(title);
+    copy.appendChild(meta);
+    inner.appendChild(badge);
+    inner.appendChild(copy);
+    inner.appendChild(link);
+    notice.appendChild(inner);
+
+    var header = document.querySelector('.site-header, .tool-header');
+    if (header && header.parentNode) {
+      header.parentNode.insertBefore(notice, header.nextSibling);
+    } else {
+      document.body.insertBefore(notice, document.body.firstChild);
+    }
+  }
 
   function getRareTechConfig() {
     return (window.ExcelLab && window.ExcelLab.rareTech) || window.RARETECH_CONFIG || null;
@@ -884,6 +960,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    initStudySurveyNotice();
     initLayoutVars();
     initResponsiveTables();
     initTabs();

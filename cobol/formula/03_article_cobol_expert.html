@@ -353,10 +353,11 @@
 <strong>対応環境向け：SCAN関数でスピル展開</strong><br>
             Excel 2024 / Microsoft 365 など <code>SCAN</code> 関数が使える環境では、上から下へ値を記憶しながらスピル展開させる次世代の力技も可能です。
           </div>
-<p class="code-label-good">SCAN関数版（対応環境）</p>
+<p class="code-label-good">貼付シート!A2（SCAN関数版・対応環境）</p>
 <div class="code-block" data-lang="excel">
-<span class="code-line">=SCAN("", B:B, LAMBDA(a,v, IF(MIDB(v,1,2)="■", v, a)))</span>
+<span class="code-line">=SCAN("", 貼付!$B$2:$B$50000, LAMBDA(a,v, IF(MIDB(v,1,2)="■", v, a)))</span>
 </div>
+<p class="text-sm-gray"><code>SCAN</code> は入力と同じ大きさの配列を返すため、<code>B:B</code> のような列全体を渡すと104万行分の展開を試み、<code>#SPILL!</code> や長時間の応答停止につながります。必ず実データ範囲に絞ってください。50000行は例です。</p>
 </div>
 </section>
 <!-- ==========================================================
@@ -461,6 +462,7 @@
 <h3 style="color:#ef6c00;border-bottom:2px solid #ffe0b2;padding-bottom:5px;margin-top:30px;">【速度チューニング】INDEX+SMALLが遅い場合の奥の手 &horbar; MATCH方式</h3>
 <p>上記の <code>INDEX+SMALL</code> 方式はシンプルで分かりやすいのですが、実は<strong>SMALL関数は内部的にデータ全体をソート（並べ替え）してからk番目を探す</strong>という処理を行っています。そのため、貼付シートの行数が数万行を超えてくると、抽出シートの各行で毎回ソートが走り、<strong>体感的に目に見えて遅くなる</strong>ことがあります。</p>
 <p>この速度問題を根本から解決するのが、<strong>貼付シートA列のフラグをROW（行番号）ではなく「連番（1, 2, 3&hellip;）」にして、抽出シート側では SMALL の代わりに MATCH 関数で行位置を取得する</strong>方式です。</p>
+<p><a href="../../functions/old/article_countif_extract.html">抽出方式の比較はこちら：【FILTER代替】4つの複数抽出方式を比較</a><br>ROW+SMALL、AGGREGATE、上行参照など、行数が増えたときの方式選択を汎用データで比較しています。</p>
 <p class="code-label">貼付シート!A列（連番フラグに変更）</p>
 <div class="code-block" data-lang="excel">
 <span class="code-line">=IF(MIDB(C2,5,1)="-", A1+1, A1)</span>
@@ -600,6 +602,7 @@
 <p>目的は、文字列を切り出す対象を必要な明細行に絞り、数式の役割を分けることです。貼付シートがヘッダー行・罫線行・空白行・合計行を含む10万～30万行になる場合、全行・複数列にMIDBやTRIMを配置すると、不要行も計算対象になり、再計算が重くなる可能性があります。</p>
 <p>本記事では貼付シートをIF・ROWによる仕分けに留め、抽出後の明細だけにMIDB・TRIMを適用します。例えば30万行のうち明細が5,000行なら、文字列切り出しの対象数は30万行から5,000行（60分の1）になります。ただし、実際の速度は数式・参照範囲・Excelのバージョン・PC環境でも変わるため、コピーしたブックで確認してください。</p>
 <div class="xdemo-note-good"><strong>本記事の役割分担</strong><br>貼付シートでは行種を判定し、抽出シートでは必要な明細と親情報だけをMIDB・TRIMで整形します。全行へ切り出し式を置く案と、必要行へ絞る案を実測で比較してください。</div>
+<p>再計算が重い場合、数式の書き方以外に揮発性関数とメモリ側の要因もあります。<br><a href="../../functions/old/article_volatile.html">揮発性関数とは？激重Excel化を防ぐ</a><br><a href="../../others/speed/article_memory_swap.html">Excelが遅い原因＝メモリスワップ</a></p>
 </div>
 </section>
 <!-- ==========================================================
@@ -608,6 +611,15 @@
 <section class="method-section" id="sec-next">
 <h2>【さらに先へ】明細行数が不規則な帳票</h2>
 <p>伝票によって明細が1行、3行&hellip;と異なる帳票では、固定行数を前提としたWRAPROWS等の折り返しは使えません。行種の判定から正規化する設計は、別ページの <a href="04_article_cobol_irregular.html" style="color:#d32f2f;font-weight:bold;text-decoration:underline;">【不規則明細・完結編】完全不規則明細の正規化展開</a> で解説します。</p>
+</section>
+
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../../functions/old/article_countif_extract.html">抽出方式の比較はこちら：【FILTER代替】4つの複数抽出方式を比較</a></li>
+<li><a href="../../functions/old/article_volatile.html">揮発性関数とは？激重Excel化を防ぐ</a></li>
+<li><a href="../../others/speed/article_memory_swap.html">Excelが遅い原因＝メモリスワップ</a></li>
+</ul>
 </section>
 
 </article>
@@ -633,6 +645,6 @@
   </p>
 </footer>
 
-<script src="../../script.js?v=7"></script>
+<script src="../../script.js?v=8"></script>
 </body>
 </html>

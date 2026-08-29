@@ -139,7 +139,6 @@ https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/07_qr_full_system.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/08_qr_hardware_revised_honeywell.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/09_qr_closed_transfer.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/10_qr_system_migration.html
-https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/12_qr_existing_reader_check.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/13_qr_reader_design_philosophy_current_research_v5.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/14_qr_zebra_adf_variable_pause_revised_ranked.html
