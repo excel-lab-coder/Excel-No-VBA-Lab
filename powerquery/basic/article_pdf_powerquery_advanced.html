@@ -22,7 +22,7 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pdf_powerquery_advanced.html" rel="canonical">
-<link href="../../common.css?v=10" rel="stylesheet">
+<link href="../../common.css?v=20261007" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -90,9 +90,10 @@
 <strong>パワークエリ実践・進化編</strong>
 </div>
 <article class="article-body">
+<p>この記事はWindows版Microsoft 365で「データ → データの取得 → ファイルから → PDFから」が利用できる環境を中心に説明します。Power Query本体の搭載とPDFコネクタの搭載は別です。Office 2019の買い切り版にはPDFコネクタがありません。2021 / 2024などの買い切り版は版・エディションと実際のメニューを確認してください。<a href="https://support.microsoft.com/en-us/excel/power-query-data-sources-in-excel-versions" target="_blank" rel="noopener">Microsoft公式対応表</a></p>
 <div class="article-header">
 <div class="article-meta">
-<span class="badge badge-all">Excel 2019〜</span>
+<span class="badge badge-all">PDFコネクタ利用環境</span>
 <span class="article-date">更新日: 2026-04-23</span>
 </div>
 <h1 class="article-title">パワークエリでPDFを取り込む &horbar; 実践・進化編<br><span style="font-size:.55em;font-weight:400;color:#666;">&horbar; 複数テーブル結合・フォルダー一括処理・M言語制御・不規則PDF対応まで全網羅 &horbar;</span></h1>
@@ -108,7 +109,7 @@
 <li><a href="#sec-mlang">テクニック④ M言語で取り込みを細かく制御する</a></li>
 <li><a href="#sec-param">テクニック⑤ パラメータクエリでファイルパスを動的に変更</a></li>
 <li><a href="#sec-irregular">テクニック⑥ 不規則なPDFへの対応パターン</a></li>
-<li><a href="#sec-history">パワークエリPDFコネクタの進化の歴史</a></li>
+<li><a href="#sec-history">パワークエリPDFコネクタの版・更新条件</a></li>
 <li><a href="#sec-limit">パワークエリの限界と代替手段</a></li>
 <li><a href="#sec-summary">まとめ</a></li>
 </ol>
@@ -280,58 +281,9 @@
         </div>
 </section>
 <!-- ==========================================================
-         【8】PDFコネクタの進化の歴史
+         【8】PDFコネクタの版・更新条件
       ========================================================== -->
-<section class="method-section" id="sec-history">
-<h2>【8】パワークエリPDFコネクタの進化の歴史</h2>
-<p>パワークエリのPDFコネクタは登場以来、継続的に改善されてきました。バージョンによる精度や機能の違いを知っておくと、トラブルシューティングに役立ちます。</p>
-<table class="format-table">
-<tr>
-<th style="width:15%">時期</th>
-<th class="w-25">バージョン</th>
-<th style="width:60%">主な変化・改善点</th>
-</tr>
-<tr>
-<td>2019年</td>
-<td>Excel 2019 / 365 初期</td>
-<td>PDFコネクタ初搭載。罫線のある表のテーブル検出に対応。日本語PDFでの文字化けが一部発生。</td>
-</tr>
-<tr>
-<td>2020年前半</td>
-<td>365 月次更新</td>
-<td>テーブル検出アルゴリズムが改善され、罫線のない表でも空白パターンから列を推定する精度が向上。</td>
-</tr>
-<tr>
-<td>2020年後半</td>
-<td>365 月次更新</td>
-<td>ナビゲーターUIが改善。テーブルとページの区別が視覚的にわかりやすくなった。複数テーブル選択のチェックボックスが追加。</td>
-</tr>
-<tr>
-<td>2021年</td>
-<td>365 月次更新</td>
-<td>ページまたぎの表の検出が改善。連続する同一構造の表を1つの Table として統合するケースが増加。</td>
-</tr>
-<tr>
-<td>2022年</td>
-<td>365 月次更新</td>
-<td>Pdf.Tables 関数のオプションパラメータが拡充。M言語からテーブル検出の挙動を制御しやすくなった。</td>
-</tr>
-<tr>
-<td>2023年</td>
-<td>365 月次更新</td>
-<td>日本語帳票（請求書・見積書など縦書き混在レイアウト）への対応精度が向上したとの報告あり。</td>
-</tr>
-<tr>
-<td>2024年〜</td>
-<td>365 最新版</td>
-<td>Copilot（AI アシスト）との連携が進み、パワークエリの操作を自然言語で指示する機能が段階的に追加されている。</td>
-</tr>
-</table>
-<div class="xdemo-note">
-<strong>バージョンの確認方法</strong><br>
-          Excelで「ファイル」&rarr;「アカウント」&rarr;「Excel のバージョン情報」でビルド番号を確認できます。Microsoft 365は自動更新のため、常に最新のPDFコネクタが利用可能です。Excel 2019は購入時のバージョンから更新されないため、PDFコネクタの精度は初期版のままです。
-        </div>
-</section>
+<section class="method-section" id="sec-history"><h2>【8】PDFコネクタの版・更新条件を確認する</h2><p>この記事はWindows版Microsoft 365で「データ → データの取得 → ファイルから → PDFから」が利用できる環境を中心に説明します。Power Query本体の搭載とPDFコネクタの搭載は別です。Office 2019の買い切り版にはPDFコネクタがありません。2021 / 2024などの買い切り版は版・エディションと実際のメニューを確認してください。<a href="https://support.microsoft.com/en-us/excel/power-query-data-sources-in-excel-versions" target="_blank" rel="noopener">Microsoft公式対応表</a></p><p>Microsoft 365でも更新チャネル・組織の管理設定・ビルドで機能の利用時期が異なります。ファイル → アカウント → Excelのバージョン情報で版とビルドを記録し、同じPDFで結果を比べてください。</p></section>
 <!-- ==========================================================
          【9】パワークエリの限界と代替手段
       ========================================================== -->
@@ -372,9 +324,9 @@
       ========================================================== -->
 <section class="goal-section" id="sec-summary" style="margin-top:40px;background:linear-gradient(135deg,#f5f8ff 0%,#e8eaf6 100%);border-radius:10px;padding:24px;">
 <h2><span class="icon">📝</span> まとめ</h2>
-<p>パワークエリのPDFコネクタは、Excel 2019/Microsoft 365で使えるPDFデータ取得の決定版です。基本編で扱った単一テーブルの取り込みに加え、この実践編では以下のテクニックを紹介しました。</p>
+<p>パワークエリのPDFコネクタは、Windows版Microsoft 365など対応環境でPDFの表を抽出する方法です。基本編で扱った単一テーブルの取り込みに加え、この実践編では以下のテクニックを紹介しました。</p>
 <p>複数テーブルの自動結合（クエリの追加）、ページまたぎの表の統合、フォルダー内の複数PDFの一括取り込み（フォルダーから）、M言語による特定テーブルの指定や全テーブルの自動結合、パラメータクエリによるファイルパスの動的切り替え、そして不規則なPDF（タイトル行混在、合計行、横長の表、テーブル未検出）への対応パターンです。</p>
-<p>PDFコネクタは2019年の初搭載から継続的に改善されており、特にMicrosoft 365では最新の検出アルゴリズムが自動適用されます。ただし、画像PDFやパスワード保護PDF、極端に複雑なレイアウトには対応できないため、これらのケースではOCR処理やサードパーティツールとの組み合わせが必要になります。</p>
+<p>PDFコネクタの機能・検出結果は版、ビルド、更新チャネルと対象PDFで変わります。ただし、画像PDFやパスワード保護PDF、極端に複雑なレイアウトには対応できないため、これらのケースではOCR処理やサードパーティツールとの組み合わせが必要になります。</p>
 <h3>テクニック早見表</h3>
 <table class="diff-table">
 <tr><th class="w-30">テクニック</th><th style="width:45%">用途</th><th class="w-25">操作レベル</th></tr>
@@ -410,7 +362,7 @@
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
     <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
-    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
   </div>
@@ -426,8 +378,7 @@
     <a href="../../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../../script.js?v=8"></script>
+<script src="../../script.js?v=20261007"></script>
 </body>
 </html>
-
 

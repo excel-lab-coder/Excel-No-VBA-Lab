@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta content="7" name="difficulty">
+<meta content="6" name="difficulty">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>【関数応用編】不規則なCOBOL帳票の撃破（不要行除外・縦持ち展開）｜Excel &times; No VBA Lab</title>
 <!-- Google Analytics -->
@@ -36,7 +36,7 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/02_article_cobol_advanced.html" rel="canonical">
-<link href="../../common.css?v=10" rel="stylesheet">
+<link href="../../common.css?v=20261007" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -89,7 +89,7 @@
 <div class="article-header">
 <div class="article-meta">
 <span class="badge badge-maniac" style="background-color:#d32f2f;">難易度：&starf;&starf;&starf;&star;&star;</span>
-<span class="badge badge-all">全バージョン対応あり</span>
+<span class="badge badge-all">Excel 2016以降対応あり</span>
 <span class="badge badge-maniac">COBOL/マニアック</span>
 <span class="article-date">更新日: 2026-07-12</span>
 </div>
@@ -114,7 +114,7 @@
 <h2><span class="icon">💡</span> 関数だけで「悪路」を走破する（基礎ロジック編）</h2>
 <p>実務で頻繁に遭遇する「不要なヘッダー行などが混ざっているデータ」や「1レコードが2行に分かれている縦持ちデータ」。厄介に見えますが、実はこれらは数あるCOBOL帳票の中ではまだ<strong>「比較的シンプルな簡単な部類」</strong>です。</p>
 <p>まずはこのページで、<strong>関数だけで「不要行を弾き飛ばし、1レコード1行の綺麗な状態を作る基本ロジックと流れ」</strong>を完璧に理解してください。</p>
-<p>※「上部にある会社名をすべての明細行にコピーして持ってくる処理」や「明細行が2～3行どころではない、完全に不規則な帳票」など、実務特有のさらに凶悪なフォーマットについては、このロジックを応用した <a href="03_article_cobol_expert.html" style="color:#d32f2f; font-weight:bold; text-decoration:underline;">【関数超絶技巧編】ヘッダー紐付けと不規則明細の完全攻略</a> の別リンクで解説しています。</p>
+<p>※「上部にある会社名をすべての明細行にコピーして持ってくる処理」や「明細行が2～3行どころではない、完全に不規則な帳票」など、実務特有のさらに凶悪なフォーマットについては、このロジックを応用した <a href="03_article_cobol_expert.html" style="color:#d32f2f; font-weight:bold; text-decoration:underline;">【複合関数編】ヘッダー紐付けと不規則明細の完全攻略</a> の別リンクで解説しています。</p>
 </section>
 <!-- ==========================================================
          【0】3層シート構成
@@ -208,7 +208,7 @@
 <span class="code-line">=FILTER(貼付シート!B2:B50000, MIDB(貼付シート!B2:B50000, 5, 1)="-")</span>
 </div>
 <p class="excel-demo-note"><code>50000</code> は例です。実データの最大行に合わせて調整するか、Excelテーブルの列参照を使ってください。FILTERやMIDBで全列を指定すると、100万行超が評価対象になり再計算負荷が増える場合があります。</p>
-<h4 style="margin:20px 0 5px;color:#f57f17;">解法B：フラグ行番号 ＋ INDEX ＋ SMALL（全ver対応・大規模データ向け候補）</h4>
+<h4 style="margin:20px 0 5px;color:#f57f17;">解法B：フラグ行番号 ＋ INDEX ＋ SMALL（Excel 2016以降対応・大規模データ向け候補）</h4>
 <p>古いExcelを使う場合は、抽出側の行番号を利用して、ステップ1で付けた貼付シートの「行番号フラグ（A列）」を <code>SMALL</code> 関数で小さい順から探す方法が候補になります。</p>
 <p class="code-label-good">抽出シート!A1セル（抽出先）</p>
 <div class="code-block" data-lang="excel">
@@ -238,7 +238,7 @@
 <p style="margin-top:10px;">これを打つだけで、スピルによって抽出シート側に「左の列に1行目の情報」「右の列に2行目の情報」が綺麗に横並びになります。COBOLの縦持ちデータという悪魔を一瞬で浄化する神関数です。</p>
 </div>
 <div class="attack-box">
-<h3 class="attack-title">基本解法：フラグ行番号 ＋ INDEX ＋ SMALL で横持ちに変換（全バージョン対応）</h3>
+<h3 class="attack-title">基本解法：フラグ行番号 ＋ INDEX ＋ SMALL で横持ちに変換（Excel 2016以降対応）</h3>
 <p>
   WRAPROWSが無い環境（Excel 2021以前、または更新チャネル・買い切り版・職場PCの管理設定などで未対応の環境）では、試練1と全く同じ「フラグを作って SMALL で拾う」アプローチが最も確実で安全です。
   今回は2行で1セットなので、A列（1行目データ用）にだけ奇数行を判別するフラグを作ります。
@@ -342,7 +342,7 @@
   あとはC列以降で <code>MIDB</code> や <code>TRIM</code> を使って、
   店舗ID・店舗名・売上・電話番号などを切り出せば、
   COBOL帳票の縦持ちデータを通常のデータベース形式に変換できます。
-  
+
   <div style="margin-top: 16px;">
       <a class="link-card" href="../../functions/old/article_countif_extract.html">
       <div class="link-card-title">旧ExcelでFILTER関数の代わりに複数抽出する方法 ― データの組み方で高速化</div>
@@ -353,7 +353,7 @@
 </div>
 <!-- INDEX + ROW 算数コラム（別枠） -->
 <div class="xdemo-note-info" style="margin-top:24px;">
-  <strong>💡 別解コラム：計算力で狙撃する INDEX ＋ ROW の算数（全バージョン対応）</strong><br>
+  <strong>💡 別解コラム：計算力で狙撃する INDEX ＋ ROW の算数（Excel 2016以降対応）</strong><br>
   上記のSMALL方式は「フラグ列を作って拾う」王道の手法ですが、WRAPROWSが無い機能限定環境で、作業列を増やしたくない場合は、「行番号（ROW）」を使った算数で、貼付シートのデータ列（B列）から自分の好きな行だけを規則的に狙い撃ちします。抽出シートのA列（1行目データ用）とB列（2行目データ用）にそれぞれ以下の数式を入れ、下にコピーします。
 
   <p class="code-label-good" style="margin-top:12px;">抽出シート!A1セル（1行目用）</p>
@@ -406,7 +406,7 @@
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
     <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
-    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
   </div>
@@ -423,7 +423,6 @@
   </p>
 </footer>
 
-<script src="../../script.js?v=8"></script>
+<script src="../../script.js?v=20261007"></script>
 </body>
 </html>
-

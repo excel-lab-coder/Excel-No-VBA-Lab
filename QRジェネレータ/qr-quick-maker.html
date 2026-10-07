@@ -130,7 +130,7 @@
 
   <div class="card">
     <label for="text">QR化する文字列</label>
-    <textarea id="text" placeholder="例：商品番号、URL、氏名、長文メモなど。全角文字も使えます。">Excel × No VBA Lab</textarea>
+    <textarea id="text" placeholder="例：架空の商品番号、検証用URL、テスト文字列など。全角文字も使えます。">Excel × No VBA Lab</textarea>
 
     <!-- 容量メーター -->
     <div class="capbox">
@@ -190,13 +190,13 @@
         <tr><td>H</td><td>3,057</td><td>1,852</td><td>1,273</td><td>約424</td><td>約636</td></tr>
       </table>
       <div class="tabnote">
-        全角の目安は、UTF-8で1文字3バイト・Shift_JISで1文字2バイトとして計算した概算です。半角と全角が混在する場合や記号により実際の上限は前後します。
+          この表の数字・英数字の列は、QR規格の専用モードを使った場合の理論容量です。このツールは常にByteモードで生成するため、数字だけでもL:2,953 / M:2,331 / Q:1,663 / H:1,273バイトが上限の目安になります。実際に使う容量は上のメーターで確認してください。全角の目安はUTF-8で1文字3バイト、Shift_JISで1文字2バイトの概算で、文字や記号により変わります。
         データが多いほどQRは大きく・複雑になり、読み取りにくくなります。実務では誤り訂正M以上＋できるだけ短いデータを推奨します。
       </div>
     </details>
 
     <div class="note">
-      ※ このページはGoogle Analyticsと外部配信ライブラリを利用しているため、ページ表示に伴う通信は発生します。QR本文を当サイトのサーバーへ保存・送信する処理は実装していませんが、個人情報・機密情報・パスワードは入力しないでください。<br>
+      ※ QR作成に必要なライブラリはサイト内に同梱しています。ページ表示時はGoogle Analytics等への通信が発生します。QR本文を当サイトのサーバーへ保存・送信する処理は実装していませんが、個人情報・機密情報・パスワードは入力しないでください。<br>
       ※ UTF-8とShift_JISでは生成されるQRが異なります。読み取り先のシステム・QRリーダーが想定する文字コードに合わせて選んでください。
       旧来の基幹システムはShift_JIS前提が多く、UTF-8で生成すると全角が文字化けすることがあります。
       <strong>本番投入前に必ず実機のQRリーダーで読み取りテストを行ってください。</strong><br>
@@ -214,8 +214,8 @@
   <div id="printText"></div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/encoding-japanese@2.2.0/encoding.min.js"></script>
+<script src="../vendor/qrcode.min.js"></script>
+<script src="../vendor/encoding.min.js"></script>
 
 <script>
 (function(){
@@ -224,6 +224,11 @@
 
   // バージョン40・各誤り訂正レベルでのバイトモード最大データ容量（バイト）
   var MAX_BYTES = { L:2953, M:2331, Q:1663, H:1273 };
+
+  function librariesReady(){
+    return typeof qrcode === 'function' && typeof Encoding !== 'undefined' && typeof Encoding.convert === 'function';
+  }
+  var libraryError = 'QR作成に必要な機能を読み込めませんでした。通信や外部ライブラリへの接続を確認し、ページを再読み込みしてください。';
 
   // 入力をエンコードしてバイト列（または擬似バイト列）を得る
   function encodeBytes(text, encMode){
@@ -241,6 +246,12 @@
 
   // 容量メーターの更新
   function updateCapacity(){
+    if(!librariesReady()){
+      $('err').textContent=libraryError;
+      $('capState').textContent='読み込み不可';
+      $('remainTxt').textContent='必要な機能を読み込むまで容量を計算できません。';
+      return;
+    }
     var text=$('text').value;
     var encMode=$('enc').value;
     var ecc=$('ecc').value;
@@ -275,14 +286,20 @@
   function generate(){
     $('err').textContent=""; $('meta').textContent="";
     clearResult();
+    if(!librariesReady()){ $('err').textContent=libraryError; return false; }
     var text=$('text').value;
     if(!text){ $('err').textContent="文字列を入力してください。"; return false; }
     var encMode=$('enc').value, ecc=$('ecc').value;
     var scale=Math.max(2, Math.min(16, parseInt($('scale').value,10)||6));
 
     try{
+      var payload=encodeBytes(text,encMode);
+      if(payload.length>MAX_BYTES[ecc]){
+        $('err').textContent='Byteモードの容量上限を超えています。文字を減らすか、誤り訂正レベルを見直してください。';
+        return false;
+      }
       var qr = qrcode(0, ecc);        // type 0 = 最適バージョンを最大40まで自動選定
-      qr.addData(encodeBytes(text,encMode), 'Byte');
+      qr.addData(payload, 'Byte');
       qr.make();
 
       var moduleCount = qr.getModuleCount();
@@ -296,7 +313,7 @@
       $('printText').textContent=text;
       return true;
     }catch(e){
-      $('err').textContent='データが多すぎて、最大サイズ（バージョン40）に収まりません。文字を減らすか、誤り訂正レベルを下げてください。';
+      $('err').textContent='文字コード変換またはQR生成に失敗しました。入力文字と文字コードの設定を確認し、短いテスト文字列で試してください。';
       return false;
     }
   }
@@ -315,6 +332,6 @@
   window.addEventListener('load', generate);
 })();
 </script>
-<script src="../script.js?v=8"></script>
+<script src="../script.js?v=20261007"></script>
 </body>
 </html>

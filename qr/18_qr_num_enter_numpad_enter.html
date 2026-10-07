@@ -27,7 +27,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../common.css?v=10">
+    <link rel="stylesheet" href="../common.css?v=20261007">
     <link rel="stylesheet" href="../article.css">
 
     <script type="application/ld+json">
@@ -136,6 +136,7 @@
             </nav>
 
             <article class="article-body">
+
                 <header class="article-header">
                     <div class="article-meta">
                         <span class="article-badge">QR Automation Lab</span>
@@ -143,6 +144,13 @@
                         <span>業務システム入力</span>
                     </div>
                     <h1 class="article-title">QRリーダーでテンキーEnterを送る方法<br><span>Num Enter・Numpad Enter・通常Enterとの違い</span></h1>
+<details class="method-section qr-convention">
+<summary>共通の設定例（Enter・トリガー文字）</summary>
+<p>Excelの移動確認は<strong>CHAR(10)（LF）から</strong>、Webフォームの確定確認は<strong>CHAR(13)（CR）から</strong>、サフィックスはNoneで1件ずつ試します。動かなければCR / LFを入れ替えます。CR+LFは二重移動がないか別に確認します。これは試す順番であり、全機種で同じ動作を保証する設定ではありません。</p>
+<p>サイト内の例は <code>/</code>（CHAR(47)）→ Num Enter、<code>@</code> → Pause/Break、<code>!</code> → 待機1秒、<code>?</code> → 待機5秒です。記号そのものにキーや待機の効果はなく、対応するリーダー設定が必要です。Pause/Breakキーと送信待機は別の処理です。</p>
+<p>日付・URLの <code>/</code> やメールの <code>@</code> など、入力データと衝突する場合は別の記号へ変更し、QR生成式とリーダー設定表を一緒に変更してください。旧記事のチルダ設定を使っている場合も、式と設定を同時に変更します。<a href="04_qr_key_conversion.html">キー変換の確認手順</a></p>
+</details>
+
                     <p class="article-summary" data-seo-lead>「Enterを送っているのに業務システムが確定しない」場合、通常EnterではなくテンキーEnter、つまり Num Enter / Numpad Enter / キーパッドEnter を要求していることがあります。この記事では、ExcelのCHAR関数でできること、QRリーダー側で設定すること、実機で確認すべきことを整理します。</p>
                     <div class="article-updated">最終更新日：2026年5月14日</div>
                 </header>
@@ -287,12 +295,12 @@
 
                 <section class="method-section">
                     <h2><span class="icon">🛠️</span> QRリーダー側で送る基本設計</h2>
-                    <p>代表的な設計は、QRコード内に通常文字として使わないトリガーを入れ、リーダー側でそのトリガーをNum Enterへ変換する方法です。トリガーには <code>~</code> などを使う例がありますが、実際に使える文字や設定名はメーカー・機種で異なります。</p>
+                    <p>代表的な設計は、QRコード内に通常文字として使わないトリガーを入れ、リーダー側でそのトリガーをNum Enterへ変換する方法です。トリガーには <code>/</code> などを使う例がありますが、実際に使える文字や設定名はメーカー・機種で異なります。</p>
                     <div class="formula-box">
                         <button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-                        <code>=A2 &amp; CHAR(9) &amp; B2 &amp; "~"</code>
+                        <code>=A2 &amp; CHAR(9) &amp; B2 &amp; "/"</code>
                     </div>
-                    <p>この式は、A2を入力してTab移動し、B2を入力したあと、最後に <code>~</code> を送る例です。QRリーダー側で「<code>~</code> をNum Enterとして送る」設定を行うことで、業務システムにテンキーEnter相当を送れる場合があります。</p>
+                    <p>この式は、A2を入力してTab移動し、B2を入力したあと、最後に <code>/</code> を送る例です。QRリーダー側で「<code>/</code> をNum Enterとして送る」設定を行うことで、業務システムにテンキーEnter相当を送れる場合があります。</p>
                     <div class="warning-box">
                         <h3>すべてのリーダーで保証される動きではありません</h3>
                         <p>安価なリーダーや設定変更が限定的な機種では、任意の文字をNum Enterへ変換できない場合があります。購入前、または本番投入前に、メーカー設定ツールと実機で確認してください。</p>
@@ -319,12 +327,12 @@
                             <tr>
                                 <td>Zebra</td>
                                 <td>123ScanやADFでNumpad Enter相当を設定できるか</td>
-                                <td><a href="./14_qr_zebra_adf_variable_pause_revised_ranked.html">⑭ Zebraガイド</a></td>
+                                <td><a href="./14_qr_zebra_adf.html">⑭ Zebraガイド</a></td>
                             </tr>
                             <tr>
                                 <td>Honeywell</td>
                                 <td>EZConfig等でキー送信、遅延、Suffixを調整できるか</td>
-                                <td><a href="./15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywellガイド</a></td>
+                                <td><a href="./15_qr_honeywell_data_formatter.html">⑮ Honeywellガイド</a></td>
                             </tr>
                             <tr>
                                 <td>手元のリーダー</td>
@@ -378,7 +386,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><code>~</code> がそのまま入力される</td>
+                                <td><code>/</code> がそのまま入力される</td>
                                 <td>リーダー側の変換設定が効いていない</td>
                                 <td>設定保存、接続モード、対象文字の指定を確認</td>
                             </tr>
@@ -390,7 +398,7 @@
                             <tr>
                                 <td>値は入るが確定前にずれる</td>
                                 <td>送信が速すぎる、画面遷移待ちがない</td>
-                                <td><a href="./06_qr_sleep_revised_honeywell.html">⑥ 待機・Sleep</a>を確認</td>
+                                <td><a href="./06_qr_wait_time.html">⑥ 待機・Sleep</a>を確認</td>
                             </tr>
                             <tr>
                                 <td>一部の端末だけ動かない</td>
@@ -438,23 +446,23 @@
                         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
                         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
                         <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
-                        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で固定時間を空ける</a></li>
+                        <li><span class="lv-adv">[応用]</span> <a href="06_qr_wait_time.html">⑥ Sleep（一時停止）で固定時間を空ける</a></li>
                         <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
-                        <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
+                        <li><span class="lv-adv">[応用]</span> <a href="08_qr_reader_selection.html">⑧ QRリーダーの選び方と接続方法</a></li>
                         <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>
                         <li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
-                        <li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ 全角QR生成VBA記事（一時非公開）</a></li>
+
                         <li><span class="lv-adv">[応用]</span> <a href="12_qr_existing_reader_check.html">⑫ 会社にあるQRリーダーでまず試す</a></li>
-                        <li><span class="lv-adv">[応用]</span> <a href="13_qr_reader_design_philosophy_current_research_v5.html">⑬ QRリーダーの設計思想比較</a></li>
-                        <li><span class="lv-adv">[応用]</span> <a href="14_qr_zebra_adf_variable_pause_revised_ranked.html">⑭ Zebra 123Scan / ADF検証メモ</a></li>
-                        <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
+                        <li><span class="lv-adv">[応用]</span> <a href="13_qr_reader_comparison.html">⑬ QRリーダーの設計思想比較</a></li>
+                        <li><span class="lv-adv">[応用]</span> <a href="14_qr_zebra_adf.html">⑭ Zebra 123Scan / ADF検証メモ</a></li>
+                        <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
                         <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
                         <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
                         <li class="current"><span class="lv-adv">[応用]</span> <strong>⑱ Num Enter・Numpad Enter・通常Enterの違い（この記事）</strong></li>
                     </ol>
                 </nav>
 
-            
+
 </article>
         </div>
     </main>
@@ -462,7 +470,7 @@
     <footer class="site-footer">
         <div class="site-footer-trust" aria-label="運営情報と検証方針">
             <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
-            <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、USB-HID型QRリーダーを想定しています。機種やファームウェアで挙動が変わる可能性があるため、実務適用前に必ずコピー環境で確認してください。</p>
+            <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、USB-HID型QRリーダーを想定しています。機種やファームウェアで挙動が変わる可能性があるため、実務適用前に必ずコピー環境で確認してください。</p>
             <p><strong>免責:</strong> 掲載手順の業務適用前に、バックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や適用判断は利用環境に合わせて確認してください。</p>
             <p class="site-footer-links"><strong>公式参照:</strong>
                 <a href="https://www.opto.co.jp/products/tool/tool_download.html" rel="noopener" target="_blank">Opticon 設定ツール / UniversalConfig</a>
@@ -484,6 +492,6 @@
   </p>
 </footer>
 
-    <script src="../script.js?v=8"></script>
+    <script src="../script.js?v=20261007"></script>
 </body>
 </html>

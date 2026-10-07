@@ -310,6 +310,9 @@
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/speed/article_memory_swap.html</loc>
   </url>
   <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/speed/article_excel_diet_emergency.html</loc>
+  </url>
+  <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_form_controls.html</loc>
   </url>
   <url>
@@ -409,13 +412,13 @@
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/05_qr_key_practice.html</loc>
   </url>
   <url>
-    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/06_qr_sleep_revised_honeywell.html</loc>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/06_qr_wait_time.html</loc>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/07_qr_full_system.html</loc>
   </url>
   <url>
-    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/08_qr_hardware_revised_honeywell.html</loc>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/08_qr_reader_selection.html</loc>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/09_qr_closed_transfer.html</loc>
@@ -427,13 +430,13 @@
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/12_qr_existing_reader_check.html</loc>
   </url>
   <url>
-    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/13_qr_reader_design_philosophy_current_research_v5.html</loc>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/13_qr_reader_comparison.html</loc>
   </url>
   <url>
-    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/14_qr_zebra_adf_variable_pause_revised_ranked.html</loc>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/14_qr_zebra_adf.html</loc>
   </url>
   <url>
-    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html</loc>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/15_qr_honeywell_data_formatter.html</loc>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/16_qr_opticon_universalconfig_streaming_control.html</loc>
@@ -452,5 +455,11 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_uia_automation.html</loc>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_tocol_torow.html</loc>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_lambda_basic.html</loc>
   </url>
 </urlset>

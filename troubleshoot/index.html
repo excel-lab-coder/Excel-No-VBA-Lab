@@ -35,7 +35,7 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
-<link rel="stylesheet" href="../common.css?v=10">
+<link rel="stylesheet" href="../common.css?v=20261007">
 <link rel="stylesheet" href="../article.css">
 
 <script type="application/ld+json">
@@ -100,6 +100,7 @@
   <section class="method-section">
     <h2>🔍 検索・抽出の悩み</h2>
     <ul class="article-list">
+<li class="article-item"><p class="article-link">複数条件の件数や合計を集計したい</p><p class="article-summary"><a class="article-link" href="../functions/old/article_countifs_sumifs.html">COUNTIFS・SUMIFSの条件指定と集計表の作り方へ</a></p></li>
       <li class="article-item"><p class="article-link">VLOOKUPが使えない / 動かない</p><p class="article-summary"><a class="article-link" href="../functions/old/article_vlookup.html">一致条件・検索範囲・近似一致を総点検してVLOOKUPを安定運用する手順へ</a></p></li>
       <li class="article-item"><p class="article-link">列を挿入したらVLOOKUPが壊れた</p><p class="article-summary"><a class="article-link" href="../functions/latest/article_xlookup_vs.html">列挿入に強いXLOOKUPへ移行し、壊れない検索式に置き換える比較ガイドへ</a></p></li>
       <li class="article-item"><p class="article-link">検索キーより左の列を取りたい</p><p class="article-summary"><a class="article-link" href="../functions/old/article_index_match.html">左方向検索に対応するINDEX+MATCHの基本設計と実装手順へ</a></p></li>
@@ -110,17 +111,19 @@
       <li class="article-item"><p class="article-link">重複なしの一覧をすぐ作りたい</p><p class="article-summary"><a class="article-link" href="../functions/latest/article_unique.html">UNIQUE関数で重複排除リストを自動生成する手順へ</a></p></li>
       <li class="article-item"><p class="article-link">並び替え結果を元表と連動させたい</p><p class="article-summary"><a class="article-link" href="../functions/latest/article_sort.html">SORT/SORTBYで動的に並び替える再利用テンプレートへ</a></p></li>
       <li class="article-item"><p class="article-link">住所から郵便番号を逆引きしたい</p><p class="article-summary"><a class="article-link" href="../functions/old/article_zip_reverse.html">最長一致検索で住所→郵便番号を逆引きする実践手順へ</a></p></li>
+      <li class="article-item"><p class="article-link">複数列・複数行のデータを縦1列（または横1行）にまとめたい</p><p class="article-summary"><a class="article-link" href="../functions/latest/article_tocol_torow.html">TOCOL・TOROWで散らばった配列を空白除外してフラット化する手順へ</a></p></li>
     </ul>
   </section>
 
   <section class="method-section">
     <h2>⚡ 速度・パフォーマンスの悩み</h2>
     <ul class="article-list">
+      <li class="article-item"><p class="article-link">Excelが重い・落ちる・ファイルサイズが異常に大きい</p><p class="article-summary"><a class="article-link" href="../others/speed/article_excel_diet_emergency.html">UsedRangeリセット・ゴースト図形削除・条件付き書式整理の緊急ダイエット手順へ</a></p></li>
       <li class="article-item"><p class="article-link">数万行の検索関数で再計算が重い</p><p class="article-summary"><a class="article-link" href="../others/speed/article_01_lookup_speed.html">検索関数の速度差とメモリ効率を比較して最適化するガイドへ</a></p></li>
       <li class="article-item"><p class="article-link">Excel全体が急に重くなった</p><p class="article-summary"><a class="article-link" href="../others/speed/article_02_formula_techniques.html">計算負荷を下げる数式設計テクニックを一括で確認できる記事へ</a></p></li>
       <li class="article-item"><p class="article-link">PC性能はあるのにExcelだけ遅い</p><p class="article-summary"><a class="article-link" href="../others/speed/article_memory_swap.html">メモリスワップ視点で重さの原因を切り分ける診断ガイドへ</a></p></li>
       <li class="article-item"><p class="article-link">揮発性関数の影響を減らしたい</p><p class="article-summary"><a class="article-link" href="../functions/old/article_volatile.html">INDIRECT/OFFSET依存を外して再計算を軽くする実践手順へ</a></p></li>
-      <li class="article-item"><p class="article-link">SORTや重い式の再評価を抑えたい</p><p class="article-summary"><a class="article-link" href="../functions/latest/article_let_iferror.html">LETで重複計算を避け、並び替え処理を高速化する方法へ</a></p></li>
+      <li class="article-item"><p class="article-link">SORTや重い式の再評価を抑えたい</p><p class="article-summary">ソート結果を変数化して再利用し、INDEX・SEQUENCEで上位件数を抽出します。Excel 2021対応、該当0件の分岐付き。</p></li>
       <li class="article-item"><p class="article-link">長い数式が読めず修正で壊れる</p><p class="article-summary"><a class="article-link" href="../functions/latest/article_let.html">LETで変数化し、可読性と保守性を上げる構造化手順へ</a></p></li>
       <li class="article-item"><p class="article-link">エラー処理を入れると式が複雑になる</p><p class="article-summary"><a class="article-link" href="../functions/old/article_iferror.html">IFERRORとIFNAを使い分けて無駄な計算を減らす設計ガイドへ</a></p></li>
     </ul>
@@ -137,6 +140,7 @@
       <li class="article-item"><p class="article-link">西暦を和暦表示に変換したい</p><p class="article-summary"><a class="article-link" href="../functions/old/article_text_date.html">TEXT関数の書式コードで和暦表示を安定化する逆引きガイドへ</a></p></li>
       <li class="article-item"><p class="article-link">1セルの文字列を一気に分割したい</p><p class="article-summary"><a class="article-link" href="../functions/latest/article_textsplit.html">TEXTSPLITで区切り文字分割をスピル展開する方法へ</a></p></li>
       <li class="article-item"><p class="article-link">記号の前後だけを抜き出したい</p><p class="article-summary"><a class="article-link" href="../functions/latest/article_textbefore.html">TEXTBEFORE/TEXTAFTERで前後抽出を安定化する手順へ</a></p></li>
+      <li class="article-item"><p class="article-link">長くて複雑な数式をチーム共通の自作関数にしてスッキリさせたい</p><p class="article-summary"><a class="article-link" href="../functions/latest/article_lambda_basic.html">LAMBDA関数でVBAを使わずに名前付き自作関数を定義する手順へ</a></p></li>
     </ul>
   </section>
 
@@ -150,7 +154,7 @@
       <li class="article-item"><p class="article-link">関数・PQ・M言語のどれで処理するか迷う</p><p class="article-summary"><a class="article-link" href="../cobol/intro/02_article_cobol_approach.html">難易度と運用性で選ぶ3大アプローチ比較ガイドへ</a></p></li>
       <li class="article-item"><p class="article-link">Power Queryで不要行除去と結合を自動化したい</p><p class="article-summary"><a class="article-link" href="../cobol/pq/01_article_cobol_pq.html">更新ボタンで再実行できるCOBOL帳票整形フローへ</a></p></li>
       <li class="article-item"><p class="article-link">M言語でMIDB相当の処理を作りたい</p><p class="article-summary"><a class="article-link" href="../cobol/pq/03_article_cobol_pq_midb_ref.html">固定長切り出し用の自作関数を構築する実装リファレンスへ</a></p></li>
-      <li class="article-item"><p class="article-link">PDFデータをExcelで使える形にしたい</p><p class="article-summary"><a class="article-link" href="../powerquery/basic/article_pdf_powerquery_basic.html">Power QueryでPDFを取り込み整形する基本手順へ</a></p></li>
+      <li class="article-item"><p class="article-link">PDFデータをExcelで使える形にしたい</p><p class="article-summary">PDFコネクタが利用できる環境で、PDFから表を取り込む基本手順を解説します。Office 2019のPDFコネクタ非搭載に注意。</p></li>
       <li class="article-item"><p class="article-link">CSV・PDF・Webなど取り込み元が毎回違う</p><p class="article-summary"><a class="article-link" href="../powerquery/advanced/article_pq_import_patterns.html">ソース別に最短手順を選べる取り込みパターン集へ</a></p></li>
       <li class="article-item"><p class="article-link">複数ファイルの表を結合・追加したい</p><p class="article-summary"><a class="article-link" href="../powerquery/advanced/article_pq_merge_append.html">マージと追加を使い分ける実務フロー設計ガイドへ</a></p></li>
     </ul>
@@ -162,10 +166,10 @@
       <li class="article-item"><p class="article-link">VBA禁止でも入力作業を自動化したい</p><p class="article-summary"><a class="article-link" href="../qr/07_qr_full_system.html">QR設定①〜⑥を統合して入力自動化を完成させる構築ガイドへ</a></p></li>
       <li class="article-item"><p class="article-link">QRを読むだけでセル入力を進めたい</p><p class="article-summary"><a class="article-link" href="../qr/01_qr_barcode_control.html">QR一発入力の基本設定と動作確認手順へ</a></p></li>
       <li class="article-item"><p class="article-link">読み取り後にTab/Enterを自動で送りたい</p><p class="article-summary"><a class="article-link" href="../qr/02_qr_tab_enter.html">Tab・Enter埋め込みで入力遷移を自動化する設定例へ</a></p></li>
-      <li class="article-item"><p class="article-link">画面遷移待ちや印刷待ちを自動化したい</p><p class="article-summary"><a class="article-link" href="../qr/06_qr_sleep_revised_honeywell.html">Sleep埋め込みで待機時間を制御する実践パターンへ</a></p></li>
+      <li class="article-item"><p class="article-link">画面遷移待ちや印刷待ちを自動化したい</p><p class="article-summary"><a class="article-link" href="../qr/06_qr_wait_time.html">Sleep埋め込みで待機時間を制御する実践パターンへ</a></p></li>
       <li class="article-item"><p class="article-link">閉域環境で安全にデータを移したい</p><p class="article-summary"><a class="article-link" href="../qr/09_qr_closed_transfer.html">ネットワーク不要でQR転送する閉域向け運用ガイドへ</a></p></li>
       <li class="article-item"><p class="article-link">旧システムから新システムへ入力移行したい</p><p class="article-summary"><a class="article-link" href="../qr/10_qr_system_migration.html">QRテンプレートでシステム間データ移行を行う手順へ</a></p></li>
-      <li class="article-item"><p class="article-link">どのQRリーダーを選べば失敗しない？</p><p class="article-summary"><a class="article-link" href="../qr/08_qr_hardware_revised_honeywell.html">接続方式・設定自由度で選ぶQRリーダー比較ガイドへ</a></p></li>
+      <li class="article-item"><p class="article-link">どのQRリーダーを選べば失敗しない？</p><p class="article-summary"><a class="article-link" href="../qr/08_qr_reader_selection.html">接続方式・設定自由度で選ぶQRリーダー比較ガイドへ</a></p></li>
       <li class="article-item"><p class="article-link">印刷範囲をデータ量に合わせて自動変更したい</p><p class="article-summary"><a class="article-link" href="../others/print/article_print_area.html">Print_Areaを数式連動で可変化する実装手順へ</a></p></li>
       <li class="article-item"><p class="article-link">ラベル用紙の途中から無駄なく印刷したい</p><p class="article-summary"><a class="article-link" href="../others/print/article_label_scrap.html">開始位置指定で残ラベルを活かす印刷制御ガイドへ</a></p></li>
       <li class="article-item"><p class="article-link">宛名や案内文を1ページずつ自動印刷したい</p><p class="article-summary"><a class="article-link" href="../others/print/article_mail_print.html">スピンボタン＋Print_Areaで差し込み風印刷を実現する手順へ</a></p></li>
@@ -184,7 +188,7 @@
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
     <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
-    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../samples/index.html">サンプルデータ</a></p>
   </div>
@@ -199,6 +203,6 @@
   </p>
 </footer>
 
-<script src="../script.js?v=8"></script>
+<script src="../script.js?v=20261007"></script>
 </body>
 </html>

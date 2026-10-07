@@ -7,7 +7,9 @@
       "url": "functions/latest/article_xlookup_basic.html",
       "summary": "Excel 2021 / 2024 / Microsoft 365 で使える検索関数の決定版。VLOOKUPの弱点を克服。",
       "level": 1,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -33,7 +35,10 @@
       "url": "functions/latest/article_xlookup_joined_key.html",
       "summary": "Aシートの東京001を、マスタ表の東京列+001列に一致。表を増やさず使うメリットとケース別の式も整理します。",
       "level": 3,
-      "tags": ["impact", "rare"],
+      "tags": [
+        "impact",
+        "rare"
+      ],
       "is_highlight": true
     },
     {
@@ -59,7 +64,9 @@
       "url": "functions/latest/article_choosecols.html",
       "summary": "指定した配列から、必要な列番号だけを選んでスピル展開する関数です。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "rarity_id": "choosecols"
     },
     {
@@ -69,7 +76,33 @@
       "url": "functions/latest/article_torow_wraprows_choosecols.html",
       "summary": "複数行に分かれた1件分のデータを横一列にし、必要な列だけを選んで扱いやすい明細表へ整形します。",
       "level": 4,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_search",
+      "title": "TOCOL・TOROW関数完全ガイド — 複数行・複数列を1列／1行に一括整列",
+      "url": "functions/latest/article_tocol_torow.html",
+      "summary": "複数行・複数列の表を縦1列（TOCOL）または横1行（TOROW）に変換。空白スキップやUNIQUE/SORT連携など実務の使い方を解説。",
+      "level": 2,
+      "tags": [
+        "impact"
+      ],
+      "is_highlight": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "modern_search",
+      "title": "LAMBDA（ラムダ）関数は「何のために使うのか？」 — 式の怪獣化を防ぎ、会社ルールを自作関数化する実務ガイド",
+      "url": "functions/latest/article_lambda_basic.html",
+      "summary": "「DATEDIFを忘れるから」程度では使わない！セルに直書きすると破綻する怪獣数式をLETと組み合わせて自作関数化し、会社ルールの修正を一撃で完結させる実務ガイド。",
+      "level": 3,
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -79,7 +112,9 @@
       "url": "thinking/article_growth_curve_standard_flow.html",
       "summary": "入力担当から、関数、VBA、VBA万能感、VBA禁止、Power Query、スピル、QR設計へ進む定番ルートを、1本の成長曲線として整理します。",
       "level": 1,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -89,7 +124,9 @@
       "url": "thinking/article_breakthrough_moments.html",
       "summary": "VLOOKUP、マクロの記録、配列、Web操作、Power Query、スピル、QR入力など、仕事の見え方が一段変わる瞬間をまとめます。",
       "level": 2,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -99,7 +136,9 @@
       "url": "thinking/article_stage1_functions_printing.html",
       "summary": "関数を完璧に組めなくても、表をキーでつなげる発想に気づき、詳しい人へ相談したり検索したりできるようになる段階です。",
       "level": 1,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -109,7 +148,9 @@
       "url": "thinking/article_stage2_vba_macro_recording.html",
       "summary": "社内のマクロやマクロの記録をきっかけに、連続印刷やCSV取込がボタン1つで終わり、VBA万能感の入口に立つ段階です。",
       "level": 2,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "thinking",
@@ -118,7 +159,9 @@
       "url": "thinking/article_stage3_vba_internal_design.html",
       "summary": "配列、Dictionary、エラー処理、ログ、設定シート、UserFormなどで、他人が使えるExcel内業務ツールにしていく段階です。",
       "level": 3,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "thinking",
@@ -127,7 +170,9 @@
       "url": "thinking/article_stage3_vba_web_automation.html",
       "summary": "Excel内の自動化を超えて、Web画面、外部アプリ、ファイル処理まで業務フロー全体を動かし、VBA万能感がピークになる段階です。",
       "level": 4,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "thinking",
@@ -136,7 +181,9 @@
       "url": "thinking/article_stage4_no_macro_powerquery.html",
       "summary": "VBA禁止環境で、Power Queryと関数を組み合わせ、操作ではなくデータの流れとしてExcelを再設計する段階です。",
       "level": 5,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "thinking",
@@ -145,7 +192,9 @@
       "url": "thinking/article_stage5_qr_input_design_shift.html",
       "summary": "RPAやSeleniumが使えない環境で、QRリーダーをキーボードとして扱い、入力データそのものを圧縮する設計へシフトする段階です。",
       "level": 6,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "thinking",
@@ -154,7 +203,9 @@
       "url": "thinking/article_spill_design_shift.html",
       "summary": "LET、実データ範囲、FILTER、SORT、UNIQUE、スピルを組み合わせ、Excelを可変構造として設計する段階です。",
       "level": 7,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -164,7 +215,9 @@
       "url": "thinking/article_vba_omnipotence_trap.html",
       "summary": "VBAで何でも動かせるようになった時期に起こる高揚感、依頼の集中、野良システム化、そしてマクロ禁止で折れる理由を整理します。",
       "level": 4,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "thinking",
@@ -173,7 +226,9 @@
       "url": "thinking/article_function_depth_before_vba.html",
       "summary": "VBA使いの多くが関数上級まで到達しにくい理由と、関数を高めたあとにVBAを使うと、できること・できないことの判定力が上がる理由を整理します。",
       "level": 4,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "thinking",
@@ -182,7 +237,9 @@
       "url": "thinking/article_no_vba_thinking.html",
       "summary": "マクロを奪われたときに、何を諦め、何を設計対象に戻すのか。Power Query、関数、テーブル、QR入力へ切り替える考え方です。",
       "level": 5,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "thinking",
@@ -191,7 +248,9 @@
       "url": "thinking/article_powerquery_design_shift.html",
       "summary": "VBAユーザーが陥る罠から、宣言的ETL思想へパラダイムシフトする過程を深掘りします。",
       "level": 5,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "thinking",
@@ -200,7 +259,9 @@
       "url": "thinking/article_cobol_structure_shift.html",
       "summary": "レガシーシステムが出力する見た目重視の帳票テキストから、ほとんどのVBAユーザーが見落とす固定長構造を読み解く思考プロセスです。",
       "level": 5,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "functions",
@@ -209,7 +270,9 @@
       "url": "functions/latest/article_filter.html",
       "summary": "条件に合うデータを複数件まとめて動的抽出します。抽出作業の自動化に非常に強力です。",
       "level": 2,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -219,7 +282,9 @@
       "url": "functions/latest/article_unique.html",
       "summary": "FILTERと組み合わせ、条件に合うデータだけから重複なしリストを作る方法を解説します。",
       "level": 1,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -229,7 +294,9 @@
       "url": "functions/latest/article_unique_filter.html",
       "summary": "条件に合うデータだけをFILTERで絞り込み、UNIQUEで重複なしリストにする基本形を解説します。",
       "level": 2,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "functions",
@@ -238,7 +305,9 @@
       "url": "functions/latest/article_unique_filter_sort.html",
       "summary": "条件で絞り、重複を消し、SORTであいうえお順に並べる3関数ネストを丁寧に解説します。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -256,7 +325,9 @@
       "url": "functions/latest/article_let.html",
       "summary": "長大で読めない数式を変数名で整理し、同じ計算の繰り返しを減らして速度改善にもつなげます。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -266,7 +337,9 @@
       "url": "functions/latest/article_ifs.html",
       "summary": "条件が多段階あるとき、IF関数のネスト地獄を避けて読みやすく分岐できます。",
       "level": 1,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -280,9 +353,9 @@
     {
       "category": "functions",
       "subcategory": "modern_logic",
-      "title": "LET + IFERROR の効率的ハンドリング",
+      "title": "LET深掘り②：SORT・SORTBYの重複計算を減らす",
       "url": "functions/latest/article_let_iferror.html",
-      "summary": "IFERRORの中で重い関数を2回書くのを避け、エラー時の分岐処理も整理します。",
+      "summary": "ソート結果を変数化して再利用し、INDEX・SEQUENCEで上位件数を抽出します。Excel 2021対応、該当0件の分岐付き。",
       "level": 4
     },
     {
@@ -300,7 +373,9 @@
       "url": "functions/latest/article_textsplit.html",
       "summary": "カンマ区切りや区切り文字つきの文字列を、複数セルに一気に分割します。",
       "level": 2,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -310,7 +385,9 @@
       "url": "functions/latest/article_textjoin.html",
       "summary": "複数セルの文字列を、指定した区切り文字でまとめます。空白セルを無視する設定も可能です。",
       "level": 1,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -344,7 +421,9 @@
       "url": "functions/latest/article_groupby_month_employee.html",
       "summary": "年月や社員番号の組み合わせを自動で見つけ、ピボットテーブルのような集計を1つの数式で展開します。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -354,7 +433,9 @@
       "url": "functions/old/article_index_match.html",
       "summary": "検索キーより左側にある列のデータを取得したい場合など、旧バージョンで強力な検索手法です。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -372,7 +453,9 @@
       "url": "functions/old/article_sumifs_month_employee.html",
       "summary": "GROUPBYが使えない環境でも、月初日とEDATEを使って月別・社員番号別の合計を作れます。",
       "level": 2,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -382,7 +465,9 @@
       "url": "functions/old/article_edate_eomonth_sumifs_monthly.html",
       "summary": "月初・月末・翌月初日の作り方と、時刻入り日付を漏らさないSUMIFSの日付条件を解説します。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -400,7 +485,9 @@
       "url": "functions/old/article_countifs_serial_number.html",
       "summary": "COUNTIFSで連番の土台を作り、必要なときだけIFで対象外を空白にする考え方を解説します。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -410,7 +497,9 @@
       "url": "functions/old/article_small_row_index_extract.html",
       "summary": "ROW・SMALL・INDEXの動きを図で追い、旧Excelの複数抽出をセル単位で徹底解説します。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -420,7 +509,9 @@
       "url": "functions/old/article_countif_extract.html",
       "summary": "Excel 2016以前でも通常の関数だけでFILTERと同等の複数行抽出を実現します。",
       "level": 7,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "rarity_id": "filter_alt",
       "is_highlight": true
     },
@@ -431,7 +522,9 @@
       "url": "functions/old/article_zip_reverse.html",
       "summary": "郵便番号簿からINDEX+MATCH+MAX+LEFT+LENで最長一致検索を行う高度な関数テクニック。",
       "level": 7,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "rarity_id": "zip_reverse",
       "is_highlight": true
     },
@@ -442,7 +535,9 @@
       "url": "functions/old/article_iferror.html",
       "summary": "#N/Aだけを処理したいのか、他のエラーもまとめて処理したいのかで使い分けます。",
       "level": 1,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "functions",
@@ -451,7 +546,9 @@
       "url": "functions/old/article_errortype.html",
       "summary": "セルのエラー種類によって表示メッセージや処理を変えたい場合に使います。",
       "level": 2,
-      "tags": ["rare"]
+      "tags": [
+        "rare"
+      ]
     },
     {
       "category": "functions",
@@ -476,7 +573,9 @@
       "url": "functions/old/article_wareki_datevalue_serial.html",
       "summary": "昭531215・平100115・令070401などの和暦文字列をDATEVALUEで日付シリアル値へ変換します。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -486,7 +585,9 @@
       "url": "functions/old/article_yyyymmdd_date_serial.html",
       "summary": "19781215・20250401などの西暦8桁をDATE関数で日付シリアル値へ変換します。",
       "level": 2,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -512,7 +613,9 @@
       "url": "functions/old/article_volatile.html",
       "summary": "INDIRECT・OFFSETなどの揮発性関数による再計算負荷を理解し、重いブックを防ぎます。",
       "level": 4,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "rarity_id": "volatile"
     },
     {
@@ -522,7 +625,10 @@
       "url": "powerquery/basic/article_powerquery_intro.html",
       "summary": "VBAやマクロが使えないExcel環境で、Power Queryが代替できる作業と使い分けを把握します。",
       "level": 1,
-      "tags": ["prereq", "impact"],
+      "tags": [
+        "prereq",
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -540,7 +646,10 @@
       "url": "powerquery/basic/article_pq_editor_ui.html",
       "summary": "エディターの5つのエリアの役割を解説し、どこを見れば何がわかるかを把握します。",
       "level": 1,
-      "tags": ["prereq", "impact"],
+      "tags": [
+        "prereq",
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -558,7 +667,10 @@
       "url": "powerquery/basic/article_pq_data_type.html",
       "summary": "型が正しくないと、計算・フィルター・並べ替えが意図通りに動きません。",
       "level": 1,
-      "tags": ["prereq", "impact"],
+      "tags": [
+        "prereq",
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -568,7 +680,10 @@
       "url": "powerquery/basic/article_pq_first_steps.html",
       "summary": "ヘッダー昇格・列の削除・列名変更・データ型変換・不要行の削除を解説します。",
       "level": 1,
-      "tags": ["prereq", "impact"],
+      "tags": [
+        "prereq",
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -578,7 +693,9 @@
       "url": "powerquery/basic/article_pq_fill.html",
       "summary": "空白セル（null）を直前の値で自動的に埋める、帳票処理で重要な操作です。",
       "level": 1,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -588,7 +705,9 @@
       "url": "powerquery/basic/article_pq_management.html",
       "summary": "更新方法、読み込み先の選び方、接続のみクエリの活用、エラー予防策をまとめて解説。",
       "level": 2,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -604,17 +723,21 @@
       "subcategory": "pdf",
       "title": "PDFからのデータ取り込み 基本編",
       "url": "powerquery/basic/article_pdf_powerquery_basic.html",
-      "summary": "Power QueryでPDFから取り込む基本的な手順をGUI操作中心に解説します。",
+      "summary": "PDFコネクタが利用できる環境で、PDFから表を取り込む基本手順を解説します。Office 2019のPDFコネクタ非搭載に注意。",
       "level": 2,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ],
+      "support": "Windows版Microsoft 365のPDFコネクタ利用環境。買い切り版は対象版のメニューで確認。Office 2019にはPDFコネクタなし。"
     },
     {
       "category": "powerquery",
       "subcategory": "pdf",
       "title": "PDFからのデータ取り込み 応用編",
       "url": "powerquery/basic/article_pdf_powerquery_advanced.html",
-      "summary": "レイアウト崩れや文字化けなど、難しいケースへの対処法を解説します。",
-      "level": 4
+      "summary": "PDFコネクタが利用できる環境で、複数ページ・レイアウト崩れ・文字化けへの対処を解説します。機能の有無は版と更新環境を確認。",
+      "level": 4,
+      "support": "Windows版Microsoft 365のPDFコネクタ利用環境。買い切り版は対象版のメニューで確認。Office 2019にはPDFコネクタなし。"
     },
     {
       "category": "powerquery",
@@ -631,7 +754,9 @@
       "url": "powerquery/advanced/article_pq_import_patterns.html",
       "summary": "VBA・マクロ禁止環境の代替手段として、Power Queryのデータ取り込みパターンを解説します。",
       "level": 2,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -641,7 +766,9 @@
       "url": "powerquery/advanced/article_pq_column_delete.html",
       "summary": "不要な列の削除と列名の整理。列に対する4つの基本操作を解説します。",
       "level": 1,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -651,7 +778,9 @@
       "url": "powerquery/advanced/article_pq_row_operations.html",
       "summary": "Power Queryでの行操作を完全解説します。",
       "level": 2,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -685,7 +814,9 @@
       "url": "powerquery/advanced/article_pq_add_columns.html",
       "summary": "Power Queryで新しい列を追加する方法を完全解説します。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -703,7 +834,9 @@
       "url": "powerquery/advanced/article_pq_merge_append.html",
       "summary": "VBAが使えないExcel環境で、マージ（横方向）と追加（縦方向）を代替手段として使い分けます。",
       "level": 4,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -713,7 +846,9 @@
       "url": "powerquery/advanced/article_pq_parameter_query.html",
       "summary": "セル値をフィルター条件やファイルパスとして渡し、更新だけで結果を切り替えます。",
       "level": 5,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "rarity_id": "pq_parameter",
       "is_highlight": true
     },
@@ -733,7 +868,9 @@
       "url": "cobol/intro/01_article_cobol_fixed.html",
       "summary": "固定長データの正体と見分け方を解説します。まず自分のデータがCOBOL帳票なのか確認します。",
       "level": 1,
-      "tags": ["prereq"],
+      "tags": [
+        "prereq"
+      ],
       "is_highlight": true
     },
     {
@@ -743,7 +880,9 @@
       "url": "cobol/intro/02_article_cobol_approach.html",
       "summary": "VBA禁止・マクロ禁止環境で困ったときの代替手段として、関数・Power Query・VBAを比較します。",
       "level": 1,
-      "tags": ["prereq"],
+      "tags": [
+        "prereq"
+      ],
       "is_highlight": true
     },
     {
@@ -753,7 +892,10 @@
       "url": "cobol/intro/03_article_cobol_output_patterns.html",
       "summary": "最大8行まで膨らむブロック明細、主情報と複数付属情報の統合、半角QR連携まで、実務でよくある10種類の帳票構造を整理します。",
       "level": 3,
-      "tags": ["impact", "prereq"]
+      "tags": [
+        "impact",
+        "prereq"
+      ]
     },
     {
       "category": "cobol",
@@ -762,7 +904,9 @@
       "url": "cobol/formula/01_article_cobol_basic.html",
       "summary": "Excelの標準関数だけで、固定長データを列ごとに切り出し、使える表へ変換します。",
       "level": 4,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "cobol",
@@ -776,11 +920,13 @@
     {
       "category": "cobol",
       "subcategory": "formula",
-      "title": "【関数超絶技巧編】凶悪COBOL帳票の撃破｜ヘッダー紐付け・フィルダウンをExcel関数で自動化",
+      "title": "【関数複合関数編】複雑なCOBOL帳票の撃破｜ヘッダー紐付け・フィルダウンをExcel関数で自動化",
       "url": "cobol/formula/03_article_cobol_expert.html",
       "summary": "COBOL帳票のヘッダー紐付け・フィルダウンを、Excel関数だけで自動化する上級テクニックです。",
       "level": 8,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "rarity_id": "cobol_expert",
       "is_highlight": true
     },
@@ -800,8 +946,10 @@
       "title": "COBOL帳票から対象者だけを抽出し、半角QRで別システムへ入力する実践編",
       "url": "cobol/formula/05_article_cobol_qr_bridge.html",
       "summary": "COBOL帳票をExcelで整形し、対象者だけを抽出して半角QRで別システムへ入力する実務フローを解説します。",
-      "level": 7,
-      "tags": ["impact"]
+      "level": 6,
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "cobol",
@@ -810,7 +958,9 @@
       "url": "cobol/pq/01_article_cobol_pq.html",
       "summary": "マクロ禁止環境でも、Power Queryで不要行除去と複数ファイルの帳票データ一括整形を狙います。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -837,7 +987,9 @@
       "url": "qr/00_qr_reader_excel_input_basics.html",
       "summary": "QRリーダーをキーボード入力として使う基本。Excel側のQR用データ設計、リーダー側のキー送信設定、実機検証を1セットで理解します。",
       "level": 1,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -857,7 +1009,9 @@
       "url": "qr/02_qr_tab_enter.html",
       "summary": "VBA・マクロ禁止環境でも、Tab/Enterを埋め込んだQRで複数セル入力を減らします。",
       "level": 4,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "qr",
@@ -874,7 +1028,9 @@
       "url": "qr/04_qr_key_conversion.html",
       "summary": "「#」をF2に、「$」をEscに変換。QRリーダーを命令実行エンジンに変える概念の転換点です。",
       "level": 5,
-      "tags": ["rare"]
+      "tags": [
+        "rare"
+      ]
     },
     {
       "category": "qr",
@@ -883,13 +1039,15 @@
       "url": "qr/05_qr_key_practice.html",
       "summary": "在庫管理・イベント受付・既存データの部分更新など、実務シナリオでQRプログラムを設計します。",
       "level": 6,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "qr",
       "subcategory": "input",
       "title": "⑥ QRコードの中に「待ち時間」を作る — スリープで画面遷移を待つ",
-      "url": "qr/06_qr_sleep_revised_honeywell.html",
+      "url": "qr/06_qr_wait_time.html",
       "summary": "業務システムの画面遷移やWebフォームの応答を待ってから次の操作を実行します。",
       "level": 6
     },
@@ -900,7 +1058,9 @@
       "url": "qr/07_qr_full_system.html",
       "summary": "VBA・マクロ禁止でPower Queryが届かない画面入力を、QR読み取り1回に圧縮します。",
       "level": 7,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "rarity_id": "qr_series",
       "is_highlight": true
     },
@@ -908,7 +1068,7 @@
       "category": "qr",
       "subcategory": "transfer",
       "title": "⑧ QRリーダーの選び方と接続方法",
-      "url": "qr/08_qr_hardware_revised_honeywell.html",
+      "url": "qr/08_qr_reader_selection.html",
       "summary": "筆者が検証した機種を中心に、選び方・USB-HID接続・設定方法まで解説します。",
       "level": 5,
       "rarity_id": "qr_hardware"
@@ -920,7 +1080,9 @@
       "url": "qr/09_qr_closed_transfer.html",
       "summary": "USBメモリ禁止・ネット接続不可でも、紙のQRコードだけでデータ転送する方法を解説します。",
       "level": 6,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "qr",
@@ -929,17 +1091,9 @@
       "url": "qr/10_qr_system_migration.html",
       "summary": "APIもCSVインポートもなく、VBA・マクロも禁止された新システムへQRリーダーで流し込む移行手法です。",
       "level": 7,
-      "tags": ["impact"]
-    },
-    {
-      "category": "qr",
-      "subcategory": "transfer",
-      "title": "⑪ 全角QR生成VBA記事（動作再確認のため一時非公開）",
-      "url": "qr/11_qr_vba_generate.html",
-      "summary": "掲載内容とコードの動作を再確認するため、本文を取り下げています。URLは今後の再検討に備えて保持しています。",
-      "level": 8,
-      "tags": ["reviewing"],
-      "is_prep": true
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "qr",
@@ -948,13 +1102,15 @@
       "url": "qr/12_qr_existing_reader_check.html",
       "summary": "本番機をいきなり変えず、余剰機・予備機・検証用機器でTab、Enter、ディレイ、Sleepの効き方を順番に確認します。",
       "level": 5,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "qr",
       "subcategory": "reader_check",
-      "title": "⑬ QRリーダーの設計思想比較 — Zebra・Honeywell・Opticonを物理RPA用途で見る",
-      "url": "qr/13_qr_reader_design_philosophy_current_research_v5.html",
+      "title": "⑬ QRリーダーの設計思想比較 — Zebra・Honeywell・OpticonをQRリーダーによるキーボード入力自動化用途で見る",
+      "url": "qr/13_qr_reader_comparison.html",
       "summary": "読み取り性能だけでなく、入力制御エンジンとしての考え方、設定難易度、現場配備時の向き不向きを比較します。",
       "level": 7,
       "rarity_id": "qr_hardware"
@@ -963,29 +1119,35 @@
       "category": "qr",
       "subcategory": "reader_check",
       "title": "⑭ Zebra 123Scan / ADF検証メモ — 区切り文字・ポーズ・可変件数の注意点",
-      "url": "qr/14_qr_zebra_adf_variable_pause_revised_ranked.html",
+      "url": "qr/14_qr_zebra_adf.html",
       "summary": "Zebra 123Scan / ADFで、区切り文字やPauseを使った入力制御を検証。固定回数では扱いやすい一方、可変件数ではExcel側の設計が重要になります。",
       "level": 7,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "qr",
       "subcategory": "reader_check",
       "title": "⑮ Honeywell EZConfig / Data Formatter検証メモ — NumEnter・ポーズ・設定紙展開の注意点",
-      "url": "qr/15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html",
+      "url": "qr/15_qr_honeywell_data_formatter.html",
       "summary": "Honeywell Data Formatterで、制御記号、Delay、NumEnterを検証。NumEnterは Control Characters ではなく Key Strokes 側で扱う点が重要です。",
       "level": 7,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "rarity_id": "qr_hardware"
     },
     {
       "category": "qr",
       "subcategory": "reader_check",
-      "title": "⑯ Opticon / UniversalConfig実機検証メモ — ストリーミング方式・Sleep・キー変換",
+      "title": "⑯ Opticon / UniversalConfig実機検証メモ — 順次送信方式・Sleep・キー変換",
       "url": "qr/16_qr_opticon_universalconfig_streaming_control.html",
       "summary": "OPI-3601 / ALX-3601 / L-46Xで、サフィックスNone、Sleep、キー変換、NumEnter、設定保存・復元を整理。設定は難しい一方、設定後は非常に使いやすい構成です。",
       "level": 7,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "rarity_id": "qr_hardware"
     },
     {
@@ -995,7 +1157,9 @@
       "url": "qr/17_qr_reader_recommendation_opticon_zebra_honeywell.html",
       "summary": "ExcelでQRコードを作り、業務システムへ自動入力する用途で3メーカーを比較。TabやEnterはCHAR関数、NumEnterやPauseは設定しやすさ、紙の設定バーコード運用まで含めて選び方を整理します。",
       "level": 7,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "rarity_id": "qr_hardware",
       "is_highlight": true
     },
@@ -1006,7 +1170,10 @@
       "url": "qr/18_qr_num_enter_numpad_enter.html",
       "summary": "通常Enterでは確定できない基幹系画面向けに、Num Enterの表記ゆれ、CHAR(13)との違い、リーダー側のキー変換、メモ帳では判別しにくい検証方法を整理します。",
       "level": 6,
-      "tags": ["impact", "rare"],
+      "tags": [
+        "impact",
+        "rare"
+      ],
       "rarity_id": "qr_hardware",
       "is_highlight": true
     },
@@ -1017,7 +1184,9 @@
       "url": "qr/19_qr_rpa_selenium_excel_qr_alternative.html",
       "summary": "QRリーダーはキーボード入力として多くのソフトで動く一方、条件分岐はできません。RPA・Selenium・UIAが使いにくい現場での使いどころを整理します。",
       "level": 4,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -1027,7 +1196,9 @@
       "url": "others/speed/article_memory_swap.html",
       "summary": "VLOOKUPをINDEX+MATCHに変えても遅いまま？RAM・SSD・32ビット制限・数式設計の考え方を解説します。",
       "level": 4,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "others",
@@ -1036,8 +1207,22 @@
       "url": "others/speed/article_01_lookup_speed.html",
       "summary": "VLOOKUP・INDEX+MATCH・XLOOKUPのメモリ消費の違いと、検索設計による高速化を解説します。",
       "level": 5,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "rarity_id": "speed_lookup",
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "speed",
+      "title": "「Excelが重い・落ちる・開かない」ときの緊急ダイエットマニュアル",
+      "url": "others/speed/article_excel_diet_emergency.html",
+      "summary": "数十MBに肥大化したファイルをVBAなしで手動軽量化。UsedRange初期化（Ctrl+Endのズレ解消）、ゴースト図形一括削除、重複した条件付き書式の整理手順を徹底解説。",
+      "level": 2,
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -1047,7 +1232,9 @@
       "url": "others/speed/article_02_formula_techniques.html",
       "summary": "数式の処理速度を劇的に引き上げる実践テクニック集です。",
       "level": 6,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "rarity_id": "speed_formula",
       "is_highlight": true
     },
@@ -1058,7 +1245,9 @@
       "url": "others/print/article_print_area.html",
       "summary": "データが増えたら印刷範囲も自動で広がり、空白行は印刷されないようにする方法です。",
       "level": 4,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "rarity_id": "print_area",
       "is_highlight": true
     },
@@ -1077,7 +1266,9 @@
       "url": "others/print/article_label_scrap.html",
       "summary": "使いかけのラベルシールを無駄なく活用する方法です。",
       "level": 4,
-      "tags": ["rare"],
+      "tags": [
+        "rare"
+      ],
       "rarity_id": "label_scrap"
     },
     {
@@ -1095,7 +1286,9 @@
       "url": "others/word/article_mailmerge_label_basic.html",
       "summary": "Excel住所録からWordで宛名ラベルを作る基本手順を、ラベル設定からプレビュー・試し印刷まで整理します。",
       "level": 2,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -1105,7 +1298,9 @@
       "url": "others/word/article_mailmerge_method_comparison.html",
       "summary": "自分用・配布用・VBA禁止環境・印刷混入リスクで、3つの差し込み印刷方式を使い分けます。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -1115,7 +1310,9 @@
       "url": "others/word/article_mailmerge_excel_source_design.html",
       "summary": "1行1件、列名、郵便番号、住所分割、敬称、QR用文字列まで、差し込み元データの作り方を整理します。",
       "level": 2,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -1125,7 +1322,11 @@
       "url": "others/word/article_mailmerge_postal_code.html",
       "summary": "Excel住所録に作業列を追加せず、Word側のフィールドコードだけで1000001を100-0001形式に整えます。",
       "level": 3,
-      "tags": ["impact", "important", "rare"],
+      "tags": [
+        "impact",
+        "important",
+        "rare"
+      ],
       "is_highlight": true
     },
     {
@@ -1135,7 +1336,10 @@
       "url": "others/word/article_mailmerge_textbox_wrap.html",
       "summary": "窓あき封筒や宛名印刷で長い住所・会社名が横に伸びる問題を、テキストボックスで枠内に収めます。",
       "level": 3,
-      "tags": ["impact", "important"],
+      "tags": [
+        "impact",
+        "important"
+      ],
       "is_highlight": true
     },
     {
@@ -1145,7 +1349,9 @@
       "url": "others/word/article_mailmerge_number_format.html",
       "summary": "Excelの表示形式がWordに反映されない時、MERGEFIELDのスイッチで年月日・金額・ゼロ埋めを整えます。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -1155,7 +1361,9 @@
       "url": "others/word/article_mailmerge_label_next_record.html",
       "summary": "ラベル差し込みで全部同じ宛名になる、1件飛ばしになる原因をNext Recordの位置で整理します。",
       "level": 2,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -1165,7 +1373,10 @@
       "url": "others/word/article_mailmerge_qrcode.html",
       "summary": "MERGEBARCODEでExcelの値をQR化。255文字制限に悩む場面との差別化と、全角文字を避ける注意点を整理します。",
       "level": 5,
-      "tags": ["impact", "rare"],
+      "tags": [
+        "impact",
+        "rare"
+      ],
       "is_highlight": true
     },
     {
@@ -1175,7 +1386,9 @@
       "url": "others/ui/article_hyperlink_jump_last_row.html",
       "summary": "HYPERLINK関数で入力済み最終行、次の空き行、指定セル、処理票番号の行へクリック移動します。",
       "level": 2,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -1185,7 +1398,9 @@
       "url": "others/ui/article_select_input_range.html",
       "summary": "名前付き範囲で手入力セルだけを選択し、数式や書式を残してDeleteで初期化します。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -1195,7 +1410,9 @@
       "url": "others/ui/article_form_controls.html",
       "summary": "スピンボタンなどのフォームコントロールを使い、VBAなしで操作性を改善します。",
       "level": 2,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "others",
@@ -1214,7 +1431,9 @@
       "url": "others/misc/article_shortcuts.html",
       "summary": "日常業務で本当に役立つExcelショートカットだけを厳選して紹介します。",
       "level": 1,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -1224,7 +1443,9 @@
       "url": "others/misc/article_linked_picture_filter_serial_label.html",
       "summary": "FILTER関数とリンク図で候補一覧を見ながら、連番だけで封筒ラベル印刷を行う実務テクニックです。",
       "level": 3,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -1234,7 +1455,9 @@
       "url": "others/misc/article_snipping_tool_video.html",
       "summary": "追加インストール不可の職場でも使いやすい、Windows標準の画面録画。フリーソフト導入やウイルス不安を増やさず手順共有できます。",
       "level": 1,
-      "tags": ["impact"],
+      "tags": [
+        "impact"
+      ],
       "is_highlight": true
     },
     {
@@ -1244,7 +1467,9 @@
       "url": "others/misc/article_format.html",
       "summary": "表示形式コードとTEXT関数の使い方を逆引きで整理します。",
       "level": 2,
-      "tags": ["impact"]
+      "tags": [
+        "impact"
+      ]
     },
     {
       "category": "others",
@@ -1261,7 +1486,10 @@
       "url": "vba/article_vba_uia_automation.html",
       "summary": "QRリーダーの代わりにVBAで直接Webシステムに入力。VBA禁止・マクロ禁止環境ではQR、制限なし環境ではUIA、という使い分けです。<br><small>対応する本編：VBAなしでWebシステム入力を自動化する方法</small>",
       "level": 7,
-      "tags": ["vba", "uia"],
+      "tags": [
+        "vba",
+        "uia"
+      ],
       "is_highlight": true
     },
     {
@@ -1271,7 +1499,9 @@
       "url": "vba/article_vba_file_rename.html",
       "summary": "リネーム・移動・アーカイブなど、Power Queryだけでは届きにくいファイル操作を補完します。<br><small>対応する本編：パワークエリ「データ取り込みパターン集」</small>",
       "level": 4,
-      "tags": ["vba"]
+      "tags": [
+        "vba"
+      ]
     },
     {
       "category": "unlocked",
@@ -1280,17 +1510,10 @@
       "url": "unlocked/coming_soon.html?topic=vba_web_scraping",
       "summary": "Power QueryのWeb取込では取れないJavaScriptレンダリングページのデータ取得を補完します。<br><small>対応する本編：パワークエリ「データ取り込みパターン集」</small>",
       "level": 6,
-      "tags": ["vba", "web"],
-      "is_prep": true
-    },
-    {
-      "category": "unlocked",
-      "subcategory": "vba",
-      "title": "全角QR生成VBA記事（動作再確認のため一時非公開）",
-      "url": "qr/11_qr_vba_generate.html",
-      "summary": "掲載内容とコードの動作を再確認するため、本文を取り下げています。<br><small>QR Automation Lab 記事⑪</small>",
-      "level": 6,
-      "tags": ["vba", "qr", "reviewing"],
+      "tags": [
+        "vba",
+        "web"
+      ],
       "is_prep": true
     },
     {
@@ -1300,8 +1523,25 @@
       "url": "unlocked/coming_soon.html?topic=vba_supplement",
       "summary": "関数・Power Queryで95%解決できるが、残り5%にVBAが必要だったケースをまとめます。<br><small>対応する本編：各関数記事・パワークエリ記事</small>",
       "level": 5,
-      "tags": ["vba"],
+      "tags": [
+        "vba"
+      ],
       "is_prep": true
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_math",
+      "title": "COUNTIFS・SUMIFS：複数条件の件数と合計",
+      "url": "functions/old/article_countifs_sumifs.html",
+      "summary": "複数条件の件数・合計・集計表を作る基本を解説します。基本式はExcel 2016以降、MAXIFS・MINIFSの補足は2019以降。",
+      "level": 3
+    },
+    {
+      "category": "resources",
+      "kind": "resource",
+      "title": "サンプルデータ集",
+      "url": "samples/index.html",
+      "summary": "記事の式や整形手順を試すための架空のサンプルデータ。検証するときの入力例を探せます。"
     }
   ]
 }

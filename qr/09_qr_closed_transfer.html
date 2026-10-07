@@ -22,7 +22,7 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/09_qr_closed_transfer.html" rel="canonical">
-<link href="../common.css?v=10" rel="stylesheet">
+<link href="../common.css?v=20261007" rel="stylesheet">
 <link href="../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -89,12 +89,20 @@
 <strong>閉域環境データ転送</strong>
 </div>
 <article class="article-body">
+
 <div class="article-header">
 <div class="article-meta">
-<span class="badge badge-all">全バージョン</span>
+<span class="badge badge-all">Excel 2016以降</span>
 <span class="badge badge-maniac">QR連携/閉域環境/データ転送</span>
 </div>
 <h1 class="article-title">QRコードで閉域環境のデータ転送！<br>ネットワーク不要・紙だけでExcelデータを別PCに移す</h1>
+<details class="method-section qr-convention">
+<summary>共通の設定例（Enter・トリガー文字）</summary>
+<p>Excelの移動確認は<strong>CHAR(10)（LF）から</strong>、Webフォームの確定確認は<strong>CHAR(13)（CR）から</strong>、サフィックスはNoneで1件ずつ試します。動かなければCR / LFを入れ替えます。CR+LFは二重移動がないか別に確認します。これは試す順番であり、全機種で同じ動作を保証する設定ではありません。</p>
+<p>サイト内の例は <code>/</code>（CHAR(47)）→ Num Enter、<code>@</code> → Pause/Break、<code>!</code> → 待機1秒、<code>?</code> → 待機5秒です。記号そのものにキーや待機の効果はなく、対応するリーダー設定が必要です。Pause/Breakキーと送信待機は別の処理です。</p>
+<p>日付・URLの <code>/</code> やメールの <code>@</code> など、入力データと衝突する場合は別の記号へ変更し、QR生成式とリーダー設定表を一緒に変更してください。旧記事のチルダ設定を使っている場合も、式と設定を同時に変更します。<a href="04_qr_key_conversion.html">キー変換の確認手順</a></p>
+</details>
+
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
 </div>
 
@@ -180,7 +188,7 @@
 <p>ただし、<strong>全角QRの「読み取り」にも制約があります</strong>。一般的なQRリーダーのキーボードエミュレーション（USB HID）モードでは全角文字を正しくExcelに入力できない機種が多く存在します（※OPI-3601等の一部機種は「漢字直接出力」に対応していますが、標準設定では文字化けするリーダーが多数派です）。全角データの受信には<strong>USB COMモード（シリアル通信）＋受信側VBA</strong>が必要で、送信側・受信側ともにVBAが動く環境であることが前提になります。</p>
 <h3>本記事の位置づけ</h3>
 <p>以上を踏まえ、本記事では<strong>バーコードコントロール（半角のみ）＋ キーボードエミュレーション方式</strong>での閉域転送手順を解説します。ただしバーコードコントロールはExcel単体の標準機能ではなく、主に<strong>Accessに同梱されるActiveXコントロール</strong>です。送信側PCにAccess、または同コントロールを含むOffice構成が入っていない場合、Excelの一覧に表示されません。加えて2026年現在、Microsoft 365 / Office 2024では初期設定でActiveXが表示・作成できないことがありますが、トラストセンター設定で許可すると表示できる場合もあります。職場PCでは管理者ポリシーでブロックされることもあるため、まず設定と一覧を確認してください。</p>
-<p>全角文字を含むデータは本記事の手順の対象外です。記事⑪は<a href="11_qr_vba_generate.html"><strong>動作再確認のため一時非公開</strong></a>にしているため、現時点では旧掲載コードを利用しないでください。</p>
+<p>全角文字を含むデータは本記事の手順の対象外です。記事⑪は<strong>動作再確認のため一時非公開</strong>にしているため、現時点では旧掲載コードを利用しないでください。</p>
 <h3>自分のデータはどちらに該当する？</h3>
 <table class="key-table transfer-choice-table">
 <thead>
@@ -690,16 +698,16 @@ QR枚数:   =ROUNDUP(G1/G3,0)            &rarr; 25
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="05_qr_key_practice.html">⑤ キー変換の実践シナリオ</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で固定時間を空ける</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_wait_time.html">⑥ Sleep（一時停止）で固定時間を空ける</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="08_qr_reader_selection.html">⑧ QRリーダーの選び方と接続方法</a></li>
         <li class="current"><span class="lv-adv">[応用]</span> <strong>⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行（この記事）</strong></li>
         <li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ 全角QR生成VBA記事（一時非公開）</a></li>
+
         <li><span class="lv-adv">[応用]</span> <a href="12_qr_existing_reader_check.html">⑫ 会社にあるQRリーダーでまず試す</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="13_qr_reader_design_philosophy_current_research_v5.html">⑬ QRリーダーの設計思想比較</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="14_qr_zebra_adf_variable_pause_revised_ranked.html">⑭ Zebra 123Scan / ADF検証メモ</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="13_qr_reader_comparison.html">⑬ QRリーダーの設計思想比較</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="14_qr_zebra_adf.html">⑭ Zebra 123Scan / ADF検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="18_qr_num_enter_numpad_enter.html">⑱ Num Enter・Numpad Enter・通常Enterの違い</a></li>
@@ -721,7 +729,7 @@ QR枚数:   =ROUNDUP(G1/G3,0)            &rarr; 25
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
     <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
-    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong>
       <a href="https://www.opto.co.jp/products/tool/tool_download.html" rel="noopener" target="_blank">Opticon 設定ツール / UniversalConfig</a>
@@ -744,9 +752,8 @@ QR枚数:   =ROUNDUP(G1/G3,0)            &rarr; 25
     <a href="../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../script.js?v=8"></script>
+<script src="../script.js?v=20261007"></script>
 
 </body>
 </html>
-
 

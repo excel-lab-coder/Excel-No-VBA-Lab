@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="「DATEDIFを忘れるから」程度の理由ではLAMBDAは使わない！セルに書くと破綻する長大な実務ロジックをLETと組み合わせて自作関数化し、会社ルールの修正を一撃で完結させる本気の実務活用ガイド。" name="description">
+<meta content="LAMBDA関数, ラムダ関数 使い方, Excel 自作関数, VBA不要 自作関数, 名前の定義 LAMBDA, Excel 2024, Microsoft 365, LET LAMBDA 組み合わせ" name="keywords">
+<title>LAMBDA（ラムダ）関数は「何のために使うのか？」 — 式の怪獣化を防ぎ、会社ルールを自作関数化する実務ガイド｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_lambda_basic.html" rel="canonical">
+<meta content="LAMBDA（ラムダ）関数は「何のために使うのか？」 — 式の怪獣化を防ぎ、会社ルールを自作関数化する実務ガイド｜Excel &times; No VBA Lab" property="og:title">
+<meta content="「DATEDIFを忘れるから」程度では使わない！セルに書くと破綻する怪獣数式をカプセル化し、会社ルールの変更を一撃で完結させる本物のLAMBDA実務活用ガイド。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_lambda_basic.html" property="og:url">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<meta content="LAMBDA（ラムダ）関数は「何のために使うのか？」" name="twitter:title">
+<meta content="式の怪獣化を防ぎ、会社ルールを自作関数化する実務ガイド。" name="twitter:description">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" name="twitter:image">
+<meta content="index, follow" name="robots">
+
+<link href="../../common.css?v=20261007" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "LAMBDA（ラムダ）関数は「何のために使うのか？」 — 式の怪獣化を防ぎ、会社ルールを自作関数化する実務ガイド",
+  "description": "「DATEDIFを忘れるから」程度の理由ではLAMBDAは使わない！セルに書くと破綻する長大な実務ロジックをLETと組み合わせて自作関数化し、会社ルールの修正を一撃で完結させる本気の実務活用ガイド。",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_lambda_basic.html"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab"
+  }
+}
+</script>
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+  <div class="breadcrumb">
+    <a href="../../index.html">ホーム</a><span>&gt;</span>
+    <a href="../../index.html#functions">関数テクニック</a><span>&gt;</span>
+    <a href="../../index.html#functions">自作関数・高度設計</a><span>&gt;</span>
+    <strong>LAMBDA関数 実務活用ガイド</strong>
+  </div>
+
+  <article class="article-body">
+    <div class="article-header">
+      <div class="article-meta">
+        <span class="badge badge-new">Excel 2024</span>
+        <span class="badge badge-365">Microsoft 365</span>
+        <span class="badge badge-level">Lv.3 標準</span>
+        <span class="article-date">更新日: 2026-09-16</span>
+      </div>
+      <h1 class="article-title">LAMBDA（ラムダ）関数は「何のために使うのか？」<br>&horbar; 式の怪獣化を防ぎ、会社ルールを自作関数化する実務ガイド</h1>
+      <p class="article-summary">世間の解説では「DATEDIFを忘れるから自作関数にする」「消費税の1.1倍を関数にする」といった入門例がよく見られます。しかし現場の人間からすれば、<strong>『そんな簡単なことのために、わざわざ名前の定義を開いて小難しいLAMBDAを書くくらいなら、普通の式を調べた方が100倍早い！』</strong>と感じるのが当然です。<br><br>では、現場のプロは一体何のためにLAMBDAを使うのか？結論は、<strong>「セルに直書きすると破綻する怪獣数式を封印し、会社の業務ルール変更時にブック内の全セルを一撃で修正するため」</strong>です。VBAが禁止された職場でこそ真価を発揮する本物の実務シナリオを徹底解説します。</p>
+    </div>
+
+    <!-- 記事の位置づけ -->
+    <aside class="article-context-box">
+      <h2>この記事の位置づけと前提環境</h2>
+      <ul>
+        <li><strong>対応環境：</strong>Excel 2024 / Microsoft 365（※Excel 2021以前では利用できません）</li>
+        <li><strong>対象読者：</strong>「数式が長すぎて自分でも読めない」「計算ルールの変更で全シートの式を直すのが苦痛」「マクロ禁止だが独自の便利関数が欲しい」方</li>
+        <li><strong>結論：</strong>LAMBDAは「簡単な式」のためではなく、<strong>「セルに直接置くには重すぎる会社共通の多段階ロジック」</strong>を閉じ込めるために使います</li>
+      </ul>
+    </aside>
+
+    <!-- 【1】なぜ普通の数式やLETではダメなのか？ -->
+    <section class="method-section">
+      <h2>【1】なぜ普通の数式やLETではダメなのか？（決定的な違い）</h2>
+      <p>「数式を綺麗にする」だけなら、既存の <strong>LET関数</strong> でも変数を使って整理できます。しかし、実務の大規模運用においてLETには超えられない壁があります。</p>
+
+      <div class="table-wrap" style="margin:20px 0;">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th style="width:22%;">比較項目</th>
+              <th style="width:26%;">普通の長大数式</th>
+              <th style="width:26%;">LET関数</th>
+              <th style="width:26%;background:#eef6ff;">LAMBDA関数（名前の定義）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>セルの見た目</strong></td>
+              <td>呪文のような怪獣数式でセルが埋まる</td>
+              <td>変数は整理されるが、依然として複数行で長い</td>
+              <td style="background:#f8fbff;"><strong><code>=MY_FUNC(A2)</code> のみ（極めて簡潔）</strong></td>
+            </tr>
+            <tr>
+              <td><strong>有効スコープ</strong></td>
+              <td>そのセル単体</td>
+              <td>そのセル単体</td>
+              <td style="background:#f8fbff;"><strong>ブック全体（全シートで即利用可能）</strong></td>
+            </tr>
+            <tr>
+              <td><strong>他セル・他シートへの展開</strong></td>
+              <td>コピペでばら撒く</td>
+              <td>コピペでばら撒く</td>
+              <td style="background:#f8fbff;"><strong>関数名を書くだけで全員が使える</strong></td>
+            </tr>
+            <tr>
+              <td><strong>計算ルールの改定時</strong></td>
+              <td><strong>100箇所のセルを探して手動修正（地獄）</strong></td>
+              <td><strong>全セルのLET式を修正（ミス多発）</strong></td>
+              <td style="background:#f8fbff;"><strong style="color:#d32f2f;">名前の定義を「1箇所」直すだけで全滅ゼロ</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="method-card" style="border-left:4px solid #d32f2f;">
+        <div class="method-card-title" style="color:#d32f2f;">最大の恐怖：「コピペされた長大数式」のメンテナンス崩壊</div>
+        <p>業務で最も恐ろしいのは、<strong>「複雑な条件判定の式を誰かがシート中にコピペし、半年後に会社の規定（判定基準や料率）が変わったとき」</strong>です。<br>
+        どのセルの式が最新で、どこが古い式のままなのか誰も把握できず、一部のセルで計算が狂って監査や請求トラブルに発展します。<br>
+        <strong>LAMBDAで自作関数化しておけば、ロジックは「名前の定義」の1箇所にしか存在しません。</strong>ルールが変わっても1箇所書き換えるだけで、ブック内の1万セルの計算結果が一瞬で安全に最新化されます。</p>
+      </div>
+    </section>
+
+    <!-- 【2】プロの鉄則：LAMBDAの中に「LET」を入れろ -->
+    <section class="method-section">
+      <h2>【2】プロの鉄則：LAMBDAは「LET」と組み合わせて真価を発揮する</h2>
+      <p>教科書的な解説では <code>=LAMBDA(x, y, x + y)</code> のような簡単な足し算が紹介されますが、そんなものにLAMBDAを使うプロはいません。<br>
+      実務でLAMBDAを使うときの <strong>黄金テンプレート</strong> は、<strong>「LAMBDAの中にLETを入れ子にする構造」</strong>です。</p>
+
+      <div class="method-card" style="border-left:4px solid #1976d2;">
+        <div class="method-card-title method-card-title-blue">現場で使える黄金テンプレート</div>
+        <div class="code-block" data-lang="excel"><span class="code-line">=LAMBDA(引数1, 引数2,</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;LET(</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;step1, 途中計算1,</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;step2, 途中計算2,</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;最終結果</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;)</span>
+<span class="code-line">)</span></div>
+        <p style="margin-top:10px;">引数を受け取った後、内部の <code>LET</code> で多段階のロジックを段階的に計算し、最後にクリーンな結果を返します。この構造を知っておくだけで、どれほど複雑な業務ルールでも破綻せずに自作関数にカプセル化できます。</p>
+      </div>
+    </section>
+
+    <!-- 【3】現場の修羅場を解決する本気の実務例3選 -->
+    <section class="method-section">
+      <h2>【3】現場の修羅場を解決する！本気の実務自作関数3選</h2>
+      <p>「普通の式で書くと現場が崩壊する」リアルな実務課題を解決する自作関数テンプレートです。</p>
+
+      <!-- 実例1 -->
+      <div class="method-card" style="margin-top:24px;">
+        <div class="method-card-title method-card-title-blue">実務例①：【経理・総務】土日祝・年末年始を自動判定する「翌営業日スライド支払期日」関数</div>
+        <p><strong>【現場の課題】</strong><br>
+        「月末締め・翌月末払いだが、支払日が土日祝日なら翌営業日に繰り延べる」という経理ルール。通常は <code>WORKDAY(EOMONTH(請求日, 1), ...)</code> と祝日一覧を組み合わせますが、セルごとに書いていると祝日の参照範囲がずれたり、年末年始の判定ミスで振込期日事故が発生します。</p>
+
+        <p><strong>【名前の定義に登録するLAMBDA数式】</strong>（名前：<code>PAY_DUE</code>）</p>
+        <div class="code-block" data-lang="excel"><span class="code-line">=LAMBDA(inv_date, holiday_range,</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;LET(</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;raw_due, EOMONTH(inv_date, 1),</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WORKDAY(raw_due - 1, 1, holiday_range)</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;)</span>
+<span class="code-line">)</span></div>
+
+        <p><strong>【セルでの使い方】</strong></p>
+        <div class="code-block" data-lang="excel"><span class="code-line">=PAY_DUE(A2, マスタ!$Z$2:$Z$50)</span></div>
+        <p class="code-comment">「請求日」と「祝日マスタ」を渡すだけで、土日祝を自動回避した確定支払日が一瞬で出ます。もし「前営業日に前倒し」に社内規定が変わっても、関数の <code>WORKDAY</code> 部分を1箇所直すだけで全取引先の期日が一括で変わります。</p>
+      </div>
+
+      <!-- 実例2 -->
+      <div class="method-card" style="margin-top:24px;">
+        <div class="method-card-title method-card-title-blue">実務例②：【営業・人事】しきい値判定をカプセル化する「階層型割増ボーナス計算」関数</div>
+        <p><strong>【現場の課題】</strong><br>
+        「売上100万未満は0%、100万以上は3%、300万以上は5%、500万以上は8%」のようなインセンティブ判定。セルに <code>IFS</code> や <code>IF</code> をネストして直接書いていると、<strong>「来期から300万以上の料率を6%に引き上げます」</strong>と言われた瞬間に、過去の全営業シートの式を探して書き換える悪夢が待っています。</p>
+
+        <p><strong>【名前の定義に登録するLAMBDA数式】</strong>（名前：<code>CALC_COMMISSION</code>）</p>
+        <div class="code-block" data-lang="excel"><span class="code-line">=LAMBDA(sales,</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;LET(</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rate, IFS(</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sales &gt;= 5000000, 0.08,</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sales &gt;= 3000000, 0.05,</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sales &gt;= 1000000, 0.03,</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TRUE, 0.00</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;),</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ROUNDDOWN(sales * rate, 0)</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;)</span>
+<span class="code-line">)</span></div>
+
+        <p><strong>【セルでの使い方】</strong></p>
+        <div class="code-block" data-lang="excel"><span class="code-line">=CALC_COMMISSION(C2)</span></div>
+        <p class="code-comment">セル側は「売上金額」を指定するだけ。料率テーブルと端数切り捨て処理が関数のブラックボックスの中に保護されているため、営業担当者が誤って計算式を壊す心配が一切ありません。</p>
+      </div>
+
+      <!-- 実例3 -->
+      <div class="method-card" style="margin-top:24px;">
+        <div class="method-card-title method-card-title-blue">実務例③：【マスタ管理】表記ゆれを一網打尽にする「コード・電話番号クレンジング」関数</div>
+        <p><strong>【現場の課題】</strong><br>
+        外部から届いたデータで、全角数字（１２３）、各種ハイフン（「-」「ー」「−」「―」）、前後の余計な空白が混ざっており、XLOOKUPで照合しても <code>#N/A</code> で全滅するケース。これを治すためにセル上で <code>TRIM(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(ASC(A2)...</code> と書き連ねると、式が長すぎて画面からはみ出します。</p>
+
+        <p><strong>【名前の定義に登録するLAMBDA数式】</strong>（名前：<code>CLEAN_CODE</code>）</p>
+        <div class="code-block" data-lang="excel"><span class="code-line">=LAMBDA(raw_text,</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;LET(</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s1, TRIM(ASC(raw_text)),</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s2, SUBSTITUTE(s1, "ー", "-"),</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s3, SUBSTITUTE(s2, "−", "-"),</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s4, SUBSTITUTE(s3, "―", "-"),</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s5, SUBSTITUTE(s4, " ", ""),</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s5</span>
+<span class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;)</span>
+<span class="code-line">)</span></div>
+
+        <p><strong>【セルでの使い方】</strong></p>
+        <div class="code-block" data-lang="excel"><span class="code-line">=CLEAN_CODE(B2)</span></div>
+        <p class="code-comment">全角の半角化、余白除去、全種類の全角ハイフンの一括置換がこの1単語で完了します。誰でも直感的に使えるため、データ受取時の清掃作業が一瞬で終わります。</p>
+      </div>
+    </section>
+
+    <!-- 【4】超重要：VBA禁止環境で全社員に自作関数を配る裏ワザ -->
+    <section class="method-section">
+      <h2>【4】VBA禁止環境の裏ワザ：全社員に関数を配布する「シートコピー術」</h2>
+      <p>「自分で作ったLAMBDA関数を、隣の同僚や他部署の人にも使わせたい。でもVBAのマクロ有効ブック（.xlsm）やアドイン（.xlam）は会社のセキュリティで禁止されている……」<br>
+      実は、<strong>LAMBDA関数にはVBAにはない驚異的な配布の仕組み</strong>が存在します。</p>
+
+      <div class="method-card" style="border-left:4px solid #2e7d32;">
+        <div class="method-card-title" style="color:#2e7d32;">💡 シートをコピーするだけで「名前の定義」ごと複製される！</div>
+        <ol style="margin:0;padding-left:1.2rem;line-height:2;">
+          <li>自作LAMBDAを登録したブックに、案内用のシート（「使い方」など）を1枚作っておきます。</li>
+          <li>同僚のブックにそのシートを <strong>右クリック &rarr; 「移動またはコピー」 &rarr; 「コピーを作成」</strong> で貼り付けます。</li>
+          <li><strong>たったこれだけで、相手のブックの「名前の定義」にもLAMBDA関数が丸ごと自動登録されます！</strong></li>
+        </ol>
+        <p style="margin-top:10px;">マクロ警告（黄色のバー）も出ず、通常の <code>.xlsx</code> 形式のまま安全にオリジナル関数を全社配布できるのです。これは情シスやセキュリティ部門が最も喜ぶ運用の知恵です。</p>
+      </div>
+    </section>
+
+    <!-- 【5】失敗しない3ステップ登録手順 -->
+    <section class="method-section">
+      <h2>【5】失敗しない！セル検証から「名前の定義」への3ステップ</h2>
+      <p>いきなり「名前の定義」に関数を書くと、括弧の閉じ忘れなどのシンタックスエラーで修正が困難になります。必ず以下の3段階を踏むのがプロの鉄則です。</p>
+
+      <ol class="step-list">
+        <li>
+          <strong>ステップ①：セル上でまず通常の数式をテストする</strong><br>
+          いきなりLAMBDAにせず、普通のセルで <code>=LET(...)</code> が期待通りの数値を返すか確認します。
+        </li>
+        <li>
+          <strong>ステップ②：セル上で <code>=LAMBDA(...)(テスト値)</code> で動かす</strong><br>
+          式の外側を <code>LAMBDA(引数, ...)</code> で囲み、末尾に <code>(A2)</code> のようにカッコをつけてセルに入力します。この段階でエラーが出なければロジックは完璧です。
+        </li>
+        <li>
+          <strong>ステップ③：「名前の定義」に式を移す</strong><br>
+          「数式」タブ &rarr; 「名前の定義」を開き：
+          <ul>
+            <li><strong>名前：</strong> 呼び出したい関数名（例: <code>PAY_DUE</code>）</li>
+            <li><strong>範囲：</strong> 「ブック」（全シートで有効化）</li>
+            <li><strong>参照範囲：</strong> ステップ②の末尾のカッコを外した <code>=LAMBDA(...)</code> を貼り付けます。</li>
+          </ul>
+        </li>
+      </ol>
+    </section>
+
+    <!-- まとめ -->
+    <section class="method-section">
+      <h2>📋 まとめ：LAMBDAを現場に導入する真の価値</h2>
+      <div class="xdemo-note-good">
+        <ul style="margin:0;padding-left:1.2rem;line-height:2;">
+          <li>✅ <strong>些細な計算には使わない：</strong>簡単な式は普通の関数で十分。LAMBDAは「セルに置くと長すぎる会社ルール」のためにある</li>
+          <li>✅ <strong>黄金比は「LAMBDA × LET」：</strong>多段階の計算ステップを変数化して美しく整理する</li>
+          <li>✅ <strong>中央集権メンテナンス：</strong>式をシート中にコピペさせない。「名前の定義」1箇所を直せば全セル即座に同期する</li>
+          <li>✅ <strong>VBAフリーの安全資産：</strong>マクロ禁止環境でも、シートコピーだけで同僚や他部署へ安全に関数を配布できる</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 関連記事 -->
+    <section class="related-articles-section" style="margin-top:40px;border-top:2px dashed #ccc;padding-top:20px;">
+      <h2><span class="icon">🔗</span> 関連するモダン関数記事</h2>
+      <div style="background:#f5f8ff;padding:15px;border-radius:8px;margin-top:15px;">
+        <ul style="line-height:1.8;">
+          <li><a href="article_let.html">LET関数で可読性＆速度UP — 数式内で変数を使う基本</a></li>
+          <li><a href="article_let_if.html">LET × IFで長大な条件分岐をスッキリ整理する</a></li>
+          <li><a href="article_tocol_torow.html">TOCOL・TOROW関数完全ガイド — 複数行・複数列を1列／1行に一括整列</a></li>
+          <li><a href="../../index.html#functions">📐 関数テクニック一覧へ戻る</a></li>
+        </ul>
+      </div>
+    </section>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/lambda-function-bd212d27-1cd1-4321-a34a-ccbf254b8b67" rel="noopener" target="_blank">LAMBDA関数公式説明</a><a href="../../samples/index.html">サンプルデータ</a></p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+  </div>
+  <p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+<script src="../../script.js?v=20261007"></script>
+</body>
+</html>

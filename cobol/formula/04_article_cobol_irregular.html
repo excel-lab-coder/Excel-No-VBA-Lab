@@ -28,7 +28,7 @@
   });
 </script>
 <meta content="行数がバラバラな不規則明細を持つCOBOL帳票を、Excel数式だけで正規化展開する完結編。行種判定と親情報の紐付けを扱います。 エクセルでCOBOL帳票・固定長データを整形したい方向け。" name="description">
-<meta content="COBOL不規則明細 正規化, 行数 バラバラ 展開 数式, Excel関数 帳票整形 完結, VBA不要 COBOL, 超絶技巧 Excel, エクセル COBOL, エクセル COBOL帳票, エクセル 固定長データ, Excel COBOL, Excel COBOL帳票 整形, COBOL帳票 Excel関数, COBOL帳票 Power Query, 固定長データ エクセル, MIDB エクセル" name="keywords">
+<meta content="COBOL不規則明細 正規化, 行数 バラバラ 展開 数式, Excel関数 帳票整形 完結, VBA不要 COBOL, 複合関数 Excel, エクセル COBOL, エクセル COBOL帳票, エクセル 固定長データ, Excel COBOL, Excel COBOL帳票 整形, COBOL帳票 Excel関数, COBOL帳票 Power Query, 固定長データ エクセル, MIDB エクセル" name="keywords">
 <meta content="【不規則明細・完結編】行数がバラバラなデータの正規化展開｜Excel &times; No VBA Lab" property="og:title">
 <meta content="行数がバラバラな不規則明細を持つCOBOL帳票を、Excel数式だけで正規化展開する完結編。行種判定と親情報の紐付けを扱います。" property="og:description">
 <meta content="article" property="og:type">
@@ -36,7 +36,7 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/04_article_cobol_irregular.html" rel="canonical">
-<link href="../../common.css?v=10" rel="stylesheet">
+<link href="../../common.css?v=20261007" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -261,7 +261,7 @@
 <div class="article-header">
 <div class="article-meta">
 <span class="badge badge-maniac" style="background-color:#455a64;color:#fff;">難易度：&starf;&starf;&starf;&starf;&star;（実践応用）</span>
-<span class="badge badge-all">全バージョン対応あり</span>
+<span class="badge badge-all">Excel 2016以降対応あり</span>
 <span class="badge badge-maniac">COBOL/マニアック</span>
 <span class="article-date">更新日: 2026-07-12</span>
 </div>
@@ -272,7 +272,7 @@
 <h2 id="article-context-title">この記事を始める前に</h2>
 <ul>
 <li><strong>記事タイプ：</strong>設計事例（不規則な明細行数への適用確認）</li>
-<li><strong>先に読む：</strong><a href="01_article_cobol_basic.html">基本編</a> → <a href="02_article_cobol_advanced.html">応用編</a> → <a href="03_article_cobol_expert.html">超絶技巧編</a></li>
+<li><strong>先に読む：</strong><a href="01_article_cobol_basic.html">基本編</a> → <a href="02_article_cobol_advanced.html">応用編</a> → <a href="03_article_cobol_expert.html">複合関数編</a></li>
 <li><strong>必要な前提：</strong>固定長とバイト位置、親子構造、行種判定、フィルダウン、配列による抽出</li>
 <li><strong>読者が決めること：</strong>ヘッダー・明細・不要行の条件、1明細の行構成、各項目のバイト位置</li>
 <li><strong>そのまま使える部分／要調整：</strong>行種判定から正規化する流れ／判定文字・バイト位置・マルチラインの結合規則</li>
@@ -296,7 +296,7 @@
       ========================================================== -->
 <section class="goal-section" id="sec-intro">
 <h2><span class="icon">💡</span> 伝票ごとに明細行数が違う帳票の攻略</h2>
-<p>前回の<a href="03_article_cobol_expert.html">超絶技巧編</a>では、「ヘッダー行（親情報）を明細行に紐付けるフィルダウン」と「フラグ＋抽出＋MIDB分解」のパイプラインを学びました。</p>
+<p>前回の<a href="03_article_cobol_expert.html">複合関数編</a>では、「ヘッダー行（親情報）を明細行に紐付けるフィルダウン」と「フラグ＋抽出＋MIDB分解」のパイプラインを学びました。</p>
 <p>あの記事で紹介したデータは、各伝票の明細行数がたまたま揃っていました。本記事では、伝票ごとに明細件数が異なる場合でも、同じ行種判定を使えることをサンプルで確認します。</p>
 <div class="xdemo-note-good">
 <strong>このページのポイント</strong><br>
@@ -309,7 +309,7 @@
       ========================================================== -->
 <section class="method-section" id="sec-data">
 <h2>【2】今回の帳票データ</h2>
-<p>以下のようなCOBOL帳票を想定します。第一商事は3件、第二物産は2件、第三工業は4件と、<strong>伝票ごとに明細行の件数がバラバラ</strong>です。超絶技巧編と同じフォーマット・同じバイト位置ですが、件数だけが異なります。</p>
+<p>以下のようなCOBOL帳票を想定します。第一商事は3件、第二物産は2件、第三工業は4件と、<strong>伝票ごとに明細行の件数がバラバラ</strong>です。複合関数編と同じフォーマット・同じバイト位置ですが、件数だけが異なります。</p>
 <div class="code-readonly" data-lang="テキスト">
 <span class="code-line">■伝票 9001 ㈱第一商事</span>
 <span class="code-line">-------------------------------</span>
@@ -403,7 +403,7 @@
 <span class="code-line">=FILTER(貼付シート!B2:C50000, 貼付シート!A2:A50000&lt;&gt;"")</span>
 </div>
 <p class="text-sm-gray">50000行は例です。実データの最大行に合わせて調整するか、Excelテーブルの構造化参照を使ってください。</p>
-<p class="code-label-good">全バージョン対応（INDEX + SMALL + IFERROR）</p>
+<p class="code-label-good">Excel 2016以降対応（INDEX + SMALL + IFERROR）</p>
 <p class="code-label">抽出シート!A2（元データ）</p>
 <div class="code-block" data-lang="excel">
 <span class="code-line">=IFERROR(INDEX(貼付シート!B:B, SMALL(IF(貼付シート!A$2:A$50000&lt;&gt;"", ROW(貼付シート!A$2:A$50000)), ROW()-1)), "")</span>
@@ -437,7 +437,7 @@
 <!-- Step 3 -->
 <div class="attack-box">
 <h3 class="attack-title">Step 3 &horbar; MIDB分解：固定長データを列に分ける</h3>
-<p>抽出シートのデータをMIDBで切り出して、最終的な正規化テーブルを作ります。ここも超絶技巧編と同じ手法です。</p>
+<p>抽出シートのデータをMIDBで切り出して、最終的な正規化テーブルを作ります。ここも複合関数編と同じ手法です。</p>
 <p class="code-label">C列：取引先</p>
 <div class="code-block" data-lang="excel">
 <span class="code-line">=TRIM(MIDB(B2, 13, 20))</span>
@@ -455,7 +455,7 @@
 <span class="code-line">=TRIM(MIDB(A2, 25, 8))*1</span>
 </div>
 <div class="code-readonly" data-lang="補足">
-<span class="code-line">※ バイト位置は帳票仕様に合わせて調整してください。超絶技巧編と同一の位置指定です。</span>
+<span class="code-line">※ バイト位置は帳票仕様に合わせて調整してください。複合関数編と同一の位置指定です。</span>
 </div>
 </div>
 <!-- 最終結果 -->
@@ -493,12 +493,12 @@
       ========================================================== -->
 <section class="method-section" id="sec-speed">
 <h2>【5】速度面の注意</h2>
-<p>超絶技巧編で解説した速度面の注意はここでも同様に当てはまります。</p>
+<p>複合関数編で解説した速度面の注意はここでも同様に当てはまります。</p>
 <p>COBOL帳票は貼付シートの行数が10万〜30万行になることがあります。全行にMIDB分解を配置すると計算対象が増えるため、<strong>貼付シートではフラグとフィルダウンを行い、MIDB分解は抽出シート（明細行だけに絞った後）で実行する</strong>構成を基本とします。</p>
 <p>例えば30万行の帳票で明細行が5,000行なら、MIDB分解の対象が60分の1に削減されます。この設計思想がパイプライン方式の速度上の利点です。</p>
 <div class="xdemo-note-info">
 <strong>速度チューニングの詳細</strong><br>
-          MATCH方式による参照や、対応環境でのSCAN＋FILTERによる構成例については<a href="03_article_cobol_expert.html">超絶技巧編</a>を参照してください。
+          MATCH方式による参照や、対応環境でのSCAN＋FILTERによる構成例については<a href="03_article_cobol_expert.html">複合関数編</a>を参照してください。
         </div>
 </section>
 <!-- ==========================================================
@@ -548,7 +548,7 @@
 <strong>シリーズ全体の振り返り</strong><br>
 <strong><a href="01_article_cobol_basic.html">【基本編】MIDB切り出し・浄化・型変換</a></strong> &hellip; 固定長データの基本的な切り出しと型変換のテンプレ。<br>
 <strong><a href="02_article_cobol_advanced.html">【応用編】不要行の除外と横展開</a></strong> &hellip; ROWフラグによる行フィルタリングと固定行数の横展開。<br>
-<strong><a href="03_article_cobol_expert.html">【超絶技巧編】ヘッダー紐付け・フィルダウン</a></strong> &hellip; 親情報のフィルダウンと抽出シートでのMIDB分解。速度チューニング。<br>
+<strong><a href="03_article_cobol_expert.html">【複合関数編】ヘッダー紐付け・フィルダウン</a></strong> &hellip; 親情報のフィルダウンと抽出シートでのMIDB分解。速度チューニング。<br>
 <strong>【不規則明細・完結編】不規則明細の正規化（本ページ）</strong> &hellip; 行数バラバラでも同じパイプラインで正規化できることの確認。マルチラインレコードへの対処の考え方。<br>
 <strong><a href="05_article_cobol_qr_bridge.html">【補助解説】半角QRで別システムへ入力する実践編</a></strong> &hellip; 整形済みのCOBOL帳票から対象者を抽出し、半角コード・数値だけをQR化して入力省力化につなげる橋渡し。
         </div>
@@ -560,7 +560,7 @@
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
     <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
-    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
   </div>
@@ -577,7 +577,6 @@
   </p>
 </footer>
 
-<script src="../../script.js?v=8"></script>
+<script src="../../script.js?v=20261007"></script>
 </body>
 </html>
-

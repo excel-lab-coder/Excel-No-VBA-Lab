@@ -13,15 +13,15 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="ExcelのLET＋IFERROR組み合わせで、重い関数を二重記述せずエラー処理する効率的な書き方を解説。" name="description">
-<meta content="LET IFERROR Excel, エラー処理 効率, IFERROR 二重計算 回避, LET 関数 応用, Excel 2021" name="keywords">
+<meta content="LETでSORT・SORTBYの結果を変数化し、重複計算を減らす方法。Excel 2021対応のINDEX・SEQUENCEで上位件数を抽出し、該当0件の分岐も扱います。" name="description">
+<meta content="LET SORTBY Excel, 重複計算 削減, FILTER 該当なし, INDEX SEQUENCE 上位抽出, Excel 2021" name="keywords">
 <meta content="LET関数 深掘り②：SORT/SORTBY の重い処理を変数化（2021～）｜Excel &times; No VBA Lab" property="og:title">
-<meta content="ExcelのLET＋IFERROR組み合わせで、重い関数を二重記述せずエラー処理する効率的な書き方を解説。" property="og:description">
+<meta content="LETでSORT・SORTBYの結果を変数化して再利用する方法。2021対応の上位抽出と、FILTERの該当0件の分岐を解説します。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_let_iferror.html" rel="canonical">
-<link href="../../common.css?v=10" rel="stylesheet">
+<link href="../../common.css?v=20261007" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -37,7 +37,7 @@
     "@type": "Person",
     "name": "Excel × No VBA Lab"
   },
-  "description": "ExcelのLET＋IFERROR組み合わせで、重い関数を二重記述せずエラー処理する効率的な書き方を解説。"
+  "description": "LETでSORT・SORTBYの結果を変数化して再利用する方法。2021対応の上位抽出と、FILTERの該当0件の分岐を解説します。"
 }</script>
 <script type="application/ld+json">{
   "@context": "https://schema.org",
@@ -110,7 +110,7 @@
 <span class="code-line"></span>
 <span class="code-line">... D4, E4 も同様（計6セルで SORTBY が6回）</span>
 </div>
-<p class="code-comment">999行のデータを降順ソートする処理が <strong>6回</strong> 実行されます。データが数万行になるとフリーズ級の遅さに。</p>
+<p class="code-comment">同じ範囲のソート式が6セルにあります。処理時間は環境とデータに左右されるため、同じブックで再計算時間を比較してください。</p>
 </section>
 <!-- ===== LETで改善 ===== -->
 <section class="method-section">
@@ -126,7 +126,7 @@
 <p class="code-comment">SORTBYは <strong>1回だけ</strong> 実行。変数「データ」にソート済み配列が入り、INDEX + SEQUENCE で上位3行&times;3列を切り出してスピル表示します。</p>
 <div class="xdemo-note-perf">
 <strong>⚡ 効果</strong><br>
-        SORTBY 6回 &rarr; 1回。ソート処理は O(n log n) の計算量を持つため、データ量が増えるほど「回数削減」の恩恵が大きくなります。1万行なら体感で明確な差が出ます。
+        ソート式を6セルから1つのスピル式へまとめます。改善量はExcelの版、データ、他の数式やPC性能で変わるため、実測して判断します。
       </div>
 </section>
 <!-- ===== FILTER + SORT の合わせ技 ===== -->
@@ -136,16 +136,21 @@
 <div class="code-block" data-lang="excel">
 <span class="code-line">=LET(</span>
 <span class="code-line">    カテゴリ, "食品",</span>
-<span class="code-line">    抽出, FILTER(A2:D1000, A2:A1000=カテゴリ, "該当なし"),</span>
-<span class="code-line">    並替, SORTBY(抽出, INDEX(抽出,,4), -1),</span>
-<span class="code-line">    上位5, TAKE(並替, 5),</span>
-<span class="code-line">    上位5</span>
+<span class="code-line">    条件, A2:A1000=カテゴリ,</span>
+<span class="code-line">    件数, SUM(--条件),</span>
+<span class="code-line">    IF(件数=0, "該当なし",</span>
+<span class="code-line">      LET(</span>
+<span class="code-line">        抽出, FILTER(A2:D1000, 条件),</span>
+<span class="code-line">        並替, SORTBY(抽出, INDEX(抽出,,4), -1),</span>
+<span class="code-line">        INDEX(並替, SEQUENCE(MIN(5,件数)), SEQUENCE(1,COLUMNS(並替)))</span>
+<span class="code-line">      )</span>
+<span class="code-line">    )</span>
 <span class="code-line">  )</span>
 </div>
-<p class="code-comment">処理の流れが一目でわかります：カテゴリ定義 &rarr; FILTER で絞り込み &rarr; SORTBY で並べ替え &rarr; TAKE で上位5件だけ切り出し。各ステップが変数名になっているのでデバッグも容易です。</p>
+<p class="code-comment">先に件数を数え、0件なら並べ替えず「該当なし」を表示します。1～4件なら存在する行だけ、5件以上なら上位5件を返します。INDEXとSEQUENCEを使うためExcel 2021でも利用できます。並べ替えるD列は数値、A列はカテゴリ文字列を前提にしています。入力範囲にエラー値がある場合は、元データを確認してください。</p>
 <div class="xdemo-note">
 <strong>🔧 デバッグのコツ</strong><br>
-        途中経過を確認したいときは、最後の行を見たい変数名に差し替えるだけ。例えば「上位5」の代わりに「抽出」と書けば、FILTER の結果だけがスピル表示されます。ステップ実行のような感覚で調整できるのが LET の隠れた利点です。
+        途中経過を確認したいときは、内側のLETの最後のINDEX式を「抽出」または「並替」に差し替えます。0件の分岐を残したまま各段階の結果を確認できます。
       </div>
 </section>
 <!-- ===== 作業シートとの使い分け ===== -->
@@ -164,8 +169,8 @@
 </div>
 </div>
 <div class="scenario-box">
-<h4>ケース②：データが10万行を超えるような大規模処理</h4>
-<p>LET内の SORTBY でも10万行のソートは重いです。そもそも関数での処理限界に近づくため、Power Query（パワークエリ）でETL処理として事前にソート・フィルターを済ませ、結果テーブルをシートに出力するほうが適切です。</p>
+<h4>ケース②：再計算の待ち時間が長い大規模処理</h4>
+<p>一律の行数で関数の限界は決まりません。実測した待ち時間が業務に支障を出す場合や、更新時だけ整形すればよい場合は、Power Queryで事前にソート・フィルターを済ませる構成も比較します。</p>
 <div class="flow-diagram">
 <span class="flow-step">元データ</span>
 <span class="flow-arrow">&rarr;</span>
@@ -192,21 +197,29 @@
 <tr><td>1つのセル内で同じソート結果を複数回参照</td><td class="highlight-cell">LET</td><td>変数化で重複評価を排除。最もシンプル</td></tr>
 <tr><td>複数セル・複数シートから同じソート結果を参照</td><td class="highlight-cell">作業シート</td><td>LETの変数はセル外から参照不可。作業シートに1回スピルが正解</td></tr>
 <tr><td>行ごとに同じSORT/FILTERが入る数式</td><td class="highlight-cell">作業シート</td><td>LETでは行間の重複を防げない</td></tr>
-<tr><td>10万行超のデータのソート・フィルター</td><td class="highlight-cell">Power Query</td><td>関数の処理限界。ETLツールで事前処理すべき規模</td></tr>
-<tr><td>FILTER &rarr; SORT &rarr; TAKE のパイプライン処理</td><td class="highlight-cell">LET（結果が1箇所なら）</td><td>各ステップに名前がつき、可読性・デバッグ性が最高</td></tr>
+<tr><td>再計算時間が業務に支障を出す処理</td><td class="highlight-cell">Power Queryも比較</td><td>更新時だけ加工する構成と、再計算で追従する構成を実測比較</td></tr>
+<tr><td>FILTER &rarr; SORTBY &rarr; INDEXのパイプライン処理</td><td class="highlight-cell">LET（結果が1箇所なら）</td><td>0件分岐と途中結果を名前で確認できる</td></tr>
 </tbody>
 </table></div>
 </section>
 <!-- ===== LAMBDA との連携予告 ===== -->
 <section class="method-section">
-<h3>発展：LET + LAMBDA でさらに強力に</h3>
-<p>LET の変数にはスカラー値や配列だけでなく、LAMBDA（自作関数）も格納できます。これにより「ソートのキーを動的に切り替える」「フィルター条件を変数として渡す」といった、より柔軟な構成が可能になります。</p>
+<h3>発展：セルの値で並べ替え条件を切り替える</h3>
+<p>G1で並べ替え列、G2でカテゴリを選ぶ例です。Excel 2021対応の関数だけで構成しています。G2が空欄のときは条件の入力を求め、該当0件なら並べ替えを実行しません。</p>
 <div class="code-block" data-lang="excel">
 <span class="code-line">=LET(</span>
 <span class="code-line">    ソートキー列, IF(G1="金額", 4, 3),</span>
-<span class="code-line">    データ, FILTER(A2:D1000, A2:A1000=G2),</span>
-<span class="code-line">    並替, SORTBY(データ, INDEX(データ,,ソートキー列), -1),</span>
-<span class="code-line">    TAKE(並替, 10)</span>
+<span class="code-line">    条件, A2:A1000=G2,</span>
+<span class="code-line">    件数, SUM(--条件),</span>
+<span class="code-line">    IF(G2="", "カテゴリを入力",</span>
+<span class="code-line">      IF(件数=0, "該当なし",</span>
+<span class="code-line">        LET(</span>
+<span class="code-line">          データ, FILTER(A2:D1000, 条件),</span>
+<span class="code-line">          並替, SORTBY(データ, INDEX(データ,,ソートキー列), -1),</span>
+<span class="code-line">          INDEX(並替, SEQUENCE(MIN(10,件数)), SEQUENCE(1,COLUMNS(並替)))</span>
+<span class="code-line">        )</span>
+<span class="code-line">      )</span>
+<span class="code-line">    )</span>
 <span class="code-line">  )</span>
 </div>
 <p class="code-comment">セルG1に「金額」と入力すればD列で、それ以外ならC列でソート。G2でカテゴリを切り替えられるインタラクティブなダッシュボードを関数だけで構築できます。</p>
@@ -214,7 +227,7 @@
 <!-- ===== 旧バージョン ===== -->
 <section class="legacy-section">
 <h3>旧バージョンでの代替法</h3>
-<p>LET も SORT / SORTBY / FILTER も使えない環境（Excel 2019以前）では、そもそもスピル配列が存在しません。作業シートに LARGE / SMALL + INDEX / MATCH で疑似ランキングを構築するか、Power Query でソート済みテーブルを出力する方式が現実的な選択肢です。Excel 2016以前では Power Query がアドイン扱いの場合もあるため、環境確認が必要です。</p>
+<p>LET・SORTBY・FILTERが使えない買い切り版Excel 2019以前では、作業シートにLARGE / SMALL + INDEX / MATCHでランキングを構築するか、Power Queryでソート済みテーブルを出力します。Windows版Excel 2016以降にはPower Queryが標準搭載されていますが、Mac版や古い版では機能差があります。</p>
 </section>
 <div class="series-nav" style="margin-top:40px; padding: 20px; background: #f0f4f8; border-radius: 8px;">
 <h4>LET関数 深掘りシリーズ</h4>
@@ -231,7 +244,7 @@
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
     <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
-    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
   </div>
@@ -248,7 +261,6 @@
   </p>
 </footer>
 
-<script src="../../script.js?v=8"></script>
+<script src="../../script.js?v=20261007"></script>
 </body>
 </html>
-

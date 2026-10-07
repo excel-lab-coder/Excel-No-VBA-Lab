@@ -5,83 +5,6 @@
   'use strict';
 
   var INDEX_STATE_KEY = 'excel_no_vba_lab_index_state_v1';
-  var STUDY_SURVEY_URL = 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAAO__c992TlUQzE1T1ozS1lZUVk0Q05YU1Y3RE9EUVRHMS4u';
-
-  function initStudySurveyNotice() {
-    if (document.querySelector('.site-survey-notice')) return;
-
-    var style = document.createElement('style');
-    style.setAttribute('data-site-survey-styles', '');
-    style.textContent = [
-      '.site-survey-notice{position:relative;z-index:140;width:100%;background:linear-gradient(90deg,#e8f6ee 0%,#f5fbf7 55%,#eef7ff 100%);border-bottom:1px solid #b7d8c4;color:#244535;font-family:inherit;box-shadow:0 2px 8px rgba(33,115,70,.08)}',
-      '.site-survey-notice__inner{width:min(100%,1200px);margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:13px}',
-      '.site-survey-notice__badge{display:inline-flex;align-items:center;flex:0 0 auto;padding:4px 9px;border-radius:999px;background:#217346;color:#fff;font-size:.72rem;font-weight:800;line-height:1.35;letter-spacing:.03em;white-space:nowrap}',
-      '.site-survey-notice__copy{display:flex;align-items:baseline;flex-wrap:wrap;gap:3px 9px;min-width:0;line-height:1.45}',
-      '.site-survey-notice__title{color:#173f2a;font-size:.9rem;font-weight:800}',
-      '.site-survey-notice__meta{color:#557064;font-size:.76rem}',
-      '.site-survey-notice__button{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;min-height:36px;margin-left:auto;padding:7px 14px;border:1px solid #217346;border-radius:7px;background:#fff;color:#185c37;font-size:.8rem;font-weight:800;line-height:1.3;text-decoration:none;white-space:nowrap;box-shadow:0 1px 4px rgba(33,115,70,.12);transition:background .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease}',
-      '.site-survey-notice__button:hover{background:#217346;color:#fff;text-decoration:none;transform:translateY(-1px);box-shadow:0 3px 8px rgba(33,115,70,.2)}',
-      '.site-survey-notice__button:focus-visible{outline:3px solid rgba(33,115,70,.3);outline-offset:2px}',
-      '@media(max-width:640px){.site-survey-notice__inner{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 10px;padding:9px 12px}.site-survey-notice__badge{grid-column:1;justify-self:start;font-size:.68rem}.site-survey-notice__copy{grid-column:1;display:block}.site-survey-notice__title{display:block;font-size:.8rem}.site-survey-notice__meta{display:block;margin-top:1px;font-size:.68rem}.site-survey-notice__button{grid-column:2;grid-row:1 / 3;min-height:42px;margin-left:0;padding:8px 12px;font-size:.76rem}}',
-      '@media(max-width:390px){.site-survey-notice__meta{display:none}.site-survey-notice__button{grid-row:1 / 3;padding-inline:10px}}',
-      '@media print{.site-survey-notice{display:none!important}}'
-    ].join('');
-    document.head.appendChild(style);
-
-    var notice = document.createElement('aside');
-    notice.className = 'site-survey-notice';
-    notice.setAttribute('aria-label', 'オンラインExcel勉強会アンケートのお知らせ');
-
-    var inner = document.createElement('div');
-    inner.className = 'site-survey-notice__inner';
-
-    var badge = document.createElement('span');
-    badge.className = 'site-survey-notice__badge';
-    badge.textContent = '📣 アンケート実施中';
-
-    var copy = document.createElement('div');
-    copy.className = 'site-survey-notice__copy';
-
-    var title = document.createElement('strong');
-    title.className = 'site-survey-notice__title';
-    title.textContent = '無料のオンラインExcel勉強会について';
-
-    var meta = document.createElement('span');
-    meta.className = 'site-survey-notice__meta';
-    meta.textContent = '匿名・約2～3分。皆さまの声をお聞かせください。';
-
-    var link = document.createElement('a');
-    link.className = 'site-survey-notice__button';
-    link.href = STUDY_SURVEY_URL;
-    link.target = '_blank';
-    link.rel = 'noopener';
-    link.textContent = '回答する →';
-    link.setAttribute('aria-label', 'オンラインExcel勉強会アンケートに回答する（Microsoft Forms、新しいタブ）');
-    link.addEventListener('click', function () {
-      if (typeof window.gtag === 'function') {
-        window.gtag('event', 'study_survey_open', {
-          event_category: 'study_survey',
-          event_label: location.pathname,
-          link_location: 'sitewide_notice'
-        });
-      }
-    });
-
-    copy.appendChild(title);
-    copy.appendChild(meta);
-    inner.appendChild(badge);
-    inner.appendChild(copy);
-    inner.appendChild(link);
-    notice.appendChild(inner);
-
-    var header = document.querySelector('.site-header, .tool-header');
-    if (header && header.parentNode) {
-      header.parentNode.insertBefore(notice, header.nextSibling);
-    } else {
-      document.body.insertBefore(notice, document.body.firstChild);
-    }
-  }
-
   function getRareTechConfig() {
     return (window.ExcelLab && window.ExcelLab.rareTech) || window.RARETECH_CONFIG || null;
   }
@@ -368,33 +291,7 @@
   }
 
   function updateRarityBadges() {
-    var cfg = getRareTechConfig();
-    if (!cfg || typeof cfg !== 'object') return;
-
-    var badges = document.querySelectorAll('[data-rare-id]');
-    badges.forEach(function (badge) {
-      var id = badge.getAttribute('data-rare-id');
-      var rarity = cfg[id];
-
-      if (!rarity || !rarity.rarity) {
-        badge.style.display = 'none';
-        return;
-      }
-
-      var text = rarity.rarity + '人に1人';
-      if (badge.classList.contains('tag-rare')) {
-        text = '💎 レアテク ' + text;
-      } else if (badge.classList.contains('rank-impact')) {
-        text = '🔥 ' + text;
-      } else if (badge.classList.contains('rank-combined')) {
-        text = (badge.getAttribute('data-rare-prefix') || '🔥💎') + ' ' + text;
-      } else {
-        text = '💎 レアテク ' + text;
-      }
-
-      badge.textContent = text;
-      badge.style.display = 'inline-block';
-    });
+    document.querySelectorAll('[data-rare-id]').forEach(function (badge) { badge.remove(); });
   }
 
   window.switchRankingTab = function (btn, tabId) {
@@ -627,7 +524,7 @@
   }
 
   var ARTICLE_FEEDBACK_FORM = {
-    action: 'https://docs.google.com/forms/d/e/1FAIpQLSdvSi9yzHNaPpu1HCSbSeP4qJwEfY-g633dnh_SD5Xs9kMmdw/formResponse',
+    viewUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSdvSi9yzHNaPpu1HCSbSeP4qJwEfY-g633dnh_SD5Xs9kMmdw/viewform',
     nameEntry: 'entry.1002031830',
     emailEntry: 'entry.356247462',
     categoryEntry: 'entry.1026400745',
@@ -657,26 +554,8 @@
     }
   };
 
-  function appendFeedbackField(form, name, value) {
-    var input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = name;
-    input.value = value;
-    form.appendChild(input);
-  }
-
-  function submitArticleComment(meta, reactionId, comment, allowPublish) {
+  function buildArticleCommentUrl(meta, reactionId, comment, allowPublish) {
     var reaction = ARTICLE_FEEDBACK_REACTIONS[reactionId] || ARTICLE_FEEDBACK_REACTIONS.question;
-    var frameName = 'article-feedback-submit-frame';
-    var frame = document.querySelector('iframe[name="' + frameName + '"]');
-
-    if (!frame) {
-      frame = document.createElement('iframe');
-      frame.name = frameName;
-      frame.title = '記事フィードバック送信先';
-      frame.hidden = true;
-      document.body.appendChild(frame);
-    }
 
     var message = [
       '【記事末尾の匿名質問・コメント】',
@@ -688,22 +567,13 @@
       comment
     ].join('\n');
 
-    var form = document.createElement('form');
-    form.method = 'POST';
-    form.action = ARTICLE_FEEDBACK_FORM.action;
-    form.target = frameName;
-    form.hidden = true;
-
-    appendFeedbackField(form, ARTICLE_FEEDBACK_FORM.nameEntry, '匿名フィードバック');
-    appendFeedbackField(form, ARTICLE_FEEDBACK_FORM.emailEntry, 'anonymous-feedback@example.invalid');
-    appendFeedbackField(form, ARTICLE_FEEDBACK_FORM.categoryEntry, reaction.category);
-    appendFeedbackField(form, ARTICLE_FEEDBACK_FORM.messageEntry, message);
-    appendFeedbackField(form, 'fvv', '1');
-    appendFeedbackField(form, 'pageHistory', '0');
-
-    document.body.appendChild(form);
-    form.submit();
-    setTimeout(function () { form.remove(); }, 1200);
+    var url = new URL(ARTICLE_FEEDBACK_FORM.viewUrl);
+    url.searchParams.set('usp', 'pp_url');
+    url.searchParams.set(ARTICLE_FEEDBACK_FORM.nameEntry, '匿名フィードバック');
+    url.searchParams.set(ARTICLE_FEEDBACK_FORM.emailEntry, 'anonymous-feedback@example.invalid');
+    url.searchParams.set(ARTICLE_FEEDBACK_FORM.categoryEntry, reaction.category);
+    url.searchParams.set(ARTICLE_FEEDBACK_FORM.messageEntry, message);
+    return url.href;
   }
 
   function initArticleFeedback() {
@@ -713,9 +583,7 @@
 
     var reactionStorageKey = 'excel_no_vba_lab_feedback_reaction_' + meta.path;
     var legacyStorageKey = 'excel_no_vba_lab_helpful_' + meta.path;
-    var commentStorageKey = 'excel_no_vba_lab_feedback_comment_' + meta.path;
     var selectedReaction = safeStorageGet(reactionStorageKey);
-    var commentAlreadySent = safeStorageGet(commentStorageKey) === '1';
 
     if (!ARTICLE_FEEDBACK_REACTIONS[selectedReaction]) {
       selectedReaction = safeStorageGet(legacyStorageKey) === '1' ? 'helpful' : '';
@@ -732,7 +600,7 @@
     heading.textContent = '気軽に質問・コメントしてください';
 
     var note = document.createElement('p');
-    note.textContent = '名前・メールアドレスは不要です。1行だけでもOK。内容は運営者だけが確認します。';
+    note.textContent = '名前・メールアドレスは不要です。内容を入力し、Googleフォームの確認画面で送信してください。原則非公開で、匿名掲載を許可した内容だけ掲載する場合があります。';
 
     textWrap.appendChild(heading);
     textWrap.appendChild(note);
@@ -759,7 +627,6 @@
     textarea.maxLength = 800;
     textarea.rows = 6;
     textarea.placeholder = '例：Excel 2021で手順3から進めません。／この場合はどうなりますか？／この手順で解決しました。';
-    textarea.disabled = commentAlreadySent;
     commentLabel.appendChild(textarea);
 
     var counter = document.createElement('span');
@@ -774,7 +641,6 @@
     publishLabel.className = 'article-feedback-publish';
     var publishCheckbox = document.createElement('input');
     publishCheckbox.type = 'checkbox';
-    publishCheckbox.disabled = commentAlreadySent;
     publishLabel.appendChild(publishCheckbox);
     publishLabel.appendChild(document.createTextNode(' 内容を匿名の「読者の声」として掲載してよい'));
 
@@ -794,8 +660,14 @@
     var submitButton = document.createElement('button');
     submitButton.type = 'button';
     submitButton.className = 'article-feedback-submit';
-    submitButton.textContent = commentAlreadySent ? '送信済み' : '質問・コメントを匿名で送る';
-    submitButton.disabled = commentAlreadySent;
+    submitButton.textContent = '内容を確認して送信する';
+
+    var confirmationLink = document.createElement('a');
+    confirmationLink.className = 'article-feedback-detail-link';
+    confirmationLink.target = '_blank';
+    confirmationLink.rel = 'noopener';
+    confirmationLink.textContent = '確認フォームを開き直す';
+    confirmationLink.hidden = true;
 
     var detailLink = document.createElement('a');
     detailLink.className = 'article-feedback-detail-link';
@@ -813,9 +685,7 @@
       }
 
       if (honeyInput.value) {
-        textarea.value = '';
-        counter.textContent = '0 / 800';
-        status.textContent = '送信ありがとうございます。';
+        status.textContent = '入力内容を確認してください。';
         return;
       }
 
@@ -825,19 +695,17 @@
       }
 
       if (location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-        status.textContent = 'ローカル確認中のため送信していません。公開ページでは匿名で送信されます。';
+        status.textContent = 'ローカル確認中のためフォームを開いていません。公開ページでは確認画面へ進みます。';
         return;
       }
 
-      submitArticleComment(meta, selectedReaction || 'question', comment, publishCheckbox.checked);
-      safeStorageSet(commentStorageKey, '1');
-      textarea.disabled = true;
-      publishCheckbox.disabled = true;
-      submitButton.disabled = true;
-      submitButton.textContent = '送信済み';
-      status.textContent = '送信ありがとうございます。内容は公開されず、運営者だけが確認します。';
+      var confirmationUrl = buildArticleCommentUrl(meta, selectedReaction || 'question', comment, publishCheckbox.checked);
+      confirmationLink.href = confirmationUrl;
+      confirmationLink.hidden = false;
+      window.open(confirmationUrl, '_blank', 'noopener');
+      status.textContent = '確認画面へ進みます。Googleフォーム内の［送信］を押して完了してください。画面が開かない場合は「確認フォームを開き直す」を使えます。入力内容はこのページに残しています。';
 
-      sendArticleEvent('article_comment_submit', {
+      sendArticleEvent('article_comment_form_open', {
         event_category: 'article_feedback',
         event_label: meta.path,
         article_title: meta.title,
@@ -849,6 +717,7 @@
     });
 
     commentActions.appendChild(submitButton);
+    commentActions.appendChild(confirmationLink);
     commentActions.appendChild(detailLink);
     commentPanel.appendChild(commentLabel);
     commentPanel.appendChild(counter);
@@ -959,8 +828,53 @@
     history.scrollRestoration = 'auto';
   }
 
+  function initArticleSearch() {
+    var form = document.getElementById('article-search-form');
+    if (!form) return;
+    var input = document.getElementById('article-search-input');
+    var status = document.getElementById('article-search-status');
+    var list = document.getElementById('article-search-results');
+    var articlesPromise;
+    var requestId = 0;
+    function plainText(html) { var box = document.createElement('div'); box.innerHTML = html || ''; return box.textContent || ''; }
+    form.addEventListener('submit', async function (event) {
+      event.preventDefault();
+      var currentRequest = ++requestId;
+      var terms = input.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+      list.replaceChildren();
+      if (!terms.length) { status.textContent = 'キーワードを入力してください。'; return; }
+      status.textContent = '記事を検索しています…';
+      try {
+        if (!articlesPromise) articlesPromise = fetch('articles.json').then(function (response) { if (!response.ok) throw new Error('記事一覧を取得できません'); return response.json(); }).catch(function (error) { articlesPromise = null; throw error; });
+        var data = await articlesPromise;
+        if (currentRequest !== requestId) return;
+        var matches = data.articles.filter(function (article) {
+          if (article.is_prep) return false;
+          var text = plainText(article.title + ' ' + article.summary).toLocaleLowerCase();
+          return terms.every(function (term) { return text.includes(term); });
+        });
+        matches.forEach(function (article) {
+          var item = document.createElement('li'); item.className = 'article-item';
+          var link = document.createElement('a'); link.className = 'article-link'; link.href = article.url; link.textContent = plainText(article.title);
+          var summary = document.createElement('p'); summary.className = 'article-summary'; summary.textContent = plainText(article.summary);
+          item.append(link, summary); list.appendChild(item);
+        });
+        status.textContent = matches.length ? matches.length + '件の記事が見つかりました。' : '一致する記事がありません。短い言葉に変えるか、目的別リンクから探してください。';
+      } catch (error) { if (currentRequest === requestId) status.textContent = '記事一覧を読み込めませんでした。再検索するか、目的別リンクから探してください。'; }
+    });
+  }
+
+  function initCuratedCounts() {
+    document.querySelectorAll('.curated-tabs [data-ranking-trigger]').forEach(function (button) {
+      var panel = document.getElementById('ranking-' + button.getAttribute('data-ranking-trigger'));
+      var count = button.querySelector('.curated-tab-count');
+      if (panel && count) count.textContent = panel.querySelectorAll('.curated-card').length;
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
-    initStudySurveyNotice();
+    initArticleSearch();
+    initCuratedCounts();
     initLayoutVars();
     initResponsiveTables();
     initTabs();

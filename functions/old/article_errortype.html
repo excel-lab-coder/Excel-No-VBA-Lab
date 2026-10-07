@@ -13,15 +13,15 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="ERROR.TYPE関数を使って「#N/A」か「#DIV/0!」などエラーの種類によって処理を分岐させる方法。全バージョン対応。" name="description">
+<meta content="ERROR.TYPE関数を使って「#N/A」か「#DIV/0!」などエラーの種類によって処理を分岐させる方法。Excel 2016以降対応。" name="description">
 <meta content="ERROR.TYPE 関数, エラー 分岐, #N/A #DIV/0!, IFERROR 違い, Excel 全バージョン, VBA不要" name="keywords">
 <meta content="ERROR.TYPE による分岐（全ver）｜Excel &times; No VBA Lab" property="og:title">
-<meta content="ERROR.TYPE関数を使って「#N/A」か「#DIV/0!」などエラーの種類によって処理を分岐させる方法。全バージョン対応。" property="og:description">
+<meta content="ERROR.TYPE関数を使って「#N/A」か「#DIV/0!」などエラーの種類によって処理を分岐させる方法。Excel 2016以降対応。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_errortype.html" rel="canonical">
-<link href="../../common.css?v=10" rel="stylesheet">
+<link href="../../common.css?v=20261007" rel="stylesheet">
 <link href="../../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -37,7 +37,7 @@
     "@type": "Person",
     "name": "Excel × No VBA Lab"
   },
-  "description": "ERROR.TYPE関数を使って「#N/A」か「#DIV/0!」などエラーの種類によって処理を分岐させる方法。全バージョン対応。"
+  "description": "ERROR.TYPE関数を使って「#N/A」か「#DIV/0!」などエラーの種類によって処理を分岐させる方法。Excel 2016以降対応。"
 }</script>
 
 </head>
@@ -62,7 +62,7 @@
 </div>
 <article class="article-body">
 <div class="article-header">
-<div class="article-meta"><span class="ver-badge ver-all">全バージョン対応</span></div>
+<div class="article-meta"><span class="ver-badge ver-all">Excel 2016以降対応</span></div>
 <h1 class="article-title">ERROR.TYPE：エラーの種類を判別して処理を分岐させる</h1>
 </div>
 <section class="goal-section">
@@ -93,7 +93,7 @@
 <p>IF関数を組み合わせて、「エラーがない場合」「エラー2（ゼロ除算）の場合」「エラー7（N/A）の場合」を分岐させます。<br>
       旧バージョンのExcel（2016など）でIFSやSWITCHが使えない場合はCHOOSE関数と連携させると綺麗です。</p>
 <div class="code-block" data-lang="excel">
-<span class="code-line">// IF多段ネストで処理を分岐させる（全ver対応）</span>
+<span class="code-line">// IF多段ネストで処理を分岐させる（Excel 2016以降対応）</span>
 <span class="code-line">=IF(ISERROR(A1),</span>
 <span class="code-line">  IF(ERROR.TYPE(A1)=2, "分母がゼロです",</span>
 <span class="code-line">    IF(ERROR.TYPE(A1)=7, "データ未登録", "その他のエラー")</span>
@@ -127,7 +127,7 @@
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
     <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
-    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/index.html">サンプルデータ</a></p>
   </div>
@@ -144,7 +144,6 @@
   </p>
 </footer>
 
-<script src="../../script.js?v=8"></script>
+<script src="../../script.js?v=20261007"></script>
 </body>
 </html>
-

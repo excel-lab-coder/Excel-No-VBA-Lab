@@ -231,7 +231,7 @@
     <div id="grid"></div>
 
     <div class="note">
-      ※ このページはGoogle Analyticsと外部配信ライブラリを利用しているため、ページ表示に伴う通信は発生します。QR本文を当サイトのサーバーへ保存・送信する処理は実装していませんが、個人情報・機密情報・パスワードは入力しないでください。<br>
+      ※ QR作成に必要なライブラリはサイト内に同梱しています。ページ表示時はGoogle Analytics等への通信が発生します。QR本文を当サイトのサーバーへ保存・送信する処理は実装していませんが、個人情報・機密情報・パスワードは入力しないでください。<br>
       ※ <strong>通し番号・バイト数：</strong>各QRの下にNo.が付きます。「番号の横にバイト数を表示する」をオンにすると「No.3 (87B)」のように容量も並びます。住所表示をオフにしても番号は残るので、読み取る順番が分かります。<br>
       ※ <strong>印刷：</strong>印刷するとQRコードと番号（必要ならバイト数）だけが出力されます（入力欄・見出し・枠線は印刷されません）。横の個数（列数）で1ページに収まる数とQRの大きさが決まります。<br>
       ※ <strong>文字欠け防止：</strong>分割は必ず行（1件）単位。全角・半角が混在しても文字の途中で切れません。<br>
@@ -245,8 +245,8 @@
   <p><a href="../index.html#qr">QR Automation Labへ戻る</a> ｜ <a href="../privacy.html">プライバシーポリシー</a> ｜ Excel × No VBA Lab</p>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/encoding-japanese@2.2.0/encoding.min.js"></script>
+<script src="../vendor/qrcode.min.js"></script>
+<script src="../vendor/encoding.min.js"></script>
 
 <script>
 (function(){
@@ -280,6 +280,11 @@
     $('overflowWarn').style.display="none"; $('overflowWarn').textContent="";
     $('toolbar').style.display="none";
 
+    if(typeof qrcode !== 'function' || typeof Encoding === 'undefined' || typeof Encoding.convert !== 'function'){
+      $('err').textContent='QR作成に必要な機能を読み込めませんでした。通信や外部ライブラリへの接続を確認し、ページを再読み込みしてください。';
+      return;
+    }
+
     var raw=$('text').value;
     if(!raw.trim()){ $('err').textContent="データを入力してください。"; return; }
 
@@ -305,7 +310,7 @@
       if(buf!=="") items.push({label:labels.join(" / "), payload:buf});
     }
 
-    var grid=$('grid'), ok=0, over=0, overLines=[];
+    var grid=$('grid'), ok=0, over=0, overLines=[], failed=0, failedLines=[];
     items.forEach(function(it,i){
       var bl=byteLen(it.payload, encMode);
       var cell=document.createElement('div'); cell.className='qrcell';
@@ -322,7 +327,7 @@
             '<div class="no">'+noHtml+'</div>'+
             '<div class="label">'+escapeHtml(it.label)+'</div>';
           ok++;
-        }catch(e){ over++; overLines.push(it.label);
+        }catch(e){ failed++; failedLines.push(it.label);
           cell.innerHTML='<div class="label" style="color:#c0392b;">生成失敗：'+escapeHtml(it.label)+'</div>'+
             '<div class="no" style="color:#c0392b;">'+noHtml+'</div>'; }
       }
@@ -335,9 +340,10 @@
     $('summary').textContent='生成：'+ok+' 個 / 全 '+items.length+' 件'+
       '（'+(encMode==='SJIS'?'Shift_JIS':'UTF-8')+'・誤り訂正'+ecc+
       '・末尾Enter：'+$('eol').options[$('eol').selectedIndex].text+'）';
-    if(over>0){
+    if(over>0 || failed>0){
       $('overflowWarn').style.display="block";
-      $('overflowWarn').innerHTML='⚠ 容量超過で生成できなかった項目が '+over+' 件あります：<br>'+escapeHtml(overLines.join(" / "));
+      $('overflowWarn').innerHTML=(over>0?'容量超過：'+over+' 件<br>'+escapeHtml(overLines.join(' / ')):'')+
+        (failed>0?'<br>文字コード変換またはQR生成の失敗：'+failed+' 件。入力文字と設定を確認してください。<br>'+escapeHtml(failedLines.join(' / ')):'');
     }
     if(ok>0) $('toolbar').style.display="flex";
   }
@@ -358,6 +364,6 @@
   $('showBytes').addEventListener('change', applyToggles);
 })();
 </script>
-<script src="../script.js?v=8"></script>
+<script src="../script.js?v=20261007"></script>
 </body>
 </html>

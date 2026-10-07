@@ -428,7 +428,7 @@ pre,
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.86);
 }
-.article-feedback-comment[hidden] { display: none; }
+.article-feedback-comment[hidden], .article-feedback-detail-link[hidden] { display: none; }
 .article-feedback-comment-label {
   display: block;
   color: #294e70;

@@ -1,0 +1,305 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="複数行・複数列にまたがる2次元の表データを、縦1列（TOCOL）または横1行（TOROW）に一撃で整列（フラット化）する決定版ガイド。空白やエラーを自動スキップする第2引数ignore、列優先/行優先の使い分け、UNIQUE/SORT連携やカレンダー表の縦並び化など実務でよくある使い方を具体例付きで徹底解説します。" name="description">
+<meta content="TOCOL関数, TOROW関数, Excel 複数列 1列 変換, Excel 2次元 1次元 変換, スピル関数, Excel 2024, Microsoft 365" name="keywords">
+<title>TOCOL・TOROW関数完全ガイド — 複数行・複数列を1列／1行に一括整列｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_tocol_torow.html" rel="canonical">
+<meta content="TOCOL・TOROW関数完全ガイド — 複数行・複数列を1列／1行に一括整列｜Excel &times; No VBA Lab" property="og:title">
+<meta content="複数行・複数列にまたがる表を、縦1列（TOCOL）または横1行（TOROW）に一撃で整列。空白スキップやUNIQUE/SORT連携など実務でよくある使い方を徹底解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_tocol_torow.html" property="og:url">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<meta content="TOCOL・TOROW関数完全ガイド — 複数行・複数列を1列／1行に一括整列" name="twitter:title">
+<meta content="複数行・複数列の表を縦1列（TOCOL）や横1行（TOROW）に変換。空白スキップやUNIQUE連携など実務の使い方を解説。" name="twitter:description">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" name="twitter:image">
+<meta content="index, follow" name="robots">
+
+<link href="../../common.css?v=20261007" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "TOCOL・TOROW関数完全ガイド — 複数行・複数列を1列／1行に一括整列",
+  "description": "複数行・複数列にまたがる2次元の表データを、縦1列（TOCOL）または横1行（TOROW）に一撃で整列（フラット化）する決定版ガイド。空白・エラー無視や実務でよくある使い方を解説します。",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_tocol_torow.html"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Excel × No VBA Lab"
+  }
+}
+</script>
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+  <div class="breadcrumb">
+    <a href="../../index.html">ホーム</a><span>&gt;</span>
+    <a href="../../index.html#functions">関数テクニック</a><span>&gt;</span>
+    <a href="../../index.html#functions">モダン配列操作</a><span>&gt;</span>
+    <strong>TOCOL・TOROW関数</strong>
+  </div>
+
+  <article class="article-body">
+    <div class="article-header">
+      <div class="article-meta">
+        <span class="badge badge-new">Excel 2024</span>
+        <span class="badge badge-365">Microsoft 365</span>
+        <span class="badge badge-level">Lv.2 やさしい</span>
+        <span class="article-date">公開日: 2026-09-15</span>
+      </div>
+      <h1 class="article-title">TOCOL・TOROW関数完全ガイド<br>&horbar; 複数行・複数列を1列／1行に一括整列</h1>
+      <p class="article-summary">「複数列に分かれた担当者や商品コードを、縦1列にまとめてリスト化したい」「カレンダー形式（マス目）のスケジュールを時系列の1列データに変換したい」……そんなときに必須となるのが <strong>TOCOL（トゥー・カラム）</strong> と <strong>TOROW（トゥー・ロー）</strong> です。基本構文から、空白セル・エラーのスキップ方法、実務でよくある活用パターンまで徹底解説します。</p>
+    </div>
+
+    <!-- 記事の位置づけ -->
+    <aside class="article-context-box">
+      <h2>この記事の位置づけと対応バージョン</h2>
+      <ul>
+        <li><strong>対応環境：</strong>Excel 2024 / Microsoft 365（※Excel 2021以前では利用できません）</li>
+        <li><strong>関数の役割：</strong>2次元（縦×横）の範囲を、縦1列（TOCOL）または横1行（TOROW）の1次元配列へ変換する</li>
+        <li><strong>実務での最大の価値：</strong>バラバラの表をフラット化して、<code>UNIQUE</code>（重複削除）や <code>SORT</code>（並び替え）、<code>FILTER</code> にそのまま渡せること</li>
+      </ul>
+    </aside>
+
+    <!-- 【1】基本概念 -->
+    <section class="method-section">
+      <h2>【1】TOCOLとTOROWの基本構文</h2>
+      <p>名前の由来は英語の「To Column（列へ）」と「To Row（行へ）」です。対象のセル範囲を指定するだけで、スピル機能によって自動的にデータが一列に展開されます。</p>
+
+      <div class="method-card">
+        <h3>構文と引数</h3>
+        <div class="code-block" data-lang="excel"><span class="code-line">=TOCOL(配列, [ignore], [scan_by_column])</span></div>
+        <div class="code-block" data-lang="excel" style="margin-top:8px;"><span class="code-line">=TOROW(配列, [ignore], [scan_by_column])</span></div>
+
+        <div class="table-responsive" style="margin-top:12px;">
+          <table class="roadmap-table">
+            <thead>
+              <tr>
+                <th>引数</th>
+                <th>意味</th>
+                <th>指定できる値</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>配列</strong><br>（必須）</td>
+                <td>1列または1行に変換したい元データのセル範囲。</td>
+                <td>例：<code>A2:D10</code></td>
+              </tr>
+              <tr>
+                <td><strong>[ignore]</strong><br>（省略可能）</td>
+                <td>空白セルやエラーをどう扱うかを指定します。<br><strong>※実務で超重要！</strong></td>
+                <td>
+                  <strong>0</strong>：すべての値を保持（省略時のデフォルト）<br>
+                  <strong>1：空白セルを無視して詰める（最頻出！）</strong><br>
+                  <strong>2</strong>：エラー値を無視して詰める<br>
+                  <strong>3</strong>：空白セルとエラー値の両方を無視して詰める
+                </td>
+              </tr>
+              <tr>
+                <td><strong>[scan_by_column]</strong><br>（省略可能）</td>
+                <td>データを読み取る順番（スキャンの向き）を指定します。</td>
+                <td>
+                  <strong>FALSE</strong>（または省略）：<strong>行優先（左から右へ）</strong><br>
+                  <strong>TRUE</strong>：<strong>列優先（上から下へ）</strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <figure class="extract-figure">
+        <figcaption>イメージ：3行×2列の表をTOCOLで縦1列にする</figcaption>
+        <div class="table-wrapper">
+          <table class="xdemo-table">
+            <thead>
+              <tr><th>元表（A1:B3）</th><th>処理</th><th>=TOCOL(A1:B3) の結果</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  東京 / 大阪<br>
+                  名古屋 / 福岡<br>
+                  札幌 / 仙台
+                </td>
+                <td class="xd-hit" style="text-align:center;">&rarr; 行優先で縦1列化 &rarr;</td>
+                <td>
+                  東京<br>大阪<br>名古屋<br>福岡<br>札幌<br>仙台
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </figure>
+    </section>
+
+    <!-- 【2】第2引数 ignore の威力 -->
+    <section class="method-section">
+      <h2>【2】空白セルを綺麗に詰める「第2引数：ignore = 1」</h2>
+      <p>何も指定せずに <code>=TOCOL(A1:C5)</code> を実行すると、元表の空欄セルは <strong>「0」</strong> として出力されてしまいます。実務では「空白セルは無視して、データが入っているセルだけをキュッと詰めて並べたい」ケースがほとんどです。</p>
+
+      <div class="code-block" data-lang="excel"><span class="code-line">=TOCOL(A2:D10, 1)</span></div>
+      <p class="code-comment">第2引数に「1」を指定するだけで、空白セルを自動的にスキップし、有効なデータだけを詰めた綺麗なリストが完成します。</p>
+
+      <div class="xdemo-note-good">
+        <strong>💡 エラー混じりの表なら「3」を指定：</strong><br>
+        数式エラー（#N/A や #VALUE!）や未入力の空白が混ざっている表をフラット化する場合は、<code>=TOCOL(A2:D10, 3)</code> とすれば、空白もエラーもすべて除外して有効データだけを抽出できます。
+      </div>
+    </section>
+
+    <!-- 【3】よくある実務の使い方3選 -->
+    <section class="method-section">
+      <h2>【3】実務でよくある使い方3選（具体例）</h2>
+
+      <!-- パターン1 -->
+      <div class="method-card">
+        <div class="method-card-title method-card-title-blue">パターン①：複数列の担当者を縦1列にして「UNIQUE」で重複削除する（最頻出！）</div>
+        <p>「主担当」「副担当」「確認者」のように3列に分かれて入力されている社員名を、全社で誰が関わっているか一意のリスト（重複なし一覧）にしたい場合です。</p>
+
+        <figure class="extract-figure">
+          <figcaption>元データ：複数列に散らばった担当者名（空白あり）</figcaption>
+          <div class="table-wrapper">
+            <table class="xdemo-table">
+              <thead><tr><th>案件名</th><th>主担当（B列）</th><th>副担当（C列）</th><th>確認者（D列）</th></tr></thead>
+              <tbody>
+                <tr><td>案件A</td><td class="xd-hit">佐藤</td><td>田中</td><td>鈴木</td></tr>
+                <tr><td>案件B</td><td class="xd-hit">田中</td><td>（空白）</td><td>佐藤</td></tr>
+                <tr><td>案件C</td><td class="xd-hit">鈴木</td><td>高橋</td><td>（空白）</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </figure>
+
+        <p>従来はVBAを書くか、コピー＆ペーストを手作業で繰り返す必要がありました。しかし今は <strong>TOCOL ＋ UNIQUE ＋ SORT</strong> を1行書くだけで完了します：</p>
+
+        <div class="code-block" data-lang="excel"><span class="code-line">=SORT(UNIQUE(TOCOL(B2:D10, 1)))</span></div>
+        <p class="code-comment">
+          ① <code>TOCOL(B2:D10, 1)</code> でB列〜D列を空白無視で縦1列にまとめる<br>
+          ② <code>UNIQUE(...)</code> で重複する名前を1つに集約する<br>
+          ③ <code>SORT(...)</code> で五十音順にきれいに並び替える
+        </p>
+      </div>
+
+      <!-- パターン2 -->
+      <div class="method-card" style="margin-top:24px;">
+        <div class="method-card-title method-card-title-blue">パターン②：カレンダー形式（月〜金のマス目表）を時系列の「1列ログ」に直す</div>
+        <p>人間の目には見やすい「月曜〜金曜が横に並んだ週間シフト表」や「月間予定表」。しかし、ピボットテーブルで集計したりデータベースに入力するには、縦1列の日報形式にする必要があります。</p>
+
+        <figure class="extract-figure">
+          <figcaption>月〜金の予定マス目を、時系列（上から下・左から右）に縦展開</figcaption>
+          <div class="table-wrapper">
+            <table class="xdemo-table">
+              <thead><tr><th>週</th><th>月（B列）</th><th>火（C列）</th><th>水（D列）</th><th>木（E列）</th><th>金（F列）</th></tr></thead>
+              <tbody>
+                <tr><td>第1週</td><td>会議</td><td>訪問</td><td>内勤</td><td>出張</td><td>研修</td></tr>
+                <tr><td>第2週</td><td>内勤</td><td>会議</td><td>訪問</td><td>訪問</td><td>内勤</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </figure>
+
+        <div class="code-block" data-lang="excel"><span class="code-line">=TOCOL(B2:F3)</span></div>
+        <p class="code-comment">第3引数を省略（またはFALSE）にすると「行優先（左から右）」で進むため、第1週の月&rarr;火&rarr;水&rarr;木&rarr;金 &rarr; 第2週の月&rarr;火...と時系列順に正しく縦1列に並びます。</p>
+      </div>
+
+      <!-- パターン3 -->
+      <div class="method-card" style="margin-top:24px;">
+        <div class="method-card-title method-card-title-blue">パターン③：横1行に展開する「TOROW」の使いどころ</div>
+        <p>逆に、縦に並んだ複数行データを、印刷用の見出しやカンマ区切りのテキストへ送るために「横1行」に並べ替えたい場合は <strong>TOROW</strong> を使います。</p>
+
+        <div class="code-block" data-lang="excel"><span class="code-line">=TEXTJOIN(", ", TRUE, TOROW(A2:C10, 1))</span></div>
+        <p class="code-comment">複数列・複数行に散らばるコードや単語を、空白を除外して横一列にし、カンマ区切りの1セルテキストとして結合する実務技です。</p>
+      </div>
+    </section>
+
+    <!-- まとめ -->
+    <section class="method-section">
+      <h2>📋 まとめ：TOCOL・TOROWの使い分けチェックシート</h2>
+      <div class="xdemo-note-good">
+        <ul style="margin:0;padding-left:1.2rem;line-height:2;">
+          <li>✅ <strong>縦に並べたいなら TOCOL、横に並べたいなら TOROW</strong></li>
+          <li>✅ <strong>実務ではほぼ必須：</strong>第2引数に <code>1</code> を入れて空白セルをスキップする</li>
+          <li>✅ <strong>最強の組み合わせ：</strong><code>=SORT(UNIQUE(TOCOL(範囲, 1)))</code> で複数列から一瞬で重複なしマスタを生成</li>
+          <li>✅ <strong>読み取り順：</strong>第3引数を <code>TRUE</code> にすると「上から下（列単位）」で順に拾う</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 関連記事 -->
+    <section class="related-articles-section" style="margin-top:40px;border-top:2px dashed #ccc;padding-top:20px;">
+      <h2><span class="icon">🔗</span> 関連するモダン関数記事</h2>
+      <div style="background:#f5f8ff;padding:15px;border-radius:8px;margin-top:15px;">
+        <ul style="line-height:1.8;">
+          <li><a href="article_torow_wraprows_choosecols.html">TOROW・WRAPROWS・CHOOSECOLSで複数行データを1行に整形（応用編）</a></li>
+          <li><a href="article_unique.html">UNIQUE関数の基本｜重複を削除して一意のリストを作る</a></li>
+          <li><a href="article_sort.html">SORT / SORTBY関数の基本と応用</a></li>
+          <li><a href="article_choosecols.html">CHOOSECOLS関数 — 離れた列を自在に抽出</a></li>
+          <li><a href="../../index.html#functions">📐 関数テクニック一覧へ戻る</a></li>
+        </ul>
+      </div>
+    </section>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/tocol-function-22839d9b-0b55-4fc1-b4e6-2761f8f122ed" rel="noopener" target="_blank">TOCOL関数公式説明</a><a href="https://support.microsoft.com/en-us/office/torow-function-b90d0964-a7d9-44b7-816b-fda5af07706a" rel="noopener" target="_blank">TOROW関数公式説明</a><a href="../../samples/index.html">サンプルデータ</a></p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+  </div>
+  <p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+<script src="../../script.js?v=20261007"></script>
+</body>
+</html>

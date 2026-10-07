@@ -22,7 +22,7 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/05_qr_key_practice.html" rel="canonical">
-<link href="../common.css?v=10" rel="stylesheet">
+<link href="../common.css?v=20261007" rel="stylesheet">
 <link href="../article.css" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -51,12 +51,20 @@
 <strong>実践パターン集</strong>
 </div>
 <article class="article-body">
+
 <div class="article-header">
 <div class="article-meta">
-<span class="badge badge-all">全バージョン</span>
+<span class="badge badge-all">Excel 2016以降</span>
 <span class="badge badge-maniac">QR連携/実践テンプレート/業務システム</span>
 </div>
 <h1 class="article-title">QRコード実践パターン集！<br>Excel＆業務システムで即使える数式テンプレート10選</h1>
+<details class="method-section qr-convention">
+<summary>共通の設定例（Enter・トリガー文字）</summary>
+<p>Excelの移動確認は<strong>CHAR(10)（LF）から</strong>、Webフォームの確定確認は<strong>CHAR(13)（CR）から</strong>、サフィックスはNoneで1件ずつ試します。動かなければCR / LFを入れ替えます。CR+LFは二重移動がないか別に確認します。これは試す順番であり、全機種で同じ動作を保証する設定ではありません。</p>
+<p>サイト内の例は <code>/</code>（CHAR(47)）→ Num Enter、<code>@</code> → Pause/Break、<code>!</code> → 待機1秒、<code>?</code> → 待機5秒です。記号そのものにキーや待機の効果はなく、対応するリーダー設定が必要です。Pause/Breakキーと送信待機は別の処理です。</p>
+<p>日付・URLの <code>/</code> やメールの <code>@</code> など、入力データと衝突する場合は別の記号へ変更し、QR生成式とリーダー設定表を一緒に変更してください。旧記事のチルダ設定を使っている場合も、式と設定を同時に変更します。<a href="04_qr_key_conversion.html">キー変換の確認手順</a></p>
+</details>
+
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
 </div>
 
@@ -97,7 +105,7 @@
 <tr><td class="text-center">① QRコード生成と基礎</td><td>CHAR関数・使える文字の種類</td><td>数式の中身を理解するために必須</td></tr>
 <tr><td class="text-center">② Tab・Enter埋め込み</td><td>Tab&rarr;Enterの動きと注意点</td><td>全パターンの土台</td></tr>
 <tr><td class="text-center">③ キャラクター間ディレイ</td><td>文字欠けを防ぐ設定</td><td>長い数式ほど必須</td></tr>
-<tr><td class="text-center">④ キー変換テクニック</td><td>CHAR で送れないキーを送る方法</td><td>トリガー文字（<span class="trigger-char">~</span> <span class="trigger-char">^</span> 等）の意味を理解するために必須</td></tr>
+<tr><td class="text-center">④ キー変換テクニック</td><td>CHAR で送れないキーを送る方法</td><td>トリガー文字（<span class="trigger-char">/</span> <span class="trigger-char">^</span> 等）の意味を理解するために必須</td></tr>
 </table>
 </section>
 <!-- ===== トリガー文字 早見表 ===== -->
@@ -106,7 +114,7 @@
 <p>以下のパターンで使用するトリガー文字の一覧です。④の記事で設定済みであることが前提です。</p>
 <table class="format-table">
 <tr><th>トリガー</th><th>変換先</th><th>用途</th><th>使用パターン</th></tr>
-<tr><td class="text-center"><span class="trigger-char">~</span></td><td>NUM Enter</td><td>業務システムの確定キー</td><td>⑦ ⑧ ⑨ ⑩</td></tr>
+<tr><td class="text-center"><span class="trigger-char">/</span></td><td>NUM Enter</td><td>業務システムの確定キー</td><td>⑦ ⑧ ⑨ ⑩</td></tr>
 <tr><td class="text-center"><span class="trigger-char">^</span></td><td>F2</td><td>Excelセル編集モード</td><td>⑥</td></tr>
 <tr><td class="text-center"><span class="trigger-char">`</span></td><td>&darr; (Down Arrow)</td><td>1行下に移動</td><td>（応用時）</td></tr>
 <tr><td class="text-center"><span class="trigger-char">{</span></td><td>F5</td><td>検索画面の起動</td><td>⑨</td></tr>
@@ -319,10 +327,10 @@
 <!-- ========================================== -->
 <section class="tips-section">
 <h2>業務システム向けパターン（⑦ 〜 ⑩）</h2>
-<p>業務システム（販売管理・生産管理・WMS など）は Excel とは異なり、<strong>テンキーEnter（NUM Enter）でないと確定できない</strong>ケースが圧倒的に多いです。以下のパターンでは、④で設定した <span class="trigger-char">~</span> &rarr; NUM Enter のキー変換を活用します。</p>
+<p>業務システム（販売管理・生産管理・WMS など）は Excel とは異なり、<strong>テンキーEnter（NUM Enter）でないと確定できない</strong>場合があります。該当するシステムの割合は確認していません。以下のパターンでは、④で設定した <span class="trigger-char">/</span> &rarr; NUM Enter のキー変換を活用します。</p>
 <div class="xdemo-note-danger" style="border-left-color: #ff9800; background: #fff3e0;">
 <strong>🔥 リーダーのサフィックスは必ず「None（なし）」に！</strong><br>
-          サフィックスに CR（改行）が残っていると、数式内の <code>~</code>（NUM Enter） + サフィックスの CR で <strong>Enterが二重送信</strong>されます。フィールドが1つ飛ぶ・意図しない画面遷移が起きるなどの事故に直結します。
+          サフィックスに CR（改行）が残っていると、数式内の <code>/</code>（NUM Enter） + サフィックスの CR で <strong>Enterが二重送信</strong>されます。フィールドが1つ飛ぶ・意図しない画面遷移が起きるなどの事故に直結します。
         </div>
 <!-- ===== Pattern 7 ===== -->
 <h3>
@@ -335,13 +343,13 @@
 <strong>使用場面：</strong>販売管理システムの品番入力フィールドにスキャン &rarr; NUM Enter で確定 &rarr; 次のフィールドに自動遷移。
         </div>
 <div class="conv-visual">
-<div class="cv-from">~ &rarr; NUM Enter</div>
+<div class="cv-from">/ &rarr; NUM Enter</div>
 </div>
 <div class="formula-box">
 <button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-<code>=A1 & "~"</code>
+<code>=A1 & "/"</code>
 </div>
-<p>最もシンプルな業務システム向けパターンです。品番の後ろに <code>~</code> を付けるだけで、スキャンと同時にフィールドが確定されます。</p>
+<p>最もシンプルな業務システム向けパターンです。品番の後ろに <code>/</code> を付けるだけで、スキャンと同時にフィールドが確定されます。</p>
 <hr class="pattern-divider">
 <!-- ===== Pattern 8 ===== -->
 <h3>
@@ -357,19 +365,19 @@
 <div class="flow-diagram">
 <span class="flow-step">品番</span>
 <span class="flow-arrow">&rarr;</span>
-<span class="flow-step">~ = NUM Enter</span>
+<span class="flow-step">/ = NUM Enter</span>
 <span class="flow-arrow">&rarr;</span>
 <span class="flow-step">数量</span>
 <span class="flow-arrow">&rarr;</span>
-<span class="flow-step">~ = NUM Enter</span>
+<span class="flow-step">/ = NUM Enter</span>
 <span class="flow-arrow">&rarr;</span>
 <span class="flow-step">ロケーション</span>
 <span class="flow-arrow">&rarr;</span>
-<span class="flow-step">~ = NUM Enter</span>
+<span class="flow-step">/ = NUM Enter</span>
 </div>
 <div class="formula-box">
 <button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-<code>=A1 & "~" & B1 & "~" & C1 & "~"</code>
+<code>=A1 & "/" & B1 & "/" & C1 & "/"</code>
 </div>
 <div class="xdemo-note-warn">
 <strong>⚠️ システムの応答速度に注意</strong><br>
@@ -389,18 +397,18 @@
         </div>
 <div class="conv-visual">
 <div class="cv-from">{ &rarr; F5（検索起動）</div>
-<div class="cv-from">~ &rarr; NUM Enter（確定）</div>
+<div class="cv-from">/ &rarr; NUM Enter（確定）</div>
 </div>
 <div class="formula-box">
 <button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-<code>="{" & A1 & "~"</code>
+<code>="{" & A1 & "/"</code>
 </div>
 <div class="flow-diagram">
 <span class="flow-step">{ &rarr; F5 検索起動</span>
 <span class="flow-arrow">&rarr;</span>
 <span class="flow-step">品番データ入力</span>
 <span class="flow-arrow">&rarr;</span>
-<span class="flow-step">~ &rarr; NUM Enter 検索実行</span>
+<span class="flow-step">/ &rarr; NUM Enter 検索実行</span>
 </div>
 <div class="xdemo-note-warn">
 <strong>⚠️ 検索ダイアログの表示待ちが必要な場合</strong><br>
@@ -419,17 +427,17 @@
 <strong>使用場面：</strong>業務システムに入力 &rarr; 確定 &rarr; 表示された結果画面を PrintScreen でキャプチャ。検品エビデンスの自動取得に活用。
         </div>
 <div class="conv-visual">
-<div class="cv-from">~ &rarr; NUM Enter（確定）</div>
+<div class="cv-from">/ &rarr; NUM Enter（確定）</div>
 <div class="cv-from">| &rarr; PrintScreen（キャプチャ）</div>
 </div>
 <div class="formula-box">
 <button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-<code>=A1 & "~" & "|"</code>
+<code>=A1 & "/" & "|"</code>
 </div>
 <div class="flow-diagram">
 <span class="flow-step">品番入力</span>
 <span class="flow-arrow">&rarr;</span>
-<span class="flow-step">~ &rarr; NUM Enter</span>
+<span class="flow-step">/ &rarr; NUM Enter</span>
 <span class="flow-arrow">&rarr;</span>
 <span class="flow-step">（Sleep 3〜5秒）</span>
 <span class="flow-arrow">&rarr;</span>
@@ -458,7 +466,7 @@
 <p>セル範囲を変えるだけで列数の増減に柔軟に対応できます。業務システム向けの NUM Enter 区切りも同様です：</p>
 <div class="formula-box">
 <button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-<code>=TEXTJOIN("~",FALSE,A1:D1) & "~"</code>
+<code>=TEXTJOIN("/",FALSE,A1:D1) & "/"</code>
 </div>
 <div class="xdemo-note-info">
 <strong>📝 TEXTJOIN の第2引数 <code>FALSE</code></strong><br>
@@ -480,7 +488,7 @@
 <tr><td>Excelに縦方向（1列）で入力</td><td>④</td><td>Enter のみ。Tab 不要</td></tr>
 <tr><td>入力後にファイルを自動保存したい</td><td>⑤</td><td>予約文字をリーダー側でCtrl+Sへ変換。ファイルの事前保存と検証が必須</td></tr>
 <tr><td>既存セルに追記したい</td><td>⑥</td><td>F2 キー変換が必要（④で設定）</td></tr>
-<tr><td>業務システム（NUM Enter が必要）</td><td>⑦ ⑧ ⑨ ⑩</td><td>~ &rarr; NUM Enter のキー変換が必須（④で設定）</td></tr>
+<tr><td>業務システム（NUM Enter が必要）</td><td>⑦ ⑧ ⑨ ⑩</td><td>/ &rarr; NUM Enter のキー変換が必須（④で設定）</td></tr>
 <tr><td>システムの画面遷移待ちが必要</td><td>⑧ ⑨ ⑩</td><td>ディレイ増加 or Sleep 併用</td></tr>
 <tr><td>エビデンス（画面キャプチャ）が必要</td><td>⑩</td><td>PrintScreen 変換 + Sleep 必須</td></tr>
 <tr><td>セル数が5以上で数式が長い</td><td>TEXTJOIN版</td><td>Excel 2019 以降で使用可能。Excel 2016では <code>&amp; CHAR(9) &amp;</code> で連結</td></tr>
@@ -499,7 +507,7 @@
 <tr><td>サフィックス</td><td><strong>None（なし）</strong></td><td>全パターン</td><td>②</td></tr>
 <tr><td>キャラクター間ディレイ</td><td><strong>20ms</strong>（長文は50ms〜）</td><td>全パターン（特に3セル以上）</td><td>③</td></tr>
 <tr><td>ファンクション間ディレイ</td><td><strong>50〜100ms</strong></td><td>Tab/Enter含む全パターン</td><td>③</td></tr>
-<tr><td>キー変換: ~ &rarr; NUM Enter</td><td>有効</td><td>⑦ ⑧ ⑨ ⑩</td><td>④</td></tr>
+<tr><td>キー変換: / &rarr; NUM Enter</td><td>有効</td><td>⑦ ⑧ ⑨ ⑩</td><td>④</td></tr>
 <tr><td>キー変換: ^ &rarr; F2</td><td>有効</td><td>⑥</td><td>④</td></tr>
 <tr><td>キー変換: { &rarr; F5</td><td>有効</td><td>⑨</td><td>④</td></tr>
 <tr><td>キー変換: | &rarr; PrintScreen</td><td>有効</td><td>⑩</td><td>④</td></tr>
@@ -530,7 +538,7 @@
 <tr>
 <td>業務システムで Enter が効かない</td>
 <td>NUM Enter が必要</td>
-<td>キー変換で ~ &rarr; NUM Enter を設定</td>
+<td>キー変換で / &rarr; NUM Enter を設定</td>
 <td>④</td>
 </tr>
 <tr>
@@ -604,16 +612,16 @@
         <li><span class="lv-basic">[基本]</span> <a href="03_qr_character_delay.html">③ キャラクター間ディレイ ― 文字欠けを防ぐ設定</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="04_qr_key_conversion.html">④ QRコード → キー変換テクニック</a></li>
         <li class="current"><span class="lv-adv">[応用]</span> <strong>⑤ キー変換の実践シナリオ（この記事）</strong></li>
-        <li><span class="lv-adv">[応用]</span> <a href="06_qr_sleep_revised_honeywell.html">⑥ Sleep（一時停止）で固定時間を空ける</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="06_qr_wait_time.html">⑥ Sleep（一時停止）で固定時間を空ける</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="07_qr_full_system.html">⑦ QRリーダー設定の全体像！フルシステム構築ガイド</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="08_qr_hardware_revised_honeywell.html">⑧ QRリーダーの選び方と接続方法</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="08_qr_reader_selection.html">⑧ QRリーダーの選び方と接続方法</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="09_qr_closed_transfer.html">⑨ 閉域環境のデータ転送 ― 紙だけでPC間移行</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="10_qr_system_migration.html">⑩ システム間データ移行</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="11_qr_vba_generate.html">⑪ 全角QR生成VBA記事（一時非公開）</a></li>
+
         <li><span class="lv-adv">[応用]</span> <a href="12_qr_existing_reader_check.html">⑫ 会社にあるQRリーダーでまず試す</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="13_qr_reader_design_philosophy_current_research_v5.html">⑬ QRリーダーの設計思想比較</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="14_qr_zebra_adf_variable_pause_revised_ranked.html">⑭ Zebra 123Scan / ADF検証メモ</a></li>
-        <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter_numenter_pause_revised_ranked.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="13_qr_reader_comparison.html">⑬ QRリーダーの設計思想比較</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="14_qr_zebra_adf.html">⑭ Zebra 123Scan / ADF検証メモ</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="15_qr_honeywell_data_formatter.html">⑮ Honeywell EZConfig / Data Formatter検証メモ</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="18_qr_num_enter_numpad_enter.html">⑱ Num Enter・Numpad Enter・通常Enterの違い</a></li>
@@ -635,7 +643,7 @@
 <footer class="site-footer">
   <div class="site-footer-trust" aria-label="運営情報と検証方針">
     <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
-    <p><strong>検証環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
     <p class="site-footer-links"><strong>公式参照:</strong>
       <a href="https://www.opto.co.jp/products/tool/tool_download.html" rel="noopener" target="_blank">Opticon 設定ツール / UniversalConfig</a>
@@ -658,8 +666,7 @@
     <a href="../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../script.js?v=8"></script>
+<script src="../script.js?v=20261007"></script>
 
 </body>
 </html>
-
