@@ -1519,9 +1519,9 @@
     {
       "category": "unlocked",
       "subcategory": "vba",
-      "title": "本編で“あと一歩”だった処理のVBA補完集",
+      "title": "VBAがどうしても必要だった実務ケース集",
       "url": "unlocked/coming_soon.html?topic=vba_supplement",
-      "summary": "関数・Power Queryで95%解決できるが、残り5%にVBAが必要だったケースをまとめます。<br><small>対応する本編：各関数記事・パワークエリ記事</small>",
+      "summary": "関数・Power Queryだけでは業務の要件を満たせず、VBAがどうしても必要だったケースをまとめます。VBAが必要になる範囲は、処理内容や利用環境によって異なります。<br><small>対応する本編：各関数記事・パワークエリ記事</small>",
       "level": 5,
       "tags": [
         "vba"
