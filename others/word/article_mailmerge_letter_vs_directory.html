@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Word差し込み印刷の「レター」と「名簿」の違いと使い分け｜ラベル・封筒・はがきも｜Excel × No VBA Lab</title>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="レターと名簿を、プレビューではなく完成した文書で比べます。" name="description"/>
+<meta content="Word差し込み印刷の「レター」と「名簿」の違いと使い分け（ラベル・封筒・はがきも）" property="og:title"/>
+<meta content="レターと名簿を、プレビューではなく完成した文書で比べます。" property="og:description"/>
+<meta content="article" property="og:type"/>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_letter_vs_directory.html" property="og:url"/>
+<meta content="Excel × No VBA Lab" property="og:site_name"/>
+<meta content="ja_JP" property="og:locale"/>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="index, follow" name="robots"/>
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_letter_vs_directory.html" rel="canonical"/>
+<link href="../../common.css?v=20261101-directory" rel="stylesheet"/>
+<link href="../../article.css?v=20261101" rel="stylesheet"/>
+<link as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="preload"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="stylesheet"/></noscript>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Word差し込み印刷の「レター」と「名簿」の違いと使い分け（ラベル・封筒・はがきも）", "description": "レターと名簿を、プレビューではなく完成した文書で比べます。", "datePublished": "2026-11-01", "dateModified": "2026-11-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_letter_vs_directory.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "Word差し込み印刷", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/"}, {"@type": "ListItem", "position": 4, "name": "レターと名簿の使い分け", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_letter_vs_directory.html"}]}
+</script>
+<link href="word-guide.css?v=20261102-images" rel="stylesheet"/><meta content="1" name="difficulty"/></head>
+<body class="article-layout word-guide">
+<div aria-hidden="true" class="reading-progress"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>レターと名簿の使い分け</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-02</span></div><h1 class="article-title">Word差し込み印刷の「レター」と「名簿」の違いと使い分け（ラベル・封筒・はがきも）</h1>
+<p class="article-summary" data-seo-lead="true">レターと名簿を、プレビューではなく完成した文書で比べます。</p></div><section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">入門（Lv.1）</p><ol class="word-guide-flow"><li>2件を準備</li><li>レターで出力</li><li>名簿で出力</li><li>並び方を比較</li></ol><details class="word-guide-toc"><summary>手順の目次を開く</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">💡 結論：ふだん使うのは「レター」</a></li><li><a href="#guide-step-2">初めてなら、同じ2人で比べます</a></li><li><a href="#finish-directory">「名簿」を選んだ後も、完成させる操作が必要です</a></li><li><a href="#guide-step-4">種類ごとの違い（早見表）</a></li><li><a href="#guide-step-5">レターと名簿の違いを実際の画面で比べる</a></li><li><a href="#guide-step-6">迷ったときの決め方</a></li><li><a href="#guide-step-7">よくある質問</a></li></ol></nav></details></section>
+<section class="goal-section" id="guide-step-1">
+<h2><span class="icon">💡</span> 結論：ふだん使うのは「レター」</h2>
+<p>Wordの差し込み印刷は、最初に「<strong>差し込み印刷の開始</strong>」で種類を選びます。案内文・通知書・請求書・修了証のように、<strong>1人に1枚</strong>の文書を作るなら「<strong>レター</strong>」です。実務でいちばんよく使うのはこれです。</p>
+<p>「<strong>名簿</strong>」は、<strong>1枚の中に何人分も続けて並べたい</strong>とき（一覧表、会社ごとの送付状など）に使います。宛名ラベル・封筒・はがきには、それぞれ専用の種類やウィザードがあります。</p>
+<figure class="article-screenshot"><a aria-label="画像を拡大：差し込み印刷の開始のメニューにレター・電子メール・封筒・ラベル・名簿が並ぶ画面" href="../../image/articles/2026-11-01/word-start-mailmerge-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:850.00px"><img alt="差し込み印刷の開始のメニューにレター・電子メール・封筒・ラベル・名簿が並ぶ画面" decoding="async" height="643" loading="lazy" src="../../image/articles/2026-11-01/word-start-mailmerge-menu.jpg" width="850"></a><figcaption>「差し込み文書」タブ →「差し込み印刷の開始」の一覧です。ここで選んだ種類によって、差し込んだ結果の並び方が変わります。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+</section><section class="method-section" id="guide-step-2"><h2>初めてなら、同じ2人で比べます</h2><ol class="line-height-2"><li>Excelに2人分の架空データを入れ、保存します。</li><li>空白のWordで「レター」を選び、氏名と短い案内文を挿入します。</li><li>「個々のドキュメントの編集」→「すべて」で出力し、1人分の文面がページごとに分かれるか見ます。</li><li>別の空白文書で「名簿」を選び、氏名1人分と改行だけを作ります。</li><li>同じように「個々のドキュメントの編集」→「すべて」で出し、2人が続けて並ぶか比べます。</li></ol><p>1人分の文面の長さでページ数は変わります。「名簿なら必ず1ページ」という意味ではありません。</p></section>
+<section class="method-section" id="finish-directory"><h2>「名簿」を選んだ後も、完成させる操作が必要です</h2><p>「名簿」を選ぶと、1人分を続けて並べる設定になります。ただし「結果のプレビュー」は表示中の1人分を確認する画面です。</p><p><strong>「完了と差し込み」→「個々のドキュメントの編集」→「すべて」→「OK」</strong>で、全員が続けて並んだ新しい文書を作ります。「個々の」という名前でも、全員分を出力できます。</p><figure class="article-screenshot"><a aria-label="画像を拡大：名簿を完成させる個々のドキュメントの編集メニュー" href="../../image/articles/2026-11-01/directory-basic/finish-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:520.00px"><img alt="名簿を完成させる個々のドキュメントの編集メニュー" decoding="async" height="360" loading="lazy" src="../../image/articles/2026-11-01/directory-basic/finish-menu.jpg" width="520"></a><figcaption>名簿も、最後にこの操作を行って全員分の文書にします。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure><p>最初から追える別記事を追加しました：<a href="article_mailmerge_directory_finish.html">名簿差し込みを完成させる手順（ひな形・プレビュー・完成文書を実画面で比較）</a>。</p></section>
+<section class="method-section" id="guide-step-4">
+<h2>種類ごとの違い（早見表）</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>差し込み印刷の種類と使い分け</caption>
+<thead><tr><th>種類</th><th>差し込んだ結果</th><th>向いているもの</th><th>手順の記事</th></tr></thead>
+<tbody>
+<tr><td><strong>レター</strong></td><td>1人ごとに新しいページ（セクション）になる</td><td>案内文、通知書、請求書、修了証、送付状（個人あて）</td><td><a href="article_mailmerge_letter_filter_print.html">レターの流れ（絞り込み・印刷まで）</a></td></tr>
+<tr><td><strong>名簿</strong></td><td>1人分ずつ<strong>続けて</strong>並ぶ。人ごとの強制改ページはなく、用紙が埋まれば次ページへ流れる</td><td>受講者一覧、名札用の一覧、会社ごとの送付状</td><td><a href="article_mailmerge_cover_letter_per_company.html">会社ごとに1枚の送付状</a></td></tr>
+<tr><td><strong>ラベル</strong></td><td>ラベルの枠ごとに1人ずつ（Next Recordで次の人へ）</td><td>宛名ラベル、名札シール、1枚に3人ずつの受講票</td><td><a href="article_mailmerge_label_basic.html">宛名ラベルの基本</a>／<a href="article_mailmerge_multiple_records_per_page.html">1枚に複数人分</a></td></tr>
+<tr><td><strong>封筒</strong></td><td>封筒の大きさの用紙に1人1枚</td><td>長形3号・角形2号などの封筒の宛名</td><td><a href="article_mailmerge_envelope_naga3.html">長形3号の封筒に縦書きで宛名</a></td></tr>
+<tr><td><strong>はがき</strong>（はがき印刷）</td><td>はがきの宛名面に1人1枚（郵便番号の枠付き）</td><td>年賀状・案内はがきの宛名面</td><td><a href="article_mailmerge_hagaki_atena.html">はがき宛名面印刷</a></td></tr>
+</tbody></table></div>
+<p>はがきは「差し込み印刷の開始」ではなく、同じタブの「<strong>はがき印刷</strong>」→「宛名面の作成」から始めます。</p>
+</section>
+<section class="method-section" id="guide-step-5">
+<h2>レターと名簿の違いを実際の画面で比べる</h2>
+<p>同じExcelの名簿（架空の8名）を使って、レターと名簿で差し込んだ結果を比べました。</p>
+<h3>レター：1人ごとにページが分かれる</h3>
+<p>案内文に «部署» «氏名» などを入れてレターで差し込むと、1人分の文書の後ろに<strong>「セクション区切り（次のページから新しいセクション）」</strong>が自動で入り、次の人は次のページから始まります。</p>
+<figure class="article-screenshot"><a aria-label="画像を拡大：レターで差し込んだ結果。1人分の案内文の後ろにセクション区切りが入っている" href="../../image/articles/2026-11-01/word-letter-result-sections.jpg" rel="noopener" target="_blank" style="--screenshot-width:1173.09px"><img alt="レターで差し込んだ結果。1人分の案内文の後ろにセクション区切りが入っている" decoding="async" height="868" loading="lazy" src="../../image/articles/2026-11-01/word-letter-result-sections.jpg" width="1376"></a><figcaption>レターで差し込んだ新しい文書を「表示」→「下書き」で見た画面です。山田さんの案内文の後ろにセクション区切りがあり、鈴木さんの案内文は次のページから始まります。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<p>文書は1人分（1ページ）だけ作ればよく、人数分のページは差し込むときにWordが作ります。ふだんの案内文・通知書はこの形で足ります。</p>
+<h3>名簿：1枚に続けて並ぶ</h3>
+<p>名簿では、文書に書いた内容が1人分ずつ<strong>改ページなしで</strong>続けて差し込まれます。一覧表を作るときは、1行分だけ作ります。</p>
+<figure class="article-screenshot"><a aria-label="画像を拡大：名簿の差し込みで社員番号・氏名・部署・受講日をタブで区切って1行に並べた文書" href="../../image/articles/2026-11-01/word-directory-list-fields.jpg" rel="noopener" target="_blank" style="--screenshot-width:925.00px"><img alt="名簿の差し込みで社員番号・氏名・部署・受講日をタブで区切って1行に並べた文書" decoding="async" height="145" loading="lazy" src="../../image/articles/2026-11-01/word-directory-list-fields.jpg" width="925"></a><figcaption>名簿で作った文書です。«社員番号»«氏名»«部署»«受講日_印刷用» をタブで区切って1行に並べ、最後にEnterで空の行を作りました。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<figure class="article-screenshot"><a aria-label="画像を拡大：名簿で差し込んだ結果。8名分が1ページに1行ずつ並んでいる" href="../../image/articles/2026-11-01/word-directory-list-result.jpg" rel="noopener" target="_blank" style="--screenshot-width:925.00px"><img alt="名簿で差し込んだ結果。8名分が1ページに1行ずつ並んでいる" decoding="async" height="456" loading="lazy" src="../../image/articles/2026-11-01/word-directory-list-result.jpg" width="925"></a><figcaption>「完了と差し込み」→「個々のドキュメントの編集」で差し込んだ結果です。8名が1ページに1行ずつ並びました。名前が短い人（田中 健）は、タブの位置がずれて列がそろっていません。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<ul class="line-height-2">
+<li><strong>列をそろえる：</strong>名前の長さで列がずれるときは、「ホーム」タブ →「段落」の右下のボタン →「タブ設定」で、タブの位置を文字数で決めておきます。</li>
+<li><strong>見出し行は入れない：</strong>名簿の文書に「社員番号　氏名…」の見出しを書くと、人数分くり返されます。見出しは、差し込んだ後の新しい文書に追加します。</li>
+<li><strong>プレビューは1人分：</strong>名簿では「結果のプレビュー」に1人分しか表示されません。全体は差し込んだ後の文書で確認します。</li>
+</ul>
+</section>
+<section class="method-section" id="guide-step-6">
+<h2>迷ったときの決め方</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>やりたいことから選ぶ</caption>
+<thead><tr><th>やりたいこと</th><th>選ぶ種類</th></tr></thead>
+<tbody>
+<tr><td>1人に1枚ずつ、同じ文面で名前や日付だけ変えて印刷したい</td><td><strong>レター</strong></td></tr>
+<tr><td>1枚の紙に全員分を表のように並べたい（一覧）</td><td><strong>名簿</strong></td></tr>
+<tr><td>会社ごと・部署ごとに1枚にまとめたい（同じ会社の人を1枚に）</td><td><strong>名簿で会社ごとに絞って出力</strong>するか、1行1社のデータを作ってレターで差し込む（<a href="article_mailmerge_cover_letter_per_company.html">送付状の記事</a>）</td></tr>
+<tr><td>1枚の紙に決まった人数（3人ずつ・10人ずつ）を枠で並べたい</td><td><strong>ラベル</strong>（<a href="article_mailmerge_multiple_records_per_page.html">1枚に複数人分</a>）</td></tr>
+<tr><td>宛名シールを作りたい</td><td><strong>ラベル</strong></td></tr>
+<tr><td>封筒に直接宛名を印刷したい</td><td><strong>封筒</strong></td></tr>
+<tr><td>はがきの宛名面を作りたい</td><td><strong>はがき印刷</strong>（宛名面の作成）</td></tr>
+</tbody></table></div>
+<div class="xdemo-note-info"><strong>まず覚えるならレター</strong><br/>
+名簿の差し込み・Excelのつなぎ方・フィールドの挿入・フィルター・プレビュー・差し込みの操作は、どの種類でも同じです。最初はレターで一通りの流れを覚えると、名簿やラベルにもそのまま応用できます。</div>
+</section>
+<section class="method-section" id="guide-step-7">
+<h2>よくある質問</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>レターと名簿でよくある疑問</caption>
+<thead><tr><th>疑問</th><th>答え</th></tr></thead>
+<tbody>
+<tr><td>レターで1枚に2人分入れたい</td><td>レターでも、2人目の前に «Next Record» を入れれば1枚に複数人を入れられます。決まった人数を枠で並べるならラベルのほうが作りやすいです（<a href="article_mailmerge_multiple_records_per_page.html">1枚に複数人分</a>）。</td></tr>
+<tr><td>名簿で1人1ページにしたい</td><td>文書の最後に改ページを入れればできますが、その用途ならレターを選ぶほうが簡単です。</td></tr>
+<tr><td>必要な人だけ印刷したい</td><td>どの種類でも「アドレス帳の編集」のフィルターで絞り込めます（<a href="article_mailmerge_filter_two_patterns.html">必要な人だけ印刷する2つの方法</a>）。</td></tr>
+</tbody></table></div>
+<p class="verify-note">画面はWindows版のWord・Excel（Microsoft 365）で、架空の名簿を使って撮影しました。紙への印刷は行っていません。画面の名前や配置は、お使いの版で異なる場合があります。</p>
+</section>
+<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>基本の流れを確認する</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p>通常操作で完成できる方法を先に紹介しています。コードを使う方法は、必要な場合に応用編を開いて参照してください。</p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="article_mailmerge_letter_filter_print.html">Word差し込み印刷（レター）の流れ：絞り込みから印刷まで</a></li>
+<li><a href="article_mailmerge_cover_letter_per_company.html">会社ごとに1枚の送付状を作る方法（名簿差し込み）</a></li>
+<li><a href="article_mailmerge_label_basic.html">Word差し込み印刷で宛名ラベルを作る基本手順</a></li>
+<li><a href="article_mailmerge_multiple_records_per_page.html">1枚に複数人分を並べる方法（3人ずつ・4人ずつ）</a></li>
+<li><a href="article_mailmerge_method_comparison.html">Excel VBA・Excel数式・Word差し込み印刷の使い分け</a></li>
+</ul></section>
+</article>
+</main>
+<footer class="site-footer"><div aria-label="運営情報と検証方針" class="site-footer-trust"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Windows版 Word / Excel（Microsoft 365）で撮影・確認しています。Word 2016以降でも同じ種類を選べますが、画面の表示は版によって異なる場合があります。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>© Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js?v=20261101"></script>
+<script src="word-images.js?v=20261102-images" defer></script>
+</body>
+</html>

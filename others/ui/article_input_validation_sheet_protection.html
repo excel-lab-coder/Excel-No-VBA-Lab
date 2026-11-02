@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Excelで入力欄だけ編集できるようにする｜入力規則とシート保護で配布用ファイルを作る｜Excel &times; No VBA Lab</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="Excelの「データの入力規則」と「シートの保護」で、入力欄だけ編集できる配布用ファイルを作る方法。セルのロック解除、リスト・日付・整数・ユーザー設定（桁数と重複チェック）の入力規則、エラーメッセージ、Tabで入力欄だけ移動する保護の設定、貼り付けで規則をすり抜ける注意と「無効データのマーク」まで解説します。" name="description">
+<meta content="Excelで入力欄だけ編集できるようにする：入力規則とシート保護" property="og:title">
+<meta content="数式の上書きと入力ミスを防ぐ、配布用Excelの作り方。VBAなしで設定できます。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_input_validation_sheet_protection.html" property="og:url">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_input_validation_sheet_protection.html" rel="canonical">
+<link href="../../common.css?v=20261101-images" rel="stylesheet">
+<link href="../../article.css?v=20261101" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "Excelで入力欄だけ編集できるようにする：入力規則とシート保護", "description": "Excelの「データの入力規則」と「シートの保護」で、入力欄だけ編集できる配布用ファイルを作る方法。セルのロック解除、リスト・日付・整数・ユーザー設定（桁数と重複チェック）の入力規則、エラーメッセージ、Tabで入力欄だけ移動する保護の設定、貼り付けで規則をすり抜ける注意と「無効データのマーク」まで解説します。", "datePublished": "2026-11-01", "dateModified": "2026-11-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_input_validation_sheet_protection.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "入力規則とシート保護", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_input_validation_sheet_protection.html"}]}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><strong>入力規則とシート保護</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-02</span></div><h1 class="article-title">Excelで入力欄だけ編集できるようにする：入力規則とシート保護</h1>
+<p class="article-summary" data-seo-lead="true">部署に配る入力用のExcelで、数式が上書きされる・部署名がばらばらになる・おかしな日付が入る、といったミスを減らす方法です。入力規則で入力できる値を決め、シートの保護で入力欄以外を守ります。VBAは使いません。</p></div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>部署に配る入力用のExcelファイルで、こんなことが起きていませんか。</p>
+<ul class="line-height-2">
+<li>合計の数式が、誰かに数字で上書きされていた</li>
+<li>部署名が「営業」「営業部」「営業１課」とばらばらに入力される</li>
+<li>日付の欄に「来週」「11/31」のような値が入る</li>
+</ul>
+<p>Excelの<strong>「データの入力規則」</strong>と<strong>「シートの保護」</strong>を組み合わせると、<strong>入力欄だけ編集でき、入力できる値も決められる</strong>ファイルが、VBAなしで作れます。</p>
+<div class="xdemo-note-good"><strong>手順の流れ：</strong>① 入力欄を決めて色を付ける → ② 入力欄のロックを外す → ③ 入力規則を設定する → ④ シートを保護する → ⑤ 配る前にテストする</div>
+</section>
+
+<section class="method-section">
+<h2>手順1：入力欄を決めて色を付ける</h2>
+<p>まず、<strong>人が入力するセル</strong>と、<strong>数式や見出しのセル</strong>を分けます。入力欄に薄い色を付けておくと、使う人にも「ここに入力する」と伝わります。</p>
+<div class="table-wrapper"><table class="comparison-table"><caption>入力表の例</caption>
+<thead><tr><th></th><th>A 日付</th><th>B 部署</th><th>C 社員番号</th><th>D 金額</th><th>E 消費税（数式）</th></tr></thead>
+<tbody>
+<tr><th>2</th><td>（入力）</td><td>（入力）</td><td>（入力）</td><td>（入力）</td><td><code>=ROUNDDOWN(D2*0.1,0)</code></td></tr>
+</tbody></table></div>
+<p>この例では A2:D50 が入力欄、E列が数式です。</p>
+</section>
+
+<section class="method-section">
+<h2>手順2：入力欄の「ロック」を外す</h2>
+<p>Excelのセルは、最初からすべて<strong>「ロック」</strong>されています。ただし、ロックはシートを保護したときに初めて効きます。保護する前に、<strong>入力欄だけロックを外して</strong>おきます。</p>
+<ol class="line-height-2">
+<li>入力欄（A2:D50）を選びます。</li>
+<li><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">1</span> で「セルの書式設定」を開きます。</li>
+<li><strong>「保護」タブ</strong>で、<strong>「ロック」のチェックを外して</strong>「OK」を押します。</li>
+</ol>
+<p>数式のE列はロックしたままにします。数式を見せたくない場合は、同じ画面の「表示しない」にチェックを入れると、保護後に数式バーに式が表示されなくなります。</p>
+<figure class="article-screenshot"><a href="../../image/articles/2026-11-01/excel-unlock-input-cells.jpg" target="_blank" rel="noopener" aria-label="画像を拡大：セルの書式設定の保護タブでロックを外した画面"><img src="../../image/articles/2026-11-01/excel-unlock-input-cells.jpg" alt="セルの書式設定の保護タブでロックを外した画面" width="545" height="552" loading="lazy" decoding="async"></a><figcaption>入力欄を選び、「保護」タブの「ロック」を外します。シートを保護するまでは、この設定だけでは編集は制限されません。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<p class="verify-note">社員番号の列（C2:C50）は、先に表示形式を「文字列」にしておきます。<span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">1</span> →「表示形式」タブ →「文字列」。こうしないと「000123」が「123」になり、手順3の「6桁」のチェックで止められます。Microsoft 365 版 Excel（Windows、バージョン 2610）で、表示形式が「標準」のセルでは「000123」が止められ、「文字列」のセルでは「000123」が入力でき「00012」が止められることを確認しました。</p>
+</section>
+
+<section class="method-section">
+<h2>手順3：入力規則で、入力できる値を決める</h2>
+<p>入力欄を選び、<strong>「データ」タブ → 「データの入力規則」</strong>を開きます。「設定」タブの「入力値の種類」で、次のように決めます。</p>
+<h3>3-1. 部署：リストから選ばせる</h3>
+<ol class="line-height-2">
+<li>別のシート（例：「リスト」）のA1:A5に、部署名を1つずつ入力しておきます。</li>
+<li>B2:B50を選び、「入力値の種類」で<strong>「リスト」</strong>を選びます。</li>
+<li>「元の値」に <code>=リスト!$A$1:$A$5</code> と入力します。</li>
+</ol>
+<p>セルに▼が出て、部署を選べるようになります。表記のゆれがなくなるので、後の集計（SUMIFSやピボットテーブル）が正しく動きます。</p>
+<h3>3-2. 日付：日付の範囲を決める</h3>
+<p>A2:A50で「入力値の種類」を<strong>「日付」</strong>、「データ」を「次の値の間」にして、開始日と終了日を入れます。「11/31」のような存在しない日付や、文字は入力できなくなります。</p>
+<h3>3-3. 金額：0以上の整数だけ</h3>
+<p>D2:D50で<strong>「整数」</strong>、「次の値以上」、最小値「0」にします。</p>
+<h3>3-4. 社員番号：6桁で、重複させない（ユーザー設定）</h3>
+<p>C2:C50で<strong>「ユーザー設定」</strong>を選び、「数式」に次の式を入れます。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=AND(LEN(C2)=6,COUNTIF($C$2:$C$50,C2)=1)</span></div><p class="code-comment">6文字で、同じ番号が他にないときだけ入力できます。先頭の0を残すため、C列の表示形式は先に「文字列」にしておきます。</p>
+
+<h3>3-5. 入力時メッセージとエラーメッセージ</h3>
+<ul class="line-height-2">
+<li><strong>「入力時メッセージ」タブ：</strong>セルを選んだときに説明を出せます（例：「社員番号を6桁で入力してください（例：000123）」）。</li>
+<li><strong>「エラー メッセージ」タブ：</strong>決まりと違う値を入れたときの表示を決めます。「スタイル」は、入力を止める<strong>「停止」</strong>が基本です。「注意」「情報」は、確認のうえで入力できてしまいます。</li>
+<li><strong>「日本語入力」タブ：</strong>社員番号や金額の欄を「オフ（英語モード）」にしておくと、全角数字の入力を減らせます。</li>
+</ul>
+<figure class="article-screenshot"><a href="../../image/articles/2026-11-01/excel-validation-options.jpg" target="_blank" rel="noopener" aria-label="画像を拡大：入力規則の入力値の種類を開きリストを選ぶ画面"><img src="../../image/articles/2026-11-01/excel-validation-options.jpg" alt="入力規則の入力値の種類を開きリストを選ぶ画面" width="433" height="362" loading="lazy" decoding="async"></a><figcaption>「入力値の種類」を開いた画面です。「リスト」を選んだ後、「元の値」に部署一覧のセル範囲を指定します。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<p class="verify-note">画面の名前・ボタンの位置は、環境により結果が異なる場合があります。お使いの版で表示を確認してください。</p>
+</section>
+
+<section class="method-section">
+<h2>手順4：シートを保護する</h2>
+<ol class="line-height-2">
+<li><strong>「校閲」タブ → 「シートの保護」</strong>を押します。</li>
+<li>パスワードは任意です。付ける場合は、<strong>忘れると解除できなくなる</strong>ので、管理者の間で決めた場所に控えておきます。</li>
+<li>「このシートのすべてのユーザーに許可する操作」で、<strong>「ロックされていないセル範囲の選択」だけにチェック</strong>を残し、「ロックされたセル範囲の選択」は外します。</li>
+<li>「OK」を押します。</li>
+</ol>
+<p>こうすると、<span class="kbd-btn">Tab</span> や <span class="kbd-btn">Enter</span> を押したときに、<strong>入力欄だけを順に移動</strong>するようになります。数式のセルは選ぶこともできません。</p>
+<figure class="article-screenshot"><a href="../../image/articles/2026-11-01/excel-protect-input-only.jpg" target="_blank" rel="noopener" aria-label="画像を拡大：シートの保護でロックされていないセル範囲の選択を許可した画面"><img src="../../image/articles/2026-11-01/excel-protect-input-only.jpg" alt="シートの保護でロックされていないセル範囲の選択を許可した画面" width="254" height="422" loading="lazy" decoding="async"></a><figcaption>「ロックされたセル範囲の選択」を外し、「ロックされていないセル範囲の選択」を残します。上部の「シートとロックされたセルの内容を保護する」はオンのままにします。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<h3>シートの追加・削除・名前の変更も防ぎたいとき</h3>
+<p>「校閲」タブ →<strong>「ブックの保護」</strong>で、シートの構成（追加・削除・名前の変更・並べ替え）を保護できます。シートの保護とは別の機能です。</p>
+<h3>あとで直すとき</h3>
+<p>「校閲」タブ →「シート保護の解除」で解除し、直してから、もう一度保護します。</p>
+</section>
+
+<section class="method-section">
+<h2>手順5：配る前にテストする</h2>
+<ul class="line-height-2">
+<li>数式のセルに入力しようとして、止められるか。</li>
+<li>入力規則と違う値（存在しない日付、マイナスの金額、5桁の社員番号）が止められるか。</li>
+<li><span class="kbd-btn">Tab</span> で入力欄だけを移動できるか。</li>
+<li>最終行まで入力したときに、数式の範囲が足りているか。</li>
+</ul>
+</section>
+
+<section class="method-section">
+<h2>知っておきたい限界と注意</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>入力規則とシート保護でできないこと</caption>
+<thead><tr><th>注意点</th><th>内容と対策</th></tr></thead>
+<tbody>
+<tr><td>貼り付けると入力規則をすり抜ける</td><td>別の場所からコピーして貼り付けると、入力規則に合わない値も入ってしまうことがあります。回収した後に「データの入力規則」の▼→<strong>「無効データのマーク」</strong>を押すと、決まりに合わない値が赤い丸で囲まれます。</td></tr>
+<tr><td>保護はセキュリティではない</td><td>シートの保護は、<strong>うっかりミスを防ぐための機能</strong>です。見られて困る情報は、そもそも配るファイルに入れません。</td></tr>
+<tr><td>テーブルが自動で広がらない</td><td>保護したシートでは、テーブル（<span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">T</span>）の行が自動で増えません。入力行を先に多めに用意しておきます。</td></tr>
+<tr><td>並べ替え・フィルターができない</td><td>必要なら、保護の画面で「並べ替え」「オートフィルターの使用」にもチェックを入れます（ロックされたセルを含む範囲は並べ替えできません）。</td></tr>
+<tr><td>ユーザーごとに入力欄を分けたい</td><td>「校閲」タブ →「範囲の編集を許可」で、範囲ごとにパスワードを付けられます。</td></tr>
+</tbody></table></div>
+<p class="verify-note">貼り付け時の入力規則の扱いは、環境により結果が異なる場合があります。</p>
+</section>
+
+<section class="method-section">
+<h2>入力欄だけを一度に消したいとき</h2>
+<p>毎月入力欄を空にして使い回す場合は、<a href="../ui/article_select_input_range.html">入力欄だけ範囲選択して初期化する方法</a> と組み合わせると、数式を消さずに入力欄だけクリアできます。</p>
+</section>
+
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="article_select_input_range.html">Excelで入力欄だけ範囲選択して初期化する方法</a></li>
+<li><a href="article_form_controls.html">開発タブ＆フォームコントロールガイド</a></li>
+<li><a href="../data/article_text_numbers_fix.html">Excelの数字が文字列になって計算・検索できないときの直し方</a></li>
+<li><a href="../../functions/old/article_countifs_sumifs.html">COUNTIFS・SUMIFSガイド</a></li>
+<li><a href="../../qr/">QR Automation Lab（入力作業の自動化）</a></li>
+</ul></section>
+</article>
+</main>
+<footer class="site-footer"><div class="site-footer-trust" aria-label="運営情報と検証方針"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Windows版 Excel 2016以降・Microsoft 365 を想定しています（XLOOKUP・FILTERはMicrosoft 365／Excel 2021以降）。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js?v=20261101"></script>
+</body>
+</html>

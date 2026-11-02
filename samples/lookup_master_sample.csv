@@ -1,0 +1,7 @@
+employee_id,name,department,location,grade,hire_date
+E001,Tanaka Taro,Sales,Tokyo,A,2018-04-01
+E002,Suzuki Hanako,Accounting,Osaka,B,2020-10-01
+E003,Sato Ichiro,Logistics,Nagoya,B,2016-07-15
+E004,Kimura Mei,Production,Fukuoka,C,2022-04-01
+E005,Yamada Ren,Information Systems,Tokyo,A,2015-01-05
+E006,Ito Aoi,Quality Control,Sendai,C,2023-04-01

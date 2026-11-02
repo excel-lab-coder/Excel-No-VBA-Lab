@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wordの「文書の比較」で修正箇所をすぐ見つける｜規程・マニュアルの改訂確認｜Excel × No VBA Lab</title>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="変更前後の2文書を比較し、変更履歴を確認して別名で保存します。" name="description"/>
+<meta content="Wordの「文書の比較」で修正箇所をすぐ見つける" property="og:title"/>
+<meta content="変更前後の2文書を比較し、変更履歴を確認して別名で保存します。" property="og:description"/>
+<meta content="article" property="og:type"/>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_word_compare.html" property="og:url"/>
+<meta content="Excel × No VBA Lab" property="og:site_name"/>
+<meta content="ja_JP" property="og:locale"/>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="index, follow" name="robots"/>
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_word_compare.html" rel="canonical"/>
+<link href="../../common.css?v=20261101" rel="stylesheet"/>
+<link href="../../article.css?v=20261101" rel="stylesheet"/>
+<link as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="preload"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="stylesheet"/></noscript>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Wordの「文書の比較」で修正箇所をすぐ見つける", "description": "変更前後の2文書を比較し、変更履歴を確認して別名で保存します。", "datePublished": "2026-11-01", "dateModified": "2026-11-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_word_compare.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "Wordの文書の比較", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_word_compare.html"}]}
+</script>
+<link href="word-guide.css?v=20261102-images" rel="stylesheet"/><meta content="1" name="difficulty"/></head>
+<body class="article-layout word-guide">
+<div aria-hidden="true" class="reading-progress"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><strong>Wordの文書の比較</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word</span><span class="article-date">更新日: 2026-11-02</span></div><h1 class="article-title">Wordの「文書の比較」で修正箇所をすぐ見つける</h1>
+<p class="article-summary" data-seo-lead="true">変更前後の2文書を比較し、変更履歴を確認して別名で保存します。</p></div><section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">入門（Lv.1）</p><ol class="word-guide-flow"><li>2文書を用意</li><li>比較条件を指定</li><li>差分を読む</li><li>判断して保存</li></ol><details class="word-guide-toc"><summary>手順の目次を開く</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">完成イメージ：新旧の文書から変更箇所を確認します</a></li><li><a href="#guide-step-2">準備：比較する2つのファイルを分かる名前で保存する</a></li><li><a href="#guide-step-3">手順1：「校閲」から比較画面を開く</a></li><li><a href="#guide-step-4">手順2：比較条件と出力先を確認する</a></li><li><a href="#guide-step-5">手順3：変更履歴を順番に読む</a></li><li><a href="#guide-step-6">手順4：採用する変更を反映し、別名で保存する</a></li><li><a href="#guide-step-7">比較と組み込みの違い</a></li></ol></nav></details></section>
+<section class="method-section" id="guide-step-1"><h2>完成イメージ：新旧の文書から変更箇所を確認します</h2><p>改訂前と改訂後のWordファイルを選ぶと、違いが変更履歴として表示されます。<strong>比較結果を新しい文書へ出し、1件ずつ確認して保存</strong>します。フィールドコードは使いません。</p></section>
+<section class="method-section" id="guide-step-2"><h2>準備：比較する2つのファイルを分かる名前で保存する</h2><ol class="line-height-2"><li>改訂前を「手順書_変更前.docx」、改訂後を「手順書_変更後.docx」などの名前で保存します。</li><li>「変更前」と「変更後」を取り違えないよう、文書の日付と内容を確認します。</li><li>既に変更履歴がある文書では、その履歴をどう扱うか確認メッセージが出ることがあります。元のファイルのコピーを残してから進めます。</li></ol></section>
+<section class="method-section" id="guide-step-3"><h2>手順1：「校閲」から比較画面を開く</h2><ol class="line-height-2"><li>Wordを開き、「校閲」→「比較」→「比較」を選びます。</li><li>左側の「元の文書」のフォルダーのボタンで、変更前のファイルを選びます。</li><li>右側の「変更された文書」で、変更後のファイルを選びます。</li><li>比較結果に表示する変更者の名前は、「改訂版」など内容が分かる名前を任意で指定します。</li></ol><figure class="article-screenshot"><a aria-label="画像を拡大：文書の比較ダイアログの実画面です。左が変更前、右が変更後です。画像はファイルを指定する前の状態です。" href="../../image/articles/2026-11-02/word-guide/compare-dialog.png" rel="noopener" target="_blank" style="--screenshot-width:651.00px"><img alt="文書の比較ダイアログの実画面です。左が変更前、右が変更後です。画像はファイルを指定する前の状態です。" decoding="async" height="182" loading="lazy" src="../../image/articles/2026-11-02/word-guide/compare-dialog.png" width="651"></a><figcaption>文書の比較ダイアログの実画面です。左が変更前、右が変更後です。画像はファイルを指定する前の状態です。 <span class="screenshot-enlarge">（クリックで拡大）</span></figcaption></figure></section>
+<section class="method-section" id="guide-step-4"><h2>手順2：比較条件と出力先を確認する</h2><ol class="line-height-2"><li>「オプション」を押して詳細を開きます。</li><li>文章の変更を中心に見たいときは、「書式設定」のチェックを外す方法があります。書式の変更も点検するならオンにします。</li><li>「変更の表示対象」は「新規文書」を選びます。これで比較結果を元の2つとは別の文書に出せます。</li><li>ファイル名と条件を確認し、「OK」を押します。</li></ol><figure class="article-screenshot"><a aria-label="画像を拡大：詳細設定の実画面です。下部の「変更の表示対象」で「新規文書」を選びます。比較の対象は文書の内容に合わせて指定します。" href="../../image/articles/2026-11-02/word-guide/compare-options.png" rel="noopener" target="_blank" style="--screenshot-width:651.00px"><img alt="詳細設定の実画面です。下部の「変更の表示対象」で「新規文書」を選びます。比較の対象は文書の内容に合わせて指定します。" decoding="async" height="464" loading="lazy" src="../../image/articles/2026-11-02/word-guide/compare-options.png" width="651"></a><figcaption>詳細設定の実画面です。下部の「変更の表示対象」で「新規文書」を選びます。比較の対象は文書の内容に合わせて指定します。 <span class="screenshot-enlarge">（クリックで拡大）</span></figcaption></figure></section>
+<section class="method-section" id="guide-step-5"><h2>手順3：変更履歴を順番に読む</h2><p>比較結果の新しい文書で「校閲」→「変更履歴」の表示を「すべての変更履歴」にします。元文書の表示は「比較」→「元の文書を表示」で切り替えます。</p><div class="table-wrapper"><table class="comparison-table"><caption>比較結果の読み方を示す説明例（画面の再現ではありません）</caption><thead><tr><th scope="col">変更前</th><th scope="col">変更後</th><th scope="col">比較結果で確認すること</th></tr></thead><tbody><tr><td>提出期限は11月10日です。</td><td>提出期限は11月15日です。</td><td>10の削除と15の追加</td></tr><tr><td>申込書を提出します。</td><td>申込書と名簿を提出します。</td><td>「と名簿」の追加</td></tr></tbody></table></div><ol class="line-height-2"><li>「校閲」の「次へ」で変更箇所へ移動します。</li><li>追加・削除の両方を読み、前後の文の意味が通るか確かめます。</li><li>「変更履歴ウィンドウ」を表示すると、変更の一覧も確認できます。削除文字は設定によって本文中の取り消し線や吹き出しに表示されます。</li></ol></section>
+<section class="method-section" id="guide-step-6"><h2>手順4：採用する変更を反映し、別名で保存する</h2><ol class="line-height-2"><li>採用する変更は「承諾」、採用しない変更は「元に戻す」（版によって「拒否」）を選びます。これは変更履歴に対する操作で、Ctrl＋Zとは別です。</li><li>最初は1件ずつ処理します。すべて採用する判断が済んだ場合だけ、承諾メニューの一括操作を使います。</li><li>「変更履歴なし」の見た目にするだけでは、変更履歴自体は消えません。承諾・元に戻すの処理が終わったか確認します。</li><li>「手順書_確認済み.docx」などの名前で保存します。元の変更前・変更後も残します。</li></ol></section>
+<section class="method-section" id="guide-step-7"><h2>比較と組み込みの違い</h2><p>2つの版の違いを見たいときは「比較」を使います。複数人が修正した変更履歴をまとめる用途には、比較メニューの「組み込み」があります。目的を分けて選んでください。</p><p>PDFをWordへ変換した文書は、変換時の改行・表の違いまで差分になることがあります。表や図が多い資料では、比較結果と実際のページをあわせて確認します。</p></section>
+<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>基本の流れを確認する</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p>通常操作で完成できる方法を先に紹介しています。コードを使う方法は、必要な場合に応用編を開いて参照してください。</p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="article_word_wildcard_replace.html">Wordの「置換」でVBAなしに一括整形する</a></li>
+<li><a href="article_excel_to_word_paste.html">Excelの表をWordへ貼る3つの方法</a></li>
+<li><a href="article_mailmerge_method_comparison.html">Excel VBA・Excel数式・Word差し込み印刷の使い分け</a></li>
+</ul></section>
+</article>
+</main>
+<footer class="site-footer"><div aria-label="運営情報と検証方針" class="site-footer-trust"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Windows版 Word / Excel 2016以降・Microsoft 365 を想定しています。Mac版・Web版ではメニューや使える機能が異なります。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>© Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js?v=20261101"></script>
+<script src="word-images.js?v=20261102-images" defer></script>
+</body>
+</html>

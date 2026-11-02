@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIとExcelでデータを整理する：表記ゆれ・空欄・先頭ゼロ｜Excel × No VBA Lab</title>
+<meta name="description" content="店舗名の空白、文字列の金額、空欄をAIと確認する練習。原本と整理後を並べ、顧客番号の先頭ゼロと正当な重複を保つ依頼文を紹介します。">
+<meta name="difficulty" content="3"><link rel="canonical" href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/unlocked/article_ai_excel_cleanup.html">
+<meta property="og:title" content="AIとExcelでデータを整理する：表記ゆれ・空欄・先頭ゼロ"><meta property="og:description" content="削除する前に、変換ルールを決める。5行の架空データで整理前後を照合する実践記事。"><meta property="og:type" content="article"><meta property="og:locale" content="ja_JP"><meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/unlocked/article_ai_excel_cleanup.html"><meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<link rel="icon" href="../favicon.ico"><link rel="stylesheet" href="../common.css?v=20261101"><link rel="stylesheet" href="../article.css?v=20261101"><link rel="stylesheet" href="ai-addins.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"AIとExcelでデータを整理する：表記ゆれ・空欄・先頭ゼロ","dateModified":"2026-10-09","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"mainEntityOfPage":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/unlocked/article_ai_excel_cleanup.html"}</script>
+</head><body><a class="skip-link" href="#main-content">メインコンテンツへスキップ</a><header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../">Excel × No VBA Lab</a></div><p class="site-subtitle">AI × Excel活用ラボ ／ データ整理</p></div></div></header>
+<main class="main-content article-layout" id="main-content"><nav class="breadcrumb" aria-label="パンくずリスト"><a href="../">ホーム</a><span>›</span><a href="ai/">AI × Excel活用</a><span>›</span><strong>データを整理する</strong></nav><article class="article-body ai-addin-article"><header class="article-header"><div class="article-meta"><span class="badge badge-all">Lv.3 ／ 基準式はExcel 2016以降</span><span class="article-date">作成日：2026年10月9日</span></div><h1 class="article-title">AIとExcelでデータを整理する<br>表記ゆれ・空欄・先頭ゼロ</h1><p class="article-summary">「この表をきれいにして」と頼む前に、何を直し、何を残すかを決めます。AIに変換ルールを説明してもらい、原本と整理後を並べて照合する練習です。</p></header>
+<nav class="ai-contents" aria-label="この記事の目次"><ol><li><a href="#data">整理前の表を用意する</a></li><li><a href="#rules">変換ルールを先に決める</a></li><li><a href="#request">AIへの依頼文</a></li><li><a href="#check">整理後を照合する</a></li></ol></nav>
+<section id="data"><h2>1. 表記ゆれと空欄がある5行の表</h2><p>A1:D6に次の架空データを入力します。顧客番号は列を文字列にしてから入力してください。空白が見えるよう、店舗名を引用符で囲んで示していますが、入力する文字に引用符は含めません。</p>
+<div class="table-wrapper ai-table-wrap" role="region" aria-label="整理前の練習データ" tabindex="0"><table class="compare-table"><thead><tr><th scope="col">注文番号（A）</th><th scope="col">店舗（B）</th><th scope="col">金額（C）</th><th scope="col">顧客番号（D）</th></tr></thead><tbody><tr><td>R001</td><td><code>"東店"</code></td><td>1200（数値）</td><td>00123</td></tr><tr><td>R002</td><td><code>" 東店 "</code>（半角空白）</td><td><code>1,800</code>（文字列）</td><td>00123</td></tr><tr><td>R003</td><td><code>"東店　"</code>（末尾全角空白）</td><td>500（数値）</td><td>00456</td></tr><tr><td>R004</td><td><code>"西店"</code></td><td>1500（数値）</td><td>00789</td></tr><tr><td>R005</td><td><code>"西店"</code></td><td>空欄</td><td>00890</td></tr></tbody></table></div>
+<p>R002の金額は文字列として入力し、値にカンマを含めます。数値に表示形式でカンマを付けただけのセルとは区別してください。</p></section>
+<section id="rules"><h2>2. 人が決める変換ルール</h2><ul><li>店舗名の前後の半角・全角空白を整理し、東店／西店へ統一する。</li><li>金額のカンマはこの課題では桁区切りなので、R002の文字列を数値1800へ変換する。</li><li>R005の空欄は未確認の金額として残し、確認対象の印を付ける。0で補わない。</li><li>顧客番号の先頭ゼロを保つ。同じ顧客の別注文は残す。</li><li>元のA:D列は残し、整理結果をE列以降へ作る。</li></ul><p>顧客00123が2回出るのは、注文番号が異なる2件の取引です。顧客番号だけを理由に行を削除すると、売上も消えてしまいます。</p></section>
+<section id="request"><h2>3. AIに、編集前の説明を依頼する</h2><pre class="code-readonly"><code>A1:D6の練習用データを整理したいです。
+A列は注文番号、B列は店舗、C列は金額、D列は文字列の顧客番号です。
+店舗名の前後の半角・全角空白を整理します。
+C列のカンマ付き文字列は桁区切りなので数値に変換します。
+空欄は未確認として残し、0にはしません。
+顧客番号の先頭ゼロを保持し、同じ顧客の別注文は削除しません。
+元のA:D列は変更せず、E列以降に整理結果と確認欄を作ります。
+変換ルール、作成する列、変換できない場合の扱いを先に説明してください。
+まだ編集はしないでください。</code></pre><p>通常チャットなら上のデータも添えて、式や手順の提案を受け取ります。アドインから編集する場合も、説明を確認してから進めます。</p>
+<h3>店舗名を整理する基準の式</h3><pre class="code-readonly"><code>=TRIM(SUBSTITUTE(B2,"　"," "))</code></pre><p>全角空白を半角空白に置き換えてからTRIMを使う例です。TRIMは前後の半角空白を取り除き、内部の連続した半角空白も1個へまとめます。店舗名の練習には使えますが、商品名・住所等へ一律に適用する場合は内部の空白を変えてよいか確認します。<a href="https://support.microsoft.com/en-us/excel/functions/trim-function">Microsoft公式のTRIM説明</a></p><p>Web由来の改行しない空白（文字コード160）はTRIMだけでは除去できません。見た目で決め付けず、残った文字を調べて変換対象に追加します。同じ文字に見えるものを全部まとめて消す依頼は避け、対象列とルールを具体化します。</p></section>
+<section id="check"><h2>4. 整理後の答えと、残っている情報を照合する</h2><p>この課題で照合する結果は、<strong>注文5件、顧客番号00123の注文2件、未確認金額1件</strong>です。確定している金額は東店3500、西店1500、合計5000です。この5000にはR005の未確認金額を含めていません。</p><ul><li>元の5行と、各注文番号が全部残っている。</li><li>店舗名が東店／西店へそろっている。</li><li>確定金額が数値になり、文字列の金額が残っていない。</li><li>顧客番号は00123のように先頭ゼロが保持されている。</li><li>未確認金額が0や推測値へ置き換わっていない。</li></ul><p>先頭ゼロが既に失われたデータは、番号の桁数や原本を確認してから補います。AIが見た目を5桁に整えただけで、本来の番号が復元できたとは限りません。</p></section>
+<section><h2>繰り返す作業は本編へつなげる</h2><p>毎月同じ加工をするなら、決めたルールを<a href="../powerquery/basic/article_pq_data_type.html">Power Queryのデータ型</a>や<a href="../functions/old/article_substitute.html">SUBSTITUTE</a>などの手順に落とし込みます。AIには変換方法の候補と例外を相談し、再利用する処理は自分の環境で確認します。</p><p>店舗名の基準式で、前後の半角空白と末尾の全角空白を整理できることは、2026年10月9日にWindows版Excel 16.0（Build 20527）で実計算を確認しました。掲載したデータ・依頼文は当サイトの練習案で、AIによる表全体の編集結果は未検証です。次は<a href="article_ai_excel_review.html">AIの結果を検算する</a>へ。<a href="ai/">AI × Excel活用ラボへ戻る</a></p></section>
+</article></main><footer class="site-footer"><p>© Excel × No VBA Lab</p><p class="site-footer-legal-links"><a href="../about.html">運営者情報</a><span>|</span><a href="../disclaimer.html">免責事項</a><span>|</span><a href="../privacy.html">プライバシーポリシー</a></p></footer><script src="../script.js?v=20261101"></script></body></html>

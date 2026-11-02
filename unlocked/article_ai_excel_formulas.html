@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIにExcelの数式を相談する：条件の伝え方とSUMIFS実践｜Excel × No VBA Lab</title>
+<meta name="description" content="ChatGPT・ClaudeへExcelの版、列、条件、期待する結果を伝える依頼文。5行の練習データでSUMIFSの式と答えを照合し、本編の関数記事へつなぎます。">
+<meta name="difficulty" content="2"><link rel="canonical" href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/unlocked/article_ai_excel_formulas.html">
+<meta property="og:title" content="AIにExcelの数式を相談する：条件の伝え方とSUMIFS実践"><meta property="og:description" content="数式を頼む前に何を伝える？ コピーできる依頼文と、照合する答えを用意しました。"><meta property="og:type" content="article"><meta property="og:locale" content="ja_JP"><meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/unlocked/article_ai_excel_formulas.html"><meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<link rel="icon" href="../favicon.ico"><link rel="stylesheet" href="../common.css?v=20261101"><link rel="stylesheet" href="../article.css?v=20261101"><link rel="stylesheet" href="ai-addins.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"AIにExcelの数式を相談する：条件の伝え方とSUMIFS実践","dateModified":"2026-10-09","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"mainEntityOfPage":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/unlocked/article_ai_excel_formulas.html"}</script>
+</head><body>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a><header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../">Excel × No VBA Lab</a></div><p class="site-subtitle">AI × Excel活用ラボ ／ 数式の相談</p></div></div></header>
+<main class="main-content article-layout" id="main-content"><nav class="breadcrumb" aria-label="パンくずリスト"><a href="../">ホーム</a><span>›</span><a href="ai/">AI × Excel活用</a><span>›</span><strong>数式を相談する</strong></nav>
+<article class="article-body ai-addin-article"><header class="article-header"><div class="article-meta"><span class="badge badge-all">Lv.2 ／ 基本式はExcel 2016以降</span><span class="article-date">作成日：2026年10月9日</span></div><h1 class="article-title">AIにExcelの数式を相談する<br>条件の伝え方とSUMIFS実践</h1><p class="article-summary">「合計する式を教えて」から一歩進めて、列の意味と集計条件を伝えます。返ってきた式の理由を理解し、自分のExcelで使えるかを確かめる練習です。</p></header>
+<nav class="ai-contents" aria-label="この記事の目次"><ol><li><a href="#request">依頼に入れる情報</a></li><li><a href="#practice">5行のデータで試す</a></li><li><a href="#answer">式と答えの照合</a></li><li><a href="#next">説明を学習につなげる</a></li></ol></nav>
+<section id="request"><h2>1. 数式を頼むときに伝える5つの情報</h2><p>通常チャットなら表の見出しと架空の数行を貼り付けます。Excelアドインなら、対象シート・セル範囲を指定します。どちらも、依頼に次の情報を入れると結果を判断しやすくなります。</p><ol><li><strong>環境：</strong>Excel 2016／2019／2021／2024／Microsoft 365、またはGoogleスプレッドシート。</li><li><strong>入力：</strong>どの列に何があり、データは何行目から始まるか。</li><li><strong>結果：</strong>何を、どの条件で、どこへ出すか。</li><li><strong>例外：</strong>空欄、未登録、返品、重複をどう扱うか。</li><li><strong>回答の形：</strong>数式、引数の説明、確認用の例を求める。</li></ol><p>日付や番号の意味が曖昧なときは、AIに推測させず、先に業務のルールを決めます。</p></section>
+<section id="practice"><h2>2. 「東店の通常売上」を求める練習</h2><p>新しいシートのA1:C6に次の架空データを入力します。金額は数値です。この練習では、区分が「通常」の行だけを集計し、返品は対象に含めません。</p>
+<div class="table-wrapper ai-table-wrap" role="region" aria-label="店舗別売上の練習データ" tabindex="0"><table class="compare-table"><thead><tr><th scope="col">店舗（A列）</th><th scope="col">区分（B列）</th><th scope="col">金額（C列）</th></tr></thead><tbody><tr><td>東店</td><td>通常</td><td>1200</td></tr><tr><td>東店</td><td>通常</td><td>1800</td></tr><tr><td>西店</td><td>通常</td><td>1500</td></tr><tr><td>東店</td><td>返品</td><td>-300</td></tr><tr><td>西店</td><td>返品</td><td>-200</td></tr></tbody></table></div>
+<h3>コピーして使える依頼文</h3><pre class="code-readonly"><code>Excel 2019で使う集計式を相談します。
+A1:C6に店舗・区分・金額の表があります。
+A列は店舗、B列は通常または返品、C列は数値の金額です。
+東店、かつ区分が通常の行だけを合計する式をE2に入れたいです。
+返品は除外します。元のA:C列は変更しません。
+Excel 2019で使える関数で、数式と各引数の意味を説明してください。
+まだセルは編集せず、確認に使える例も提案してください。</code></pre>
+<p>通常チャットで使う場合は、上の表の内容も一緒に伝えます。Excelの版を変えて試すときは、依頼文の環境を書き換えます。</p></section>
+<section id="answer"><h2>3. 提案された式を、基準の式と答えで確かめる</h2><p>この課題の基準になる式は次のとおりです。AIが同じ書き方を返すとは限りませんが、条件と結果を照合できます。</p><pre class="code-readonly"><code>=SUMIFS($C$2:$C$6,$A$2:$A$6,"東店",$B$2:$B$6,"通常")</code></pre><p><strong>答えは3000</strong>です。C2とC3の1200＋1800が対象です。C5の返品-300は含みません。SUMIFSの第1引数は合計する範囲で、その後に条件範囲と条件を組にして指定します。<a href="https://support.microsoft.com/en-us/excel/functions/sumifs-function">Microsoft公式のSUMIFS説明</a></p>
+<h3>条件を変えて、式の意味を確認する</h3><ul><li>店舗を西店、区分を通常にすると1500。</li><li>店舗を東店、区分を返品にすると-300。</li><li>存在しない北店、区分を通常にすると0。</li><li>C3の1800を2000に変えると、東店の通常売上は3200。</li></ul><p>AIの回答が2700なら、返品まで合計していないか確認します。見た目の答えだけでなく、合計範囲と両方の条件が式に入っているかを読みます。</p></section>
+<section id="next"><h2>4. 数式の相談を学習につなげる</h2><pre class="code-readonly"><code>この式を、引数ごとに分けて説明してください。
+どの行が集計されるか、表の行番号でも示してください。
+店舗名をF2、区分をG2に入力して切り替える形にするなら、
+どの部分をセル参照へ置き換えるか説明してください。</code></pre><p>F2とG2で条件を変える基準式は次のようになります。</p><pre class="code-readonly"><code>=SUMIFS($C$2:$C$6,$A$2:$A$6,F2,$B$2:$B$6,G2)</code></pre><p><a href="../functions/old/article_countifs_sumifs.html">本編のCOUNTIFS・SUMIFS</a>で基本を確認し、<a href="article_ai_excel_review.html">AIの結果を検算する記事</a>へ進みます。Googleスプレッドシートで試す場合は環境を明記し、提案された式をそのシートで確認してください。</p></section>
+<section><h2>関連する道具と記事</h2><p>アドインの導入は<a href="article_chatgpt_excel.html">ChatGPT × Excel・Googleスプレッドシート</a>、<a href="article_claude_excel.html">Claude in Excel</a>を参照してください。ここに掲載した依頼文とデータは当サイトの練習案です。</p><p>SUMIFSの主例で3000、金額変更後に3200となることは、2026年10月9日にWindows版Excel 16.0（Build 20527）で実計算を確認しました。AIによる編集の実行結果や、各Excel版・Googleスプレッドシートでの動作は未検証です。</p><p><a href="ai/">AI × Excel活用ラボへ戻る</a></p></section>
+</article></main><footer class="site-footer"><p>© Excel × No VBA Lab</p><p class="site-footer-legal-links"><a href="../about.html">運営者情報</a><span>|</span><a href="../disclaimer.html">免責事項</a><span>|</span><a href="../privacy.html">プライバシーポリシー</a></p></footer><script src="../script.js?v=20261101"></script></body></html>

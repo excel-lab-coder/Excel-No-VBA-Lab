@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Word差し込み印刷でQRコードを差し込む方法｜MERGEBARCODEでExcelの値をQR化｜Excel × No VBA Lab</title>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="応用・難易度高。Wordのフィールドコードで人ごとにQRを生成し、印刷後の読み取りまで確認します。" name="description"/>
+<meta content="Word差し込み印刷でQRコードを差し込む方法" property="og:title"/>
+<meta content="応用・難易度高。Wordのフィールドコードで人ごとにQRを生成し、印刷後の読み取りまで確認します。" property="og:description"/>
+<meta content="article" property="og:type"/>
+<meta content="Excel × No VBA Lab" property="og:site_name"/>
+<meta content="ja_JP" property="og:locale"/>
+<meta content="index, follow" name="robots"/>
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_qrcode.html" rel="canonical"/>
+<link href="../../common.css?v=20261101" rel="stylesheet"/>
+<link href="../../article.css?v=20261101" rel="stylesheet"/>
+<link as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="preload"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="stylesheet"/></noscript>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Word差し込み印刷でQRコードを差し込む方法", "description": "応用・難易度高。Wordのフィールドコードで人ごとにQRを生成し、印刷後の読み取りまで確認します。", "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}}, "datePublished": "2026-06-22", "dateModified": "2026-11-02"}</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"現場実務ラボ","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":3,"name":"Word差し込み印刷","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/"},{"@type":"ListItem","position":4,"name":"Word差し込み印刷でQRコードを差し込む方法","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_qrcode.html"}]}
+</script>
+<link href="word-guide.css?v=20261102-images" rel="stylesheet"/><meta content="5" name="difficulty"/></head>
+<body class="article-layout word-guide">
+<div aria-hidden="true" class="reading-progress"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>差し込み印刷 QRコード</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-02</span></div><h1 class="article-title">Word差し込み印刷でQRコードを差し込む方法：MERGEBARCODEでExcelの値をQR化</h1><p class="article-summary" data-seo-lead="true">応用・難易度高。Wordのフィールドコードで人ごとにQRを生成し、印刷後の読み取りまで確認します。</p></div><section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">難しい・応用（Lv.5）</p><ol class="word-guide-flow"><li>短いIDで準備</li><li>コードを挿入</li><li>全員分を出力</li><li>実機で読み取り</li></ol><details class="word-guide-toc"><summary>手順の目次を開く</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">💡 やりたいこと</a></li><li><a href="#guide-step-2">この記事は応用編：Wordで人ごとのQRを生成します</a></li><li><a href="#guide-step-3">Word QRコードの何が便利か</a></li><li><a href="#guide-step-4">静的なQRコード：DISPLAYBARCODE</a></li><li><a href="#guide-step-5">差し込みQRコード：MERGEBARCODE</a></li><li><a href="#guide-step-6">全角文字は避ける</a></li><li><a href="#guide-step-7">設定手順</a></li><li><a href="#guide-step-8">サイズと読み取りの注意点</a></li><li><a href="#guide-step-9">ExcelでQRを作る方法との使い分け</a></li><li><a href="#guide-step-10">✅ まとめ</a></li><li><a href="#guide-step-11">読み取れないときの確認順</a></li></ol></nav></details></section>
+<section class="goal-section" id="guide-step-1">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>Excelの管理表にあるURL、受付番号、商品ID、Webシステム入力用の文字列などを、Wordの差し込み印刷で1件ずつQRコードにしたいケースがあります。</p>
+<div class="xdemo-note-good"><strong>結論：Wordの <code>MERGEBARCODE</code> または <code>DISPLAYBARCODE</code> フィールドでQRコードを作れます。</strong><br/>ExcelでQR画像を1件ずつ用意しなくても、Word側で差し込み結果からQRコードを生成できます。</div>
+</section><section class="method-section" id="guide-step-2"><h2>この記事は応用編：Wordで人ごとのQRを生成します</h2><p><strong>難易度高（Lv.5）</strong>。Word内で差し込みデータからQRを生成するため、ここではフィールドコードを使います。通常の宛名や案内文は、先にレター・ラベルの基本手順で作ってください。</p><ol class="line-height-2"><li>Excelに「QR用文字列」列を作り、最初は半角IDの「TEST-1001」「TEST-1002」など2件で試します。</li><li>Wordでレターの差し込みを開始し、Excelファイルとシートを接続します。</li><li>氏名やIDを通常のフィールドとして挿入し、QRの横に人が読める文字も残します。</li><li>QRを置く位置でCtrl＋F9を押し、Wordが作ったかっこの内側へ <code>MERGEBARCODE QR用文字列 QR \q 3</code> と入力します。かっこを二重に入力しません。</li><li>F9で更新し、必要に応じAlt＋F9で結果表示に戻して「結果のプレビュー」をオンにします。</li><li>次の人へ切り替え、氏名・ID・QRが一緒に切り替わるか確認します。</li><li>「個々のドキュメントの編集」→「すべて」で完成文書を出します。</li><li>印刷した2件のQRを実際の機器で読み、TEST-1001とTEST-1002がそれぞれ一致することを確認します。</li></ol><figure class="article-screenshot"><a aria-label="画像を拡大：Excelの見出しがWordのフィールド一覧になります。名前を途中で変えた場合は、Word側の挿入箇所も見直します。" href="../../image/articles/2026-11-01/word-insert-mergefield-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:508.00px"><img alt="接続した列名を確認する画面です。QR用文字列の見出しがあることを確認します。この画像は通常フィールドの挿入例で、QRの生成結果ではありません。" decoding="async" height="548" loading="lazy" src="../../image/articles/2026-11-01/word-insert-mergefield-menu.jpg" width="508"></a><figcaption>接続した列名を確認する画面です。QR用文字列の見出しがあることを確認します。この画像は通常フィールドの挿入例で、QRの生成結果ではありません。 （クリックで拡大）</figcaption></figure></section>
+<section class="method-section" id="guide-step-3">
+<h3>Word QRコードの何が便利か</h3>
+<p>差し込みデータからWord内でQRを生成でき、レコードごとの画像ファイルを別に用意せずに済みます。別方式との文字数制限の比較は、利用する方式・版・文字種ごとに確認してください。</p>
+<div class="xdemo-note-info"><strong>ただし、無制限ではありません。</strong><br/>QRコード自体の容量、印刷サイズ、読み取り機の性能、文字種の問題があります。長い文字列ほどQRは細かくなり、印刷で読みにくくなります。</div>
+</section>
+<section class="method-section" id="guide-step-4">
+<h3>静的なQRコード：DISPLAYBARCODE</h3>
+<p>固定のURLや固定文字列をQRコードにするだけなら、<code>DISPLAYBARCODE</code> を使います。</p>
+<div class="code-block" data-lang="word">
+<span class="code-line">{ DISPLAYBARCODE "https://example.com/app?id=1001" QR \q 3 }</span>
+</div>
+<p><code>QR</code> がQRコードの種類、<code>\q 3</code> がエラー訂正レベルです。フィールドの <code>{ }</code> は <code>Ctrl + F9</code> で作ります。</p>
+<figure class="article-screenshot"><a aria-label='画像を拡大：Wordで作った固定値のフィールドです。実際のコードはDISPLAYBARCODE "TEST-1001" QR \q 3です。「\」が画面では「¥」に見える場合があります。' href="../../image/articles/2026-11-02/word-guide/word-qr-code.png" rel="noopener" target="_blank" style="--screenshot-width:500.00px"><img alt='Wordで作った固定値のフィールドです。実際のコードはDISPLAYBARCODE "TEST-1001" QR \q 3です。「\」が画面では「¥」に見える場合があります。' decoding="async" height="57" loading="lazy" src="../../image/articles/2026-11-02/word-guide/word-qr-code.png" width="500"></a><figcaption>Wordで作った固定値のフィールドです。実際のコードはDISPLAYBARCODE "TEST-1001" QR \q 3です。「\」が画面では「¥」に見える場合があります。 （クリックで拡大）</figcaption></figure><figure class="article-screenshot"><a aria-label="画像を拡大：左のコードをF9で更新した実際のQR表示です。固定値のDISPLAYBARCODEの例であり、人ごとに切り替わるMERGEBARCODEの完成結果とは区別してください。紙への印刷・実機の読み取りはこの撮影では行っていません。" href="../../image/articles/2026-11-02/word-guide/word-qr-result.png" rel="noopener" target="_blank" style="--screenshot-width:205.00px"><img alt="左のコードをF9で更新した実際のQR表示です。固定値のDISPLAYBARCODEの例であり、人ごとに切り替わるMERGEBARCODEの完成結果とは区別してください。紙への印刷・実機の読み取りはこの撮影では行っていません。" decoding="async" height="181" loading="lazy" src="../../image/articles/2026-11-02/word-guide/word-qr-result.png" width="205"></a><figcaption>左のコードをF9で更新した実際のQR表示です。固定値のDISPLAYBARCODEの例であり、人ごとに切り替わるMERGEBARCODEの完成結果とは区別してください。紙への印刷・実機の読み取りはこの撮影では行っていません。 （クリックで拡大）</figcaption></figure></section>
+<section class="method-section" id="guide-step-5">
+<h3>差し込みQRコード：MERGEBARCODE</h3>
+<p>Excel側の列ごとに違うQRコードを作るなら、<code>MERGEBARCODE</code> を使います。たとえばExcelに <code>QR用文字列</code> という列がある場合です。</p>
+<div class="code-block" data-lang="word">
+<span class="code-line">{ MERGEBARCODE QR用文字列 QR \q 3 }</span>
+</div>
+<p>これで、差し込み印刷の各レコードごとに、<code>QR用文字列</code> の値からQRコードを生成します。</p>
+<div class="table-responsive"><div class="table-wrapper"><table class="comparison-table"><caption>Excel側の例</caption><thead><tr><th>宛先ID</th><th>氏名</th><th>QR用文字列</th></tr></thead><tbody>
+<tr><td>1001</td><td>山田 太郎</td><td>https://example.com/check?id=1001</td></tr>
+<tr><td>1002</td><td>佐藤 花子</td><td>https://example.com/check?id=1002</td></tr>
+</tbody></table></div></div>
+</section>
+<section class="tips-section" id="guide-step-6">
+<h3>全角文字は避ける</h3>
+<p>実務では、WordのQRコードに日本語の氏名や住所などの全角文字をそのまま入れる設計は避けた方が安全です。半角英数字、URL、ID、区切り記号を中心にします。</p>
+<div class="xdemo-note-warn"><strong>全角文字を使う場合の注意：</strong>どうしても日本語や全角文字をQRに入れる必要がある場合は、十分に注意して検証してください。Word上でQRが表示されるだけで判断せず、印刷後に実際のQRリーダーやスマホで読み取り、読み取り結果の文字列が想定どおりに出力されるかまで確認してから使用します。</div>
+<div class="table-responsive"><div class="table-wrapper"><table class="formula-count-table"><caption>QR用文字列の設計</caption><thead><tr><th>入れるもの</th><th>おすすめ度</th><th>理由</th></tr></thead><tbody>
+<tr><td>URL</td><td>高</td><td class="text-left">読み取り後にWeb画面へ飛ばせます。</td></tr>
+<tr><td>受付番号・伝票番号</td><td>高</td><td class="text-left">半角英数字で安定しやすいです。</td></tr>
+<tr><td>複数項目を区切った半角文字列</td><td>中</td><td class="text-left">例：<code>ID=1001&amp;TYPE=A</code> のように設計できます。</td></tr>
+<tr><td>日本語の住所・氏名</td><td>低</td><td class="text-left">全角文字は避け、IDから参照する設計にした方が安全です。</td></tr>
+</tbody></table></div></div>
+</section>
+<section class="method-section" id="guide-step-7">
+<h3>設定手順</h3>
+<ol class="line-height-2">
+<li>Excel側に <code>QR用文字列</code> 列を用意します。</li>
+<li>Wordで差し込み印刷の宛名やラベルを作ります。</li>
+<li>QRコードを置きたい場所で <code>Ctrl + F9</code> を押します。</li>
+<li>Wordが作ったかっこの内側だけに、MERGEBARCODE QR用文字列 QR \q 3 と半角で入力します。かっこは追加で入力しません。</li>
+<li><code>F9</code> で更新し、結果のプレビューでQRコードが表示されるか確認します。</li>
+<li>印刷して、実際のQRリーダーやスマホで読み取れるか確認します。</li>
+</ol>
+</section>
+<section class="tips-section" id="guide-step-8">
+<h3>サイズと読み取りの注意点</h3>
+<ul class="line-height-2">
+<li><strong>長い文字列ほどQRが細かくなる：</strong>印刷サイズが小さいと読み取りにくくなります。</li>
+<li><strong>余白を潰しすぎない：</strong>QRコードの周囲に余白がないと読み取り精度が落ちます。</li>
+<li><strong>レーザープリンターと実機で確認する：</strong>画面で見えても、印刷すると読めないことがあります。</li>
+<li><strong>全角文字は慎重に扱う：</strong>日本語住所を入れるより、IDやURLにして読み取り後に参照する設計が安定します。使う場合は、必ず印刷後の読み取り結果まで確認します。</li>
+</ul>
+</section>
+<section class="comparison-section" id="guide-step-9">
+<h3>ExcelでQRを作る方法との使い分け</h3>
+<div class="table-responsive"><div class="table-wrapper"><table class="comparison-table"><caption>QR作成方法の比較</caption><thead><tr><th>方法</th><th>向いている場面</th><th>注意点</th></tr></thead><tbody>
+<tr><td>ExcelでQR画像を作る</td><td class="text-left">Excel内で一覧印刷したい、画像として保存したい場合。</td><td class="text-left">方式によっては文字数制限や外部サービス依存があります。</td></tr>
+<tr><td>WordのMERGEBARCODE</td><td class="text-left">宛名、ラベル、案内文に差し込みでQRを入れたい場合。</td><td class="text-left">Word for Windows環境での事前検証が必要です。全角文字は避けます。</td></tr>
+<tr><td>専用QR作成ツール</td><td class="text-left">大量生成、画像保存、デザイン調整が必要な場合。</td><td class="text-left">別ツール運用になるため、テンプレート管理が増えます。</td></tr>
+</tbody></table></div></div>
+</section>
+<section class="summary-section" id="guide-step-10"><h2><span class="icon">✅</span> まとめ</h2><p>Wordの <code>MERGEBARCODE</code> を使うと、Excelの値を差し込み印刷しながらQRコード化できます。Excel側でQR画像を作らなくてよいので、宛名ラベル、受付票、案内文、封筒などと相性がよい方法です。文字数だけで方式を選ばず、基本は半角英数字・URL・ID中心で設計するのが安全です。全角文字を使う場合は、十分に注意し、表示だけで判断せず、印刷後にきちんと読み取れるか、出力文字列が崩れていないかを確認してから使用してください。</p></section>
+<section class="method-section" id="guide-step-11"><h2>読み取れないときの確認順</h2><ol class="line-height-2"><li>コードのかっこがCtrl＋F9で作ったものか、列名がExcelの見出しと一致するかを確認します。</li><li>長いURLや日本語を使う前に、短い半角IDで生成できるかを確認します。</li><li>QRの周囲の白い余白を残し、小さく印刷しすぎないようにします。</li><li>使うプリンター・用紙・読み取り機で、最初と最後のデータも読み取ります。</li><li>画面にQRが出たことと、正しい値として読めることは別々に確認します。</li></ol><p><a href="https://support.microsoft.com/en-us/word/field-codes-mergebarcode" rel="noopener" target="_blank">Microsoft：MergeBarcodeフィールド</a>。構文と対応するスイッチの参考です。本記事の画面資料は接続操作用で、実紙の読み取り結果を保証するものではありません。</p></section><aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>基本の流れを確認する</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p>通常操作で完成できる方法を先に紹介しています。コードを使う方法は、必要な場合に応用編を開いて参照してください。</p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="article_mailmerge_excel_source_design.html">Word差し込み印刷で失敗しにくいExcel住所録の作り方</a></li>
+<li><a href="../../qr/01_qr_barcode_control.html">QRコードでWebシステム入力を自動化</a></li>
+</ul></section>
+</article>
+</main>
+<footer class="site-footer"><div aria-label="運営情報と検証方針" class="site-footer-trust"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Word差し込み印刷、USB-HID型QRリーダーを想定しています。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>© Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js?v=20261101"></script>
+<script src="word-images.js?v=20261102-images" defer></script>
+</body>
+</html>

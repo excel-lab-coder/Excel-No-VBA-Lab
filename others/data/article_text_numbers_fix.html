@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Excelの数字が文字列になって計算・検索できないときの直し方｜SUMが0・VLOOKUPが#N/Aの原因別対処｜Excel &times; No VBA Lab</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="見た目は数字なのにSUMで合計できない、VLOOKUPが#N/Aになる、緑の三角が出る――数字が文字列として入っているときの見分け方と直し方を原因別に整理。数値に変換、形式を選択して貼り付け（乗算）、区切り位置、VALUE・ASC・TRIM・SUBSTITUTE関数、検索時の型合わせ、数値にしてはいけない番号まで解説します。" name="description">
+<meta content="Excelの数字が文字列になって計算・検索できないときの直し方" property="og:title">
+<meta content="SUMが0、VLOOKUPが#N/A。見た目は同じ数字が動かない原因と、原因別の直し方。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_text_numbers_fix.html" property="og:url">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_text_numbers_fix.html" rel="canonical">
+<link href="../../common.css?v=20261101" rel="stylesheet">
+<link href="../../article.css?v=20261101" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "Excelの数字が文字列になって計算・検索できないときの直し方", "description": "見た目は数字なのにSUMで合計できない、VLOOKUPが#N/Aになる、緑の三角が出る――数字が文字列として入っているときの見分け方と直し方を原因別に整理。数値に変換、形式を選択して貼り付け（乗算）、区切り位置、VALUE・ASC・TRIM・SUBSTITUTE関数、検索時の型合わせ、数値にしてはいけない番号まで解説します。", "datePublished": "2026-11-01", "dateModified": "2026-11-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_text_numbers_fix.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "数字が文字列になったとき", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_text_numbers_fix.html"}]}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><strong>数字が文字列になったとき</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-02</span></div><h1 class="article-title">Excelの数字が文字列になって計算・検索できないときの直し方</h1>
+<p class="article-summary" data-seo-lead="true">見た目は同じ数字なのに、SUMで合計できない・検索で見つからない。その多くは、数字が「文字列」として入っていることが原因です。見分け方と、取り込み・全角・見えない空白・末尾マイナスなど原因別の直し方をまとめます。</p></div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> こんな症状はありませんか</h2>
+<ul class="line-height-2">
+<li>数字が並んでいるのに、<strong>SUMの合計が0</strong>や、一部だけの合計になる</li>
+<li>見た目は同じ番号なのに、<strong>VLOOKUPやXLOOKUPが #N/A</strong> になる</li>
+<li>数字が<strong>セルの左に寄っている</strong>、セルの左上に<strong>緑の三角</strong>が出ている</li>
+<li>並べ替えると「1, 10, 100, 2, 20」のような順番になる</li>
+</ul>
+<p>これらは、数字が<strong>「文字列」</strong>として入っているのが原因です。見た目は同じでも、Excelにとって「123」（数値）と「"123"」（文字列）は別のものです。この記事では、原因別に直し方を整理します。</p>
+</section>
+
+<section class="method-section">
+<h2>まず確かめる：数値か文字列か</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>見分け方</caption>
+<thead><tr><th>方法</th><th>数値なら</th><th>文字列なら</th></tr></thead>
+<tbody>
+<tr><td>セルの配置（標準のまま）</td><td>右寄せ</td><td>左寄せ</td></tr>
+<tr><td><code>=ISNUMBER(A2)</code></td><td>TRUE</td><td>FALSE</td></tr>
+<tr><td><code>=ISTEXT(A2)</code></td><td>FALSE</td><td>TRUE</td></tr>
+<tr><td>範囲を選んだときのステータスバー</td><td>「合計」が出る</td><td>「データの個数」だけ出る</td></tr>
+</tbody></table></div>
+<p>列全体を調べるなら、<code>=COUNT(A2:A1000)</code>（数値の個数）と <code>=COUNTA(A2:A1000)</code>（入っているセルの個数）を比べます。差があれば、その分が文字列です。</p>
+</section>
+
+<section class="method-section">
+<h2>原因別の直し方</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>原因と直し方の早見表</caption>
+<thead><tr><th>原因</th><th>よくある場面</th><th>直し方</th></tr></thead>
+<tbody>
+<tr><td>文字列として取り込まれた</td><td>システムのCSV・Webからのコピー</td><td>方法1〜3</td></tr>
+<tr><td>表示形式が「文字列」のセルに入力した</td><td>人から受け取ったファイル</td><td>表示形式を戻してから方法1〜3</td></tr>
+<tr><td>先頭にアポストロフィ（'）が付いている</td><td>手入力、他のファイルからの貼り付け</td><td>方法1〜3</td></tr>
+<tr><td>全角の数字（１２３）</td><td>手入力、帳票からのコピー</td><td>方法4（ASC関数）</td></tr>
+<tr><td>見えない空白が付いている</td><td>Webや基幹システムからのコピー</td><td>方法4（TRIM・SUBSTITUTE）</td></tr>
+<tr><td>末尾にマイナス（123-）</td><td>古いシステムの帳票</td><td>方法3（区切り位置の詳細設定）</td></tr>
+</tbody></table></div>
+<div class="xdemo-note-warn"><strong>表示形式を「数値」に変えるだけでは直りません。</strong><br>表示形式は「見せ方」の設定です。すでに文字列として入っている値は、表示形式を変えても文字列のままです。下の方法で値そのものを数値に変えます。</div>
+</section>
+
+<section class="method-section">
+<h2>方法1：緑の三角から「数値に変換する」</h2>
+<ol class="line-height-2">
+<li>文字列の数字が入った範囲を選びます（最初のセルが緑の三角が出ているセルになるように選びます）。</li>
+<li>表示される「！」のアイコンをクリックし、<strong>「数値に変換する」</strong>を選びます。</li>
+</ol>
+<p>少ない件数なら、これがいちばん手早い方法です。数万行では時間がかかることがあります。</p>
+</section>
+
+<section class="method-section">
+<h2>方法2：「形式を選択して貼り付け」で1を掛ける</h2>
+<ol class="line-height-2">
+<li>空いているセルに <code>1</code> と入力し、コピーします。</li>
+<li>文字列の数字の範囲を選び、<span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">Alt</span>+<span class="kbd-btn">V</span>（形式を選択して貼り付け）を押します。</li>
+<li>「貼り付け」で<strong>「値」</strong>、「演算」で<strong>「乗算」</strong>を選んで「OK」を押します。</li>
+</ol>
+<p>1を掛けた結果は数値になるので、文字列がまとめて数値に変わります。終わったら、1を入力したセルは消します。</p>
+</section>
+
+<section class="method-section">
+<h2>方法3：「区切り位置」で列ごと変換する</h2>
+<ol class="line-height-2">
+<li>変換したい<strong>1列</strong>を選びます。</li>
+<li>「データ」タブ →<strong>「区切り位置」</strong>を押します。</li>
+<li>そのまま<strong>「完了」</strong>を押します。</li>
+</ol>
+<p>列の値が読み直され、数字は数値に変わります。末尾にマイナスが付いた「123-」は、ウィザードの3つ目の画面で「詳細」を押すと<strong>「負の数はマイナスを表示する」</strong>があり、チェックが入っていれば「-123」になります（Microsoft 365 版 Excel（Windows、バージョン 2610）では、最初からチェックが入っていました）。</p>
+<p class="verify-note">「詳細」の項目の名前は、環境により結果が異なる場合があります。</p>
+</section>
+
+<section class="method-section">
+<h2>方法4：関数で変換する（元の列を残したいとき）</h2>
+<div class="code-block" data-lang="excel"><span class="code-line">=VALUE(A2)</span></div><p class="code-comment">文字列の数字を数値にします。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=A2*1</span></div><p class="code-comment">同じ結果になります（「--A2」でも可）。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=VALUE(ASC(A2))</span></div><p class="code-comment">全角の数字「１２３」を半角にしてから数値にします。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=VALUE(TRIM(SUBSTITUTE(A2,CHAR(160),"")))</span></div><p class="code-comment">Webからコピーした値に付いている見えない空白（ノーブレークスペース）と、前後の空白を取ってから数値にします。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=IFERROR(VALUE(ASC(TRIM(A2))),A2)</span></div><p class="code-comment">変換できないもの（「未定」など）は、元の値をそのまま残します。</p>
+<p>関数の結果を元の列に戻すときは、コピーして<strong>「値の貼り付け」</strong>をします。</p>
+</section>
+
+<section class="method-section">
+<h2>検索（VLOOKUP・XLOOKUP）が #N/A になるとき</h2>
+<p>検索する値と、検索される表の列で、<strong>片方が数値・片方が文字列</strong>だと一致しません。表の側を直すのが基本ですが、表を触れないときは、式の中で型をそろえます。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=XLOOKUP(VALUE(A2),マスタ!A:A,マスタ!B:B,"該当なし")</span></div><p class="code-comment">検索値が文字列、表が数値のとき：検索値を数値にします。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=XLOOKUP(A2&amp;"",マスタ!A:A,マスタ!B:B,"該当なし")</span></div><p class="code-comment">検索値が数値、表が文字列のとき：検索値に「&amp;""」を付けて文字列にします。</p>
+<p>なお、COUNTIFやSUMIFは「123」と「"123"」を同じものとして数えるため、<strong>COUNTIFでは見つかるのにVLOOKUPでは見つからない</strong>ということが起きます。これも型の違いを疑うサインです。</p>
+</section>
+
+<section class="method-section">
+<h2>数値にしてはいけない「数字」もある</h2>
+<p>郵便番号・社員番号・電話番号・商品コードなど、<strong>先頭の0に意味がある番号</strong>や、<strong>16桁以上の番号</strong>は、数値にすると0が消えたり、末尾の数字が失われたりします。これらは計算に使わないので、<strong>文字列のまま</strong>にして、照合する相手の側も文字列にそろえます（<a href="article_csv_leading_zero.html">CSVのゼロが消える原因と正しい取り込み方</a>）。</p>
+<div class="xdemo-note-info"><strong>目安：</strong>足したり平均したりする数字 → 数値にする／番号として見る数字 → 文字列のまま</div>
+</section>
+
+<section class="method-section">
+<h2>毎回同じデータで起きるならPower Queryで</h2>
+<p>毎月取り込むデータで毎回この作業をしているなら、Power Queryで取り込み、列のデータ型を「整数」「10進数」「テキスト」に決めておくと、次からは更新するだけで正しい型になります（<a href="../../powerquery/basic/article_pq_data_type.html">データ型の変換</a>）。</p>
+</section>
+
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="article_csv_leading_zero.html">CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方</a></li>
+<li><a href="article_compare_two_lists.html">Excelで2つの名簿を比較し、追加・削除・変更された人を見つける</a></li>
+<li><a href="../../functions/old/article_vlookup.html">VLOOKUPガイド</a></li>
+<li><a href="../../functions/old/article_substitute.html">SUBSTITUTE関数</a></li>
+<li><a href="../../powerquery/basic/article_pq_data_type.html">データ型の変換（Power Query）</a></li>
+<li><a href="../misc/article_statusbar.html">ステータスバー（オートカルク）の活用術</a></li>
+</ul></section>
+</article>
+</main>
+<footer class="site-footer"><div class="site-footer-trust" aria-label="運営情報と検証方針"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Windows版 Excel 2016以降・Microsoft 365 を想定しています（XLOOKUPはMicrosoft 365／Excel 2021以降）。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js?v=20261101"></script>
+</body>
+</html>

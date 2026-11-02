@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方｜社員番号・長い管理番号を守る｜Excel &times; No VBA Lab</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="CSVをダブルクリックで開くと、郵便番号や社員番号の先頭のゼロが消えたり、16桁以上の番号が指数表示になって末尾が0になったりする原因と対策。「テキストまたはCSVから」で列をテキストにする方法、従来のウィザード、Microsoft 365の自動データ変換の設定、消えたゼロの戻し方を解説します。" name="description">
+<meta content="CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方" property="og:title">
+<meta content="郵便番号・社員番号・長い管理番号を守るCSVの取り込み方。上書き保存の注意も。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_csv_leading_zero.html" property="og:url">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_csv_leading_zero.html" rel="canonical">
+<link href="../../common.css?v=20261101" rel="stylesheet">
+<link href="../../article.css?v=20261101" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方", "description": "CSVをダブルクリックで開くと、郵便番号や社員番号の先頭のゼロが消えたり、16桁以上の番号が指数表示になって末尾が0になったりする原因と対策。「テキストまたはCSVから」で列をテキストにする方法、従来のウィザード、Microsoft 365の自動データ変換の設定、消えたゼロの戻し方を解説します。", "datePublished": "2026-11-01", "dateModified": "2026-11-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_csv_leading_zero.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "CSVのゼロが消える", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_csv_leading_zero.html"}]}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><strong>CSVのゼロが消える</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-02</span></div><h1 class="article-title">CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方</h1>
+<p class="article-summary" data-seo-lead="true">CSVを直接開くと、郵便番号「0600001」が「600001」に、長い管理番号が「1.23457E+15」になってしまう原因と、番号を守ったまま取り込む方法をまとめます。消えてしまったときの戻し方と、戻せないケースも説明します。</p></div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> こんなことが起きていませんか</h2>
+<ul class="line-height-2">
+<li>郵便番号「0600001」が「600001」になった（北海道・青森などの0から始まる郵便番号）</li>
+<li>社員番号「000123」が「123」になった</li>
+<li>16桁以上の管理番号が「1.23457E+15」と表示され、末尾が「0」に変わった</li>
+<li>「1-2」のような番号が「1月2日」の日付になった</li>
+</ul>
+<p>どれも、<strong>CSVファイルをダブルクリックしてExcelで直接開いた</strong>ときに起きやすい問題です。この記事では、原因と、番号を守ったまま取り込む方法を説明します。</p>
+<div class="xdemo-note-warn"><strong>いちばん大事なこと：直接開いたCSVを、そのまま上書き保存しない</strong><br>ゼロが消えた状態で上書き保存すると、CSVファイルそのものからゼロが消えます。元のファイルは閉じて、下の正しい方法で取り込み直してください。</div>
+</section>
+
+<section class="method-section">
+<h2>原因：Excelが「数字に見えるもの」を数値に変えてしまう</h2>
+<p>CSVはただの文字のファイルで、「この列は文字として扱う」という情報を持っていません。Excelは直接開くときに、数字に見えるものを自動で<strong>数値</strong>や<strong>日付</strong>に変換します。</p>
+<div class="table-wrapper"><table class="comparison-table"><caption>自動変換で起きること</caption>
+<thead><tr><th>CSVの中身</th><th>直接開いた結果</th><th>理由</th></tr></thead>
+<tbody>
+<tr><td>0600001</td><td>600001</td><td>数値になり、先頭の0が意味のない桁として消える</td></tr>
+<tr><td>000123</td><td>123</td><td>同上</td></tr>
+<tr><td>1234567890123456789</td><td>1.23457E+18（末尾は0になる）</td><td>Excelの数値は15桁までしか正確に持てない</td></tr>
+<tr><td>1-2</td><td>1月2日</td><td>日付と判断される</td></tr>
+</tbody></table></div>
+<p>16桁以上の番号は、数値になった時点で<strong>16桁目以降の数字が失われます</strong>。表示形式を変えても元には戻りません。</p>
+</section>
+
+<section class="method-section">
+<h2>正しい取り込み方1：「テキストまたはCSVから」で列を文字列にする（おすすめ）</h2>
+<ol class="line-height-2">
+<li>Excelを開き、<strong>「データ」タブ → 「テキストまたはCSVから」</strong>を選びます。</li>
+<li>CSVファイルを選んで「インポート」を押します。</li>
+<li>プレビューの画面で「元のファイル」（文字コード）を確認します。日本語が化けていれば「932: 日本語 (シフト JIS)」か「65001: Unicode (UTF-8)」に変えます。</li>
+<li><strong>「データの変換」</strong>を押して、Power Queryエディターを開きます（「読み込み」ではありません）。</li>
+<li>右側の「適用したステップ」に<strong>「変更された型」</strong>があれば、×で削除します。ここでゼロが消えています。</li>
+<li>郵便番号・社員番号などの列の見出しの左のアイコン（<code>ABC</code>／<code>123</code>）をクリックし、<strong>「テキスト」</strong>を選びます。</li>
+<li>金額・数量など計算する列だけ「整数」や「10進数」にします。</li>
+<li>「閉じて読み込む」を押します。</li>
+</ol>
+<!-- TODO-SCREENSHOT: Power Queryで「変更された型」を削除し、郵便番号の列をテキストにする画面 -->
+<p class="verify-note">画面の名前・ボタンの位置は、環境により結果が異なる場合があります。お使いの版で表示を確認してください。</p>
+<p>この方法で作ったクエリは、CSVを新しいものに差し替えて「データ」→「すべて更新」を押すだけで、次回もゼロを守ったまま取り込めます。データ型の考え方は <a href="../../powerquery/basic/article_pq_data_type.html">データ型の変換</a> で詳しく説明しています。</p>
+</section>
+
+<section class="method-section">
+<h2>正しい取り込み方2：従来のテキストインポートウィザードを使う</h2>
+<p>Power Queryに慣れていない人には、以前からある「テキスト ファイル ウィザード」の方が分かりやすいこともあります。</p>
+<ol class="line-height-2">
+<li>「ファイル」→「オプション」→<strong>「データ」</strong>を開き、「レガシ データ インポート ウィザードの表示」で<strong>「テキストから (レガシ)」</strong>にチェックを入れます。</li>
+<li>「データ」タブ →「データの取得」→「従来のウィザード」→「テキストから (レガシ)」を選びます。</li>
+<li>「カンマやタブなどの区切り文字によって…」を選んで「次へ」、区切り文字で「カンマ」を選んで「次へ」。</li>
+<li>3つ目の画面で郵便番号などの列をクリックし、<strong>「列のデータ形式」で「文字列」</strong>を選んで「完了」。</li>
+</ol>
+<p class="verify-note">メニューの名前と場所は、環境により結果が異なる場合があります。</p>
+</section>
+
+<section class="method-section">
+<h2>Microsoft 365：自動変換をオフにする設定</h2>
+<p>Microsoft 365のExcelには、CSVを開くときの自動変換を止める設定があります。</p>
+<ol class="line-height-2">
+<li>「ファイル」→「オプション」→「データ」を開きます。</li>
+<li><strong>「自動データ変換」</strong>の欄で、「先頭のゼロを削除して数値に変換する」「ロング数値の最初の 15 桁を保持し、科学的記数法で表示する」などのチェックを外します。</li>
+</ol>
+<p>この設定はPCごと・人ごとの設定です。CSVを受け取る人全員の設定をそろえるのは難しいため、<strong>業務の手順としては「取り込み方1」に決めておく</strong>方が確実です。</p>
+<p class="verify-note">項目の名前は Microsoft 365 版 Excel（Windows、バージョン 2610） で確認しました。この設定が見当たらないときは、上の「取り込み方1」「取り込み方2」を使ってください。</p>
+</section>
+
+<section class="method-section">
+<h2>もう消えてしまった場合の戻し方</h2>
+<p>元のCSVが残っているなら、<strong>取り込み直すのがいちばん確実</strong>です。元のファイルがない場合は、桁数が決まっている番号に限り、関数で0を補えます。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=TEXT(A2,"0000000")</span></div><p class="code-comment">郵便番号（7桁）。600001 → 0600001</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=TEXT(A2,"000-0000")</span></div><p class="code-comment">ハイフン付きの郵便番号にする場合。600001 → 060-0001</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=TEXT(A2,"000000")</span></div><p class="code-comment">6桁の社員番号。123 → 000123</p>
+<ul class="line-height-2">
+<li>結果は文字列になります。元の列に戻すときは「値の貼り付け」をします。</li>
+<li><strong>16桁以上で消えた数字は戻せません。</strong>元のCSVかシステムから取り直してください。</li>
+<li>日付に変わってしまった「1-2」なども、元の文字が分からなくなるので、取り込み直しが必要です。</li>
+</ul>
+</section>
+
+<section class="method-section">
+<h2>この問題につながる場面</h2>
+<ul class="line-height-2">
+<li><strong>住所録・差し込み印刷：</strong>郵便番号の0が消えると宛名が間違います（<a href="../word/article_mailmerge_postal_code.html">差し込み印刷で郵便番号と日付を整える方法</a>）。</li>
+<li><strong>QRコード：</strong>商品番号・管理番号の0が消えたままQRを作ると、読み取った番号がシステムと一致しません（<a href="../../qr/">QR Automation Lab</a>）。</li>
+<li><strong>名簿の照合：</strong>片方だけ0が消えると、同じ人が別人扱いになります（<a href="article_compare_two_lists.html">2つの名簿を比較する方法</a>）。</li>
+</ul>
+</section>
+
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="../../powerquery/basic/article_pq_data_type.html">データ型の変換（Power Query）</a></li>
+<li><a href="../../powerquery/advanced/article_pq_import_patterns.html">データ取り込みパターン集</a></li>
+<li><a href="../word/article_mailmerge_postal_code.html">Word差し込み印刷で郵便番号と日付を整える方法</a></li>
+<li><a href="article_text_numbers_fix.html">Excelの数字が文字列になって計算・検索できないときの直し方</a></li>
+<li><a href="article_compare_two_lists.html">Excelで2つの名簿を比較する</a></li>
+<li><a href="../../samples/">サンプルデータ</a></li>
+</ul></section>
+</article>
+</main>
+<footer class="site-footer"><div class="site-footer-trust" aria-label="運営情報と検証方針"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Windows版 Excel 2016以降・Microsoft 365 を想定しています（XLOOKUP・FILTERはMicrosoft 365／Excel 2021以降）。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js?v=20261101"></script>
+</body>
+</html>

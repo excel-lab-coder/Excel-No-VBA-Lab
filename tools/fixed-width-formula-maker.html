@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>固定長レイアウトからMIDB式・M言語を作るツール｜ブラウザ内で処理・外部送信なし｜Excel &times; No VBA Lab</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="固定長データのレイアウト（項目名・開始位置・バイト数・型）から、ExcelのMIDB式とPower QueryのM言語コード（fx_MIDB）を作るツール。サンプル行で切り出し結果も確認できます。入力内容は外部に送信せず、ブラウザ内だけで処理します。" name="description">
+<meta content="固定長レイアウトから MIDB式／M言語を作るツール" property="og:title">
+<meta content="レイアウトを入れるだけで、MIDB式とM言語のコードを作ります。外部送信なし。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/tools/fixed-width-formula-maker.html" property="og:url">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/tools/fixed-width-formula-maker.html" rel="canonical">
+<link href="../common.css?v=20261101" rel="stylesheet">
+<link href="../article.css?v=20261101" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "固定長レイアウトから MIDB式／M言語を作るツール", "description": "固定長データのレイアウト（項目名・開始位置・バイト数・型）から、ExcelのMIDB式とPower QueryのM言語コード（fx_MIDB）を作るツール。サンプル行で切り出し結果も確認できます。入力内容は外部に送信せず、ブラウザ内だけで処理します。", "datePublished": "2026-11-01", "dateModified": "2026-11-01", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/tools/fixed-width-formula-maker.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "ツール", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/tools/fixed-width-formula-maker.html"}, {"@type": "ListItem", "position": 3, "name": "固定長→MIDB式・M言語", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/tools/fixed-width-formula-maker.html"}]}
+</script>
+<style>
+.fw-tool label{display:block;margin:12px 0 4px;}
+.fw-tool textarea,.fw-tool .fw-sample{width:100%;box-sizing:border-box;font-family:Consolas,"MS Gothic",monospace;font-size:.95em;padding:8px;}
+.fw-row{display:flex;flex-wrap:wrap;gap:12px;}.fw-row label{display:flex;gap:6px;align-items:center;margin:8px 0;}
+.fw-btn{padding:10px 22px;font-weight:700;border-radius:6px;border:0;background:#217346;color:#fff;cursor:pointer;}
+.fw-code{white-space:pre-wrap;word-break:break-all;background:#1e2a35;color:#e6edf3;padding:12px;border-radius:6px;font-size:.88em;}
+</style>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">ブラウザツール</span></p></div></div></header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../">ホーム</a><span>&gt;</span><a href="../tools/fixed-width-formula-maker.html">ツール</a><span>&gt;</span><strong>固定長→MIDB式・M言語</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">ブラウザツール</span><span class="article-date">更新日: 2026-11-01</span></div><h1 class="article-title">固定長レイアウトから MIDB式／M言語を作るツール</h1>
+<p class="article-summary" data-seo-lead="true">COBOL帳票などの固定長データを、レイアウト定義書の「開始位置・バイト数」からExcelの式にするツールです。MIDB式とPower QueryのM言語コードを同時に作り、サンプル行で結果を確認できます。</p></div>
+
+<section class="goal-section">
+<h2><span class="icon">🧮</span> できること</h2>
+<p>固定長データのレイアウト（項目名・開始位置・バイト数・型）を入れると、Excelの<strong>MIDB式</strong>と、Power Queryの<strong>M言語のコード</strong>を作ります。サンプルの1行を貼ると、切り出し結果もその場で確認できます。</p>
+<div class="xdemo-note-good"><strong>入力したデータは外部に送信しません。</strong>すべてこのページの中（お使いのブラウザ内）で計算します。それでも、本番データではなくテスト用のデータで試してください。</div>
+</section>
+
+<section class="method-section" id="tool">
+<h2>ツール</h2>
+<div class="fw-tool">
+<label for="fw-layout"><strong>1. レイアウト</strong>（1行に1項目：<code>項目名,開始位置,バイト数,型</code>　型は <code>文字</code>／<code>数値</code>／<code>日付8</code>（YYYYMMDD）／<code>そのまま</code>）</label>
+<textarea id="fw-layout" rows="7" spellcheck="false">社員番号,1,6,文字
+氏名,7,20,文字
+部署コード,27,3,文字
+金額,30,9,数値
+入社日,39,8,日付8</textarea>
+<div class="fw-row">
+<label>Excelで元データがあるセル <input id="fw-cell" type="text" value="A2" size="6"></label>
+<label>M言語の列名 <input id="fw-col" type="text" value="Column1" size="10"></label>
+<label>開始位置の数え方
+<select id="fw-base"><option value="1" selected>1から（MIDBと同じ）</option><option value="0">0から</option></select></label>
+</div>
+<label for="fw-sample"><strong>2. サンプルの1行（任意）</strong>：貼ると切り出し結果を確認できます（全角は2バイト、半角は1バイトとして数えます）</label>
+<input id="fw-sample" type="text" class="fw-sample" value="000123山田　太郎          10100001234520260401" spellcheck="false">
+<p><button type="button" id="fw-gen" class="fw-btn" data-ga-tool-generate="fixed_width_formula_maker">式を作る</button></p>
+<p id="fw-msg" role="status" aria-live="polite"></p>
+<h3>Excelの式（項目ごとに、右隣の列へ貼ります）</h3>
+<div class="table-wrapper"><table class="comparison-table" id="fw-excel"><thead><tr><th>項目</th><th>式</th><th>サンプルの結果</th></tr></thead><tbody></tbody></table></div>
+<h3>Power Query（M言語）</h3>
+<p>先に、下の <code>fx_MIDB</code> を空のクエリとして作り、クエリ名を <code>fx_MIDB</code> にします。次に、データのクエリの詳細エディターで、最後のステップの後に「列の追加」のコードを続けます。</p>
+<pre class="fw-code" id="fw-mfunc"></pre>
+<pre class="fw-code" id="fw-m"></pre>
+</div>
+</section>
+
+<section class="method-section">
+<h2>作られる式の解説</h2>
+<h3>Excelの式（MIDB）</h3>
+<p>基本の形は <code>=TRIM(MIDB(A2,開始位置,バイト数))</code> です。</p>
+<ul class="line-height-2">
+<li><strong>MIDB：</strong>文字列の指定した<strong>バイト位置</strong>から、指定した<strong>バイト数</strong>だけ取り出します。日本語版のExcelでは、全角は2バイト、半角は1バイトとして数えます。レイアウト定義書がバイトで書かれている固定長データと相性がよい関数です。</li>
+<li><strong>TRIM：</strong>前後の余白を取ります。固定長データは桁をそろえるために空白で埋められていることが多いためです。全角スペースが残る場合は <code>SUBSTITUTE(…,"　"," ")</code> を挟みます（<a href="../functions/old/article_midb.html">MID / MIDB 関数の記事</a>）。</li>
+<li><strong>数値：</strong><code>=VALUE(MIDB(…))</code> で、ゼロ埋めの「000012345」を数値の 12345 にします。</li>
+<li><strong>日付8（YYYYMMDD）：</strong><code>=DATE(MIDB(…,1,4),MIDB(…,5,2),MIDB(…,7,2))</code> の形で、年・月・日を取り出して日付にします。セルの表示形式を日付にしてください。</li>
+</ul>
+<div class="xdemo-note-danger"><strong>MIDBは非推奨です。</strong>Microsoftは MIDB を非推奨としています。今すぐ使えなくなるわけではありませんが、新しく作る仕組みでは、下のPower Query版も検討してください。</div>
+
+<h3>Power Queryのコード（fx_MIDB）</h3>
+<ul class="line-height-2">
+<li><strong>Text.ToBinary(文字列, 932)：</strong>文字列をShift_JIS（コードページ932）のバイト列に変えます。</li>
+<li><strong>Binary.Range(バイト列, 開始, 長さ)：</strong>バイト単位で切り出します。開始は0から数えるため、関数の中で1を引いてMIDBと同じ数え方に合わせています。</li>
+<li><strong>Text.FromBinary(バイト列, 932)：</strong>切り出したバイト列を文字列に戻します。</li>
+<li>列の追加は <code>Table.AddColumn</code> で、数値は <code>Number.FromText</code>、日付は <code>#date</code> で型を変えています。</li>
+</ul>
+<p>詳しい仕組みは <a href="../cobol/pq/03_article_cobol_pq_midb_ref.html">M言語でMIDB相当の自作関数を作る</a> で解説しています。</p>
+<p class="verify-note">このツールのバイト数の数え方（全角2・半角1）は、CP932の多くの文字に合わせた目安です。外字・機種依存文字・絵文字などは数え方が変わることがあります。環境により結果が異なる場合があります。必ず実データのコピーで結果を照合してください。</p>
+</section>
+
+<script>
+(function(){
+  function bytesOf(ch){var c=ch.codePointAt(0);if(c<0x80)return 1;if(c>=0xFF61&&c<=0xFF9F)return 1;return 2;}
+  function midb(s,start,len){var out='',pos=1;for(var ch of s){var b=bytesOf(ch);if(pos>=start&&pos+b-1<start+len)out+=ch;pos+=b;if(pos>=start+len)break;}return out;}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function mstr(s){return '"'+String(s).replace(/"/g,'""')+'"';}
+  var FX='// fx_MIDB ― ExcelのMIDB相当（Shift_JIS基準・1始まり）\n(targetText as text, startByte as number, numBytes as number) as text =>\nlet\n    bin = Text.ToBinary(targetText, 932),\n    sliced = Binary.Range(bin, startByte - 1, numBytes),\n    result = Text.FromBinary(sliced, 932)\nin\n    result';
+  function gen(){
+    var msg=document.getElementById('fw-msg');var cell=document.getElementById('fw-cell').value.trim()||'A2';
+    var col=document.getElementById('fw-col').value.trim()||'Column1';var base=+document.getElementById('fw-base').value;
+    var sample=document.getElementById('fw-sample').value;var rows=[],errs=[];
+    document.getElementById('fw-layout').value.split(/\r?\n/).forEach(function(line,i){
+      line=line.trim();if(!line)return;var p=line.split(/[,，\t]/).map(function(x){return x.trim();});
+      var st=parseInt(p[1],10),ln=parseInt(p[2],10);if(!p[0]||isNaN(st)||isNaN(ln)||ln<=0){errs.push((i+1)+'行目');return;}
+      rows.push({name:p[0],start:st+(base===0?1:0),len:ln,type:p[3]||'文字'});});
+    var tb=document.querySelector('#fw-excel tbody');tb.innerHTML='';
+    var steps=[],prev='前のステップ';
+    rows.forEach(function(r,i){
+      var m='MIDB('+cell+','+r.start+','+r.len+')',f,mc,res=sample?midb(sample,r.start,r.len):'';
+      if(r.type==='数値'){f='=VALUE('+m+')';mc='Number.FromText(fx_MIDB(['+col+'], '+r.start+', '+r.len+'))';res=res.trim()===''?'':String(Number(res.trim()));}
+      else if(r.type==='日付8'){var y='MIDB('+cell+','+r.start+',4)',mo='MIDB('+cell+','+(r.start+4)+',2)',d='MIDB('+cell+','+(r.start+6)+',2)';
+        f='=DATE('+y+','+mo+','+d+')';mc='#date(Number.FromText(fx_MIDB(['+col+'], '+r.start+', 4)), Number.FromText(fx_MIDB(['+col+'], '+(r.start+4)+', 2)), Number.FromText(fx_MIDB(['+col+'], '+(r.start+6)+', 2)))';
+        if(res.length===8)res=res.slice(0,4)+'/'+res.slice(4,6)+'/'+res.slice(6,8);}
+      else if(r.type==='そのまま'){f='='+m;mc='fx_MIDB(['+col+'], '+r.start+', '+r.len+')';}
+      else{f='=TRIM('+m+')';mc='Text.Trim(fx_MIDB(['+col+'], '+r.start+', '+r.len+'))';res=res.replace(/^ +| +$/g,'');}
+      var tr=document.createElement('tr');tr.innerHTML='<td>'+esc(r.name)+'</td><td><code>'+esc(f)+'</code></td><td>'+esc(res)+'</td>';tb.appendChild(tr);
+      var typ=r.type==='数値'?'type number':r.type==='日付8'?'type date':'type text';
+      var name='追加_'+(i+1);steps.push('    '+name+' = Table.AddColumn('+(i===0?'#"'+prev+'"':'追加_'+i)+', '+mstr(r.name)+', each '+mc+', '+typ+')');});
+    document.getElementById('fw-mfunc').textContent=FX;
+    document.getElementById('fw-m').textContent='// 「前のステップ」を、実際の直前のステップ名に置き換えてください\n'+steps.join(',\n')+(steps.length?'\n// in の後ろを 追加_'+steps.length+' にします':'');
+    msg.textContent=(errs.length?'読み取れなかった行：'+errs.join('、')+'（項目名,開始位置,バイト数,型 の形で入力してください）。':'')+rows.length+'項目の式を作りました。';
+  }
+  document.getElementById('fw-gen').addEventListener('click',gen);gen();
+})();
+</script>
+
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="../cobol/formula/01_article_cobol_basic.html">COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）</a></li>
+<li><a href="../cobol/pq/03_article_cobol_pq_midb_ref.html">M言語でMIDB相当の自作関数を作る</a></li>
+<li><a href="../functions/old/article_midb.html">MID / MIDB 関数</a></li>
+<li><a href="../samples/">サンプルデータ（固定長テキスト）</a></li>
+<li><a href="qr-quick-maker.html">QR Quick Maker（1件用QRコード作成）</a></li>
+</ul></section>
+</article>
+</main>
+<footer class="site-footer"><div class="site-footer-trust" aria-label="運営情報と検証方針"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Windows版 Excel 2016以降・Microsoft 365（日本語版）、Power Query を想定しています。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../about.html">運営者情報</a><span>|</span><a href="../disclaimer.html">免責事項</a><span>|</span><a href="../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../script.js?v=20261101"></script>
+</body>
+</html>

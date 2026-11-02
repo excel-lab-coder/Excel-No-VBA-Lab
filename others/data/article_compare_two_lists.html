@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Excelで2つの名簿を比較し、追加・削除・変更された人を見つける方法｜COUNTIF・XLOOKUP・条件付き書式｜Excel &times; No VBA Lab</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="前月と今月の社員名簿や取引先一覧を、Excelの関数で照合する方法。COUNTIFで追加・削除を判定し、比較用の列とINDEX＋MATCH（またはXLOOKUP）で変更を見つけ、条件付き書式で変わったセルに色を付けます。文字列と数値の違い、空白、重複など照合ミスの対策も解説します。" name="description">
+<meta content="Excelで2つの名簿を比較し、追加・削除・変更された人を見つける" property="og:title">
+<meta content="前月と今月の名簿を関数で照合。追加・削除・変更を1行ずつ自動判定します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_compare_two_lists.html" property="og:url">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_compare_two_lists.html" rel="canonical">
+<link href="../../common.css?v=20261101" rel="stylesheet">
+<link href="../../article.css?v=20261101" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "Excelで2つの名簿を比較し、追加・削除・変更された人を見つける", "description": "前月と今月の社員名簿や取引先一覧を、Excelの関数で照合する方法。COUNTIFで追加・削除を判定し、比較用の列とINDEX＋MATCH（またはXLOOKUP）で変更を見つけ、条件付き書式で変わったセルに色を付けます。文字列と数値の違い、空白、重複など照合ミスの対策も解説します。", "datePublished": "2026-11-01", "dateModified": "2026-11-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_compare_two_lists.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "2つの名簿の比較", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_compare_two_lists.html"}]}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><strong>2つの名簿の比較</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-02</span></div><h1 class="article-title">Excelで2つの名簿を比較し、追加・削除・変更された人を見つける</h1>
+<p class="article-summary" data-seo-lead="true">前月と今月の社員名簿、取引先一覧などを見比べて、追加された人・いなくなった人・内容が変わった人を関数で見つける方法です。Excel 2016でも使える式と、Microsoft 365向けの短い式の両方を載せ、照合ミスが起きる原因と対策もまとめます。</p></div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>前月と今月の社員名簿、先月と今月の取引先一覧――2つの名簿を見比べて、<strong>「追加された人」「いなくなった人」「内容が変わった人」</strong>を見つけたい。目で見比べると見落としが出ますが、Excelの関数を使えば1行ずつ自動で判定できます。</p>
+<div class="xdemo-note-good"><strong>考え方：</strong>両方の名簿に共通する<strong>「キー」</strong>（社員番号・取引先コードなど、1人に1つだけの番号）を決め、キーで相手の名簿を探します。<br>
+・相手にキーがない → <strong>追加</strong>（今月にだけいる）／<strong>削除</strong>（前月にだけいる）<br>
+・相手にキーがあるが中身が違う → <strong>変更</strong></div>
+</section>
+
+<section class="method-section">
+<h2>準備：2つの名簿を同じブックに並べる</h2>
+<p>同じブックに「前月」「今月」の2つのシートを作り、同じ列の並びにそろえます。</p>
+<div class="table-wrapper"><table class="comparison-table"><caption>シート「前月」</caption>
+<thead><tr><th></th><th>A 社員番号</th><th>B 氏名</th><th>C 部署</th><th>D 役職</th></tr></thead>
+<tbody>
+<tr><th>2</th><td>1001</td><td>山田 太郎</td><td>営業部</td><td>主任</td></tr>
+<tr><th>3</th><td>1002</td><td>佐藤 花子</td><td>総務部</td><td></td></tr>
+<tr><th>4</th><td>1003</td><td>鈴木 一郎</td><td>営業部</td><td></td></tr>
+</tbody></table></div>
+<div class="table-wrapper"><table class="comparison-table"><caption>シート「今月」</caption>
+<thead><tr><th></th><th>A 社員番号</th><th>B 氏名</th><th>C 部署</th><th>D 役職</th></tr></thead>
+<tbody>
+<tr><th>2</th><td>1001</td><td>山田 太郎</td><td>営業部</td><td>係長</td></tr>
+<tr><th>3</th><td>1003</td><td>鈴木 一郎</td><td>経理部</td><td></td></tr>
+<tr><th>4</th><td>1004</td><td>田中 次郎</td><td>営業部</td><td></td></tr>
+</tbody></table></div>
+<p>この例の正解は、<strong>追加：1004 田中</strong>、<strong>削除：1002 佐藤</strong>、<strong>変更：1001 山田（役職）・1003 鈴木（部署）</strong>です。</p>
+</section>
+
+<section class="method-section">
+<h2>手順1：追加された人を見つける（今月にだけいる）</h2>
+<p>シート「今月」のE2に次の式を入れ、下へコピーします。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=IF(COUNTIF(前月!$A:$A,A2)=0,"追加","")</span></div><p class="code-comment">前月のA列に同じ社員番号が1件もなければ「追加」と表示します。</p>
+<ul class="line-height-2">
+<li><strong>COUNTIF(前月!$A:$A,A2)：</strong>前月の社員番号の列に、A2と同じ番号がいくつあるかを数えます。</li>
+<li>0件なら、前月にはいなかった＝今月追加された人です。</li>
+</ul>
+</section>
+
+<section class="method-section">
+<h2>手順2：いなくなった人を見つける（前月にだけいる）</h2>
+<p>反対向きに、シート「前月」のE2に次の式を入れて下へコピーします。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=IF(COUNTIF(今月!$A:$A,A2)=0,"削除","")</span></div><p class="code-comment">今月のA列に同じ社員番号がなければ「削除」（退職・取引終了など）と表示します。</p>
+<p>追加と削除は<strong>それぞれ逆向きに調べる</strong>必要があります。今月側だけを見ていると、いなくなった人には気づけません。</p>
+</section>
+
+<section class="method-section">
+<h2>手順3：内容が変わった人を見つける</h2>
+<h3>3-1. 行全体で「どこか変わったか」を判定する</h3>
+<p>両方のシートのF列に、比較したい列をつないだ「比較用」の列を作ります（前月・今月とも同じ式）。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=B2&"|"&C2&"|"&D2</span></div><p class="code-comment">氏名・部署・役職を「|」でつないだ文字列。どれか1つでも変わると、この文字列も変わります。</p>
+<p>次に、シート「今月」のG2に次の式を入れます。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=IF(COUNTIF(前月!$A:$A,A2)=0,"追加",IF(INDEX(前月!$F:$F,MATCH(A2,前月!$A:$A,0))=F2,"変更なし","変更"))</span></div><p class="code-comment">前月にいなければ「追加」、いれば前月の比較用の列と比べて「変更なし」か「変更」を表示します。Excel 2016でも使えます。</p>
+<p>Microsoft 365／Excel 2021以降なら、XLOOKUPで短く書けます。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=IF(COUNTIF(前月!$A:$A,A2)=0,"追加",IF(XLOOKUP(A2,前月!$A:$A,前月!$F:$F)=F2,"変更なし","変更"))</span></div><p class="code-comment">INDEX＋MATCHの式と同じく、「追加／変更なし／変更」の3つのどれかを返します。</p>
+
+<h3>3-2. 変わったセルに色を付ける（条件付き書式）</h3>
+<p>「変更」と分かった人の、<strong>どの列が変わったか</strong>を色で見せます。</p>
+<ol class="line-height-2">
+<li>シート「今月」のB2:D500を選びます。</li>
+<li>「ホーム」→「条件付き書式」→「新しいルール」→「数式を使用して、書式設定するセルを決定」を選びます。</li>
+<li>次の式を入れ、塗りつぶしの色を選んで「OK」を押します。</li>
+</ol>
+<div class="code-block" data-lang="excel"><span class="code-line">=IFERROR(B2&lt;&gt;INDEX(前月!B:B,MATCH($A2,前月!$A:$A,0)),FALSE)</span></div><p class="code-comment">同じ社員番号の前月の値と違うセルだけ色が付きます。前月にいない人（追加）はIFERRORで色を付けません。</p>
+<!-- TODO-SCREENSHOT: 条件付き書式で、変わったセル（今月シートの役職・部署）に色が付いた状態 -->
+<p class="verify-note">別のシートを参照する条件付き書式は、Excel 2010以降で使えます。</p>
+</section>
+
+<section class="method-section">
+<h2>手順4：結果を一覧にする（Microsoft 365／Excel 2021以降）</h2>
+<p>FILTER関数を使うと、追加・削除された人を別の場所に一覧で取り出せます。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=FILTER(今月!A2:D500,(今月!A2:A500&lt;&gt;"")*(COUNTIF(前月!A2:A500,今月!A2:A500)=0),"追加なし")</span></div><p class="code-comment">今月にいて前月にいない人の一覧（追加された人）。</p>
+<div class="code-block" data-lang="excel"><span class="code-line">=FILTER(前月!A2:D500,(前月!A2:A500&lt;&gt;"")*(COUNTIF(今月!A2:A500,前月!A2:A500)=0),"削除なし")</span></div><p class="code-comment">前月にいて今月にいない人の一覧（いなくなった人）。</p>
+<p>Excel 2016／2019では、手順1・2の判定列でオートフィルターをかけて「追加」「削除」だけを表示します。</p>
+</section>
+
+<section class="method-section">
+<h2>正しく比べるための注意</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>よくある失敗と対策</caption>
+<thead><tr><th>失敗</th><th>原因</th><th>対策</th></tr></thead>
+<tbody>
+<tr><td>同じ内容なのに「変更」になる</td><td>前後の空白、全角・半角の違い</td><td>比較用の列を <code>=TRIM(ASC(B2))&amp;"|"&amp;…</code> のように整えてからつなぎます。</td></tr>
+<tr><td>結果がおかしい人がいる</td><td>キーが重複している（同じ社員番号が2行）</td><td>先に <code>=COUNTIF($A:$A,A2)</code> が2以上の行がないか確認します。</td></tr>
+<tr><td>社員番号のような番号がない</td><td>キーが決められない</td><td>「氏名＋生年月日」のように複数の列をつないでキーを作ります。氏名だけでは同姓同名を区別できません。</td></tr>
+<tr><td>先頭の0が消えて一致しない</td><td>CSVを直接開いた</td><td><a href="article_csv_leading_zero.html">CSVのゼロが消える原因と正しい取り込み方</a></td></tr>
+<tr><td>判定の列が #N/A になる</td><td>社員番号が、片方は数値でもう片方は文字列。COUNTIFは見つけるのに、MATCHは見つけられない</td><td>キーの型をそろえます（<a href="article_text_numbers_fix.html">数字が文字列になったときの直し方</a>）。</td></tr>
+<tr><td>16桁以上の番号で、別の番号なのに一致したと判定される</td><td>COUNTIFは数字の文字列を数値として比べるので、16桁目から先が無視される</td><td>長い番号は <code>=SUMPRODUCT(--(前月!$A$2:$A$500=A2))</code> で数えます（<a href="article_csv_leading_zero.html">CSVのゼロが消える原因と正しい取り込み方</a>）。</td></tr>
+</tbody></table></div>
+<p class="verify-note">確認した環境：Microsoft 365 版 Excel（Windows、バージョン 2610）。2026年11月2日に検証用のブックで、社員番号の型が違う行（COUNTIFは1件と数えるが、判定の列は #N/A）、16桁の番号（COUNTIFは別の番号でも1件、SUMPRODUCTは0件）、別のシートを参照する条件付き書式を確認しました。</p>
+</section>
+
+<section class="method-section">
+<h2>毎月くり返すならPower Queryも検討</h2>
+<p>毎月同じ比較をするなら、Power Queryの<strong>「マージ」の左反結合</strong>で「前月にいない人」「今月にいない人」を取り出す方法もあります。名簿を差し替えて「すべて更新」するだけで結果が変わります。手順は <a href="../../powerquery/advanced/article_pq_merge_append.html">テーブルの結合（マージと追加）</a> を見てください。</p>
+</section>
+
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="article_text_numbers_fix.html">Excelの数字が文字列になって計算・検索できないときの直し方</a></li>
+<li><a href="article_csv_leading_zero.html">CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方</a></li>
+<li><a href="../../functions/old/article_index_match.html">INDEX＋MATCHの基本</a></li>
+<li><a href="../../functions/latest/article_xlookup_basic.html">XLOOKUP基本編</a></li>
+<li><a href="../../functions/latest/article_filter.html">FILTER関数</a></li>
+<li><a href="../../powerquery/advanced/article_pq_merge_append.html">テーブルの結合 ― マージと追加</a></li>
+</ul></section>
+</article>
+</main>
+<footer class="site-footer"><div class="site-footer-trust" aria-label="運営情報と検証方針"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Windows版 Excel 2016以降・Microsoft 365 を想定しています（XLOOKUP・FILTERはMicrosoft 365／Excel 2021以降）。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js?v=20261101"></script>
+</body>
+</html>

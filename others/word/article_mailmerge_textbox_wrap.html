@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Word差し込み印刷で長い住所・会社名を枠内で折り返す方法｜テキストボックスで宛名崩れを防ぐ｜Excel × No VBA Lab</title>
+<!-- Google Analytics -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="宛名枠の幅と高さを決め、長い住所が欠けないように確認します。" name="description"/>
+<meta content="Word差し込み印刷で長い住所・会社名を枠内で折り返す方法" property="og:title"/>
+<meta content="宛名枠の幅と高さを決め、長い住所が欠けないように確認します。" property="og:description"/>
+<meta content="article" property="og:type"/>
+<meta content="Excel × No VBA Lab" property="og:site_name"/>
+<meta content="ja_JP" property="og:locale"/>
+<meta content="index, follow" name="robots"/>
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_textbox_wrap.html" rel="canonical"/>
+<link href="../../common.css?v=20261101" rel="stylesheet"/>
+<link href="../../article.css?v=20261101" rel="stylesheet"/>
+<link as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="preload"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="stylesheet"/></noscript>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Word差し込み印刷で長い住所・会社名を枠内で折り返す方法", "description": "宛名枠の幅と高さを決め、長い住所が欠けないように確認します。", "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}}, "datePublished": "2026-06-22", "dateModified": "2026-11-02"}</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},
+    {"@type": "ListItem", "position": 3, "name": "Word差し込み印刷", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/"},
+    {"@type": "ListItem", "position": 4, "name": "Word差し込み印刷で長い住所・会社名を枠内で折り返す方法", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_textbox_wrap.html"}
+  ]
+}
+</script>
+<link href="word-guide.css?v=20261102-images" rel="stylesheet"/><meta content="3" name="difficulty"/></head>
+<body class="article-layout word-guide">
+<div aria-hidden="true" class="reading-progress"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p>
+</div>
+</div>
+</header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../">ホーム</a><span>&gt;</span>
+<a href="../../others/">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span>
+<strong>Word差し込み印刷 テキストボックス</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Windows版 Word / Excel</span>
+<span class="article-date">更新日: 2026-11-02</span>
+</div>
+<h1 class="article-title">Word差し込み印刷で長い住所・会社名を枠内で折り返す方法：テキストボックスで宛名崩れを防ぐ</h1>
+<p class="article-summary" data-seo-lead="true">宛名枠の幅と高さを決め、長い住所が欠けないように確認します。</p></div><section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">ふつう（Lv.3）</p><ol class="word-guide-flow"><li>枠を描く</li><li>列を挿入</li><li>折り返し・位置</li><li>長い宛名を確認</li></ol><details class="word-guide-toc"><summary>手順の目次を開く</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">最初に選ぶ方法：本文・表で足りるか確認します</a></li><li><a href="#guide-step-2">準備：文書を接続し、長い住所を選びます</a></li><li><a href="#guide-step-3">手順1：テキストボックスを描く</a></li><li><a href="#guide-step-4">手順2：枠の中へ差し込みフィールドを入れる</a></li><li><a href="#guide-step-5">手順3：枠内の折り返しと余白を設定する</a></li><li><a href="#guide-step-6">手順4：位置を固定し、枠線を消す</a></li><li><a href="#guide-step-7">手順5：短い住所・長い住所・空欄を比べる</a></li></ol></nav></details></section>
+<section class="method-section" id="guide-step-1"><h2>最初に選ぶ方法：本文・表で足りるか確認します</h2><p>普通の案内文は本文へ、宛名ラベルはラベルの表へ差し込めば十分です。<strong>窓あき封筒など、宛名の場所と幅を固定したいとき</strong>にテキストボックスを使います。フィールドコードは編集しません。</p><p>幅を決めると住所が折り返されますが、高さが不足すると下の文字が隠れます。「折り返した」だけで完成と判断せず、最後の氏名まで確認します。</p></section>
+<section class="method-section" id="guide-step-2"><h2>準備：文書を接続し、長い住所を選びます</h2><ol class="line-height-2"><li>Excelの表を保存し、Wordの新しい文書を開きます。</li><li>「差し込み文書」→「宛先の選択」→「既存のリストを使用」を押し、保存したExcelファイルを選びます。</li><li>「テーブルの選択」で使うシート名を選びます。1行目が見出しなら「先頭行をタイトル行として使用する」をオンにして「OK」を押します。</li><li>「アドレス帳の編集」を開き、氏名・件数・空白の行がないことを確認して「OK」を押します。</li></ol><p>住所1は市区町村・番地、住所2は建物名に分けておくと、建物名の前で改行できます。最も長い会社名・建物名と、住所2が空の人を試す対象にします。</p></section>
+<section class="method-section" id="guide-step-3"><h2>手順1：テキストボックスを描く</h2><ol class="line-height-2"><li>「挿入」→「テキストボックス」→「横書きテキストボックスの描画」を選びます。</li><li>宛名を置く場所で左上から右下へドラッグします。まずは横80mm・縦45mm程度を練習の目安にします。実物の窓や宛名欄の寸法が優先です。</li><li>枠線をクリックして選択し、「図形の書式」の「サイズ」で幅と高さを指定します。文字内をクリックした状態と、枠を選んだ状態を区別します。</li></ol><figure class="article-screenshot"><a aria-label="画像を拡大：「挿入」から開くテキストボックスのメニューです。横書きの描画を選び、文書上に枠を作ります。" href="../../image/articles/2026-11-02/word-guide/textbox-menu.png" rel="noopener" target="_blank" style="--screenshot-width:429.00px"><img alt="「挿入」から開くテキストボックスのメニューです。横書きの描画を選び、文書上に枠を作ります。" decoding="async" height="500" loading="lazy" src="../../image/articles/2026-11-02/word-guide/textbox-menu.png" width="429"></a><figcaption>「挿入」から開くテキストボックスのメニューです。横書きの描画を選び、文書上に枠を作ります。 <span class="screenshot-enlarge">（クリックで拡大）</span></figcaption></figure></section>
+<section class="method-section" id="guide-step-4"><h2>手順2：枠の中へ差し込みフィールドを入れる</h2><ol class="line-height-2"><li>枠内をクリックし、文字のカーソルが出ることを確認します。</li><li>「差し込み文書」→「差し込みフィールドの挿入」で郵便番号_印刷用を挿入します。</li><li>Enterで改行し、住所1、住所2、会社名、氏名を順に入れます。氏名の後ろへ「 様」を入力します。</li></ol><pre class="code-block"><code>〒«郵便番号_印刷用»
+«住所1»
+«住所2»
+«会社名»
+«氏名» 様</code></pre><p>「«氏名»」などの記号をキーボードで入力しても差し込みにはなりません。<strong>表示したい位置をクリックして「差し込みフィールドの挿入」から列名を選ぶ</strong>操作で入れます。Enterで次の行へ移り、次の列を挿入します。</p><figure class="article-screenshot"><a aria-label="画像を拡大：枠の中にカーソルを置いてから列を挿入します。列名は自分の住所録の名前を選びます。" href="../../image/articles/2026-11-01/word-insert-mergefield-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:508.00px"><img alt="枠の中にカーソルを置いてから列を挿入します。列名は自分の住所録の名前を選びます。" decoding="async" height="548" loading="lazy" src="../../image/articles/2026-11-01/word-insert-mergefield-menu.jpg" width="508"></a><figcaption>枠の中にカーソルを置いてから列を挿入します。列名は自分の住所録の名前を選びます。 <span class="screenshot-enlarge">（クリックで拡大）</span></figcaption></figure></section>
+<section class="method-section" id="guide-step-5"><h2>手順3：枠内の折り返しと余白を設定する</h2><ol class="line-height-2"><li>テキストボックスの枠線を右クリックし、「図形の書式設定」を開きます。</li><li>「文字のオプション」→「テキストボックス」で「図形内でテキストを折り返す」を確認します。設定名・項目の有無は版や図形によって異なります。</li><li>内部余白を確認します。まず上下左右2mm程度を目安にし、実物の枠より文字が出ないよう調整します。</li><li>固定の宛名欄では、文字に合わせて図形が広がる自動調整を避け、サイズを維持して収まりを確認します。</li></ol><div class="xdemo-note-info">「図形の書式」→「文字列の折り返し」は、<strong>周囲の本文が図形をどう避けるか</strong>の設定です。枠内の文字を折り返す設定とは別です。</div></section>
+<section class="method-section" id="guide-step-6"><h2>手順4：位置を固定し、枠線を消す</h2><ol class="line-height-2"><li>枠を選び、「レイアウト オプション」から本文との配置方法を選びます。固定位置の宛名なら、本文に重ねられる「前面」などを使います。</li><li>「ページ上で位置を固定」を選びます。より正確に指定する場合は「その他のレイアウト オプション」で、基準をページにした水平・垂直の位置を指定します。</li><li>確認中は枠線を残しておき、配置が決まったら「図形の書式」→「図形の塗りつぶし」→「塗りつぶしなし」、「図形の枠線」→「枠線なし」にします。</li></ol></section>
+<section class="method-section" id="guide-step-7"><h2>手順5：短い住所・長い住所・空欄を比べる</h2><ol class="line-height-2"><li>「結果のプレビュー」をオンにし、長い住所の人へ切り替えます。</li><li>住所が折り返された後も、会社名と最後の「氏名 様」がすべて見えるか確認します。</li><li>一時的に枠を下へ広げ、隠れていた文字が出てこないか確認します。出る場合は元の高さが不足しています。</li><li>幅・高さを許容範囲で広げる、住所2の改行位置を変える、段落前後の余白や文字サイズを調整する順で見直します。</li><li>「完了と差し込み」→「個々のドキュメントの編集」→「すべて」で完成文書を作り、全ページを確認します。</li></ol><figure class="article-screenshot"><a aria-label="画像を拡大：参考画像：縦書きの封筒（長形3号）の記事で使っている、修正前の宛名の画面です。この記事の横書きテキストボックスの画面ではありません。手順5では、自分の文書で長い住所の人に切り替え、折り返した住所と「氏名 様」の行が枠の中にすべて見えているかを確認します。" href="../../image/articles/2026-11-02/word-image-fixes/envelope-preview-halfwidth.png" rel="noopener" target="_blank" style="--screenshot-width:310.00px"><img alt="参考画像：縦書きの封筒（長形3号）の記事で使っている、修正前の宛名の画面です。この記事の横書きテキストボックスの画面ではありません。手順5では、自分の文書で長い住所の人に切り替え、折り返した住所と「氏名 様」の行が枠の中にすべて見えているかを確認します。" decoding="async" height="510" loading="lazy" src="../../image/articles/2026-11-02/word-image-fixes/envelope-preview-halfwidth.png" width="310"></a><figcaption>参考画像：縦書きの封筒（長形3号）の記事で使っている、修正前の宛名の画面です。この記事の横書きテキストボックスの画面ではありません。手順5では、自分の文書で長い住所の人に切り替え、折り返した住所と「氏名 様」の行が枠の中にすべて見えているかを確認します。 （クリックで拡大・原寸表示）</figcaption></figure><p>窓あき封筒は、完成文書を普通紙へ印刷して実際に折り、宛名全体が窓から見えるかを確かめます。画面の位置だけでは判断できません。</p></section>
+<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>基本の流れを確認する</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p>通常操作で完成できる方法を先に紹介しています。コードを使う方法は、必要な場合に応用編を開いて参照してください。</p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_mailmerge_excel_source_design.html">Word差し込み印刷で失敗しにくいExcel住所録の作り方</a></li>
+<li><a href="article_mailmerge_postal_code.html">Word差し込み印刷で郵便番号と日付を整える方法</a></li>
+<li><a href="../print/article_mail_print.html">Excel 宛名1ページ1枚 案内文書印刷 ― スピンボタン＋Print_Area</a></li>
+<li><a href="../print/article_label_print.html">Excel 10面ラベル印刷 ― Print_Area数式で空白シールを自動除外</a></li>
+</ul>
+</section>
+</article>
+</main>
+<footer class="site-footer">
+<div aria-label="運営情報と検証方針" class="site-footer-trust">
+<p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+<p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Word差し込み印刷、Power Query、USB-HID型QRリーダーを想定しています。関数やWordフィールドの挙動は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+<p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+</div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>© Excel × No VBA Lab — コンテンツは随時追加中です</p>
+<p class="site-footer-legal-links">
+<a href="../../about.html">運営者情報</a>
+<span>|</span>
+<a href="../../disclaimer.html">免責事項</a>
+<span>|</span>
+<a href="../../privacy.html">プライバシーポリシー</a>
+</p>
+</footer>
+<script src="../../script.js?v=20261101"></script>
+<script src="word-images.js?v=20261102-images" defer></script>
+</body>
+</html>

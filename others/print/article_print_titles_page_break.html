@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Excelで2ページ目以降にも見出しを印刷する方法｜印刷タイトルと改ページプレビュー｜Excel &times; No VBA Lab</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="Excelで複数ページになる表を印刷すると2ページ目以降に見出しが出ない問題を、「印刷タイトル」のタイトル行（$3:$3）で解決します。ページの切れ目は改ページプレビューで点線をドラッグして決め、不要になったら「すべての改ページを解除」で戻します。実際のExcelの画面付き。" name="description">
+<meta content="Excelで2ページ目以降にも見出しを印刷する方法（印刷タイトルと改ページプレビュー）" property="og:title">
+<meta content="2ページ目以降にも見出し行を。Excelの印刷タイトルと改ページプレビューを実画面で解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_print_titles_page_break.html" property="og:url">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_print_titles_page_break.html" rel="canonical">
+<link href="../../common.css?v=20261101-images" rel="stylesheet">
+<link href="../../article.css?v=20261101" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "Excelで2ページ目以降にも見出しを印刷する方法（印刷タイトルと改ページプレビュー）", "description": "Excelで複数ページになる表を印刷すると2ページ目以降に見出しが出ない問題を、「印刷タイトル」のタイトル行（$3:$3）で解決します。ページの切れ目は改ページプレビューで点線をドラッグして決め、不要になったら「すべての改ページを解除」で戻します。実際のExcelの画面付き。", "datePublished": "2026-11-01", "dateModified": "2026-11-01", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_print_titles_page_break.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "毎ページに見出しを印刷", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_print_titles_page_break.html"}]}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><strong>毎ページに見出しを印刷</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-01</span></div><h1 class="article-title">Excelで2ページ目以降にも見出しを印刷する方法（印刷タイトルと改ページプレビュー）</h1>
+<p class="article-summary" data-seo-lead="true">複数ページになる表を印刷すると、2ページ目以降に見出し行が出ません。Excelの「印刷タイトル」で見出し行を全ページに付け、「改ページプレビュー」でページの切れ目を決める方法を、実際の画面で説明します。</p></div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>120行ある社員一覧を印刷すると、<strong>2ページ目以降に見出し（社員番号・氏名・部署…）が出ません</strong>。どの列が何かわからず、1ページ目と見比べることになります。</p>
+<p>この記事では、Excelの<strong>「印刷タイトル」</strong>で見出し行を全ページに付け、<strong>「改ページプレビュー」</strong>でページの切れ目を自分で決める方法を、実際のExcelの画面で説明します。どちらも数式やVBAは使いません。</p>
+<div class="table-wrapper"><table class="comparison-table"><caption>この記事でやること</caption>
+<thead><tr><th>困りごと</th><th>使う機能</th><th>場所</th></tr></thead>
+<tbody>
+<tr><td>2ページ目以降に見出し行が出ない</td><td>印刷タイトル（タイトル行）</td><td>「ページ レイアウト」タブ →「印刷タイトル」</td></tr>
+<tr><td>区切りの悪い行でページが変わる</td><td>改ページプレビュー</td><td>「表示」タブ →「改ページ プレビュー」</td></tr>
+</tbody></table></div>
+</section>
+
+<section class="method-section">
+<h2>撮影に使った表</h2>
+<p>A1に表のタイトル「社員一覧（2026年11月）」、<strong>3行目に見出し</strong>（社員番号・氏名・部署・入社日・内線）、4行目から120人分のデータが並ぶ表です。名前はすべて架空のデータです。</p>
+<p>そのまま印刷プレビューを見ると、2ページ目は見出しのないデータだけが並びます。</p>
+<figure class="article-screenshot"><a href="../../image/articles/2026-11-01/excel-print-preview-page2-no-title.jpg" target="_blank" rel="noopener" aria-label="画像を拡大：印刷タイトルを設定する前の2ページ目の印刷プレビュー。見出し行がない"><img src="../../image/articles/2026-11-01/excel-print-preview-page2-no-title.jpg" alt="印刷タイトルを設定する前の2ページ目の印刷プレビュー。見出し行がない" width="840" height="705" loading="lazy" decoding="async"></a><figcaption>設定前の2ページ目です。社員番号1054から始まり、どの列が部署で、どの列が入社日かは1ページ目を見ないとわかりません。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+</section>
+
+<section class="method-section" id="print-titles">
+<h2>手順1：印刷タイトルで見出し行を全ページに付ける</h2>
+<ol class="line-height-2">
+<li>「<strong>ページ レイアウト</strong>」タブ →「ページ設定」グループの「<strong>印刷タイトル</strong>」を押します。</li>
+<li>「ページ設定」の画面が「<strong>シート</strong>」タブで開きます。</li>
+<li>「印刷タイトル」の「<strong>タイトル行</strong>」の入力欄をクリックし、シートの<strong>3行目の行番号</strong>をクリックします。<code>$3:$3</code> と入ります。</li>
+<li>「OK」を押します。</li>
+</ol>
+<figure class="article-screenshot"><a href="../../image/articles/2026-11-01/excel-print-titles-row3.jpg" target="_blank" rel="noopener" aria-label="画像を拡大：ページ設定のシートタブで、タイトル行に$3:$3を指定した画面"><img src="../../image/articles/2026-11-01/excel-print-titles-row3.jpg" alt="ページ設定のシートタブで、タイトル行に$3:$3を指定した画面" width="870" height="515" loading="lazy" decoding="async"></a><figcaption>実際の画面です。タイトル行に「$3:$3」を指定しました。見出しが2行ある場合は、行番号を2行分ドラッグして「$3:$4」のようにします。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<p>印刷プレビュー（<span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">P</span>）で2ページ目を見ると、先頭に見出し行が付いています。</p>
+<figure class="article-screenshot"><a href="../../image/articles/2026-11-01/excel-print-preview-page2-with-title.jpg" target="_blank" rel="noopener" aria-label="画像を拡大：印刷タイトルを設定した後の2ページ目の印刷プレビュー。先頭に見出し行がある"><img src="../../image/articles/2026-11-01/excel-print-preview-page2-with-title.jpg" alt="印刷タイトルを設定した後の2ページ目の印刷プレビュー。先頭に見出し行がある" width="840" height="705" loading="lazy" decoding="async"></a><figcaption>設定後の2ページ目です。先頭に「社員番号・氏名・部署・入社日・内線」の見出しが付きました。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<ul class="line-height-2">
+<li><strong>表のタイトル（1行目）は入れなくてかまいません。</strong>毎ページに出したいのは列の見出しだけ、という場合がほとんどです。表のタイトルも毎ページに出したい場合は「$1:$3」にします。</li>
+<li>横に長い表で、左端の列（社員番号・氏名など）を毎ページに出したいときは「<strong>タイトル列</strong>」に列を指定します（例：<code>$A:$B</code>）。</li>
+<li>印刷タイトルは<strong>シートごと</strong>の設定です。別のシートには別に設定します。</li>
+</ul>
+<div class="xdemo-note-info"><strong>「印刷タイトル」が押せない（灰色）とき</strong><br>
+複数のシートを選んだ状態（グループ）になっていると押せません。シート見出しを1つだけクリックしてから押します。また、ページ設定の画面を印刷プレビュー（<span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">P</span>）の「ページ設定」から開いた場合は、タイトル行の欄が使えません。「ページ レイアウト」タブから開きます。</div>
+</section>
+
+<section class="method-section" id="page-break">
+<h2>手順2：改ページプレビューでページの切れ目を決める</h2>
+<p>印刷タイトルで見出しは付きましたが、ページの切れ目は用紙の大きさで自動に決まります。部署ごと・50人ごとなど、<strong>区切りのよいところでページを変えたい</strong>ときは改ページプレビューを使います。</p>
+<ol class="line-height-2">
+<li>「<strong>表示</strong>」タブ →「<strong>改ページ プレビュー</strong>」を押します（画面右下の表示切り替えボタンからも切り替えられます）。</li>
+<li>印刷される範囲が白、印刷されない範囲が灰色で表示されます。ページの切れ目は<strong>青い線</strong>で表示されます。</li>
+<li>自動で決まった切れ目は<strong>点線</strong>です。この点線を、ページを変えたい行の境目まで<strong>ドラッグ</strong>します。</li>
+<li>ドラッグした切れ目は<strong>実線</strong>（手動の改ページ）に変わります。</li>
+</ol>
+<figure class="article-screenshot"><a href="../../image/articles/2026-11-01/excel-page-break-preview-auto.jpg" target="_blank" rel="noopener" aria-label="画像を拡大：改ページプレビューで自動の切れ目が点線で表示されている画面"><img src="../../image/articles/2026-11-01/excel-page-break-preview-auto.jpg" alt="改ページプレビューで自動の切れ目が点線で表示されている画面" width="700" height="590" loading="lazy" decoding="async"></a><figcaption>ドラッグする前。56行目と57行目の間に、自動で決まった切れ目（点線）があります。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<figure class="article-screenshot"><a href="../../image/articles/2026-11-01/excel-page-break-preview-manual.jpg" target="_blank" rel="noopener" aria-label="画像を拡大：改ページプレビューで切れ目をドラッグして実線になった画面"><img src="../../image/articles/2026-11-01/excel-page-break-preview-manual.jpg" alt="改ページプレビューで切れ目をドラッグして実線になった画面" width="700" height="590" loading="lazy" decoding="async"></a><figcaption>切れ目を50行目と51行目の間までドラッグした後。実線（手動の改ページ）に変わり、1ページ目は社員番号1047までになりました。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<ul class="line-height-2">
+<li>切れ目を<strong>下</strong>にずらす（1ページに入る行を増やす）と、Excelは1ページに収めるために<strong>印刷の倍率を自動で小さく</strong>します。文字が小さくなりすぎていないか、印刷プレビューで確認します。</li>
+<li>行を選んで「ページ レイアウト」タブ →「<strong>改ページ</strong>」→「<strong>改ページの挿入</strong>」でも、選んだ行の上に切れ目を入れられます。</li>
+<li>元の表示に戻すときは「表示」タブ →「<strong>標準</strong>」を押します。標準の表示でも、切れ目の位置に細い点線が表示されます。</li>
+</ul>
+</section>
+
+<section class="method-section" id="reset">
+<h2>手動の改ページをやめたいとき</h2>
+<ul class="line-height-2">
+<li>1か所だけやめる：切れ目の下の行を選び、「ページ レイアウト」タブ →「改ページ」→「<strong>改ページの解除</strong>」。</li>
+<li>全部やめる：「ページ レイアウト」タブ →「改ページ」→「<strong>すべての改ページを解除</strong>」。自動の切れ目に戻ります。</li>
+<li>印刷タイトルをやめる：「印刷タイトル」を開き、タイトル行の欄を空にして「OK」。</li>
+</ul>
+</section>
+
+<section class="method-section">
+<h2>よくあるつまずき</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>症状と確認すること</caption>
+<thead><tr><th>症状</th><th>確認すること</th></tr></thead>
+<tbody>
+<tr><td>ページの先頭に見出しが2行続けて出る</td><td>以前の印刷のために、表の途中へ見出し行をコピーして貼ってあると、印刷タイトルの見出しと重なります。印刷タイトルを使う場合は、表の途中の見出し行を削除します。</td></tr>
+<tr><td>2ページ目以降に見出しが出ない</td><td>設定したのが別のシートではないか。タイトル行が「$3:$3」のように行全体の形で入っているか。</td></tr>
+<tr><td>切れ目をドラッグしても思った位置にならない</td><td>「拡大縮小印刷」で「次のページ数に合わせて印刷」を指定していると、ページ数が優先されます。「ページ レイアウト」タブの「横」「縦」を「自動」に戻します。</td></tr>
+<tr><td>文字が小さくなった</td><td>切れ目を下にドラッグして1ページに入る行を増やすと、倍率が自動で下がります。切れ目を上に戻すか、余白を狭くします。</td></tr>
+</tbody></table></div>
+<p class="verify-note">画面はWindows版のExcel（Microsoft 365）で、プリンターに「Microsoft Print to PDF」を選んだ状態の印刷プレビューです。ページの切れ目の位置は、プリンターや用紙の設定によって変わります。環境により結果が異なる場合があります。紙への印刷は行っていません。</p>
+</section>
+
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="article_print_area.html">印刷範囲をデータ量に合わせて自動で伸縮させる</a></li>
+<li><a href="article_label_print.html">Excel 10面ラベル印刷</a></li>
+<li><a href="article_mail_print.html">宛名を1ページ1枚にして案内文書を印刷する</a></li>
+<li><a href="../word/article_mailmerge_cover_letter_per_company.html">Word差し込み印刷で会社ごとに1枚の送付状を作る</a></li>
+</ul></section>
+</article>
+</main>
+<footer class="site-footer"><div class="site-footer-trust" aria-label="運営情報と検証方針"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Windows版 Excel（Microsoft 365）で撮影・確認しています。Excel 2016以降でも同じ機能がありますが、画面の表示は版によって異なる場合があります。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js?v=20261101"></script>
+</body>
+</html>

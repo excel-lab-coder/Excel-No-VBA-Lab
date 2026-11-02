@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wordの「置換」でVBAなしに一括整形する｜特殊文字^p・^tとワイルドカード｜Excel × No VBA Lab</title>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="通常の置換を1件ずつ試してから一括整形。ワイルドカードは難易度高の応用編です。" name="description"/>
+<meta content="Wordの「置換」でVBAなしに一括整形する（特殊文字・ワイルドカード）" property="og:title"/>
+<meta content="通常の置換を1件ずつ試してから一括整形。ワイルドカードは難易度高の応用編です。" property="og:description"/>
+<meta content="article" property="og:type"/>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_word_wildcard_replace.html" property="og:url"/>
+<meta content="Excel × No VBA Lab" property="og:site_name"/>
+<meta content="ja_JP" property="og:locale"/>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="index, follow" name="robots"/>
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_word_wildcard_replace.html" rel="canonical"/>
+<link href="../../common.css?v=20261101" rel="stylesheet"/>
+<link href="../../article.css?v=20261101" rel="stylesheet"/>
+<link as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="preload"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="stylesheet"/></noscript>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Wordの「置換」でVBAなしに一括整形する（特殊文字・ワイルドカード）", "description": "通常の置換を1件ずつ試してから一括整形。ワイルドカードは難易度高の応用編です。", "datePublished": "2026-11-01", "dateModified": "2026-11-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_word_wildcard_replace.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "Wordの置換で一括整形", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_word_wildcard_replace.html"}]}
+</script>
+<link href="word-guide.css?v=20261102-images" rel="stylesheet"/><meta content="2" name="difficulty"/></head>
+<body class="article-layout word-guide">
+<div aria-hidden="true" class="reading-progress"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><strong>Wordの置換で一括整形</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word</span><span class="article-date">更新日: 2026-11-02</span></div><h1 class="article-title">Wordの「置換」でVBAなしに一括整形する（特殊文字・ワイルドカード）</h1>
+<p class="article-summary" data-seo-lead="true">社名の表記の修正、余分な空行、手動改行などを、Wordの「置換」でまとめて直す方法です。まずは普通の置換を1件ずつ試し、結果を確かめてから一括で直します。パターンを使うワイルドカードは、後半の応用編で扱います。</p></div><section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">やさしい（Lv.2） ／ コードを使う応用は本文で区別</p><ol class="word-guide-flow"><li>コピーを保存</li><li>通常の置換</li><li>特殊文字を確認</li><li>結果を照合</li></ol><details class="word-guide-toc"><summary>手順の目次を開く</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">まずは普通の置換から試します</a></li><li><a href="#guide-step-2">準備：コピーを作り、変更前を残す</a></li><li><a href="#guide-step-3">手順1：普通の文字を1件だけ置き換える</a></li><li><a href="#guide-step-4">手順2：空行を減らす（通常の検索）</a></li><li><a href="#guide-step-5">手順3：全角・半角は必要な文字だけ選ぶ</a></li><li><a href="#guide-step-7">条番号を付け替える場合の注意</a></li><li><a href="#guide-step-8">最後に：結果を確認して保存する</a></li></ol></nav></details></section>
+<section class="method-section" id="guide-step-1"><h2>まずは普通の置換から試します</h2><p>Wordの「置換」は、同じ文字の修正や余分な空行の整理に使えます。基本操作を先に練習し、パターンを扱うワイルドカードは後半の応用編で使います。フィールドコードは不要です。</p></section>
+<section class="method-section" id="guide-step-2"><h2>準備：コピーを作り、変更前を残す</h2><ol class="line-height-2"><li>元の文書を開き、「ファイル」→「名前を付けて保存」で「整形作業用」などの名前のコピーを作ります。</li><li>まずは短い段落を選んで試します。表やタブ区切りデータと普通の文章は分けて扱います。</li><li>ホームタブの「編集記号の表示/非表示」で、段落記号やタブを見えるようにすると確認しやすくなります。</li></ol></section>
+<section class="method-section" id="guide-step-3"><h2>手順1：普通の文字を1件だけ置き換える</h2><ol class="line-height-2"><li>Ctrl＋Hを押して「検索と置換」の「置換」タブを開きます。</li><li>「検索する文字列」へ、例として「株式会社サンプル」を入力します。</li><li>「置換後の文字列」へ「サンプル株式会社」を入力します。</li><li>「オプション」を開き、「ワイルドカードを使用する」がオフであることを確認します。前の検索の条件や書式が残っていれば解除します。</li><li>「次を検索」で該当箇所を確認し、「置換」で1件だけ直します。</li><li>結果が正しいと分かってから、文書全体に同じ変更が必要な場合だけ「すべて置換」を使います。</li></ol><figure class="article-screenshot"><a aria-label="画像を拡大：「検索と置換」の詳細設定を開いた実画面です。上が検索欄、下が置換後の欄です。画像は入力前の状態です。ワイルドカードのオン・オフもここで確認します。" href="../../image/articles/2026-11-02/word-guide/replace-paragraphs.png" rel="noopener" target="_blank" style="--screenshot-width:640.00px"><img alt="「検索と置換」の詳細設定を開いた実画面です。上が検索欄、下が置換後の欄です。画像は入力前の状態です。ワイルドカードのオン・オフもここで確認します。" decoding="async" height="543" loading="lazy" src="../../image/articles/2026-11-02/word-guide/replace-paragraphs.png" width="640"></a><figcaption>「検索と置換」の詳細設定を開いた実画面です。上が検索欄、下が置換後の欄です。画像は入力前の状態です。ワイルドカードのオン・オフもここで確認します。 <span class="screenshot-enlarge">（クリックで拡大）</span></figcaption></figure></section>
+<section class="method-section" id="guide-step-4"><h2>手順2：空行を減らす（通常の検索）</h2><p>下の例は<strong>ワイルドカードをオフ</strong>にして使います。空行もレイアウトの一部の場合があるので、まず1件ずつ確認します。</p><div class="table-wrapper"><table class="comparison-table"><caption>特殊文字による置換例</caption><thead><tr><th scope="col">目的</th><th scope="col">検索する文字列</th><th scope="col">置換後の文字列</th></tr></thead><tbody><tr><td>連続した段落区切りを1つにする</td><td>^p^p</td><td>^p</td></tr><tr><td>手動改行を段落区切りにする</td><td>^l</td><td>^p</td></tr></tbody></table></div><ol class="line-height-2"><li>検索欄へ「^p^p」、置換欄へ「^p」を入力します。</li><li>「次を検索」で空行に一致しているか確認します。</li><li>「置換」で1か所直し、前後の段落が意図どおりか見ます。</li><li>複数の空行がある場合は、必要な回数だけ繰り返します。段落の間隔設定で空いている場所は、この置換では変わりません。</li></ol><div class="xdemo-note-info"><strong>連続タブは一律に減らしません。</strong>タブ区切りデータでは「A［タブ］［タブ］C」が、A・空欄・Cの3列を表す場合があります。タブを1つにするとCが2列目へ移ります。Excelに貼る予定の表では、空欄の列を保ったまま確認します。</div></section>
+<section class="method-section" id="guide-step-5"><h2>手順3：全角・半角は必要な文字だけ選ぶ</h2><ol class="line-height-2"><li>変換したい文字列を選びます。文章全体ではなく、番号や英数字だけで試します。</li><li>「ホーム」→「文字種の変換」（Aaのメニュー）→「半角」または「全角」を選びます。</li><li>句読点・カナ・英字まで意図せず変わっていないか確認します。</li><li>番号の意味をそろえたり日付を計算したりする場合は、Excelへ貼り付けた後に値を整えます。</li></ol></section>
+<details class="mailmerge-advanced"><summary>応用・難易度高：ワイルドカードで日付表記を変える</summary><div class="mailmerge-advanced-content"><section class="method-section"><h2>応用：日付の区切りをワイルドカードで変える</h2><p>対象を半角数字の「2026/11/2」のような日付表記に限定した例です。検索は日付の妥当性までは判断しません。</p><div class="table-wrapper"><table class="comparison-table"><caption>半角数字の日付表記の変換</caption><thead><tr><th scope="col">欄</th><th scope="col">入力</th></tr></thead><tbody><tr><td>検索する文字列</td><td>([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})</td></tr><tr><td>置換後の文字列</td><td>\1年\2月\3日</td></tr></tbody></table></div><ol class="line-height-2"><li>Ctrl＋H→「オプション」で「ワイルドカードを使用する」をオンにします。</li><li>表の検索式と置換文字列を、半角で入力します。</li><li>「次を検索」で、周辺の数字を巻き込んでいないか確認します。</li><li>「置換」を1件ずつ実行します。日付以外の番号が混ざる文書では、すべて置換を使わず個別に判断します。</li><li>作業後はワイルドカードをオフに戻します。</li></ol><p>Wordのワイルドカードは一般的な正規表現とは異なります。検索式を他のアプリからそのまま流用しないでください。</p></section>
+</div></details><section class="method-section" id="guide-step-7"><h2>条番号を付け替える場合の注意</h2><p>「第[0-9]{1,3}条」を文書全体で削除すると、見出しに加え「第3条を参照」のような本文中の参照も消えます。条番号の一括削除は基本手順にしません。</p><p>見出しの番号をそろえる場合は、見出し段落を確認して「ホーム」→「アウトライン」などの自動番号を使います。本文の参照先がある文書は、番号だけでなく参照先の整合性も確認します。</p></section>
+<section class="method-section" id="guide-step-8"><h2>最後に：結果を確認して保存する</h2><p>変更後の件数と、文書の先頭・途中・最後を確認します。置換の結果は Ctrl+Z で取り消せますが、文書を閉じると取り消しの履歴は消えます。作業前のコピーを必ず残してください。</p><p><a href="https://support.microsoft.com/ja-jp/word/training/find-and-replace-text-in-word" rel="noopener" target="_blank">Microsoft：文字列の検索と置換</a>／<a href="https://support.microsoft.com/ja-jp/office/foundations-experiences/undo-redo-or-repeat-an-action" rel="noopener" target="_blank">操作の取り消し</a></p></section>
+<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>基本の流れを確認する</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p>通常操作で完成できる方法を先に紹介しています。コードを使う方法は、必要な場合に応用編を開いて参照してください。</p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="../../functions/old/article_substitute.html">SUBSTITUTE関数で複数文字を一括置換</a></li>
+<li><a href="article_excel_to_word_paste.html">Excelの表をWordへ貼る3つの方法</a></li>
+<li><a href="article_word_compare.html">Wordの「文書の比較」で修正箇所をすぐ見つける</a></li>
+<li><a href="article_mailmerge_method_comparison.html">Excel VBA・Excel数式・Word差し込み印刷の使い分け</a></li>
+</ul></section>
+</article>
+</main>
+<footer class="site-footer"><div aria-label="運営情報と検証方針" class="site-footer-trust"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Windows版 Word / Excel 2016以降・Microsoft 365 を想定しています。Mac版・Web版ではメニューや使える機能が異なります。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>© Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js?v=20261101"></script>
+<script src="word-images.js?v=20261102-images" defer></script>
+</body>
+</html>

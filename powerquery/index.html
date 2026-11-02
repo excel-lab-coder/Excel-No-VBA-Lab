@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>パワークエリ総合ガイド｜VBA・マクロ禁止時のExcel代替手段｜Excel × No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta name="description" content="VBAやマクロが会社で禁止されている、またはExcelで使えない環境で、Power Query（パワークエリ）を代替手段として使う総合ガイド。CSV取込、データ整形、複数ファイル結合、更新運用を実務でそのまま使える形で解説します。">
+<meta name="theme-color" content="#1a3d5c">
+<link rel="canonical" href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/">
+<meta property="og:title" content="パワークエリ総合ガイド｜VBA・マクロ禁止時のExcel代替手段｜Excel × No VBA Lab">
+<meta property="og:description" content="VBAやマクロが会社で禁止されている、またはExcelで使えない環境で、Power Query（パワークエリ）を代替手段として使う総合ガイド。CSV取込、データ整形、複数ファイル結合、更新運用を体系化しています。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/">
+<meta property="og:site_name" content="Excel × No VBA Lab">
+<meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="パワークエリ総合ガイド｜VBA・マクロ禁止時のExcel代替手段｜Excel × No VBA Lab">
+<meta name="twitter:description" content="VBAやマクロが使えないExcel環境で、Power Query（パワークエリ）を代替手段として使う方法を整理します。">
+<meta name="twitter:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="../common.css?v=20261101">
+<link rel="stylesheet" href="../index.css?v=20261101">
+<link rel="stylesheet" href="../article.css?v=20261101">
+<script>
+  window.ExcelLab = window.ExcelLab || {};
+  window.ExcelLab.rareTech = {
+    "cobol_irregular": { rarity: 1000 },
+    "cobol_expert": { rarity: 1000 },
+    "qr_hardware": { rarity: 1000 },
+    "qr_series": { rarity: 1000 },
+    "cobol_pq_midb": { rarity: 300 },
+    "print_area": { rarity: 300 },
+    "zip_reverse": { rarity: 300 },
+    "shape_circle": { rarity: 200 },
+    "filter_alt": { rarity: 200 },
+    "m_language": { rarity: 200 },
+    "cobol_advanced": { rarity: 200 },
+    "speed_formula": { rarity: 200 },
+    "speed_lookup": { rarity: 200 },
+    "pq_parameter": { rarity: 200 },
+    "pq_add_columns": { rarity: 100 },
+    "volatile": { rarity: 100 },
+    "label_scrap": { rarity: 100 },
+    "qr_generate": { rarity: 100 },
+    "choosecols": { rarity: 50 }
+  };
+  window.RARETECH_CONFIG = window.ExcelLab.rareTech;
+</script>
+<script type="application/ld+json">
+{
+    "@context":  "https://schema.org",
+    "@type":  "CollectionPage",
+    "name":  "パワークエリ",
+    "description":  "VBAやマクロが会社で禁止されている、またはExcelで使えない環境で、Power Query（パワークエリ）を代替手段として使う総合ガイドです。CSV取込、データ整形、複数ファイル結合、更新運用を体系化しています。",
+    "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/",
+    "inLanguage":  "ja",
+    "isPartOf":  {
+                     "@type":  "WebSite",
+                     "name":  "Excel × No VBA Lab",
+                     "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"
+                 },
+    "hasPart":  [
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Power QueryとVBAの違い",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_powerquery_intro.html",
+                        "position":  1
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "取り込み直後の5操作",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pq_first_steps.html",
+                        "position":  2
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "テーブルの結合（マージ/追加）",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_merge_append.html",
+                        "position":  3
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "パラメータクエリ",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_parameter_query.html",
+                        "position":  4
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "新しい列を作る",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_add_columns.html",
+                        "position":  5
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "M言語入門",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_m_language.html",
+                        "position":  6
+                    }
+                ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context":  "https://schema.org",
+    "@type":  "BreadcrumbList",
+    "itemListElement":  [
+                            {
+                                "@type":  "ListItem",
+                                "position":  1,
+                                "name":  "ホーム",
+                                "item":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"
+                            },
+                            {
+                                "@type":  "ListItem",
+                                "position":  2,
+                                "name":  "パワークエリ",
+                                "item":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/"
+                            }
+                        ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context":  "https://schema.org",
+    "@type":  "FAQPage",
+    "mainEntity":  [
+                       {
+                           "@type":  "Question",
+                           "name":  "Excel 2016でも使えますか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "はい。Power Query は Excel 2016 以降で利用できます（機能差分あり）。本カテゴリでは互換性を意識した手順を扱います。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "VBAとPower Queryの違いは何ですか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "VBAはExcel操作全般や画面操作をコードで自動化する仕組みです。Power Queryはデータの取り込み・整形・結合に強い標準機能で、マクロ禁止のExcel環境でも代替手段になる場面があります。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "関数より先に学ぶべきですか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "定型の取り込み・整形が多い業務では先に学ぶ価値が高いです。セル単位ロジックは関数カテゴリと併用してください。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "更新時に壊れない設計のコツは？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "型の確定、列名依存の最小化、ステップ命名、想定外値の吸収手順を先に組み込むことです。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "パラメータクエリは何に効きますか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "日付・ファイル名・対象フォルダなどをセルで切り替え、同一クエリを再利用できます。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "M言語は必須ですか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "必須ではありません。GUIで十分な範囲を先に固め、必要な箇所だけ M を補う運用が現実的です。"
+                                              }
+                       }
+                   ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">パワークエリ</span><span class="sub-main">カテゴリ総合ランディングページ</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+  <nav aria-label="パンくずリスト">
+    <div class="breadcrumb">
+      <a href="../">ホーム</a><span>&gt;</span><strong>パワークエリ</strong>
+    </div>
+  </nav>
+
+  <section class="method-section">
+    <h1>パワークエリ 総合ガイド</h1>
+    <p class="article-summary">Power Query の設計を「取り込み→整形→更新運用」まで一続きで学べるカテゴリです。</p>
+    <p class="article-summary">VBAが使えない、マクロが禁止されている、外部ソフトを入れられない環境では、Power Query（パワークエリ）やExcel関数による代替手段を先に検討すると安全です。</p>
+  </section>
+
+  <section class="method-section">
+    <h2><span class="icon">🧩</span> 読者の課題</h2>
+    <ul class="philosophy-list">
+      <li>毎月のCSV整形を手作業で繰り返している。</li>
+      <li>PDF/Word取込の手順が担当者依存になっている。</li>
+      <li>更新ボタンを押すたびに列ズレや型崩れが起きる。</li>
+      <li>結合や条件切替の設計が場当たりになっている。</li>
+    </ul>
+  </section>
+
+  <section class="method-section">
+    <h2><span class="icon">✅</span> このカテゴリで解決できること</h2>
+    <ul class="philosophy-list">
+      <li>接続〜読み込みの基本操作を標準化。</li>
+      <li>列・行・型変換の整形フローをテンプレ化。</li>
+      <li>マージ/追加で複数データ源を統合。</li>
+      <li>パラメータクエリとM言語で再利用性を向上。</li>
+    </ul>
+  </section>
+
+
+  <div class="category-hero hero-overlay hero-pq">
+    <picture>
+      <source media="(max-width: 600px)" type="image/avif" srcset="../image/hero_pq-480.avif 480w, ../image/hero_pq-768.avif 768w" sizes="100vw">
+      <source type="image/avif" srcset="../image/hero_pq-768.avif 768w, ../image/hero_pq-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <source media="(max-width: 600px)" type="image/webp" srcset="../image/hero_pq-480.webp 480w, ../image/hero_pq-768.webp 768w" sizes="100vw">
+      <source type="image/webp" srcset="../image/hero_pq-768.webp 768w, ../image/hero_pq-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <img alt="パワークエリ Power Query 特集" decoding="async" height="576" loading="lazy" src="../image/hero_pq.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Data Transformation</div>
+      <div class="hero-copy-title">Power Query特集</div>
+      <div class="hero-copy-sub">毎月の整形作業を、更新ボタンひとつに。</div>
+    </div>
+  </div>
+
+  <div class="category-header">
+    <h2>🔄 パワークエリ（Power Query）</h2>
+    <p>VBAやマクロを書かずに、GUIでデータ加工を自動化するためのカテゴリです。基本操作から応用テクニックまで体系的に解説します。</p>
+  </div>
+
+  <p class="level-scale-note">※ Lvは一般的なExcel技能の共通基準ではなく、このカテゴリ内で必要になる操作・M言語・設計判断を含む相対的な目安です。</p>
+  <div class="level-legend">
+    <div class="legend-row-levels">
+      <span class="level-legend-item"><span class="lv-dot lv-dot-1"></span>Lv.1 入門</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-2"></span>Lv.2 やさしい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-3"></span>Lv.3 ふつう</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-4"></span>Lv.4 やや難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-5"></span>Lv.5 難しい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-6"></span>Lv.6 かなり難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-7"></span>仕組みを解説</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-8"></span>数式例・解説あり</span>
+    </div>
+
+    <div class="legend-row-tags">
+      <span class="legend-tag-desc"><span class="tag-impact">🔥 即戦力</span><span class="tag-desc-text">実務効果が大きい</span></span>
+      <span class="legend-tag-desc"><span class="tag-rare">💎 応用例</span><span class="tag-desc-text">複数の機能を組み合わせる例</span></span>
+      <span class="legend-tag-desc"><span class="tag-prereq">📖 前提知識</span><span class="tag-desc-text">先に読んでおく記事</span></span>
+    </div>
+  </div>
+
+  <h3 class="subcategory-heading">1. 基本（まずここから）</h3>
+
+  <ul class="article-list mb-32" id="list-pq-basic">
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-prereq">📖 前提知識 — 必ず先に読む</span><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../powerquery/basic/article_powerquery_intro.html">Power QueryとVBAの違い</a>
+      <p class="article-summary">VBAやマクロが使えないExcel環境で、Power Queryが代替できる作業と使い分けを把握します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../powerquery/basic/article_powerquery_intro_deep.html">パワークエリとは【補足編】</a>
+      <p class="article-summary">読み込み先の選択肢、パラメータクエリ、SharePoint連携などの発展的内容。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-prereq">📖 前提知識 — 必ず先に読む</span><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../powerquery/basic/article_pq_editor_ui.html">Power Queryエディターの画面構成</a>
+      <p class="article-summary">エディターの5つのエリアの役割を解説し、どこを見れば何がわかるかを把握します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../powerquery/basic/article_pq_editor_ui_2.html">Power Queryエディターの画面構成と「適用したステップ」</a>
+      <p class="article-summary">「適用したステップ」の読み方・戻し方・削除・途中挿入まで丁寧にカバーします。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-prereq">📖 前提知識 — 必ず先に読む</span><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../powerquery/basic/article_pq_data_type.html">データ型の変換</a>
+      <p class="article-summary">型が正しくないと、計算・フィルター・並べ替えが意図通りに動きません。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-prereq">📖 前提知識 — 必ず先に読む</span><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../powerquery/basic/article_pq_first_steps.html">取り込んだ直後にやる5つの定番操作</a>
+      <p class="article-summary">ヘッダー昇格・列の削除・列名変更・データ型変換・不要行の削除を解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../powerquery/basic/article_pq_fill.html">フィル（下方向・上方向）</a>
+      <p class="article-summary">空白セル（null）を直前の値で自動的に埋める、帳票処理で重要な操作です。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../powerquery/basic/article_pq_management.html">更新と管理 — 接続・エラー対策・設計パターン</a>
+      <p class="article-summary">更新方法、読み込み先の選び方、接続のみクエリの活用、エラー予防策をまとめて解説。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">2. PDF・Wordからの取り込み</h3>
+
+  <ul class="article-list mb-32" id="list-pq-pdf">
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../powerquery/basic/article_pdf_overview.html">PDFからのデータ取り込み 概要</a>
+      <p class="article-summary">対応できるケースとできないケース、注意点を解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../powerquery/basic/article_pdf_powerquery_basic.html">PDFからのデータ取り込み 基本編</a>
+      <p class="article-summary">PDFコネクタが利用できる環境で、PDFから表を取り込む基本手順を解説します。Microsoft 365で利用可。2021／2024の買い切り版は要確認、2019以前は非搭載。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../powerquery/basic/article_pdf_powerquery_advanced.html">PDFからのデータ取り込み 応用編</a>
+      <p class="article-summary">PDFコネクタが利用できる環境で、複数ページ・レイアウト崩れ・文字化けへの対処を解説します。機能の有無は版と更新環境を確認。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../powerquery/basic/article_pdf_word.html">WordファイルからPower Queryでデータを取り込む</a>
+      <p class="article-summary">Wordドキュメント内のテーブルをPower Queryで取り込む方法を解説します。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">3. データ整形テクニック</h3>
+
+  <ul class="article-list mb-32" id="list-pq-transform">
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="../powerquery/advanced/article_pq_folder_monthly.html">Power Queryで毎月のファイルをまとめる：翌月も更新だけで使える設計</a>
+      <p class="article-summary">フォルダー取り込みを月次業務の例で解説。ファイル名のルール、余計なファイルの除外、二重取り込みの確認表、列名が変わった月への対処まで。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../powerquery/advanced/article_pq_import_patterns.html">データ取り込みパターン集 — CSV・Excel・PDF・Web・フォルダ</a>
+      <p class="article-summary">Power Queryのデータ取り込みパターンをGUI操作で丁寧に解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../powerquery/advanced/article_pq_column_delete.html">列の削除・選択・並べ替え・名前変更</a>
+      <p class="article-summary">不要な列の削除と列名の整理。列に対する4つの基本操作を解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../powerquery/advanced/article_pq_row_operations.html">行を操る — フィルター・並べ替え・重複削除・フィル</a>
+      <p class="article-summary">Power Queryでの行操作を完全解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../powerquery/advanced/article_pq_text_operations.html">テキスト列を整形する — 書式・置換・トリム・抽出・分割・マージ</a>
+      <p class="article-summary">テキスト列を整形する方法をまとめて解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../powerquery/advanced/article_pq_split_column.html">列の分割</a>
+      <p class="article-summary">1列に複数の情報が入っているデータを、複数列に分割します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../powerquery/advanced/article_pq_number_date.html">数値と日付を扱う — 丸め・統計・日付抽出・期間計算</a>
+      <p class="article-summary">数値操作と日付操作をGUI中心に解説。Excel関数との対応表付き。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../powerquery/advanced/article_pq_add_columns.html">新しい列を作る — 条件列・インデックス・カスタム列・例からの列</a>
+      <p class="article-summary">Power Queryで新しい列を追加する方法を完全解説します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../powerquery/advanced/article_pq_group_pivot.html">集計とピボット — グループ化・ピボット・ピボット解除</a>
+      <p class="article-summary">グループ化・ピボット・ピボット解除をGUI中心に徹底解説します。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">4. 応用（結合・パラメータ・列加工）</h3>
+
+  <div class="category-hero hero-overlay hero-small hero-pq-merge-params margin-y-16-24 max-width-800">
+    <picture>
+      <source media="(max-width: 600px)" type="image/avif" srcset="../image/hero_pq_merge_params-480.avif 480w, ../image/hero_pq_merge_params-768.avif 768w" sizes="100vw">
+      <source type="image/avif" srcset="../image/hero_pq_merge_params-768.avif 768w, ../image/hero_pq_merge_params-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <source media="(max-width: 600px)" type="image/webp" srcset="../image/hero_pq_merge_params-480.webp 480w, ../image/hero_pq_merge_params-768.webp 768w" sizes="100vw">
+      <source type="image/webp" srcset="../image/hero_pq_merge_params-768.webp 768w, ../image/hero_pq_merge_params-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <img alt="パワークエリ応用 結合・統合設計" decoding="async" height="576" loading="lazy" src="../image/hero_pq_merge_params.jpg" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Query Design</div>
+      <div class="hero-copy-title">結合・統合設計</div>
+      <div class="hero-copy-sub">マージ・追加・パラメータでデータを一括管理。</div>
+    </div>
+  </div>
+
+  <ul class="article-list" id="list-pq-advanced">
+    <li class="article-item highlight">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../powerquery/advanced/article_pq_merge_append.html">テーブルの結合 — マージと追加</a>
+      <p class="article-summary">マージ（横方向）と追加（縦方向）を、結合型の違いから解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-5">
+        <span class="level-label">Lv.5 難しい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="pq_parameter"></span></span>
+      </div>
+      <a class="article-link" href="../powerquery/advanced/article_pq_parameter_query.html">パラメータクエリ — セルの値で結果を切り替える</a>
+      <p class="article-summary">セル値をフィルター条件やファイルパスとして渡し、更新だけで結果を切り替えます。</p>
+
+      <div class="category-hero hero-overlay hero-small hero-pq-params-control margin-y-10-20 max-width-700">
+        <picture>
+          <source media="(max-width: 600px)" type="image/avif" srcset="../image/hero_pq_params_control-480.avif 480w, ../image/hero_pq_params_control-768.avif 768w" sizes="100vw">
+          <source type="image/avif" srcset="../image/hero_pq_params_control-768.avif 768w, ../image/hero_pq_params_control-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+          <source media="(max-width: 600px)" type="image/webp" srcset="../image/hero_pq_params_control-480.webp 480w, ../image/hero_pq_params_control-768.webp 768w" sizes="100vw">
+          <source type="image/webp" srcset="../image/hero_pq_params_control-768.webp 768w, ../image/hero_pq_params_control-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+          <img alt="パラメータクエリによる動的制御" decoding="async" height="576" loading="lazy" src="../image/hero_pq_params_control.jpg" width="1024">
+        </picture>
+        <div class="hero-copy">
+          <div class="hero-copy-kicker">Dynamic Control</div>
+          <div class="hero-copy-title">パラメータクエリ</div>
+          <div class="hero-copy-sub">セルの値で、取り込み条件を動的に変える。</div>
+        </div>
+      </div>
+    </li>
+
+<li class="article-item">
+  <div class="level-bar lv-3">
+    <span class="level-label">Lv.3 ふつう</span>
+    <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+    <span class="tag-row"><span class="tag-rare" data-rare-id="pq_add_columns"></span></span>
+  </div>
+  <a class="article-link" href="../powerquery/advanced/article_pq_add_columns.html">新しい列を作る — 条件列・インデックス・カスタム列</a>
+  <p class="article-summary">条件列・インデックス列・カスタム列を使い分け、手作業の補助列づくりをPower Queryに置き換えます。</p>
+
+  <div class="category-hero hero-overlay hero-small hero-pq margin-y-10-20 max-width-700">
+    <picture>
+      <source media="(max-width: 600px)" type="image/avif" srcset="../image/hero_pq-480.avif 480w, ../image/hero_pq-768.avif 768w" sizes="100vw">
+      <source type="image/avif" srcset="../image/hero_pq-768.avif 768w, ../image/hero_pq-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <source media="(max-width: 600px)" type="image/webp" srcset="../image/hero_pq-480.webp 480w, ../image/hero_pq-768.webp 768w" sizes="100vw">
+      <source type="image/webp" srcset="../image/hero_pq-768.webp 768w, ../image/hero_pq-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <img alt="Power Queryの列加工イメージ" decoding="async" height="576" loading="lazy" src="../image/hero_pq.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Column Design</div>
+      <div class="hero-copy-title">新しい列を作る</div>
+      <div class="hero-copy-sub">条件列・インデックス列・カスタム列で、補助列を再現性ある手順にする。</div>
+    </div>
+  </div>
+</li>
+
+<li class="article-item">
+  <div class="level-bar lv-7">
+    <span class="level-label">仕組みを解説</span>
+    <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+  </div>
+  <a class="article-link" href="../powerquery/advanced/article_pq_m_language.html">M言語入門 — GUIの限界を超えるカスタム処理</a>
+  <p class="article-summary">let...in構文、ステップ参照、if式、よく使うM関数を読み、必要な箇所だけ安全に直すための入門記事です。</p>
+</li>
+  </ul>
+
+  <section class="method-section method-section-spaced">
+    <h2><span class="icon">🛣️</span> 推奨学習ルート</h2>
+    <ul class="article-list">
+      <li><a class="article-link" href="./basic/article_powerquery_intro.html">1. VBAとPower Queryの違いを理解する</a><p class="article-summary">まずは全体像とできることを把握。</p></li>
+      <li><a class="article-link" href="./basic/article_pq_first_steps.html">2. 取り込み直後の5操作</a><p class="article-summary">実務で最初に使う整形手順を習得。</p></li>
+      <li><a class="article-link" href="./advanced/article_pq_merge_append.html">3. テーブルの結合（マージ/追加）</a><p class="article-summary">複数ソース統合の基本。</p></li>
+      <li><a class="article-link" href="./advanced/article_pq_parameter_query.html">4. パラメータクエリ</a><p class="article-summary">条件切替をセル連動で自動化。</p></li>
+      <li><a class="article-link" href="./advanced/article_pq_add_columns.html">5. 新しい列を作る</a><p class="article-summary">条件列・インデックス列・カスタム列の使い分けを整理。</p></li>
+      <li><a class="article-link" href="./advanced/article_pq_m_language.html">6. M言語入門</a><p class="article-summary">GUIで作った手順を読み、必要な1行だけ直せる状態にする。</p></li>
+    </ul>
+  </section>
+
+  <section class="method-section method-section-spaced">
+    <h2><span class="icon">❓</span> FAQ</h2>
+    <ul class="article-list">
+      <li class="article-item"><p class="article-link">Q. Excel 2016でも使えますか？</p><p class="article-summary">A. はい。Power Query は Excel 2016 以降で利用できます（機能差分あり）。本カテゴリでは互換性を意識した手順を扱います。</p></li>
+      <li class="article-item"><p class="article-link">Q. VBAとPower Queryの違いは何ですか？</p><p class="article-summary">A. VBAはExcel操作全般や画面操作をコードで自動化する仕組みです。Power Queryはデータの取り込み・整形・結合に強い標準機能で、マクロ禁止のExcel環境でも代替手段になる場面があります。</p></li>
+      <li class="article-item"><p class="article-link">Q. 関数より先に学ぶべきですか？</p><p class="article-summary">A. 定型の取り込み・整形が多い業務では先に学ぶ価値が高いです。セル単位ロジックは関数カテゴリと併用してください。</p></li>
+      <li class="article-item"><p class="article-link">Q. 更新時に壊れない設計のコツは？</p><p class="article-summary">A. 型の確定、列名依存の最小化、ステップ命名、想定外値の吸収手順を先に組み込むことです。</p></li>
+      <li class="article-item"><p class="article-link">Q. パラメータクエリは何に効きますか？</p><p class="article-summary">A. 日付・ファイル名・対象フォルダなどをセルで切り替え、同一クエリを再利用できます。</p></li>
+      <li class="article-item"><p class="article-link">Q. M言語は必須ですか？</p><p class="article-summary">A. 必須ではありません。GUIで十分な範囲を先に固め、必要な箇所だけ M を補う運用が現実的です。</p></li>
+    </ul>
+  </section>
+
+  <section class="method-section method-section-spaced">
+    <h2><span class="icon">🔗</span> 関連カテゴリへ</h2>
+    <ul class="article-list">
+      <li class="article-item"><a class="article-link" href="../functions/">📐 VBA禁止環境で使えるExcel関数の代替手段</a><p class="article-summary">検索・抽出・整形を関数で体系化。</p></li>
+      <li class="article-item"><a class="article-link" href="../cobol/">🏭 COBOL帳票をExcelで整形する方法</a><p class="article-summary">固定長・不規則帳票をExcelで実務化。</p></li>
+      <li class="article-item"><a class="article-link" href="../qr/">⚡ VBAなしでWebシステム入力を自動化する方法</a><p class="article-summary">VBA不要の入力自動化と閉域転送。</p></li>
+      <li class="article-item"><a class="article-link" href="../others/">🧰 現場実務ラボ総合</a><p class="article-summary">速度・印刷・UI改善の実戦ノウハウ。</p></li>
+      <li class="article-item"><a class="article-link" href="../unlocked/">🔓 VBAが使える環境で補完する自動化方法</a><p class="article-summary">VBA可環境で最後の5%を補完。</p></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../samples/">サンプルデータ</a></p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ（Google Forms）</a>
+  </div>
+  <p>&copy; Excel &times; No VBA Lab &horbar; コンテンツは随時追加中です</p>
+  <p><a href="../">🏠 ホームへ戻る</a></p>
+  <p class="site-footer-legal-links">
+    <a href="../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+<script src="../script.js?v=20261101"></script>
+</body>
+</html>

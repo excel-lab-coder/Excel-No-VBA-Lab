@@ -1,0 +1,966 @@
+/**
+ * Excel × No VBA Lab のサイト共通スクリプト
+ */
+(function () {
+  'use strict';
+
+  var INDEX_STATE_KEY = 'excel_no_vba_lab_index_state_v1';
+  function getRareTechConfig() {
+    return (window.ExcelLab && window.ExcelLab.rareTech) || window.RARETECH_CONFIG || null;
+  }
+
+  function syncLayoutVars() {
+    var root = document.documentElement;
+    var header = document.querySelector('.site-header');
+    var tabNav = document.querySelector('.tab-nav');
+
+    if (header) {
+      // The header height itself uses --header-height on desktop.
+      // Reset the inline value before measuring to avoid feeding a stale
+      // measured height back into the next responsive resize.
+      root.style.removeProperty('--header-height');
+      root.style.setProperty(
+        '--header-height',
+        window.matchMedia('(max-width: 768px)').matches ? '0px' : header.offsetHeight + 'px'
+      );
+    }
+    if (tabNav) {
+      root.style.setProperty('--tab-nav-height', tabNav.offsetHeight + 'px');
+    } else {
+      root.style.setProperty('--tab-nav-height', '0px');
+    }
+  }
+
+  function initLayoutVars() {
+    syncLayoutVars();
+    window.addEventListener('resize', syncLayoutVars);
+    window.addEventListener('orientationchange', syncLayoutVars);
+  }
+
+  function initResponsiveTables() {
+    var tables = document.querySelectorAll('.article-body table');
+    tables.forEach(function (table) {
+      if (table.closest('.table-wrapper, .excel-wrap, .formula-copy-list, .helper-display-table, .a4-paper, .a4-grid')) return;
+
+      var wrapper = document.createElement('div');
+      wrapper.className = 'table-wrapper';
+      wrapper.tabIndex = 0;
+      wrapper.setAttribute('aria-label', '表を横スクロールできます');
+
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+  }
+
+  function getHeaderOffset() {
+    var header = document.querySelector('.site-header');
+    var tabNav = document.querySelector('.tab-nav');
+    var headerHeight = header ? header.offsetHeight : 0;
+    var tabNavHeight = tabNav ? tabNav.offsetHeight : 0;
+    return headerHeight + tabNavHeight + 12;
+  }
+
+  function scrollToMainContentTop() {
+    var main = document.getElementById('main-content');
+    if (!main) return;
+    var targetY = main.getBoundingClientRect().top + window.pageYOffset - getHeaderOffset();
+    window.scrollTo({ top: Math.max(targetY, 0), behavior: 'auto' });
+  }
+
+  function getActiveTabId() {
+    var activePanel = document.querySelector('.tab-panel.active');
+    return activePanel ? activePanel.id : 'home';
+  }
+
+  function saveIndexState() {
+    try {
+      var state = {
+        tabId: getActiveTabId(),
+        scrollY: window.pageYOffset || document.documentElement.scrollTop || 0,
+        savedAt: Date.now()
+      };
+      sessionStorage.setItem(INDEX_STATE_KEY, JSON.stringify(state));
+    } catch (e) {
+      // ストレージ例外は無視する。
+    }
+  }
+
+  function readIndexState() {
+    try {
+      var raw = sessionStorage.getItem(INDEX_STATE_KEY);
+      if (!raw) return null;
+      var state = JSON.parse(raw);
+      if (!state || typeof state !== 'object') return null;
+      return state;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function shouldRestoreFromState() {
+    var navEntry = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || null;
+    var isBackForward = !!(navEntry && navEntry.type === 'back_forward');
+    var sameOriginReferrer = document.referrer && document.referrer.indexOf(location.origin) === 0;
+    return isBackForward || sameOriginReferrer;
+  }
+
+  function loadDeferredPanelMedia(panel) {
+    if (!panel) return;
+    panel.querySelectorAll('source[data-srcset]').forEach(function (source) {
+      if (!source.getAttribute('srcset')) {
+        source.setAttribute('srcset', source.getAttribute('data-srcset'));
+      }
+    });
+    panel.querySelectorAll('img[data-src]').forEach(function (img) {
+      if (!img.getAttribute('data-loaded-src')) {
+        img.setAttribute('src', img.getAttribute('data-src'));
+        img.setAttribute('data-loaded-src', 'true');
+      }
+    });
+    panel.querySelectorAll('video[data-poster]').forEach(function (video) {
+      if (!video.getAttribute('poster')) {
+        video.setAttribute('poster', video.getAttribute('data-poster'));
+      }
+    });
+  }
+
+  function activateTab(targetId, options) {
+    options = options || {};
+    var shouldScroll = options.scroll !== false;
+    var updateHash = options.updateHash === true;
+    var focusPanel = options.focusPanel === true;
+
+    var tabButtons = document.querySelectorAll('.tab-btn');
+    var tabPanels = document.querySelectorAll('.tab-panel');
+    var targetPanel = document.getElementById(targetId);
+    var targetButton = document.querySelector('.tab-btn[data-tab="' + targetId + '"]');
+
+    if (!targetPanel || !targetButton) return;
+
+    tabButtons.forEach(function (btn) {
+      btn.classList.remove('active');
+      btn.setAttribute('aria-selected', 'false');
+      btn.setAttribute('tabindex', '-1');
+    });
+
+    tabPanels.forEach(function (panel) {
+      panel.classList.remove('active');
+    });
+
+    targetButton.classList.add('active');
+    targetButton.setAttribute('aria-selected', 'true');
+    targetButton.setAttribute('tabindex', '0');
+    targetPanel.classList.add('active');
+    loadDeferredPanelMedia(targetPanel);
+
+    var tabScroller = targetButton.closest('.tab-nav');
+    if (tabScroller && window.matchMedia('(max-width: 768px)').matches) {
+      requestAnimationFrame(function () {
+        var targetLeft = targetButton.offsetLeft - ((tabScroller.clientWidth - targetButton.offsetWidth) / 2);
+        tabScroller.scrollLeft = Math.max(targetLeft, 0);
+      });
+    }
+
+    if (updateHash && history.pushState) {
+      history.pushState(null, '', '#' + targetId);
+    }
+
+    if (shouldScroll) {
+      requestAnimationFrame(function () {
+        scrollToMainContentTop();
+        if (focusPanel) targetPanel.focus();
+      });
+    } else if (focusPanel) {
+      targetPanel.focus();
+    }
+  }
+
+  window.activateTab = activateTab;
+
+  function initTabs() {
+    var tabNav = document.querySelector('.tab-nav-inner[role="tablist"]');
+    var tabButtons = document.querySelectorAll('.tab-btn');
+    if (!tabButtons.length) return;
+
+    tabButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        activateTab(btn.getAttribute('data-tab'), {
+          scroll: true,
+          updateHash: true,
+          focusPanel: false
+        });
+        saveIndexState();
+      });
+    });
+
+    if (tabNav) {
+      tabNav.addEventListener('keydown', function (e) {
+        var buttons = Array.prototype.slice.call(tabButtons);
+        var currentIndex = buttons.indexOf(document.activeElement);
+        if (currentIndex < 0) return;
+
+        var target = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          target = buttons[currentIndex + 1] || buttons[0];
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          target = buttons[currentIndex - 1] || buttons[buttons.length - 1];
+        } else if (e.key === 'Home') {
+          target = buttons[0];
+        } else if (e.key === 'End') {
+          target = buttons[buttons.length - 1];
+        }
+
+        if (target) {
+          e.preventDefault();
+          target.focus();
+          activateTab(target.getAttribute('data-tab'), {
+            scroll: false,
+            updateHash: true,
+            focusPanel: false
+          });
+          saveIndexState();
+        }
+      });
+    }
+
+    document.addEventListener('click', function (e) {
+      var rankingTrigger = e.target.closest('[data-ranking-trigger]');
+      if (rankingTrigger) {
+        if (e.defaultPrevented || e.button !== 0) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        window.switchRankingTab(rankingTrigger, rankingTrigger.dataset.rankingTrigger);
+        saveIndexState();
+        return;
+      }
+
+      var trigger = e.target.closest('[data-tab-trigger]');
+      if (trigger) {
+        if (e.defaultPrevented || e.button !== 0) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        activateTab(trigger.dataset.tabTrigger, {
+          scroll: trigger.dataset.tabScroll === 'true',
+          focusPanel: trigger.dataset.tabFocus === 'true',
+          updateHash: trigger.dataset.tabUpdateHash === 'true'
+        });
+        saveIndexState();
+        return;
+      }
+
+      var link = e.target.closest('a[href]');
+      if (!link) return;
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      if (link.target === '_blank') return;
+
+      var href = link.getAttribute('href') || '';
+      if (!href || href.charAt(0) === '#') return;
+      if (/^javascript:/i.test(href)) return;
+      if (/\.html([?#].*)?$/i.test(href)) saveIndexState();
+    });
+
+    window.addEventListener('pagehide', saveIndexState);
+    window.addEventListener('beforeunload', saveIndexState);
+    window.addEventListener('popstate', function () {
+      var hash = window.location.hash ? window.location.hash.substring(1) : 'home';
+      var panel = document.getElementById(hash);
+      if (panel && panel.classList.contains('tab-panel')) {
+        activateTab(hash, { scroll: false, updateHash: false, focusPanel: false });
+      } else if (!hash || hash === 'home') {
+        activateTab('home', { scroll: false, updateHash: false, focusPanel: false });
+      }
+    });
+
+    var initialHash = window.location.hash ? window.location.hash.substring(1) : '';
+    var validPanel = initialHash && document.getElementById(initialHash);
+
+    if (validPanel && validPanel.classList.contains('tab-panel')) {
+      activateTab(initialHash, { scroll: false, updateHash: false });
+      return;
+    }
+
+    if (shouldRestoreFromState()) {
+      var state = readIndexState();
+      if (state && state.tabId && document.getElementById(state.tabId)) {
+        activateTab(state.tabId, { scroll: false, updateHash: false });
+        requestAnimationFrame(function () {
+          window.scrollTo(0, Math.max(state.scrollY || 0, 0));
+        });
+      }
+    }
+  }
+
+  function updateRarityBadges() {
+    document.querySelectorAll('[data-rare-id]').forEach(function (badge) { badge.remove(); });
+  }
+
+  window.switchRankingTab = function (btn, tabId) {
+    var btns = btn.parentElement.querySelectorAll('.ranking-tab-btn');
+    btns.forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+
+    var card = btn.closest('.ranking-card');
+    if (!card) return;
+
+    var panels = card.querySelectorAll('.ranking-panel');
+    panels.forEach(function (p) { p.classList.remove('active'); });
+
+    var target = card.querySelector('#ranking-' + tabId);
+    if (target) target.classList.add('active');
+  };
+
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+
+    return new Promise(function (resolve, reject) {
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:fixed;top:-9999px;opacity:0;';
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, text.length);
+        var ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        ok ? resolve() : reject(new Error('execCommand failed'));
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  function ensureCopyAnnouncer() {
+    var announcer = document.getElementById('copy-announcer');
+    if (announcer) return announcer;
+
+    announcer = document.createElement('div');
+    announcer.id = 'copy-announcer';
+    announcer.className = 'sr-only';
+    announcer.setAttribute('role', 'status');
+    announcer.setAttribute('aria-live', 'polite');
+    document.body.appendChild(announcer);
+    return announcer;
+  }
+
+  function announceCopy(message) {
+    var announcer = ensureCopyAnnouncer();
+    announcer.textContent = '';
+    window.setTimeout(function () {
+      announcer.textContent = message;
+    }, 0);
+  }
+
+  function initCopyButtons() {
+    var blocks = document.querySelectorAll('.code-block, .code-readonly');
+    blocks.forEach(function (block) {
+      if (block.querySelector('.copy-btn')) return;
+
+      var btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.type = 'button';
+      btn.textContent = 'コピー';
+      btn.setAttribute('aria-label', 'コードをコピーする');
+      btn.setAttribute('aria-live', 'polite');
+
+      btn.addEventListener('click', function () {
+        var clone = block.cloneNode(true);
+        var cloneBtn = clone.querySelector('.copy-btn');
+        if (cloneBtn && cloneBtn.parentNode) cloneBtn.parentNode.removeChild(cloneBtn);
+        var textToCopy = clone.innerText.trim();
+
+        copyText(textToCopy).then(function () {
+          btn.textContent = 'コピー済み';
+          btn.classList.add('copied');
+          announceCopy('コードをコピーしました');
+          setTimeout(function () {
+            btn.textContent = 'コピー';
+            btn.classList.remove('copied');
+          }, 1600);
+        }).catch(function () {
+          btn.textContent = '失敗';
+          announceCopy('コピーに失敗しました');
+          setTimeout(function () {
+            btn.textContent = 'コピー';
+          }, 1200);
+        });
+      });
+
+      block.appendChild(btn);
+    });
+  }
+
+  function initFormulaCopyButtons() {
+    var buttons = document.querySelectorAll('.formula-copy-btn');
+    buttons.forEach(function (btn) {
+      if (btn.dataset.formulaCopyReady === 'true') return;
+      btn.dataset.formulaCopyReady = 'true';
+      btn.setAttribute('aria-label', '数式をコピーする');
+      btn.setAttribute('aria-live', 'polite');
+
+      btn.addEventListener('click', function () {
+        var row = btn.closest('.formula-copy-row');
+        var code = row ? row.querySelector('.formula-copy-code') : null;
+        var textToCopy = code ? code.textContent.trim() : '';
+
+        if (!textToCopy) {
+          btn.textContent = '失敗';
+          announceCopy('コピーする数式が見つかりません');
+          setTimeout(function () { btn.textContent = 'コピー'; }, 1200);
+          return;
+        }
+
+        copyText(textToCopy).then(function () {
+          btn.textContent = 'コピー済み';
+          btn.classList.add('copied');
+          announceCopy('数式をコピーしました');
+          setTimeout(function () {
+            btn.textContent = 'コピー';
+            btn.classList.remove('copied');
+          }, 1600);
+        }).catch(function () {
+          btn.textContent = '失敗';
+          announceCopy('コピーに失敗しました');
+          setTimeout(function () { btn.textContent = 'コピー'; }, 1200);
+        });
+      });
+    });
+  }
+
+  window.copyFormula = function (btn) {
+    var code = btn && btn.parentElement ? btn.parentElement.querySelector('code') : null;
+    var text = code ? code.textContent.trim() : '';
+
+    if (!text && btn && btn.parentElement) {
+      text = btn.parentElement.textContent.replace('コードをコピー', '').replace('コピー', '').trim();
+    }
+
+    copyText(text).then(function () {
+      var original = btn.textContent;
+      btn.textContent = 'コピー済み';
+      btn.classList.add('copied');
+      btn.setAttribute('aria-live', 'polite');
+      announceCopy('コードをコピーしました');
+      setTimeout(function () {
+        btn.textContent = original;
+        btn.classList.remove('copied');
+      }, 1600);
+    }).catch(function () {
+      btn.textContent = '失敗';
+      btn.setAttribute('aria-live', 'polite');
+      announceCopy('コピーに失敗しました');
+      setTimeout(function () { btn.textContent = 'コピー'; }, 1200);
+    });
+  };
+
+  function initReadingProgress() {
+    var progressBar = document.querySelector('.reading-progress');
+    var articleBody = document.querySelector('.article-body');
+    if (!progressBar || !articleBody) return;
+
+    function updateProgress() {
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+      var articleTop = articleBody.getBoundingClientRect().top + scrollTop;
+      var articleHeight = articleBody.scrollHeight;
+      var viewport = window.innerHeight || document.documentElement.clientHeight || 1;
+      var effectiveHeight = Math.max(articleHeight - viewport * 0.65, 1);
+      var ratio = (scrollTop - articleTop) / effectiveHeight;
+
+      if (ratio < 0) ratio = 0;
+      if (ratio > 1) ratio = 1;
+
+      progressBar.style.width = (ratio * 100).toFixed(2) + '%';
+    }
+
+    updateProgress();
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+    window.addEventListener('orientationchange', updateProgress);
+  }
+
+  function getArticleMeta() {
+    var articleBody = document.querySelector('.article-body');
+    var titleNode = document.querySelector('.article-header .article-title, .article-title');
+    if (!articleBody || !titleNode) return null;
+
+    var path = location.pathname || '';
+    var fileName = path.split('/').pop() || '';
+    if (!fileName || fileName === 'index.html') return null;
+
+    var normalizedPath = path.replace(/^\/Excel-No-VBA-Lab\//, '').replace(/^\//, '');
+    var section = normalizedPath.split('/')[0] || 'article';
+
+    return {
+      body: articleBody,
+      title: titleNode.textContent.trim(),
+      path: normalizedPath,
+      section: section
+    };
+  }
+
+  function sendArticleEvent(eventName, params) {
+    if (location.protocol === 'file:') return;
+    if (typeof window.gtag !== 'function') return;
+
+    window.gtag('event', eventName, params);
+  }
+
+  function safeStorageGet(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function safeStorageSet(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      // ストレージが使えない環境では、ボタン表示だけ継続する。
+    }
+  }
+
+  var ARTICLE_FEEDBACK_FORM = {
+    viewUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSdvSi9yzHNaPpu1HCSbSeP4qJwEfY-g633dnh_SD5Xs9kMmdw/viewform',
+    nameEntry: 'entry.1002031830',
+    emailEntry: 'entry.356247462',
+    categoryEntry: 'entry.1026400745',
+    messageEntry: 'entry.113328341'
+  };
+
+  // 記事末尾の5択（P4-2：2026-11 変更）。category は既存Googleフォームの選択肢名に合わせる
+  var ARTICLE_FEEDBACK_REACTIONS = {
+    solved: {
+      label: '解決した',
+      category: '情報交換・感想',
+      placeholder: '例：Excel 2021で手順どおりにできました。'
+    },
+    stuck_step: {
+      label: '手順◯で止まった',
+      category: '記事への質問・誤り報告',
+      placeholder: '例：手順3で止まりました。ボタンが見つかりません。'
+    },
+    error: {
+      label: 'エラーが出た',
+      category: '記事への質問・誤り報告',
+      placeholder: '例：#VALUE! が出ます。（業務データは書かないでください）'
+    },
+    env_diff: {
+      label: '環境が違う',
+      category: '記事に関するご質問',
+      placeholder: '例：Excel 2016／Mac版／Web版を使っています。'
+    },
+    more: {
+      label: 'もっと詳しく',
+      category: '記事に関するご質問',
+      placeholder: '例：複数条件の場合の例がほしいです。'
+    }
+  };
+
+  function buildArticleCommentUrl(meta, reactionId, comment, allowPublish) {
+    var reaction = ARTICLE_FEEDBACK_REACTIONS[reactionId] || ARTICLE_FEEDBACK_REACTIONS.more;
+
+    var message = [
+      '【記事末尾の匿名質問・コメント】',
+      '記事名: ' + meta.title,
+      '記事URL: ' + location.href.split('#')[0],
+      '反応: ' + reaction.label,
+      '匿名での掲載許可: ' + (allowPublish ? 'はい' : 'いいえ'),
+      '',
+      comment
+    ].join('\n');
+
+    var url = new URL(ARTICLE_FEEDBACK_FORM.viewUrl);
+    url.searchParams.set('usp', 'pp_url');
+    url.searchParams.set(ARTICLE_FEEDBACK_FORM.nameEntry, '匿名フィードバック');
+    url.searchParams.set(ARTICLE_FEEDBACK_FORM.emailEntry, 'anonymous-feedback@example.invalid');
+    url.searchParams.set(ARTICLE_FEEDBACK_FORM.categoryEntry, reaction.category);
+    url.searchParams.set(ARTICLE_FEEDBACK_FORM.messageEntry, message);
+    return url.href;
+  }
+
+  function initArticleFeedback() {
+    var meta = getArticleMeta();
+    if (!meta) return;
+    if (meta.body.querySelector('.article-feedback')) return;
+
+    var reactionStorageKey = 'excel_no_vba_lab_feedback_reaction_' + meta.path;
+    var legacyStorageKey = 'excel_no_vba_lab_helpful_' + meta.path;
+    var selectedReaction = safeStorageGet(reactionStorageKey);
+
+    if (!ARTICLE_FEEDBACK_REACTIONS[selectedReaction]) {
+      selectedReaction = safeStorageGet(legacyStorageKey) === '1' ? 'solved' : '';
+    }
+
+    var feedback = document.createElement('aside');
+    feedback.className = 'article-feedback';
+    feedback.setAttribute('aria-label', '記事へのフィードバック');
+
+    var textWrap = document.createElement('div');
+    textWrap.className = 'article-feedback-text';
+
+    var heading = document.createElement('h2');
+    heading.textContent = 'この記事はどうでしたか？';
+
+    var note = document.createElement('p');
+    note.textContent = '当てはまるものを1つ押してください。押した方にだけ1行の入力欄が出ます。名前・メールアドレスは不要です。業務データ・個人情報は書かないでください。';
+
+    textWrap.appendChild(heading);
+    textWrap.appendChild(note);
+
+    var optionWrap = document.createElement('div');
+    optionWrap.className = 'article-feedback-options';
+
+    var status = document.createElement('p');
+    status.className = 'article-feedback-status';
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-live', 'polite');
+    status.textContent = selectedReaction ? '種類を選択済みです。下の入力欄から送れます。' : '';
+
+    var commentPanel = document.createElement('div');
+    commentPanel.className = 'article-feedback-comment';
+    commentPanel.hidden = !selectedReaction;
+
+    var commentLabel = document.createElement('label');
+    commentLabel.className = 'article-feedback-comment-label';
+    commentLabel.textContent = 'ひとこと（任意・200文字以内）';
+
+    var textarea = document.createElement('input');
+    textarea.type = 'text';
+    textarea.className = 'article-feedback-textarea article-feedback-input';
+    textarea.maxLength = 200;
+    textarea.placeholder = selectedReaction && ARTICLE_FEEDBACK_REACTIONS[selectedReaction] ? ARTICLE_FEEDBACK_REACTIONS[selectedReaction].placeholder : '';
+    commentLabel.appendChild(textarea);
+
+    var counter = document.createElement('span');
+    counter.className = 'article-feedback-counter';
+    counter.textContent = '0 / 200';
+
+    textarea.addEventListener('input', function () {
+      counter.textContent = textarea.value.length + ' / 200';
+    });
+
+    var publishLabel = document.createElement('label');
+    publishLabel.className = 'article-feedback-publish';
+    var publishCheckbox = document.createElement('input');
+    publishCheckbox.type = 'checkbox';
+    publishLabel.appendChild(publishCheckbox);
+    publishLabel.appendChild(document.createTextNode(' 内容を匿名の「読者の声」として掲載してよい'));
+
+    var honeyLabel = document.createElement('label');
+    honeyLabel.className = 'article-feedback-honeypot';
+    honeyLabel.setAttribute('aria-hidden', 'true');
+    honeyLabel.textContent = '会社名';
+    var honeyInput = document.createElement('input');
+    honeyInput.type = 'text';
+    honeyInput.tabIndex = -1;
+    honeyInput.autocomplete = 'off';
+    honeyLabel.appendChild(honeyInput);
+
+    var commentActions = document.createElement('div');
+    commentActions.className = 'article-feedback-comment-actions';
+
+    var submitButton = document.createElement('button');
+    submitButton.type = 'button';
+    submitButton.className = 'article-feedback-submit';
+    submitButton.textContent = '確認画面へ進む（Googleフォーム）';
+
+    var confirmationLink = document.createElement('a');
+    confirmationLink.className = 'article-feedback-detail-link';
+    confirmationLink.target = '_blank';
+    confirmationLink.rel = 'noopener';
+    confirmationLink.textContent = '確認フォームを開き直す';
+    confirmationLink.hidden = true;
+
+    var detailLink = document.createElement('a');
+    detailLink.className = 'article-feedback-detail-link';
+    detailLink.href = 'https://forms.gle/6SnCHNWK6EcRy1XG8';
+    detailLink.target = '_blank';
+    detailLink.rel = 'noopener';
+    detailLink.textContent = '個別の返信が必要な方 → お問い合わせフォーム';
+
+    submitButton.addEventListener('click', function () {
+      var comment = textarea.value.trim() || '（ひとことなし）';
+
+      if (honeyInput.value) {
+        status.textContent = '入力内容を確認してください。';
+        return;
+      }
+
+      if (!navigator.onLine && location.protocol !== 'file:') {
+        status.textContent = '通信できませんでした。接続を確認してもう一度お試しください。';
+        return;
+      }
+
+      if (location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+        status.textContent = 'ローカル確認中のためフォームを開いていません。公開ページでは確認画面へ進みます。';
+        return;
+      }
+
+      var confirmationUrl = buildArticleCommentUrl(meta, selectedReaction || 'more', comment, publishCheckbox.checked);
+      confirmationLink.href = confirmationUrl;
+      confirmationLink.hidden = false;
+      window.open(confirmationUrl, '_blank', 'noopener');
+      status.textContent = '確認画面へ進みます。Googleフォーム内の［送信］を押して完了してください。画面が開かない場合は「確認フォームを開き直す」を使えます。入力内容はこのページに残しています。';
+
+      sendArticleEvent('article_comment_form_open', {
+        event_category: 'article_feedback',
+        event_label: meta.path,
+        article_title: meta.title,
+        article_path: meta.path,
+        article_section: meta.section,
+        feedback_reaction: selectedReaction || 'more',
+        publish_allowed: publishCheckbox.checked ? 'yes' : 'no'
+      });
+    });
+
+    commentActions.appendChild(submitButton);
+    commentActions.appendChild(confirmationLink);
+    commentActions.appendChild(detailLink);
+    commentPanel.appendChild(commentLabel);
+    commentPanel.appendChild(counter);
+    commentPanel.appendChild(publishLabel);
+    commentPanel.appendChild(honeyLabel);
+    commentPanel.appendChild(commentActions);
+
+    Object.keys(ARTICLE_FEEDBACK_REACTIONS).forEach(function (reactionId) {
+      var reaction = ARTICLE_FEEDBACK_REACTIONS[reactionId];
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'article-feedback-option';
+      button.textContent = reaction.label;
+      button.setAttribute('data-reaction', reactionId);
+      button.setAttribute('aria-pressed', selectedReaction === reactionId ? 'true' : 'false');
+      if (selectedReaction === reactionId) button.classList.add('selected');
+
+      button.addEventListener('click', function () {
+        var previousReaction = selectedReaction;
+        selectedReaction = reactionId;
+        safeStorageSet(reactionStorageKey, reactionId);
+        if (reactionId === 'solved') safeStorageSet(legacyStorageKey, '1');
+
+        optionWrap.querySelectorAll('.article-feedback-option').forEach(function (option) {
+          var selected = option.getAttribute('data-reaction') === reactionId;
+          option.classList.toggle('selected', selected);
+          option.setAttribute('aria-pressed', selected ? 'true' : 'false');
+        });
+
+        status.textContent = '「' + ARTICLE_FEEDBACK_REACTIONS[reactionId].label + '」を選びました。よければひとこと添えて送信してください。';
+        commentPanel.hidden = false;
+        textarea.placeholder = ARTICLE_FEEDBACK_REACTIONS[reactionId].placeholder;
+
+        if (previousReaction !== reactionId) {
+          sendArticleEvent('article_feedback_reaction', {
+            event_category: 'article_feedback',
+            event_label: meta.path,
+            article_title: meta.title,
+            article_path: meta.path,
+            article_section: meta.section,
+            feedback_reaction: reactionId
+          });
+
+          if (reactionId === 'solved') {
+            sendArticleEvent('article_helpful_click', {
+              event_category: 'article_feedback',
+              event_label: meta.path,
+              article_title: meta.title,
+              article_path: meta.path,
+              article_section: meta.section
+            });
+          }
+        }
+      });
+
+      optionWrap.appendChild(button);
+    });
+
+    feedback.appendChild(textWrap);
+    feedback.appendChild(optionWrap);
+    feedback.appendChild(status);
+    feedback.appendChild(commentPanel);
+
+    var nav = meta.body.querySelector('.stage-nav');
+    if (nav && nav.parentNode === meta.body) {
+      meta.body.insertBefore(feedback, nav);
+    } else {
+      meta.body.appendChild(feedback);
+    }
+  }
+
+  function initArticleReadDepth() {
+    var meta = getArticleMeta();
+    if (!meta) return;
+
+    var sent = false;
+    var threshold = 0.75;
+
+    function checkDepth() {
+      if (sent) return;
+
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+      var articleTop = meta.body.getBoundingClientRect().top + scrollTop;
+      var articleHeight = meta.body.scrollHeight;
+      var viewport = window.innerHeight || document.documentElement.clientHeight || 1;
+      var effectiveHeight = Math.max(articleHeight - viewport * 0.65, 1);
+      var ratio = (scrollTop - articleTop) / effectiveHeight;
+
+      if (ratio >= threshold) {
+        sent = true;
+        window.removeEventListener('scroll', checkDepth);
+        sendArticleEvent('article_read_75', {
+          event_category: 'article_engagement',
+          event_label: meta.path,
+          article_title: meta.title,
+          article_path: meta.path,
+          article_section: meta.section,
+          read_depth: 75
+        });
+      }
+    }
+
+    checkDepth();
+    window.addEventListener('scroll', checkDepth, { passive: true });
+    window.addEventListener('resize', checkDepth);
+    window.addEventListener('orientationchange', checkDepth);
+  }
+
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'auto';
+  }
+
+  // ===== GA4 読者行動イベント（P4-1：2026-11 追加） =====
+  function getArticleSlug() {
+    var p = (location.pathname || '').replace(/^\/Excel-No-VBA-Lab\//, '').replace(/^\//, '');
+    p = p.replace(/index\.html$/, '').replace(/\.html$/, '').replace(/\/$/, '');
+    return p || 'home';
+  }
+
+  function sendSiteEvent(eventName, params) {
+    if (location.protocol === 'file:') return;
+    if (typeof window.gtag !== 'function') return;
+    var payload = { article_slug: getArticleSlug() };
+    Object.keys(params || {}).forEach(function (k) { payload[k] = params[k]; });
+    window.gtag('event', eventName, payload);
+  }
+
+  function initAnalyticsEvents() {
+    var COPY_SELECTOR = '.copy-btn, .formula-copy-btn, [onclick*="copyFormula"]';
+    document.addEventListener('click', function (event) {
+      var target = event.target;
+      if (!target || !target.closest) return;
+
+      // code_copy：コードのコピーボタン（code_index はページ内で何番目のボタンか）
+      var copyBtn = target.closest(COPY_SELECTOR);
+      if (copyBtn) {
+        var buttons = Array.prototype.slice.call(document.querySelectorAll(COPY_SELECTOR));
+        sendSiteEvent('code_copy', { code_index: buttons.indexOf(copyBtn) + 1 });
+        return;
+      }
+
+      var link = target.closest('a[href]');
+
+      // sample_download：サンプルファイルのダウンロード
+      if (link && (link.hasAttribute('download') || /\/samples\/[^\/?#]+\.(csv|txt|xlsx|zip)(\?|#|$)/i.test(link.href))) {
+        sendSiteEvent('sample_download', { file_name: (link.getAttribute('href') || '').split('/').pop() });
+        return;
+      }
+
+      // tool_generate：ブラウザツールの生成ボタン（data-ga-tool-generate、または /tools/ の #gen）
+      var genBtn = target.closest('[data-ga-tool-generate]');
+      if (!genBtn && /\/tools\//.test(location.pathname)) genBtn = target.closest('#gen');
+      if (genBtn) {
+        sendSiteEvent('tool_generate', { tool_name: genBtn.getAttribute('data-ga-tool-generate') || getArticleSlug() });
+        return;
+      }
+
+      // next_article_click：シリーズ・関連記事・次の記事へのリンク
+      if (link && link.closest('.stage-nav, .series-nav, .related-articles, .related-articles-section, .related, .next-article, [data-ga-next]')) {
+        sendSiteEvent('next_article_click', {
+          link_url: link.getAttribute('href') || '',
+          link_text: (link.textContent || '').trim().slice(0, 80)
+        });
+      }
+    }, true);
+
+    // scroll_90：記事本文の90%まで読んだ
+    var body = document.querySelector('.article-body');
+    if (!body) return;
+    var sent = false;
+    function check() {
+      if (sent) return;
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+      var top = body.getBoundingClientRect().top + scrollTop;
+      var viewport = window.innerHeight || document.documentElement.clientHeight || 1;
+      var effective = Math.max(body.scrollHeight - viewport * 0.65, 1);
+      if ((scrollTop - top) / effective >= 0.9) {
+        sent = true;
+        window.removeEventListener('scroll', check);
+        sendSiteEvent('scroll_90', { read_depth: 90 });
+      }
+    }
+    window.addEventListener('scroll', check, { passive: true });
+  }
+
+
+  function initArticleSearch() {
+    var form = document.getElementById('article-search-form');
+    if (!form) return;
+    var input = document.getElementById('article-search-input');
+    var status = document.getElementById('article-search-status');
+    var list = document.getElementById('article-search-results');
+    var articlesPromise;
+    var requestId = 0;
+    function plainText(html) { var box = document.createElement('div'); box.innerHTML = html || ''; return box.textContent || ''; }
+    form.addEventListener('submit', async function (event) {
+      event.preventDefault();
+      var currentRequest = ++requestId;
+      var terms = input.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+      list.replaceChildren();
+      if (!terms.length) { status.textContent = 'キーワードを入力してください。'; return; }
+      status.textContent = '記事を検索しています…';
+      try {
+        if (!articlesPromise) articlesPromise = fetch('articles.json').then(function (response) { if (!response.ok) throw new Error('記事一覧を取得できません'); return response.json(); }).catch(function (error) { articlesPromise = null; throw error; });
+        var data = await articlesPromise;
+        if (currentRequest !== requestId) return;
+        var matches = data.articles.filter(function (article) {
+          if (article.is_prep) return false;
+          var text = plainText(article.title + ' ' + article.summary).toLocaleLowerCase();
+          return terms.every(function (term) { return text.includes(term); });
+        });
+        matches.forEach(function (article) {
+          var item = document.createElement('li'); item.className = 'article-item';
+          var link = document.createElement('a'); link.className = 'article-link'; link.href = article.url; link.textContent = plainText(article.title);
+          var summary = document.createElement('p'); summary.className = 'article-summary'; summary.textContent = plainText(article.summary);
+          item.append(link, summary); list.appendChild(item);
+        });
+        status.textContent = matches.length ? matches.length + '件の記事が見つかりました。' : '一致する記事がありません。短い言葉に変えるか、目的別リンクから探してください。';
+      } catch (error) { if (currentRequest === requestId) status.textContent = '記事一覧を読み込めませんでした。再検索するか、目的別リンクから探してください。'; }
+    });
+  }
+
+  function initCuratedCounts() {
+    document.querySelectorAll('.curated-tabs [data-ranking-trigger]').forEach(function (button) {
+      var panel = document.getElementById('ranking-' + button.getAttribute('data-ranking-trigger'));
+      var count = button.querySelector('.curated-tab-count');
+      if (panel && count) count.textContent = panel.querySelectorAll('.curated-card').length;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    initArticleSearch();
+    initCuratedCounts();
+    initLayoutVars();
+    initResponsiveTables();
+    initTabs();
+    updateRarityBadges();
+    initCopyButtons();
+    initFormulaCopyButtons();
+    initReadingProgress();
+    initArticleFeedback();
+    initArticleReadDepth();
+    initAnalyticsEvents();
+  });
+})();

@@ -1,0 +1,54 @@
+/* Shared, scoped additions for AI introduction and practice guides. */
+.ai-addin-article .article-title { text-wrap: balance; }
+.ai-addin-article .article-header .article-summary { font-size: 1rem; line-height: 1.9; }
+.ai-addin-article .ai-check-note {
+  margin: 1.5rem 0;
+  padding: 1rem 1.2rem;
+  background: #f3f7fc;
+  border-left: 4px solid #39688c;
+  border-radius: 6px;
+}
+.ai-addin-article .ai-check-note p:last-child { margin-bottom: 0; }
+.ai-addin-article .ai-contents {
+  padding: 1rem 1.2rem;
+  border: 1px solid #d6e1eb;
+  border-radius: 8px;
+}
+.ai-addin-article .ai-contents li { margin: .45rem 0; }
+.ai-addin-article .ai-table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 1.25rem 0;
+}
+.ai-addin-article .ai-table-wrap > .compare-table {
+  min-width: 580px !important;
+  table-layout: fixed;
+  margin: 0;
+}
+.ai-addin-article #practice .compare-table { min-width: 0 !important; width: 100% !important; }
+.ai-addin-article #practice .ai-table-wrap::before { display: none; }
+.ai-addin-article .compare-table caption {
+  text-align: left;
+  padding: .5rem 0;
+  color: #334155;
+  font-weight: 700;
+}
+.ai-addin-article .code-readonly {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding-top: 3.2rem;
+}
+.ai-addin-article .code-readonly code { white-space: inherit; }
+.ai-addin-article :focus-visible { outline: 3px solid #21618c; outline-offset: 3px; }
+@media (max-width: 600px) {
+  .ai-addin-article .ai-check-note,
+  .ai-addin-article .ai-contents { padding: .9rem; }
+  .ai-addin-article #compatibility .ai-table-wrap::before,
+  .ai-addin-article #comparison .ai-table-wrap::before {
+    content: "比較表は横にスクロールできます →";
+    display: block;
+    font-size: .8rem;
+    color: #475569;
+    margin-bottom: .4rem;
+  }
+}

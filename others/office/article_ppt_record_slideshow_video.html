@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>PowerPointの「スライドショーの記録」でナレーション付き動画を作る｜MP4に書き出す手順｜Excel &times; No VBA Lab</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="PowerPointの「スライドショーの記録」で、ナレーションやカメラ映像付きの説明動画を作り、「ビデオのエクスポート」でMP4に書き出す手順。社内研修やExcel勉強会の資料づくりに使う方法を解説します。" name="description">
+<meta content="PowerPointの「スライドショーの記録」でナレーション付き動画にする" property="og:title">
+<meta content="スライドをめくりながら話した内容を録音し、MP4の研修動画にする手順。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/office/article_ppt_record_slideshow_video.html" property="og:url">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/office/article_ppt_record_slideshow_video.html" rel="canonical">
+<link href="../../common.css?v=20261101" rel="stylesheet">
+<link href="../../article.css?v=20261101" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "PowerPointの「スライドショーの記録」でナレーション付き動画にする", "description": "PowerPointの「スライドショーの記録」で、ナレーションやカメラ映像付きの説明動画を作り、「ビデオのエクスポート」でMP4に書き出す手順。社内研修やExcel勉強会の資料づくりに使う方法を解説します。", "datePublished": "2026-11-01", "dateModified": "2026-11-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/office/article_ppt_record_slideshow_video.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "スライドショーの記録で動画化", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/office/article_ppt_record_slideshow_video.html"}]}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><strong>スライドショーの記録で動画化</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">PowerPoint 2016以降</span><span class="article-date">更新日: 2026-11-02</span></div><h1 class="article-title">PowerPointの「スライドショーの記録」でナレーション付き動画にする</h1>
+<p class="article-summary" data-seo-lead="true">PowerPointの「スライドショーの記録」を使うと、スライドを進めながら話した声やカメラ映像を記録し、MP4の動画に書き出せます。社内研修やExcel勉強会の資料を、追加ソフトなしで動画にする手順です。</p></div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>社内研修やExcel勉強会の資料を、<strong>説明の声が入った動画</strong>にして配りたい。PowerPointの<strong>「スライドショーの記録」</strong>を使うと、スライドをめくりながら話した内容をそのまま録音し、MP4の動画に書き出せます。</p>
+<div class="xdemo-note-good"><strong>流れ：</strong>記録 → ナレーション・カメラのオン／オフ → スライドを進めながら話す → 「ビデオのエクスポート」でMP4にする</div>
+<p>操作画面そのものを録りたい場合は、<a href="article_ppt_screen_recording.html">PowerPointの画面録画</a>の方が向いています。2つを組み合わせて、「スライドで説明 → 画面録画で実演」という動画も作れます。</p>
+</section>
+
+<section class="method-section">
+<h2>手順1：記録を始める</h2>
+<ol class="line-height-2">
+<li>動画にしたいプレゼンテーションを開きます。</li>
+<li><strong>「スライドショー」タブ → 「録画」（版によっては「スライドショーの記録」）</strong>を押し、「先頭から」か「現在のスライドから」を選びます。Microsoft 365では「記録」タブから始めることもできます。</li>
+<li>記録画面で、<strong>マイク（ナレーション）</strong>と<strong>カメラ</strong>のオン／オフを決めます。顔を出さない場合はカメラをオフにします。</li>
+<li>録画ボタンを押し、カウントダウンの後に話し始めます。</li>
+</ol>
+<!-- TODO-SCREENSHOT: スライドショーの記録画面（マイク・カメラのオン／オフと録画ボタン） -->
+<p class="verify-note">画面の名前・ボタンの位置は、環境により結果が異なる場合があります。お使いの版で表示を確認してください。</p>
+</section>
+
+<section class="method-section">
+<h2>手順2：スライドを進めながら話す</h2>
+<ul class="line-height-2">
+<li>矢印キーやクリックで次のスライドに進みます。スライドごとの表示時間も記録されます。</li>
+<li>言い間違えたら、そのスライドだけ撮り直せます（記録画面の「クリア」で現在のスライドの記録を消せます）。</li>
+<li>ペンや蛍光ペンで書き込んだ内容も記録されます。</li>
+<li>終わったら停止し、記録画面を閉じます。</li>
+</ul>
+<p class="verify-note">撮り直し・クリアのボタンの名前は、環境により結果が異なる場合があります。</p>
+</section>
+
+<section class="method-section">
+<h2>手順3：MP4に書き出す</h2>
+<ol class="line-height-2">
+<li>記録画面の<strong>「ビデオのエクスポート」</strong>を押します。または<strong>「ファイル → エクスポート → ビデオの作成」</strong>を選びます。</li>
+<li>画質を選びます。社内共有なら中くらいの画質で十分なことが多く、ファイルも軽くなります。</li>
+<li><strong>「記録されたタイミングとナレーションを使用する」</strong>を選んで、「ビデオの作成」を押します。</li>
+<li>保存先を決めると、MP4ファイルの書き出しが始まります。長い資料は時間がかかるので、終わるまでPowerPointを閉じないでください。</li>
+</ol>
+<!-- TODO-SCREENSHOT: 「ファイル」→「エクスポート」→「ビデオの作成」の画面 -->
+</section>
+
+<section class="method-section">
+<h2>社内研修・Excel勉強会での使い方</h2>
+<ul class="line-height-2">
+<li><strong>1本5分以内に分ける：</strong>「XLOOKUPの基本」「Power Queryで更新する」のように、テーマごとに短い動画にすると、見る側も探しやすくなります。</li>
+<li><strong>スライド → 実演の順にする：</strong>説明はスライドの記録で、実際の操作は<a href="article_ppt_screen_recording.html">画面録画</a>で録って、1つのプレゼンテーションにまとめてから書き出します。</li>
+<li><strong>サンプルデータを使う：</strong>本番の業務データではなく、<a href="../../samples/">サンプルデータ</a>のような練習用のデータで説明します。</li>
+</ul>
+</section>
+
+<section class="tips-section">
+<h2>注意点</h2>
+<ul class="line-height-2">
+<li>社内規程で動画の作成・共有が制限されていないか、先に確認します。</li>
+<li>顔や声を出すかどうかは本人の意思で決め、無理に求めないようにします。</li>
+<li>書き出したMP4は、共有する前に最後まで再生して、音声と画面を確認します。</li>
+</ul>
+</section>
+
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="article_ppt_screen_recording.html">PowerPointの画面録画で操作マニュアル動画を作る</a></li>
+<li><a href="../misc/article_screen_record_win10.html">Windows 10で画面録画する方法の比較</a></li>
+<li><a href="../../samples/">サンプルデータ</a></li>
+</ul></section>
+</article>
+</main>
+<footer class="site-footer"><div class="site-footer-trust" aria-label="運営情報と検証方針"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Windows版 PowerPoint 2016以降・Microsoft 365 を想定しています（画面の名前やボタンの位置は、版によって異なることがあります）。Web版PowerPointでは使えない機能があります。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js?v=20261101"></script>
+</body>
+</html>

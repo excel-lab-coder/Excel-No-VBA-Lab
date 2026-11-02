@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex, nofollow">
+<meta name="description" content="関数やPower Queryでは届きにくい出力・ファイル選択・値固定・実行ログだけをVBAで補う実務パターン集です。">
+<title>本編であと一歩だった処理のVBA補完集｜記事候補</title>
+<link href="../../common.css?v=8" rel="stylesheet"><link href="../../article.css" rel="stylesheet">
+</head>
+<body><a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限解除ラボ・記事候補</span></p></div></div></header>
+<main class="main-content article-layout" id="main-content"><div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&rsaquo;</span><a href="../index.html">制限解除ラボ</a><span>&rsaquo;</span><a href="index.html">記事候補</a><span>&rsaquo;</span><strong>VBA補完集</strong></div>
+<article class="article-body"><div class="article-header"><div class="article-meta"><span class="badge badge-all">VBA OK</span><span class="badge badge-new">新規候補</span><span class="article-date">作成日: 2026-07-15</span></div><h1 class="article-title">本編で“あと一歩”だった処理のVBA補完集</h1><p class="article-lead">計算やデータ整形は関数・Power Queryに任せ、VBAは「選ぶ」「出す」「固定する」「記録する」に限定します。短いコードでも、責任範囲を狭くすると保守しやすくなります。</p></div>
+<div class="tip-box"><strong>サンプルの前提：</strong>このブックに「帳票」「結果」「実行ログ」の3シートを用意します。「実行ログ」は1行目を見出し行にしてください。</div>
+<div class="warning-box"><strong>実行前に</strong><p>必ずコピーしたブックとテスト用フォルダで確認してください。掲載コードは汎用例であり、保護シート、権限、既存ファイル、PDFプリンター設定など、利用環境による差があります。</p></div>
+<section><h2>1. VBAを使う範囲を先に決める</h2><div class="table-responsive"><table><thead><tr><th>処理</th><th>基本担当</th><th>VBAの役割</th></tr></thead><tbody><tr><td>集計・検索・判定</td><td>関数</td><td>原則なし</td></tr><tr><td>取込・結合・整形</td><td>Power Query</td><td>必要なら更新開始のみ</td></tr><tr><td>PDF・ファイル出力</td><td>VBA</td><td>保存先とファイル名を制御</td></tr><tr><td>操作履歴</td><td>VBA</td><td>実行日時・利用者・結果を追記</td></tr></tbody></table></div></section>
+<section><h2>2. パターンA：利用者に保存先フォルダを選んでもらう</h2><p>パスをコードへ固定せず、実行時に選択します。キャンセルは正常な終了として扱います。</p><div class="code-readonly"><pre><code>Private Function 保存先を選ぶ() As String
+    With Application.FileDialog(msoFileDialogFolderPicker)
+        .Title = "保存先フォルダを選択してください"
+        .AllowMultiSelect = False
+        If .Show &lt;&gt; -1 Then Exit Function
+        保存先を選ぶ = .SelectedItems(1)
+    End With
+End Function</code></pre></div></section>
+<section><h2>3. パターンB：指定シートをPDFへ出力する</h2><p>数式やPower Queryで完成した帳票を、最後だけVBAでPDF化します。同名ファイルがある場合は上書きせず停止します。</p><div class="code-readonly"><pre><code>Public Sub 帳票をPDF保存する()
+    Dim folderPath As String, pdfPath As String
+    Dim ws As Worksheet
+
+    Set ws = ThisWorkbook.Worksheets("帳票")
+    folderPath = 保存先を選ぶ()
+    If Len(folderPath) = 0 Then Exit Sub
+
+    pdfPath = folderPath &amp; "\帳票_" &amp; Format$(Now, "yyyymmdd_HHMMSS") &amp; ".pdf"
+    If Len(Dir$(pdfPath)) &gt; 0 Then
+        MsgBox "同名ファイルが存在するため中止しました。", vbExclamation
+        Exit Sub
+    End If
+
+    ws.ExportAsFixedFormat Type:=xlTypePDF, _
+        Filename:=pdfPath, Quality:=xlQualityStandard, _
+        IgnorePrintAreas:=False, OpenAfterPublish:=False
+    実行ログを書く "PDF出力", pdfPath, "成功"
+End Sub</code></pre></div><p>印刷範囲、改ページ、余白、非表示行はExcel側の設定に従います。PDF化前に印刷プレビューで確認してください。</p></section>
+<section><h2>4. パターンC：計算結果を値として別シートへ残す</h2><p>数式を壊して上書きするのではなく、新しいシートへ値だけを複製します。監査証跡として使う場合は、保存ルールと改変権限も別途必要です。</p><div class="code-readonly"><pre><code>Public Sub 結果を値で保存する()
+    Dim src As Worksheet, dst As Worksheet
+    Dim newName As String
+
+    Set src = ThisWorkbook.Worksheets("結果")
+    newName = "確定_" &amp; Format$(Now, "mmdd_HHmmss")
+
+    Set dst = ThisWorkbook.Worksheets.Add( _
+        After:=ThisWorkbook.Worksheets(ThisWorkbook.Worksheets.Count))
+    dst.Name = newName
+    src.UsedRange.Copy
+    dst.Range("A1").PasteSpecial xlPasteValuesAndNumberFormats
+    Application.CutCopyMode = False
+    実行ログを書く "値の確定", newName, "成功"
+End Sub</code></pre></div><div class="tip-box"><strong>注意：</strong>シート名は31文字までです。同じ秒に再実行した場合やブック構成によっては名称が重複するため、本番では重複確認を加えてください。</div></section>
+<section><h2>5. パターンD：最低限の実行ログを残す</h2><p>「いつ、誰が、何を、どう終えたか」をログシートへ追記します。Windowsの利用者名だけで本人性を保証できるわけではありませんが、調査の手掛かりになります。</p><div class="code-readonly"><pre><code>Private Sub 実行ログを書く(ByVal actionName As String, _
+                            ByVal target As String, _
+                            ByVal result As String)
+    Dim ws As Worksheet, nextRow As Long
+    Set ws = ThisWorkbook.Worksheets("実行ログ")
+    nextRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row + 1
+
+    ws.Cells(nextRow, 1).Value = Now
+    ws.Cells(nextRow, 2).Value = Environ$("Username")
+    ws.Cells(nextRow, 3).Value = actionName
+    ws.Cells(nextRow, 4).Value = target
+    ws.Cells(nextRow, 5).Value = result
+End Sub</code></pre></div><p>失敗時も記録したい場合は、各処理にエラーハンドラーを設け、エラー番号と説明をログへ残します。機密パスや個人情報をログへ書き過ぎないことも重要です。</p></section>
+<section><h2>6. 採用判断</h2><ul><li>複数人がコードを読めるか</li><li>失敗時に元へ戻せるか、またはバックアップがあるか</li><li>処理対象と出力先を画面で確認できるか</li><li>上書きを既定動作にしていないか</li><li>関数やPower Query側へ戻して簡単にできないか</li></ul></section>
+<section><h2>まとめ</h2><p>制限解除ラボのVBAは、すべてをマクロ化するためではありません。関数・Power Queryで作った安定した処理に、出力や記録という最後の一手だけを加える使い方が基本です。</p></section>
+</article></main></body></html>

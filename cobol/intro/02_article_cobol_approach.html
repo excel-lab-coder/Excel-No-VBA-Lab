@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="1" name="difficulty">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>COBOL帳票処理の3大アプローチ：難易度と完成時のメリット｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  var gaCobolTitle = 'COBOL Intro 02 Approach Comparison';
+  var gaCobolPath = location.pathname.replace(/\/index\.html$/, '/');
+  gtag('config', 'G-596JZ3M97H', {
+    'page_title': gaCobolTitle,
+    'page_path': gaCobolPath
+  });
+  gtag('event', 'cobol_page_view', {
+    'article_group': 'cobol',
+    'article_slug': 'intro_02_article_cobol_approach',
+    'page_title': gaCobolTitle,
+    'page_path': gaCobolPath,
+    'page_location': location.href
+  });
+</script>
+<meta content="VBA・パワークエリ・ワークシート関数の3つの視点からCOBOL帳票処理を比較。VBA禁止・マクロ禁止環境で困ったときの代替手段として、Power Queryと関数の使い分けを解説。" name="description">
+<meta content="COBOL帳票処理の3大アプローチ：VBA・パワークエリ・数式の比較｜Excel &times; No VBA Lab" property="og:title">
+<meta content="COBOL帳票データをExcelで処理する3つのアプローチを比較。VBA禁止・マクロ禁止環境での代替手段と最適解を解説。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/intro/02_article_cobol_approach.html" rel="canonical">
+<link href="../../common.css?v=20261101" rel="stylesheet">
+<link href="../../article.css?v=20261101" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "COBOL帳票処理の3大アプローチ：難易度と完成時のメリット",
+    "description": "VBA・パワークエリ・ワークシート関数の3つの視点からCOBOL帳票処理を比較。VBA禁止・マクロ禁止環境で困ったときの代替手段として、Power Queryと関数の使い分けを解説。",
+    "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
+    "datePublished": "2026-03-28",
+    "dateModified":"2026-07-12"
+  }
+  </script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+      {"@type": "ListItem", "position": 2, "name": "COBOL帳票処理", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/"},
+      {"@type": "ListItem", "position": 3, "name": "アプローチと完成時のメリット"}
+    ]
+  }
+  </script>
+
+
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../../">ホーム</a><span>&gt;</span>
+<a href="../../cobol/">COBOLデータ整形</a><span>&gt;</span>
+<strong>アプローチと完成時のメリット</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Excel 2016以降</span>
+<span class="badge badge-maniac">コラム</span>
+<span class="article-date">更新日: 2026-07-12</span>
+</div>
+<h1 class="article-title">COBOL帳票処理の3大アプローチ：難易度と完成時のメリット</h1>
+<p class="article-summary" data-seo-lead="true">COBOL帳票の整形を、VBA・Power Query・ワークシート関数の3つの方法で比べ、難易度と完成後のメリットから、職場の制限に合った進め方を選べるようにします。会社でVBAやマクロが禁止されて困ったときも、関数版とPower Query版の違いを理解しておくと代替手段を選びやすくなります。</p>
+</div>
+<div class="xdemo-note-info">
+<strong>方式の選び方：</strong>VBAの利用可否、入力データの構造、更新頻度、保守できる担当者のスキルを基準に比較してください。
+</div>
+<style>
+  .article-demo-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 修正: 1:1に近い比率で画像を見やすく */
+    gap: 30px;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  .article-demo-visual {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+    z-index: 5;
+  }
+  .article-demo-visual img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+    cursor: zoom-in;
+  }
+  .article-demo-visual img:hover {
+    transform: scale(1.2);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    z-index: 10;
+    position: relative;
+  }
+  @media (max-width: 768px) {
+    .article-demo-container { grid-template-columns: 1fr; }
+    .article-demo-visual img:hover { transform: none; }
+  }
+</style>
+
+<section class="goal-section">
+<div class="article-demo-container">
+  <div>
+    <h2><span class="icon">💡</span> なぜCOBOLデータの処理は難しいのか？</h2>
+    <p>「システムから落とした固定長データをきれいにExcelにまとめたいだけなのに、どうしてこんなに苦労するのか？」</p>
+    <p>職場でCOBOL帳票の処理をサラッとこなせる人を見たことがないかもしれません。大抵の人は「区切り位置」機能を使って手作業で何とかしようとしますが、1件のデータが複数行にまたがっていたり、全角・半角が混ざっていたりすると破綻します。</p>
+  </div>
+  <div class="article-demo-visual">
+    <video class="demo-video" aria-label="COBOLデータ整形デモ" controls loop muted playsinline preload="metadata" poster="../../image/hero_cobol-1024.webp" width="1280" height="720">
+      <source src="../../video/Cobol1.mp4" type="video/mp4">
+      <img src="../../Gif/Cobol.gif" alt="COBOLデータ整形デモ" loading="lazy" decoding="async" width="1280" height="720">
+    </video>
+  </div>
+</div>
+<div class="xdemo-note-good" style="margin-top: 0;">
+  <strong>【結論】VBA禁止・マクロ禁止環境でも「2つのパターン」で攻略可能です</strong><br>
+  このサイトでは、VBAに頼らずにCOBOL帳票を「使えるリスト」へ完全自動整形するための2大ルート（数式アプローチ / パワークエリ・アプローチ）を体系化しています。
+</div>
+</section>
+
+
+<section class="method-section">
+<div class="approach-header">
+<h2>1. VBA（マクロ）による処理</h2>
+</div>
+<p>テキストファイルを直接読み込み、プログラムで自在に切り出してExcelに書き出す手法です。高度なプログラミング知識が必要なはずなのに、なぜか「固定長データはVBAでやるのが一番簡単」と言われることがあります。</p>
+<table class="format-table">
+<tr><th>比較的簡単と言われる理由</th><td>
+<strong>「人間と同じ目線（ループ処理）」で組めるから</strong><br>
+            VBAは「1行目を読んで、不要なヘッダーなら飛ばす」「次の1行目と2行目を読み込んで、横にガッチャンコする」というように、人間が手作業で行うのと同じ順番で命令（ループ処理）を書くことができます。さらにバイト数の計算も標準で備わっているため、固定長データの構造と非常に相性が良いのです。
+          </td></tr>
+<tr><th>現場のリアルな罠</th><td>
+<div class="xdemo-note-danger" style="margin-top:0;">
+<strong>セキュリティによる「VBA禁止」の壁</strong><br>
+              近年、セキュリティ対策の強化により「マクロ付きファイルの実行禁止」を敷く企業が急増しています。どんなに完璧なVBAを組めるスキルがあっても、共有先で実行できなければ実務では使えません。会社でマクロ禁止になったときは、Power Queryやワークシート関数による代替手段を先に検討する必要があります。
+            </div>
+</td></tr>
+<tr class="benefit-row"><th>【完成時のメリット】<br>利用者の負担ゼロ</th><td>
+<strong>ボタン1つで全自動化される「アプリ」のような完成度</strong><br>
+            マクロさえ許可されていれば、ファイル選択から加工、別名保存まで裏側で完結させることができます。他の担当者に引き継いだり共有したりする際、相手にExcelの知識が全くなくても「このボタンを押すだけ」で運用できるのが最強のメリットです。
+          </td></tr>
+</table>
+</section>
+<section class="method-section">
+<div class="approach-header">
+<h2>2. パワークエリ（Power Query）による処理</h2>
+</div>
+<p>「マクロがダメならパワークエリだ！」と多くの人が飛びつきます。不要行の削除や、複数行にまたがるデータの1行化などは、視覚的な操作だけで魔法のように処理できます。</p>
+<table class="format-table">
+<tr><th>得意なこと</th><td>
+<ul style="margin-top:0; padding-left:1.5em;">
+<li><strong>複数ファイルの一括結合（フォルダ取得）：</strong>指定した「フォルダ」から取得することで、複数月や複数部署に分かれたテキストファイルを全自動で1つにガッチャンコできます。</li>
+<li><strong>ワークシートへ展開しない処理：</strong>接続またはデータモデルとして処理すれば、ワークシートの104万行を超えるデータを扱える場合があります。ただし、処理可能量はExcelの32/64ビット、利用可能メモリ、変換内容、データモデル等に左右されます。<a href="https://support.microsoft.com/en-US/Excel/power-query-specifications-and-limits-in-excel" target="_blank" rel="noopener noreferrer">MicrosoftのPower Query仕様と制限</a>も確認してください。</li>
+</ul>
+</td></tr>
+<tr><th>現場のリアルな罠</th><td>
+<div class="xdemo-note-warn" style="margin-top:0;">
+<strong>【最大のつまずきポイント】MIDB関数が存在しない</strong><br>
+              パワークエリのテキスト切り出し機能はすべて<strong>「文字数」</strong>で数えます。全角と半角が混在するデータ（Shift-JISのバイト数で区切られたもの）を処理しようとすると、列の開始位置がズレてしまいます。これを解決するには、文字コードを判定してバイト数を計算する複雑なカスタム関数（M言語）の自作が必要になります。
+            </div>
+</td></tr>
+<tr class="benefit-row"><th>【完成時のメリット】<br>大量データへの対応力</th><td>
+<strong>「フォルダに入れて更新」だけの手軽さと大容量対応</strong><br>
+            毎月のデータがどんどん増えたりファイルが小分けにされていたりしても、<strong>「所定のフォルダにファイルを入れて更新ボタンを押すだけ」</strong>という超シンプルな運用が可能です。<br>
+            ワークシートへ直接展開しない構成なら、104万行を超えるデータを扱える場合もあり、大量データの定型処理で有力です。ただし、実際の処理量と速度はExcelのビット数、利用可能メモリ、変換内容、読込先などに左右されます。
+          </td></tr>
+</table>
+<div class="xdemo-note-good" style="margin-top: 20px;">
+<strong>VBA禁止環境で光る「フォルダ一括取得」&horbar;&horbar;数式版にはない守備範囲</strong><br>
+          VBAが使えない環境で「毎月届く複数のテキストファイルをまとめて処理したい」というニーズがある場合、パワークエリの<strong>「フォルダーから取得」</strong>は他に代替手段がほぼ存在しない切り札になります。<br><br>
+
+          数式アプローチの処理対象はあくまで<strong>「シート上にコピペされた1つのテキストデータ」</strong>です。5つのファイルがあれば5回コピペして5回処理する必要があり、複数ファイルを一発で結合するという芸当はできません。<br><br>
+
+          一方、パワークエリなら<strong>フォルダにファイルを追加するだけで、新しいデータが自動的に結合対象に含まれます。</strong>ファイルが3つだろうと30だろうと、利用者がやることは「フォルダに入れて、すべて更新を押す」の2ステップだけです。<br><br>
+
+          つまり<strong>「VBA禁止 &times; 複数ファイルの定期処理」</strong>という条件が揃ったとき、パワークエリは数式では到達できない領域をカバーします。逆に、ファイルが1つで「その場でサッと貼り付けて即結果を見たい」場面では数式版の手軽さに軍配が上がるため、両者は競合ではなく<strong>得意な場面が異なる補完関係</strong>にあります。
+        </div>
+</section>
+<section class="method-section">
+<div class="approach-header">
+<h2>3. ワークシート関数による処理</h2>
+</div>
+<p>VBAが禁止され、Power QueryのGUI操作だけではバイト位置の切り出しが難しい場合は、ワークシート関数も有力な選択肢になります。</p>
+<table class="format-table">
+<tr><th>得意なこと</th><td>
+            Excelのセル上で直接動くため、VBA禁止環境でも採用しやすい方法です。ただし、Excelのバージョン、互換設定、文字コード、MIDBの提供状況によって結果は変わります。既存環境でレイアウト定義と実データを照合できる場合に限り、MIDBによるバイト位置切り出しを候補にします。
+          </td></tr>
+<tr><th>現場のリアルな罠</th><td>
+<div class="xdemo-note-warn" style="margin-top:0;">
+<strong>①「ループ処理」ができないことによるアプローチの難しさ</strong><br>
+              数式が難しく感じる最大の理由は、VBAのように「上から順に処理する」ことができない点です。作業列をうまく使うか、「全体の行数を割って、何番目と何番目を拾うか」という座標計算（配列処理）のロジックを組む必要があります。<br><br>
+<strong>② 自動拡張（スピル）の難易度とファイル肥大化</strong><br>
+              従来のExcelでは「データ行数が分からないから1万行目まで数式をコピーしておく」という力技でファイルが激重になりがちでした。現在は「スピル」と「最終行カウント」を使えばデータ量に合わせた自動拡張が可能ですが、判定ロジックが少しでも破綻すると <code>#SPILL!</code> エラーを連発するため、完璧に制御するにはかなりの設計スキルが求められます。
+            </div>
+</td></tr>
+<tr class="benefit-row"><th>【完成時のメリット】<br>究極の手軽さと<br>ポータビリティ</th><td>
+<strong>完成後の利用者操作を少なくできる</strong><br>
+            帳票仕様に合わせて数式を設計できれば、利用者側の操作を「指定セルへ貼り付ける」程度まで減らせます。ただし、貼り付け位置、対象範囲、例外行、出力件数を確認する手順は残してください。<br><br>
+            数式アプローチは配布しやすい一方、処理対象は<strong>「シートに貼り付けた1ファイル分のデータ」が基本</strong>です。複数ファイルを一括で結合したい場面ではPower Queryのフォルダー取得が有力なため、ファイル数や運用体制に応じて使い分けるのが現実的です。
+          </td></tr>
+</table>
+</section>
+<section class="method-section">
+<div class="approach-header">
+<h2>番外編：「システム部に頼んでCSVにしてもらえば？」という正論と現実</h2>
+</div>
+<p>固定長データの処理に苦労していると、必ず「そもそもシステム部に依頼して、最初からカンマ区切りのCSVで出力してもらえばいいじゃないか」という声が上がります。しかし、現場がそれを簡単に実現できないのには、もっと深く切実な「大人の事情」があります。</p>
+<table class="format-table">
+<tr>
+<th class="sys-wall-th">「動いているものに<br>触るな」の絶対掟</th>
+<td>基幹システムは会社の心臓です。「現場のExcel作業を楽にするためにCSV出力処理を追加した結果、予期せぬエラーで全社の給与計算や受発注が止まった」となっては目も当てられません。そのため、安定稼働しているレガシーシステムには<strong>「極力手を加えない・リスクは絶対に取らない」</strong>のがIT部門の鉄則となっています。</td>
+</tr>
+<tr>
+<th class="sys-wall-th">技術者不足と<br>ブラックボックス化</th>
+<td>そもそも、情報システム部門内に「何十年も前のCOBOLプログラムを解読して安全に改修できるスキルを持った人材」が既に残っていない（定年退職等で枯渇している）ケースが多々あります。中身がどう動いているか、システム部自身も完全に把握しきれていない「ブラックボックス」と化しているのです。</td>
+</tr>
+<tr>
+<th class="sys-wall-th">外注費と予算の壁<br>（ベンダーロックイン）</th>
+<td>システム保守を外部ベンダーへ委託している場合、「CSV出力を1本追加する」依頼でも、要件定義・権限調整・回帰テストを含めると相応の費用と期間が必要になることがあります。「現場の集計作業を少し楽にしたい」という目的だけでは、費用対効果の説明が難しい場合があります。</td>
+</tr>
+</table>
+<div class="xdemo-note-good" style="margin-top: 20px;">
+<strong>だからこそ「自力で解決できる人材」は圧倒的に希少で価値がある</strong><br>
+          「基幹システムの仕様（固定長・バイト数）を理解し」「自部署の業務要件を把握しており」「予算ゼロ・VBA禁止という過酷な制約の中で、パワークエリやモダン関数を駆使してツールを組み上げられる」人材は、大げさではなく<strong>数千人に一人レベルの希少な存在（ユニコーン）</strong>です。<br>
+          職場で誰もできないような「気合いの入った数式」や「緻密なクエリ」を組むことは、ただの自己満足ではありません。システム化の壁に阻まれ、手作業で疲弊している現場を救うための「最強の実務ハック」なのです。
+        </div>
+</section>
+<section class="tips-section" style="background:#fcfcfc;">
+<h2>結論：どう戦うべきか？</h2>
+<p>これらすべてを扱えるスキルがあったとしても、環境と目的に応じて最適なツールは変わります。</p>
+<ul style="line-height: 1.8;">
+<li>VBAが自由に使える環境で、利用者に一切の操作をさせたくないなら ➡️ <strong>VBA</strong></li>
+<li><strong>VBA禁止環境</strong>で、複数ファイルの一括結合やワークシート上限を超えるデータを扱う必要があるなら ➡️ <strong>パワークエリを候補にする</strong>（PC環境と読込先を確認）</li>
+<li><strong>VBA禁止環境</strong>で全角半角が混在しており、ITリテラシーが低い同僚でも「コピペだけ」で使えるようにしたいなら ➡️ <strong>数式（関数＋スピル）</strong></li>
+</ul>
+<div class="xdemo-note-good" style="margin-top: 20px;">
+<strong>VBA禁止環境では「パワークエリ」と「数式」の二刀流が有効</strong><br>
+          パワークエリは複数ファイルのフォルダ一括取得や大量データ処理で有力ですが、画面操作だけで全角半角混在のバイト位置を扱うのは難しい場合があります。数式はシート上のデータが対象ですが、互換条件を確認した <code>MIDB</code> でバイト位置を扱え、「貼り付けて再計算」という簡単な運用にできます。<br><br>
+          どちらか一方で全てを賄おうとするのではなく、<strong>業務の性質に応じて両方を使い分けられること</strong>が、VBA禁止・マクロ禁止環境における最も実戦的なスキルセットです。
+        </div>
+<p style="margin-top: 1.5em; font-weight: bold;">➡️ 次のステップ：数式でどうやってアプローチするのか？</p>
+<p>難関とされる「複数行またぎ」のデータを、作業列や最新の関数を使ってスッキリと処理する実践的な手順は、以下の記事で解説しています。</p>
+<ul>
+<li><a href="../formula/02_article_cobol_advanced.html">【実践】複数行にまたがるCOBOLデータを配列関数で1行にする方法</a></li>
+</ul>
+</section>
+
+</article>
+</main>
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/">サンプルデータ</a></p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ(Google Forms)</a>
+  </div>
+  <p>&copy; Excel × No VBA Lab — 制限環境こそが最高の教師。</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js?v=20261101"></script>
+</body>
+</html>

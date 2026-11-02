@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>PowerPointの画面録画で操作マニュアル動画を作る｜インストール不要でMP4保存｜Excel &times; No VBA Lab</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="PowerPointの「挿入 → 画面録画」で、Excel手順やQRリーダー設定の操作動画を作る方法。領域の選択、音声とポインターのオン／オフ、Windows+Shift+Qでの停止、「メディアに名前を付けて保存」でのMP4保存、トリミング、録画ボタンがない・音が入らない・重いときの対処を解説します。" name="description">
+<meta content="PowerPointの画面録画で操作マニュアル動画を作る：インストール不要でMP4に保存" property="og:title">
+<meta content="録画ソフトを入れられない職場でも、PowerPointの画面録画で操作動画をMP4にできます。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/office/article_ppt_screen_recording.html" property="og:url">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/office/article_ppt_screen_recording.html" rel="canonical">
+<link href="../../common.css?v=20261101" rel="stylesheet">
+<link href="../../article.css?v=20261101" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "Article", "headline": "PowerPointの画面録画で操作マニュアル動画を作る：インストール不要でMP4に保存", "description": "PowerPointの「挿入 → 画面録画」で、Excel手順やQRリーダー設定の操作動画を作る方法。領域の選択、音声とポインターのオン／オフ、Windows+Shift+Qでの停止、「メディアに名前を付けて保存」でのMP4保存、トリミング、録画ボタンがない・音が入らない・重いときの対処を解説します。", "datePublished": "2026-11-01", "dateModified": "2026-11-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/office/article_ppt_screen_recording.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "PowerPointで画面録画", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/office/article_ppt_screen_recording.html"}]}
+</script>
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><strong>PowerPointで画面録画</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">PowerPoint 2016以降</span><span class="article-date">更新日: 2026-11-02</span></div><h1 class="article-title">PowerPointの画面録画で操作マニュアル動画を作る：インストール不要でMP4に保存</h1>
+<p class="article-summary" data-seo-lead="true">録画ソフトをインストールできない職場でも、PowerPointの「画面録画」なら、範囲を選んで操作を録画し、MP4として保存できます。Excel手順の引き継ぎやQRリーダー設定の共有に使える手順と、つまずいたときの確認ポイントをまとめます。</p></div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>Excelの操作手順や、QRリーダーの設定方法を、短い動画にして引き継ぎたい。でも録画ソフトはインストールできない――そんなときは、PowerPointの<strong>「画面録画」</strong>が使えます。</p>
+<div class="xdemo-note-good"><strong>流れ：</strong>挿入 → 画面録画 → 領域の選択 → 音声・ポインターのオン／オフ → 録画 → 停止 → MP4で保存</div>
+</section>
+
+<section class="method-section">
+<h2>手順1：画面録画を始める</h2>
+<ol class="line-height-2">
+<li>PowerPointで新しいプレゼンテーションを開きます（録画用の空のファイルで構いません）。</li>
+<li><strong>「挿入」タブ → 「画面録画」</strong>を押します。PowerPointの画面が小さくなり、画面の上にコントロールが出ます。</li>
+<li><strong>「領域の選択」</strong>を押し、録りたい範囲をドラッグで四角に囲みます。画面全体を録る場合は <span><span class="kbd-btn">Windows</span>+<span class="kbd-btn">Shift</span>+<span class="kbd-btn">F</span></span> で全画面を選べます。</li>
+<li><strong>「オーディオ」</strong>（音声）と<strong>「ポインターの録画」</strong>（マウスポインター）をそれぞれオン／オフします。声で説明しないなら、オーディオはオフにしておくとファイルが軽くなります。</li>
+<li><strong>「録画」</strong>を押します。カウントダウンの後に録画が始まります。</li>
+</ol>
+<!-- TODO-SCREENSHOT: 画面録画のコントロール（領域の選択・オーディオ・ポインターの録画・録画） -->
+<p class="verify-note">画面の名前・ボタンの位置は、環境により結果が異なる場合があります。お使いの版で表示を確認してください。</p>
+</section>
+
+<section class="method-section">
+<h2>手順2：録画を止める</h2>
+<p>録画を止めるには <strong><span class="kbd-btn">Windows</span>+<span class="kbd-btn">Shift</span>+<span class="kbd-btn">Q</span></strong> を押します。画面の上にマウスを持っていくとコントロールが出るので、そこから停止することもできます。</p>
+<p>止めると、録画した動画がスライドに貼り付けられます。</p>
+</section>
+
+<section class="method-section">
+<h2>手順3：MP4ファイルとして保存する</h2>
+<ol class="line-height-2">
+<li>スライド上の動画を<strong>右クリック</strong>します。</li>
+<li><strong>「メディアに名前を付けて保存」</strong>を選びます。</li>
+<li>保存先とファイル名を決めて保存します。形式はMP4になります。</li>
+</ol>
+<p>ファイル名には、日付・システム名・操作の内容を入れておくと後で探しやすくなります。例：<code>20261101_販売管理_月次CSV取込.mp4</code></p>
+<!-- TODO-SCREENSHOT: スライド上の動画を右クリックして「メディアに名前を付けて保存」を選ぶ画面 -->
+</section>
+
+<section class="method-section">
+<h2>手順4：前後の不要な部分を切る（ビデオのトリミング）</h2>
+<p>録画の最初と最後には、録画ボタンを押す・止める動きが入りがちです。次の順に操作して、切った後の動画を保存します。</p>
+<ol class="line-height-2">
+<li>動画を選択し、<strong>「再生」タブ →「ビデオのトリミング」</strong>で開始時間と終了時間を調整して「OK」を押します。</li>
+<li><strong>「ファイル」→「情報」→「メディアの圧縮」</strong>を選びます（画質はどれでも構いません）。</li>
+<li>圧縮が終わったらスライドに戻り、動画を右クリックして<strong>「メディアに名前を付けて保存」</strong>を選びます。</li>
+</ol>
+<p>「メディアの圧縮」をしないで保存すると、切る前の動画が保存されることがあります。保存した後、最初と最後を再生して確認します。</p>
+<p class="verify-note">確認した環境：Microsoft 365 版 PowerPoint（Windows）。10秒の動画を2秒〜7秒にトリミングして保存すると、「メディアの圧縮」をしないときは10秒のまま、圧縮した後は5秒の動画になりました。「ファイル」→「情報」には、圧縮の前に「トリミングされた部分が含まれるメディア ファイルが 1 個あります」と表示されます。</p>
+</section>
+
+<section class="method-section">
+<h2>活用例</h2>
+<ul class="line-height-2">
+<li><strong>Excel手順の引き継ぎ：</strong>月次の集計やPower Queryの更新手順を1〜2分の動画にしておくと、文章の手順書より伝わりやすくなります。</li>
+<li><strong>QRリーダー設定の共有：</strong>設定用のQRコードを読む順番や、Excelへの入力結果を画面で見せられます（<a href="../../qr/">QR Automation Lab</a>）。</li>
+<li><strong>問い合わせ・不具合の再現：</strong>エラーが出るまでの操作を短く録って、情報システム部門に渡せます。</li>
+</ul>
+</section>
+
+<section class="method-section">
+<h2>対応バージョンと、メニューにないときの確認ポイント</h2>
+<p>画面録画は、Windows版PowerPoint 2016以降とMicrosoft 365で使える機能として説明しています（PowerPoint 2013も更新プログラムで追加されています）。</p>
+<ul class="line-height-2">
+<li><strong>Web版のPowerPointではないか：</strong>ブラウザで開いている場合は、デスクトップ版で開き直します。</li>
+<li><strong>リボンが簡易表示になっていないか：</strong>「挿入」タブの「メディア」グループ（右寄り）を探します。画面が狭いとボタンがまとめられていることがあります。</li>
+<li><strong>リボンが会社でカスタマイズされていないか：</strong>管理者がボタンを非表示にしている場合があります。</li>
+<li><strong>検索ボックスで探す：</strong>PowerPoint上部の検索ボックスに「画面録画」と入れると、ボタンの場所が分かることがあります。</li>
+</ul>
+</section>
+
+<section class="method-section">
+<h2>つまずき対策</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>よくあるつまずきと確認すること</caption>
+<thead><tr><th>困りごと</th><th>確認すること</th></tr></thead>
+<tbody>
+<tr><td>録画ボタンがない</td><td>上の「メニューにないときの確認ポイント」を順に確認します。デスクトップ版であること、版が古すぎないことが前提です。</td></tr>
+<tr><td>音が入らない</td><td>録画前に「オーディオ」がオンになっているか、Windowsの「設定 → プライバシー → マイク」でアプリのマイク利用が許可されているか、マイクが接続されているかを確認します。</td></tr>
+<tr><td>ファイルが重い</td><td>録画範囲を必要な部分だけに絞る、録画時間を短く分ける、音声が不要ならオフにする、「ファイル → 情報 → メディアの圧縮」を使う、の順に試します。</td></tr>
+</tbody></table></div>
+<p class="verify-note">「メディアの圧縮」の表示場所は、環境により結果が異なる場合があります。</p>
+</section>
+
+<section class="tips-section">
+<h2>録画前の注意</h2>
+<ul class="line-height-2">
+<li>社内規程で画面録画や動画の共有が制限されていないか、先に確認します。</li>
+<li>メール・チャットの通知を止め、個人情報や機密情報が映らないようにテスト用のデータを使います。</li>
+<li>共有する前に、動画を最初から最後まで再生して確認します。</li>
+</ul>
+</section>
+
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="../misc/article_screen_record_win10.html">Windows 10で画面録画する方法の比較</a></li>
+<li><a href="article_ppt_record_slideshow_video.html">PowerPointの「スライドショーの記録」でナレーション付き動画にする</a></li>
+<li><a href="../misc/article_snipping_tool_video.html">Windows 11 スニッピングツールで画面録画する方法</a></li>
+<li><a href="../../qr/">QR Automation Lab</a></li>
+</ul></section>
+</article>
+</main>
+<footer class="site-footer"><div class="site-footer-trust" aria-label="運営情報と検証方針"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Windows版 PowerPoint 2016以降・Microsoft 365 を想定しています（画面の名前やボタンの位置は、版によって異なることがあります）。Web版PowerPointでは使えない機能があります。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js?v=20261101"></script>
+</body>
+</html>

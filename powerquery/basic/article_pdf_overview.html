@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>PDFデータをExcelに取り込む方法｜Power Query・Word活用｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="PDFの表データをExcelに取り込む方法を比較。Power Queryの基本・応用、旧式Wordを使う手順、対応できるPDFと限界・注意点をまとめて解説します。" name="description">
+<meta content="PDFデータをExcelに取り込む方法｜Power Query・Word活用｜Excel &times; No VBA Lab" property="og:title">
+<meta content="PDFの表データをExcelに取り込む方法を比較。Power Queryの基本・応用、旧式Wordを使う手順、対応できるPDFと限界・注意点をまとめて解説します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pdf_overview.html" rel="canonical">
+<link href="../../common.css?v=20261101" rel="stylesheet">
+<link href="../../article.css?v=20261101" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-23", "dateModified": "2026-04-23", "headline":"PDFデータをExcelに取り込む方法｜Power Query・Word活用","description":"PDFの表データをExcelに取り込む方法を比較。Power Queryの基本・応用、旧式Wordを使う手順、対応できるPDFと限界・注意点をまとめて解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pdf_overview.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<!-- スキップリンク -->
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../">Excel &times; No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb">
+<a href="../../">ホーム</a><span>&gt;</span>
+<a href="../../powerquery/">パワークエリ</a><span>&gt;</span>
+<strong>PDFデータ取得テクニック</strong>
+</div>
+<article class="article-body">
+<p>この記事はWindows版Microsoft 365で「データ → データの取得 → ファイルから → PDFから」が利用できる環境を中心に説明します。Power Query本体の搭載とPDFコネクタの搭載は別です。Office 2019の買い切り版にはPDFコネクタがありません。2021 / 2024などの買い切り版は版・エディションと実際のメニューを確認してください。<a href="https://support.microsoft.com/en-us/excel/power-query-data-sources-in-excel-versions" target="_blank" rel="noopener">Microsoft公式対応表</a></p>
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Excel 2013〜</span>
+<span class="article-date">更新日: 2026-04-23</span>
+</div>
+<h1 class="article-title">ExcelでPDFのデータを取得する全テクニック<br><span style="font-size:.55em;font-weight:400;color:#666;">&horbar; 旧式Word変換からパワークエリまで &horbar;</span></h1>
+</div>
+<!-- ========== 目次 ========== -->
+<div class="toc-box">
+<h3 aria-level="2">この記事の内容</h3>
+<ol>
+<li><a href="#sec-why">なぜPDFからExcelへの取り込みが必要なのか</a></li>
+<li><a href="#sec-overview">2つのアプローチ &horbar; 全体像</a></li>
+<li><a href="#sec-timeline">PDF取得の方式と対応条件</a></li>
+<li><a href="#sec-compare">方法比較：Word変換 vs パワークエリ</a></li>
+<li><a href="#sec-judge">どちらを使うべきか？ &horbar; 判断チャート</a></li>
+<li><a href="#sec-pdftype">PDFの種類と取り込みの成否</a></li>
+<li><a href="#sec-links">各詳細記事へのリンク</a></li>
+</ol>
+</div>
+<!-- ==========================================================
+         【1】なぜPDFからの取り込みが必要か
+      ========================================================== -->
+<section class="goal-section" id="sec-why">
+<h2><span class="icon">💡</span> なぜPDFからExcelへの取り込みが必要なのか</h2>
+<p>取引先から届く請求書、官公庁が公開する統計データ、社内システムから出力されるレポート &horbar; これらの多くはPDF形式で提供されます。PDF内の表データを手作業で転記するのは時間がかかるだけでなく、入力ミスの温床にもなります。PDFの表をExcelに正確に取り込む技術を持っていれば、月次の集計作業やデータ分析の前処理が劇的に効率化されます。</p>
+<p>しかしPDFは「印刷物の見た目を再現する」ためのフォーマットであり、内部にセル構造やデータ型の情報を持ちません。そのため取り込みには「PDFの文字列情報を解析して表の構造を推定する」というステップが必要で、完璧な変換は保証されません。この前提を理解した上で、現在使える2つの主要な方法を解説します。</p>
+</section>
+<!-- ==========================================================
+         【2】2つのアプローチ
+      ========================================================== -->
+<section class="method-section" id="sec-overview">
+<h2>【2】2つのアプローチ &horbar; 全体像</h2>
+<div class="card-row">
+<div class="method-card">
+<div class="mc-header word">方法① Word経由で変換（旧式）</div>
+<div class="mc-body">
+<span class="mc-tag old">Excel 2013〜 / Word 2013〜</span>
+<p>PDFをWordで開いて表に変換し、それをコピーしてExcelに貼り付ける方法です。Word 2013以降で搭載されたPDF読み込み機能を利用します。</p>
+<div class="flow-box">
+<div class="flow-step pdf">PDF</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-step word">Word</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-step excel">Excel</div>
+</div>
+<p>手軽に試せる反面、表の構造が崩れやすく、ページをまたぐ表の結合が手作業になるデメリットがあります。</p>
+</div>
+<a class="mc-link" href="article_pdf_word.html">&rarr; Word変換の詳細手順を見る</a>
+</div>
+<div class="method-card">
+<div class="mc-header pq">方法② パワークエリで取り込み（推奨）</div>
+<div class="mc-body">
+<span class="mc-tag new">PDFコネクタが利用できるWindows版Excel環境</span>
+<p>Excelの「データの取得」からPDFファイルを直接指定し、パワークエリエディターで表構造を整形する方法です。PDFコネクタが利用できる環境に限ります。Office 2019の買い切り版には搭載されていません。</p>
+<div class="flow-box">
+<div class="flow-step pdf">PDF</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-step pq">パワークエリ</div>
+<div class="flow-arrow">&rarr;</div>
+<div class="flow-step excel">Excel</div>
+</div>
+<p>複数テーブルの選択取得、自動更新、変換ステップの記録・再利用ができます。</p>
+</div>
+<a class="mc-link" href="article_pdf_powerquery_basic.html">&rarr; パワークエリ基本編を見る</a>
+</div>
+</div>
+</section>
+<!-- ==========================================================
+         【3】進化タイムライン
+      ========================================================== -->
+<section class="method-section" id="sec-timeline"><h2>【3】PDF取得の方式と対応条件</h2><p>WordのPDF読み込み、Power Query本体、PDFコネクタは別の機能です。機能が追加された時期から買い切り版の対応を推定せず、対象PCのメニューと公式対応表を確認します。</p><p>この記事はWindows版Microsoft 365で「データ → データの取得 → ファイルから → PDFから」が利用できる環境を中心に説明します。Power Query本体の搭載とPDFコネクタの搭載は別です。Office 2019の買い切り版にはPDFコネクタがありません。2021 / 2024などの買い切り版は版・エディションと実際のメニューを確認してください。<a href="https://support.microsoft.com/en-us/excel/power-query-data-sources-in-excel-versions" target="_blank" rel="noopener">Microsoft公式対応表</a></p></section>
+<!-- ==========================================================
+         【4】方法比較
+      ========================================================== -->
+<section class="method-section" id="sec-compare">
+<h2>【4】方法比較：Word変換 vs パワークエリ</h2>
+<table class="diff-table">
+<tr>
+<th style="width:22%"></th>
+<th style="width:39%">① Word経由で変換（旧式）</th>
+<th style="width:39%">② パワークエリ（推奨）</th>
+</tr>
+<tr>
+<td class="col-item">対応バージョン</td>
+<td>Excel 2013〜（Word 2013〜も必要）</td>
+<td>PDFコネクタが利用できるWindows版Excel環境</td>
+</tr>
+<tr>
+<td class="col-item">操作ステップ数</td>
+<td><span class="diff-ng">多い（PDF&rarr;Word&rarr;コピー&rarr;Excel&rarr;整形）</span></td>
+<td><span class="diff-ok">少ない（PDF&rarr;パワークエリ&rarr;Excel）</span></td>
+</tr>
+<tr>
+<td class="col-item">表の構造精度</td>
+<td><span class="diff-ng">中〜低（セル結合ズレが起きやすい）</span></td>
+<td><span class="diff-ok">中〜高（テーブル検出が優秀）</span></td>
+</tr>
+<tr>
+<td class="col-item">複数ページの表</td>
+<td><span class="diff-ng">手動で結合が必要</span></td>
+<td><span class="diff-ok">自動で結合可能</span></td>
+</tr>
+<tr>
+<td class="col-item">再利用・自動更新</td>
+<td><span class="diff-ng">不可（毎回手作業）</span></td>
+<td><span class="diff-ok">可（クエリを保存、更新ボタン一発）</span></td>
+</tr>
+<tr>
+<td class="col-item">複数テーブルの選択取得</td>
+<td><span class="diff-ng">困難（目視でコピー範囲を変える）</span></td>
+<td><span class="diff-ok">ナビゲーターで選択可能</span></td>
+</tr>
+<tr>
+<td class="col-item">変換ステップの記録</td>
+<td><span class="diff-ng">なし</span></td>
+<td><span class="diff-ok">M言語で自動記録・編集可能</span></td>
+</tr>
+<tr>
+<td class="col-item">必要なスキル</td>
+<td>Word・Excelの基本操作</td>
+<td>パワークエリの基本操作</td>
+</tr>
+<tr>
+<td class="col-item">画像PDF（スキャンPDF）</td>
+<td><span class="diff-ng">対応不可</span></td>
+<td><span class="diff-ng">対応不可（OCRが別途必要）</span></td>
+</tr>
+</table>
+</section>
+<!-- ==========================================================
+         【5】判断チャート
+      ========================================================== -->
+<section class="method-section" id="sec-judge">
+<h2>【5】どちらを使うべきか？ &horbar; 判断チャート</h2>
+<table class="judge-table">
+<tr>
+<th style="width:50%">質問</th>
+<th class="w-25">はい</th>
+<th class="w-25">いいえ</th>
+</tr>
+<tr>
+<td><strong>対象PCに「PDFから」のメニューがあり、PDFコネクタを利用できる？</strong></td>
+<td class="judge-yes">&rarr; パワークエリを使う</td>
+<td class="judge-no">&rarr; 次の質問へ</td>
+</tr>
+<tr>
+<td><strong>Excel 2016 を使っていて、パワークエリアドインを入れられる？</strong></td>
+<td class="judge-yes">&rarr; アドイン導入後パワークエリを使う</td>
+<td class="judge-no">&rarr; 次の質問へ</td>
+</tr>
+<tr>
+<td><strong>Word 2013 以降がインストールされている？</strong></td>
+<td style="background:#fff8e1;font-weight:700;color:#e65100">&rarr; Word変換を使う</td>
+<td class="judge-fallback">&rarr; サードパーティツールを検討</td>
+</tr>
+</table>
+<div class="xdemo-note-good">
+<strong>結論</strong><br>
+          PDFコネクタが利用でき、対象PDFから必要な表を抽出できる場合はPower Queryを試します。利用できない環境や表が崩れるPDFでは、Word変換や承認済みのOCRなどを比較してください。精度・所要時間は実際のPDFで確認します。
+        </div>
+</section>
+<!-- ==========================================================
+         【6】PDFの種類と取り込みの成否
+      ========================================================== -->
+<section class="method-section" id="sec-pdftype">
+<h2>【6】PDFの種類と取り込みの成否</h2>
+<p>PDFには大きく2種類あり、取り込みの成否に直結します。</p>
+<table class="diff-table">
+<tr>
+<th class="w-20"></th>
+<th style="width:40%">テキストPDF（デジタル生成）</th>
+<th style="width:40%">画像PDF（スキャン生成）</th>
+</tr>
+<tr>
+<td class="col-item">作り方</td>
+<td>Word・Excel・業務システムから「PDF保存」で生成</td>
+<td>紙の書類をスキャナーで読み取り</td>
+</tr>
+<tr>
+<td class="col-item">PDF内部の文字</td>
+<td><span class="diff-ok">テキストデータとして保持</span></td>
+<td><span class="diff-ng">画像の中にあり、文字として認識されない</span></td>
+</tr>
+<tr>
+<td class="col-item">Word変換</td>
+<td><span class="diff-ok">可能（精度は中程度）</span></td>
+<td><span class="diff-ng">不可（文字が取得できない）</span></td>
+</tr>
+<tr>
+<td class="col-item">パワークエリ</td>
+<td><span class="diff-ok">可能（精度は高い）</span></td>
+<td><span class="diff-ng">不可（テキスト情報がない）</span></td>
+</tr>
+<tr>
+<td class="col-item">対処法</td>
+<td>そのまま取り込み可能</td>
+<td>Adobe Acrobat等でOCR処理後に取り込む</td>
+</tr>
+</table>
+<div class="xdemo-note-warn">
+<strong>テキストPDFか画像PDFかの確認方法</strong><br>
+          PDFをAdobe Readerで開き、<kbd>Ctrl</kbd>+<kbd>A</kbd>（全選択）を実行してください。テキストが青くハイライトされればテキストPDF、何も選択されなければ画像PDFです。画像PDFの場合はWord・パワークエリのどちらも直接取り込みはできません。
+        </div>
+</section>
+<!-- ==========================================================
+         【7】各詳細記事へのリンク
+      ========================================================== -->
+<section class="method-section" id="sec-links">
+<h2>【7】各詳細記事へのリンク</h2>
+<div class="card-row">
+<div class="method-card">
+<div class="mc-header word">旧式：Word経由でPDF変換</div>
+<div class="mc-body">
+<p>Word 2013以降のPDF読み込み機能を使い、PDFの表をExcelに取り込む手順を詳細に解説。表が崩れた場合の修正テクニックも紹介します。</p>
+</div>
+<a class="mc-link" href="article_pdf_word.html">&rarr; 詳細手順を見る</a>
+</div>
+<div class="method-card">
+<div class="mc-header pq">パワークエリ基本編</div>
+<div class="mc-body">
+<p>PDFコネクタ利用環境で使えるパワークエリのPDFコネクタ。「データの取得」&rarr;「PDFから」の基本操作からテーブル選択・整形・読み込みまで。</p>
+</div>
+<a class="mc-link" href="article_pdf_powerquery_basic.html">&rarr; 基本編を見る</a>
+</div>
+<div class="method-card">
+<div class="mc-header pq">パワークエリ実践・進化編</div>
+<div class="mc-body">
+<p>複数テーブルの結合、ページまたぎの表、定期更新、M言語での高度な制御など、実務で役立つテクニック集。</p>
+</div>
+<a class="mc-link" href="article_pdf_powerquery_advanced.html">&rarr; 実践編を見る</a>
+</div>
+</div>
+</section>
+<p>パワークエリの基本操作は &rarr; <a href="article_pq_first_steps.html">GUIマスターシリーズ①〜⑥</a><br>応用操作は &rarr; <a href="../advanced/article_pq_merge_append.html">応用編⑦〜⑪</a></p>
+
+</article>
+</main>
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+<script src="../../script.js?v=20261101"></script>
+</body>
+</html>

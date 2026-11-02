@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatGPTをExcel・Googleスプレッドシートで使う：導入と比較｜Excel × No VBA Lab</title>
+<meta name="description" content="ChatGPT for ExcelとChatGPT for Google Sheetsの公式案内・導入手順・実践例。サブスクの使用量、Claudeとの違い、買い切り版Excelの確認事項を整理。2026年10月9日公式情報確認。">
+<meta name="difficulty" content="2">
+<link rel="canonical" href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/unlocked/article_chatgpt_excel.html">
+<meta property="og:title" content="ChatGPTをExcel・Googleスプレッドシートで使う：導入と比較">
+<meta property="og:description" content="既存のChatGPT契約をExcel・Googleスプレッドシートの作業にも活用。日本語の公式案内、導入手順、使用枠と対応環境を整理します。">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/unlocked/article_chatgpt_excel.html">
+<meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<link rel="icon" href="../favicon.ico">
+<link rel="stylesheet" href="../common.css?v=20261101">
+<link rel="stylesheet" href="../article.css?v=20261101">
+<link rel="stylesheet" href="ai-addins.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"ChatGPTをExcel・Googleスプレッドシートで使う：導入と比較","description":"ChatGPT for ExcelとGoogle Sheetsの公式案内、導入、実践例、使用量、Claudeとの比較。","dateModified":"2026-10-09","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"mainEntityOfPage":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/unlocked/article_chatgpt_excel.html"}</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限解除ラボ</span><span class="sub-main">AI・アドインが許可された環境でのExcel活用</span></p>
+</div></div></header>
+<main class="main-content article-layout" id="main-content">
+<nav class="breadcrumb" aria-label="パンくずリスト"><a href="../">ホーム</a><span>›</span><a href="./">制限解除ラボ</a><span>›</span><strong>ChatGPTとスプレッドシート</strong></nav>
+<article class="article-body ai-addin-article">
+<header class="article-header">
+<div class="article-meta"><span class="badge badge-all">Lv.2 ／ AI・アドイン利用許可が必要</span><span class="article-date">公式情報確認日：<time datetime="2026-10-09">2026年10月9日</time></span></div>
+<h1 class="article-title">ChatGPTをExcel・Googleスプレッドシートで使う<br>導入・サブスク・Claudeとの違い</h1>
+<p class="article-summary">普段使っているChatGPTを、ExcelやGoogleスプレッドシートの中で相談・編集する道具として使う方法です。表の作成、数式の説明、データの整理を、いつもの作業画面から依頼できます。</p>
+<p><strong><a href="https://chatgpt.com/ja-JP/apps/spreadsheets/">ChatGPT for Excel／Google Sheetsの公式案内・インストールはこちら</a></strong></p>
+</header>
+<aside class="ai-check-note"><strong>この記事の確認範囲</strong><p>公式文書を確認してまとめた導入ガイドです。各Excel版・Googleスプレッドシートでのインストールや、以下のAIへの依頼例の実行結果は未検証です。プラン・使用上限・表示名は変わるため、契約・導入前にリンク先と自分のアカウントを確認してください。</p></aside>
+<nav class="ai-contents" aria-label="この記事の目次"><strong>この記事でわかること</strong><ol>
+<li><a href="#features">何ができる？ 公式アドインの選び方</a></li>
+<li><a href="#setup">Excel・Googleスプレッドシートへの導入</a></li>
+<li><a href="#usage">サブスク内で使える範囲と使用量</a></li>
+<li><a href="#compatibility">Office 365以外でも使える？</a></li>
+<li><a href="#practice">Excel・Googleスプレッドシートで試す依頼例</a></li>
+<li><a href="#comparison">Claudeとの違いと使い分け</a></li>
+</ol></nav>
+<section id="features"><h2>1. 「答えを聞く」から「開いている表を一緒に整える」へ</h2>
+<p><strong>ChatGPT for Excel</strong>と<strong>ChatGPT for Google Sheets</strong>は、それぞれのスプレッドシート内にChatGPTのサイドバーを追加する公式機能です。表を作る、数式を説明・修正する、複数タブのデータを確認する、書式や項目を整えるといった作業を依頼できます。<a href="https://chatgpt.com/ja-JP/apps/spreadsheets/">日本語の公式紹介ページ</a></p>
+<p><strong>提供元が「OpenAI, LLC」であることを確認してください。</strong>名前に「GPT」「ChatGPT」が入った別会社のアドインもあります。第三者製品の料金やAPI利用料まで、ChatGPTのサブスクに含まれるとは限りません。</p>
+<p>Excel用アドインとGoogleスプレッドシート用アドオンは、それぞれの環境に導入します。片方をインストールすれば両方に追加されるわけではありません。ChatGPTの通常チャットにファイルを添付する使い方とも入口が異なります。<a href="https://help.openai.com/en/articles/20001063-chatgpt-for-excel-and-google-sheets">公式ヘルプの機能説明</a></p>
+</section>
+<section id="setup"><h2>2. Excel・Googleスプレッドシートへの導入</h2>
+<p>まず<a href="https://chatgpt.com/ja-JP/apps/spreadsheets/">公式案内ページ</a>を開き、使いたい環境のインストールボタンを選びます。ExcelはMicrosoft Marketplace、GoogleスプレッドシートはGoogle Workspace Marketplaceへ進みます。</p>
+<h3>Excelで使う</h3>
+<ol><li>編集してよい練習用ブックを用意し、Excelを開きます。</li>
+<li>公式案内の［ChatGPT for Excelをインストール］から追加します。Excelの［ホーム］→［アドイン］で検索する場合も、提供元がOpenAIであることを確認します。</li>
+<li>アドインを開き、利用するChatGPTアカウントでサインインします。</li>
+<li>最初は「このシートの構成を説明してください。まだ変更しないでください」と依頼し、対象ブックが合っているか確認します。</li></ol>
+<h3 id="google-sheets">Googleスプレッドシートで使う</h3>
+<ol><li>公式案内の［ChatGPT for Google Sheetsをインストール］から、<a href="https://workspace.google.com/marketplace/app/chatgpt/870214997678">公式のGoogle Workspace Marketplace掲載ページ</a>へ進みます。</li><li>Googleアカウントでアドオンをインストールし、練習用のGoogleスプレッドシートを開きます。シート側では［拡張機能］→［アドオン］→［アドオンを取得］から探す方法もあります。</li><li>［拡張機能］メニューからChatGPTを開き、利用するChatGPTアカウントでサインインします。</li><li>最初は表の説明を依頼し、その後に作成・編集を進めます。</li></ol>
+<p>導入の詳細は<a href="https://help.openai.com/en/articles/20001063-chatgpt-for-excel-and-google-sheets">公式ヘルプ</a>でも確認できます。会社・学校のアカウントでは、管理者によるアドイン／アドオンの許可設定が必要な場合があります。</p>
+</section>
+<section id="usage"><h2>3. サブスク内で使える。ただし無制限・完全な別枠ではない</h2>
+<p><strong>Plus／Proでは、プランに含まれる使用枠でExcel・Googleスプレッドシートの公式機能を利用できます。</strong>既に契約している人が、手持ちのChatGPT契約を表計算の作業にも活用できる点は便利です。Free／Goにも制限付きの提供があります。ExcelやGoogleスプレッドシート自体の利用条件は別に確認します。<a href="https://help.openai.com/en/articles/20001063-chatgpt-for-excel-and-google-sheets">公式の提供プラン・使用量</a></p>
+<div class="ai-check-note"><strong>2026年10月9日確認：「GPTは別枠」をどう読むか</strong>
+<p>公式料金資料では、Plus／ProのChatGPT for Excelは<strong>Codexなどのエージェント機能と使用枠を共有</strong>します。「Excel専用の独立した枠が、Codexとは別に増える」という意味ではありません。通常チャットのモデル別上限と、Excel／Codex等のエージェント使用枠を混同せず、利用状況画面で確認しましょう。<a href="https://learn.chatgpt.com/docs/pricing">OpenAI公式料金資料</a></p></div>
+<p>含まれる枠を使い切った後に追加クレジットを利用すれば、別料金が発生します。サブスクの範囲内に収めたい場合は、残量・追加購入・自動補充の設定を確認し、上限に達したら回復を待つ使い方にします。ChatGPTの追加クレジットとAPIの支払いは同じものではありません。<a href="https://help.openai.com/en/articles/12642688-using-credits-for-flexible-usage-in-chatgpt-personal-plans">追加クレジットの公式説明</a></p>
+</section>
+<section id="compatibility"><h2>4. Office 365以外でも使える？ 対応環境の確認</h2>
+<p>ここではOffice 365と呼ばれることのある<strong>Microsoft 365版Excel</strong>と、買い切り版を分けます。AIのサブスクを持っていることと、そのExcelでアドインが動くことは別の条件です。</p>
+<div class="table-wrapper ai-table-wrap" role="region" aria-label="Excelの対応環境の比較" tabindex="0"><table class="compare-table"><caption>公式資料で確認できた範囲（2026年10月9日）</caption><thead><tr><th scope="col">Excel環境</th><th scope="col">ChatGPT</th><th scope="col">Claude</th></tr></thead><tbody>
+<tr><th scope="row">Excel for the web</th><td>公式導入案内あり</td><td>対応を明記</td></tr>
+<tr><th scope="row">Windows・Microsoft 365</th><td>デスクトップExcelの導入案内あり。更新状況・管理者設定も確認</td><td>ビルド16.0.13127.20296以降を明記</td></tr>
+<tr><th scope="row">Windows・買い切り2016／2019</th><td>今回確認した公式ヘルプでは、版別の対応保証を確認できず</td><td>買い切り・ボリュームライセンス版は非対応と明記</td></tr>
+<tr><th scope="row">Windows・買い切り2021／2024</th><td>今回の資料では対応を確定できず。導入前の確認が必要</td><td>Windowsの対応条件はMicrosoft 365契約。買い切り版を対応扱いにしない</td></tr>
+<tr><th scope="row">Mac</th><td>今回の資料では最低バージョンを確定できず</td><td>16.46以降・ビルド21011600以降を明記。Windowsの契約条件をそのまま当てはめない</td></tr>
+</tbody></table></div>
+<p>出典：<a href="https://help.openai.com/en/articles/20001063-chatgpt-for-excel-and-google-sheets">ChatGPT公式導入条件</a>、<a href="https://claude.com/docs/office-agents/excel">Claude公式のSupported versions／Unsupported versions</a>。</p>
+<p><strong>現時点で「GPTなら買い切り版でも確実、Claudeだけ不可」とは結論付けません。</strong>ストアに製品名が出ることだけでなく、手元のExcelの製品名・OS・バージョン／ビルドを確認し、サインイン、セルの読み取り、練習用セルへの書き込みまで確認する必要があります。本記事ではこの実機確認は未実施です。</p>
+<p>アドインが動かなくても、チャットで式を相談して手動で入力する方法は区別できます。生成した.xlsxを開けることも、アドインの対応証明にはなりません。使える関数は出力先Excelの版に合わせます。</p>
+<h3>Microsoft 365を使っていない場合の選択肢</h3>
+<p><strong>Googleスプレッドシートで使う場合、Microsoft 365の契約は必要ありません。</strong>Googleアカウントと利用可能なChatGPTアカウント、アドオンの導入条件を確認して利用します。これは買い切り版Excelのアドイン対応とは別の選択肢です。<a href="https://chatgpt.com/ja-JP/apps/spreadsheets/">公式案内のGoogle Sheets導入方法</a></p>
+</section>
+<section id="practice"><h2>5. Excel・Googleスプレッドシートで試す依頼例</h2>
+<p>以下は当サイトが用意した練習案です。架空のデータを新規ブックのA1:C4に入力します。アドインでの実行結果を保証するサンプルではなく、答えを人が確かめやすい小さな課題です。</p>
+<div class="table-wrapper ai-table-wrap" role="region" aria-label="練習データ" tabindex="0"><table class="compare-table"><thead><tr><th scope="col">店舗</th><th scope="col">数量</th><th scope="col">単価</th></tr></thead><tbody><tr><td>東店</td><td>2</td><td>1200</td></tr><tr><td>西店</td><td>3</td><td>500</td></tr><tr><td>東店</td><td>1</td><td>1200</td></tr></tbody></table></div>
+<h3>まず変更案を確認する</h3>
+<pre class="code-readonly"><code>A1:C4の練習データを確認してください。
+D列に「金額」を作り、数量×単価を数式で計算したいです。
+さらにF列以降にSUMIFSを使った店舗別の集計表を作りたいです。
+入力済みのA:C列は変更しないでください。
+Excel 2019でも使える関数で、まず変更予定のセルと式を説明してください。
+まだ編集はしないでください。</code></pre>
+<p>説明を確認してから編集を依頼します。人が照合する答えは、明細が<strong>2400・1500・1200</strong>、東店<strong>3600</strong>、西店<strong>1500</strong>、総額<strong>5100</strong>です。単価を1つ変え、値の貼り付けではなく数式で再計算されるかも確認しましょう。</p>
+<p>対応する本編：<a href="../functions/old/article_countifs_sumifs.html">COUNTIFS・SUMIFS：複数条件の件数と合計</a>。AI・アドインが使えない環境では、この記事の手順を自分で入力して試せます。</p>
+<h3>Googleスプレッドシートで同じ小さな課題を試す</h3>
+<p>GoogleスプレッドシートのA1:C4にも上のデータを入力し、ChatGPTのサイドバーから次のように依頼できます。作業環境を指定して、Googleスプレッドシート用の式を提案してもらいます。</p>
+<pre class="code-readonly"><code>このGoogleスプレッドシートのA1:C4を確認してください。
+D列に数量×単価を数式で計算し、F列以降に店舗別の集計表を作りたいです。
+入力済みのA:C列は変更しないでください。
+Googleスプレッドシートで使える式で、変更予定のセルと計算方法を説明してください。
+まだ編集はしないでください。</code></pre>
+<p>照合する金額はExcelの例と同じです。編集後は、明細・店舗別合計・全体の合計と、入力を変えたときの再計算を確認します。Excel向け記事の機能や操作手順が、すべてGoogleスプレッドシートでも同じという意味ではありません。</p>
+<h3>応用：既存の式を説明してもらう</h3>
+<p><a href="../functions/latest/article_xlookup_basic.html">XLOOKUP基本編</a>の式を試した後、「検索キーが空欄・未登録・重複の場合を説明し、検証用データを提案してください。まだ式は変更しないでください」と依頼します。正しそうな説明だけでなく、実際のセルの結果と照合するのがポイントです。</p>
+</section>
+<section id="comparison"><h2>6. Claudeとの違い：どちらも便利、契約と運用で選ぶ</h2>
+<div class="table-wrapper ai-table-wrap" role="region" aria-label="ChatGPTとClaudeの比較" tabindex="0"><table class="compare-table"><thead><tr><th scope="col">比較点</th><th scope="col">ChatGPT for Excel／Google Sheets</th><th scope="col">Claude for Excel</th></tr></thead><tbody>
+<tr><th scope="row">既存契約の活用</th><td>Plus／Proの含まれる使用枠で利用。Free／Goも限定利用あり</td><td>Pro／Max／Team／Enterpriseが対象</td></tr>
+<tr><th scope="row">使用量の共有</th><td>Plus／ProはCodex・ChatGPT Work等のエージェント枠を共有</td><td>Claudeアカウントの枠を共有。チャット・Claude Code等も同じ上限に計上</td></tr>
+<tr><th scope="row">活用の入口</th><td>Excel・Googleスプレッドシート内で表作成・編集・数式説明。Codexから開いたExcelに接続する方法はExcel向け</td><td>セル参照をたどる説明や既存ブックの修正。Microsoft 365アプリ間の連携もある</td></tr>
+<tr><th scope="row">共通の注意</th><td colspan="2">AI出力の確認が必要。サブスク内の利用は無制限ではなく、Excelの利用権や組織の許可も別途必要</td></tr>
+</tbody></table></div>
+<p>出典：<a href="https://learn.chatgpt.com/docs/pricing">OpenAI料金資料</a>、<a href="https://help.openai.com/en/articles/20001063-chatgpt-for-excel-and-google-sheets">ChatGPT公式ヘルプ</a>、<a href="https://claude.com/docs/office-agents/excel">Claude公式ガイド</a>、<a href="https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work">Claudeの使用量の説明</a>。</p>
+<p>当サイトの提案は、まず既に契約している方で同じ小さな課題を試すことです。両方持っている場合も、速度や正確さを先に決め付けず、結果・直しやすさ・使用量を比較しましょう。Claude Codeをよく使う日はClaude側の残量に、Codexをよく使う日はChatGPT側のエージェント枠に注意します。</p>
+<p><a href="article_claude_excel.html">次の記事：Claude in Excelの導入と、式の参照関係を確かめる実践例</a></p>
+</section>
+<section id="safety"><h2>7. 業務に使う前の確認</h2>
+<ul><li>両サービスともオンラインAIです。社外送信が許可されたデータだけを使い、個人情報・機密情報は練習用データへ置き換えます。</li><li>原本を複製し、変更セル・数式・合計・エラーを確認してから採用します。</li><li>通常のChatGPT履歴とアドインの会話は別です。履歴の分離と使用量の分離は別の話です。</li><li>VBA・マクロ等の高度な機能は完全対応と考えず、対象機能の制約を確認します。</li></ul>
+<p>公式の制約・データ取扱い：<a href="https://chatgpt.com/ja-JP/apps/spreadsheets/">日本語の公式案内・よくある質問</a>、<a href="https://help.openai.com/en/articles/20001063-chatgpt-for-excel-and-google-sheets">Excel／Google Sheets公式ヘルプ</a>。このページの契約・対応環境の記述は確認日時点のものです。</p>
+</section>
+<section><h2>次に試す：AI × Excelの実践記事</h2><ul class="related-articles"><li><a href="ai/">AI × Excel活用ラボ：テーマから選ぶ</a></li><li><a href="article_ai_excel_formulas.html">AIに数式を相談する：条件の伝え方とSUMIFS実践</a></li><li><a href="article_ai_excel_cleanup.html">表記ゆれ・空欄・先頭ゼロを整理する</a></li><li><a href="article_ai_excel_review.html">AIの結果を検算する：件数・総額・条件の確認</a></li><li><a href="article_claude_excel.html">Claude in Excel：できること・使用量・対応環境</a></li><li><a href="../functions/old/article_countifs_sumifs.html">AIなしでも試せるSUMIFSの基本</a></li></ul></section>
+</article></main>
+<footer class="site-footer"><p>© Excel × No VBA Lab</p><p>本記事は公式資料に基づく導入ガイドです。製品ごとの対応条件と社内ルールを確認してください。</p><p class="site-footer-legal-links"><a href="../about.html">運営者情報</a><span>|</span><a href="../disclaimer.html">免責事項</a><span>|</span><a href="../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../script.js?v=20261101"></script>
+</body></html>

@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>現場実務ラボ総合ガイド｜速度改善・印刷自動化・操作UI改善を実務最適化｜Excel × No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta name="description" content="「現場の細かな手作業が積み重なっている」を実務改善テクニックの体系学習で解決。設定手順に加え、失敗しやすいポイント、エラー時の直し方、運用で詰まりやすい場面まで整理し、Excel 2016以降の実務環境・VBA不要環境でも実務でそのまま使える形で解説します。">
+<meta name="theme-color" content="#1a3d5c">
+<link rel="canonical" href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/">
+<meta property="og:title" content="現場実務ラボ総合ガイド｜速度改善・印刷自動化・操作UI改善を実務最適化｜Excel × No VBA Lab">
+<meta property="og:description" content="重いブックが止まる、印刷設定に時間がかかる、入力UIが使いにくい。現場実務ラボは、速度改善・印刷自動化・UI改善の実戦テクニックをまとめた総合ページです。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/">
+<meta property="og:site_name" content="Excel × No VBA Lab">
+<meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="現場実務ラボ総合ガイド｜速度改善・印刷自動化・操作UI改善を実務最適化｜Excel × No VBA Lab">
+<meta name="twitter:description" content="重いブックが止まる、印刷設定に時間がかかる、入力UIが使いにくい。現場実務ラボは、速度改善・印刷自動化・UI改善の実戦テクニックをまとめた総合ページです。">
+<meta name="twitter:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="../common.css?v=20261101">
+<link rel="stylesheet" href="../index.css?v=20261101">
+<link rel="stylesheet" href="../article.css?v=20261101">
+<script>
+  window.ExcelLab = window.ExcelLab || {};
+  window.ExcelLab.rareTech = {
+    "cobol_irregular": { rarity: 1000 },
+    "cobol_expert": { rarity: 1000 },
+    "qr_hardware": { rarity: 1000 },
+    "qr_series": { rarity: 1000 },
+    "cobol_pq_midb": { rarity: 300 },
+    "print_area": { rarity: 300 },
+    "zip_reverse": { rarity: 300 },
+    "shape_circle": { rarity: 200 },
+    "filter_alt": { rarity: 200 },
+    "m_language": { rarity: 200 },
+    "cobol_advanced": { rarity: 200 },
+    "speed_formula": { rarity: 200 },
+    "speed_lookup": { rarity: 200 },
+    "pq_parameter": { rarity: 200 },
+    "volatile": { rarity: 100 },
+    "label_scrap": { rarity: 100 },
+    "qr_generate": { rarity: 100 },
+    "choosecols": { rarity: 50 }
+  };
+  window.RARETECH_CONFIG = window.ExcelLab.rareTech;
+</script>
+<script type="application/ld+json">
+{
+    "@context":  "https://schema.org",
+    "@type":  "CollectionPage",
+    "name":  "現場実務ラボ",
+    "description":  "重いブックが止まる、印刷設定に時間がかかる、入力UIが使いにくい。現場実務ラボは、速度改善・印刷自動化・UI改善の実戦テクニックをまとめた総合ページです。",
+    "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/",
+    "inLanguage":  "ja",
+    "isPartOf":  {
+                     "@type":  "WebSite",
+                     "name":  "Excel × No VBA Lab",
+                     "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"
+                 },
+    "hasPart":  [
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "検索関数の速度と参照範囲",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/speed/article_01_lookup_speed.html",
+                        "position":  1
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Excelが遅い本当の原因 — メモリスワップと数式設計の関係",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/speed/article_memory_swap.html",
+                        "position":  2
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "VBAなしで印刷範囲を自動で伸縮させる方法（名前の管理）",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_print_area.html",
+                        "position":  3
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Excel 10面ラベル印刷 — Print_Area数式で空白シールを自動除外",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_label_print.html",
+                        "position":  4
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "FILTER関数とリンク図で候補を確認し、連番だけで封筒ラベル印刷する方法",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_linked_picture_filter_serial_label.html",
+                        "position":  5
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Word差し込み印刷で宛名ラベルを作る基本手順",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_label_basic.html",
+                        "position":  6
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Excel VBA・Excel数式・Word差し込み印刷の使い分け",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_method_comparison.html",
+                        "position":  7
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Word差し込み印刷で失敗しにくいExcel住所録の作り方",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_excel_source_design.html",
+                        "position":  8
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Word差し込み印刷で郵便番号にハイフンを入れる方法",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_postal_code.html",
+                        "position":  9
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Word差し込み印刷で長い住所・会社名を枠内で折り返す方法",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_textbox_wrap.html",
+                        "position":  10
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Word差し込み印刷で日付・金額・数値の表示崩れを直す方法",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_number_format.html",
+                        "position":  11
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Wordラベル差し込みで全ラベルが同じ宛名になる原因と直し方",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_label_next_record.html",
+                        "position":  12
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Word差し込み印刷でQRコードを差し込む方法",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_qrcode.html",
+                        "position":  13
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "開発タブ\u0026フォームコントロール",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_form_controls.html",
+                        "position":  14
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Excelで最終行・次の空き行へジャンプする方法｜HYPERLINK関数でVBA不要",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_hyperlink_jump_last_row.html",
+                        "position":  15
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Excelで入力欄だけ範囲選択して初期化する方法｜数式を消さずDelete",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_select_input_range.html",
+                        "position":  16
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Windows 11 スニッピングツールで画面録画する方法",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_snipping_tool_video.html",
+                        "position":  17
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Windows 10で画面録画する方法の比較（PowerPoint・Game Bar・スニッピングツール）",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_screen_record_win10.html",
+                        "position":  18
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "PowerPointの画面録画で操作マニュアル動画を作る",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/office/article_ppt_screen_recording.html",
+                        "position":  19
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "PowerPointの「スライドショーの記録」でナレーション付き動画にする",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/office/article_ppt_record_slideshow_video.html",
+                        "position":  20
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Wordの「置換」でVBAなしに一括整形する（特殊文字・ワイルドカード）",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_word_wildcard_replace.html",
+                        "position":  21
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Wordの「文書の比較」で修正箇所をすぐ見つける",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_word_compare.html",
+                        "position":  22
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Excelの表をWordへ貼る3つの方法（貼り付け／リンク貼り付け／オブジェクト）",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_excel_to_word_paste.html",
+                        "position":  23
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "Microsoft 365に移行したときの数式チェックリスト（#SPILL!・@記号・旧版との共有）",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_m365_migration_formula_checklist.html",
+                        "position":  24
+                    },
+                    {
+                        "@type":  "CreativeWork",
+                        "name":  "「マクロの実行がブロックされました」と表示されたとき",
+                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_macro_blocked.html",
+                        "position":  25
+                    },
+    {"@type": "CreativeWork", "position": 26, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_directory_finish.html", "name": "Wordの名簿差し込みを完成させる手順：レターとの違いと全員分の出力"},
+    {"@type": "CreativeWork", "position": 27, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_letter_vs_directory.html", "name": "Word差し込み印刷の「レター」と「名簿」の違いと使い分け（ラベル・封筒・はがきも）"},
+    {"@type": "CreativeWork", "position": 28, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_letter_filter_print.html", "name": "Word差し込み印刷（レター）の流れ：Excel名簿をつないで、絞り込んで、印刷するまで"},
+    {"@type": "CreativeWork", "position": 29, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_filter_two_patterns.html", "name": "Word差し込み印刷で必要な人だけ印刷する2つの方法：Word側で絞り込む／Excel側で対象者の表を作る"},
+    {"@type": "CreativeWork", "position": 30, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_cover_letter_per_company.html", "name": "Word差し込み印刷で会社ごとに1枚の送付状を作る方法"},
+    {"@type": "CreativeWork", "position": 31, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_print_titles_page_break.html", "name": "Excelで2ページ目以降にも見出しを印刷する方法（印刷タイトルと改ページプレビュー）"},
+    {"@type": "CreativeWork", "position": 32, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_compare_two_lists.html", "name": "Excelで2つの名簿を比較し、追加・削除・変更された人を見つける"},
+    {"@type": "CreativeWork", "position": 33, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_csv_leading_zero.html", "name": "CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方"},
+    {"@type": "CreativeWork", "position": 34, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_text_numbers_fix.html", "name": "Excelの数字が文字列になって計算・検索できないときの直し方"},
+    {"@type": "CreativeWork", "position": 35, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_input_validation_sheet_protection.html", "name": "Excelで入力欄だけ編集できるようにする：入力規則とシート保護"},
+    {"@type": "CreativeWork", "position": 36, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_envelope_naga3.html", "name": "Word差し込み印刷で長形3号の封筒に縦書きで宛名を入れる方法"},
+    {"@type": "CreativeWork", "position": 37, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_hagaki_atena.html", "name": "Wordのはがき宛名面印刷：Excel住所録から縦書き・漢数字・連名で作る方法"},
+    {"@type": "CreativeWork", "position": 38, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_multiple_records_per_page.html", "name": "Word差し込み印刷で1枚に複数人分を並べる方法：3人ずつ・4人ずつ・表・一覧"},
+    {"@type": "CreativeWork", "position": 39, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_renmei_label.html", "name": "Word差し込み印刷で同じ会社の2人目・3人目を1枚のラベルに入れる方法（連名ラベル）"}
+                 ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context":  "https://schema.org",
+    "@type":  "BreadcrumbList",
+    "itemListElement":  [
+                            {
+                                "@type":  "ListItem",
+                                "position":  1,
+                                "name":  "ホーム",
+                                "item":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"
+                            },
+                            {
+                                "@type":  "ListItem",
+                                "position":  2,
+                                "name":  "現場実務ラボ",
+                                "item":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"
+                            }
+                        ]
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context":  "https://schema.org",
+    "@type":  "FAQPage",
+    "mainEntity":  [
+                       {
+                           "@type":  "Question",
+                           "name":  "最初に着手すべき改善は何ですか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "効果が大きいのは速度と印刷です。まず処理時間削減、次に出力手順の標準化を行うと現場負荷が下がります。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "速度改善は関数だけで十分ですか？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "多くは関数設計で改善しますが、データ量が大きい場合はPower Queryや設計分割も併用します。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "印刷業務の属人化を防ぐには？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "印刷範囲・開始位置・ラベル位置のルール化と、テンプレート化が有効です。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "UI改善はVBAなしでも可能？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "はい。フォームコントロール、名前定義、図形連動だけでも操作性は大きく改善できます。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "「日常時短・表示整形」の記事の使い方は？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "日常業務の詰まりポイント別に参照し、チーム標準として手順化する運用が効果的です。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "CSVの0が消えるのを防ぐには？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "CSVをダブルクリックで開かず、「データ」→「テキストまたはCSVから」で取り込み、番号の列をテキストにします。"
+                                              }
+                       },
+                       {
+                           "@type":  "Question",
+                           "name":  "録画ソフトを入れられないときは？",
+                           "acceptedAnswer":  {
+                                                  "@type":  "Answer",
+                                                  "text":  "PowerPointの画面録画や、Windows 11のスニッピング ツールなど、追加インストールのいらない方法があります。"
+                                              }
+                       }
+                   ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span><span class="sub-main">カテゴリ総合ランディングページ</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content" id="main-content">
+  <nav aria-label="パンくずリスト">
+    <div class="breadcrumb">
+      <a href="../">ホーム</a><span>&gt;</span><strong>現場実務ラボ</strong>
+    </div>
+  </nav>
+
+  <section class="method-section">
+    <h1>現場実務ラボ 総合ガイド</h1>
+    <p class="article-summary">日々の運用負荷を下げるための速度・印刷・UI改善ノウハウを、現場視点でまとめています。</p>
+  </section>
+
+  <section class="method-section">
+    <h2><span class="icon">🧩</span> 読者の課題</h2>
+    <ul class="philosophy-list">
+      <li>ブックが重くて再計算待ちが長い。</li>
+      <li>印刷範囲・ラベル印刷設定が毎回手作業。</li>
+      <li>入力UIが分かりづらく操作ミスが起きる。</li>
+      <li>小技が属人化して引き継げない。</li>
+      <li>取り込んだデータの0が消える・計算できない／操作手順を動画で引き継ぎたい。</li>
+    </ul>
+  </section>
+
+  <section class="method-section">
+    <h2><span class="icon">✅</span> このカテゴリで解決できること</h2>
+    <ul class="philosophy-list">
+      <li>関数設計とメモリ観点の速度最適化。</li>
+      <li>印刷範囲・ラベル・帳票出力の標準化。</li>
+      <li>フォーム/図形を使った入力補助UIの改善。</li>
+      <li>現場時短テクニックをカテゴリ別に整理。</li>
+      <li>データの型の整理と名簿の照合、標準機能だけで手順を動画にする方法。</li>
+    </ul>
+  </section>
+
+
+  <div class="category-hero hero-overlay hero-others-lab">
+    <picture>
+      <source media="(max-width: 600px)" type="image/avif" srcset="../image/hero_others_lab_main-480.avif 480w, ../image/hero_others_lab_main-768.avif 768w" sizes="100vw">
+      <source type="image/avif" srcset="../image/hero_others_lab_main-768.avif 768w, ../image/hero_others_lab_main-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <source media="(max-width: 600px)" type="image/webp" srcset="../image/hero_others_lab_main-480.webp 480w, ../image/hero_others_lab_main-768.webp 768w" sizes="100vw">
+      <source type="image/webp" srcset="../image/hero_others_lab_main-768.webp 768w, ../image/hero_others_lab_main-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <img alt="現場実務ラボ 活用テクニック特集" decoding="async" height="576" loading="lazy" src="../image/hero_others_lab_main.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Practical Excel Lab</div>
+      <div class="hero-copy-title">現場実務ラボ</div>
+      <div class="hero-copy-sub">印刷・速度・UIまで、日々の手間を減らす。</div>
+    </div>
+  </div>
+
+  <div class="category-header">
+    <h2>🛠 現場実務ラボ</h2>
+    <p>
+      印刷・ラベル・フォーム操作・表示形式・速度改善など、
+      関数・パワークエリ・COBOL・QRの枠に収まりきらない
+      「現場で本当に効く」実務改善テクニックをまとめています。
+      VBAなしで毎日の面倒な作業を減らすための横断ラボです。
+    </p>
+  </div>
+
+  <h3 class="subcategory-heading">🆕 新着記事</h3>
+  <ul class="article-list">
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="../others/data/article_compare_two_lists.html">Excelで2つの名簿を比較し、追加・削除・変更された人を見つける</a>
+      <p class="article-summary">前月と今月の名簿をCOUNTIFとINDEX＋MATCH（XLOOKUP）で照合し、追加・削除・変更を自動判定。変わったセルは条件付き書式で色付け。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="../others/data/article_csv_leading_zero.html">CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方</a>
+      <p class="article-summary">郵便番号・社員番号・16桁以上の管理番号を守る取り込み方。「テキストまたはCSVから」で列をテキストにする手順と、消えたゼロの戻し方。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="../others/data/article_text_numbers_fix.html">Excelの数字が文字列になって計算・検索できないときの直し方</a>
+      <p class="article-summary">SUMが0、VLOOKUPが#N/Aになる原因を見分け、数値に変換・乗算の貼り付け・区切り位置・VALUE/ASC関数で原因別に直す方法。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="../others/ui/article_input_validation_sheet_protection.html">Excelで入力欄だけ編集できるようにする：入力規則とシート保護</a>
+      <p class="article-summary">入力欄のロック解除、リスト・日付・桁数と重複チェックの入力規則、Tabで入力欄だけ移動するシート保護。配布用ファイルの作り方。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="../others/misc/article_screen_record_win10.html">Windows 10で画面録画する方法の比較（PowerPoint・Game Bar・スニッピングツール）</a>
+      <p class="article-summary">Windows 10ならPowerPointの画面録画が手軽。追加インストールなしで使える4つの方法を、範囲指定・デスクトップ録画・音声・保存形式で比較します。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/office/article_ppt_screen_recording.html">PowerPointの画面録画で操作マニュアル動画を作る</a>
+      <p class="article-summary">挿入 → 画面録画で範囲を選んで録画し、MP4で保存。Excel手順の引き継ぎやQRリーダー設定の共有に。録画ボタンがない・音が入らないときの確認も。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/office/article_ppt_record_slideshow_video.html">PowerPointの「スライドショーの記録」でナレーション付き動画にする</a>
+      <p class="article-summary">スライドを進めながら話した声を記録し、「ビデオのエクスポート」でMP4に。社内研修・Excel勉強会の資料づくりに使えます。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/word/article_word_wildcard_replace.html">Wordの「置換」でVBAなしに一括整形する（特殊文字・ワイルドカード）</a>
+      <p class="article-summary">通常の置換を1件ずつ試してから一括整形。ワイルドカードは難易度高の応用編です。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/word/article_word_compare.html">Wordの「文書の比較」で修正箇所をすぐ見つける</a>
+      <p class="article-summary">変更前後の2文書を比較し、変更履歴を確認して別名で保存します。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/word/article_excel_to_word_paste.html">Excelの表をWordへ貼る3つの方法（貼り付け／リンク貼り付け／オブジェクト）</a>
+      <p class="article-summary">まずは通常のWordの表として貼り、更新が必要な場合だけリンクや埋め込みを選びます。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/misc/article_m365_migration_formula_checklist.html">Microsoft 365に移行したときの数式チェックリスト（#SPILL!・@記号・旧版との共有）</a>
+      <p class="article-summary">Office 2016／2019・2021のサポート終了を受けた移行時の確認点。#SPILL!、数式に付く@、古い版の人と共有するときの新しい関数の注意。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/misc/article_macro_blocked.html">「マクロの実行がブロックされました」と表示されたとき</a>
+      <p class="article-summary">表示の意味と、Microsoft公式の案内にある対応だけを紹介。マクロを許可してよいかは、必ず社内規程を確認してください。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../others/misc/article_snipping_tool_video.html">Windows 11 スニッピングツールで画面録画する方法</a>
+      <p class="article-summary">追加インストール不可の職場でも使いやすい、Windows標準の画面録画。フリーソフト導入やウイルス不安を増やさず手順共有できます。</p>
+    </li></ul>
+
+  <p class="level-scale-note">※ Lvは一般的なExcel技能の共通基準ではなく、操作手順から設計・検証記事までを含むこのカテゴリ内の相対的な目安です。</p>
+  <div class="level-legend">
+    <div class="legend-row-levels">
+      <span class="level-legend-item"><span class="lv-dot lv-dot-1"></span>Lv.1 入門</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-2"></span>Lv.2 やさしい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-3"></span>Lv.3 ふつう</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-4"></span>Lv.4 やや難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-5"></span>Lv.5 難しい</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-6"></span>Lv.6 かなり難</span>
+      <span class="level-legend-item"><span class="lv-dot lv-dot-7"></span>仕組みを解説</span>
+    </div>
+
+    <div class="legend-row-tags">
+      <span class="legend-tag-desc"><span class="tag-impact">🔥 即戦力</span><span class="tag-desc-text">実務効果が大きい</span></span>
+      <span class="legend-tag-desc"><span class="tag-impact">🔥 ミス防止</span><span class="tag-desc-text">入力・照合ミスを減らす</span></span>
+      <span class="legend-tag-desc"><span class="tag-important">⚠ 重要</span><span class="tag-desc-text">見落とすと崩れやすい</span></span>
+      <span class="legend-tag-desc"><span class="tag-rare">💎 応用例</span><span class="tag-desc-text">複数の機能を組み合わせる例</span></span>
+    </div>
+  </div>
+
+  <h3 class="subcategory-heading">🚀 限界突破の計算速度</h3>
+
+  <div class="category-hero hero-overlay hero-small hero-others-speed margin-y-16-24 max-width-800">
+    <picture>
+      <source media="(max-width: 600px)" type="image/avif" srcset="../image/hero_others_speed_clean-480.avif 480w, ../image/hero_others_speed_clean-768.avif 768w" sizes="100vw">
+      <source type="image/avif" srcset="../image/hero_others_speed_clean-768.avif 768w, ../image/hero_others_speed_clean-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <source media="(max-width: 600px)" type="image/webp" srcset="../image/hero_others_speed_clean-480.webp 480w, ../image/hero_others_speed_clean-768.webp 768w" sizes="100vw">
+      <source type="image/webp" srcset="../image/hero_others_speed_clean-768.webp 768w, ../image/hero_others_speed_clean-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <img alt="Excel Speed Lab 業務高速化" decoding="async" height="576" loading="lazy" src="../image/hero_others_speed_clean.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Performance</div>
+      <div class="hero-copy-title">Excel Speed Lab</div>
+      <div class="hero-copy-sub">重いブックを、数式設計から軽くする。</div>
+    </div>
+  </div>
+
+  <p class="text-desc">
+    VLOOKUPをINDEX+MATCHに変えても遅いまま？本当の原因はメモリスワップにあるかもしれません。
+    検索関数の選び方から数式の高速化テクニックまで、Excelの処理速度を見直すノウハウです。
+  </p>
+
+  <ul class="article-list" id="list-others-speed">
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../others/speed/article_memory_swap.html">Excelが遅い本当の原因 — メモリスワップと数式設計の関係</a>
+      <p class="article-summary">VLOOKUPをINDEX+MATCHに変えても遅いまま？RAM・SSD・32ビット制限・数式設計の考え方を解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-5">
+        <span class="level-label">Lv.5 難しい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="speed_lookup"></span></span>
+      </div>
+      <a class="article-link" href="../others/speed/article_01_lookup_speed.html">検索関数の速度と参照範囲</a>
+      <p class="article-summary">VLOOKUP・INDEX+MATCH・XLOOKUPの参照範囲の違いと、検索設計による高速化を解説します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="speed_formula"></span></span>
+      </div>
+      <a class="article-link" href="../others/speed/article_02_formula_techniques.html">数式の速度UPテクニック集</a>
+      <p class="article-summary">数式の処理速度を改善する実践テクニック集です。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">🖨 印刷自動化・ラベル印刷</h3>
+
+  <div class="category-hero hero-overlay hero-small hero-others-print margin-y-16-24 max-width-800">
+    <picture>
+      <source media="(max-width: 600px)" type="image/avif" srcset="../image/hero_others_print_main-480.avif 480w, ../image/hero_others_print_main-768.avif 768w" sizes="100vw">
+      <source type="image/avif" srcset="../image/hero_others_print_main-768.avif 768w, ../image/hero_others_print_main-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <source media="(max-width: 600px)" type="image/webp" srcset="../image/hero_others_print_main-480.webp 480w, ../image/hero_others_print_main-768.webp 768w" sizes="100vw">
+      <source type="image/webp" srcset="../image/hero_others_print_main-768.webp 768w, ../image/hero_others_print_main-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <img alt="印刷自動化・ラベル印刷 特集" decoding="async" height="576" loading="lazy" src="../image/hero_others_print_main.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Print Automation</div>
+      <div class="hero-copy-title">印刷自動化ラボ</div>
+      <div class="hero-copy-sub">印刷範囲・ラベル・帳票出力をVBAなしで制御。</div>
+    </div>
+  </div>
+
+  <p class="text-desc">
+    Print_Area、スピンボタン、XLOOKUP、VLOOKUPを組み合わせ、
+    VBAなしで印刷範囲・ラベル・案内文書を自動化する実務シリーズです。
+  </p>
+
+  <ul class="article-list" id="list-others-print">
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="../others/print/article_print_titles_page_break.html">Excelで2ページ目以降にも見出しを印刷する方法（印刷タイトルと改ページプレビュー）</a>
+      <p class="article-summary">2ページ目以降に見出しが出ない表を、印刷タイトルのタイトル行で解決。ページの切れ目は改ページプレビューでドラッグして決める。実画面で解説。</p>
+    </li>
+
+
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../others/misc/article_linked_picture_filter_serial_label.html">FILTER関数とリンク図で候補を確認し、連番だけで封筒ラベル印刷する方法</a>
+      <p class="article-summary">候補一覧をリンク図で表示し、連番を入力するだけで宛名・住所を切り替えて封筒ラベルを印刷する方法です。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="print_area"></span></span>
+      </div>
+      <a class="article-link" href="../others/print/article_print_area.html">VBAなしで印刷範囲を自動で伸縮させる方法（名前の管理）</a>
+      <p class="article-summary">データが増えたら印刷範囲も自動で広がり、空白行は印刷されないようにする方法です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/print/article_label_print.html">Excel 10面ラベル印刷 — Print_Area数式で空白シールを自動除外</a>
+      <p class="article-summary">データ件数に応じてPrint_Areaが自動伸縮。VBAもWordも不要でラベル印刷を制御します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="label_scrap"></span></span>
+      </div>
+      <a class="article-link" href="../others/print/article_label_scrap.html">Excelシール残骸を活用 — 開始位置を指定して途中から印刷する方法</a>
+      <p class="article-summary">使いかけのラベルシールを無駄なく活用する方法です。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/print/article_mail_print.html">宛名1ページ1枚 案内文書インスタント印刷 — スピンボタン＋Print_Area</a>
+      <p class="article-summary">スピンボタン＋VLOOKUPで差し込み印刷をExcelだけで実現します。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">📄 Word差し込み印刷</h3>
+
+  <p class="text-desc">
+    Excelの住所録をWordの差し込み印刷につなぎ、レター・名簿・宛名ラベル・封筒・はがきを作るシリーズです（全17記事）。
+    記事が多いため、専用の一覧ページにまとめました。ここでは最初に読む4記事だけを載せています。
+  </p>
+<ul class="article-list" id="list-others-word">
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../others/word/article_mailmerge_excel_source_design.html">Word差し込み印刷で失敗しにくいExcel住所録の作り方</a>
+      <p class="article-summary">入力用の列と印刷用の列を分け、Wordにつなげる住所録を用意します。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="../others/word/article_mailmerge_letter_vs_directory.html">Word差し込み印刷の「レター」と「名簿」の違いと使い分け（ラベル・封筒・はがきも）</a>
+      <p class="article-summary">レターと名簿を、プレビューではなく完成した文書で比べます。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="../others/word/article_mailmerge_letter_filter_print.html">Word差し込み印刷（レター）の流れ：Excel名簿をつないで、絞り込んで、印刷するまで</a>
+      <p class="article-summary">Excelの名簿から、1人ずつ渡す案内文を作ります。</p>
+    </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../others/word/article_mailmerge_label_basic.html">Word差し込み印刷で宛名ラベルを作る基本手順</a>
+      <p class="article-summary">用紙の品番を選び、1面目から全ラベルへ自動反映して印刷します。</p>
+    </li>
+  </ul>
+  <p class="text-desc"><a class="article-link" href="word/">📄 Word差し込み印刷の全17記事を見る &rarr;</a></p>
+
+  <h3 class="subcategory-heading">🎛 操作UI・入力補助</h3>
+
+  <div class="category-hero hero-overlay hero-small hero-others-ui margin-y-16-24 max-width-800">
+    <picture>
+      <source media="(max-width: 600px)" type="image/avif" srcset="../image/hero_others_ui_plain-480.avif 480w, ../image/hero_others_ui_plain-768.avif 768w" sizes="100vw">
+      <source type="image/avif" srcset="../image/hero_others_ui_plain-768.avif 768w, ../image/hero_others_ui_plain-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <source media="(max-width: 600px)" type="image/webp" srcset="../image/hero_others_ui_plain-480.webp 480w, ../image/hero_others_ui_plain-768.webp 768w" sizes="100vw">
+      <source type="image/webp" srcset="../image/hero_others_ui_plain-768.webp 768w, ../image/hero_others_ui_plain-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <img alt="操作UI・入力補助 利便性向上" decoding="async" height="576" loading="lazy" src="../image/hero_others_ui_plain.png" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Input Support</div>
+      <div class="hero-copy-title">操作UI・入力補助</div>
+      <div class="hero-copy-sub">入力・選択・表示を、現場で使いやすく。</div>
+    </div>
+  </div>
+
+  <ul class="article-list" id="list-others-ui">
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../others/ui/article_hyperlink_jump_last_row.html">最終行・次の空き行へジャンプ｜HYPERLINK関数でVBA不要</a>
+      <p class="article-summary">処理票を1件ずつ追加する台帳で、入力済み最終行や次の貼り付け行へクリック移動します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 ミス防止</span></span>
+      </div>
+      <a class="article-link" href="../others/ui/article_select_input_range.html">入力欄だけ範囲選択して初期化｜数式を消さずにDelete</a>
+      <p class="article-summary">名前付き範囲から手入力セルだけを選び、数式と書式を残したまま安全に消します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="../others/ui/article_input_validation_sheet_protection.html">Excelで入力欄だけ編集できるようにする：入力規則とシート保護</a>
+      <p class="article-summary">入力欄のロック解除、リスト・日付・桁数と重複チェックの入力規則、Tabで入力欄だけ移動するシート保護。配布用ファイルの作り方。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../others/ui/article_form_controls.html">🎛️ 開発タブ＆フォームコントロールの使い方</a>
+      <p class="article-summary">スピンボタンなどのフォームコントロールを使い、VBAなしで操作性を改善します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="shape_circle"></span></span>
+      </div>
+      <a class="article-link" href="../others/ui/article_shape_circle.html">セルの文字を○で囲む 表示／非表示 — 名前の管理＋図形（VBA不要）</a>
+      <p class="article-summary">入力値に応じて図形の○を自動表示する、Excelの隠れた仕様を活用したテクニックです。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">🧹 データの整理・照合</h3>
+
+  <p class="text-desc">
+    CSVを開くと0が消える、数字が文字列になって計算・検索できない、2つの名簿のどこが変わったか分からない――
+    取り込んだデータの型をそろえて、名簿を正しく照合するための記事です。
+  </p>
+
+  <ul class="article-list" id="list-others-data">
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="../others/data/article_csv_leading_zero.html">CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方</a>
+      <p class="article-summary">郵便番号・社員番号・16桁以上の管理番号を守る取り込み方。「テキストまたはCSVから」で列をテキストにする手順と、消えたゼロの戻し方。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="../others/data/article_text_numbers_fix.html">Excelの数字が文字列になって計算・検索できないときの直し方</a>
+      <p class="article-summary">SUMが0、VLOOKUPが#N/Aになる原因を見分け、数値に変換・乗算の貼り付け・区切り位置・VALUE/ASC関数で原因別に直す方法。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="../others/data/article_compare_two_lists.html">Excelで2つの名簿を比較し、追加・削除・変更された人を見つける</a>
+      <p class="article-summary">前月と今月の名簿をCOUNTIFとINDEX＋MATCH（XLOOKUP）で照合し、追加・削除・変更を自動判定。変わったセルは条件付き書式で色付け。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">🤝 Office連携・手順の共有</h3>
+
+  <p class="text-desc">
+    Wordでの一括修正や文書の比較、Excelの表のWordへの貼り付け、PowerPointやWindowsの標準機能での画面録画など、
+    Excelの外側で手順を共有・引き継ぐための記事です。
+  </p>
+
+  <ul class="article-list" id="list-others-office">
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/word/article_word_wildcard_replace.html">Wordの「置換」でVBAなしに一括整形する（特殊文字・ワイルドカード）</a>
+      <p class="article-summary">通常の置換を1件ずつ試してから一括整形。ワイルドカードは難易度高の応用編です。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/word/article_word_compare.html">Wordの「文書の比較」で修正箇所をすぐ見つける</a>
+      <p class="article-summary">変更前後の2文書を比較し、変更履歴を確認して別名で保存します。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/word/article_excel_to_word_paste.html">Excelの表をWordへ貼る3つの方法（貼り付け／リンク貼り付け／オブジェクト）</a>
+      <p class="article-summary">まずは通常のWordの表として貼り、更新が必要な場合だけリンクや埋め込みを選びます。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/office/article_ppt_screen_recording.html">PowerPointの画面録画で操作マニュアル動画を作る</a>
+      <p class="article-summary">挿入 → 画面録画で範囲を選んで録画し、MP4で保存。Excel手順の引き継ぎやQRリーダー設定の共有に。録画ボタンがない・音が入らないときの確認も。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/office/article_ppt_record_slideshow_video.html">PowerPointの「スライドショーの記録」でナレーション付き動画にする</a>
+      <p class="article-summary">スライドを進めながら話した声を記録し、「ビデオのエクスポート」でMP4に。社内研修・Excel勉強会の資料づくりに使えます。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="../others/misc/article_screen_record_win10.html">Windows 10で画面録画する方法の比較（PowerPoint・Game Bar・スニッピングツール）</a>
+      <p class="article-summary">Windows 10ならPowerPointの画面録画が手軽。追加インストールなしで使える4つの方法を、範囲指定・デスクトップ録画・音声・保存形式で比較します。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../others/misc/article_snipping_tool_video.html">Windows 11 スニッピングツールで画面録画する方法</a>
+      <p class="article-summary">追加インストール不可の職場でも使いやすい、Windows標準の画面録画。フリーソフト導入やウイルス不安を増やさず手順共有できます。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading">⌨ 日常時短・表示整形</h3>
+
+  <ul class="article-list" id="list-others-misc">
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../others/misc/article_shortcuts.html">実務で本当に使うショートカットキー厳選集</a>
+      <p class="article-summary">日常業務で本当に役立つExcelショートカットだけを厳選して紹介します。</p>
+    </li>
+
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../others/misc/article_snipping_tool_video.html">Windows 11 スニッピングツールで画面録画する方法</a>
+      <p class="article-summary">追加インストール不可の職場でも使いやすい、Windows標準の画面録画。フリーソフト導入やウイルス不安を増やさず手順共有できます。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="../others/misc/article_format.html">【保存版】ユーザー定義の表示形式＆TEXT関数 逆引き一覧</a>
+      <p class="article-summary">表示形式コードとTEXT関数の使い方を逆引きで整理します。</p>
+    </li>
+
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="../others/misc/article_statusbar.html">電卓不要！ステータスバー（オートカルク）の活用術</a>
+      <p class="article-summary">数式を立てずに合計・平均・件数を瞬時に確認できる機能を活用します。</p>
+    </li>
+  </ul>
+
+  <section class="method-section method-section-spaced">
+    <h2><span class="icon">🛣️</span> 推奨学習ルート</h2>
+    <ul class="article-list">
+      <li><a class="article-link" href="./speed/article_01_lookup_speed.html">1. 検索関数の速度と参照範囲</a><p class="article-summary">性能改善の起点。</p></li>
+      <li><a class="article-link" href="./speed/article_memory_swap.html">2. メモリスワップと数式設計</a><p class="article-summary">重さの根本原因を理解。</p></li>
+      <li><a class="article-link" href="./print/article_print_area.html">3. 印刷範囲の自動伸縮</a><p class="article-summary">印刷運用の定型化。</p></li>
+      <li><a class="article-link" href="./print/article_label_print.html">4. 10面ラベル印刷</a><p class="article-summary">実務頻出のラベル対応。</p></li>
+      <li><a class="article-link" href="./misc/article_linked_picture_filter_serial_label.html">5. リンク図＋連番で封筒ラベル印刷</a><p class="article-summary">検索候補を見ながら印刷内容を確定。</p></li>
+      <li><a class="article-link" href="./ui/article_form_controls.html">6. 開発タブ&フォームコントロール</a><p class="article-summary">UI改善の基礎。</p></li>
+    </ul>
+  </section>
+
+  <section class="method-section method-section-spaced">
+    <h2><span class="icon">❓</span> FAQ</h2>
+    <ul class="article-list">
+      <li class="article-item"><p class="article-link">Q. 最初に着手すべき改善は何ですか？</p><p class="article-summary">A. 効果が大きいのは速度と印刷です。まず処理時間削減、次に出力手順の標準化を行うと現場負荷が下がります。</p></li>
+      <li class="article-item"><p class="article-link">Q. 速度改善は関数だけで十分ですか？</p><p class="article-summary">A. 多くは関数設計で改善しますが、データ量が大きい場合はPower Queryや設計分割も併用します。</p></li>
+      <li class="article-item"><p class="article-link">Q. 印刷業務の属人化を防ぐには？</p><p class="article-summary">A. 印刷範囲・開始位置・ラベル位置のルール化と、テンプレート化が有効です。</p></li>
+      <li class="article-item"><p class="article-link">Q. UI改善はVBAなしでも可能？</p><p class="article-summary">A. はい。フォームコントロール、名前定義、図形連動だけでも操作性は大きく改善できます。</p></li>
+      <li class="article-item"><p class="article-link">Q. 「日常時短・表示整形」の記事の使い方は？</p><p class="article-summary">A. 日常業務の詰まりポイント別に参照し、チーム標準として手順化する運用が効果的です。</p></li>
+      <li class="article-item"><p class="article-link">Q. CSVの0が消えるのを防ぐには？</p><p class="article-summary">A. CSVをダブルクリックで開かず、「データ」→「テキストまたはCSVから」で取り込み、番号の列をテキストにします。（<a href="data/article_csv_leading_zero.html">CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方</a>）</p></li>
+      <li class="article-item"><p class="article-link">Q. 録画ソフトを入れられないときは？</p><p class="article-summary">A. PowerPointの画面録画や、Windows 11のスニッピング ツールなど、追加インストールのいらない方法があります。（<a href="misc/article_screen_record_win10.html">Windows 10で画面録画する方法の比較</a>）</p></li>
+    </ul>
+  </section>
+
+  <section class="method-section method-section-spaced">
+    <h2><span class="icon">🔗</span> 関連カテゴリへ</h2>
+    <ul class="article-list">
+      <li class="article-item"><a class="article-link" href="../functions/">📐 関数テクニック総合</a><p class="article-summary">検索・抽出・整形を関数で体系化。</p></li>
+      <li class="article-item"><a class="article-link" href="../powerquery/">🔄 パワークエリ総合</a><p class="article-summary">取り込みから更新運用までを一気通貫。</p></li>
+      <li class="article-item"><a class="article-link" href="../cobol/">🏭 COBOL帳票処理総合</a><p class="article-summary">固定長・不規則帳票をExcelで実務化。</p></li>
+      <li class="article-item"><a class="article-link" href="../qr/">⚡ QR Automation Lab総合</a><p class="article-summary">VBA不要の入力自動化と閉域転送。</p></li>
+      <li class="article-item"><a class="article-link" href="../unlocked/">🔓 制限解除ラボ総合</a><p class="article-summary">VBA可環境で最後の5%を補完。</p></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../samples/">サンプルデータ</a></p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ（Google Forms）</a>
+  </div>
+  <p>&copy; Excel &times; No VBA Lab &horbar; コンテンツは随時追加中です</p>
+  <p><a href="../">🏠 ホームへ戻る</a></p>
+  <p class="site-footer-legal-links">
+    <a href="../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+<script src="../script.js?v=20261102-lists"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="VBAでWebデータを取得するときに、静的HTML・API・JavaScriptで生成される画面を区別し、適切な方式を選ぶための実務ガイドです。">
+<title>VBAでWebデータ取得｜制限解除ラボ 記事候補</title>
+<link href="../../common.css?v=8" rel="stylesheet">
+<link href="../../article.css" rel="stylesheet">
+</head>
+<body>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../index.html">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限解除ラボ・記事候補</span></p></div></div></header>
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../../index.html">ホーム</a><span>&rsaquo;</span><a href="../index.html">制限解除ラボ</a><span>&rsaquo;</span><a href="index.html">記事候補</a><span>&rsaquo;</span><strong>Webデータ取得</strong></div>
+<article class="article-body">
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">VBA OK</span><span class="badge badge-new">新規候補</span><span class="article-date">作成日: 2026-07-15</span></div><h1 class="article-title">VBAでWebデータ取得 ― 静的ページ・API・動的画面を混同しない</h1><p class="article-lead">「URLへアクセスできる」ことと「ブラウザに表示された内容を取得できる」ことは同じではありません。最初にページの種類を判定すると、古いIE制御や不安定な画面操作へ迷い込みにくくなります。</p></div>
+<div class="warning-box"><strong>実務利用の前提</strong><p>取得先の利用規約、robots.txt、著作権、個人情報、アクセス頻度、社内規程を確認してください。ログイン回避、CAPTCHA回避、アクセス制限の迂回を扱う記事ではありません。業務システムでは、まず公式APIや正規のエクスポート機能を確認します。</p></div>
+<section><h2>1. 先に「何を取得するか」を分ける</h2><div class="table-responsive"><table><thead><tr><th>対象</th><th>基本的な候補</th><th>注意点</th></tr></thead><tbody>
+<tr><td>公開CSV・JSON・静的HTML</td><td>Power Query / HTTP要求</td><td>JavaScriptは実行されない</td></tr>
+<tr><td>Excelへ定期取込</td><td>まずPower Query</td><td>更新手順を共有しやすい</td></tr>
+<tr><td>JavaScript実行後の画面</td><td>公式API / 承認済みブラウザ自動化</td><td>VBAのHTTP要求だけでは画面状態を再現できない</td></tr>
+<tr><td>他アプリへの入力操作</td><td>UI Automation</td><td>画面変更、権限差、ロック状態の影響を受ける</td></tr>
+</tbody></table></div><p>HTTPで返る本文に目的の値がなければ、待ち時間を増やしても値は現れません。ブラウザが後からAPIを呼び出して画面を組み立てている可能性があります。</p></section>
+<section><h2>2. 公開ページを1回だけ取得する最小例</h2><p>次の例は、認証不要の公開URLをGETし、状態・Content-Type・本文の先頭部分を「Web取得」シートへ出します。参照設定を不要にするため遅延バインディングを使っています。</p>
+<div class="code-readonly"><pre><code>Option Explicit
+
+Public Sub 公開ページを確認する()
+    Const TARGET_URL As String = "https://example.com/"
+    Dim http As Object
+    Dim ws As Worksheet
+    Dim body As String
+
+    Set ws = ThisWorkbook.Worksheets("Web取得")
+    Set http = CreateObject("MSXML2.ServerXMLHTTP.6.0")
+
+    On Error GoTo Failed
+    http.setTimeouts 5000, 5000, 10000, 10000
+    http.Open "GET", TARGET_URL, False
+    http.setRequestHeader "User-Agent", "Excel-No-VBA-Lab/1.0"
+    http.Send
+
+    ws.Range("A1:B4").ClearContents
+    ws.Range("A1").Value = "取得日時"
+    ws.Range("B1").Value = Now
+    ws.Range("A2").Value = "HTTP状態"
+    ws.Range("B2").Value = http.Status &amp; " " &amp; http.statusText
+    ws.Range("A3").Value = "Content-Type"
+    ws.Range("B3").Value = http.getResponseHeader("Content-Type")
+
+    If http.Status &lt; 200 Or http.Status &gt;= 300 Then
+        Err.Raise vbObjectError + 1000, , "HTTPエラー: " &amp; http.Status
+    End If
+
+    body = http.responseText
+    ws.Range("A4").Value = "本文（先頭32000文字）"
+    ws.Range("B4").Value = Left$(body, 32000)
+    Exit Sub
+
+Failed:
+    ws.Range("A6").Value = "失敗"
+    ws.Range("B6").Value = Err.Number &amp; ": " &amp; Err.Description
+End Sub</code></pre></div>
+<div class="tip-box"><strong>このコードが保証しないこと</strong><p>文字コードの完全判定、HTML解析、JSON解析、再試行、認証、Cookie管理、ページング、大容量保存は含みません。セルは最大32,767文字のため、本文全体の保管用途にも向きません。</p></div></section>
+<section><h2>3. 取得できたかを3段階で確認する</h2><ol><li><strong>HTTP状態：</strong>200番台か。301/302、401/403、429、500番台を成功扱いしない。</li><li><strong>Content-Type：</strong>期待するHTML、JSON、CSVか。ログイン画面がHTMLで返っていないか。</li><li><strong>本文：</strong>目的の項目が本当に含まれるか。画面に見えるだけで本文にない場合は動的生成を疑う。</li></ol></section>
+<section><h2>4. 動的ページならVBAだけに固執しない</h2><p>WebView2はEdgeの描画エンジンをアプリへ組み込む技術で、VBAから数行で既存Edgeを自由に操作する機能ではありません。実装・配布・Runtime・非同期処理を含む設計が必要です。WebDriver系もドライバーや組織の導入許可が必要になる場合があります。</p><p>そのため、実務では次の順が基本です。</p><ol><li>公式APIまたはCSV出力</li><li>Power Queryで取得可能か</li><li>認証不要の静的データならHTTP取得</li><li>入力操作ならUIAを限定利用</li><li>本格的な動的画面は、管理部門承認のブラウザ自動化基盤</li></ol></section>
+<section><h2>5. 本番化する前のチェック</h2><ul><li>対象URLをセルから無制限に受け取らず、許可ドメインを決める</li><li>パスワードやトークンをセル、コード、ログへ平文保存しない</li><li>連続アクセスを避け、429応答時は停止する</li><li>取得日時、URL、HTTP状態、件数をログに残す</li><li>サイト変更時は自動登録せず、異常として止める</li><li>マクロをインターネット配布せず、組織の署名・配布ルールに従う</li></ul></section>
+<section><h2>6. 公式参照</h2><ul class="related-articles"><li><a href="https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ms759148(v=vs.85)" rel="noopener" target="_blank">Microsoft Learn: IXMLHTTPRequest</a></li><li><a href="https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ms762278(v=vs.85)" rel="noopener" target="_blank">Microsoft Learn: ServerXMLHTTP</a></li><li><a href="https://learn.microsoft.com/en-us/microsoft-edge/webview2/landing/" rel="noopener" target="_blank">Microsoft Learn: WebView2 documentation</a></li><li><a href="https://learn.microsoft.com/en-us/microsoft-365-apps/security/internet-macros-blocked" rel="noopener" target="_blank">Microsoft Learn: インターネット由来のマクロの既定ブロック</a></li></ul></section>
+<section><h2>まとめ</h2><p>VBAによるWeb取得の基本は、万能なスクレイピングコードを作ることではなく、静的データ・API・動的画面を先に見分けることです。公開された静的データにはHTTP取得が使えますが、動的画面や認証付き業務システムでは、公式経路と管理された自動化基盤を優先します。</p></section>
+</article></main>
+</body></html>

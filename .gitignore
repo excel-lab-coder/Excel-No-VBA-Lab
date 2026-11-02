@@ -1,0 +1,17 @@
+# Local work artifacts that should not be published with the site.
+/NOTE/
+/tmp/
+/image_optimization_report.csv
+
+# 開発用スクリプト・作業メモ（公開しない）
+/_dev/
+# 非公開ファイル（P0-2：誤って追加しないため）
+/_trash/
+/NOTEBOOKLLM/
+/評価/
+/image/_backup/
+/image/storage/
+/image/画像追加/
+/index_test.html
+/debug_others.txt
+*.py

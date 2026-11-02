@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>⑪ 全角QR生成VBA記事は一時非公開です｜QR Automation Lab｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="この記事は動作再確認のため一時的に非公開にしています。本文とコードは公開ページから取り下げ、URLのみ保持しています。" name="description">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html" rel="canonical">
+<meta content="website" property="og:type">
+<meta content="⑪ 全角QR生成VBA記事は一時非公開です｜QR Automation Lab" property="og:title">
+<meta content="動作再確認のため、本文とコードを一時的に取り下げています。URLは今後の再検討に備えて保持しています。" property="og:description">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html" property="og:url">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="Excel &times; No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="summary_large_image" name="twitter:card">
+<meta content="⑪ 全角QR生成VBA記事は一時非公開です" name="twitter:title">
+<meta content="動作再確認のため、本文とコードを一時的に取り下げています。" name="twitter:description">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" name="twitter:image">
+<meta content="noindex, follow, noarchive" name="robots">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<link href="../common.css?v=20261101" rel="stylesheet">
+<link href="../article.css?v=20261101" rel="stylesheet">
+<style>
+  .unpublished-card {
+    max-width: 760px;
+    margin: 2.5rem auto;
+    padding: clamp(1.5rem, 5vw, 3rem);
+    border: 2px solid #b45309;
+    border-radius: 16px;
+    background: #fffbeb;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .08);
+  }
+  .unpublished-label {
+    display: inline-block;
+    margin-bottom: 1rem;
+    padding: .35rem .75rem;
+    border-radius: 999px;
+    background: #b45309;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: .04em;
+  }
+  .unpublished-card h1 {
+    margin: 0 0 1.25rem;
+    color: #3f2d16;
+    font-size: clamp(1.65rem, 5vw, 2.4rem);
+    line-height: 1.45;
+  }
+  .unpublished-card p {
+    margin: .8rem 0;
+    color: #493720;
+    line-height: 1.9;
+  }
+  .unpublished-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin-top: 1.75rem;
+  }
+  .unpublished-actions a {
+    display: inline-block;
+    padding: .7rem 1rem;
+    border: 1px solid #9a6700;
+    border-radius: 8px;
+    background: #fff;
+    color: #7c4a03;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .unpublished-actions a:hover,
+  .unpublished-actions a:focus-visible {
+    background: #fff7d6;
+    text-decoration: underline;
+  }
+</style>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebPage",
+  "name":"⑪ 全角QR生成VBA記事は一時非公開です",
+  "description":"動作再確認のため、本文とコードを一時的に取り下げています。URLのみ保持しています。",
+  "url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/11_qr_vba_generate.html",
+  "isPartOf":{"@type":"WebSite","name":"Excel × No VBA Lab","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},
+    {"@type":"ListItem","position":2,"name":"QR Automation Lab","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/"},
+    {"@type":"ListItem","position":3,"name":"⑪ 一時非公開のお知らせ"}
+  ]
+}
+</script>
+</head>
+<body class="article-layout">
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="site-title"><a href="../">Excel &times; No VBA Lab</a></div>
+      <p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+    </div>
+  </div>
+</header>
+
+<main class="main-content article-layout" id="main-content">
+  <div class="breadcrumb">
+    <a href="../">ホーム</a><span>&gt;</span>
+    <a href="./">QR Automation Lab</a><span>&gt;</span>
+    <strong>⑪ 一時非公開</strong>
+  </div>
+
+  <section class="unpublished-card" aria-labelledby="unpublished-title">
+    <span class="unpublished-label">一時非公開</span>
+    <h1 id="unpublished-title">全角QR生成のVBA記事は<br>現在公開していません</h1>
+    <p>この記事は、掲載内容とコードの動作をあらためて確認するため、一時的に非公開にしています。</p>
+    <p>本文とコードは公開ページから取り下げました。再検証後に、再掲載するかどうかをあらためて検討します。</p>
+    <p>このURLは今後の再検討に備えて保持しています。現時点では、旧記事のコードを利用しないでください。</p>
+    <div class="unpublished-actions">
+      <a href="./">QR Automation Labの記事一覧へ</a>
+      <a href="../">ホームへ戻る</a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。</p>
+  </div>
+  <div class="footer-contact-wrap">
+    <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ 情報提供・お問い合わせ (Google Forms)</a>
+  </div>
+  <p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+  <p class="site-footer-legal-links">
+    <a href="../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+<script src="../script.js?v=20261101"></script>
+</body>
+</html>
