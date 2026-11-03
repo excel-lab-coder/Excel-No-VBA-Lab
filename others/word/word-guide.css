@@ -15,6 +15,14 @@ body.article-layout.word-guide .main-content{width:min(100%,1080px);}
 .word-step-no{display:inline-block;margin-right:.55em;padding:.08em .55em;border-radius:6px;background:#185b3f;color:#fff;font-size:.78em;font-weight:700;line-height:1.5;vertical-align:.08em;}
 .word-subsection{margin:24px 0 8px;padding:0;scroll-margin-top:calc(var(--header-height) + 16px);}
 .word-env-note{margin:24px 0 0;font-size:.88rem;color:#5f6b76;}
+.word-answer{display:flex;gap:14px;align-items:flex-start;margin:20px 0 0;padding:16px 18px;background:#fff8e6;border:1px solid #f1d58f;border-left:5px solid #d99a00;border-radius:8px;}
+.word-answer>span{flex:0 0 auto;padding:2px 10px;font-size:.82rem;font-weight:700;color:#fff;background:#8a5a00;border-radius:4px;}
+.word-answer p{margin:0;line-height:1.85;}
+.word-advanced-link{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:28px 0;padding:14px 18px;background:#f6f1fb;border:1px solid #d9c9ec;border-left:5px solid #6a1b9a;border-radius:8px;}
+.word-advanced-link strong{flex:1 1 100%;font-size:.86rem;color:#4a148c;}
+.word-advanced-link a{font-weight:700;}
+.word-advanced-link span{padding:1px 8px;font-size:.78rem;font-weight:700;color:#fff;background:#6a1b9a;border-radius:4px;}
+@media(max-width:600px){.word-answer{flex-direction:column;gap:6px;padding:12px 14px;}}
 .word-guide-toc[open] summary{margin-bottom:2px;}
 .word-guide .mailmerge-advanced{margin:24px 0;}
 .word-guide .mailmerge-advanced>summary{min-height:44px;cursor:pointer;}

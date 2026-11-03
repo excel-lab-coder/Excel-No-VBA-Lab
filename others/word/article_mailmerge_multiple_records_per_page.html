@@ -37,9 +37,10 @@
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>1枚に複数人分を差し込む</strong></div>
 <article class="article-body">
 <div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Word差し込み印刷で1枚に複数人分を並べる方法：3人ずつ・4人ずつ・表・一覧</h1>
-<p class="article-summary" data-seo-lead="true">通常はラベルの自動反映を使い、3人ずつなど同じ大きさで並べます。</p></div><section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">ふつう（Lv.3） ／ 応用編は折りたたんでいます</p><ol class="word-guide-flow"><li>面数と寸法</li><li>1面目を作る</li><li>自動反映</li><li>全ページを照合</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">やりたいこと</a></li><li><a href="#guide-step-3">4つの方法と選び方</a></li><li><a href="#guide-step-4">準備：Excelの名簿</a></li><li><a href="#method-label">方法1：ラベル機能を使う（おすすめ）</a></li><li><a href="#advanced-1">方法2・方法3（応用）：次のレコードを手動で配置する</a></li><li><a href="#method-directory">方法4：「名簿」（ディレクトリ）差し込みで一覧にする</a></li><li><a href="#guide-step-12">仕上げ：余り枠・切り取り線・横向き3列</a></li><li><a href="#advanced-2">応用・難易度高：通し番号と条件によるスキップ</a></li><li><a href="#guide-step-13">確認のしかた</a></li><li><a href="#guide-step-14">よくあるつまずき</a></li></ol></nav></details></section>
+<p class="article-summary" data-seo-lead="true">通常はラベルの自動反映を使い、3人ずつなど同じ大きさで並べます。</p></div><div class="word-answer"><span>結論</span><p>同じ大きさで並べるなら<strong>ラベル機能</strong>、全員を続けて一覧にするなら<strong>「名簿」</strong>を使います。この2つでほとんどの用途に対応できます。</p></div>
+<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">ふつう（Lv.3）</p><ol class="word-guide-flow"><li>面数と寸法</li><li>1面目を作る</li><li>自動反映</li><li>全ページを照合</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">この記事でできること</a></li><li><a href="#guide-step-3">方法の選び方</a></li><li><a href="#guide-step-4">準備：Excelの名簿</a></li><li><a href="#method-label">方法1：ラベル機能を使う（おすすめ）</a></li><li><a href="#method-directory">方法2：「名簿」（ディレクトリ）差し込みで一覧にする</a></li><li><a href="#guide-step-12">仕上げ：余り枠・切り取り線・横向き3列</a></li><li><a href="#guide-step-13">確認のしかた</a></li><li><a href="#guide-step-14">よくあるつまずき</a></li></ol></nav></details></section>
 <section class="goal-section" id="guide-step-1">
-<h2><span class="icon">💡</span> やりたいこと</h2>
+<h2>この記事でできること</h2>
 <p>Wordの差し込み印刷は、普通に使うと<strong>1人（Excelの1行）につき1ページ</strong>になります。でも実際には、こんな使い方をしたいことがあります。</p>
 <ul class="line-height-2">
 <li>A4の1枚に、受講票や受付控えを<strong>3人ずつ</strong>並べて印刷し、切り分けて配りたい</li>
@@ -49,14 +50,14 @@
 </ul>
 <p>どれも、Wordの差し込み印刷の<strong>「次のデータ（次のレコード）へ進む」</strong>仕組みを使えば、VBAなしでできます。人数ごとの設定は <a href="#per-count">人数別の早見表</a>、3人ずつの作り方は <a href="#three">A4に3人ずつの例</a> を見てください。</p>
 </section><section class="method-section" id="guide-step-3">
-<h2>4つの方法と選び方</h2>
+<h2>方法の選び方</h2>
 <div class="table-wrapper"><table class="comparison-table"><caption>1枚に複数人分を差し込む方法</caption>
 <thead><tr><th>方法</th><th>できあがり</th><th>向いているもの</th><th>手間</th></tr></thead>
 <tbody>
 <tr><td><a href="#method-label">方法1：ラベル機能を使う</a></td><td>用紙を同じ大きさの枠に分け、枠ごとに1人</td><td>参加証・名札・受付票など、<strong>同じ大きさで並べるもの</strong></td><td>少ない（Next Recordを自動で入れてくれる）</td></tr>
-<tr><td><a href="#method-letter">方法2：レターに「次のレコード」を自分で入れる</a></td><td>1ページの中に、決めた人数分のブロック</td><td>大きさがそろわない様式、1ページに2〜3人分の案内など</td><td>ふつう</td></tr>
-<tr><td><a href="#method-table">方法3：表の行ごとに「次のレコード」を入れる</a></td><td>1ページの表に、1行1人</td><td>出席簿・受領印欄つきの名簿・チェック表</td><td>ふつう</td></tr>
-<tr><td><a href="#method-directory">方法4：「名簿」（ディレクトリ）差し込み</a></td><td>全員分を改ページなしで続けて並べる</td><td>全員の一覧・名簿・カタログ</td><td>少ない</td></tr>
+<tr><td><a href="article_next_record_manual_layout.html#method-letter">応用A：レターに「次のレコード」を自分で入れる</a></td><td>1ページの中に、決めた人数分のブロック</td><td>大きさがそろわない様式、1ページに2〜3人分の案内など</td><td>ふつう</td></tr>
+<tr><td><a href="article_next_record_manual_layout.html#method-table">応用B：表の行ごとに「次のレコード」を入れる</a></td><td>1ページの表に、1行1人</td><td>出席簿・受領印欄つきの名簿・チェック表</td><td>ふつう</td></tr>
+<tr><td><a href="#method-directory">方法2：「名簿」（ディレクトリ）差し込み</a></td><td>全員分を改ページなしで続けて並べる</td><td>全員の一覧・名簿・カタログ</td><td>少ない</td></tr>
 </tbody></table></div>
 <p>同じ会社の人だけを1枚のラベルにまとめたい（会社名は1回、その下に2人目・3人目の名前）場合は、<a href="article_mailmerge_renmei_label.html">連名ラベルの作り方</a>を見てください。</p>
 <div class="xdemo-note-info"><strong>共通の考え方</strong><br/>Wordは「文書の最後まで来たら、次の人で新しいページを始める」動きをします。ページの途中で次の人に進ませたい場所に <strong><code>«Next Record»</code>（次のレコード）</strong>を置くと、そこから先は次の人のデータになります。<br/>
@@ -73,7 +74,7 @@
 <section class="word-subsection" id="guide-step-2"><h3>まず「ラベルで3段」を完成させる</h3><ol class="line-height-2"><li>同じ大きさの受講票を並べるなら、ラベル機能を選びます。</li><li>1段目だけを作り、「複数ラベルに反映」で2段目以降を作ります。</li><li>「結果のプレビュー」で1ページ目の並びを見ます。</li><li>「個々のドキュメントの編集」→「すべて」で全員分を出します。4人のデータを3段に入れたら、2ページ目に4人目がいることを確認します。</li><li>最後の余り枠にタイトルや敬称だけが残った場合は、完成文書で不要な固定文字を除いてから印刷します。</li></ol><p>自分で「次のレコード」を入れる方法は応用です。単なる一覧なら、枠を人数分作らず「名簿」を使います。</p></section>
 <section class="word-subsection" id="per-count">
 <h3>人数別の早見表（A4・Word側の設定）</h3>
-<p>「1枚に何人分か」が決まったら、下の表でWord側の設定を決めます。<strong>ラベル機能（方法1）を使う場合の寸法</strong>と、<strong>レター・表（方法2・3）で入れる「次のレコード」の数</strong>をまとめています。</p>
+<p>「1枚に何人分か」が決まったら、下の表でWord側の設定を決めます。<strong>ラベル機能（方法1）を使う場合の寸法</strong>と、<strong>レター・表（応用A・B）で入れる「次のレコード」の数</strong>をまとめています。</p>
 <div class="table-wrapper"><table class="comparison-table"><caption>A4に並べる人数とWordの設定（寸法の単位はmm）</caption>
 <thead><tr><th>1枚の人数</th><th>並べ方</th><th>用紙の向き</th><th>横×縦</th><th>ラベルの幅×高さ</th><th>上余白／横余白</th><th><code>«Next Record»</code>の数（方法2・3）</th></tr></thead>
 <tbody>
@@ -96,7 +97,7 @@
 <section class="word-subsection" id="three">
 <h3>例：A4に3人ずつ（受講票）を作る</h3>
 <p>「1枚に3人分」を、Wordの差し込み印刷だけで作る手順です。受講票・面談票・受付控えなど、切り分けて1人ずつ渡すものを想定します。</p>
-<h4>やり方A：ラベル機能で3段に分ける（おすすめ）</h4>
+<h4>ラベル機能で3段に分ける</h4>
 <figure class="article-screenshot"><a aria-label="画像を拡大：A4縦のラベルを横1列縦3段にする設定画面" href="../../image/articles/2026-11-01/word-a4-three-label-settings.jpg" rel="noopener" target="_blank" style="--screenshot-width:631.07px"><img alt="A4縦のラベルを横1列縦3段にする設定画面" decoding="async" height="985" loading="lazy" src="../../image/articles/2026-11-01/word-a4-three-label-settings.jpg" width="840"></a><figcaption>設定する数値の例です。A4縦・横1列×縦3段、幅200mm・高さ93mm、上余白9mm・横余白5mmにします。垂直方向の間隔は93mmです。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <ol class="line-height-2">
 <li>「差し込み文書」→「差し込み印刷の開始」→<strong>「ラベル」</strong>→「新しいラベル」。</li>
@@ -146,79 +147,8 @@
 <p>反映後のフィールドとプレビューは、上の<a href="#three-label-example">3段ラベルの実画面</a>で確認できます。4面でも同じように、2面目以降の先頭に«Next Record»を1つずつ入れます。</p>
 <p>1面目を直したら、もう一度「複数ラベルに反映」を押すと、2面目以降も直ります。ラベルでよくあるつまずき（全部同じ人になる、1人飛ばしになる）は <a href="article_mailmerge_label_next_record.html">Next Recordの基本</a> を見てください。</p>
 </section>
-<details class="mailmerge-advanced" id="advanced-1"><summary>方法2・方法3（応用）：次のレコードを手動で配置する</summary><div class="mailmerge-advanced-content"><section class="method-section" id="method-letter">
-<h3>方法2：レターに「次のレコード」を自分で入れる</h3>
-<p>ブロックの大きさがそろわない様式（例：上半分に1人目の申込控え、下半分に2人目）や、ラベルの枠では作りにくいレイアウトのときの方法です。</p>
-<h4>2-1. 1人目のブロックを作る</h4>
-<ol class="line-height-2">
-<li>「差し込み印刷の開始」→<strong>「レター」</strong>を選び、名簿をつなぎます。</li>
-<li>ページの上半分に、1人目のブロックを作ります（«氏名»«受付番号» などを入れる）。<strong>ここには <code>«Next Record»</code> を入れません。</strong></li>
-</ol>
-<h4>2-2. 2人目以降のブロックの先頭に「次のレコード」を入れる</h4>
-<ol class="line-height-2">
-<li>2人目のブロックを置く位置（下半分の先頭）をクリックします。</li>
-<li><strong>「差し込み文書」タブ →「ルール」→「Next Record」</strong>を選びます（版によっては「次のレコード」と表示されます）。<code>«Next Record»</code> が入ります。</li>
-<li>その後ろに、1人目と同じように差し込みフィールドを入れてブロックを作ります。</li>
-<li>3人目以降も同じです。2人目のブロック（<code>«Next Record»</code> を含めて）をコピーして貼り付けると早く作れます。</li>
-</ol>
-<div class="table-wrapper"><table class="comparison-table"><caption>1ページに3人分の配置イメージ</caption>
-<thead><tr><th>ページ内の位置</th><th>中身</th></tr></thead>
-<tbody>
-<tr><td>上</td><td>«受付番号» «氏名» 様 ……（1人目：<code>«Next Record»</code> なし）</td></tr>
-<tr><td>中</td><td><code>«Next Record»</code> «受付番号» «氏名» 様 ……（2人目）</td></tr>
-<tr><td>下</td><td><code>«Next Record»</code> «受付番号» «氏名» 様 ……（3人目）</td></tr>
-</tbody></table></div>
-<p>表で位置を固定する場合の実画面は、上の<a href="#three-letter-example">レター＋3行の表の配置例</a>を参照してください。枠の大きさに関係なく、2人目以降の先頭で1回だけ次のレコードへ進めます。</p>
-<h4>2-3. ブロックがページからはみ出さないようにする</h4>
-<ul class="line-height-2">
-<li>ブロックの高さが変わってずれないように、<strong>表（罫線なしでも可）やテキストボックスの中</strong>に作ると、位置が安定します。</li>
-<li>長い住所や会社名で高さが変わる場合は、行の高さを「固定値」にするか、<a href="article_mailmerge_textbox_wrap.html">テキストボックスで折り返す方法</a>を使います。</li>
-<li>文書の最後に余分な空の段落があると、白紙のページが混ざることがあります。</li>
-</ul>
-</section><section class="method-section" id="method-table">
-<h3>方法3：表の行ごとに「次のレコード」を入れる（1行1人の名簿）</h3>
-<p>出席簿や受領印の欄がある名簿のように、<strong>1ページの表に何人分も並べたい</strong>ときの方法です。</p>
-<ol class="line-height-2">
-<li>「レター」で差し込みを始め、名簿をつなぎます。</li>
-<li>表を作ります。例：見出し行＋10行（No.／氏名／部署／受領印）。</li>
-<li><strong>見出し行</strong>は普通の文字で入力します（差し込みフィールドは入れません）。</li>
-<li><strong>1行目のデータ行</strong>に «社員番号» «氏名» «部署» を入れます。<code>«Next Record»</code> は入れません。</li>
-<li><strong>2行目のデータ行</strong>の最初のセルの先頭で「ルール」→「Next Record」（次のレコード）を選んで <code>«Next Record»</code> を入れ、続けて «社員番号»、他のセルに «氏名» «部署» を入れます。</li>
-<li>2行目を選んでコピーし、3行目〜10行目に貼り付けます。</li>
-</ol>
-<div class="table-wrapper"><table class="comparison-table"><caption>差し込み文書の表のイメージ</caption>
-<thead><tr><th>No.</th><th>氏名</th><th>部署</th><th>受領印</th></tr></thead>
-<tbody>
-<tr><td>«社員番号»</td><td>«氏名»</td><td>«部署»</td><td></td></tr>
-<tr><td><code>«Next Record»</code>«社員番号»</td><td>«氏名»</td><td>«部署»</td><td></td></tr>
-<tr><td><code>«Next Record»</code>«社員番号»</td><td>«氏名»</td><td>«部署»</td><td></td></tr>
-<tr><td colspan="4">……（10行目まで同じ）</td></tr>
-</tbody></table></div>
-<p>こうすると、1ページ目に1〜10人目、2ページ目に11〜20人目……と並びます。見出し行は毎ページに印刷されます。</p>
-<div class="xdemo-note-warn"><strong><code>«Next Record»</code> は、1行に1つだけ</strong><br/>2行目の各セルに <code>«Next Record»</code> を入れてしまうと、セルごとに次の人へ進んでしまい、1行の中で別々の人のデータになります。<code>«Next Record»</code> は<strong>その行の最初のセルの先頭に1つだけ</strong>置きます。</div>
-<p>上の表はフィールドの配置を示した図です。「見出し行」は人数に数えません。最初のデータ行には«Next Record»を入れず、2人目以降の行では社員番号より前に1つだけ入れます。氏名・部署のセルには追加しません。</p>
-</section><h4>やり方B：レターに3行の表を置いて、2つの<code>«Next Record»</code>を入れる</h4>
-<p>3人分の大きさを変えたい（例：1人目の欄だけ大きくする）、上下に見出しや注意書きを入れたい、というときはこちらです。</p>
-<ol class="line-height-2">
-<li>「差し込み印刷の開始」→<strong>「レター」</strong>を選び、名簿をつなぎます。</li>
-<li>「挿入」→「表」で<strong>1列×3行</strong>の表を作ります。</li>
-<li>表を選び、<strong>「テーブル レイアウト」タブ →「プロパティ」→「行」</strong>で、「高さを指定する」にチェックを入れて<strong>「固定値」</strong>にし、1行の高さを決めます。例：「レイアウト」タブ →「余白」→「ユーザー設定の余白」で上下を9mmにすると、(297－18)÷3 ＝ <strong>93mm</strong>です（下の画面の撮影例と同じ値）。固定値にしておくと、住所が長い人がいても段の位置がずれません。</li>
-<li><strong>1行目</strong>に1人目の中身を作ります（<code>«Next Record»</code>は入れません）。</li>
-<li><strong>2行目</strong>の先頭で「ルール」→<strong>「Next Record」</strong>（次のレコード）を選んで<code>«Next Record»</code>を入れ、続けて同じ中身を作ります。</li>
-<li>2行目の中身を<code>«Next Record»</code>ごとコピーして、<strong>3行目</strong>に貼り付けます。</li>
-<li>表の後ろに余分な改行があると白紙ページが混ざるので、表の下の段落を最小にします（段落のフォントサイズを1ptにする、など）。</li>
-</ol>
-<div class="table-wrapper"><table class="comparison-table"><caption>レター＋3行の表の配置</caption>
-<thead><tr><th>表の行</th><th>中身</th></tr></thead>
-<tbody>
-<tr><td>1行目（高さ93mm）</td><td>受講票 No.«MERGEREC» ／ «部署» «氏名» 様 ／ …</td></tr>
-<tr><td>2行目（高さ93mm）</td><td><strong><code>«Next Record»</code></strong>受講票 No.«MERGEREC» ／ «部署» «氏名» 様 ／ …</td></tr>
-<tr><td>3行目（高さ93mm）</td><td><strong><code>«Next Record»</code></strong>受講票 No.«MERGEREC» ／ «部署» «氏名» 様 ／ …</td></tr>
-</tbody></table></div>
-<figure class="article-screenshot" id="three-letter-example"><a aria-label="画像を拡大：レター形式の1列3行の表をWordで100％表示した実画面です。各行の本文を切り出し、間の余白を省いて順に並べています。2・3行目の先頭だけに«Next Record»を置きます。" href="../../image/articles/2026-11-02/word-image-fixes/three-letter-fields.png" rel="noopener" target="_blank" style="--screenshot-width:560.00px"><img alt="レター形式の1列3行の表をWordで100％表示した実画面です。各行の本文を切り出し、間の余白を省いて順に並べています。2・3行目の先頭だけに«Next Record»を置きます。" decoding="async" height="564" loading="lazy" src="../../image/articles/2026-11-02/word-image-fixes/three-letter-fields.png" width="560"></a><figcaption>レター形式の1列3行の表をWordで100％表示した実画面です。各行の本文を切り出し、間の余白を省いて順に並べています。2・3行目の先頭だけに«Next Record»を置きます。 <span class="screenshot-enlarge">（クリックで拡大・原寸表示）</span></figcaption></figure>
-</div></details>
-<section class="method-section" id="method-directory">
-<h2>方法4：「名簿」（ディレクトリ）差し込みで一覧にする</h2>
+<aside class="word-advanced-link"><strong>もっと高度に作りたい場合</strong><a href="article_next_record_manual_layout.html">次のレコードを手動で配置する（レター・表）</a><span>難易度 Lv.5</span></aside><section class="method-section" id="method-directory">
+<h2>方法2：「名簿」（ディレクトリ）差し込みで一覧にする</h2>
 <p>全員分を<strong>改ページなしで続けて並べたい</strong>ときは、差し込みの種類を<strong>「名簿」</strong>にします（英語版や古い説明では「ディレクトリ（Directory）」と呼ばれる機能です）。<code>«Next Record»</code> を入れなくても、文書の中身が人数分くり返されます。</p>
 <ol class="line-height-2">
 <li>新しい文書で「差し込み印刷の開始」→<strong>「名簿」</strong>を選び、Excelの名簿をつなぎます（メニューでは「名簿(D)」と表示されます）。</li>
@@ -249,24 +179,13 @@
 </ul>
 <h3>切り取り線を入れる</h3>
 <ul class="line-height-2">
-<li>やり方Bでは、表の罫線を「点線」にすると、そのまま切り取り線になります（「テーブル デザイン」→「ペンのスタイル」で点線を選び、行の境目をなぞる）。</li>
-<li>やり方Aでは、ラベルの表示用の枠線は印刷されません。1段目の下端に点線の罫線を引いておくと、「複数ラベルに反映」で各段にコピーされます。</li>
+<li>レターの表で作る場合（応用記事）は、表の罫線を「点線」にすると、そのまま切り取り線になります（「テーブル デザイン」→「ペンのスタイル」で点線を選び、行の境目をなぞる）。</li>
+<li>ラベル機能では、ラベルの表示用の枠線は印刷されません。1段目の下端に点線の罫線を引いておくと、「複数ラベルに反映」で各段にコピーされます。</li>
 <li>「✂ ‐‐‐‐‐‐‐‐」のような文字を段の下に入れる方法もあります。</li>
 </ul>
 <h3>左右に3列（A4横）にしたいとき</h3>
 <p>名札や小さな案内カードなら、用紙を<strong>横向き</strong>にして左右3列に並べる方法もあります。やり方Aなら早見表の「3人・左右に3列」の寸法で、やり方Bなら「3列×1行」の表にして、2列目と3列目のセルの先頭に<code>«Next Record»</code>を入れます。</p>
 </section>
-<details class="mailmerge-advanced" id="advanced-2"><summary>応用・難易度高：通し番号と条件によるスキップ</summary><div class="mailmerge-advanced-content"><section class="method-section" id="numbering">
-<h2>Wordの機能で番号を入れる・飛ばす</h2>
-<h3>通し番号を付ける：差し込み印刷のレコード番号</h3>
-<p class="verify-note">「ルール」メニューの項目名は、日本語表示と英語表示（Next Record・Skip Record If など）が混ざっていることがあります。環境により結果が異なる場合があります。</p>
-<p>「ルール」→<strong>「差し込み印刷のレコード番号」</strong>（Merge Record #）を選ぶと、<code>«MERGEREC»</code> が入り、名簿の何人目かが印刷されます（1, 2, 3…）。3人ずつ並べても、ブロックごとに 1・2・3、次の紙に 4・5・6 と続くので、<strong>受付番号や切り分けた後の照合</strong>に使えます。</p>
-<p class="verify-note">フィルターで絞り込んだときに番号が絞り込み後の何番目になるか、名簿の行番号になるかは、環境により結果が異なる場合があります。番号を正式な受付番号として使う場合は、名簿側の番号を差し込む方が確実です。</p>
-<h3>対象者を外すときはフィルターを使います</h3>
-<p>NEXTを使う複数人配置の文書では、SkipIf（レコードのスキップ条件）を併用しません。対象者は「アドレス帳の編集」のチェックやフィルターで先に決め、完成文書で人数と順番を確認します。<a href="https://support.microsoft.com/en-us/word/field-codes-next-field" rel="noopener" target="_blank">MicrosoftのNEXTの使用条件</a></p>
-<h3>3人ずつの順番を決める：並べ替え</h3>
-<p>「アドレス帳の編集」→「並べ替え」で、部署順・受講日順などに並べてから差し込むと、同じ部署の人が同じ紙にまとまりやすくなります。並べ替えた順に、上から3人ずつ埋まります。</p>
-</section></div></details>
 <section class="method-section" id="guide-step-13">
 <h2>確認のしかた</h2><p>通常は1面目を修正して「複数ラベルに反映」を押し、完成文書で人数・順番・最後の余りを確認します。Alt+F9のコード表示は、自動反映で直らない場合の補助確認です。</p>
 <ul class="line-height-2">

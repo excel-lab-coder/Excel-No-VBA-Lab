@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Word名簿差し込みで会社が変わったら自動で改ページする：IF・SET・REF・MERGESEQ｜Excel × No VBA Lab</title>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="1行1人の担当者名簿を変えずに、Wordの名簿差し込みだけで会社ごとの見出しと改ページを自動化します。IF・SET・REF・MERGESEQを、押すキーの順番で説明します。" name="description"/>
+<meta content="Word名簿差し込みで会社が変わったら自動で改ページする：IF・SET・REF・MERGESEQ" property="og:title"/>
+<meta content="1行1人の担当者名簿を変えずに、Wordの名簿差し込みだけで会社ごとの見出しと改ページを自動化します。IF・SET・REF・MERGESEQを、押すキーの順番で説明します。" property="og:description"/>
+<meta content="article" property="og:type"/>
+<meta content="Excel × No VBA Lab" property="og:site_name"/>
+<meta content="ja_JP" property="og:locale"/>
+<meta content="index, follow" name="robots"/>
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_label_basic.html" rel="canonical"/>
+<link href="../../common.css?v=20261103" rel="stylesheet"/>
+<link href="../../article.css?v=20261103" rel="stylesheet"/>
+<link as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="preload"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="stylesheet"/></noscript>
+<link href="word-guide.css?v=20261103" rel="stylesheet"/><meta content="6" name="difficulty"/>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Word名簿差し込みで会社が変わったら自動で改ページする：IF・SET・REF・MERGESEQ", "description": "1行1人の担当者名簿を変えずに、Wordの名簿差し込みだけで会社ごとの見出しと改ページを自動化します。IF・SET・REF・MERGESEQを、押すキーの順番で説明します。", "datePublished": "2026-11-03", "dateModified": "2026-11-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_cover_letter_auto_page_break.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "Word差し込み印刷", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/"}, {"@type": "ListItem", "position": 4, "name": "会社別の自動改ページ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_cover_letter_auto_page_break.html"}]}</script>
+</head>
+<body class="article-layout word-guide">
+<div aria-hidden="true" class="reading-progress"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/" aria-current="true">Word差し込み</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>会社別の自動改ページ</strong></div>
+<article class="article-body"><div class="article-header"><div class="article-meta"><span class="badge badge-maniac">応用・難易度高</span><span class="badge badge-all">Windows版 Word</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Word名簿差し込みで会社が変わったら自動で改ページする：IF・SET・REF・MERGESEQ</h1><p class="article-summary" data-seo-lead="true">1行1人の担当者名簿を変えずに、Wordの名簿差し込みだけで会社ごとの見出しと改ページを自動化します。IF・SET・REF・MERGESEQを、押すキーの順番で説明します。</p></div>
+<div class="word-answer"><span>結論</span><p><strong>前の人の会社名をSETで覚え、今の人と違うときだけ見出しと改ページを出します。</strong>会社数が少なければ、<a href="article_mailmerge_cover_letter_per_company.html">基本記事の方法</a>の方が簡単です。</p></div>
+<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">かなり難（Lv.6）／ 通常の操作で足りる場合は基本記事を先に読んでください</p><ol class="word-guide-flow"><li>名簿を並べる</li><li>名簿差し込み</li><li>コードを入力</li><li>完成文書で確認</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#flow">全体の流れ</a></li><li><a href="#prepare">準備：Excelの名簿を用意する</a></li><li><a href="#step1">手順1：Wordで「名簿」の差し込みを始める</a></li><li><a href="#step2">手順2：Excelファイルとシートを指定する</a></li><li><a href="#step3">手順3：宛先の一覧を確認する</a></li><li><a href="#step4">手順4：文面を入力し、差し込みフィールドを入れる</a></li><li><a href="#step5">手順5：結果のプレビューで確認する</a></li><li><a href="#step6">手順6：いったん差し込んで、何が足りないか見る</a></li><li><a href="#step7">手順7：会社が変わったときだけ見出しを出す設定</a></li><li><a href="#step8">手順8：新しい文書に差し込んで確認・印刷する</a></li><li><a href="#extras">応用：送付状に入れたいものを足す</a></li><li><a href="#trouble">よくあるつまずき</a></li></ol></nav></details></section>
+<section class="method-section">
+<h2 id="flow">全体の流れ</h2>
+<ol class="line-height-2">
+<li><a href="#prepare">Excelの名簿を用意する</a></li>
+<li><a href="#step1">Wordで「名簿」の差し込みを始める</a></li>
+<li><a href="#step2">Excelファイルとシートを指定する</a></li>
+<li><a href="#step3">宛先の一覧を確認する</a></li>
+<li><a href="#step4">文面を入力し、差し込みフィールドを入れる</a></li>
+<li><a href="#step5">結果のプレビューで確認する</a></li>
+<li><a href="#step6">いったん差し込んで、何が足りないか見る</a></li>
+<li><a href="#step7">会社が変わったときだけ見出しを出す設定（フィールドコード）</a></li>
+<li><a href="#step8">新しい文書に差し込んで確認・印刷する</a></li>
+</ol>
+<p>手順5までは、ボタンとメニューを順に押すだけです。手順7だけはキーボードで入力する部分があるので、押すキーを1つずつ表にしています。</p>
+</section>
+<section class="method-section" id="prepare">
+<h2>準備：Excelの名簿を用意する</h2>
+<figure class="article-screenshot"><a aria-label="画像を拡大：会社名・部署・氏名の3列で6名分の担当者名簿を作ったExcelの画面" href="../../image/articles/2026-11-01/word-cover-letter-excel-list.jpg" rel="noopener" target="_blank" style="--screenshot-width:871.00px"><img alt="会社名・部署・氏名の3列で6名分の担当者名簿を作ったExcelの画面" decoding="async" height="353" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-excel-list.jpg" width="871"></a><figcaption>撮影に使った名簿です（シート名「担当者」）。1行目が見出し、2行目から1人1行。3社・6名の架空のデータです。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<ol class="line-height-2">
+<li>1行目に見出し（会社名・部署・氏名）、2行目から1人1行で入力します。空白行は入れません。</li>
+<li><strong>会社名で並べ替え</strong>て、同じ会社の人が続けて並ぶようにします（「データ」タブ →「並べ替え」）。</li>
+<li>会社名の<strong>表記をそろえます</strong>（「株式会社」の有無、全角・半角、前後の空白）。1文字でも違うと、別の会社として改ページされます。</li>
+<li>保存して、<strong>Excelを閉じます</strong>。開いたままだと、Wordからつなぐときに確認やエラーが出ることがあります。</li>
+</ol>
+</section>
+<section class="method-section" id="step1">
+<h2><span class="word-step-no">手順1</span>Wordで「名簿」の差し込みを始める</h2>
+<ol class="line-height-2">
+<li>Wordを起動して<strong>白紙の文書</strong>を開きます。</li>
+<li>「<strong>差し込み文書</strong>」タブ →「<strong>差し込み印刷の開始</strong>」→「<strong>名簿(D)</strong>」を選びます。</li>
+</ol>
+<figure class="article-screenshot"><a aria-label="画像を拡大：差し込み印刷の開始のメニューで名簿を選ぶ画面" href="../../image/articles/2026-11-01/word-cover-letter-start-meibo.jpg" rel="noopener" target="_blank" style="--screenshot-width:850.00px"><img alt="差し込み印刷の開始のメニューで名簿を選ぶ画面" decoding="async" height="643" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-start-meibo.jpg" width="850"></a><figcaption>「差し込み印刷の開始」の一覧から「名簿(D)」を選びます。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<div class="xdemo-note-info"><strong>なぜ「レター」ではなく「名簿」なのか</strong><br/>
+レターは1人ごとに新しいページを作ります。名簿は、文書の中身を1人分ずつ<strong>続けて</strong>差し込み、ページを分けません。どこで改ページするかを、こちらで決められるのは名簿のほうです。</div>
+</section>
+<section class="method-section" id="step2">
+<h2><span class="word-step-no">手順2</span>Excelファイルとシートを指定する</h2>
+<ol class="line-height-2">
+<li>「<strong>宛先の選択</strong>」→「<strong>既存のリストを使用(E)</strong>」を選びます。</li>
+</ol>
+<figure class="article-screenshot"><a aria-label="画像を拡大：宛先の選択のメニューで既存のリストを使用を選ぶ画面" href="../../image/articles/2026-11-01/word-cover-letter-select-existing.jpg" rel="noopener" target="_blank" style="--screenshot-width:871.00px"><img alt="宛先の選択のメニューで既存のリストを使用を選ぶ画面" decoding="async" height="415" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-select-existing.jpg" width="871"></a><figcaption>「宛先の選択」の一覧から「既存のリストを使用(E)」を選びます。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<ol class="line-height-2" start="2">
+<li>「データ ファイルの選択」の画面が開きます。準備したExcelファイルの保存場所を開き、ファイルを選んで「<strong>開く</strong>」を押します。</li>
+<li>「<strong>テーブルの選択</strong>」で、名簿のシート（撮影では「<strong>担当者$</strong>」）を選びます。「<strong>先頭行をタイトル行として使用する</strong>」にチェックが入っていることを確認して「OK」を押します。</li>
+</ol>
+<figure class="article-screenshot"><a aria-label="画像を拡大：テーブルの選択で担当者シートを選んだ画面" href="../../image/articles/2026-11-01/word-cover-letter-select-table.jpg" rel="noopener" target="_blank" style="--screenshot-width:987.00px"><img alt="テーブルの選択で担当者シートを選んだ画面" decoding="async" height="483" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-select-table.jpg" width="987"></a><figcaption>シート名の後ろに「$」が付いて表示されます。シートが複数ある場合は、名簿のシートを選びます。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+</section>
+<section class="method-section" id="step3">
+<h2><span class="word-step-no">手順3</span>宛先の一覧を確認する</h2>
+<p>「<strong>アドレス帳の編集</strong>」を押すと、「差し込み印刷の宛先」が開きます。Excelの名簿が読み込まれているかを確認します。</p>
+<figure class="article-screenshot"><a aria-label="画像を拡大：差し込み印刷の宛先に6名の担当者が会社名順に並んだ画面" href="../../image/articles/2026-11-01/word-cover-letter-recipients.jpg" rel="noopener" target="_blank" style="--screenshot-width:1314.05px"><img alt="差し込み印刷の宛先に6名の担当者が会社名順に並んだ画面" decoding="async" height="767" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-recipients.jpg" width="1362"></a><figcaption>6名すべてにチェックが入り、会社名順に並んでいます。列の順番はExcelと違って表示されることがありますが、問題ありません。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<ul class="line-height-2">
+<li>左のチェックを外した人は差し込まれません。</li>
+<li>この画面の「並べ替え」で順番を変えると、同じ会社が離れてしまうことがあります。並び順はExcel側で決めておき、ここでは変えないのが安全です。</li>
+<li>確認したら「OK」を押します。</li>
+</ul>
+</section>
+<section class="method-section" id="step4">
+<h2><span class="word-step-no">手順4</span>文面を入力し、差し込みフィールドを入れる</h2>
+<p>文書に、次の4行を作ります。«　» の部分は、手で入力せず「<strong>差し込みフィールドの挿入</strong>」から入れます。</p>
+<div class="table-wrapper"><table class="comparison-table"><caption>入力する内容</caption>
+<thead><tr><th>行</th><th>内容</th><th>入れ方</th></tr></thead>
+<tbody>
+<tr><td>1行目</td><td>«会社名» 御中</td><td>「差し込みフィールドの挿入」の▼→「会社名」、続けて「 御中」と入力</td></tr>
+<tr><td>2行目</td><td>書類送付のご案内</td><td>そのまま入力</td></tr>
+<tr><td>3行目</td><td>下記の方々あてに書類をお送りします。</td><td>そのまま入力</td></tr>
+<tr><td>4行目</td><td>«部署»　«氏名» 様</td><td>「部署」を挿入→全角スペース→「氏名」を挿入→「 様」と入力</td></tr>
+</tbody></table></div>
+<figure class="article-screenshot"><a aria-label="画像を拡大：差し込みフィールドの挿入のメニューに会社名・部署・氏名が並ぶ画面" href="../../image/articles/2026-11-01/word-cover-letter-insert-field.jpg" rel="noopener" target="_blank" style="--screenshot-width:508.00px"><img alt="差し込みフィールドの挿入のメニューに会社名・部署・氏名が並ぶ画面" decoding="async" height="350" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-insert-field.jpg" width="508"></a><figcaption>「差し込みフィールドの挿入」の▼を押すと、Excelの見出し（会社名・部署・氏名）が並びます。入れたい項目をクリックします。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<p>4行目の最後で <span class="kbd-btn">Enter</span> を押し、<strong>最後に空の行を1つ</strong>作ります。これがないと、差し込んだときに名前が改行されず横につながりました。</p>
+<figure class="article-screenshot"><a aria-label="画像を拡大：会社名 御中、本文2行、部署 氏名 様の4行と最後の空行を入力した画面" href="../../image/articles/2026-11-01/word-cover-letter-fields-placed.jpg" rel="noopener" target="_blank" style="--screenshot-width:995.00px"><img alt="会社名 御中、本文2行、部署 氏名 様の4行と最後の空行を入力した画面" decoding="async" height="363" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-fields-placed.jpg" width="995"></a><figcaption>入力が終わった状態です（「ホーム」タブの編集記号の表示をオンにしています）。«会社名» などが差し込みフィールドです。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+</section>
+<section class="method-section" id="step5">
+<h2><span class="word-step-no">手順5</span>結果のプレビューで確認する</h2>
+<p>「差し込み文書」タブの「<strong>結果のプレビュー</strong>」を押すと、«会社名» などが名簿の1人目の値に変わります。</p>
+<figure class="article-screenshot"><a aria-label="画像を拡大：結果のプレビューで1人目の株式会社サンプル商事 営業部 山田太郎様が表示された画面" href="../../image/articles/2026-11-01/word-cover-letter-preview-1.jpg" rel="noopener" target="_blank" style="--screenshot-width:995.00px"><img alt="結果のプレビューで1人目の株式会社サンプル商事 営業部 山田太郎様が表示された画面" decoding="async" height="363" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-preview-1.jpg" width="995"></a><figcaption>1人目（株式会社サンプル商事・営業部・山田 太郎）が表示されました。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<ul class="line-height-2">
+<li>「結果のプレビュー」の右にある <span class="kbd-btn">▶</span> を押すと、2人目、3人目…と切り替わります。</li>
+<li>名簿の差し込みでは、プレビューには<strong>1人分ずつ</strong>しか表示されません。会社ごとのまとまりは、手順8で新しい文書に差し込んで確認します。</li>
+<li>確認したら、もう一度「結果のプレビュー」を押してオフに戻します（手順7はオフの状態で行います）。</li>
+</ul>
+</section>
+<section class="method-section" id="step6">
+<h2><span class="word-step-no">手順6</span>いったん差し込んで、何が足りないか見る</h2>
+<p>この状態で「<strong>完了と差し込み</strong>」→「<strong>個々のドキュメントの編集</strong>」→「すべて」→「OK」を押すと、次のような新しい文書ができます。</p>
+<figure class="article-screenshot"><a aria-label="画像を拡大：見出しの3行が担当者1人ごとにくり返された差し込み結果" href="../../image/articles/2026-11-01/word-cover-letter-before-repeat.jpg" rel="noopener" target="_blank" style="--screenshot-width:694.92px"><img alt="見出しの3行が担当者1人ごとにくり返された差し込み結果" decoding="async" height="985" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-before-repeat.jpg" width="925"></a><figcaption>手順4のままで差し込んだ結果です。「株式会社サンプル商事 御中」と本文が、担当者1人ごとにくり返されています。改ページもありません。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<p>欲しいのは「会社名と本文は<strong>会社が変わったときだけ</strong>出し、その前で改ページする」形です。これを手順7で設定します。確認したら、この新しい文書は保存せずに閉じます。</p>
+</section>
+<section class="method-section" id="step7">
+<h2><span class="word-step-no">手順7</span>会社が変わったときだけ見出しを出す設定</h2>
+<p>ここからは<strong>フィールドコード</strong>を使います。ボタンにはない設定なので、キーボードで入力します。押すキーを順番に表にしたので、その通りに進めてください。</p>
+<h3>7-1. フィールドコードを表示する</h3>
+<ol class="line-height-2">
+<li>「結果のプレビュー」がオフになっていることを確認します。</li>
+<li><span class="kbd-btn">Alt</span>+<span class="kbd-btn">F9</span> を押します。«会社名» が <code>{ MERGEFIELD 会社名 }</code> の形に変わります。もう一度押すと元に戻ります。</li>
+<li>「<strong>表示</strong>」タブ →「<strong>下書き</strong>」にすると、改ページが点線1本で表示され、作業しやすくなります。</li>
+</ol>
+<figure class="article-screenshot"><a aria-label="画像を拡大：Alt+F9でフィールドコードを表示した状態の文書" href="../../image/articles/2026-11-01/word-cover-letter-codes-basic.jpg" rel="noopener" target="_blank" style="--screenshot-width:995.00px"><img alt="Alt+F9でフィールドコードを表示した状態の文書" decoding="async" height="363" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-codes-basic.jpg" width="995"></a><figcaption>Alt+F9でコードを表示した状態です。「{ MERGEFIELD 会社名 }」のように表示されます。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<h3>7-2. フィールド用のかっこ「{ }」の入れ方</h3>
+<p>フィールドコードの「{ }」は、キーボードの波かっこでは動きません。<strong><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押すと入る、灰色の「{ }」</strong>を使います。</p>
+<figure class="article-screenshot"><a aria-label="画像を拡大：Ctrl+F9で空のフィールドのかっこが入った画面" href="../../image/articles/2026-11-01/word-cover-letter-ctrl-f9.jpg" rel="noopener" target="_blank" style="--screenshot-width:995.00px"><img alt="Ctrl+F9で空のフィールドのかっこが入った画面" decoding="async" height="363" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-ctrl-f9.jpg" width="995"></a><figcaption>Ctrl+F9を押すと、灰色の「{ }」が入り、カーソルがその中に入ります。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<ul class="line-height-2">
+<li>「{ }」の中に入力したら、<span class="kbd-btn">→</span> を<strong>2回</strong>押すと、閉じかっこ「}」の外に出られます（1回だとまだ中にいます）。</li>
+<li>「"」は<strong>半角</strong>で入力します。<code>=</code>、<code>&lt;&gt;</code>、<code>&gt;</code> の前後には半角スペースを入れます。</li>
+<li>間違えたら <span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">Z</span> で戻せます。</li>
+</ul>
+<h3>7-3. 見出しの3行を「会社が変わったときだけ」にする</h3>
+<div class="table-wrapper"><table class="comparison-table"><caption>見出しの3行をIFで囲む操作</caption><thead><tr><th>順</th><th>操作</th><th>画面の状態</th></tr></thead><tbody><tr><td style="white-space:nowrap">1</td><td>見出しの3行（«会社名» 御中 〜 お送りします。）を、行の左側をドラッグして<strong>3行まとめて選択</strong></td><td>3行が反転表示になる</td></tr><tr><td style="white-space:nowrap">2</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押す</td><td>3行全体が「{{ }}」で囲まれる（下の画面）</td></tr><tr><td style="white-space:nowrap">3</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">Home</span> で文書の先頭へ移動し、<span class="kbd-btn">→</span> を1回押す</td><td>カーソルが外側の「{」のすぐ後ろに入る</td></tr><tr><td style="white-space:nowrap">4</td><td><code>IF </code> と入力（IFの後ろに半角スペース）</td><td></td></tr><tr><td style="white-space:nowrap">5</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>MERGEFIELD 会社名</code> と入力し、<span class="kbd-btn">→</span> <span class="kbd-btn">→</span></td><td>内側の「{ }」から外に出る</td></tr><tr><td style="white-space:nowrap">6</td><td><code> &lt;&gt; "</code> と入力（前後に半角スペース、最後は半角の「"」）</td><td></td></tr><tr><td style="white-space:nowrap">7</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>REF 前社</code> と入力し、<span class="kbd-btn">→</span> <span class="kbd-btn">→</span></td><td></td></tr><tr><td style="white-space:nowrap">8</td><td><code>" "</code> と入力</td><td>ここまでで「前社と違うとき、次の" "の中を表示する」という形になる</td></tr><tr><td style="white-space:nowrap">9</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>IF </code> と入力、もう一度 <span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>MERGESEQ</code> と入力し、<span class="kbd-btn">→</span> <span class="kbd-btn">→</span></td><td></td></tr><tr><td style="white-space:nowrap">10</td><td><code> &gt; 1 "</code> と入力</td><td></td></tr><tr><td style="white-space:nowrap">11</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">Enter</span> を押す</td><td>「改ページ」の線が入る（2社目以降の前だけ改ページするため）</td></tr><tr><td style="white-space:nowrap">12</td><td><code>" ""</code> と入力して <span class="kbd-btn">→</span> <span class="kbd-btn">→</span></td><td>改ページ用のIFが閉じる。この後ろに元の«会社名» 御中が続いている</td></tr><tr><td style="white-space:nowrap">13</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">End</span> で文書の最後へ移動し、<span class="kbd-btn">↑</span> で«部署»の行へ移動して <span class="kbd-btn">Home</span></td><td>カーソルが行頭（外側の「}」の前）に来る</td></tr><tr><td style="white-space:nowrap">14</td><td><code>" ""</code> と入力</td><td>外側のIFが閉じる（違わないときは何も表示しない、の意味）</td></tr></tbody></table></div>
+<figure class="article-screenshot"><a aria-label="画像を拡大：見出しの3行を選択してCtrl+F9を押し、3行全体が波かっこで囲まれた画面" href="../../image/articles/2026-11-01/word-cover-letter-wrap-field.jpg" rel="noopener" target="_blank" style="--screenshot-width:1131.00px"><img alt="見出しの3行を選択してCtrl+F9を押し、3行全体が波かっこで囲まれた画面" decoding="async" height="207" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-wrap-field.jpg" width="1131"></a><figcaption>表の2番目の状態です。選んでいた3行全体が「{」と「}」で囲まれ、閉じかっこは4行目の先頭に来ています。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<h3>7-4. 名前の行で「今の会社名」を覚える</h3>
+<div class="table-wrapper"><table class="comparison-table"><caption>«部署» «氏名» 様 の後ろに入れる操作</caption><thead><tr><th>順</th><th>操作</th><th>画面の状態</th></tr></thead><tbody><tr><td style="white-space:nowrap">1</td><td>«部署»の行で <span class="kbd-btn">End</span> を押し、「様」の後ろへ移動</td><td></td></tr><tr><td style="white-space:nowrap">2</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>SET 前社 "</code> と入力</td><td></td></tr><tr><td style="white-space:nowrap">3</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>MERGEFIELD 会社名</code> と入力し、<span class="kbd-btn">→</span> <span class="kbd-btn">→</span></td><td></td></tr><tr><td style="white-space:nowrap">4</td><td><code>"</code> と入力</td><td>今の人の会社名を「前社」として覚える形になる</td></tr></tbody></table></div>
+<h3>7-5. 文書の先頭に、1人目のための準備を入れる</h3>
+<div class="table-wrapper"><table class="comparison-table"><caption>文書の先頭に入れる操作</caption><thead><tr><th>順</th><th>操作</th><th>画面の状態</th></tr></thead><tbody><tr><td style="white-space:nowrap">1</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">Home</span> で文書の先頭（外側の「{」の前）へ移動</td><td></td></tr><tr><td style="white-space:nowrap">2</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>IF </code> と入力、<span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>MERGESEQ</code> と入力し、<span class="kbd-btn">→</span> <span class="kbd-btn">→</span></td><td></td></tr><tr><td style="white-space:nowrap">3</td><td><code> = 1 "</code> と入力</td><td></td></tr><tr><td style="white-space:nowrap">4</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>SET 前社 "（なし）"</code> と入力し、<span class="kbd-btn">→</span> <span class="kbd-btn">→</span></td><td>「（なし）」は全角でかまいません</td></tr><tr><td style="white-space:nowrap">5</td><td><code>" ""</code> と入力</td><td>1人目のときだけ「前社」を空の値で用意する形になる</td></tr></tbody></table></div>
+<p>これがないと、1人目のときに「前社」がまだ決まっていないため、差し込みで<strong>「レコード 1 でフィールドの計算エラー」</strong>が出ました。</p>
+<h3>7-6. 完成したフィールドコード</h3>
+<figure class="article-screenshot"><a aria-label="画像を拡大：送付状の完成したフィールドコードを下書き表示で表示した画面" href="../../image/articles/2026-11-01/word-cover-letter-fieldcodes.jpg" rel="noopener" target="_blank" style="--screenshot-width:1518.00px"><img alt="送付状の完成したフィールドコードを下書き表示で表示した画面" decoding="async" height="375" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-fieldcodes.jpg" width="1518"></a><figcaption>下書き表示でAlt+F9を押した状態です。1段目の途中から改ページの点線までが「会社が変わったとき」の部分、「様」の後ろの { SET 前社 … } が会社名を覚える部分です。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<p>文字で書くと次の形です（「［改ページ］」は <span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">Enter</span> で入れた改ページ、行の終わりは <span class="kbd-btn">Enter</span>）。</p>
+<pre class="code-block" data-lang="word"><code>{ IF { MERGESEQ } = 1 "{ SET 前社 "（なし）" }" "" }{ IF { MERGEFIELD 会社名 } &lt;&gt; "{ REF 前社 }" "{ IF { MERGESEQ } &gt; 1 "［改ページ］" "" }{ MERGEFIELD 会社名 } 御中
+書類送付のご案内
+下記の方々あてに書類をお送りします。
+" "" }
+{ MERGEFIELD 部署 }　{ MERGEFIELD 氏名 } 様{ SET 前社 "{ MERGEFIELD 会社名 }" }
+（空の行）</code></pre>
+<div class="table-wrapper"><table class="comparison-table"><caption>コードの意味</caption>
+<thead><tr><th>部分</th><th>意味</th></tr></thead>
+<tbody>
+<tr><td><code>IF { MERGESEQ } = 1 …</code></td><td>1人目のときだけ、「前社」に「（なし）」を入れておく</td></tr>
+<tr><td><code>IF { MERGEFIELD 会社名 } &lt;&gt; "{ REF 前社 }" …</code></td><td>今の人の会社名が、前の人の会社名と<strong>違うとき</strong>だけ、見出しの3行を表示する</td></tr>
+<tr><td><code>IF { MERGESEQ } &gt; 1 "［改ページ］" ""</code></td><td>2社目以降のときだけ、見出しの前で改ページする（1ページ目が白紙にならないように）</td></tr>
+<tr><td><code>SET 前社 "{ MERGEFIELD 会社名 }"</code></td><td>名前を表示した後、今の人の会社名を「前社」として覚える</td></tr>
+</tbody></table></div>
+<p>入力が終わったら <span class="kbd-btn">Alt</span>+<span class="kbd-btn">F9</span> でコードの表示を戻し、「表示」タブ →「印刷レイアウト」に戻します。作った文書は名前を付けて保存しておくと、次回は名簿を差し替えるだけで使えます。</p>
+</section>
+<section class="method-section" id="step8">
+<h2><span class="word-step-no">手順8</span>新しい文書に差し込んで確認・印刷する</h2>
+<ol class="line-height-2">
+<li>「<strong>完了と差し込み</strong>」→「<strong>個々のドキュメントの編集</strong>」を選びます。</li>
+</ol>
+<figure class="article-screenshot"><a aria-label="画像を拡大：完了と差し込みのメニューに個々のドキュメントの編集が並ぶ画面" href="../../image/articles/2026-11-01/word-finish-merge-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:842.00px"><img alt="完了と差し込みのメニューに個々のドキュメントの編集が並ぶ画面" decoding="async" height="353" loading="lazy" src="../../image/articles/2026-11-01/word-finish-merge-menu.jpg" width="842"></a><figcaption>「完了と差し込み」の一覧です。確認してから印刷したいので「個々のドキュメントの編集」を選びます。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<ol class="line-height-2" start="2">
+<li>「新規文書への差し込み」で「<strong>すべて</strong>」を選び、「OK」を押します。</li>
+</ol>
+<figure class="article-screenshot"><a aria-label="画像を拡大：新規文書への差し込みですべてを選んだ画面" href="../../image/articles/2026-11-01/word-merge-to-new-document.jpg" rel="noopener" target="_blank" style="--screenshot-width:813.00px"><img alt="新規文書への差し込みですべてを選んだ画面" decoding="async" height="345" loading="lazy" src="../../image/articles/2026-11-01/word-merge-to-new-document.jpg" width="813"></a><figcaption>「すべて」を選んで「OK」を押します。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<ol class="line-height-2" start="3">
+<li>差し込み済みの新しい文書（「ディレクトリ1」など）が開きます。会社ごとに1ページになっているかを確認します。</li>
+</ol>
+<figure class="article-screenshot"><a aria-label="画像を拡大：差し込み後の2ページ目。テスト工業株式会社 御中の下に2名" href="../../image/articles/2026-11-01/word-cover-letter-page2.jpg" rel="noopener" target="_blank" style="--screenshot-width:960.00px"><img alt="差し込み後の2ページ目。テスト工業株式会社 御中の下に2名" decoding="async" height="404" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-page2.jpg" width="960"></a><figcaption>2ページ目です。テスト工業株式会社の2名がまとまっています。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<figure class="article-screenshot"><a aria-label="画像を拡大：差し込み後の3ページ目。みどり物産株式会社 御中の下に1名" href="../../image/articles/2026-11-01/word-cover-letter-page3.jpg" rel="noopener" target="_blank" style="--screenshot-width:995.00px"><img alt="差し込み後の3ページ目。みどり物産株式会社 御中の下に1名" decoding="async" height="342" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-page3.jpg" width="995"></a><figcaption>3ページ目です。みどり物産株式会社の1名だけのページです。最後の会社の後ろには改ページが入らないので、白紙のページはできませんでした。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<ol class="line-height-2" start="4">
+<li>確認できたら、この新しい文書から <span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">P</span> で印刷します。PDFにする場合は「ファイル」→「名前を付けて保存」でPDFを選びます。</li>
+</ol>
+<p class="verify-note">撮影した例（3社・6名）では、エラーなく3ページにまとまりました。紙への印刷は行っていません。担当者が多く1ページに入りきらない会社は、次のページにはみ出します。環境により結果が異なる場合があります。</p>
+</section>
+<section class="method-section">
+<h2 id="extras">応用：送付状に入れたいものを足す</h2>
+<ul class="line-height-2">
+<li><strong>日付・差出人・あいさつ文：</strong>見出しのIF（7-3で作った外側の「{ }」）の中、«会社名» 御中 の前後に書きます。外に書くと、担当者の人数分くり返されます。</li>
+<li><strong>担当者の前に「・」を付ける：</strong>«部署»の行の先頭に入力します。</li>
+<li><strong>必要な会社だけ：</strong>Excelで対象の会社だけの名簿を作るのが安全です（<a href="article_mailmerge_filter_two_patterns.html">必要な人だけ印刷する2つの方法</a>のパターン2）。</li>
+</ul>
+</section>
+<section class="method-section">
+<h2 id="trouble">よくあるつまずき</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>症状と確認すること</caption>
+<thead><tr><th>症状</th><th>確認すること</th></tr></thead>
+<tbody>
+<tr><td>「レコード 1 でフィールドの計算エラー」が出る</td><td>7-5の、文書の先頭のコードが入っているか。「前社」の名前が3か所で同じか。</td></tr>
+<tr><td>1人ずつ別のページになる</td><td>手順1で「レター」を選んでいないか。「名簿」で始めます。</td></tr>
+<tr><td>見出しが1人ごとにくり返される</td><td>見出しの3行が外側のIFの「" "」の中に入っているか。「"」が半角か。</td></tr>
+<tr><td>同じ会社が2ページに分かれる</td><td>Excelで会社名順に並んでいるか。会社名の表記ゆれがないか。</td></tr>
+<tr><td>1ページ目が白紙になる</td><td>改ページを <code>MERGESEQ &gt; 1</code> のIFで囲んでいるか。</td></tr>
+<tr><td>会社名の前に空白が入る</td><td>改ページ用のIFの「}」と «会社名» の「{」の間に、スペースが残っていないか。</td></tr>
+<tr><td>名前が改行されず横につながる</td><td>名前の行の後ろに空の行があるか。</td></tr>
+<tr><td>コードがそのまま印刷される</td><td><span class="kbd-btn">Alt</span>+<span class="kbd-btn">F9</span> でコードの表示を戻したか。「{ }」を <span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> で入れたか。</td></tr>
+</tbody></table></div>
+</section>
+
+<p class="word-env-note">Windows版Word（Microsoft 365）で、架空の3社・6名のデータを使って確認しました。紙への印刷は行っていません。</p>
+<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>Wordの記事をさらに探す</strong></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside>
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2"><li><a href="article_mailmerge_cover_letter_per_company.html">会社ごとに1枚の送付状（基本）</a></li><li><a href="article_field_code_basics.html">フィールドコード入門</a></li><li><a href="article_mailmerge_directory_finish.html">名簿差し込みを完成させる手順</a></li></ul></section>
+</article>
+</main>
+<footer class="site-footer"><div aria-label="運営情報と検証方針" class="site-footer-trust"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Word差し込み印刷を想定しています。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>© Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js?v=20261103"></script>
+<script src="word-images.js?v=20261103" defer></script>
+</body>
+</html>

@@ -37,9 +37,10 @@
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>長形3号の封筒に縦書きで宛名</strong></div>
 <article class="article-body">
 <div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Word差し込み印刷で長形3号の封筒に縦書きで宛名を入れる方法</h1>
-<p class="article-summary" data-seo-lead="true">封筒のサイズと宛名枠を決め、縦書き用の印刷列を使って配置します。</p></div><section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">ふつう（Lv.3） ／ 応用編は折りたたんでいます</p><ol class="word-guide-flow"><li>長形3号を選ぶ</li><li>宛名枠を作る</li><li>印刷用列を挿入</li><li>完成・給紙確認</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">やりたいこと</a></li><li><a href="#guide-step-2">操作の順番と完成確認</a></li><li><a href="#guide-step-3">住所録（Excel）の準備</a></li><li><a href="#step1">手順1：封筒の差し込みを始めて、長形3号を選ぶ</a></li><li><a href="#step2">手順2：縦書きにして、縦書きテキストボックスに宛名を入れる</a></li><li><a href="#step3">手順3：縦書き用の数字はExcelの印刷用列で整える</a></li><li><a href="#advanced-1">応用・難易度高：元データに列を追加できないときのDBCHAR</a></li><li><a href="#step4">手順4：確認して印刷する</a></li><li><a href="#guide-step-9">完成文書から封筒へ印刷する</a></li><li><a href="#guide-step-8">よくあるつまずき</a></li></ol></nav></details></section>
+<p class="article-summary" data-seo-lead="true">封筒のサイズと宛名枠を決め、縦書き用の印刷列を使って配置します。</p></div><div class="word-answer"><span>結論</span><p><strong>「封筒」で長形3号を選び、縦書きテキストボックスに宛名を入れます。</strong>半角数字が横に寝る場合は、Excelに全角の印刷用列を作って差し込みます。</p></div>
+<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">ふつう（Lv.3）</p><ol class="word-guide-flow"><li>長形3号を選ぶ</li><li>宛名枠を作る</li><li>印刷用列を挿入</li><li>完成・給紙確認</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">この記事でできること</a></li><li><a href="#guide-step-2">操作の順番と完成確認</a></li><li><a href="#guide-step-3">住所録（Excel）の準備</a></li><li><a href="#step1">手順1：封筒の差し込みを始めて、長形3号を選ぶ</a></li><li><a href="#step2">手順2：縦書きにして、縦書きテキストボックスに宛名を入れる</a></li><li><a href="#step3">手順3：縦書き用の数字はExcelの印刷用列で整える</a></li><li><a href="#step4">手順4：確認して印刷する</a></li><li><a href="#guide-step-9">完成文書から封筒へ印刷する</a></li><li><a href="#guide-step-8">よくあるつまずき</a></li></ol></nav></details></section>
 <section class="goal-section" id="guide-step-1">
-<h2><span class="icon">💡</span> やりたいこと</h2>
+<h2>この記事でできること</h2>
 <p>A4の書類を三つ折りにして入れる<strong>長形3号</strong>（120×235mm）の封筒に、Excelの住所録から<strong>縦書き</strong>で宛名を印刷したい――という場合の手順です。</p>
 <p>Wordの差し込み印刷には「封筒」があり、封筒の大きさを選べます。ただし、そのままでは横書きです。この記事では、実際のWordで次の順に作り、撮影で気づいた点（宛先の枠が縦書きにならなかった、半角の数字が横に寝た）と、その直し方を説明します。</p>
 <ol class="line-height-2">
@@ -96,17 +97,7 @@
 </section>
 <section class="method-section" id="step3">
 <h2><span class="word-step-no">手順3</span>縦書き用の数字はExcelの印刷用列で整える</h2><p>半角数字が横向きになる場合は、まずExcelに縦書き印刷用の列を作ります。元の住所は残し、追加列へ全角表記を用意して差し込む方法です。</p><ol class="line-height-2"><li>Excelへ「郵便番号_縦書き用」「住所1_縦書き用」「住所2_縦書き用」を追加します。</li><li>元の住所がF2なら、印刷用の2行目に <code>=IF(F2="","",JIS(F2))</code> を入力し、最終行までコピーします。</li><li>JISは数字だけでなく英字や半角カナも全角に変えます。建物名の英字などを変えたくない場合は、印刷用列へ必要な数字だけを全角にした文字列を入力します。</li><li>Excelを保存し、Wordの宛先を選び直します。縦書きテキストボックス内の元の住所フィールドを、追加した印刷用列へ置き換えます。</li><li>プレビューで数字とハイフンの向きを確認します。ハイフンを全角にしても、縦棒へ自動変換されるとは限りません。</li></ol>
-<details class="mailmerge-advanced" id="advanced-1"><summary>応用・難易度高：元データに列を追加できないときのDBCHAR</summary><div class="mailmerge-advanced-content"><p>「結果のプレビュー」をオンにすると、住所録の<strong>半角の数字やハイフン</strong>が、縦書きの中で横向きに寝て表示されました。</p><figure class="article-screenshot"><a aria-label="画像を拡大：Wordを100％表示して撮り直した、修正前の宛名です。半角の100-0001・1-2-3・101が横向きに寝ています。宛名部分を切り出し、封筒の余白は省いています。" href="../../image/articles/2026-11-02/word-image-fixes/envelope-preview-halfwidth.png" rel="noopener" target="_blank" style="--screenshot-width:310.00px"><img alt="Wordを100％表示して撮り直した、修正前の宛名です。半角の100-0001・1-2-3・101が横向きに寝ています。宛名部分を切り出し、封筒の余白は省いています。" decoding="async" height="510" loading="lazy" src="../../image/articles/2026-11-02/word-image-fixes/envelope-preview-halfwidth.png" width="310"></a><figcaption>Wordを100％表示して撮り直した、修正前の宛名です。半角の100-0001・1-2-3・101が横向きに寝ています。宛名部分を切り出し、封筒の余白は省いています。 （クリックで拡大・原寸表示）</figcaption></figure><p>住所録の数字を全角に直す方法もありますが、Word側で<strong>差し込むときだけ全角に変える</strong>ことができます。フィールドに <code>\* DBCHAR</code>（全角文字に変換する書式スイッチ）を付けます。</p><ol class="line-height-2">
-<li>テキストボックスの中をクリックし、<span class="kbd-btn">Alt</span>+<span class="kbd-btn">F9</span> でフィールドコードを表示します。</li>
-<li>郵便番号・住所_1・住所_2のフィールドの、列名の後ろに <code> \* DBCHAR</code> を入力します。</li>
-<li><span class="kbd-btn">Alt</span>+<span class="kbd-btn">F9</span> で表示を戻し、テキストボックスの中を全部選んで <span class="kbd-btn">F9</span> を押して更新します。</li>
-</ol><pre class="code-block" data-lang="word"><code>{ MERGEFIELD 郵便番号 \* DBCHAR }
-{ MERGEFIELD 住所_1 \* DBCHAR }
-{ MERGEFIELD 住所_2 \* DBCHAR }</code></pre><p>フィールドコードは上のコード欄で全文を確認できます。「\」はWordの画面では「¥」に見える場合があります。</p><p>更新すると、数字が全角になり、縦に並びました（この記事の冒頭の画面）。</p><ul class="line-height-2">
-<li>ハイフンは全角の「－」になり、縦書きの中では<strong>横棒</strong>で表示されました。番地の区切りを縦棒にしたい場合や、「一－二－三」のような漢数字にしたい場合は、住所録の側で書き方を変えます。</li>
-<li>撮影した例では、住所_2や会社が空の人も、その行のぶんの空きは表示されず、詰めて表示されました。</li>
-</ul></div></details>
-</section>
+<aside class="word-advanced-link"><strong>もっと高度に作りたい場合</strong><a href="article_field_format_switches.html">元データに列を足せないときのDBCHAR（書式スイッチ実例集）</a><span>難易度 Lv.5</span></aside></section>
 <section class="method-section" id="step4">
 <h2><span class="word-step-no">手順4</span>確認して印刷する</h2>
 <ol class="line-height-2">

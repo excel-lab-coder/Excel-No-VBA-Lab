@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wordのワイルドカード置換の実例：日付・郵便番号・連続スペース・番号付け｜Excel × No VBA Lab</title>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="Wordの置換でワイルドカードを使う実例集です。日付、郵便番号、連続スペース、段落先頭の番号を、実際に置換した結果と、置換されない場合の注意とともに説明します。" name="description"/>
+<meta content="Wordのワイルドカード置換の実例：日付・郵便番号・連続スペース・番号付け" property="og:title"/>
+<meta content="Wordの置換でワイルドカードを使う実例集です。日付、郵便番号、連続スペース、段落先頭の番号を、実際に置換した結果と、置換されない場合の注意とともに説明します。" property="og:description"/>
+<meta content="article" property="og:type"/>
+<meta content="Excel × No VBA Lab" property="og:site_name"/>
+<meta content="ja_JP" property="og:locale"/>
+<meta content="index, follow" name="robots"/>
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_label_basic.html" rel="canonical"/>
+<link href="../../common.css?v=20261103" rel="stylesheet"/>
+<link href="../../article.css?v=20261103" rel="stylesheet"/>
+<link as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="preload"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="stylesheet"/></noscript>
+<link href="word-guide.css?v=20261103" rel="stylesheet"/><meta content="5" name="difficulty"/>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Wordのワイルドカード置換の実例：日付・郵便番号・連続スペース・番号付け", "description": "Wordの置換でワイルドカードを使う実例集です。日付、郵便番号、連続スペース、段落先頭の番号を、実際に置換した結果と、置換されない場合の注意とともに説明します。", "datePublished": "2026-11-03", "dateModified": "2026-11-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_wildcard_advanced.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "Word差し込み印刷", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/"}, {"@type": "ListItem", "position": 4, "name": "ワイルドカード置換の実例", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_wildcard_advanced.html"}]}</script>
+</head>
+<body class="article-layout word-guide">
+<div aria-hidden="true" class="reading-progress"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/" aria-current="true">Word差し込み</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>ワイルドカード置換の実例</strong></div>
+<article class="article-body"><div class="article-header"><div class="article-meta"><span class="badge badge-maniac">応用・難易度高</span><span class="badge badge-all">Windows版 Word</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Wordのワイルドカード置換の実例：日付・郵便番号・連続スペース・番号付け</h1><p class="article-summary" data-seo-lead="true">Wordの置換でワイルドカードを使う実例集です。日付、郵便番号、連続スペース、段落先頭の番号を、実際に置換した結果と、置換されない場合の注意とともに説明します。</p></div>
+<div class="word-answer"><span>結論</span><p><strong>「ワイルドカードを使用する」をオンにし、1件ずつ確認してから置換します。</strong>Wordの記号は一般的な正規表現と違います。作業前に必ずコピーを保存します。</p></div>
+<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">難しい（Lv.5）／ 通常の操作で足りる場合は基本記事を先に読んでください</p><ol class="word-guide-flow"><li>コピーを保存</li><li>検索式を入力</li><li>1件ずつ確認</li><li>結果を照合</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#date">日付の区切りを変える</a></li><li><a href="#results">実際に置換した結果</a></li><li><a href="#guide-step-7">条番号を付け替える場合の注意</a></li></ol></nav></details></section>
+<section class="method-section"><h2 id="date">日付の区切りを変える</h2><p>対象を半角数字の「2026/11/2」のような日付表記に限定した例です。検索は日付の妥当性までは判断しません。</p><div class="table-wrapper"><table class="comparison-table"><caption>半角数字の日付表記の変換</caption><thead><tr><th scope="col">欄</th><th scope="col">入力</th></tr></thead><tbody><tr><td>検索する文字列</td><td>([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})</td></tr><tr><td>置換後の文字列</td><td>\1年\2月\3日</td></tr></tbody></table></div><ol class="line-height-2"><li>Ctrl＋H→「オプション」で「ワイルドカードを使用する」をオンにします。</li><li>表の検索式と置換文字列を、半角で入力します。</li><li>「次を検索」で、周辺の数字を巻き込んでいないか確認します。</li><li>「置換」を1件ずつ実行します。日付以外の番号が混ざる文書では、すべて置換を使わず個別に判断します。</li><li>作業後はワイルドカードをオフに戻します。</li></ol><p>Wordのワイルドカードは一般的な正規表現とは異なります。検索式を他のアプリからそのまま流用しないでください。</p></section>
+<section class="method-section" id="results"><h2>実際に置換した結果</h2><div class="table-wrapper"><table class="comparison-table"><thead><tr><th>目的</th><th>検索する文字列</th><th>置換後</th><th>元の文字列 → 結果</th></tr></thead><tbody>
+<tr><td>日付の表記</td><td><code>([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})</code></td><td><code>\1年\2月\3日</code></td><td>2026/11/2 → 2026年11月2日（12/34/56は変わらない）</td></tr>
+<tr><td>ドット区切りの日付</td><td><code>([0-9]{4}).([0-9]{2}).([0-9]{2})</code></td><td><code>\1年\2月\3日</code></td><td>2026.11.02 → 2026年11月02日（2026-11-02は変わらない）</td></tr>
+<tr><td>郵便番号のハイフン</td><td><code>〒([0-9]{3})([0-9]{4})</code></td><td><code>〒\1-\2</code></td><td>〒1000001 → 〒100-0001</td></tr>
+<tr><td>連続スペース</td><td><code> {2,}</code>（先頭は半角スペース）</td><td>半角スペース1つ</td><td>株式会社  サンプル   商事 → 株式会社 サンプル 商事</td></tr>
+<tr><td>段落先頭の番号</td><td><code>^13[0-9]{1,3}\)</code></td><td><code>^p●</code></td><td>2) 範囲 → ● 範囲（文中の3)は変わらない）</td></tr></tbody></table></div><div class="xdemo-note-warn"><strong>文書の最初の段落は置換されません。</strong><code>^13</code> は「前の段落の終わり」に一致します。文書先頭の「1) 目的」は前に段落がないため、そのまま残りました。最初の段落は手で直します。</div></section><section class="method-section" id="guide-step-7"><h2>条番号を付け替える場合の注意</h2><p>「第[0-9]{1,3}条」を文書全体で削除すると、見出しに加え「第3条を参照」のような本文中の参照も消えます。条番号の一括削除は基本手順にしません。</p><p>見出しの番号をそろえる場合は、見出し段落を確認して「ホーム」→「アウトライン」などの自動番号を使います。本文の参照先がある文書は、番号だけでなく参照先の整合性も確認します。</p></section>
+<p class="word-env-note">2026年11月3日に、Windows版Word（バージョン16.0）で架空の文章を置換して確認しました。環境により結果が異なる場合があります。</p>
+<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>Wordの記事をさらに探す</strong></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside>
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2"><li><a href="article_word_wildcard_replace.html">Wordの「置換」の基本</a></li><li><a href="article_word_compare.html">Wordの「文書の比較」で確認する</a></li></ul></section>
+</article>
+</main>
+<footer class="site-footer"><div aria-label="運営情報と検証方針" class="site-footer-trust"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Word差し込み印刷を想定しています。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>© Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js?v=20261103"></script>
+<script src="word-images.js?v=20261103" defer></script>
+</body>
+</html>

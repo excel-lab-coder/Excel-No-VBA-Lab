@@ -1584,7 +1584,7 @@
       "subcategory": "word",
       "title": "Word差し込み印刷で同じ会社の2人目・3人目を1枚のラベルに入れる方法（連名ラベル）",
       "url": "others/word/article_mailmerge_renmei_label.html",
-      "summary": "通常は1社1行の印刷用表で連名を作ります。1人1行のまままとめるコード方式は応用編（Lv.5）で説明します。",
+      "summary": "1社1行の印刷用表を作れば、普通のラベル差し込みで連名になります。",
       "level": 2
     },
     {
@@ -1690,6 +1690,83 @@
       "url": "others/word/article_excel_to_word_paste.html",
       "summary": "まずは通常のWordの表として貼り、更新が必要な場合だけリンクや埋め込みを選びます。",
       "level": 1
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Wordフィールドコード入門：Alt+F9・Ctrl+F9の基本",
+      "url": "others/word/article_field_code_basics.html",
+      "summary": "キー3つの操作と、目的別にどの応用記事を読むかを整理します。",
+      "level": 4,
+      "tags": [
+        "rare"
+      ]
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Word差し込みの書式スイッチ実例集：郵便番号・日付・和暦・金額・全角",
+      "url": "others/word/article_field_format_switches.html",
+      "summary": "実際に差し込んだ結果と、文字列や割合で失敗する例を載せています。",
+      "level": 5,
+      "tags": [
+        "rare"
+      ]
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Word差し込みで条件によって文面や対象者を変える：If…Then…ElseとSkipIf",
+      "url": "others/word/article_if_skipif_conditions.html",
+      "summary": "部署ごとの文面の出し分けと、条件に合う人を飛ばす方法です。",
+      "level": 5,
+      "tags": [
+        "rare"
+      ]
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Wordの次のレコードを手動で配置する：レターや表で1枚に複数人分",
+      "url": "others/word/article_next_record_manual_layout.html",
+      "summary": "ラベル機能で作れない様式のために、«Next Record»を自分で置きます。",
+      "level": 5,
+      "tags": [
+        "rare"
+      ]
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Word名簿差し込みで会社が変わったら自動で改ページする",
+      "url": "others/word/article_cover_letter_auto_page_break.html",
+      "summary": "1行1人の名簿のまま、IF・SET・REF・MERGESEQで会社別に分けます。",
+      "level": 6,
+      "tags": [
+        "rare"
+      ]
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Wordの連名ラベルを1人1行の名簿から作る：NEXTIF・SET・IF",
+      "url": "others/word/article_renmei_nextif.html",
+      "summary": "目印の列とNEXTIFで、同じ会社の人を1枚のラベルにまとめます。",
+      "level": 6,
+      "tags": [
+        "rare"
+      ]
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Wordのワイルドカード置換の実例：日付・郵便番号・連続スペース・番号付け",
+      "url": "others/word/article_wildcard_advanced.html",
+      "summary": "実際の置換結果と、文書の先頭が置換されない注意を載せています。",
+      "level": 5,
+      "tags": [
+        "rare"
+      ]
     },
     {
       "category": "others",

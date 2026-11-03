@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wordの次のレコードを手動で配置する：レターや表で1枚に複数人分を作る｜Excel × No VBA Lab</title>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
+<meta content="ラベル機能では作れない様式のために、«Next Record»を自分で配置します。レターのブロック、表の行、通し番号、コード表示での確認方法を説明します。" name="description"/>
+<meta content="Wordの次のレコードを手動で配置する：レターや表で1枚に複数人分を作る" property="og:title"/>
+<meta content="ラベル機能では作れない様式のために、«Next Record»を自分で配置します。レターのブロック、表の行、通し番号、コード表示での確認方法を説明します。" property="og:description"/>
+<meta content="article" property="og:type"/>
+<meta content="Excel × No VBA Lab" property="og:site_name"/>
+<meta content="ja_JP" property="og:locale"/>
+<meta content="index, follow" name="robots"/>
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_label_basic.html" rel="canonical"/>
+<link href="../../common.css?v=20261103" rel="stylesheet"/>
+<link href="../../article.css?v=20261103" rel="stylesheet"/>
+<link as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="preload"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="stylesheet"/></noscript>
+<link href="word-guide.css?v=20261103" rel="stylesheet"/><meta content="5" name="difficulty"/>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Wordの次のレコードを手動で配置する：レターや表で1枚に複数人分を作る", "description": "ラベル機能では作れない様式のために、«Next Record»を自分で配置します。レターのブロック、表の行、通し番号、コード表示での確認方法を説明します。", "datePublished": "2026-11-03", "dateModified": "2026-11-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_next_record_manual_layout.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "Word差し込み印刷", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/"}, {"@type": "ListItem", "position": 4, "name": "次のレコードの手動配置", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_next_record_manual_layout.html"}]}</script>
+</head>
+<body class="article-layout word-guide">
+<div aria-hidden="true" class="reading-progress"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/" aria-current="true">Word差し込み</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>次のレコードの手動配置</strong></div>
+<article class="article-body"><div class="article-header"><div class="article-meta"><span class="badge badge-maniac">応用・難易度高</span><span class="badge badge-all">Windows版 Word</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Wordの次のレコードを手動で配置する：レターや表で1枚に複数人分を作る</h1><p class="article-summary" data-seo-lead="true">ラベル機能では作れない様式のために、«Next Record»を自分で配置します。レターのブロック、表の行、通し番号、コード表示での確認方法を説明します。</p></div>
+<div class="word-answer"><span>結論</span><p><strong>1人目には置かず、2人目以降の先頭に1つずつ置きます。</strong>同じ大きさで並べるだけなら、<a href="article_mailmerge_multiple_records_per_page.html">ラベル機能</a>の方が失敗しにくい方法です。</p></div>
+<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">難しい（Lv.5）／ 通常の操作で足りる場合は基本記事を先に読んでください</p><ol class="word-guide-flow"><li>レターで開始</li><li>1人目を作る</li><li>2人目以降にNext</li><li>完成文書で確認</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#method-letter">応用A：レターに「次のレコード」を自分で入れる</a></li><li><a href="#method-table">応用B：表の行ごとに「次のレコード」を入れる（1行1人の名簿）</a></li><li><a href="#numbering">Wordの機能で番号を入れる・飛ばす</a></li><li><a href="#numbering">通し番号を付ける：差し込み印刷のレコード番号</a></li><li><a href="#numbering">対象者を外すときはフィルターを使います</a></li><li><a href="#numbering">3人ずつの順番を決める：並べ替え</a></li></ol></nav></details></section>
+<section class="method-section" id="method-letter">
+<h2>応用A：レターに「次のレコード」を自分で入れる</h2>
+<p>ブロックの大きさがそろわない様式（例：上半分に1人目の申込控え、下半分に2人目）や、ラベルの枠では作りにくいレイアウトのときの方法です。</p>
+<h3>2-1. 1人目のブロックを作る</h3>
+<ol class="line-height-2">
+<li>「差し込み印刷の開始」→<strong>「レター」</strong>を選び、名簿をつなぎます。</li>
+<li>ページの上半分に、1人目のブロックを作ります（«氏名»«受付番号» などを入れる）。<strong>ここには <code>«Next Record»</code> を入れません。</strong></li>
+</ol>
+<h3>2-2. 2人目以降のブロックの先頭に「次のレコード」を入れる</h3>
+<ol class="line-height-2">
+<li>2人目のブロックを置く位置（下半分の先頭）をクリックします。</li>
+<li><strong>「差し込み文書」タブ →「ルール」→「Next Record」</strong>を選びます（版によっては「次のレコード」と表示されます）。<code>«Next Record»</code> が入ります。</li>
+<li>その後ろに、1人目と同じように差し込みフィールドを入れてブロックを作ります。</li>
+<li>3人目以降も同じです。2人目のブロック（<code>«Next Record»</code> を含めて）をコピーして貼り付けると早く作れます。</li>
+</ol>
+<div class="table-wrapper"><table class="comparison-table"><caption>1ページに3人分の配置イメージ</caption>
+<thead><tr><th>ページ内の位置</th><th>中身</th></tr></thead>
+<tbody>
+<tr><td>上</td><td>«受付番号» «氏名» 様 ……（1人目：<code>«Next Record»</code> なし）</td></tr>
+<tr><td>中</td><td><code>«Next Record»</code> «受付番号» «氏名» 様 ……（2人目）</td></tr>
+<tr><td>下</td><td><code>«Next Record»</code> «受付番号» «氏名» 様 ……（3人目）</td></tr>
+</tbody></table></div>
+<p>表で位置を固定する場合の実画面は、上の<a href="#three-letter-example">レター＋3行の表の配置例</a>を参照してください。枠の大きさに関係なく、2人目以降の先頭で1回だけ次のレコードへ進めます。</p>
+<h3>2-3. ブロックがページからはみ出さないようにする</h3>
+<ul class="line-height-2">
+<li>ブロックの高さが変わってずれないように、<strong>表（罫線なしでも可）やテキストボックスの中</strong>に作ると、位置が安定します。</li>
+<li>長い住所や会社名で高さが変わる場合は、行の高さを「固定値」にするか、<a href="article_mailmerge_textbox_wrap.html">テキストボックスで折り返す方法</a>を使います。</li>
+<li>文書の最後に余分な空の段落があると、白紙のページが混ざることがあります。</li>
+</ul>
+</section><section class="method-section" id="method-table">
+<h2>応用B：表の行ごとに「次のレコード」を入れる（1行1人の名簿）</h2>
+<p>出席簿や受領印の欄がある名簿のように、<strong>1ページの表に何人分も並べたい</strong>ときの方法です。</p>
+<ol class="line-height-2">
+<li>「レター」で差し込みを始め、名簿をつなぎます。</li>
+<li>表を作ります。例：見出し行＋10行（No.／氏名／部署／受領印）。</li>
+<li><strong>見出し行</strong>は普通の文字で入力します（差し込みフィールドは入れません）。</li>
+<li><strong>1行目のデータ行</strong>に «社員番号» «氏名» «部署» を入れます。<code>«Next Record»</code> は入れません。</li>
+<li><strong>2行目のデータ行</strong>の最初のセルの先頭で「ルール」→「Next Record」（次のレコード）を選んで <code>«Next Record»</code> を入れ、続けて «社員番号»、他のセルに «氏名» «部署» を入れます。</li>
+<li>2行目を選んでコピーし、3行目〜10行目に貼り付けます。</li>
+</ol>
+<div class="table-wrapper"><table class="comparison-table"><caption>差し込み文書の表のイメージ</caption>
+<thead><tr><th>No.</th><th>氏名</th><th>部署</th><th>受領印</th></tr></thead>
+<tbody>
+<tr><td>«社員番号»</td><td>«氏名»</td><td>«部署»</td><td></td></tr>
+<tr><td><code>«Next Record»</code>«社員番号»</td><td>«氏名»</td><td>«部署»</td><td></td></tr>
+<tr><td><code>«Next Record»</code>«社員番号»</td><td>«氏名»</td><td>«部署»</td><td></td></tr>
+<tr><td colspan="4">……（10行目まで同じ）</td></tr>
+</tbody></table></div>
+<p>こうすると、1ページ目に1〜10人目、2ページ目に11〜20人目……と並びます。見出し行は毎ページに印刷されます。</p>
+<div class="xdemo-note-warn"><strong><code>«Next Record»</code> は、1行に1つだけ</strong><br/>2行目の各セルに <code>«Next Record»</code> を入れてしまうと、セルごとに次の人へ進んでしまい、1行の中で別々の人のデータになります。<code>«Next Record»</code> は<strong>その行の最初のセルの先頭に1つだけ</strong>置きます。</div>
+<p>上の表はフィールドの配置を示した図です。「見出し行」は人数に数えません。最初のデータ行には«Next Record»を入れず、2人目以降の行では社員番号より前に1つだけ入れます。氏名・部署のセルには追加しません。</p>
+</section><h3>やり方B：レターに3行の表を置いて、2つの<code>«Next Record»</code>を入れる</h3>
+<p>3人分の大きさを変えたい（例：1人目の欄だけ大きくする）、上下に見出しや注意書きを入れたい、というときはこちらです。</p>
+<ol class="line-height-2">
+<li>「差し込み印刷の開始」→<strong>「レター」</strong>を選び、名簿をつなぎます。</li>
+<li>「挿入」→「表」で<strong>1列×3行</strong>の表を作ります。</li>
+<li>表を選び、<strong>「テーブル レイアウト」タブ →「プロパティ」→「行」</strong>で、「高さを指定する」にチェックを入れて<strong>「固定値」</strong>にし、1行の高さを決めます。例：「レイアウト」タブ →「余白」→「ユーザー設定の余白」で上下を9mmにすると、(297－18)÷3 ＝ <strong>93mm</strong>です（下の画面の撮影例と同じ値）。固定値にしておくと、住所が長い人がいても段の位置がずれません。</li>
+<li><strong>1行目</strong>に1人目の中身を作ります（<code>«Next Record»</code>は入れません）。</li>
+<li><strong>2行目</strong>の先頭で「ルール」→<strong>「Next Record」</strong>（次のレコード）を選んで<code>«Next Record»</code>を入れ、続けて同じ中身を作ります。</li>
+<li>2行目の中身を<code>«Next Record»</code>ごとコピーして、<strong>3行目</strong>に貼り付けます。</li>
+<li>表の後ろに余分な改行があると白紙ページが混ざるので、表の下の段落を最小にします（段落のフォントサイズを1ptにする、など）。</li>
+</ol>
+<div class="table-wrapper"><table class="comparison-table"><caption>レター＋3行の表の配置</caption>
+<thead><tr><th>表の行</th><th>中身</th></tr></thead>
+<tbody>
+<tr><td>1行目（高さ93mm）</td><td>受講票 No.«MERGEREC» ／ «部署» «氏名» 様 ／ …</td></tr>
+<tr><td>2行目（高さ93mm）</td><td><strong><code>«Next Record»</code></strong>受講票 No.«MERGEREC» ／ «部署» «氏名» 様 ／ …</td></tr>
+<tr><td>3行目（高さ93mm）</td><td><strong><code>«Next Record»</code></strong>受講票 No.«MERGEREC» ／ «部署» «氏名» 様 ／ …</td></tr>
+</tbody></table></div>
+<figure class="article-screenshot" id="three-letter-example"><a aria-label="画像を拡大：レター形式の1列3行の表をWordで100％表示した実画面です。各行の本文を切り出し、間の余白を省いて順に並べています。2・3行目の先頭だけに«Next Record»を置きます。" href="../../image/articles/2026-11-02/word-image-fixes/three-letter-fields.png" rel="noopener" target="_blank" style="--screenshot-width:560.00px"><img alt="レター形式の1列3行の表をWordで100％表示した実画面です。各行の本文を切り出し、間の余白を省いて順に並べています。2・3行目の先頭だけに«Next Record»を置きます。" decoding="async" height="564" loading="lazy" src="../../image/articles/2026-11-02/word-image-fixes/three-letter-fields.png" width="560"></a><figcaption>レター形式の1列3行の表をWordで100％表示した実画面です。各行の本文を切り出し、間の余白を省いて順に並べています。2・3行目の先頭だけに«Next Record»を置きます。 <span class="screenshot-enlarge">（クリックで拡大・原寸表示）</span></figcaption></figure>
+<section class="method-section" id="numbering">
+<h2>Wordの機能で番号を入れる・飛ばす</h2>
+<h2>通し番号を付ける：差し込み印刷のレコード番号</h2>
+<p class="verify-note">「ルール」メニューの項目名は、日本語表示と英語表示（Next Record・Skip Record If など）が混ざっていることがあります。環境により結果が異なる場合があります。</p>
+<p>「ルール」→<strong>「差し込み印刷のレコード番号」</strong>（Merge Record #）を選ぶと、<code>«MERGEREC»</code> が入り、名簿の何人目かが印刷されます（1, 2, 3…）。3人ずつ並べても、ブロックごとに 1・2・3、次の紙に 4・5・6 と続くので、<strong>受付番号や切り分けた後の照合</strong>に使えます。</p>
+<p class="verify-note">フィルターで絞り込んだときに番号が絞り込み後の何番目になるか、名簿の行番号になるかは、環境により結果が異なる場合があります。番号を正式な受付番号として使う場合は、名簿側の番号を差し込む方が確実です。</p>
+<h2>対象者を外すときはフィルターを使います</h2>
+<p>NEXTを使う複数人配置の文書では、SkipIf（レコードのスキップ条件）を併用しません。対象者は「アドレス帳の編集」のチェックやフィルターで先に決め、完成文書で人数と順番を確認します。<a href="https://support.microsoft.com/en-us/word/field-codes-next-field" rel="noopener" target="_blank">MicrosoftのNEXTの使用条件</a></p>
+<h2>3人ずつの順番を決める：並べ替え</h2>
+<p>「アドレス帳の編集」→「並べ替え」で、部署順・受講日順などに並べてから差し込むと、同じ部署の人が同じ紙にまとまりやすくなります。並べ替えた順に、上から3人ずつ埋まります。</p>
+</section><section class="method-section"><h2>自動反映で直せない場合だけコードを確認する</h2><p>Alt＋F9でコードを表示すると、「«Next Record»」は <code>{ NEXT }</code> と表示されます。両者は同じ指示の表示違いです。</p><ol class="line-height-2"><li>1面目には <code>{ NEXT }</code> を置きません。</li><li>2面目以降は、その面の最初の差し込みフィールドより前に1つだけ置きます。</li><li>追加が必要な場合は、カーソルを置いて「差し込み文書」→「ルール」→「次のレコード」を選びます。かっこの手入力は不要です。</li><li>Alt＋F9で通常表示へ戻し、完成文書を出し直して確認します。</li></ol></section>
+
+<p class="word-env-note">画面はWindows版の例です。版によって名称や配置が異なる場合は、同じ操作名を探してください。</p>
+<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>Wordの記事をさらに探す</strong></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside>
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2"><li><a href="article_mailmerge_multiple_records_per_page.html">1枚に複数人分を並べる方法（基本）</a></li><li><a href="article_mailmerge_label_next_record.html">全ラベルが同じ宛名になる原因</a></li><li><a href="article_field_code_basics.html">フィールドコード入門</a></li></ul></section>
+</article>
+</main>
+<footer class="site-footer"><div aria-label="運営情報と検証方針" class="site-footer-trust"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Word差し込み印刷を想定しています。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>© Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
+<script src="../../script.js?v=20261103"></script>
+<script src="word-images.js?v=20261103" defer></script>
+</body>
+</html>

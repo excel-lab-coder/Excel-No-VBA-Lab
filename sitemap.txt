@@ -184,3 +184,10 @@ https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_letter_vs_directory.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_directory_finish.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_field_code_basics.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_field_format_switches.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_if_skipif_conditions.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_next_record_manual_layout.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_cover_letter_auto_page_break.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_renmei_nextif.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_wildcard_advanced.html
