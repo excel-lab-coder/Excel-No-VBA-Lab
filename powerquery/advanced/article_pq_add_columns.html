@@ -26,12 +26,14 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
-<link href="../../common.css?v=20261101" rel="stylesheet">
-<link href="../../article.css?v=20261101" rel="stylesheet">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
 
 
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-23", "dateModified": "2026-04-23", "headline":"新しい列を作る ― 条件列・インデックス・カスタム列・例からの列","description":"Power Queryで新しい列を追加する方法を完全解説。条件列（IF的な列）・カスタム列・インデックス列・例からの列・重複する列をGUI操作中心に、Before/After付きで丁寧に解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_add_columns.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -40,6 +42,7 @@
 <header class="site-header"><div class="header-inner"><div class="header-brand">
 <div class="site-title"><a href="../../">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
 </div></div></header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/" aria-current="true">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../powerquery/">パワークエリ</a><span>&gt;</span><strong>新しい列を作る</strong></div>
@@ -48,14 +51,15 @@
 <div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
 <h1 class="article-title">新しい列を作る &horbar; 条件列・インデックス・カスタム列・例からの列</h1>
 </div>
+<details class="auto-toc" open><summary>目次（10項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">このページのゴール</a></li><li><a href="#sec-2">「列の追加」タブの全体像</a></li><li><a href="#sec-3">条件列 &horbar; GUIだけでIF的な列を作る</a></li><li><a href="#sec-4">カスタム列 &horbar; M言語で自由に列を作る</a></li><li><a href="#sec-5">インデックス列 &horbar; 連番を振る</a></li><li><a href="#sec-6">例からの列 &horbar; 入力例から数式を自動推定</a></li><li><a href="#sec-7">重複する列 &horbar; 列のコピーを作る</a></li><li><a href="#sec-8">実践例 &horbar; 売上データにランクと連番を付ける</a></li><li><a href="#sec-9">どの機能を使うべきか &horbar; 判断フローチャート</a></li><li><a href="#sec-10">まとめ</a></li></ol></nav></details>
 <!-- ============================== -->
 <section id="goal">
-<h2>このページのゴール</h2>
+<h2 id="sec-1">このページのゴール</h2>
 <p>Power Queryの「列の追加」タブにある主要な4つの機能（条件列・カスタム列・インデックス列・例からの列）を使いこなし、データに新しい列を追加できるようになることです。特に「条件列」はExcelのIF関数に代わる機能であり、GUIだけで完結できるため重点的に解説します。</p>
 </section>
 <!-- ============================== -->
 <section id="overview">
-<h2>「列の追加」タブの全体像</h2>
+<h2 id="sec-2">「列の追加」タブの全体像</h2>
 <p>「列の追加」タブには以下のボタンが並んでいます。このページで扱うのは太字の4つです。</p>
 <table class="ref-table">
 <thead><tr><th>ボタン</th><th>何ができるか</th><th>M言語の知識</th><th>このページでの扱い</th></tr></thead>
@@ -72,7 +76,7 @@
 </section>
 <!-- ============================== -->
 <section id="conditional-column">
-<h2>条件列 &horbar; GUIだけでIF的な列を作る</h2>
+<h2 id="sec-3">条件列 &horbar; GUIだけでIF的な列を作る</h2>
 <p>ExcelのIF関数（=IF(A1&gt;=70,"合格","不合格")）と同じことを、数式を一切書かずにダイアログだけで実現できます。Power Queryでもっとも活用場面の多い機能の一つです。</p>
 <h3>基本操作：1つの条件</h3>
 <div class="step-box">
@@ -172,7 +176,7 @@
 </section>
 <!-- ============================== -->
 <section id="custom-column">
-<h2>カスタム列 &horbar; M言語で自由に列を作る</h2>
+<h2 id="sec-4">カスタム列 &horbar; M言語で自由に列を作る</h2>
 <p>条件列のGUIだけでは対応できない場合（AND/OR条件、計算式、複雑な文字列加工）に使います。「M言語入門」は後のページで扱いますが、ここではすぐに使える基本パターンだけ紹介します。</p>
 <div class="step-box">
 <h4 aria-level="3">操作手順</h4>
@@ -199,7 +203,7 @@
 </section>
 <!-- ============================== -->
 <section id="index-column">
-<h2>インデックス列 &horbar; 連番を振る</h2>
+<h2 id="sec-5">インデックス列 &horbar; 連番を振る</h2>
 <p>全行に通し番号を付ける操作です。ExcelのROW関数に近い役割ですが、Power Queryではデータの並び順に基づいて番号が振られます。</p>
 <div class="step-box">
 <h4 aria-level="3">操作手順</h4>
@@ -224,7 +228,7 @@
 </section>
 <!-- ============================== -->
 <section id="column-from-examples">
-<h2>例からの列 &horbar; 入力例から数式を自動推定</h2>
+<h2 id="sec-6">例からの列 &horbar; 入力例から数式を自動推定</h2>
 <p>Power Queryのユニークな機能です。新しい列の最初の数行に「こういう結果がほしい」という例を手入力すると、Power Queryがパターンを学習して残りの行を自動的に埋めてくれます。</p>
 <div class="step-box">
 <h4 aria-level="3">操作手順</h4>
@@ -255,7 +259,7 @@
 </section>
 <!-- ============================== -->
 <section id="duplicate-column">
-<h2>重複する列 &horbar; 列のコピーを作る</h2>
+<h2 id="sec-7">重複する列 &horbar; 列のコピーを作る</h2>
 <p>元の列を残したまま加工したいとき、まず列のコピーを作ってからコピー側を加工するという安全な方法で使います。</p>
 <div class="step-box">
 <h4 aria-level="3">操作手順</h4>
@@ -267,7 +271,7 @@
 </section>
 <!-- ============================== -->
 <section id="practice">
-<h2>実践例 &horbar; 売上データにランクと連番を付ける</h2>
+<h2 id="sec-8">実践例 &horbar; 売上データにランクと連番を付ける</h2>
 <p>売上データに「売上ランク」列と「連番」列を追加する例です。</p>
 <h3>サンプルデータ</h3>
 <table class="ba-table">
@@ -309,7 +313,7 @@
 </section>
 <!-- ============================== -->
 <section id="comparison">
-<h2>どの機能を使うべきか &horbar; 判断フローチャート</h2>
+<h2 id="sec-9">どの機能を使うべきか &horbar; 判断フローチャート</h2>
 <p>新しい列を作りたいとき、どの機能を選べばよいか迷ったら、次の順序で判断してください。</p>
 <p><strong>①</strong> 「IF的な条件分岐だけでよいか？」&rarr; はい &rarr; <strong>条件列</strong>（M言語不要）</p>
 <p><strong>②</strong> 「連番を振るだけでよいか？」&rarr; はい &rarr; <strong>インデックス列</strong></p>
@@ -319,7 +323,7 @@
 </section>
 <!-- ============================== -->
 <section id="summary">
-<h2>まとめ</h2>
+<h2 id="sec-10">まとめ</h2>
 <p>「列の追加」タブは、元のデータを壊さずに新しい情報を付加するためのタブです。このページのポイントを振り返ると、<strong>条件列</strong>はExcelのIF関数をGUIで視覚的に設定できる機能で、規則を追加することでネストIFも簡単に実現できること。<strong>カスタム列</strong>はM言語を使う必要がありますが、四則演算と if/then/else だけ覚えれば実用に足りること。<strong>インデックス列</strong>は並べ替えの後に追加することで正しい順序の連番が振れること。<strong>例からの列</strong>はM言語を知らなくても複雑な変換が作れる可能性がある一方、推定が外れることもあるため確認が必須であること。これらを使い分ければ、Excelの関数で苦労していた列追加の作業が格段に楽になります。</p>
 </section>
 <!-- ============================== -->
@@ -355,6 +359,6 @@
     <a href="../../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../../script.js?v=20261101"></script>
+<script src="../../script.js?v=20261103"></script>
 </body>
 </html>

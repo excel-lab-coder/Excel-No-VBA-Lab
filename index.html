@@ -28,13 +28,13 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/" property="og:url">
 <meta content="Excel × No VBA Lab" property="og:site_name">
-<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 
 <!-- Twitter Card -->
 <meta content="summary_large_image" name="twitter:card">
 <meta content="Excel × No VBA Lab — VBA・マクロ禁止環境で使える代替手段" name="twitter:title">
 <meta content="VBAやマクロが会社で禁止されたExcel環境でも、関数・Power Query（パワークエリ）・QRリーダーで業務改善する実務テクニック集。キーボード扱いの強みと条件分岐できない限界も整理します。" name="twitter:description">
-<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" name="twitter:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" name="twitter:image">
 
 <meta content="index, follow" name="robots">
 
@@ -47,8 +47,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
 
-<link href="common.css?v=20261101" rel="stylesheet">
-    <link href="index.css?v=20261101" rel="stylesheet">
+<link href="common.css?v=20261103" rel="stylesheet">
+    <link href="index.css?v=20261103" rel="stylesheet">
 <link href="unlocked/ai-theme.css" rel="stylesheet">
 
 <script>
@@ -94,7 +94,7 @@
   "@type": "Organization",
   "name": "Excel × No VBA Lab",
   "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/",
-  "logo": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"
+  "logo": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"
 }
 </script>
 <script type="application/ld+json">
@@ -401,36 +401,20 @@
     <div class="hero-copy">
       <div class="hero-copy-kicker">VBA禁止環境を突破する</div>
       <h1 class="hero-copy-title">Excel × No VBA Lab</h1>
-      <div class="hero-copy-sub">関数・Power Query・QR連携で、手作業を仕組みに変える。</div>
+      <div class="hero-copy-sub">VBA・マクロが禁止された職場でも使える、Excel関数・Power Query・QRリーダー連携・COBOL帳票整形の実務資料集。</div>
     </div>
   </div>
 
   <section class="article-finder" id="article-finder" aria-labelledby="article-finder-title">
 <h2 id="article-finder-title">やりたいこと・困りごとから記事を探す</h2>
-<p>カテゴリをまたいで、公開記事とサンプル資料の名前・概要を検索できます。例：文字欠け、帳票、印刷、検索、Power Query。</p>
-<form id="article-search-form" role="search"><label for="article-search-input">キーワード</label><input id="article-search-input" type="search" placeholder="例：QR 文字欠け" autocomplete="off"><button type="submit">検索</button></form>
+<p class="article-finder-lead">公開記事とサンプル資料の題名・概要・対応バージョンから探せます。</p>
+<form id="article-search-form" role="search"><label for="article-search-input">キーワード</label><input id="article-search-input" type="search" placeholder="例：INDEX MATCH、QR 文字欠け" autocomplete="off"><button type="submit">検索</button>
+<div class="article-finder-filters"><label>カテゴリ<select id="article-search-category"><option value="">すべて</option><option value="functions">関数</option><option value="powerquery">Power Query</option><option value="cobol">COBOL帳票</option><option value="qr">QR入力</option><option value="others">現場実務</option><option value="thinking">技術の流れ</option><option value="unlocked">VBA・AI（利用可能な環境向け）</option></select></label><label>対応Excel<select id="article-search-version"><option value="">指定なし</option><option value="2016">Excel 2016で使える</option><option value="2019">Excel 2019で使える</option><option value="2021">Excel 2021で使える</option><option value="2024">Excel 2024で使える</option></select></label></div></form>
+<p class="article-finder-examples">例：<button type="button" data-search-example="INDEX MATCH">INDEX MATCH</button><button type="button" data-search-example="Excel 2016">Excel 2016</button><button type="button" data-search-example="COBOL 固定長">COBOL 固定長</button><button type="button" data-search-example="QR 文字欠け">QR 文字欠け</button><button type="button" data-search-example="差し込み印刷">差し込み印刷</button></p>
 <p class="article-finder-status" id="article-search-status" role="status" aria-live="polite">キーワードを入力して検索してください。</p>
 <ul class="article-list" id="article-search-results"></ul>
-<nav class="article-finder-routes" aria-label="目的別の入口"><a href="functions/">値を検索・集計する</a><a href="powerquery/">データを取り込んで整える</a><a href="cobol/">固定長・帳票データを表にする</a><a href="qr/">QRで画面へ入力する</a><a href="others/">印刷・操作・速度を改善する</a><a href="troubleshoot/">困りごと索引</a></nav>
-<noscript><p>検索にはJavaScriptが必要です。上の目的別リンクからも記事を探せます。</p></noscript>
+<noscript><p>検索にはJavaScriptが必要です。下の「目的から選ぶ」や上部のタブからも記事を探せます。</p></noscript>
 </section>
-<p class="hero-practical">
-    このサイトでは、会社でVBA・マクロが禁止されている職場や、VBAが使えないExcel環境でも実装できる
-    Excel関数、Power Query、QRリーダー連携、COBOL帳票整形の具体的な手順を紹介しています。
-    Excel 2016対応の旧式関数テクニックから、Excel 2021・2024・Microsoft 365 などの動的配列関数まで、
-    関数ごとの対応差をふまえて使える方法を整理しています。
-  </p>
-
-  <section class="ai-theme-entry" aria-labelledby="home-ai-title">
-    <p class="ai-theme-kicker">AI × EXCEL / GOOGLE SHEETS</p>
-    <h2 id="home-ai-title">AIを、いつものExcel作業と学習に。</h2>
-    <p>ChatGPT・Claudeの導入から、数式の相談、表記ゆれの整理、結果の検算まで。<br>小さな練習データとコピーできる依頼文で試す「AI × Excel活用ラボ」を追加しました。</p>
-    <div class="ai-theme-entry-links">
-      <a class="ai-theme-button" href="unlocked/ai/">AI × Excel活用ラボを見る →</a>
-      <a href="unlocked/article_ai_excel_formulas.html">まずは数式の相談から</a>
-    </div>
-  </section>
-
   <section class="quick-route" aria-labelledby="quick-route-title">
     <h2 id="quick-route-title">🚀 目的から選ぶ</h2>
     <p class="quick-route-lead">
@@ -468,8 +452,33 @@
         <span class="quick-route-title">QRで入力を自動化したい</span>
         <span class="quick-route-text">QRコードをその場で作成し、キーボード扱いのQRリーダー連携を試す</span>
       </a>
+
+      <a class="quick-route-card qrc-functions" href="#others" data-tab-trigger="others" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">
+        <span class="quick-route-icon">🛠</span>
+        <span class="quick-route-title">印刷・操作・速度を改善したい</span>
+        <span class="quick-route-text">Word差し込み印刷、ラベル印刷、重いExcelの軽量化など現場の実務</span>
+      </a>
+
+      <a class="quick-route-card qrc-thinking" href="./troubleshoot/">
+        <span class="quick-route-icon">🔍</span>
+        <span class="quick-route-title">困りごとから探したい</span>
+        <span class="quick-route-text">症状や困りごとの索引から、該当する記事へ移動</span>
+      </a>
+
+      <a class="quick-route-card qrc-cobol" href="samples/">
+        <span class="quick-route-icon">📂</span>
+        <span class="quick-route-title">サンプルで試したい</span>
+        <span class="quick-route-text">全角半角混在のCOBOL帳票300行など、検証用のサンプルデータ集</span>
+      </a>
     </div>
   </section>
+
+<p class="hero-practical">
+    このサイトでは、会社でVBA・マクロが禁止されている職場や、VBAが使えないExcel環境でも実装できる
+    Excel関数、Power Query、QRリーダー連携、COBOL帳票整形の具体的な手順を紹介しています。
+    Excel 2016対応の旧式関数テクニックから、Excel 2021・2024・Microsoft 365 などの動的配列関数まで、
+    関数ごとの対応差をふまえて使える方法を整理しています。
+  </p>
 
   <section class="starter-guide" aria-labelledby="starter-guide-title">
     <div class="starter-guide-head">
@@ -507,101 +516,7 @@
     </div>
   </section>
 
-  <section class="site-description" id="philosophy">
-    <h2>⚔️ VBA禁止？ — 諦めるのはまだ早い。</h2>
-
-    <div class="hero-banner">
-      <span class="hero-eyecatch">🔥 VBA・マクロ全面禁止の職場へ</span>
-
-      <h3 class="hero-headline">
-        <span class="accent-red">「VBAが使えない」</span>＝<span class="accent-red">「手作業に戻るしかない」</span><br>
-        — その常識を覆す、モダンExcelの体系的メソッド。
-      </h3>
-
-      <p class="hero-sub">
-        ネットで調べれば「VBAで解決！」ばかり。<br>
-        情シスの一言でマクロは封じられ、積み上げた知識も使えない。<br>
-        <strong>「この環境では、もう手作業に戻るしかない」</strong>……本当に？<br><br>
-        制約は、思考を研ぎ澄ます最高のスパイスです。<br>
-        長年の制約環境下での泥臭い試行錯誤から導き出した、<br>
-        <strong>VBAに依存しない「モダンExcelの最適解」を体系化しました。</strong>
-      </p>
-
-      <div class="hero-pain">
-        <div class="hero-pain-title">🤔 ここで手に入る「4つのブレイクスルー」</div>
-        <div class="hero-pain-list">
-          <span class="hero-pain-item">その作業、本当に「VBAでしか」できないものですか？</span>
-          <span class="hero-pain-item">関数やパワークエリの最新機能を、全て試しましたか？</span>
-          <span class="hero-pain-item">ソフトが封じられたとき、ハードウェア連携で補う発想はありますか？</span>
-          <span class="hero-pain-item">「無理だ」と思い込んでいるだけで、まだ知らない手札がありませんか？</span>
-        </div>
-      </div>
-
-      <div class="hero-answer">
-        <div class="hero-answer-title">💡 このサイトの答え</div>
-        <p class="hero-answer-text">
-          VBAが封じられても、<strong>関数・パワークエリ・ハードウェア連携</strong>という強大な武器が残っています。<br><br>
-          数式の組み合わせで「VBAでしか無理」と思っていた処理に手が届く。<br>
-          パワークエリで毎月の手作業が「更新」ボタン1つになる。<br>
-          ソフトが全て封じられても、手入力相当のハードウェア連携で作業を補う。<br><br>
-          <strong>私が長年培ってきた「VBAなしでの最適解」を、ここに全て公開します。</strong>
-        </p>
-      </div>
-
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <span class="hero-stat-num num-blue">60+</span>
-          <span class="hero-stat-label">テクニック記事</span>
-        </div>
-
-        <div class="hero-stat">
-          <span class="hero-stat-num num-gold">Lv.1〜8</span>
-          <span class="hero-stat-label">サイト内の相対難易度</span>
-        </div>
-
-        <div class="hero-stat">
-          <span class="hero-stat-num num-purple">💎</span>
-          <span class="hero-stat-label">用途別の実践例<br><small>操作手順と適用条件</small></span>
-        </div>
-
-        <div class="hero-stat">
-          <span class="hero-stat-num num-orange">🔥</span>
-          <span class="hero-stat-label">即戦力タグつき<br><small>今すぐ業務で使える度合い</small></span>
-        </div>
-      </div>
-    </div>
-
-    <h3 class="weapons-heading">🗡️ VBAの代わりに研ぎ澄ます「4つの武器」</h3>
-
-    <div class="weapons-grid">
-      <div class="weapon-card wc-blue">
-        <div class="weapon-card-num">01</div>
-        <div class="weapon-card-title">📐 Excel関数（全バージョン）</div>
-        <p class="weapon-card-desc">VLOOKUP・INDEX+MATCH・COUNTIFS・SUMIFSなど。旧バージョンでもフル活用できる定番テクニック。</p>
-      </div>
-
-      <div class="weapon-card wc-green">
-        <div class="weapon-card-num">02</div>
-        <div class="weapon-card-title">✨ モダンExcel関数</div>
-        <p class="weapon-card-desc">XLOOKUP・FILTER・LET・UNIQUE・TEXTSPLITなど。「VBAでしかできなかった処理」の多くを関数だけで代替。</p>
-      </div>
-
-      <div class="weapon-card wc-orange">
-        <div class="weapon-card-num">03</div>
-        <div class="weapon-card-title">🔄 パワークエリ</div>
-        <p class="weapon-card-desc">GUIによるデータ加工・結合・整形の自動化。毎月のコピペ作業を更新ボタン一発で完結。</p>
-      </div>
-
-      <div class="weapon-card wc-purple">
-        <div class="weapon-card-num">04</div>
-        <div class="weapon-card-title">💎 ハードウェア逆転発想</div>
-        <p class="weapon-card-desc">
-          ソフトが全て封じられたなら、Excelで作るQR用データとキーボード扱いのQRリーダー設定を組み合わせて入力作業を補助。<br>
-          <a class="color-purple-bold" href="./qr/">→ QR Automation Lab総合ガイドへ</a>
-        </p>
-      </div>
-    </div>
-
+  <div class="home-section-version">
     <div class="version-guide">
       <div class="version-guide-header">🗂️ あなたのExcelバージョン別・推奨読み順</div>
 
@@ -640,52 +555,7 @@
         ※対応バージョンは目安です。Excel 2024でも使えるモダン関数は増えていますが、関数ごとにExcel 2021まで対応するもの、Excel 2024 / Microsoft 365中心のもの、Microsoft 365の更新チャネルで先行提供されるものが混在します。実務では、まずセルで <code>=関数名(</code> を入力して候補に出るか確認してください。
       </p>
     </div>
-
-    <h3 class="reasons-heading">💡 「VBAなしでも戦える」4つの理由</h3>
-
-
-    <div class="reasons-grid">
-      <div class="reason-card rc-blue" data-num="1">
-        <span class="reason-card-before">❌ 「この処理、VBAがないと無理でしょ」</span>
-        <div class="reason-card-title">モダンExcel関数がVBAの領域を侵食している</div>
-        <p class="reason-card-text">FILTER・XLOOKUP・UNIQUE・LETの登場で、<strong>動的抽出・変数処理が関数だけで実現可能</strong>に。守備範囲は確実に広がっています。</p>
-      </div>
-
-      <div class="reason-card rc-green" data-num="2">
-        <span class="reason-card-before">❌ 「関数の限界はとっくに知っている」</span>
-        <div class="reason-card-title">旧来の関数も、限界は思っているより遥かに先にある</div>
-        <p class="reason-card-text">INDEX+MATCHも使いこなし、VBAも書ける。— それでも、<strong>旧式関数の「正しい組み合わせ」を知れば、VBA相当の処理が再現できます。</strong>「関数では無理」と思い込んでいただけで、旧バージョンの関数にはまだ引き出せる力が眠っています。</p>
-      </div>
-
-      <div class="reason-card rc-orange" data-num="3">
-        <span class="reason-card-before">❌ 「毎月のCSV整形に3時間かかる」</span>
-        <div class="reason-card-title">パワークエリが繰り返し作業を消す</div>
-        <p class="reason-card-text">CSV取り込み→整形→コピペを1回設定すれば、以後は<strong>「更新」ボタン1つ</strong>。VBAなしでも定型作業は自動化できます。</p>
-      </div>
-
-      <div class="reason-card rc-purple" data-num="4">
-        <span class="reason-card-before">❌ 「ソフトが全て封じられた」</span>
-        <div class="reason-card-title">逆転の発想で突破口を開く</div>
-        <p class="reason-card-text">ソフトウェアが封じられたなら、Excel側の設計とハードウェア連携で補う。<strong>制限環境でも、承認された手段の組み合わせで作業を減らせます。</strong></p>
-      </div>
-    </div>
-
-
-    <div class="hero-cta-box">
-      <p class="hero-cta-msg">
-        📖 まずは、あなたのExcelバージョンに合った手法から習得を開始してください。
-        <span class="cta-sub">本サイトは順番に進む教科書ではなく、操作手順と実務の設計事例を目的別に探す資料集です。Lvは一般的なExcel技能の基準ではなく、サイト内での相対的な目安です。</span>
-      </p>
-
-      <div class="hero-cta-buttons">
-        <a href="#functions" aria-label="関数テクニックカテゴリへ移動" class="hero-cta-btn btn-new" data-tab-trigger="functions" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">📐 関数テクニックへ</a>
-        <a href="#powerquery" aria-label="パワークエリカテゴリへ移動" class="hero-cta-btn btn-pq" data-tab-trigger="powerquery" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">🔄 パワークエリへ</a>
-        <a href="#cobol" aria-label="COBOL帳票処理カテゴリへ移動" class="hero-cta-btn btn-old" data-tab-trigger="cobol" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">🏭 COBOL帳票処理へ</a>
-        <a href="./qr/" aria-label="QR Automation Lab総合ガイドへ移動" class="hero-cta-btn btn-old btn-qr-gradient">⚡ QR Automation Labへ</a>
-        <a href="#unlocked" aria-label="制限解除ラボへ移動" class="hero-cta-btn btn-unlocked-cta btn-unlocked-gradient" data-tab-trigger="unlocked" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">🔓 制限解除ラボへ <span class="tag-vba-label">VBA / AI</span></a>
-      </div>
-    </div>
-  </section>
+  </div>
 
   <!-- ピックアップ -->
   <section class="pickup-section">
@@ -829,6 +699,9 @@
             <time datetime="2026-11-01">2026-11-01</time>
           </span>
         </li>
+      </ul>
+      <details class="news-more"><summary>新着をさらに表示（15件）</summary>
+      <ul class="news-list">
         <li class="is-new">
           <a href="others/data/article_text_numbers_fix.html">Excelの数字が文字列になって計算・検索できないときの直し方</a>
           <span class="news-meta">
@@ -950,6 +823,7 @@
           </span>
         </li>
       </ul>
+      </details>
 
 
       <p class="more-link">
@@ -1019,6 +893,161 @@
       <p class="curated-collection-link"><a href="#curated" data-tab-trigger="curated" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">⭐ 厳選記事集をすべて見る</a></p>
     </div>
   </div>
+  <section class="ai-theme-entry" aria-labelledby="home-ai-title">
+    <p class="ai-theme-kicker">AI × EXCEL / GOOGLE SHEETS</p>
+    <h2 id="home-ai-title">AIを、いつものExcel作業と学習に。</h2>
+    <p>ChatGPT・Claudeの導入から、数式の相談、表記ゆれの整理、結果の検算まで。<br>小さな練習データとコピーできる依頼文で試す「AI × Excel活用ラボ」を追加しました。</p>
+    <div class="ai-theme-entry-links">
+      <a class="ai-theme-button" href="unlocked/ai/">AI × Excel活用ラボを見る →</a>
+      <a href="unlocked/article_ai_excel_formulas.html">まずは数式の相談から</a>
+    </div>
+  </section>
+
+  <section class="site-description" id="philosophy">
+    <h2>⚔️ VBA禁止？ — 諦めるのはまだ早い。</h2>
+    <p class="philosophy-lead">VBAが使えなくても、関数・Power Query・QRリーダー連携には多くの手札が残っています。このサイトの背景と考え方は、必要なときに開いて読めます。</p>
+    <details class="philosophy-details">
+    <summary>このサイトの考え方を読む</summary>
+
+    <div class="hero-banner">
+      <span class="hero-eyecatch">🔥 VBA・マクロ全面禁止の職場へ</span>
+
+      <h3 class="hero-headline">
+        <span class="accent-red">「VBAが使えない」</span>＝<span class="accent-red">「手作業に戻るしかない」</span><br>
+        — その常識を覆す、モダンExcelの体系的メソッド。
+      </h3>
+
+      <p class="hero-sub">
+        ネットで調べれば「VBAで解決！」ばかり。<br>
+        情シスの一言でマクロは封じられ、積み上げた知識も使えない。<br>
+        <strong>「この環境では、もう手作業に戻るしかない」</strong>……本当に？<br><br>
+        制約は、思考を研ぎ澄ます最高のスパイスです。<br>
+        長年の制約環境下での泥臭い試行錯誤から導き出した、<br>
+        <strong>VBAに依存しない「モダンExcelの最適解」を体系化しました。</strong>
+      </p>
+
+      <div class="hero-pain">
+        <div class="hero-pain-title">🤔 ここで手に入る「4つのブレイクスルー」</div>
+        <div class="hero-pain-list">
+          <span class="hero-pain-item">その作業、本当に「VBAでしか」できないものですか？</span>
+          <span class="hero-pain-item">関数やパワークエリの最新機能を、全て試しましたか？</span>
+          <span class="hero-pain-item">ソフトが封じられたとき、ハードウェア連携で補う発想はありますか？</span>
+          <span class="hero-pain-item">「無理だ」と思い込んでいるだけで、まだ知らない手札がありませんか？</span>
+        </div>
+      </div>
+
+      <div class="hero-answer">
+        <div class="hero-answer-title">💡 このサイトの答え</div>
+        <p class="hero-answer-text">
+          VBAが封じられても、<strong>関数・パワークエリ・ハードウェア連携</strong>という強大な武器が残っています。<br><br>
+          数式の組み合わせで「VBAでしか無理」と思っていた処理に手が届く。<br>
+          パワークエリで毎月の手作業が「更新」ボタン1つになる。<br>
+          ソフトが全て封じられても、手入力相当のハードウェア連携で作業を補う。<br><br>
+          <strong>私が長年培ってきた「VBAなしでの最適解」を、ここに全て公開します。</strong>
+        </p>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-num num-blue">170</span>
+          <span class="hero-stat-label">公開記事・資料</span>
+        </div>
+
+        <div class="hero-stat">
+          <span class="hero-stat-num num-gold">Lv.1〜8</span>
+          <span class="hero-stat-label">サイト内の相対難易度</span>
+        </div>
+
+        <div class="hero-stat">
+          <span class="hero-stat-num num-purple">💎</span>
+          <span class="hero-stat-label">用途別の実践例<br><small>操作手順と適用条件</small></span>
+        </div>
+
+        <div class="hero-stat">
+          <span class="hero-stat-num num-orange">🔥</span>
+          <span class="hero-stat-label">即戦力タグつき<br><small>今すぐ業務で使える度合い</small></span>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="weapons-heading">🗡️ VBAの代わりに研ぎ澄ます「4つの武器」</h3>
+
+    <div class="weapons-grid">
+      <div class="weapon-card wc-blue">
+        <div class="weapon-card-num">01</div>
+        <div class="weapon-card-title">📐 Excel関数（全バージョン）</div>
+        <p class="weapon-card-desc">VLOOKUP・INDEX+MATCH・COUNTIFS・SUMIFSなど。旧バージョンでもフル活用できる定番テクニック。</p>
+      </div>
+
+      <div class="weapon-card wc-green">
+        <div class="weapon-card-num">02</div>
+        <div class="weapon-card-title">✨ モダンExcel関数</div>
+        <p class="weapon-card-desc">XLOOKUP・FILTER・LET・UNIQUE・TEXTSPLITなど。「VBAでしかできなかった処理」の多くを関数だけで代替。</p>
+      </div>
+
+      <div class="weapon-card wc-orange">
+        <div class="weapon-card-num">03</div>
+        <div class="weapon-card-title">🔄 パワークエリ</div>
+        <p class="weapon-card-desc">GUIによるデータ加工・結合・整形の自動化。毎月のコピペ作業を更新ボタン一発で完結。</p>
+      </div>
+
+      <div class="weapon-card wc-purple">
+        <div class="weapon-card-num">04</div>
+        <div class="weapon-card-title">💎 ハードウェア逆転発想</div>
+        <p class="weapon-card-desc">
+          ソフトが全て封じられたなら、Excelで作るQR用データとキーボード扱いのQRリーダー設定を組み合わせて入力作業を補助。<br>
+          <a class="color-purple-bold" href="./qr/">→ QR Automation Lab総合ガイドへ</a>
+        </p>
+      </div>
+    </div>
+
+    <h3 class="reasons-heading">💡 「VBAなしでも戦える」4つの理由</h3>
+
+
+    <div class="reasons-grid">
+      <div class="reason-card rc-blue" data-num="1">
+        <span class="reason-card-before">❌ 「この処理、VBAがないと無理でしょ」</span>
+        <div class="reason-card-title">モダンExcel関数がVBAの領域を侵食している</div>
+        <p class="reason-card-text">FILTER・XLOOKUP・UNIQUE・LETの登場で、<strong>動的抽出・変数処理が関数だけで実現可能</strong>に。守備範囲は確実に広がっています。</p>
+      </div>
+
+      <div class="reason-card rc-green" data-num="2">
+        <span class="reason-card-before">❌ 「関数の限界はとっくに知っている」</span>
+        <div class="reason-card-title">旧来の関数も、限界は思っているより遥かに先にある</div>
+        <p class="reason-card-text">INDEX+MATCHも使いこなし、VBAも書ける。— それでも、<strong>旧式関数の「正しい組み合わせ」を知れば、VBA相当の処理が再現できます。</strong>「関数では無理」と思い込んでいただけで、旧バージョンの関数にはまだ引き出せる力が眠っています。</p>
+      </div>
+
+      <div class="reason-card rc-orange" data-num="3">
+        <span class="reason-card-before">❌ 「毎月のCSV整形に3時間かかる」</span>
+        <div class="reason-card-title">パワークエリが繰り返し作業を消す</div>
+        <p class="reason-card-text">CSV取り込み→整形→コピペを1回設定すれば、以後は<strong>「更新」ボタン1つ</strong>。VBAなしでも定型作業は自動化できます。</p>
+      </div>
+
+      <div class="reason-card rc-purple" data-num="4">
+        <span class="reason-card-before">❌ 「ソフトが全て封じられた」</span>
+        <div class="reason-card-title">逆転の発想で突破口を開く</div>
+        <p class="reason-card-text">ソフトウェアが封じられたなら、Excel側の設計とハードウェア連携で補う。<strong>制限環境でも、承認された手段の組み合わせで作業を減らせます。</strong></p>
+      </div>
+    </div>
+
+
+    <div class="hero-cta-box">
+      <p class="hero-cta-msg">
+        📖 まずは、あなたのExcelバージョンに合った手法から習得を開始してください。
+        <span class="cta-sub">本サイトは順番に進む教科書ではなく、操作手順と実務の設計事例を目的別に探す資料集です。Lvは一般的なExcel技能の基準ではなく、サイト内での相対的な目安です。</span>
+      </p>
+
+      <div class="hero-cta-buttons">
+        <a href="#functions" aria-label="関数テクニックカテゴリへ移動" class="hero-cta-btn btn-new" data-tab-trigger="functions" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">📐 関数テクニックへ</a>
+        <a href="#powerquery" aria-label="パワークエリカテゴリへ移動" class="hero-cta-btn btn-pq" data-tab-trigger="powerquery" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">🔄 パワークエリへ</a>
+        <a href="#cobol" aria-label="COBOL帳票処理カテゴリへ移動" class="hero-cta-btn btn-old" data-tab-trigger="cobol" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">🏭 COBOL帳票処理へ</a>
+        <a href="./qr/" aria-label="QR Automation Lab総合ガイドへ移動" class="hero-cta-btn btn-old btn-qr-gradient">⚡ QR Automation Labへ</a>
+        <a href="#unlocked" aria-label="制限解除ラボへ移動" class="hero-cta-btn btn-unlocked-cta btn-unlocked-gradient" data-tab-trigger="unlocked" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">🔓 制限解除ラボへ <span class="tag-vba-label">VBA / AI</span></a>
+      </div>
+    </div>
+    </details>
+  </section>
+
   <!-- FAQセクション -->
   <section class="faq-section" aria-labelledby="faq-title">
     <h2 id="faq-title">❓ よくある質問</h2>
@@ -1046,7 +1075,7 @@
 
       <details>
         <summary>QRコードでExcelの入力を自動化できますか？</summary>
-        <p>はい。QRリーダーの設定を組み合わせれば、VBA・RPA不要で入力自動化が可能です。Tab、Enter、待ち時間、キー変換などを活用することで、読み取りからセル移動まで自動化できます。</p>
+        <p>はい。QRリーダーの設定を組み合わせれば、VBA・RPA不要で入力補助が可能です。QRリーダーはキーボード扱いのため多くのソフトで動きますが、画面状態を読んだ条件分岐やエラー判断はできません。Tab、Enter、待ち時間、キー変換などを活用し、定型入力の負担を減らします。</p>
       </details>
     </div>
   </section>
@@ -2501,7 +2530,7 @@
   <section class="cobol-selection-guide">
     <div class="guide-intro">
       <div class="guide-visual">
-        <video class="demo-video" aria-label="COBOL帳票をExcelで一瞬で整形するデモ" controls loop muted playsinline preload="metadata" data-poster="./image/hero_cobol-1024.webp" width="1280" height="720">
+        <video class="demo-video" aria-label="COBOL帳票をExcelで一瞬で整形するデモ" controls loop muted playsinline preload="none" data-poster="./image/hero_cobol-1024.webp" width="1280" height="720">
           <source src="./video/Cobol1.mp4" type="video/mp4">
           <img data-src="./Gif/Cobol.gif" src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" alt="COBOL帳票をExcelで一瞬で整形するデモ" loading="lazy" decoding="async" width="1280" height="720">
         </video>
@@ -3755,7 +3784,7 @@
 </footer>
 
 
-<script src="script.js?v=20261102-lists" defer></script>
+<script src="script.js?v=20261103" defer></script>
 
 </body>
 </html>

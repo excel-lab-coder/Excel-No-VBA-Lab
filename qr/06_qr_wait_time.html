@@ -14,20 +14,22 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="QRコードリーダーのSleep（一時停止）機能で業務システムの画面遷移待ち・帳票出力待ち・PrintScreen待ちを自動化。ディレイとの違い、設定方法、Optoelectronics・Zebra・Honeywellでの考え方を解説。OPI-3601、ALX-3601、L-46Xで動作確認済み、Zebra DS2208で一部確認、Honeywell Xenon 1900GではData Formatterによる待機処理を検証済み。 Excel QRコード作成、Excel QRリーダー連携、バーコードリーダー入力自動化を探している方向け。" name="description">
+<meta content="QRコードリーダーのSleep（一時停止）機能で、業務システムの画面遷移待ち・帳票出力待ち・PrintScreen待ちを自動化。ディレイとの違い、設定方法、Optoelectronics・Zebra・Honeywellでの考え方を解説します。" name="description">
 <meta content="QRコードにSleep（一時停止）を埋め込む！業務システムの画面遷移・印刷待ちを自動化｜Excel &times; No VBA Lab" property="og:title">
 <meta content="QRリーダーのSleep機能で業務システムの画面遷移待ち・帳票出力待ち・PrintScreenの待機を自動化する方法を解説。Optoelectronics・Zebra・Honeywellの違いも整理。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/06_qr_wait_time.html" rel="canonical">
-<link href="../common.css?v=20261101" rel="stylesheet">
-<link href="../article.css?v=20261101" rel="stylesheet">
+<link href="../common.css?v=20261103" rel="stylesheet">
+<link href="../article.css?v=20261103" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-10-07", "dateModified": "2026-10-07", "headline":"QRコードに Sleep（一時停止）を埋め込む！業務システムの画面遷移・印刷待ちを自動化","description":"QRコードリーダーのSleep（一時停止）機能で業務システムの画面遷移待ち・帳票出力待ち・PrintScreen待ちを自動化。ディレイとの違い、設定方法、Optoelectronics・Zebra・Honeywellでの考え方を解説。OPI-3601、ALX-3601、L-46Xで動作確認済み、Zebra DS2208で一部確認、Honeywell Xenon 1900GではData Formatterによる待機処理を検証済み。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/06_qr_wait_time.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 
 <body class="article-layout">
@@ -43,6 +45,7 @@
 </div>
 </div>
 </header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../#article-finder">🔍 記事を探す</a><a href="../functions/">関数</a><a href="../powerquery/">Power Query</a><a href="../cobol/">COBOL帳票</a><a href="../qr/" aria-current="true">QR入力</a><a href="../others/">現場実務</a><a href="../thinking/">技術の流れ</a><a href="../unlocked/">VBA・AI</a><a href="../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content" id="main-content">
 <div class="breadcrumb">
@@ -68,9 +71,10 @@
 
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
 </div>
+<details class="auto-toc" open><summary>目次（13項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">↵ Enter / Tab の共通整理</a></li><li><a href="#sec-2">💡 この記事で「できるようになること」</a></li><li><a href="#sec-3">STEP 1：ディレイと Sleep の違いを正しく理解する</a></li><li><a href="#sec-4">STEP 2：Sleep が本当に必要な場面</a></li><li><a href="#sec-5">STEP 3：Sleep の仕組み &horbar; QRコードのどこに入れるのか</a></li><li><a href="#sec-6">STEP 4：リーダーへの Sleep 設定方法</a></li><li><a href="#sec-7">STEP 5：Sleep を使った実践パターン</a></li><li><a href="#sec-8">STEP 6：Sleep の最適値を決める手順</a></li><li><a href="#sec-9">注意：ディレイとSleepは目的に応じて組み合わせる</a></li><li><a href="#sec-10">深掘り：Sleep が使えないリーダーの場合</a></li><li><a href="#sec-11">Sleep 関連のトラブルシューティング</a></li><li><a href="#sec-12">まとめ</a></li><li><a href="#qr-safety-title">QRリーダー連携の運用注意</a></li></ol></nav></details>
 
 <section class="method-section qr-control-guide">
-  <h2><span class="icon">↵</span> Enter / Tab の共通整理</h2>
+  <h2 id="sec-1"><span class="icon">↵</span> Enter / Tab の共通整理</h2>
   <p>QR入力では、読み取り先によって最初に試す制御を分けます。Num Enter は Excel の CHAR 関数では生成できないため、必要な場合はQRリーダー側のキー変換で確認します。</p>
   <table class="format-table">
     <thead>
@@ -86,7 +90,7 @@
 </section>
 
 <section class="goal-section">
-<h2><span class="icon">💡</span> この記事で「できるようになること」</h2>
+<h2 id="sec-2"><span class="icon">💡</span> この記事で「できるようになること」</h2>
 <p>記事⑤の実践パターンで、こんな壁にぶつかりませんでしたか？</p>
 <ul>
 <li>業務システムで NUM Enter を送ったのに、<strong>画面遷移が終わる前に次のデータが送られてしまう</strong></li>
@@ -115,7 +119,7 @@ Sleepで確認できるのは時間が経過したことだけです。保存完
 </section>
 
 <section class="method-section">
-<h2>STEP 1：ディレイと Sleep の違いを正しく理解する</h2>
+<h2 id="sec-3">STEP 1：ディレイと Sleep の違いを正しく理解する</h2>
 <p>③で学んだ「キャラクター間ディレイ」と今回の「Sleep」は、名前こそ似ていますが<strong>目的・単位・使い所がまったく違います</strong>。ここを混同すると設定を間違えます。</p>
 <p>なお、ディレイの最適値はPC性能、入力先アプリ、業務システムの応答速度、IME状態、ネットワーク状況によって変わります。そのため、本記事では「この値なら必ず安全」とは断定せず、<strong>実際の画面でテストしながら少しずつ遅くする</strong>前提で説明します。</p>
 
@@ -166,7 +170,7 @@ Sleepで確認できるのは時間が経過したことだけです。保存完
 </section>
 
 <section class="method-section">
-<h2>STEP 2：Sleep が本当に必要な場面</h2>
+<h2 id="sec-4">STEP 2：Sleep が本当に必要な場面</h2>
 <p>Sleep は「秒」単位で送信を止める重い機能です。不必要な場面で使うとスキャンのたびに数秒止まり、現場のストレスになります。<strong>本当に必要な場面だけで使ってください。</strong></p>
 
 <table class="format-table">
@@ -215,7 +219,7 @@ Excel のセル入力は PC のローカル処理なので比較的速く完了�
 </section>
 
 <section class="method-section">
-<h2>STEP 3：Sleep の仕組み &horbar; QRコードのどこに入れるのか</h2>
+<h2 id="sec-5">STEP 3：Sleep の仕組み &horbar; QRコードのどこに入れるのか</h2>
 <p>Sleep はリーダーの機能です。QRコード内に<strong>「ここで一時停止しろ」という信号</strong>を埋め込み、リーダーがそれを読み取ったときに指定秒数だけ送信を止めます。</p>
 
 <h3>仕組みのイメージ</h3>
@@ -270,7 +274,7 @@ Sleep 中はリーダーの LED が点滅するなどの表示がある機種も
 </section>
 
 <section class="tips-section">
-<h2>STEP 4：リーダーへの Sleep 設定方法</h2>
+<h2 id="sec-6">STEP 4：リーダーへの Sleep 設定方法</h2>
 <p>Sleep の設定方法は大きく分けて<strong>2つのアプローチ</strong>があります。リーダーのメーカー・機種によって対応が異なります。</p>
 
 <h3>方式A：トリガー文字 + キー変換で Sleep を埋め込む</h3>
@@ -398,7 +402,7 @@ Pause、Delay、Data Editing 系の機能があっても、本記事の Sleep �
 </section>
 
 <section class="tips-section">
-<h2>STEP 5：Sleep を使った実践パターン</h2>
+<h2 id="sec-7">STEP 5：Sleep を使った実践パターン</h2>
 <p>⑤の実践パターンに Sleep を組み込んだ応用例です。ここでは、Sleep のトリガー文字を <code>!</code> = 1秒、<code>?</code> = 5秒として、必要な秒数分組み合わせる方式で記述します。</p>
 
 <div class="xdemo-note-warn">
@@ -564,7 +568,7 @@ Alt+Tabは文字コードではなく修飾キーを含むキーイベントで�
 </section>
 
 <section class="method-section">
-<h2>STEP 6：Sleep の最適値を決める手順</h2>
+<h2 id="sec-8">STEP 6：Sleep の最適値を決める手順</h2>
 <p>Sleep の秒数は「長すぎると遅い、短すぎると失敗」のジレンマがあります。以下の手順で最適値を見つけてください。</p>
 <ol>
 <li><strong>手動で操作し、ストップウォッチで計測する</strong><br>実際に業務システムを手動で操作し、「確定ボタンを押してから次の画面が完全に表示されるまで」の時間を複数回計測します。</li>
@@ -579,7 +583,7 @@ Alt+Tabは文字コードではなく修飾キーを含むキーイベントで�
 </section>
 
 <section class="method-section">
-<h2>注意：ディレイとSleepは目的に応じて組み合わせる</h2>
+<h2 id="sec-9">注意：ディレイとSleepは目的に応じて組み合わせる</h2>
 <p>Sleepを設定しても文字欠け対策のディレイが不要になるわけではありません。文字欠けと操作間隔の両方が問題になる環境では併用し、不要な環境ではむやみに増やしません。</p>
 
 <table class="format-table">
@@ -626,7 +630,7 @@ Alt+Tabは文字コードではなく修飾キーを含むキーイベントで�
 </section>
 
 <section class="tips-section">
-<h2>深掘り：Sleep が使えないリーダーの場合</h2>
+<h2 id="sec-10">深掘り：Sleep が使えないリーダーの場合</h2>
 <p>Sleep 機能そのものが使えない場合は、まずリーダーにどの待機系設定があるかを確認します。低価格リーダーでは、Sleep だけでなくキャラクター間ディレイやファンクション間ディレイも弱い、または存在しない場合があります。</p>
 
 <h3>代替①：待機系の設定があるか確認する</h3>
@@ -642,7 +646,7 @@ Sleep が必要な業務フローを待機機能の弱いリーダーで組む�
 </section>
 
 <section class="method-section">
-<h2>Sleep 関連のトラブルシューティング</h2>
+<h2 id="sec-11">Sleep 関連のトラブルシューティング</h2>
 <table class="key-table">
 <thead>
 <tr><th>症状</th><th>原因</th><th>対処法</th></tr>
@@ -688,7 +692,7 @@ Sleep が必要な業務フローを待機機能の弱いリーダーで組む�
 </section>
 
 <section class="method-section" style="background:#f8f9fa; border-top: 2px solid #ddd;">
-<h2>まとめ</h2>
+<h2 id="sec-12">まとめ</h2>
 <table class="format-table">
 <tr><th class="w-30">項目</th><th>内容</th></tr>
 <tr>
@@ -805,7 +809,7 @@ Sleep が必要な業務フローを待機機能の弱いリーダーで組む�
   </p>
 </footer>
 
-<script src="../script.js?v=20261101"></script>
+<script src="../script.js?v=20261103"></script>
 
 </body>
 </html>

@@ -26,11 +26,13 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
-<link href="../common.css?v=20261101" rel="stylesheet">
-<link href="../article.css?v=20261101" rel="stylesheet">
+<link href="../common.css?v=20261103" rel="stylesheet">
+<link href="../article.css?v=20261103" rel="stylesheet">
 
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-24", "dateModified": "2026-04-24", "headline":"VBAでフォルダ内ファイル一括処理・リネーム・アーカイブ","description":"パワークエリのフォルダ取り込みでは届かない「ファイルのリネーム・移動・アーカイブ」など、VBAを用いたフォルダ内ファイル一括処理の手法を解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_file_rename.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 <body>
 <!-- スキップリンク -->
@@ -38,6 +40,7 @@
 <header class="site-header"><div class="header-inner"><div class="header-brand">
 <div class="site-title"><a href="../">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
 </div></div></header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../#article-finder">🔍 記事を探す</a><a href="../functions/">関数</a><a href="../powerquery/">Power Query</a><a href="../cobol/">COBOL帳票</a><a href="../qr/">QR入力</a><a href="../others/">現場実務</a><a href="../thinking/">技術の流れ</a><a href="../unlocked/">VBA・AI</a><a href="../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
 <div class="breadcrumb"><a href="../">ホーム</a><span>&rsaquo;</span><a href="../unlocked/">制限解除ラボ</a><span>&rsaquo;</span><strong>ファイル一括処理（リネーム）</strong></div>
@@ -46,17 +49,18 @@
 <div class="article-meta"><span class="badge badge-all">VBA OK</span><span class="article-date">更新日: 2026-04-24</span></div>
 <h1 class="article-title">VBAでフォルダ内ファイル一括処理・リネーム・アーカイブ</h1>
 </div>
+<details class="auto-toc" open><summary>目次（5項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">1. パワークエリの限界とFileSystemObject (FSO)</a></li><li><a href="#sec-2">2. 実践：Excelリストに基づく一括リネーム（FSO版）</a></li><li><a href="#sec-3">3. 処理済みファイルのアーカイブ（日付別フォルダへ移動）</a></li><li><a href="#sec-4">4. サブフォルダも含む再帰処理</a></li><li><a href="#sec-5">5. パワークエリとの使い分けまとめ</a></li></ol></nav></details>
 <div class="vba-box">
 <strong>💡 本編（VBAなし）との位置づけ</strong>
 <p>「複数ファイルの中身のデータを結合する」だけであればVBAは不要です。代替手法は &rarr; <a href="../powerquery/advanced/article_pq_import_patterns.html">パワークエリ「データ取り込みパターン集」</a> を使用してください。本記事は、ファイル自体の「移動」「名前変更」を行うための手法です。</p>
 </div>
 <section>
-<h2>1. パワークエリの限界とFileSystemObject (FSO)</h2>
+<h2 id="sec-1">1. パワークエリの限界とFileSystemObject (FSO)</h2>
 <p>パワークエリの「フォルダーから」取り込みは、大量のCSVやExcelファイルのデータを一気に結合する際に強力ですが、<strong>「ファイル自体をリネームする」「処理が終わったファイルを別フォルダに移動（アーカイブ）する」といったファイルシステムへの干渉はできません。</strong><br>
         業務フローとして「処理済みファイルは別フォルダへ退避する」ルールがある場合、VBAの <code>FileSystemObject</code> (FSO) が最も確実で安全な選択肢となります。標準の <code>Name</code> ステートメントや <code>Dir</code> 関数は古い仕様であり、Unicode文字の扱いや別ドライブへの移動でエラーを起こしやすいため、現代の実務ではFSO一択です。</p>
 </section>
 <section>
-<h2>2. 実践：Excelリストに基づく一括リネーム（FSO版）</h2>
+<h2 id="sec-2">2. 実践：Excelリストに基づく一括リネーム（FSO版）</h2>
 <p>A列に「現在のファイル名」、B列に「新しいファイル名」を入力したリスト（シート名：リネームリスト）を用意し、一気にリネームする堅牢なコードです。上書きエラーやファイル欠損を事前に検知します。</p>
 <div class="code-readonly">
 <span class="code-line">Sub FSO_ファイル一括リネーム()</span>
@@ -104,7 +108,7 @@
 </div>
 </section>
 <section>
-<h2>3. 処理済みファイルのアーカイブ（日付別フォルダへ移動）</h2>
+<h2 id="sec-3">3. 処理済みファイルのアーカイブ（日付別フォルダへ移動）</h2>
 <p>パワークエリでデータを読み込んだ後、使用したCSVファイルを「YYYYMM」形式のアーカイブフォルダに自動で移動させるルーチンです。</p>
 <div class="code-readonly">
 <span class="code-line">Sub 処理済ファイル_アーカイブ()</span>
@@ -146,7 +150,7 @@
         </div>
 </section>
 <section>
-<h2>4. サブフォルダも含む再帰処理</h2>
+<h2 id="sec-4">4. サブフォルダも含む再帰処理</h2>
 <p>対象フォルダの中にさらにサブフォルダがある場合、再帰的に全てのファイルを処理するパターンです。月別フォルダの中にあるCSVを一括でリネームしたい場合などに使います。</p>
 <div class="code-readonly">
 <span class="code-line">Sub 再帰的ファイル一覧取得(folderPath As String, result As Collection)</span>
@@ -179,7 +183,7 @@
 </div>
 </section>
 <section>
-<h2>5. パワークエリとの使い分けまとめ</h2>
+<h2 id="sec-5">5. パワークエリとの使い分けまとめ</h2>
 <div class="table-responsive">
 <table class="vba-compare-table">
 <thead>
@@ -244,7 +248,7 @@
     <a href="../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../script.js?v=20261101"></script>
+<script src="../script.js?v=20261103"></script>
 </body>
 </html>
 

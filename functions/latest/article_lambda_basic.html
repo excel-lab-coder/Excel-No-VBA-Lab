@@ -20,15 +20,15 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_lambda_basic.html" property="og:url">
 <meta content="Excel &times; No VBA Lab" property="og:site_name">
-<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
 <meta content="LAMBDA（ラムダ）関数は「何のために使うのか？」" name="twitter:title">
 <meta content="式の怪獣化を防ぎ、会社ルールを自作関数化する実務ガイド。" name="twitter:description">
-<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" name="twitter:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" name="twitter:image">
 <meta content="index, follow" name="robots">
 
-<link href="../../common.css?v=20261101" rel="stylesheet">
-<link href="../../article.css?v=20261101" rel="stylesheet">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
 <link rel="icon" href="../../favicon.ico">
 <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
@@ -71,6 +71,7 @@
     </div>
   </div>
 </header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/" aria-current="true">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content" id="main-content">
   <div class="breadcrumb">
@@ -91,10 +92,11 @@
       <h1 class="article-title">LAMBDA（ラムダ）関数は「何のために使うのか？」<br>&horbar; 式の怪獣化を防ぎ、会社ルールを自作関数化する実務ガイド</h1>
       <p class="article-summary">世間の解説では「DATEDIFを忘れるから自作関数にする」「消費税の1.1倍を関数にする」といった入門例がよく見られます。しかし現場の人間からすれば、<strong>『そんな簡単なことのために、わざわざ名前の定義を開いて小難しいLAMBDAを書くくらいなら、普通の式を調べた方が100倍早い！』</strong>と感じるのが当然です。<br><br>では、現場のプロは一体何のためにLAMBDAを使うのか？結論は、<strong>「セルに直書きすると破綻する怪獣数式を封印し、会社の業務ルール変更時にブック内の全セルを一撃で修正するため」</strong>です。VBAが禁止された職場でこそ真価を発揮する本物の実務シナリオを徹底解説します。</p>
     </div>
+<details class="auto-toc" open><summary>目次（7項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">この記事の位置づけと前提環境</a></li><li><a href="#sec-2">【1】なぜ普通の数式やLETではダメなのか？（決定的な違い）</a></li><li><a href="#sec-3">【2】LAMBDAとLETを組み合わせて、計算の流れを整理する</a></li><li><a href="#sec-4">【3】現場の修羅場を解決する！本気の実務自作関数3選</a></li><li><a href="#sec-5">【4】VBA禁止環境の裏ワザ：全社員に関数を配布する「シートコピー術」</a></li><li><a href="#sec-6">【5】失敗しない！セル検証から「名前の定義」への3ステップ</a></li><li><a href="#sec-7">📋 まとめ：LAMBDAを現場に導入する真の価値</a></li></ol></nav></details>
 
     <!-- 記事の位置づけ -->
     <aside class="article-context-box">
-      <h2>この記事の位置づけと前提環境</h2>
+      <h2 id="sec-1">この記事の位置づけと前提環境</h2>
       <ul>
         <li><strong>対応環境：</strong>Excel 2024 / Microsoft 365（※Excel 2021以前では利用できません）</li>
         <li><strong>対象読者：</strong>「数式が長すぎて自分でも読めない」「計算ルールの変更で全シートの式を直すのが苦痛」「マクロ禁止だが独自の便利関数が欲しい」方</li>
@@ -104,7 +106,7 @@
 
     <!-- 【1】なぜ普通の数式やLETではダメなのか？ -->
     <section class="method-section">
-      <h2>【1】なぜ普通の数式やLETではダメなのか？（決定的な違い）</h2>
+      <h2 id="sec-2">【1】なぜ普通の数式やLETではダメなのか？（決定的な違い）</h2>
       <p>「数式を綺麗にする」だけなら、既存の <strong>LET関数</strong> でも変数を使って整理できます。しかし、実務の大規模運用においてLETには超えられない壁があります。</p>
 
       <div class="table-wrap" style="margin:20px 0;">
@@ -156,7 +158,7 @@
 
     <!-- 【2】LAMBDAとLETを組み合わせる例 -->
     <section class="method-section">
-      <h2>【2】LAMBDAとLETを組み合わせて、計算の流れを整理する</h2>
+      <h2 id="sec-3">【2】LAMBDAとLETを組み合わせて、計算の流れを整理する</h2>
       <p><code>=LAMBDA(x, y, x + y)</code> のような簡単な足し算は、LAMBDAの仕組みを理解するための入門例として役立ちます。<br>
       実務で複数の計算手順をまとめたいときには、<strong>LAMBDAの中でLETを使う書き方</strong>も便利です。途中の計算に名前を付けることで、式の流れを追いやすくなります。LETを使うかどうかは、式の複雑さや読みやすさに応じて選べます。</p>
 
@@ -175,7 +177,7 @@
 
     <!-- 【3】現場の修羅場を解決する本気の実務例3選 -->
     <section class="method-section">
-      <h2>【3】現場の修羅場を解決する！本気の実務自作関数3選</h2>
+      <h2 id="sec-4">【3】現場の修羅場を解決する！本気の実務自作関数3選</h2>
       <p>「普通の式で書くと現場が崩壊する」リアルな実務課題を解決する自作関数テンプレートです。</p>
 
       <!-- 実例1 -->
@@ -247,7 +249,7 @@
 
     <!-- 【4】超重要：VBA禁止環境で全社員に自作関数を配る裏ワザ -->
     <section class="method-section">
-      <h2>【4】VBA禁止環境の裏ワザ：全社員に関数を配布する「シートコピー術」</h2>
+      <h2 id="sec-5">【4】VBA禁止環境の裏ワザ：全社員に関数を配布する「シートコピー術」</h2>
       <p>「自分で作ったLAMBDA関数を、隣の同僚や他部署の人にも使わせたい。でもVBAのマクロ有効ブック（.xlsm）やアドイン（.xlam）は会社のセキュリティで禁止されている……」<br>
       実は、<strong>LAMBDA関数にはVBAにはない驚異的な配布の仕組み</strong>が存在します。</p>
 
@@ -264,7 +266,7 @@
 
     <!-- 【5】失敗しない3ステップ登録手順 -->
     <section class="method-section">
-      <h2>【5】失敗しない！セル検証から「名前の定義」への3ステップ</h2>
+      <h2 id="sec-6">【5】失敗しない！セル検証から「名前の定義」への3ステップ</h2>
       <p>いきなり「名前の定義」に関数を書くと、括弧の閉じ忘れなどのシンタックスエラーで修正が困難になります。必ず以下の3段階を踏むのがプロの鉄則です。</p>
 
       <ol class="step-list">
@@ -290,7 +292,7 @@
 
     <!-- まとめ -->
     <section class="method-section">
-      <h2>📋 まとめ：LAMBDAを現場に導入する真の価値</h2>
+      <h2 id="sec-7">📋 まとめ：LAMBDAを現場に導入する真の価値</h2>
       <div class="xdemo-note-good">
         <ul style="margin:0;padding-left:1.2rem;line-height:2;">
           <li>✅ <strong>些細な計算には使わない：</strong>簡単な式は普通の関数で十分。LAMBDAは「セルに置くと長すぎる会社ルール」のためにある</li>
@@ -334,6 +336,6 @@
     <a href="../../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../../script.js?v=20261101"></script>
+<script src="../../script.js?v=20261103"></script>
 </body>
 </html>

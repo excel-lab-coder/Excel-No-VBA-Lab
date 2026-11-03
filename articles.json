@@ -10,7 +10,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2021以降",
+      "min_excel": 2021
     },
     {
       "category": "functions",
@@ -18,7 +20,9 @@
       "title": "XLOOKUP 応用編",
       "url": "functions/latest/article_xlookup_advanced.html",
       "summary": "第3引数（戻り配列）に複数列の範囲を指定するだけで、ヒットした行の複数列を横並びに一気に展開できます。",
-      "level": 3
+      "level": 3,
+      "version": "Excel 2021以降",
+      "min_excel": 2021
     },
     {
       "category": "functions",
@@ -26,7 +30,9 @@
       "title": "XLOOKUP ネスト（多条件検索）",
       "url": "functions/latest/article_xlookup_multi.html",
       "summary": "「店舗」と「商品名」など、複数条件の組み合わせが完全一致する行を探し出します。",
-      "level": 4
+      "level": 4,
+      "version": "Excel 2021以降",
+      "min_excel": 2021
     },
     {
       "category": "functions",
@@ -39,7 +45,9 @@
         "impact",
         "rare"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2021以降",
+      "min_excel": 2021
     },
     {
       "category": "functions",
@@ -47,7 +55,9 @@
       "title": "XLOOKUP比較編：VLOOKUP・INDEX+MATCHとの使い分け",
       "url": "functions/latest/article_xlookup_vs.html",
       "summary": "VLOOKUPの弱点、INDEX+MATCHの強み、XLOOKUPの便利さを比較して使い分けます。",
-      "level": 2
+      "level": 2,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -55,7 +65,9 @@
       "title": "XMATCH関数",
       "url": "functions/latest/article_xmatch.html",
       "summary": "リストの中から特定の値を探し、それが上から何番目にあるかを安全・確実に取得します。",
-      "level": 2
+      "level": 2,
+      "version": "Excel 2021以降",
+      "min_excel": 2021
     },
     {
       "category": "functions",
@@ -67,7 +79,9 @@
       "tags": [
         "impact"
       ],
-      "rarity_id": "choosecols"
+      "rarity_id": "choosecols",
+      "version": "Excel 2024以降",
+      "min_excel": 2024
     },
     {
       "category": "functions",
@@ -79,7 +93,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2024以降",
+      "min_excel": 2024
     },
     {
       "category": "functions",
@@ -91,7 +107,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2024以降",
+      "min_excel": 2024
     },
     {
       "category": "functions",
@@ -103,7 +121,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2024以降",
+      "min_excel": 2024
     },
     {
       "category": "thinking",
@@ -206,7 +226,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2021以降",
+      "min_excel": 2021
     },
     {
       "category": "thinking",
@@ -273,7 +295,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2021以降",
+      "min_excel": 2021
     },
     {
       "category": "functions",
@@ -285,7 +309,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2021以降",
+      "min_excel": 2021
     },
     {
       "category": "functions",
@@ -296,7 +322,9 @@
       "level": 2,
       "tags": [
         "impact"
-      ]
+      ],
+      "version": "Excel 2021以降",
+      "min_excel": 2021
     },
     {
       "category": "functions",
@@ -308,7 +336,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2021以降",
+      "min_excel": 2021
     },
     {
       "category": "functions",
@@ -316,7 +346,9 @@
       "title": "SORT / SORTBY関数",
       "url": "functions/latest/article_sort.html",
       "summary": "抽出結果や一覧を、条件に応じて自動で並べ替えます。",
-      "level": 2
+      "level": 2,
+      "version": "Excel 2021以降",
+      "min_excel": 2021
     },
     {
       "category": "functions",
@@ -328,7 +360,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2021以降",
+      "min_excel": 2021
     },
     {
       "category": "functions",
@@ -340,7 +374,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2019以降",
+      "min_excel": 2019
     },
     {
       "category": "functions",
@@ -348,7 +384,9 @@
       "title": "LET + IF の複雑ロジック",
       "url": "functions/latest/article_let_if.html",
       "summary": "複雑なIF条件や結果値をLET関数の変数で整理し、見やすく・保守しやすくします。",
-      "level": 4
+      "level": 4,
+      "version": "Excel 2021以降",
+      "min_excel": 2021
     },
     {
       "category": "functions",
@@ -356,7 +394,9 @@
       "title": "LET深掘り②：SORT・SORTBYの重複計算を減らす",
       "url": "functions/latest/article_let_iferror.html",
       "summary": "ソート結果を変数化して再利用し、INDEX・SEQUENCEで上位件数を抽出します。Excel 2021対応、該当0件の分岐付き。",
-      "level": 4
+      "level": 4,
+      "version": "Excel 2021以降",
+      "min_excel": 2021
     },
     {
       "category": "functions",
@@ -364,7 +404,9 @@
       "title": "SWITCH関数",
       "url": "functions/latest/article_switch.html",
       "summary": "特定の値に対して決まった結果を返す処理を、IFよりすっきり書けます。",
-      "level": 1
+      "level": 1,
+      "version": "Excel 2019以降",
+      "min_excel": 2019
     },
     {
       "category": "functions",
@@ -376,7 +418,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2024以降",
+      "min_excel": 2024
     },
     {
       "category": "functions",
@@ -388,7 +432,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2019以降",
+      "min_excel": 2019
     },
     {
       "category": "functions",
@@ -396,7 +442,9 @@
       "title": "CONCAT vs CONCATENATE vs「&」徹底比較",
       "url": "functions/latest/article_concat.html",
       "summary": "Excelで文字列を結合する方法を比較し、実務でどれを使うべきか整理します。",
-      "level": 1
+      "level": 1,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -404,7 +452,9 @@
       "title": "TEXTBEFORE / TEXTAFTER関数",
       "url": "functions/latest/article_textbefore.html",
       "summary": "文字列から、特定の区切り文字の前後だけを抜き出します。",
-      "level": 2
+      "level": 2,
+      "version": "Excel 2024以降",
+      "min_excel": 2024
     },
     {
       "category": "functions",
@@ -412,7 +462,9 @@
       "title": "SEQUENCE で日付リスト自動生成",
       "url": "functions/latest/article_sequence.html",
       "summary": "連番、日付、月初、時間割を1セルからスピル生成する方法を図解します。",
-      "level": 2
+      "level": 2,
+      "version": "Excel 2021以降",
+      "min_excel": 2021
     },
     {
       "category": "functions",
@@ -424,7 +476,8 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Microsoft 365"
     },
     {
       "category": "functions",
@@ -436,7 +489,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -444,7 +499,9 @@
       "title": "VLOOKUP完全ガイド — 基本から限界まで",
       "url": "functions/old/article_vlookup.html",
       "summary": "VLOOKUPの基本構文、よくあるエラー、列番号の落とし穴、使ってはいけない場面まで整理します。",
-      "level": 2
+      "level": 2,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -456,7 +513,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -468,7 +527,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -476,7 +537,9 @@
       "title": "INDEX + MATCH + 結合キー列",
       "url": "functions/old/article_index_match_multi.html",
       "summary": "複数条件の組み合わせで検索したいとき、旧Excelでも安定して実装できます。",
-      "level": 4
+      "level": 4,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -488,7 +551,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -500,7 +565,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -513,7 +580,9 @@
         "impact"
       ],
       "rarity_id": "filter_alt",
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -526,7 +595,9 @@
         "impact"
       ],
       "rarity_id": "zip_reverse",
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -537,7 +608,9 @@
       "level": 1,
       "tags": [
         "impact"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -548,7 +621,9 @@
       "level": 2,
       "tags": [
         "rare"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -556,7 +631,9 @@
       "title": "SUBSTITUTE 多段ネスト",
       "url": "functions/old/article_substitute.html",
       "summary": "複数の文字置換を一気に済ませたいときの定番テクニックです。",
-      "level": 3
+      "level": 3,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -576,7 +653,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -588,7 +667,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -596,7 +677,9 @@
       "title": "TEXT関数による和暦変換",
       "url": "functions/old/article_text_date.html",
       "summary": "日付を令和表記や省略形式に変換する表示テクニックです。",
-      "level": 2
+      "level": 2,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -604,7 +687,9 @@
       "title": "DATEDIFの注意点",
       "url": "functions/old/article_datedif.html",
       "summary": "年齢や勤続年数の計算で便利ですが、仕様に注意が必要な関数です。",
-      "level": 2
+      "level": 2,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -616,7 +701,9 @@
       "tags": [
         "impact"
       ],
-      "rarity_id": "volatile"
+      "rarity_id": "volatile",
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -629,7 +716,9 @@
         "prereq",
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -637,7 +726,9 @@
       "title": "パワークエリとは【補足編】",
       "url": "powerquery/basic/article_powerquery_intro_deep.html",
       "summary": "読み込み先の選択肢、パラメータクエリ、SharePoint連携などの発展的内容。",
-      "level": 2
+      "level": 2,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -650,7 +741,9 @@
         "prereq",
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -658,7 +751,9 @@
       "title": "Power Queryエディターの画面構成と「適用したステップ」",
       "url": "powerquery/basic/article_pq_editor_ui_2.html",
       "summary": "「適用したステップ」の読み方・戻し方・削除・途中挿入まで丁寧にカバーします。",
-      "level": 1
+      "level": 1,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -671,7 +766,9 @@
         "prereq",
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -684,7 +781,9 @@
         "prereq",
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -696,7 +795,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -708,7 +809,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -757,7 +860,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -765,7 +870,9 @@
       "title": "Power Queryで毎月のファイルをまとめる：翌月も更新だけで使える設計",
       "url": "powerquery/advanced/article_pq_folder_monthly.html",
       "summary": "フォルダー取り込みを月次業務の例で解説。ファイル名のルール、余計なファイルの除外、二重取り込みの確認表、列名が変わった月への対処まで。",
-      "level": 4
+      "level": 4,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -777,7 +884,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -789,7 +898,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -797,7 +908,9 @@
       "title": "テキスト列を整形する — 書式・置換・トリム・抽出・分割・マージ",
       "url": "powerquery/advanced/article_pq_text_operations.html",
       "summary": "テキスト列を整形する方法をまとめて解説します。",
-      "level": 2
+      "level": 2,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -805,7 +918,9 @@
       "title": "列の分割",
       "url": "powerquery/advanced/article_pq_split_column.html",
       "summary": "1列に複数の情報が入っているデータを、複数列に分割します。",
-      "level": 2
+      "level": 2,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -813,7 +928,9 @@
       "title": "数値と日付を扱う — 丸め・統計・日付抽出・期間計算",
       "url": "powerquery/advanced/article_pq_number_date.html",
       "summary": "数値操作と日付操作をGUI中心に解説。Excel関数との対応表付き。",
-      "level": 3
+      "level": 3,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -825,7 +942,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -833,7 +952,9 @@
       "title": "集計とピボット — グループ化・ピボット・ピボット解除",
       "url": "powerquery/advanced/article_pq_group_pivot.html",
       "summary": "グループ化・ピボット・ピボット解除をGUI中心に徹底解説します。",
-      "level": 4
+      "level": 4,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -845,7 +966,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -858,7 +981,9 @@
         "impact"
       ],
       "rarity_id": "pq_parameter",
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "powerquery",
@@ -867,7 +992,9 @@
       "url": "powerquery/advanced/article_pq_m_language.html",
       "summary": "Power QueryのバックエンドであるM言語の基本構文を理解します。",
       "level": 7,
-      "rarity_id": "m_language"
+      "rarity_id": "m_language",
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "cobol",
@@ -879,7 +1006,9 @@
       "tags": [
         "prereq"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "cobol",
@@ -891,7 +1020,9 @@
       "tags": [
         "prereq"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "cobol",
@@ -903,7 +1034,9 @@
       "tags": [
         "impact",
         "prereq"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "cobol",
@@ -923,7 +1056,9 @@
       "url": "cobol/formula/02_article_cobol_advanced.html",
       "summary": "不要なヘッダー行が混ざるデータや縦持ちデータを、関数だけで整形します。",
       "level": 6,
-      "rarity_id": "cobol_advanced"
+      "rarity_id": "cobol_advanced",
+      "version": "Excel 2016以降（一部）",
+      "min_excel": 2016
     },
     {
       "category": "cobol",
@@ -936,7 +1071,9 @@
         "impact"
       ],
       "rarity_id": "cobol_expert",
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降（一部）",
+      "min_excel": 2016
     },
     {
       "category": "cobol",
@@ -946,7 +1083,9 @@
       "summary": "最凶の不規則帳票に、数式だけで立ち向かう完結編です。",
       "level": 8,
       "rarity_id": "cobol_irregular",
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降（一部）",
+      "min_excel": 2016
     },
     {
       "category": "cobol",
@@ -969,7 +1108,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "cobol",
@@ -977,7 +1118,9 @@
       "title": "【参考資料】パワークエリでCOBOL帳票を処理する全テクニック",
       "url": "cobol/pq/02_article_cobol_pq3.html",
       "summary": "Power Queryの標準機能だけで完結する処理パターンを網羅した参考資料です。",
-      "level": 4
+      "level": 4,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "cobol",
@@ -986,7 +1129,9 @@
       "url": "cobol/pq/03_article_cobol_pq_midb_ref.html",
       "summary": "Text.ToBinaryとBinary.Rangeを組み合わせ、バイト単位の切り出しを実現します。",
       "level": 7,
-      "rarity_id": "cobol_pq_midb"
+      "rarity_id": "cobol_pq_midb",
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "cobol",
@@ -1016,7 +1161,9 @@
       "summary": "ExcelでQR用データを作り、QRリーダーをキーボード入力として使う基本。Tab・Enterを組み合わせたWebシステム入力の入口です。",
       "level": 3,
       "rarity_id": "qr_generate",
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "qr",
@@ -1027,7 +1174,9 @@
       "level": 4,
       "tags": [
         "impact"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "qr",
@@ -1035,7 +1184,9 @@
       "title": "③ QRリーダーの読み取りが速すぎて文字が欠ける — キャラクター間ディレイで解決",
       "url": "qr/03_qr_character_delay.html",
       "summary": "文字欠け・セルずれを、キャラクター間ディレイの設定で解決します。推奨値はまず20msから。",
-      "level": 4
+      "level": 4,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "qr",
@@ -1046,7 +1197,9 @@
       "level": 5,
       "tags": [
         "rare"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "qr",
@@ -1057,7 +1210,9 @@
       "level": 6,
       "tags": [
         "impact"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "qr",
@@ -1065,7 +1220,9 @@
       "title": "⑥ QRコードの中に「待ち時間」を作る — スリープで画面遷移を待つ",
       "url": "qr/06_qr_wait_time.html",
       "summary": "業務システムの画面遷移やWebフォームの応答を待ってから次の操作を実行します。",
-      "level": 6
+      "level": 6,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "qr",
@@ -1078,7 +1235,9 @@
         "impact"
       ],
       "rarity_id": "qr_series",
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "qr",
@@ -1087,7 +1246,9 @@
       "url": "qr/08_qr_reader_selection.html",
       "summary": "筆者が検証した機種を中心に、選び方・USB-HID接続・設定方法まで解説します。",
       "level": 5,
-      "rarity_id": "qr_hardware"
+      "rarity_id": "qr_hardware",
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "qr",
@@ -1098,7 +1259,9 @@
       "level": 6,
       "tags": [
         "impact"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "qr",
@@ -1109,7 +1272,9 @@
       "level": 7,
       "tags": [
         "impact"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "qr",
@@ -1120,7 +1285,9 @@
       "level": 5,
       "tags": [
         "impact"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "qr",
@@ -1129,7 +1296,9 @@
       "url": "qr/13_qr_reader_comparison.html",
       "summary": "読み取り性能だけでなく、入力制御エンジンとしての考え方、設定難易度、現場配備時の向き不向きを比較します。",
       "level": 7,
-      "rarity_id": "qr_hardware"
+      "rarity_id": "qr_hardware",
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "qr",
@@ -1140,7 +1309,9 @@
       "level": 7,
       "tags": [
         "impact"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "qr",
@@ -1152,7 +1323,9 @@
       "tags": [
         "impact"
       ],
-      "rarity_id": "qr_hardware"
+      "rarity_id": "qr_hardware",
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "qr",
@@ -1177,7 +1350,9 @@
         "impact"
       ],
       "rarity_id": "qr_hardware",
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "qr",
@@ -1214,7 +1389,9 @@
       "level": 4,
       "tags": [
         "impact"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1227,7 +1404,9 @@
         "impact"
       ],
       "rarity_id": "speed_lookup",
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1239,7 +1418,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1252,7 +1433,9 @@
         "impact"
       ],
       "rarity_id": "speed_formula",
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1265,7 +1448,9 @@
         "impact"
       ],
       "rarity_id": "print_area",
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1273,7 +1458,9 @@
       "title": "Excel 10面ラベル印刷 — Print_Area数式で空白シールを自動除外",
       "url": "others/print/article_label_print.html",
       "summary": "データ件数に応じてPrint_Areaが自動伸縮。VBAもWordも不要でラベル印刷を制御します。",
-      "level": 4
+      "level": 4,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1285,7 +1472,9 @@
       "tags": [
         "rare"
       ],
-      "rarity_id": "label_scrap"
+      "rarity_id": "label_scrap",
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1293,7 +1482,9 @@
       "title": "宛名1ページ1枚 案内文書インスタント印刷 — スピンボタン＋Print_Area",
       "url": "others/print/article_mail_print.html",
       "summary": "スピンボタン＋VLOOKUPで差し込み印刷をExcelだけで実現します。",
-      "level": 3
+      "level": 3,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1436,7 +1627,9 @@
       "title": "Excelで2ページ目以降にも見出しを印刷する方法（印刷タイトルと改ページプレビュー）",
       "url": "others/print/article_print_titles_page_break.html",
       "summary": "2ページ目以降に見出しが出ない表を、印刷タイトルのタイトル行で解決。ページの切れ目は改ページプレビューでドラッグして決める。実画面で解説。",
-      "level": 1
+      "level": 1,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1485,7 +1678,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1497,7 +1692,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1505,7 +1702,9 @@
       "title": "Excelで入力欄だけ編集できるようにする：入力規則とシート保護",
       "url": "others/ui/article_input_validation_sheet_protection.html",
       "summary": "入力欄のロック解除、リスト・日付・桁数と重複チェックの入力規則、Tabで入力欄だけ移動するシート保護。配布用ファイルの作り方。",
-      "level": 2
+      "level": 2,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1516,7 +1715,9 @@
       "level": 2,
       "tags": [
         "impact"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1526,7 +1727,9 @@
       "summary": "入力値に応じて図形の○を自動表示する、Excelの隠れた仕様を活用したテクニックです。",
       "level": 6,
       "rarity_id": "shape_circle",
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1538,7 +1741,9 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1550,7 +1755,8 @@
       "tags": [
         "impact"
       ],
-      "is_highlight": true
+      "is_highlight": true,
+      "version": "Microsoft 365"
     },
     {
       "category": "others",
@@ -1570,7 +1776,9 @@
       "title": "Excelの数字が文字列になって計算・検索できないときの直し方",
       "url": "others/data/article_text_numbers_fix.html",
       "summary": "SUMが0、VLOOKUPが#N/Aになる原因を見分け、数値に変換・乗算の貼り付け・区切り位置・VALUE/ASC関数で原因別に直す方法。",
-      "level": 1
+      "level": 1,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1578,7 +1786,9 @@
       "title": "CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方",
       "url": "others/data/article_csv_leading_zero.html",
       "summary": "郵便番号・社員番号・16桁以上の管理番号を守る取り込み方。「テキストまたはCSVから」で列をテキストにする手順と、消えたゼロの戻し方。",
-      "level": 1
+      "level": 1,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1586,7 +1796,9 @@
       "title": "Excelで2つの名簿を比較し、追加・削除・変更された人を見つける",
       "url": "others/data/article_compare_two_lists.html",
       "summary": "前月と今月の名簿をCOUNTIFとINDEX＋MATCH（XLOOKUP）で照合し、追加・削除・変更を自動判定。変わったセルは条件付き書式で色付け。",
-      "level": 2
+      "level": 2,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1642,7 +1854,8 @@
       "title": "Microsoft 365に移行したときの数式チェックリスト（#SPILL!・@記号・旧版との共有）",
       "url": "others/misc/article_m365_migration_formula_checklist.html",
       "summary": "Office 2016／2019・2021のサポート終了を受けた移行時の確認点。#SPILL!、数式に付く@、古い版の人と共有するときの新しい関数の注意。",
-      "level": 2
+      "level": 2,
+      "version": "Microsoft 365"
     },
     {
       "category": "others",
@@ -1650,7 +1863,8 @@
       "title": "「マクロの実行がブロックされました」と表示されたとき",
       "url": "others/misc/article_macro_blocked.html",
       "summary": "表示の意味と、Microsoft公式の案内にある対応だけを紹介。マクロを許可してよいかは、必ず社内規程を確認してください。",
-      "level": 1
+      "level": 1,
+      "version": "Microsoft 365"
     },
     {
       "category": "others",
@@ -1669,7 +1883,9 @@
       "level": 2,
       "tags": [
         "impact"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1677,7 +1893,9 @@
       "title": "電卓不要！ステータスバー（オートカルク）の活用術",
       "url": "others/misc/article_statusbar.html",
       "summary": "数式を立てずに合計・平均・件数を瞬時に確認できる機能を活用します。",
-      "level": 1
+      "level": 1,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "unlocked",
@@ -1762,7 +1980,9 @@
       "tags": [
         "ai",
         "formulas"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "unlocked",
@@ -1774,7 +1994,9 @@
       "tags": [
         "ai",
         "cleanup"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "unlocked",
@@ -1786,7 +2008,9 @@
       "tags": [
         "ai",
         "review"
-      ]
+      ],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "functions",
@@ -1794,14 +2018,18 @@
       "title": "COUNTIFS・SUMIFS：複数条件の件数と合計",
       "url": "functions/old/article_countifs_sumifs.html",
       "summary": "複数条件の件数・合計・集計表を作る基本を解説します。基本式はExcel 2016以降、MAXIFS・MINIFSの補足は2019以降。",
-      "level": 3
+      "level": 3,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "resources",
       "kind": "resource",
       "title": "サンプルデータ集",
       "url": "samples/index.html",
-      "summary": "記事の式や整形手順を試すための架空のサンプルデータ。検証するときの入力例を探せます。"
+      "summary": "記事の式や整形手順を試すための架空のサンプルデータ。検証するときの入力例を探せます。",
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     }
   ]
 }

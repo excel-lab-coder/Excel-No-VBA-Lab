@@ -116,6 +116,10 @@ for (const [file, raw] of pages) {
     if (expected != null && level && +level !== expected) issues.push(`${file}: list level mismatch for ${dest.target}`);
   }
   if (/人に1人|ネット上にほぼ情報なし|専門書にも載っていない|情報希少だが効果が高い/.test(html)) issues.push(`${file}: unsupported rarity wording`);
+  const ogImage = [...html.matchAll(/<meta\b[^>]*>/g)].map(m => attributes(m[0])).find(a => a.property === 'og:image')?.content;
+  const ogTarget = ogImage && resolve(file, ogImage);
+  if (ogTarget && !fs.existsSync(path.join(root, ogTarget.target))) issues.push(`${file}: missing og:image ${ogImage}`);
+  if (!redirect && !robotsTag?.content?.includes('noindex') && byUrl.has(file) && !ogImage) issues.push(`${file}: missing og:image`);
 }
 const index = pages.get('index.html');
 for (const kind of ['combined', 'rare', 'impact']) {

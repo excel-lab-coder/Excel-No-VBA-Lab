@@ -13,12 +13,12 @@
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_m365_migration_formula_checklist.html" property="og:url">
 <meta content="Excel × No VBA Lab" property="og:site_name">
 <meta content="ja_JP" property="og:locale">
-<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_m365_migration_formula_checklist.html" rel="canonical">
-<link href="../../common.css?v=20261101" rel="stylesheet">
-<link href="../../article.css?v=20261101" rel="stylesheet">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
@@ -33,20 +33,22 @@
 <div class="reading-progress" aria-hidden="true"></div>
 <a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
 <header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/" aria-current="true">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 <main class="main-content" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><strong>Microsoft 365移行の数式チェック</strong></div>
 <article class="article-body">
 <div class="article-header"><div class="article-meta"><span class="badge badge-all">Microsoft 365</span><span class="article-date">更新日: 2026-11-02</span></div><h1 class="article-title">Microsoft 365に移行したときの数式チェックリスト（#SPILL!・@記号・旧版との共有）</h1>
 <p class="article-summary" data-seo-lead="true">Office 2016／2019とOffice 2021のサポート終了を受けて、Microsoft 365に移行したときに確認したい数式のポイントをチェックリストにしました。#SPILL!エラー、数式に付く「@」、古い版の人とファイルを共有するときの注意をまとめます。</p></div>
+<details class="auto-toc" open><summary>目次（6項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 この記事の背景</a></li><li><a href="#sec-2">移行直後のチェックリスト</a></li><li><a href="#sec-3">1. #SPILL! エラー</a></li><li><a href="#sec-4">2. 数式に付く「@」（暗黙的な共通部分演算子）</a></li><li><a href="#sec-5">3. 古い版の人とファイルを共有するとき</a></li><li><a href="#sec-6">移行のときに決めておくとよいこと</a></li></ol></nav></details>
 
 <section class="goal-section">
-<h2><span class="icon">💡</span> この記事の背景</h2>
+<h2 id="sec-1"><span class="icon">💡</span> この記事の背景</h2>
 <p>Office 2016／2019のサポートは<strong>2025年10月14日</strong>に、Office 2021のサポートは<strong>2026年10月13日</strong>に終了しました。これに合わせて、会社のExcelがMicrosoft 365に切り替わったという方も多いと思います。</p>
 <p>Microsoft 365のExcelは、数式の結果が複数のセルに広がる<strong>「スピル」</strong>（動的配列）が標準です。古い版で作ったブックはおおむねそのまま動きますが、いくつか確認しておきたい点があります。また、まだ古い版を使っている取引先や他部署とファイルをやり取りする場合は、新しい関数の扱いに注意が必要です。</p>
 </section>
 
 <section class="method-section">
-<h2>移行直後のチェックリスト</h2>
+<h2 id="sec-2">移行直後のチェックリスト</h2>
 <div class="table-wrapper"><table class="comparison-table"><caption>Microsoft 365に移行したときの数式チェック</caption>
 <thead><tr><th>#</th><th>確認すること</th><th>見つけ方</th></tr></thead>
 <tbody>
@@ -60,7 +62,7 @@
 </section>
 
 <section class="method-section">
-<h2>1. #SPILL! エラー</h2>
+<h2 id="sec-3">1. #SPILL! エラー</h2>
 <p>スピルする数式の結果を広げる先に、値や結合セルがあると <code>#SPILL!</code> になります。古い版では1つのセルにしか結果が出なかった式が、Microsoft 365では複数のセルに広がろうとして起きることがあります。</p>
 <ul class="line-height-2">
 <li>エラーのセルを選ぶと、広がる予定の範囲が点線で表示されます。その範囲の値を消すか、式を別の場所に移します。</li>
@@ -71,7 +73,7 @@
 </section>
 
 <section class="method-section">
-<h2>2. 数式に付く「@」（暗黙的な共通部分演算子）</h2>
+<h2 id="sec-4">2. 数式に付く「@」（暗黙的な共通部分演算子）</h2>
 <p>古い版で作ったブックをMicrosoft 365で開くと、<code>=@A1:A10</code> や <code>=@INDEX(…)</code> のように、数式に <code>@</code> が自動で付くことがあります。これは「古い版と同じように、1つの値だけを返す」という意味で、計算結果は以前と同じです。</p>
 <ul class="line-height-2">
 <li><strong>基本はそのままで構いません。</strong>古い版と同じ動きを保つために付いています。</li>
@@ -80,7 +82,7 @@
 </section>
 
 <section class="method-section">
-<h2>3. 古い版の人とファイルを共有するとき</h2>
+<h2 id="sec-5">3. 古い版の人とファイルを共有するとき</h2>
 <p>XLOOKUP・FILTER・UNIQUE・LET・TEXTSPLITなど、新しい関数を使ったファイルを古い版で開くと、次のようになります。</p>
 <ul class="line-height-2">
 <li>数式に <code>_xlfn.</code> が付いて表示され、再計算すると <code>#NAME?</code> になることがあります。</li>
@@ -95,7 +97,7 @@
 </section>
 
 <section class="tips-section">
-<h2>移行のときに決めておくとよいこと</h2>
+<h2 id="sec-6">移行のときに決めておくとよいこと</h2>
 <ul class="line-height-2">
 <li>新しい関数を使ってよいファイルと、古い版との共有のために使わないファイルを分ける。</li>
 <li>部署で使っている「よく使うブック」を一覧にし、上のチェックリストで1つずつ確認する。</li>
@@ -113,6 +115,6 @@
 </article>
 </main>
 <footer class="site-footer"><div class="site-footer-trust" aria-label="運営情報と検証方針"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Microsoft 365（Windows版Excel）と、Excel 2016／2019／2021とのファイル共有を想定しています。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
-<script src="../../script.js?v=20261101"></script>
+<script src="../../script.js?v=20261103"></script>
 </body>
 </html>

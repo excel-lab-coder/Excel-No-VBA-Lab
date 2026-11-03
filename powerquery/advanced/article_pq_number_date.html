@@ -26,12 +26,14 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
-<link href="../../common.css?v=20261101" rel="stylesheet">
-<link href="../../article.css?v=20261101" rel="stylesheet">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
 
 
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-23", "dateModified": "2026-04-23", "headline":"数値と日付を扱う ― 丸め・統計・日付抽出・期間計算","description":"Power Queryでの数値操作（四則演算・丸め・統計）と日付操作（年月日抽出・期間計算・月末取得）をGUI中心に解説。Excel関数との対応表付き。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_number_date.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -40,6 +42,7 @@
 <header class="site-header"><div class="header-inner"><div class="header-brand">
 <div class="site-title"><a href="../../">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
 </div></div></header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/" aria-current="true">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../powerquery/">パワークエリ</a><span>&gt;</span><strong>数値と日付を扱う</strong></div>
@@ -48,14 +51,15 @@
 <div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
 <h1 class="article-title">数値と日付を扱う &horbar; 丸め・統計・日付抽出・期間計算</h1>
 </div>
+<details class="auto-toc" open><summary>目次（10項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">このページのゴール</a></li><li><a href="#sec-2">四則演算 &horbar; 標準ボタンで計算する</a></li><li><a href="#sec-3">丸め &horbar; 四捨五入・切り上げ・切り捨て</a></li><li><a href="#sec-4">統計 &horbar; 列全体の集計値を得る</a></li><li><a href="#sec-5">日付から年・月・日を取り出す</a></li><li><a href="#sec-6">日付の計算 &horbar; 期間・月末・加減算</a></li><li><a href="#sec-7">日付でよくあるトラブルと対処法</a></li><li><a href="#sec-8">Excel関数との対応まとめ</a></li><li><a href="#sec-9">実践例 &horbar; 社員データから勤続年数と給与ランクを算出</a></li><li><a href="#sec-10">まとめ</a></li></ol></nav></details>
 <!-- ============================== -->
 <section id="goal">
-<h2>このページのゴール</h2>
+<h2 id="sec-1">このページのゴール</h2>
 <p>Power Queryの「変換」タブと「列の追加」タブにある数値操作（四則演算・丸め・統計）と日付操作（年月日の抽出・期間計算・月末の取得）をGUIで使いこなせるようになることです。Excelの ROUND、YEAR、MONTH、DATEDIF、EOMONTH に対応する操作を中心に解説します。</p>
 </section>
 <!-- ============================== -->
 <section id="arithmetic">
-<h2>四則演算 &horbar; 標準ボタンで計算する</h2>
+<h2 id="sec-2">四則演算 &horbar; 標準ボタンで計算する</h2>
 <p>数値列を選択した状態で「変換」タブを見ると、「標準」というドロップダウンがあります。ここに基本的な四則演算が並んでいます。</p>
 <table class="ref-table">
 <thead><tr><th>メニュー</th><th>動作</th><th>使い方</th></tr></thead>
@@ -87,7 +91,7 @@
 </section>
 <!-- ============================== -->
 <section id="rounding">
-<h2>丸め &horbar; 四捨五入・切り上げ・切り捨て</h2>
+<h2 id="sec-3">丸め &horbar; 四捨五入・切り上げ・切り捨て</h2>
 <p>ExcelのROUND / ROUNDUP / ROUNDDOWN に対応する操作です。</p>
 <table class="ref-table">
 <thead><tr><th>GUI操作</th><th>Excel関数</th><th>M言語</th><th>動作</th></tr></thead>
@@ -111,7 +115,7 @@
 </section>
 <!-- ============================== -->
 <section id="statistics">
-<h2>統計 &horbar; 列全体の集計値を得る</h2>
+<h2 id="sec-4">統計 &horbar; 列全体の集計値を得る</h2>
 <p>「変換」タブの「統計」メニューには、列全体を1つの集計値に変換する機能があります。</p>
 <table class="ref-table">
 <thead><tr><th>メニュー</th><th>Excel関数</th><th>動作</th></tr></thead>
@@ -132,7 +136,7 @@
 </section>
 <!-- ============================== -->
 <section id="date-extraction">
-<h2>日付から年・月・日を取り出す</h2>
+<h2 id="sec-5">日付から年・月・日を取り出す</h2>
 <p>ExcelのYEAR / MONTH / DAY関数に対応する操作です。日付型の列を選択すると、「変換」タブと「列の追加」タブに「日付」メニューが表示されます。</p>
 <table class="ref-table">
 <thead><tr><th>GUI操作</th><th>Excel関数</th><th>M言語</th><th>出力例（2026/03/21 の場合）</th></tr></thead>
@@ -160,7 +164,7 @@
 </section>
 <!-- ============================== -->
 <section id="date-calculation">
-<h2>日付の計算 &horbar; 期間・月末・加減算</h2>
+<h2 id="sec-6">日付の計算 &horbar; 期間・月末・加減算</h2>
 <h3>2つの日付の差を計算する（DATEDIF相当）</h3>
 <p>ExcelのDATEDIF関数に相当する操作です。Power Queryでは日付同士の引き算の結果が「Duration（期間）」型になるため、そこから日数や年数を取り出します。</p>
 <div class="step-box">
@@ -195,7 +199,7 @@
 </section>
 <!-- ============================== -->
 <section id="date-troubleshooting">
-<h2>日付でよくあるトラブルと対処法</h2>
+<h2 id="sec-7">日付でよくあるトラブルと対処法</h2>
 <h3>トラブル1：日付がテキスト型のまま認識されない</h3>
 <p>CSVから取り込んだ日付が「2026/03/21」というテキストのまま、日付型に変換できないことがあります。</p>
 <div class="step-box">
@@ -216,7 +220,7 @@
 </section>
 <!-- ============================== -->
 <section id="excel-comparison">
-<h2>Excel関数との対応まとめ</h2>
+<h2 id="sec-8">Excel関数との対応まとめ</h2>
 <h3>数値関数の対応</h3>
 <table class="ref-table">
 <thead><tr><th>Excel関数</th><th>Power Query GUI</th><th>M言語</th><th>注意</th></tr></thead>
@@ -245,7 +249,7 @@
 </section>
 <!-- ============================== -->
 <section id="practice">
-<h2>実践例 &horbar; 社員データから勤続年数と給与ランクを算出</h2>
+<h2 id="sec-9">実践例 &horbar; 社員データから勤続年数と給与ランクを算出</h2>
 <h3>サンプルデータ</h3>
 <table class="ba-table">
 <thead><tr><th>社員名</th><th>入社日</th><th>基本給</th></tr></thead>
@@ -286,7 +290,7 @@
 </section>
 <!-- ============================== -->
 <section id="summary">
-<h2>まとめ</h2>
+<h2 id="sec-10">まとめ</h2>
 <p>数値と日付の操作で覚えておくべきポイントは4つです。<strong>第一に</strong>、「標準」ボタンは固定値との演算で、列同士の計算にはカスタム列を使うこと。<strong>第二に</strong>、Power Queryの四捨五入は「銀行丸め」であり、Excel の ROUND とは 0.5 ちょうどの処理が異なること。<strong>第三に</strong>、日付操作は「変換」タブだと元の列が書き換わるため、元の日付を残したい場合は「列の追加」タブを使うこと。<strong>第四に</strong>、日付のロケール問題（月日の取り違え）は、「ロケールを使用&hellip;」で日本語を指定することで解決すること。</p>
 <p>これで「パワークエリ GUIマスターシリーズ」全6回が完了です。ここまでの内容を身につければ、日常の Excel 作業の大部分をPower Queryで自動化できるはずです。さらに深い内容（グループ化、ピボット解除、マージ、パラメータクエリ、M言語）は、今後の記事で扱います。</p>
 </section>
@@ -323,6 +327,6 @@
     <a href="../../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../../script.js?v=20261101"></script>
+<script src="../../script.js?v=20261103"></script>
 </body>
 </html>

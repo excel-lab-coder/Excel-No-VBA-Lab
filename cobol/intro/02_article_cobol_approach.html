@@ -35,8 +35,8 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/intro/02_article_cobol_approach.html" rel="canonical">
-<link href="../../common.css?v=20261101" rel="stylesheet">
-<link href="../../article.css?v=20261101" rel="stylesheet">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
@@ -47,7 +47,7 @@
     "headline": "COBOL帳票処理の3大アプローチ：難易度と完成時のメリット",
     "description": "VBA・パワークエリ・ワークシート関数の3つの視点からCOBOL帳票処理を比較。VBA禁止・マクロ禁止環境で困ったときの代替手段として、Power Queryと関数の使い分けを解説。",
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
-    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}},
     "datePublished": "2026-03-28",
     "dateModified":"2026-07-12"
   }
@@ -63,8 +63,8 @@
     ]
   }
   </script>
-
-
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -78,6 +78,7 @@
 </div>
 </div>
 </header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/" aria-current="true">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
 <div class="breadcrumb">
@@ -95,6 +96,7 @@
 <h1 class="article-title">COBOL帳票処理の3大アプローチ：難易度と完成時のメリット</h1>
 <p class="article-summary" data-seo-lead="true">COBOL帳票の整形を、VBA・Power Query・ワークシート関数の3つの方法で比べ、難易度と完成後のメリットから、職場の制限に合った進め方を選べるようにします。会社でVBAやマクロが禁止されて困ったときも、関数版とPower Query版の違いを理解しておくと代替手段を選びやすくなります。</p>
 </div>
+<details class="auto-toc" open><summary>目次（6項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 なぜCOBOLデータの処理は難しいのか？</a></li><li><a href="#sec-2">1. VBA（マクロ）による処理</a></li><li><a href="#sec-3">2. パワークエリ（Power Query）による処理</a></li><li><a href="#sec-4">3. ワークシート関数による処理</a></li><li><a href="#sec-5">番外編：「システム部に頼んでCSVにしてもらえば？」という正論と現実</a></li><li><a href="#sec-6">結論：どう戦うべきか？</a></li></ol></nav></details>
 <div class="xdemo-note-info">
 <strong>方式の選び方：</strong>VBAの利用可否、入力データの構造、更新頻度、保守できる担当者のスキルを基準に比較してください。
 </div>
@@ -135,7 +137,7 @@
 <section class="goal-section">
 <div class="article-demo-container">
   <div>
-    <h2><span class="icon">💡</span> なぜCOBOLデータの処理は難しいのか？</h2>
+    <h2 id="sec-1"><span class="icon">💡</span> なぜCOBOLデータの処理は難しいのか？</h2>
     <p>「システムから落とした固定長データをきれいにExcelにまとめたいだけなのに、どうしてこんなに苦労するのか？」</p>
     <p>職場でCOBOL帳票の処理をサラッとこなせる人を見たことがないかもしれません。大抵の人は「区切り位置」機能を使って手作業で何とかしようとしますが、1件のデータが複数行にまたがっていたり、全角・半角が混ざっていたりすると破綻します。</p>
   </div>
@@ -155,7 +157,7 @@
 
 <section class="method-section">
 <div class="approach-header">
-<h2>1. VBA（マクロ）による処理</h2>
+<h2 id="sec-2">1. VBA（マクロ）による処理</h2>
 </div>
 <p>テキストファイルを直接読み込み、プログラムで自在に切り出してExcelに書き出す手法です。高度なプログラミング知識が必要なはずなのに、なぜか「固定長データはVBAでやるのが一番簡単」と言われることがあります。</p>
 <table class="format-table">
@@ -177,7 +179,7 @@
 </section>
 <section class="method-section">
 <div class="approach-header">
-<h2>2. パワークエリ（Power Query）による処理</h2>
+<h2 id="sec-3">2. パワークエリ（Power Query）による処理</h2>
 </div>
 <p>「マクロがダメならパワークエリだ！」と多くの人が飛びつきます。不要行の削除や、複数行にまたがるデータの1行化などは、視覚的な操作だけで魔法のように処理できます。</p>
 <table class="format-table">
@@ -212,7 +214,7 @@
 </section>
 <section class="method-section">
 <div class="approach-header">
-<h2>3. ワークシート関数による処理</h2>
+<h2 id="sec-4">3. ワークシート関数による処理</h2>
 </div>
 <p>VBAが禁止され、Power QueryのGUI操作だけではバイト位置の切り出しが難しい場合は、ワークシート関数も有力な選択肢になります。</p>
 <table class="format-table">
@@ -236,7 +238,7 @@
 </section>
 <section class="method-section">
 <div class="approach-header">
-<h2>番外編：「システム部に頼んでCSVにしてもらえば？」という正論と現実</h2>
+<h2 id="sec-5">番外編：「システム部に頼んでCSVにしてもらえば？」という正論と現実</h2>
 </div>
 <p>固定長データの処理に苦労していると、必ず「そもそもシステム部に依頼して、最初からカンマ区切りのCSVで出力してもらえばいいじゃないか」という声が上がります。しかし、現場がそれを簡単に実現できないのには、もっと深く切実な「大人の事情」があります。</p>
 <table class="format-table">
@@ -260,7 +262,7 @@
         </div>
 </section>
 <section class="tips-section" style="background:#fcfcfc;">
-<h2>結論：どう戦うべきか？</h2>
+<h2 id="sec-6">結論：どう戦うべきか？</h2>
 <p>これらすべてを扱えるスキルがあったとしても、環境と目的に応じて最適なツールは変わります。</p>
 <ul style="line-height: 1.8;">
 <li>VBAが自由に使える環境で、利用者に一切の操作をさせたくないなら ➡️ <strong>VBA</strong></li>
@@ -301,6 +303,6 @@
   </p>
 </footer>
 
-<script src="../../script.js?v=20261101"></script>
+<script src="../../script.js?v=20261103"></script>
 </body>
 </html>

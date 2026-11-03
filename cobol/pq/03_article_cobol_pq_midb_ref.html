@@ -36,8 +36,8 @@
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/pq/03_article_cobol_pq_midb_ref.html" rel="canonical">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="../../common.css?v=20261101" rel="stylesheet">
-<link href="../../article.css?v=20261101" rel="stylesheet">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
@@ -48,7 +48,7 @@
     "headline": "【参考資料】M言語でMIDB相当の自作関数を作る",
     "description": "Power QueryのM言語でMIDB相当のバイト単位文字列切り出しを実現する自作関数の作り方を参考資料として解説。",
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
-    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}},
     "datePublished": "2026-03-20",
     "dateModified":"2026-07-12"
   }
@@ -114,6 +114,8 @@
   .mt-20 { margin-top: 20px; }
   .tips-bg-soft { background: #fcfcfc; }
 </style>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -128,6 +130,7 @@
     </div>
   </div>
 </header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/" aria-current="true">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
   <div class="breadcrumb">
@@ -148,9 +151,10 @@
 <h1 class="article-title">【参考資料】M言語でMIDB相当の自作関数を作る<br><small style="font-size:0.55em;color:#607d8b;">&horbar; パワークエリ最大の壁を越えるための完全テクニック集 &horbar;</small></h1>
 <p class="article-summary" data-seo-lead="true">Power QueryのM言語で、MIDBと同じように「バイト数」で文字列を切り出す自作関数を作る方法をまとめた参考資料です。全角・半角が混在する固定長データ向けです。</p>
 </div>
+<details class="auto-toc" open><summary>目次（13項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 この資料の位置づけ</a></li><li><a href="#sec-2">核心技術：Text.ToBinary + Binary.Range + Text.FromBinary</a></li><li><a href="#sec-3">1 LENB相当：fx_LENB &horbar; バイト数を数える</a></li><li><a href="#sec-4">2 MIDB相当：fx_MIDB &horbar; バイト位置で切り出す</a></li><li><a href="#sec-5">3 LEFTB・RIGHTB相当：fx_LEFTB / fx_RIGHTB</a></li><li><a href="#sec-6">4 カスタム関数の登録手順</a></li><li><a href="#sec-7">5 実践：COBOL帳票の列分解に使う</a></li><li><a href="#sec-8">Excel関数 &harr; M言語 自作関数 対応表</a></li><li><a href="#sec-9">⚠ エラーハンドリング：境界ケースへの対処</a></li><li><a href="#sec-10">⚡ パフォーマンスに関する注意</a></li><li><a href="#sec-11">📋 エンコーディングとコードページ一覧</a></li><li><a href="#sec-12">🔧 トラブルシューティング</a></li><li><a href="#sec-13">🎯 まとめ：この資料の関数一覧</a></li></ol></nav></details>
 <!-- ======================== 導入 ======================== -->
 <section class="goal-section">
-<h2><span class="icon">💡</span> この資料の位置づけ</h2>
+<h2 id="sec-1"><span class="icon">💡</span> この資料の位置づけ</h2>
 <p><a href="01_article_cobol_pq.html">パワークエリ編</a>で説明した「MIDBの壁」を実際に越えるための技術的な手順をまとめた参考資料です。M言語にはバイト単位で文字列を切り出す標準関数が存在しないため、<code>Text.ToBinary</code> と <code>Binary.Range</code> を組み合わせてExcelのMIDB・LEFTB・RIGHTB・LENBに相当するカスタム関数を自作します。</p>
 <div class="xdemo-note-warn">
 <strong>💬 前提知識：</strong><br>
@@ -162,7 +166,7 @@
 </section>
 <!-- ======================== 核心技術 ======================== -->
 <section class="method-section">
-<h2>核心技術：Text.ToBinary + Binary.Range + Text.FromBinary</h2>
+<h2 id="sec-2">核心技術：Text.ToBinary + Binary.Range + Text.FromBinary</h2>
 <p>M言語でバイト単位の操作を実現するカギは、<strong>文字列をバイナリに変換し、バイナリレベルで切り出してから文字列に戻す</strong>という3段階の処理です。この3つの関数がすべての基礎になります。</p>
 <div class="pipeline-box">
 <span class="step">文字列（text）</span>
@@ -188,7 +192,7 @@
 </section>
 <!-- ======================== LENB ======================== -->
 <section class="method-section">
-<h2><span class="step-number">1</span> LENB相当：fx_LENB &horbar; バイト数を数える</h2>
+<h2 id="sec-3"><span class="step-number">1</span> LENB相当：fx_LENB &horbar; バイト数を数える</h2>
 <p>まず最もシンプルな関数から始めます。ExcelのLENB関数に相当する、文字列のバイト数を返す関数です。これ自体がMIDB自作関数の土台になるだけでなく、COBOL帳票の行長チェックなどにも単体で活躍します。</p>
 <div class="technique-card">
 <h3>fx_LENB のコード</h3>
@@ -216,7 +220,7 @@
 </section>
 <!-- ======================== MIDB ======================== -->
 <section class="method-section">
-<h2><span class="step-number">2</span> MIDB相当：fx_MIDB &horbar; バイト位置で切り出す</h2>
+<h2 id="sec-4"><span class="step-number">2</span> MIDB相当：fx_MIDB &horbar; バイト位置で切り出す</h2>
 <p>これが本丸です。ExcelのMIDB関数と同じように、「開始バイト位置」と「バイト数」を指定して文字列の一部を切り出します。COBOL帳票の列分解で最も多用する関数です。</p>
 <div class="technique-card">
 <h3>fx_MIDB のコード</h3>
@@ -248,7 +252,7 @@
 </section>
 <!-- ======================== LEFTB / RIGHTB ======================== -->
 <section class="method-section">
-<h2><span class="step-number">3</span> LEFTB・RIGHTB相当：fx_LEFTB / fx_RIGHTB</h2>
+<h2 id="sec-5"><span class="step-number">3</span> LEFTB・RIGHTB相当：fx_LEFTB / fx_RIGHTB</h2>
 <p>左端・右端からバイト数で切り出す関数も、同じ仕組みで簡単に作れます。COBOL帳票では使用頻度はMIDBほど高くありませんが、レコード種別の先頭判定や末尾のチェックディジット取得などに便利です。</p>
 <div class="technique-card">
 <h3>fx_LEFTB のコード</h3>
@@ -281,7 +285,7 @@
 </section>
 <!-- ======================== 登録手順 ======================== -->
 <section class="method-section">
-<h2><span class="step-number">4</span> カスタム関数の登録手順</h2>
+<h2 id="sec-6"><span class="step-number">4</span> カスタム関数の登録手順</h2>
 <p>自作関数をパワークエリに登録する手順を示します。一度登録すれば、同じブック内のどのクエリからでも呼び出せます。</p>
 <div class="pq-step-box">
 <h3 class="pq-step-title">手順① 空のクエリを作成</h3>
@@ -306,7 +310,7 @@
 </section>
 <!-- ======================== 実践での使い方 ======================== -->
 <section class="method-section">
-<h2><span class="step-number">5</span> 実践：COBOL帳票の列分解に使う</h2>
+<h2 id="sec-7"><span class="step-number">5</span> 実践：COBOL帳票の列分解に使う</h2>
 <p>登録した自作関数を使って、COBOL帳票を列分解する具体的な手順を示します。</p>
 <div class="pq-step-box">
 <h3 class="pq-step-title">想定する帳票レイアウト</h3>
@@ -347,7 +351,7 @@
 </section>
 <!-- ======================== 対応表 ======================== -->
 <section class="method-section">
-<h2>Excel関数 &harr; M言語 自作関数 対応表</h2>
+<h2 id="sec-8">Excel関数 &harr; M言語 自作関数 対応表</h2>
 <p>Excel関数パイプラインからパワークエリに移行する際の対応関係をまとめます。</p>
 <table class="compare-table">
 <thead>
@@ -403,7 +407,7 @@
 </section>
 <!-- ======================== エラー処理 ======================== -->
 <section class="method-section">
-<h2>⚠ エラーハンドリング：境界ケースへの対処</h2>
+<h2 id="sec-9">⚠ エラーハンドリング：境界ケースへの対処</h2>
 <p>自作関数を実際の帳票データに使うと、空行やバイト位置が範囲外のケースでエラーが発生することがあります。安全に使うためのエラー処理パターンを示します。</p>
 <div class="technique-card">
 <h3>fx_MIDB 安全版（エラー処理付き）</h3>
@@ -437,7 +441,7 @@
 </section>
 <!-- ======================== パフォーマンス ======================== -->
 <section class="method-section">
-<h2>⚡ パフォーマンスに関する注意</h2>
+<h2 id="sec-10">⚡ パフォーマンスに関する注意</h2>
 <p>自作関数は便利ですが、パワークエリのカスタム関数は標準関数と比べて処理速度が遅くなる傾向があります。特にMIDB分解では行ごとにバイナリ変換を行うため、データ量が多い場合はパフォーマンスへの影響に注意が必要です。</p>
 <div class="technique-card">
 <h3>パフォーマンスを改善するテクニック</h3>
@@ -469,7 +473,7 @@
 </section>
 <!-- ======================== エンコーディング ======================== -->
 <section class="method-section">
-<h2>📋 エンコーディングとコードページ一覧</h2>
+<h2 id="sec-11">📋 エンコーディングとコードページ一覧</h2>
 <p>本資料ではShift_JIS（コードページ932）を前提としていますが、帳票のエンコーディングが異なる場合は、<code>Text.ToBinary</code> と <code>Text.FromBinary</code> に渡すコードページ番号を変更します。</p>
 <table class="compare-table">
 <thead>
@@ -514,7 +518,7 @@
 </section>
 <!-- ======================== トラブルシューティング ======================== -->
 <section class="method-section">
-<h2>🔧 トラブルシューティング</h2>
+<h2 id="sec-12">🔧 トラブルシューティング</h2>
 <p>自作関数を使っていて遭遇しやすい問題と対処法をまとめます。</p>
 <div class="pq-step-box">
 <h3 class="pq-step-title">症状：切り出し結果が文字化けする</h3>
@@ -539,7 +543,7 @@
 </section>
 <!-- ======================== まとめ ======================== -->
 <section class="tips-section" style="background:#fcfcfc;">
-<h2>🎯 まとめ：この資料の関数一覧</h2>
+<h2 id="sec-13">🎯 まとめ：この資料の関数一覧</h2>
 <table class="format-table">
 <thead>
 <tr>
@@ -615,7 +619,7 @@
   </p>
 </footer>
 
-<script src="../../script.js?v=20261101"></script>
+<script src="../../script.js?v=20261103"></script>
 </body>
 </html>
 

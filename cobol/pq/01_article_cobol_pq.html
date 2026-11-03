@@ -34,8 +34,8 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/pq/01_article_cobol_pq.html" rel="canonical">
-<link href="../../common.css?v=20261101" rel="stylesheet">
-<link href="../../article.css?v=20261101" rel="stylesheet">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
@@ -46,7 +46,7 @@
     "headline": "【パワークエリ編】COBOL帳票データの不要行除去と一括結合",
     "description": "Power QueryでCOBOL帳票データの不要行を除去して一括結合する方法を解説。VBAやマクロが禁止されている会社で、固定長データ整形や複数ファイル結合の代替手段を探している方向け。",
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
-    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}},
     "datePublished": "2026-03-18",
     "dateModified":"2026-07-12"
   }
@@ -133,6 +133,8 @@
 .code-block-large .text-blue-light { color: #81d4fa; }
 .code-block-large .color-808080 { color: #808080; }
 </style>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -147,6 +149,7 @@
     </div>
   </div>
 </header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/" aria-current="true">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
   <div class="breadcrumb">
@@ -165,9 +168,10 @@
 <h1 class="article-title">【パワークエリ編】COBOL帳票データの不要行除去と一括結合</h1>
 <p class="article-summary" data-seo-lead="true">Power Queryで帳票テキストを読み込み、見出し・区切り線などの不要行を除去して、複数ファイルを1つの表にまとめる手順を、更新ボタンで繰り返せる形で解説します。VBAが使えない、マクロが禁止されている会社では、定期的なCOBOL帳票整形の代替手段としてPower Queryを検討できます。</p>
 </div>
+<details class="auto-toc" open><summary>目次（6項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 パワークエリが得意なこと・苦手なこと</a></li><li><a href="#sec-2">⚠ 最初にして最大の壁：パワークエリにMIDBがない</a></li><li><a href="#sec-3">壁の越え方：M言語でMIDB相当の自作関数を作る</a></li><li><a href="#sec-4">💡 壁を越えた後：関数パイプラインより簡潔に処理できる</a></li><li><a href="#sec-5">⚠ ただし「最初の壁」を越えるハードルは高い</a></li><li><a href="#sec-6">🎯 結論：関数とパワークエリの使い分け</a></li></ol></nav></details>
 <!-- ======================== 導入 ======================== -->
 <section class="goal-section">
-<h2><span class="icon">💡</span> パワークエリが得意なこと・苦手なこと</h2>
+<h2 id="sec-1"><span class="icon">💡</span> パワークエリが得意なこと・苦手なこと</h2>
 <p>本シリーズの<a href="../formula/01_article_cobol_basic.html">MIDB＋TRIM基本編</a>から<a href="../formula/04_article_cobol_irregular.html">不規則明細編</a>までは、Excel関数（MIDB・INDEX・SMALL等）を使ったパイプライン方式でCOBOL帳票を正規化してきました。</p>
 <p>「同じことをパワークエリでやればもっと簡単では？」と思う方もいるかもしれません。実際、パワークエリには関数では難しい強力な機能があります。しかし一方で、<strong>COBOL帳票の処理においてパワークエリには1つだけ決定的な壁</strong>が存在します。</p>
 <p>この記事では、その壁の正体と越え方、そしてパワークエリが本当に威力を発揮する場面を整理します。</p>
@@ -178,7 +182,7 @@
 </section>
 <!-- ======================== MIDBの壁 ======================== -->
 <section class="method-section">
-<h2>⚠ 最初にして最大の壁：パワークエリにMIDBがない</h2>
+<h2 id="sec-2">⚠ 最初にして最大の壁：パワークエリにMIDBがない</h2>
 <p>COBOL帳票の整形で最も重要な処理は「固定長データからバイト位置を指定して切り出す」ことです。Excel関数ではMIDBがこの役割を担いますが、パワークエリ（M言語）には<strong>バイト単位で文字列を切り出す関数が標準では存在しません</strong>。</p>
 <p>M言語の Text.Middle は文字数ベースであり、「半角＝1バイト、全角＝2バイト」というCOBOL帳票の固定長ルールに対応していません。全角文字が含まれている帳票では、切り出し位置がずれてしまいます。</p>
 <div class="xdemo-note-danger">
@@ -188,7 +192,7 @@
 </section>
 <!-- ======================== 壁の越え方 ======================== -->
 <section class="method-section">
-<h2>壁の越え方：M言語でMIDB相当の自作関数を作る</h2>
+<h2 id="sec-3">壁の越え方：M言語でMIDB相当の自作関数を作る</h2>
 <p>この壁は、M言語でバイト数を計算するカスタム関数を自作することで越えられます。1文字ずつバイト数を判定して位置を特定するロジックを一度書いてしまえば、以降はExcelのMIDBと同じ感覚で使えるようになります。</p>
 <div class="code-block">
 <span class="code-line">// M言語：MIDB相当の自作関数（イメージ）</span>
@@ -210,7 +214,7 @@
 </section>
 <!-- ======================== 壁を越えた後の世界 ======================== -->
 <section class="method-section">
-<h2>💡 壁を越えた後：関数パイプラインより簡潔に処理できる</h2>
+<h2 id="sec-4">💡 壁を越えた後：関数パイプラインより簡潔に処理できる</h2>
 <p>MIDB相当の自作関数を一度用意してしまえば、パワークエリはCOBOL帳票の整形において<strong>関数パイプラインよりもはるかに簡潔で効率的な手段</strong>になります。その理由を具体的に見ていきます。</p>
 <div class="pq-step-box">
 <h3 class="pq-step-title">1. 不要行の除去が一瞬で終わる</h3>
@@ -264,7 +268,7 @@
 </section>
 <!-- ======================== ただしハードルは高い ======================== -->
 <section class="method-section">
-<h2>⚠ ただし「最初の壁」を越えるハードルは高い</h2>
+<h2 id="sec-5">⚠ ただし「最初の壁」を越えるハードルは高い</h2>
 <p>ここまでの説明で、壁を越えた後のパワークエリの優位性は明らかです。しかし、正直に言えば<strong>その最初の壁を越えること自体が簡単ではありません</strong>。</p>
 <p>M言語でMIDB相当の関数を自作するには、M言語の文法、文字列操作関数、エンコーディングの仕組みについての理解が必要です。Excel関数やVBAの経験がある人でも、M言語は記法が独特で情報も少ないため、最初は戸惑うことが多いでしょう。</p>
 <p>また、自作関数の処理速度は標準関数より遅くなる傾向があり、数十万行の帳票ではパフォーマンスに注意が必要です。</p>
@@ -277,7 +281,7 @@
 </section>
 <!-- ======================== まとめ ======================== -->
 <section class="tips-section" style="background:#fcfcfc;">
-<h2>🎯 結論：関数とパワークエリの使い分け</h2>
+<h2 id="sec-6">🎯 結論：関数とパワークエリの使い分け</h2>
 <p>パワークエリにはMIDBに相当するバイト単位の切り出し関数がなく、これがCOBOL帳票処理における最大の壁です。しかし、M言語で自作関数を一度作ってしまえば、不要行除去・フィルダウン・MIDB分解・複数ファイル結合までを1つのクエリ内で完結でき、<strong>関数パイプラインよりはるかに簡潔な処理が可能</strong>になります。</p>
 <p>最初の壁を越えるコストをかけるかどうかは、処理の頻度と規模で判断してください。定期的に大量の帳票を処理する業務であれば、パワークエリへの移行は十分に元が取れます。単発の処理であれば、本シリーズの関数パイプラインで対応するのが現実的です。マクロ禁止で困ったときも、まず処理の頻度とファイル数から代替手段を選ぶと判断しやすくなります。</p>
 <div class="pq-step-box" style="border-left-color: #66bb6a;">
@@ -330,7 +334,7 @@
   </p>
 </footer>
 
-<script src="../../script.js?v=20261101"></script>
+<script src="../../script.js?v=20261103"></script>
 </body>
 </html>
 

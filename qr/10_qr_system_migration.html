@@ -21,8 +21,8 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/10_qr_system_migration.html" rel="canonical">
-<link href="../common.css?v=20261101" rel="stylesheet">
-<link href="../article.css?v=20261101" rel="stylesheet">
+<link href="../common.css?v=20261103" rel="stylesheet">
+<link href="../article.css?v=20261103" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
@@ -66,7 +66,8 @@
     ]
   }
   </script>
-
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 <body class="article-layout">
 <div class="reading-progress" aria-hidden="true"></div>
@@ -80,6 +81,7 @@
 </div>
 </div>
 </header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../#article-finder">🔍 記事を探す</a><a href="../functions/">関数</a><a href="../powerquery/">Power Query</a><a href="../cobol/">COBOL帳票</a><a href="../qr/" aria-current="true">QR入力</a><a href="../others/">現場実務</a><a href="../thinking/">技術の流れ</a><a href="../unlocked/">VBA・AI</a><a href="../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content" id="main-content">
 <div class="breadcrumb">
@@ -104,6 +106,7 @@
 
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。APIやCSVインポートが使えず、VBA・マクロも禁止されている会社の移行作業では、QRリーダー入力が代替手段になる場合があります。</p>
 </div>
+<details class="auto-toc" open><summary>目次（17項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">↵ Enter / Tab の共通整理</a></li><li><a href="#sec-2">🔑 最初に &horbar; 本記事を読む前に知っておいてほしいこと</a></li><li><a href="#sec-3">💡 この記事の目的</a></li><li><a href="#sec-4">なぜQRコードでシステム移行なのか</a></li><li><a href="#sec-5">記事⑨との違い &horbar; Excel&rarr;Excel と システム&rarr;システム</a></li><li><a href="#sec-6">移行プロジェクトの全体フロー</a></li><li><a href="#sec-7">フェーズ①：旧システムからデータを抽出する</a></li><li><a href="#sec-8">フェーズ②：新システムの入力画面を操作分析する</a></li><li><a href="#sec-9">フェーズ③：フィールドマッピング表を作成する</a></li><li><a href="#sec-10">フェーズ④：QRプログラム数式を組み立てる</a></li><li><a href="#sec-11">フェーズ⑤：テスト移行 &rarr; 本番移行</a></li><li><a href="#sec-12">キー入力時間の理論見積もり</a></li><li><a href="#sec-13">実践シナリオ：旧販売管理 &rarr; 新クラウドCRMへの顧客マスタ移行</a></li><li><a href="#sec-14">移行パターン別の設計ガイド</a></li><li><a href="#sec-15">トラブルシューティング（移行特有の問題）</a></li><li><a href="#sec-16">この記事で学んだこと &horbar; まとめ</a></li><li><a href="#qr-safety-title">QRリーダー連携の運用注意</a></li></ol></nav></details>
 
 <div class="xdemo-note-danger">
 <strong>⚠️ 検証・実験的手法です</strong><br>
@@ -111,7 +114,7 @@
 </div>
 
 <section class="method-section qr-control-guide">
-  <h2><span class="icon">↵</span> Enter / Tab の共通整理</h2>
+  <h2 id="sec-1"><span class="icon">↵</span> Enter / Tab の共通整理</h2>
   <p>QR入力では、読み取り先によって最初に試す制御を分けます。Num Enter は Excel の CHAR 関数では生成できないため、必要な場合はQRリーダー側のキー変換で確認します。</p>
   <table class="format-table">
     <thead>
@@ -132,7 +135,7 @@
       </div>
 <!-- ===== 記事⑪の公開状態 ===== -->
 <section class="goal-section">
-<h2><span class="icon">🔑</span> 最初に &horbar; 本記事を読む前に知っておいてほしいこと</h2>
+<h2 id="sec-2"><span class="icon">🔑</span> 最初に &horbar; 本記事を読む前に知っておいてほしいこと</h2>
 <div class="xdemo-note-warn">
 <strong>⚠️ 実務でのシステム移行は、ほとんどの場合「全角文字」を含みます</strong><br>
           顧客名、商品名、住所、備考欄&horbar;&horbar;業務システムのデータには日本語（全角文字）がほぼ必ず含まれます。バーコードコントロール（ActiveX）は<strong>半角文字しか扱えない</strong>ため、現実のシステム移行でそのまま使えるケースは限定的です。
@@ -145,7 +148,7 @@
 </section>
 <!-- ===== ゴール ===== -->
 <section class="goal-section">
-<h2><span class="icon">💡</span> この記事の目的</h2>
+<h2 id="sec-3"><span class="icon">💡</span> この記事の目的</h2>
 <p>記事⑨では「Excel &rarr; Excel」のデータ転送を扱いました。本記事ではさらに踏み込み、<strong>異なるシステム間</strong>でのデータ移行にQRコードを活用する方法を解説します。</p>
 <p>旧システムのリプレース、部門間のシステム統合、クラウド移行&horbar;&horbar;こうした場面で「旧システムの数千件のデータを新システムに手入力する」という作業が発生しがちです。QRコードなら、<strong>新システムの画面にキーボード入力として直接データを流し込める</strong>ため、インポート機能がなくても移行が可能です。</p>
 <ul>
@@ -158,7 +161,7 @@
 </section>
 <!-- ===== なぜQRか ===== -->
 <section class="method-section">
-<h2>なぜQRコードでシステム移行なのか</h2>
+<h2 id="sec-4">なぜQRコードでシステム移行なのか</h2>
 <table class="format-table">
 <tr><th>移行手段</th><th>前提条件</th><th>メリット</th><th>デメリット</th></tr>
 <tr><td>API連携</td><td>両システムにAPIがある</td><td>高速・自動化可能</td><td>開発コスト大・技術者必要</td></tr>
@@ -172,7 +175,7 @@
 </section>
 <!-- ===== 記事⑨との違い ===== -->
 <section class="method-section">
-<h2>記事⑨との違い &horbar; Excel&rarr;Excel と システム&rarr;システム</h2>
+<h2 id="sec-5">記事⑨との違い &horbar; Excel&rarr;Excel と システム&rarr;システム</h2>
 <table class="key-table">
 <thead>
 <tr><th>要素</th><th>記事⑨（Excel&rarr;Excel）</th><th>本記事（システム&rarr;システム）</th></tr>
@@ -190,7 +193,7 @@
 </section>
 <!-- ===== 全体フロー ===== -->
 <section class="method-section">
-<h2>移行プロジェクトの全体フロー</h2>
+<h2 id="sec-6">移行プロジェクトの全体フロー</h2>
 <div class="flow-diagram">
 <span class="flow-step">① データ抽出</span>
 <span class="flow-arrow">&rarr;</span>
@@ -214,7 +217,7 @@
 </section>
 <!-- ===== フェーズ①：データ抽出 ===== -->
 <section class="tips-section">
-<h2>フェーズ①：旧システムからデータを抽出する</h2>
+<h2 id="sec-7">フェーズ①：旧システムからデータを抽出する</h2>
 <div class="setup-step">
 <div class="setup-step-header">
 <span class="step-number">1</span>
@@ -237,7 +240,7 @@
 </section>
 <!-- ===== フェーズ②：画面分析 ===== -->
 <section class="tips-section">
-<h2>フェーズ②：新システムの入力画面を操作分析する</h2>
+<h2 id="sec-8">フェーズ②：新システムの入力画面を操作分析する</h2>
 <p>QR移行の成否は、新システムの画面操作をどれだけ正確に分析できるかにかかっています。記事⑦で学んだ<strong>「操作を1キーずつ分解する」</strong>手法を使います。</p>
 <div class="setup-step">
 <div class="setup-step-header">
@@ -282,7 +285,7 @@
 </section>
 <!-- ===== フェーズ③：マッピング ===== -->
 <section class="tips-section">
-<h2>フェーズ③：フィールドマッピング表を作成する</h2>
+<h2 id="sec-9">フェーズ③：フィールドマッピング表を作成する</h2>
 <div class="setup-step">
 <div class="setup-step-header">
 <span class="step-number">3</span>
@@ -318,7 +321,7 @@
 </section>
 <!-- ===== フェーズ④：数式設計 ===== -->
 <section class="tips-section">
-<h2>フェーズ④：QRプログラム数式を組み立てる</h2>
+<h2 id="sec-10">フェーズ④：QRプログラム数式を組み立てる</h2>
 <div class="setup-step">
 <div class="setup-step-header">
 <span class="step-number">4</span>
@@ -368,7 +371,7 @@
 </section>
 <!-- ===== フェーズ⑤：テスト＆本番 ===== -->
 <section class="tips-section">
-<h2>フェーズ⑤：テスト移行 &rarr; 本番移行</h2>
+<h2 id="sec-11">フェーズ⑤：テスト移行 &rarr; 本番移行</h2>
 <div class="setup-step">
 <div class="setup-step-header">
 <span class="step-number">5</span>
@@ -389,7 +392,7 @@
 </section>
 <!-- ===== 所要時間 ===== -->
 <section class="method-section">
-<h2>キー入力時間の理論見積もり</h2>
+<h2 id="sec-12">キー入力時間の理論見積もり</h2>
 <div class="xdemo-note-warn">
 <strong>⚠️ 移行完了時間ではありません</strong><br>
           下表は、各操作が想定どおり進み、エラーや例外が発生しない場合の入力時間例です。データ抽出・洗浄、承認、バックアップ、QR生成、照合、エラー調査、再実行、ロールバックは含みません。実環境で代表データを測定してから見積もってください。
@@ -404,7 +407,7 @@
 </section>
 <!-- ===== 実践シナリオ ===== -->
 <section class="method-section">
-<h2>実践シナリオ：旧販売管理 &rarr; 新クラウドCRMへの顧客マスタ移行</h2>
+<h2 id="sec-13">実践シナリオ：旧販売管理 &rarr; 新クラウドCRMへの顧客マスタ移行</h2>
 <div class="scenario-box">
 <strong>シナリオ：</strong>オンプレミスの旧販売管理ソフト（CSV出力可能）から、クラウド型CRM（インポート機能なし、Web画面から手入力のみ）へ顧客マスタ350件を移行する。
         </div>
@@ -447,7 +450,7 @@
 </section>
 <!-- ===== 移行パターン別ガイド ===== -->
 <section class="method-section">
-<h2>移行パターン別の設計ガイド</h2>
+<h2 id="sec-14">移行パターン別の設計ガイド</h2>
 <table class="format-table">
 <tr><th>移行パターン</th><th>特徴</th><th>設計のポイント</th><th>使う技術</th></tr>
 <tr><td>デスクトップ &rarr; デスクトップ</td><td>Tab順序が比較的安定する場合がある</td><td>固定待機とディレイは実測で決め、結果確認を別に用意</td><td>②④⑥</td></tr>
@@ -459,7 +462,7 @@
 </section>
 <!-- ===== トラブルシューティング ===== -->
 <section class="tips-section">
-<h2>トラブルシューティング（移行特有の問題）</h2>
+<h2 id="sec-15">トラブルシューティング（移行特有の問題）</h2>
 <table class="format-table">
 <tr><th>症状</th><th>原因</th><th>対処法</th></tr>
 <tr><td>2件目以降でフィールドがずれる</td><td>1件目の登録後、目的画面へ戻る前に2件目が始まる</td><td>処理を停止して影響範囲を確認。固定待機とバッチ分割を見直す</td></tr>
@@ -473,7 +476,7 @@
 </section>
 <!-- ===== まとめ ===== -->
 <section class="method-section" style="background:#f8f9fa; border-top: 2px solid #ddd;">
-<h2>この記事で学んだこと &horbar; まとめ</h2>
+<h2 id="sec-16">この記事で学んだこと &horbar; まとめ</h2>
 <table class="format-table">
 <tr><th>項目</th><th>内容</th></tr>
 <tr><td>QR移行の位置づけ</td><td>API・インポート機能が使えない場合の入力候補。キーボード入力できても、画面状態・権限・入力規則・承認を含む検証が必要</td></tr>
@@ -581,7 +584,7 @@
     <a href="../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../script.js?v=20261101"></script>
+<script src="../script.js?v=20261103"></script>
 
 </body>
 </html>

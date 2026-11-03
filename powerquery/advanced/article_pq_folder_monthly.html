@@ -6,24 +6,24 @@
 <title>Power Queryで毎月のファイルをまとめる｜翌月も更新だけで使える設計（二重取り込み・列名変更の対処）｜Excel &times; No VBA Lab</title>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
-<meta content="Power Queryの「フォルダーから」で、毎月届くCSVやExcelファイルを1つの表にまとめる方法を、月次業務の例で解説。フォルダーとファイル名のルール、余計なファイルの除外、Source.Nameから年月を取り出す方法、二重取り込みを見つける確認表、列名が変わった月にMissingField.Ignoreで対応する方法まで扱います。" name="description">
+<meta content="Power Queryの「フォルダーから」で、毎月届くCSVやExcelファイルを1つの表にまとめる方法を解説。ファイル名のルール、余計なファイルの除外、二重取り込みの確認、列名が変わった月の対応まで扱います。" name="description">
 <meta content="Power Queryで毎月のファイルをまとめる：翌月も更新だけで使える設計" property="og:title">
 <meta content="毎月のファイルを入れて「すべて更新」だけ。二重取り込みと列名変更に強いフォルダー取り込みの作り方。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_folder_monthly.html" property="og:url">
 <meta content="Excel × No VBA Lab" property="og:site_name">
 <meta content="ja_JP" property="og:locale">
-<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_folder_monthly.html" rel="canonical">
-<link href="../../common.css?v=20261101" rel="stylesheet">
-<link href="../../article.css?v=20261101" rel="stylesheet">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "Article", "headline": "Power Queryで毎月のファイルをまとめる：翌月も更新だけで使える設計", "description": "Power Queryの「フォルダーから」で、毎月届くCSVやExcelファイルを1つの表にまとめる方法を、月次業務の例で解説。フォルダーとファイル名のルール、余計なファイルの除外、Source.Nameから年月を取り出す方法、二重取り込みを見つける確認表、列名が変わった月にMissingField.Ignoreで対応する方法まで扱います。", "datePublished": "2026-11-01", "dateModified": "2026-11-01", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_folder_monthly.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}
+{"@context": "https://schema.org", "@type": "Article", "headline": "Power Queryで毎月のファイルをまとめる：翌月も更新だけで使える設計", "description": "Power Queryの「フォルダーから」で、毎月届くCSVやExcelファイルを1つの表にまとめる方法を解説。ファイル名のルール、余計なファイルの除外、二重取り込みの確認、列名が変わった月の対応まで扱います。", "datePublished": "2026-11-01", "dateModified": "2026-11-01", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_folder_monthly.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}
 </script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "パワークエリ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/"}, {"@type": "ListItem", "position": 3, "name": "毎月のファイルをまとめる", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_folder_monthly.html"}]}
@@ -33,14 +33,16 @@
 <div class="reading-progress" aria-hidden="true"></div>
 <a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
 <header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">パワークエリ</span></p></div></div></header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/" aria-current="true">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 <main class="main-content" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../powerquery/">パワークエリ</a><span>&gt;</span><strong>毎月のファイルをまとめる</strong></div>
 <article class="article-body">
 <div class="article-header"><div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-01</span></div><h1 class="article-title">Power Queryで毎月のファイルをまとめる：翌月も更新だけで使える設計</h1>
 <p class="article-summary" data-seo-lead="true">毎月届くファイルのコピー＆貼り付けを、Power Queryの「フォルダーから」で自動化します。翌月以降もファイルを入れて更新するだけで使えるように、フォルダーの決め方、二重取り込みの防ぎ方、列名が変わった月への対処まで、月次業務の例で説明します。</p></div>
+<details class="auto-toc" open><summary>目次（9項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 やりたいこと</a></li><li><a href="#sec-2">手順1：フォルダーとファイル名のルールを決める</a></li><li><a href="#sec-3">手順2：フォルダーから取り込む</a></li><li><a href="#sec-4">手順3：余計なファイルを読み込まない絞り込みを入れる</a></li><li><a href="#sec-5">手順4：どのファイルの行か分かるようにする（Source.Name）</a></li><li><a href="#sec-6">手順5：二重取り込みを防ぐ</a></li><li><a href="#sec-7">手順6：列名が変わった月に備える</a></li><li><a href="#sec-8">手順7：読み込んで、翌月からの運用を決める</a></li><li><a href="#sec-9">月次運用のチェックリスト</a></li></ol></nav></details>
 
 <section class="goal-section">
-<h2><span class="icon">💡</span> やりたいこと</h2>
+<h2 id="sec-1"><span class="icon">💡</span> やりたいこと</h2>
 <p>毎月、システムから「売上_2026-09.csv」「売上_2026-10.csv」…のようなファイルが届き、そのたびに1つのシートへコピーして貼り付けている――この作業は、Power Queryの<strong>「フォルダーから」</strong>で自動化できます。</p>
 <div class="xdemo-note-good"><strong>完成すると、翌月からの作業はこれだけです：</strong><br>① 新しい月のファイルを決めたフォルダーに入れる → ② 「データ」→「すべて更新」</div>
 <p>ただし、最初の設計を間違えると「同じ月が2回入る」「列名が変わった月だけ空になる」といった問題が起きます。この記事では、<strong>翌月以降も更新だけで使い続けられる作り方</strong>を説明します。</p>
@@ -48,7 +50,7 @@
 </section>
 
 <section class="method-section">
-<h2>手順1：フォルダーとファイル名のルールを決める</h2>
+<h2 id="sec-2">手順1：フォルダーとファイル名のルールを決める</h2>
 <p>Power Queryは「フォルダーの中のファイルを全部」読み込みます。最初にルールを決めておくことが、いちばんの事故防止です。</p>
 <div class="table-wrapper"><table class="comparison-table"><caption>おすすめのフォルダー構成</caption>
 <thead><tr><th>フォルダー</th><th>入れるもの</th></tr></thead>
@@ -65,7 +67,7 @@
 </section>
 
 <section class="method-section">
-<h2>手順2：フォルダーから取り込む</h2>
+<h2 id="sec-3">手順2：フォルダーから取り込む</h2>
 <ol class="line-height-2">
 <li>集計用のExcelブックで、<strong>「データ」→「データの取得」→「ファイルから」→「フォルダーから」</strong>を選びます。</li>
 <li>「元データ」フォルダーを指定して「開く」（または「OK」）を押します。</li>
@@ -80,7 +82,7 @@
 </section>
 
 <section class="method-section">
-<h2>手順3：余計なファイルを読み込まない絞り込みを入れる</h2>
+<h2 id="sec-4">手順3：余計なファイルを読み込まない絞り込みを入れる</h2>
 <p>ルールを決めても、うっかり別のファイルが入ることはあります。最終のクエリの最初の方（「ソース」の直後）で、ファイルを絞り込んでおきます。</p>
 <ol class="line-height-2">
 <li>最終のクエリの「適用したステップ」で<strong>「ソース」</strong>をクリックし、ファイル一覧の状態を表示します。</li>
@@ -92,7 +94,7 @@
 </section>
 
 <section class="method-section">
-<h2>手順4：どのファイルの行か分かるようにする（Source.Name）</h2>
+<h2 id="sec-5">手順4：どのファイルの行か分かるようにする（Source.Name）</h2>
 <p>結合した表には、元のファイル名が入った<strong>「Source.Name」</strong>列が自動で付きます。この列から「年月」を取り出しておくと、月別の集計や確認ができます。</p>
 <ol class="line-height-2">
 <li>「Source.Name」列を選び、「変換」タブ →「抽出」→「区切り記号の間のテキスト」を選びます。</li>
@@ -103,7 +105,7 @@
 </section>
 
 <section class="method-section">
-<h2>手順5：二重取り込みを防ぐ</h2>
+<h2 id="sec-6">手順5：二重取り込みを防ぐ</h2>
 <p>月次の集計で一番怖いのは、<strong>同じ月のデータが2回入って金額が倍になる</strong>ことです。原因は、ほとんどが次のどれかです。</p>
 <div class="table-wrapper"><table class="comparison-table"><caption>二重取り込みの原因と対策</caption>
 <thead><tr><th>原因</th><th>対策</th></tr></thead>
@@ -125,7 +127,7 @@
 </section>
 
 <section class="method-section">
-<h2>手順6：列名が変わった月に備える</h2>
+<h2 id="sec-7">手順6：列名が変わった月に備える</h2>
 <p>システムの更新などで、ある月から列名が「金額」→「売上金額」に変わることがあります。そのままだと、次のどちらかが起きます。</p>
 <ul class="line-height-2">
 <li>更新すると<strong>「列 '金額' が見つかりませんでした」</strong>というエラーで止まる（「変更された型」などのステップが古い列名を指定しているため）。</li>
@@ -146,7 +148,7 @@
 </section>
 
 <section class="method-section">
-<h2>手順7：読み込んで、翌月からの運用を決める</h2>
+<h2 id="sec-8">手順7：読み込んで、翌月からの運用を決める</h2>
 <ol class="line-height-2">
 <li>「ホーム」→「閉じて読み込む」で、シートに読み込みます（データが多い場合は、ピボットテーブルやデータモデルへの読み込みも検討します）。</li>
 <li>翌月からは、<strong>新しいファイルを「元データ」に入れて「データ」→「すべて更新」</strong>を押すだけです。</li>
@@ -157,7 +159,7 @@
 </section>
 
 <section class="method-section">
-<h2>月次運用のチェックリスト</h2>
+<h2 id="sec-9">月次運用のチェックリスト</h2>
 <ul class="line-height-2">
 <li>□ 元データのフォルダーには、ルールに合う名前のファイルだけがある</li>
 <li>□ 同じ月のファイルが2つない（確認表のファイル数がすべて1）</li>
@@ -178,6 +180,6 @@
 </article>
 </main>
 <footer class="site-footer"><div class="site-footer-trust" aria-label="運営情報と検証方針"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Windows版 Excel 2016以降・Microsoft 365 の Power Query を想定しています。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
-<script src="../../script.js?v=20261101"></script>
+<script src="../../script.js?v=20261103"></script>
 </body>
 </html>

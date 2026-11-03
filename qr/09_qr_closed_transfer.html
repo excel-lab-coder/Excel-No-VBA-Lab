@@ -14,15 +14,15 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="ネットワークもUSBメモリも使えない閉域環境で、ExcelデータをQRコードに変換し紙に印刷&rarr;OPI-3601・ALX-3601・L-46Xで読み取るだけで転送。全角文字のVBA対応策から、半角データの分割QR・連結数式・セキュリティまで網羅。 Excel QRコード作成、Excel QRリーダー連携、バーコードリーダー入力自動化を探している方向け。" name="description">
+<meta content="ネットワークもUSBメモリも使えない閉域環境で、ExcelデータをQRコードに変換し紙に印刷&rarr;OPI-3601・ALX-3601・L-46Xで読み取るだけで転送。全角文字のVBA対応策から、半角データの分割QR・連結数式・セキュリティまで網羅。" name="description">
 <meta content="QRコードで閉域環境のデータ転送！ネットワーク不要・紙だけでExcelデータを別PCに移す完全ガイド｜Excel &times; No VBA Lab" property="og:title">
 <meta content="ネットワークもUSBメモリも使えない閉域環境で、ExcelデータをQRコードに変換し紙に印刷&rarr;別PCのリーダーで読み取るだけで転送する方法を解説。全角対応のVBA手法も紹介。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/09_qr_closed_transfer.html" rel="canonical">
-<link href="../common.css?v=20261101" rel="stylesheet">
-<link href="../article.css?v=20261101" rel="stylesheet">
+<link href="../common.css?v=20261103" rel="stylesheet">
+<link href="../article.css?v=20261103" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
@@ -66,7 +66,8 @@
     ]
   }
   </script>
-
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 <body class="article-layout">
 <div class="reading-progress" aria-hidden="true"></div>
@@ -80,6 +81,7 @@
 </div>
 </div>
 </header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../#article-finder">🔍 記事を探す</a><a href="../functions/">関数</a><a href="../powerquery/">Power Query</a><a href="../cobol/">COBOL帳票</a><a href="../qr/" aria-current="true">QR入力</a><a href="../others/">現場実務</a><a href="../thinking/">技術の流れ</a><a href="../unlocked/">VBA・AI</a><a href="../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content" id="main-content">
 <div class="breadcrumb">
@@ -104,6 +106,7 @@
 
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
 </div>
+<details class="auto-toc" open><summary>目次（16項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">↵ Enter / Tab の共通整理</a></li><li><a href="#sec-2">🔑 最初に &horbar;「全角文字が使えないなら意味がない」と思った方へ</a></li><li><a href="#sec-3">💡 この記事の目的</a></li><li><a href="#sec-4">転送の全体像 &horbar; 送信 &rarr; 紙 &rarr; 受信の3フェーズ</a></li><li><a href="#sec-5">閉域環境とは？ &horbar; なぜQR転送が必要になるのか</a></li><li><a href="#sec-6">前提条件の確認</a></li><li><a href="#sec-7">受信側リーダーの推奨設定（OPI-3601 / ALX-3601 / L-46X）</a></li><li><a href="#sec-8">送信側：ExcelデータをQR文字列に変換する</a></li><li><a href="#sec-9">QRコードの生成と印刷レイアウト</a></li><li><a href="#sec-10">受信側：検証用シートへ読み取り &rarr; 照合後に確定</a></li><li><a href="#sec-11">転送量とキー送信時間の理論目安</a></li><li><a href="#sec-12">実践シナリオ：工場の検査データ150件を転送する</a></li><li><a href="#sec-13">トラブルシューティング</a></li><li><a href="#sec-14">セキュリティ上の考慮事項</a></li><li><a href="#sec-15">この記事で学んだこと &horbar; まとめ</a></li><li><a href="#qr-safety-title">QRリーダー連携の運用注意</a></li></ol></nav></details>
 
 <div class="xdemo-note-danger">
 <strong>⚠️ 検証・実験的手法です</strong><br>
@@ -111,7 +114,7 @@
 </div>
 
 <section class="method-section qr-control-guide">
-  <h2><span class="icon">↵</span> Enter / Tab の共通整理</h2>
+  <h2 id="sec-1"><span class="icon">↵</span> Enter / Tab の共通整理</h2>
   <p>QR入力では、読み取り先によって最初に試す制御を分けます。Num Enter は Excel の CHAR 関数では生成できないため、必要な場合はQRリーダー側のキー変換で確認します。</p>
   <table class="format-table">
     <thead>
@@ -133,7 +136,7 @@
       </div>
 <!-- ===== 全角文字の現実と希望（離脱防止セクション） ===== -->
 <section class="goal-section">
-<h2><span class="icon">🔑</span> 最初に &horbar;「全角文字が使えないなら意味がない」と思った方へ</h2>
+<h2 id="sec-2"><span class="icon">🔑</span> 最初に &horbar;「全角文字が使えないなら意味がない」と思った方へ</h2>
 <p>閉域環境でのQR転送を検討するとき、多くの方がまず気になるのは<strong>「日本語（全角文字）は転送できるのか？」</strong>でしょう。結論から言います。</p>
 <div class="xdemo-note-good">
 <strong>💡 全角文字を含むQRコードは作れます</strong><br>
@@ -208,7 +211,7 @@
 </section>
 <!-- ===== ゴール ===== -->
 <section class="goal-section">
-<h2><span class="icon">💡</span> この記事の目的</h2>
+<h2 id="sec-3"><span class="icon">💡</span> この記事の目的</h2>
 <p>記事①〜⑦では<strong>1台のPC上</strong>でQRリーダーを使い、業務入力を自動化しました。しかし現場には<strong>「ネットワークに繋がっていないPC同士でデータを受け渡したい」</strong>という要望が数多くあります。</p>
 <p>セキュリティポリシーでUSBメモリ禁止、インターネット接続なし、メール不可&horbar;&horbar;そんな<strong>閉域環境</strong>で、承認された物理移送の候補としてQR印刷を検証する場合があります。本記事では<strong>半角文字のみで構成されるデータ</strong>を対象に、バーコードコントロールを使う手順を解説します。</p>
 <ul>
@@ -221,7 +224,7 @@
 </section>
 <!-- ===== 全体像 ===== -->
 <section class="method-section">
-<h2>転送の全体像 &horbar; 送信 &rarr; 紙 &rarr; 受信の3フェーズ</h2>
+<h2 id="sec-4">転送の全体像 &horbar; 送信 &rarr; 紙 &rarr; 受信の3フェーズ</h2>
 <div class="arch-diagram">
 <div class="arch-row">
 <div class="arch-box arch-send">
@@ -268,7 +271,7 @@
 </section>
 <!-- ===== 閉域環境とは ===== -->
 <section class="method-section">
-<h2>閉域環境とは？ &horbar; なぜQR転送が必要になるのか</h2>
+<h2 id="sec-5">閉域環境とは？ &horbar; なぜQR転送が必要になるのか</h2>
 <table class="format-table">
 <tr><th>制約</th><th>具体例</th><th>従来の対処法</th><th>問題点</th></tr>
 <tr><td>ネットワーク不可</td><td>工場制御系PC、機密端末</td><td>手入力・紙の転記</td><td>ミス多発・時間がかかる</td></tr>
@@ -280,7 +283,7 @@
 </section>
 <!-- ===== 前提条件 ===== -->
 <section class="method-section">
-<h2>前提条件の確認</h2>
+<h2 id="sec-6">前提条件の確認</h2>
 <table class="key-table">
 <thead>
 <tr><th>前提</th><th>内容</th><th>参照記事</th></tr>
@@ -300,7 +303,7 @@
 </section>
 <!-- ===== 受信側リーダー設定 ===== -->
 <section class="method-section">
-<h2>受信側リーダーの推奨設定（OPI-3601 / ALX-3601 / L-46X）</h2>
+<h2 id="sec-7">受信側リーダーの推奨設定（OPI-3601 / ALX-3601 / L-46X）</h2>
 <table class="key-table">
 <thead>
 <tr><th>設定項目</th><th>推奨値</th><th>メニューバーコード</th><th>理由</th></tr>
@@ -319,7 +322,7 @@
 </section>
 <!-- ===== 送信側 手順 ===== -->
 <section class="tips-section">
-<h2>送信側：ExcelデータをQR文字列に変換する</h2>
+<h2 id="sec-8">送信側：ExcelデータをQR文字列に変換する</h2>
 <!-- STEP 1 -->
 <div class="setup-step">
 <div class="setup-step-header">
@@ -450,7 +453,7 @@
 </section>
 <!-- ===== QR生成・印刷 ===== -->
 <section class="method-section">
-<h2>QRコードの生成と印刷レイアウト</h2>
+<h2 id="sec-9">QRコードの生成と印刷レイアウト</h2>
 <p>記事①で設定したバーコードコントロール（Style = 11: QR Code）のLinkedCellを、管理ヘッダーを含むI1, I2, I3&hellip; に切り替えてQRコードを生成します。</p>
 <table class="key-table">
 <thead>
@@ -472,7 +475,7 @@
 </section>
 <!-- ===== 受信側 手順 ===== -->
 <section class="tips-section">
-<h2>受信側：検証用シートへ読み取り &rarr; 照合後に確定</h2>
+<h2 id="sec-10">受信側：検証用シートへ読み取り &rarr; 照合後に確定</h2>
 <div class="flow-diagram">
 <span class="flow-step">① 空の検証用シートを文字列書式にしてA1を選択</span>
 <span class="flow-arrow">&rarr;</span>
@@ -527,7 +530,7 @@
 </section>
 <!-- ===== 転送可能データ量 ===== -->
 <section class="method-section">
-<h2>転送量とキー送信時間の理論目安</h2>
+<h2 id="sec-11">転送量とキー送信時間の理論目安</h2>
 <div class="xdemo-note-warn">
 <strong>⚠️ 下表は255文字を隙間なく使った場合の下限計算です</strong><br>
           管理ヘッダー、レコード単位の区切り、印刷・運搬・照合・再読取の時間を含みません。本記事の安全側の構成では、実際のQR枚数と作業時間は表より増えます。
@@ -548,7 +551,7 @@
 </section>
 <!-- ===== 実践シナリオ ===== -->
 <section class="method-section">
-<h2>実践シナリオ：工場の検査データ150件を転送する</h2>
+<h2 id="sec-12">実践シナリオ：工場の検査データ150件を転送する</h2>
 <div class="scenario-box">
 <strong>シナリオ：</strong>製造工場の検査室PC（閉域ネットワーク）から、事務所PC（社内LAN）へ検査データ150件を転送する。USBメモリは持ち出し禁止。データは半角のみ（製品ID・検査値・合否・日付）。
         </div>
@@ -605,7 +608,7 @@ QR枚数:   =ROUNDUP(G1/G3,0)            &rarr; 25
 </section>
 <!-- ===== トラブルシューティング ===== -->
 <section class="tips-section">
-<h2>トラブルシューティング</h2>
+<h2 id="sec-13">トラブルシューティング</h2>
 <table class="format-table">
 <tr><th>症状</th><th>原因</th><th>対処法</th><th>参照</th></tr>
 <tr><td>文字が欠ける・抜ける</td><td>キャラクタ間ディレイ不足</td><td>ディレイを10ms &rarr; 20msに上げる</td><td>③</td></tr>
@@ -623,7 +626,7 @@ QR枚数:   =ROUNDUP(G1/G3,0)            &rarr; 25
 </section>
 <!-- ===== セキュリティ ===== -->
 <section class="method-section">
-<h2>セキュリティ上の考慮事項</h2>
+<h2 id="sec-14">セキュリティ上の考慮事項</h2>
 <p>QRコードの紙は<strong>「物理的なデータ持ち出し」</strong>です。組織によってはUSBメモリと同等の管理が求められます。</p>
 <table class="format-table">
 <tr><th>懸念事項</th><th>リスク</th><th>対策</th></tr>
@@ -640,7 +643,7 @@ QR枚数:   =ROUNDUP(G1/G3,0)            &rarr; 25
 </section>
 <!-- ===== まとめ ===== -->
 <section class="method-section" style="background:#f8f9fa; border-top: 2px solid #ddd;">
-<h2>この記事で学んだこと &horbar; まとめ</h2>
+<h2 id="sec-15">この記事で学んだこと &horbar; まとめ</h2>
 <table class="format-table">
 <tr><th>項目</th><th>内容</th></tr>
 <tr><td>全角文字の対応</td><td>バーコードコントロールは半角のみ。全角には生成側・受信側を含む別方式の検証が必要です。記事⑪は動作再確認のため一時非公開にしています。</td></tr>
@@ -751,7 +754,7 @@ QR枚数:   =ROUNDUP(G1/G3,0)            &rarr; 25
     <a href="../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../script.js?v=20261101"></script>
+<script src="../script.js?v=20261103"></script>
 
 </body>
 </html>

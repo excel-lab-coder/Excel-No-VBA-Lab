@@ -23,14 +23,14 @@
 <meta content="QRコードでWeb入力を自動化｜Tab・Enterの埋め込み｜Excel &times; No VBA Lab" property="og:title">
 <meta content="Excelで作るQRコードにTab・Enterを埋め込み、Webシステムの入力欄移動、検索、登録、確定をQRリーダーで自動化する方法を解説。VBAやRPAを使えない閉域環境にも対応します。" property="og:description">
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/01_qr_barcode_control.html" property="og:url">
-<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="QR Automation Lab｜Excel &times; No VBA Lab" property="og:site_name">
 <meta content="ja_JP" property="og:locale">
 
 <meta content="summary_large_image" name="twitter:card">
 <meta content="QRコードでWeb入力を自動化｜Tab・Enterの埋め込み｜Excel &times; No VBA Lab" name="twitter:title">
 <meta content="Excelで作るQRコードにTab・Enterを埋め込み、Webシステムの入力欄移動、検索、登録、確定をQRリーダーで自動化する方法を解説。VBAやRPAを使えない閉域環境にも対応します。" name="twitter:description">
-<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" name="twitter:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" name="twitter:image">
 
 <meta content="index, follow" name="robots">
 
@@ -42,8 +42,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 </noscript>
 
-<link href="../common.css?v=20261101" rel="stylesheet">
-<link href="../article.css?v=20261101" rel="stylesheet">
+<link href="../common.css?v=20261103" rel="stylesheet">
+<link href="../article.css?v=20261103" rel="stylesheet">
 
 <script type="application/ld+json">
 {
@@ -51,7 +51,7 @@
   "@type":"Article",
   "headline":"QRコードでWeb入力を自動化｜Tab・Enterの埋め込み",
   "description":"Excelで作るQRコードにTab・Enterを埋め込み、Webシステムの入力欄移動、検索、登録、確定をQRリーダーで自動化する方法を解説。VBAやRPAを使えない閉域環境にも対応します。",
-  "image":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png",
+  "image":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg",
   "author":{
     "@type":"Organization",
     "name":"Excel × No VBA Lab"
@@ -61,7 +61,7 @@
     "name":"Excel × No VBA Lab",
     "logo":{
       "@type":"ImageObject",
-      "url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"
+      "url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"
     }
   },
   "datePublished":"2026-04-17",
@@ -151,6 +151,7 @@
     </div>
   </div>
 </header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../#article-finder">🔍 記事を探す</a><a href="../functions/">関数</a><a href="../powerquery/">Power Query</a><a href="../cobol/">COBOL帳票</a><a href="../qr/" aria-current="true">QR入力</a><a href="../others/">現場実務</a><a href="../thinking/">技術の流れ</a><a href="../unlocked/">VBA・AI</a><a href="../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
 
@@ -195,9 +196,10 @@
     下の動画では、QRリーダーからTab・Enterを送信して、Webシステム画面を操作するイメージを確認できます。
   </div>
 </div>
+<details class="auto-toc" open><summary>目次（15項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">↵ Enter / Tab の共通整理</a></li><li><a href="#sec-2">初めて読む方へ：まず1項目だけ送ってみる</a></li><li><a href="#sec-3">🎬 まず動画でイメージ：QRリーダーでWebシステム入力を動かす例</a></li><li><a href="#sec-4">🔥 QRコード &times; CHAR関数でできること</a></li><li><a href="#sec-5">📊 RPAとの棲み分け</a></li><li><a href="#sec-6">📚 学習ロードマップ</a></li><li><a href="#sec-7">STEP 1：ExcelでQRコードを作る</a></li><li><a href="#sec-8">🎯 STEP 2：Tab・Enterを埋め込む</a></li><li><a href="#sec-9">🔍 CHAR(10)・CHAR(13)・NUMEnterの違い</a></li><li><a href="#sec-10">⚡ 知っておくべきポイント</a></li><li><a href="#sec-11">💡 Excel入力にも応用できる</a></li><li><a href="#sec-12">💡 Ctrl+S自動保存を組み込む場合</a></li><li><a href="#sec-13">📝 この記事で学んだこと</a></li><li><a href="#sec-14">📎 付録：QRコードに入れやすい文字とCHARコード</a></li><li><a href="#qr-safety-title">QRリーダー連携の運用注意</a></li></ol></nav></details>
 
 <section class="method-section qr-control-guide">
-  <h2><span class="icon">↵</span> Enter / Tab の共通整理</h2>
+  <h2 id="sec-1"><span class="icon">↵</span> Enter / Tab の共通整理</h2>
   <p>QR入力では、読み取り先によって最初に試す制御を分けます。Num Enter は Excel の CHAR 関数では生成できないため、必要な場合はQRリーダー側のキー変換で確認します。</p>
   <table class="format-table">
     <thead>
@@ -213,9 +215,9 @@
 
 </section>
 
-<section class="method-section qr-beginner-route"><h2>初めて読む方へ：まず1項目だけ送ってみる</h2><p>最初は <a href="00_qr_reader_excel_input_basics.html">⓪ 仕組みの説明</a>で、QRリーダーがキーボードとして文字を送る流れを確認します。次に空のメモ帳へ「TEST」だけを送り、Excelで1項目・Tab・Enterの順に確認します。開発タブやActiveXは、この記事で紹介するQR作成方法の一つです。</p><p>ActiveXが利用できない場合は <a href="../tools/qr-quick-maker.html">ブラウザーのQR作成ツール</a>でテスト用文字列をQR化できます。LinkedCellは「QRにする文字列が入ったセルを指定する設定」です。業務データを使う前に架空の文字列で確認してください。</p></section>
+<section class="method-section qr-beginner-route"><h2 id="sec-2">初めて読む方へ：まず1項目だけ送ってみる</h2><p>最初は <a href="00_qr_reader_excel_input_basics.html">⓪ 仕組みの説明</a>で、QRリーダーがキーボードとして文字を送る流れを確認します。次に空のメモ帳へ「TEST」だけを送り、Excelで1項目・Tab・Enterの順に確認します。開発タブやActiveXは、この記事で紹介するQR作成方法の一つです。</p><p>ActiveXが利用できない場合は <a href="../tools/qr-quick-maker.html">ブラウザーのQR作成ツール</a>でテスト用文字列をQR化できます。LinkedCellは「QRにする文字列が入ったセルを指定する設定」です。業務データを使う前に架空の文字列で確認してください。</p></section>
 <section class="method-section" style="padding-top:12px;padding-bottom:12px;">
-  <h2>🎬 まず動画でイメージ：QRリーダーでWebシステム入力を動かす例</h2>
+  <h2 id="sec-3">🎬 まず動画でイメージ：QRリーダーでWebシステム入力を動かす例</h2>
 
   <div class="xdemo-note-good">
     <strong>▶ この下が実際の動作動画です</strong><br>
@@ -288,7 +290,7 @@
 </div>
 
 <section class="goal-section">
-  <h2><span class="icon">🔥</span> QRコード &times; CHAR関数でできること</h2>
+  <h2 id="sec-4"><span class="icon">🔥</span> QRコード &times; CHAR関数でできること</h2>
 
   <p>
     QRリーダーは<strong>超高速キーボード</strong>です。
@@ -339,7 +341,7 @@
 </section>
 
 <section class="method-section">
-  <h2>📊 RPAとの棲み分け</h2>
+  <h2 id="sec-5">📊 RPAとの棲み分け</h2>
 
   <p>
     QRリーダーによる入力自動化は、RPAの下位互換ではありません。
@@ -387,7 +389,7 @@
 </section>
 
 <section class="method-section">
-  <h2>📚 学習ロードマップ</h2>
+  <h2 id="sec-6">📚 学習ロードマップ</h2>
 
   <p>
     QR Automation Labは段階的に学べる構成です。
@@ -419,7 +421,7 @@
 </section>
 
 <section class="method-section">
-  <h2>STEP 1：ExcelでQRコードを作る</h2>
+  <h2 id="sec-7">STEP 1：ExcelでQRコードを作る</h2>
 
   <p>
     この方法では、Excelを<strong>QRコードを作るための道具</strong>として使います。
@@ -473,7 +475,7 @@
 </section>
 
 <section class="tips-section">
-  <h2>🎯 STEP 2：Tab・Enterを埋め込む</h2>
+  <h2 id="sec-8">🎯 STEP 2：Tab・Enterを埋め込む</h2>
 
   <p>
     ここが基本です。QRコードに文字データだけでなくキー操作を仕込むことで、
@@ -564,7 +566,7 @@
 </section>
 
 <section class="method-section" id="enter-difference">
-  <h2>🔍 CHAR(10)・CHAR(13)・NUMEnterの違い</h2>
+  <h2 id="sec-9">🔍 CHAR(10)・CHAR(13)・NUMEnterの違い</h2>
 
   <p>
     QRリーダーで業務システムを操作するとき、よく混同されるのが
@@ -666,7 +668,7 @@
 </section>
 
 <section class="tips-section">
-  <h2>⚡ 知っておくべきポイント</h2>
+  <h2 id="sec-10">⚡ 知っておくべきポイント</h2>
 
   <div class="xdemo-note-danger">
     <strong>⓪ 途中で止められない</strong><br>
@@ -709,7 +711,7 @@
 </section>
 
 <section class="method-section">
-  <h2>💡 Excel入力にも応用できる</h2>
+  <h2 id="sec-11">💡 Excel入力にも応用できる</h2>
 
   <p>
     この記事ではWebシステム入力を中心に説明していますが、同じQRコードの考え方はExcel入力にも使えます。
@@ -742,7 +744,7 @@
 </section>
 
 <section class="method-section">
-  <h2>💡 Ctrl+S自動保存を組み込む場合</h2>
+  <h2 id="sec-12">💡 Ctrl+S自動保存を組み込む場合</h2>
 
   <p>
     QR内の制御文字を、そのまま「Ctrlキーを押しながらSを押す操作」と同一視することはできません。
@@ -775,7 +777,7 @@
 </section>
 
 <section class="method-section">
-  <h2>📝 この記事で学んだこと</h2>
+  <h2 id="sec-13">📝 この記事で学んだこと</h2>
 
   <table class="format-table">
     <tr>
@@ -816,7 +818,7 @@
 </section>
 
 <section class="appendix-section" id="appendix">
-  <h2>📎 付録：QRコードに入れやすい文字とCHARコード</h2>
+  <h2 id="sec-14">📎 付録：QRコードに入れやすい文字とCHARコード</h2>
 
   <p>
     Microsoft Barcode Controlで作成するQRコードでは、半角英数・記号・制御文字を中心に使うと安定します。
@@ -1023,7 +1025,7 @@
   </p>
 </footer>
 
-<script src="../script.js?v=20261101"></script>
+<script src="../script.js?v=20261103"></script>
 
 </body>
 </html>

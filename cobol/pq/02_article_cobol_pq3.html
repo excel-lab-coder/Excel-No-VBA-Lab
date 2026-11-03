@@ -34,8 +34,8 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/pq/02_article_cobol_pq3.html" rel="canonical">
-<link href="../../common.css?v=20261101" rel="stylesheet">
-<link href="../../article.css?v=20261101" rel="stylesheet">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
@@ -46,7 +46,7 @@
     "headline": "【参考資料】パワークエリでCOBOL帳票を処理する全テクニック",
     "description": "パワークエリの標準機能だけでCOBOL帳票を処理する全テクニックを網羅した参考資料。不要行除去・固定長切り出し・縦持ち展開を解説。",
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
-    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
+    "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}},
     "datePublished": "2026-03-20",
     "dateModified":"2026-07-12"
   }
@@ -213,6 +213,8 @@
   background: #e3f2fd; color: #0d47a1; font-weight: 600; text-align: center;
 }
 </style>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -227,6 +229,7 @@
     </div>
   </div>
 </header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/" aria-current="true">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
   <div class="breadcrumb">
@@ -248,9 +251,10 @@
 <small style="font-size:0.5em;color:#607d8b;">&horbar; 自作関数なしでどこまでできるか ＋ MIDB自作関数の実装 &horbar;</small></h1>
 <p class="article-summary" data-seo-lead="true">Power Queryの標準機能でCOBOL帳票を扱うときの手順（不要行除去・固定長切り出し・縦持ち展開など）を一覧できる参考資料です。必要な箇所から参照してください。</p>
 </div>
+<details class="auto-toc" open><summary>目次（19項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 この資料の目的</a></li><li><a href="#sec-2">前半：自作関数なし（標準機能だけ）でできること</a></li><li><a href="#sec-3">パターンA 半角のみの固定長データ &rarr; Text.Middle で直接切り出し</a></li><li><a href="#sec-4">パターンB 全角文字混在でも「文字数」が固定 &rarr; Text.Middle で対応可能</a></li><li><a href="#sec-5">パターンC 不要行の除去・フィルダウン &rarr; 標準機能で一瞬</a></li><li><a href="#sec-6">パターンD 2行にまたがるデータを1行に結合 &rarr; インデックス＋行ずらし</a></li><li><a href="#sec-7">パターンE 「目印」を頼りに可変長フィールドを切り出す</a></li><li><a href="#sec-8">判定表：自分の帳票はどのパターンか？</a></li><li><a href="#sec-9">後半：自作関数が必要なケース &horbar; M言語でMIDB相当を作る</a></li><li><a href="#sec-10">核心技術：バイナリ経由のバイト位置切り出し</a></li><li><a href="#sec-11">fx_MIDB（自作関数）&horbar; バイト位置で切り出す（本丸）</a></li><li><a href="#sec-12">fx_MIDB_Safe（自作関数）&horbar; エラー処理付き安全版</a></li><li><a href="#sec-13">⚡ パフォーマンス改善：一括バイナリ変換パターン</a></li><li><a href="#sec-14">カスタム関数の登録手順</a></li><li><a href="#sec-15">エンコーディングとコードページ</a></li><li><a href="#sec-16">🔧 よくあるトラブル</a></li><li><a href="#sec-17">Excel関数 &harr; パワークエリ 対応表</a></li><li><a href="#sec-18">🎯 まとめ</a></li><li><a href="#sec-19">参考情報</a></li></ol></nav></details>
 <!-- ======================== 導入 ======================== -->
 <section class="goal-section">
-<h2><span class="icon">💡</span> この資料の目的</h2>
+<h2 id="sec-1"><span class="icon">💡</span> この資料の目的</h2>
 <p><a href="01_article_cobol_pq.html">パワークエリ編</a>では「MIDBの壁」を最大の問題として紹介しました。しかし実際には、<strong>帳票のデータ構造次第ではパワークエリの標準機能だけで切り出しまで完結するケースが多くあります</strong>。</p>
 <p>この資料では、まず<strong>前半で「自作関数なしでどこまでできるか」を5つのパターンに分けて整理</strong>し、後半で<strong>「どうしても自作関数が必要なケース」の具体的な実装</strong>を示します。自分の帳票がどちらに該当するかをこのページで判定してください。</p>
 <div class="xdemo-note-danger">
@@ -276,12 +280,12 @@
            ★★★ 前半：自作関数なしでできること ★★★
       ================================================================ -->
 <section class="method-section">
-<h2 style="color: #00838f; border-bottom: 3px solid #00acc1; padding-bottom: 8px;">前半：自作関数なし（標準機能だけ）でできること</h2>
+<h2 id="sec-2" style="color: #00838f; border-bottom: 3px solid #00acc1; padding-bottom: 8px;">前半：自作関数なし（標準機能だけ）でできること</h2>
 <p>以下の5パターンは、M言語のカスタム関数を一切書かずに、パワークエリのGUI操作と標準関数だけで処理できます。また、fx_MIDB（自作関数）によるメインの切り出し処理と組み合わせて前処理・後処理としても使えます。</p>
 </section>
 <!-- ======== パターンA ======== -->
 <section class="method-section">
-<h2><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンA</span> 半角のみの固定長データ &rarr; Text.Middle で直接切り出し</h2>
+<h2 id="sec-3"><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンA</span> 半角のみの固定長データ &rarr; Text.Middle で直接切り出し</h2>
 <p>帳票の全フィールドが半角英数字だけで構成されている場合は、<strong>バイト位置 ＝ 文字位置</strong>になります。パワークエリ標準の <code>Text.Middle</code> がそのままExcelの <code>MIDB</code> と同じ感覚で使えます。</p>
 <div class="code-block-large"><span class="cm-comment">// 帳票例（全フィールド半角・1行50バイト）</span>
 <span class="text-blue-light">1234567</span><span style="color:#ce9178">EXCEL CORP           </span><span style="color:#b5cea8">0000150000</span><span class="text-yellow">20260318</span>
@@ -309,7 +313,7 @@
 </section>
 <!-- ======== パターンB ======== -->
 <section class="method-section">
-<h2><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンB</span> 全角文字混在でも「文字数」が固定 &rarr; Text.Middle で対応可能</h2>
+<h2 id="sec-4"><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンB</span> 全角文字混在でも「文字数」が固定 &rarr; Text.Middle で対応可能</h2>
 <p>見落としがちですが重要なパターンです。全角文字が含まれていても、<strong>各フィールドの「文字数」（バイト数ではなく）が固定であれば</strong>、<code>Text.Middle</code>（文字数ベース）で正しく切り出せます。</p>
 <p>COBOLのデータ定義で言えば、<strong>日本語項目が <code>PIC N(10)</code> のように「文字数」で定義されている帳票</strong>がこれに該当します。</p>
 <div class="code-block-large"><span class="cm-comment">// 帳票例：全フィールドが「文字数」で一定</span>
@@ -388,7 +392,7 @@
 </section>
 <!-- ======== パターンC ======== -->
 <section class="method-section">
-<h2><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンC</span> 不要行の除去・フィルダウン &rarr; 標準機能で一瞬</h2>
+<h2 id="sec-5"><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンC</span> 不要行の除去・フィルダウン &rarr; 標準機能で一瞬</h2>
 <p>ヘッダー行・罫線行・ページ区切り行の除去、および親情報の空白埋め（フィルダウン）は、<strong>全角混在であっても標準機能だけで完璧に処理</strong>できます。fx_MIDB（自作関数）でフィールド分解する前の前処理として、またfx_MIDB（自作関数）で切り出した後の仕上げとしても使います。</p>
 <div class="pq-step-box">
 <h3 class="pq-step-title">不要行の除去</h3>
@@ -412,7 +416,7 @@
 </section>
 <!-- ======== パターンD ======== -->
 <section class="method-section">
-<h2><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンD</span> 2行にまたがるデータを1行に結合 &rarr; インデックス＋行ずらし</h2>
+<h2 id="sec-6"><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンD</span> 2行にまたがるデータを1行に結合 &rarr; インデックス＋行ずらし</h2>
 <p>COBOL帳票では印字桁数の制限から、1件のデータが2行以上に分かれることがよくあります。パワークエリではインデックス列を使った「行ずらし結合」で<strong>自作関数なしに標準操作だけで対応</strong>できます。1行にまとめた後で fx_MIDB（自作関数）によるフィールド分解を行う流れです。</p>
 <div class="code-block-large"><span class="cm-comment">// 帳票例（1件＝2行構成）</span>
 <span class="text-yellow">店舗ID：1001　店舗名：新宿本店　売上：50,000</span> <span style="color:#666">&larr; 1件目の1行目</span>
@@ -482,7 +486,7 @@
 </section>
 <!-- ======== パターンE ======== -->
 <section class="method-section">
-<h2><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンE</span> 「目印」を頼りに可変長フィールドを切り出す</h2>
+<h2 id="sec-7"><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンE</span> 「目印」を頼りに可変長フィールドを切り出す</h2>
 <p>ここまでのパターンA～Dは「フィールドの開始位置と長さが完全に固定」であることを前提としていました。しかし実務では、<strong>帳票のバイト枠は確保されているのに、中身の有効データの長さが行ごとに違う</strong>ケースが頻繁に発生します。</p>
 <p>典型例は「氏名」「住所」のような自然言語フィールドです。COBOLのPICTURE句で30バイトの枠が確保されていても、「山田太郎」なら8バイト、「アレクサンドル・ペトロフ」なら20バイト以上と、<strong>実際に入っているデータの長さは毎行異なります</strong>。レイアウト定義書がない場合、隣のフィールドとの境界がスペースだけでは判別困難です。</p>
 <div class="code-block-large"><span class="cm-comment">// 実務でよく遭遇する帳票例</span>
@@ -552,7 +556,7 @@
 </section>
 <!-- ======== 判定表 ======== -->
 <section class="method-section">
-<h2>判定表：自分の帳票はどのパターンか？</h2>
+<h2 id="sec-8">判定表：自分の帳票はどのパターンか？</h2>
 <table class="format-table">
 <thead>
 <tr>
@@ -623,12 +627,12 @@
       ================================================================ -->
 <hr class="section-divider">
 <section class="method-section">
-<h2 style="color: #b71c1c; border-bottom: 3px solid #d32f2f; padding-bottom: 8px;">後半：自作関数が必要なケース &horbar; M言語でMIDB相当を作る</h2>
+<h2 id="sec-9" style="color: #b71c1c; border-bottom: 3px solid #d32f2f; padding-bottom: 8px;">後半：自作関数が必要なケース &horbar; M言語でMIDB相当を作る</h2>
 <p>前半の判定表で「自作関数が必要」に該当した場合、ここから先の手法を使います。核心技術は <strong>Text.ToBinary + Binary.Range + Text.FromBinary</strong> の3段階変換です。前半のパターンB〜Dで紹介した行種判定・不要行除去・行ずらし等と組み合わせて使ってください。</p>
 </section>
 <!-- ======== 核心技術 ======== -->
 <section class="method-section">
-<h2>核心技術：バイナリ経由のバイト位置切り出し</h2>
+<h2 id="sec-10">核心技術：バイナリ経由のバイト位置切り出し</h2>
 <p>M言語では文字列を指定したコードページのバイナリへ変換し、<code>Binary.Range</code> でバイト位置を切り出せます。コードページ932では多くの半角文字が1バイト、多くの全角文字が2バイトになりますが、文字種や変換不能文字による例外があります。ExcelのMIDBと同一と決めつけず、実データで照合してください。</p>
 <div class="pipeline-box">
 <span class="step">文字列（text）</span>
@@ -653,7 +657,7 @@
 </section>
 <!-- ======== fx_MIDB（自作関数） ======== -->
 <section class="method-section">
-<h2>fx_MIDB（自作関数）&horbar; バイト位置で切り出す（本丸）</h2>
+<h2 id="sec-11">fx_MIDB（自作関数）&horbar; バイト位置で切り出す（本丸）</h2>
 <p>このページで紹介する自作関数はこの <strong>fx_MIDB（自作関数）1つだけ</strong>です。ExcelのMIDBと同じ「1始まり」のバイト位置指定で、全角・半角混在の文字列からバイト単位で正確に切り出します。</p>
 <div class="code-block-large"><span class="cm-comment">// fx_MIDB（自作関数）&horbar; ExcelのMIDB相当（Shift_JIS基準・1始まり）</span>
 (<span class="cm-param">targetText</span> <span class="cm-keyword">as</span> <span class="cm-type">text</span>, <span class="cm-param">startByte</span> <span class="cm-keyword">as</span> <span class="cm-type">number</span>, <span class="cm-param">numBytes</span> <span class="cm-keyword">as</span> <span class="cm-type">number</span>) <span class="cm-keyword">as</span> <span class="cm-type">text</span> <span class="cm-op">=&gt;</span>
@@ -679,7 +683,7 @@
 </section>
 <!-- ======== fx_MIDB_Safe ======== -->
 <section class="method-section">
-<h2>fx_MIDB_Safe（自作関数）&horbar; エラー処理付き安全版</h2>
+<h2 id="sec-12">fx_MIDB_Safe（自作関数）&horbar; エラー処理付き安全版</h2>
 <p>元データに null や短い行（ヘッダー行、空行など）が混在する場合にエラーを回避する安全版です。必要に応じて fx_MIDB（自作関数）の代わりに使用してください。</p>
 <div class="code-block-large"><span class="cm-comment">// fx_MIDB_Safe（自作関数）&horbar; null・範囲外でもエラーにならない安全版</span>
 (<span class="cm-param">targetText</span> <span class="cm-keyword">as</span> <span class="cm-type">nullable text</span>, <span class="cm-param">startByte</span> <span class="cm-keyword">as</span> <span class="cm-type">number</span>, <span class="cm-param">numBytes</span> <span class="cm-keyword">as</span> <span class="cm-type">number</span>) <span class="cm-keyword">as</span> <span class="cm-type">nullable text</span> <span class="cm-op">=&gt;</span>
@@ -700,7 +704,7 @@
 </section>
 <!-- ======== パフォーマンス ======== -->
 <section class="method-section">
-<h2>⚡ パフォーマンス改善：一括バイナリ変換パターン</h2>
+<h2 id="sec-13">⚡ パフォーマンス改善：一括バイナリ変換パターン</h2>
 <p>fx_MIDB（自作関数）を1行あたり複数回呼ぶと、毎回 <code>Text.ToBinary</code> が実行されてパフォーマンスが低下します。カスタム列でレコード型を返せば、バイナリ変換は1行1回で済みます。</p>
 <div class="code-block-large"><span class="cm-comment">// カスタム列でレコードを返し、後で展開する方式</span>
 <span class="cm-keyword">let</span>
@@ -718,7 +722,7 @@
 </section>
 <!-- ======== カスタム関数の登録手順 ======== -->
 <section class="method-section">
-<h2>カスタム関数の登録手順</h2>
+<h2 id="sec-14">カスタム関数の登録手順</h2>
 <div class="pq-step-box-red">
 <h3 class="pq-step-title-red">手順</h3>
 <p><strong>①</strong> [データ] &rarr; [データの取得] &rarr; [その他のデータソースから] &rarr; [空のクエリ]</p>
@@ -729,7 +733,7 @@
 </section>
 <!-- ======== エンコーディング ======== -->
 <section class="method-section">
-<h2>エンコーディングとコードページ</h2>
+<h2 id="sec-15">エンコーディングとコードページ</h2>
 <table class="compare-table">
 <thead><tr><th>エンコーディング</th><th>コードページ</th><th>全角1文字</th><th>備考</th></tr></thead>
 <tbody>
@@ -741,7 +745,7 @@
 </section>
 <!-- ======== トラブルシューティング ======== -->
 <section class="method-section">
-<h2>🔧 よくあるトラブル</h2>
+<h2 id="sec-16">🔧 よくあるトラブル</h2>
 <div class="pq-step-box-red">
 <h3 class="pq-step-title-red">文字化けする</h3>
 <p>全角文字の途中を切り出している可能性があります。開始位置と長さをレイアウト仕様書・実データで確認し、文字の途中を避けてください。先行する半角文字や末尾スペースによって開始位置・項目長は奇数にもなるため、偶数・奇数だけでは判断できません。</p>
@@ -757,7 +761,7 @@
 </section>
 <!-- ======== 対応表 ======== -->
 <section class="method-section">
-<h2>Excel関数 &harr; パワークエリ 対応表</h2>
+<h2 id="sec-17">Excel関数 &harr; パワークエリ 対応表</h2>
 <table class="format-table">
 <thead><tr><th>処理</th><th>Excel関数</th><th>パワークエリ</th></tr></thead>
 <tbody>
@@ -777,7 +781,7 @@
 </section>
 <!-- ======================== まとめ ======================== -->
 <section class="tips-section" style="background:#fcfcfc;">
-<h2>🎯 まとめ</h2>
+<h2 id="sec-18">🎯 まとめ</h2>
 <p>パワークエリでCOBOL帳票を処理する際、<strong>自作関数が必要になるのは「半角と全角が混在するフィールドを区切り文字なしでバイト位置だけで切り分ける」ケースだけ</strong>です。それ以外の処理 &horbar; 半角のみデータの切り出し、文字数ベースの切り出し、行種判定フラグ、目印ベースの相対切り出し、不要行除去、フィルダウン、2行&rarr;1行結合、複数ファイル結合 &horbar; はすべて標準機能で対応できます。</p>
 <p>ただし、Power Query はそもそも固定長テキストの分解を想定した設計ではないため、COBOL帳票の処理には工夫が必要です。そして<strong>前半のテクニックと後半の fx_MIDB（自作関数）は別物ではなく、組み合わせて使うのが実務の基本</strong>です。行種判定（パターンB）で明細行だけに絞り、不要行除去（パターンC）でゴミ行を消し、fx_MIDB（自作関数）でフィールド分解する &horbar; この一連の流れが COBOL 帳票処理のパワークエリにおける定番パイプラインです。</p>
 <div class="pq-step-box" style="border-left-color: #66bb6a;">
@@ -807,7 +811,7 @@
            ★★★ 参考情報 ★★★
       ================================================================ -->
 <section class="method-section">
-<h2 style="color: #616161; border-bottom: 2px solid #bdbdbd; padding-bottom: 8px;">参考情報</h2>
+<h2 id="sec-19" style="color: #616161; border-bottom: 2px solid #bdbdbd; padding-bottom: 8px;">参考情報</h2>
 <div class="ref-box">
 <h3>参考：区切り文字がある場合 &rarr; 列の分割（区切り記号）で全角混在でもそのまま分割可能</h3>
 <p>フィールド間にカンマ、タブ、スペース連続、パイプ（|）などの区切り文字がある場合は、パワークエリの「列の分割（区切り記号）」だけで全角混在でも処理できます。バイト位置の計算自体が不要になるためです。</p>
@@ -845,7 +849,7 @@
   </p>
 </footer>
 
-<script src="../../script.js?v=20261101"></script>
+<script src="../../script.js?v=20261103"></script>
 </body>
 </html>
 

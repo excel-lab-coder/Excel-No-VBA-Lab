@@ -26,12 +26,14 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
-<link href="../../common.css?v=20261101" rel="stylesheet">
-<link href="../../article.css?v=20261101" rel="stylesheet">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
 
 
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-23", "dateModified": "2026-04-23", "headline":"集計とピボット ― グループ化・ピボット・ピボット解除","description":"Power Queryのグループ化（カテゴリ別集計）、ピボット（縦→横変換）、ピボット解除（横→縦変換）をGUI中心に徹底解説。INDEX+INT+MOD式の代替も紹介。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_group_pivot.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -40,6 +42,7 @@
 <header class="site-header"><div class="header-inner"><div class="header-brand">
 <div class="site-title"><a href="../../">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
 </div></div></header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/" aria-current="true">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../powerquery/">パワークエリ</a><span>&gt;</span><strong>集計とピボット</strong></div>
@@ -48,13 +51,14 @@
 <div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
 <h1 class="article-title">集計とピボット &horbar; グループ化・ピボット・ピボット解除</h1>
 </div>
+<details class="auto-toc" open><summary>目次（6項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">このページのゴール</a></li><li><a href="#sec-2">グループ化 &horbar; カテゴリ別に集計する</a></li><li><a href="#sec-3">ピボット列 &horbar; 縦持ちデータを横持ちに変換する</a></li><li><a href="#sec-4">ピボット解除 &horbar; 横持ちデータを縦持ちに変換する</a></li><li><a href="#sec-5">実践例 &horbar; 月別クロス表を受け取ってピボットテーブル用に整形</a></li><li><a href="#sec-6">まとめ</a></li></ol></nav></details>
 <section id="goal">
-<h2>このページのゴール</h2>
+<h2 id="sec-1">このページのゴール</h2>
 <p>Power Queryの3大データ形状変換機能 &horbar;「グループ化」「ピボット列」「ピボット列の解除」&horbar; を理解し、縦持ちデータ（トランザクション形式）と横持ちデータ（クロス集計形式）を自在に変換できるようになることです。</p>
 </section>
 <!-- ==================== グループ化 ==================== -->
 <section id="groupby">
-<h2>グループ化 &horbar; カテゴリ別に集計する</h2>
+<h2 id="sec-2">グループ化 &horbar; カテゴリ別に集計する</h2>
 <p>ExcelのSUMIFS / COUNTIFS関数をテーブル全体に適用するイメージです。ピボットテーブルの「行ラベル＋値」と同じ結果を、Power Query内で作れます。</p>
 <h3>サンプルデータ</h3>
 <table class="ba-table">
@@ -127,7 +131,7 @@
 </section>
 <!-- ==================== ピボット列 ==================== -->
 <section id="pivot">
-<h2>ピボット列 &horbar; 縦持ちデータを横持ちに変換する</h2>
+<h2 id="sec-3">ピボット列 &horbar; 縦持ちデータを横持ちに変換する</h2>
 <p>グループ化で得た縦持ちの集計結果を、クロス集計表（横持ち）の形に変えたいときに使います。</p>
 <h3>サンプル（Before）</h3>
 <table class="ba-table">
@@ -162,7 +166,7 @@
 </section>
 <!-- ==================== ピボット解除 ==================== -->
 <section id="unpivot">
-<h2>ピボット解除 &horbar; 横持ちデータを縦持ちに変換する</h2>
+<h2 id="sec-4">ピボット解除 &horbar; 横持ちデータを縦持ちに変換する</h2>
 <p>これはピボット列の逆操作です。実務では横に月が並んだクロス集計表を受け取ることが多く、これを分析しやすい縦持ちデータに変換する場面で活躍します。Excelの関数だけでこれをやろうとすると INDEX + INT + MOD の難解な式が必要でしたが、Power Queryなら数クリックです。</p>
 <h3>サンプル（Before &horbar; よくある月別クロス集計）</h3>
 <table class="ba-table">
@@ -208,7 +212,7 @@
 </section>
 <!-- ==================== 実践例 ==================== -->
 <section id="practice">
-<h2>実践例 &horbar; 月別クロス表を受け取ってピボットテーブル用に整形</h2>
+<h2 id="sec-5">実践例 &horbar; 月別クロス表を受け取ってピボットテーブル用に整形</h2>
 <div class="step-box">
 <h4 aria-level="3">Step 1：ピボット解除</h4>
 <p>「商品」列を選択 &rarr; 変換 &rarr; その他の列のピボット解除</p>
@@ -224,7 +228,7 @@
 <p>たった3ステップで、横持ちのクロス表を縦持ちに変換し、さらに商品別の合計まで出せました。</p>
 </section>
 <section id="summary">
-<h2>まとめ</h2>
+<h2 id="sec-6">まとめ</h2>
 <p><strong>グループ化</strong>はSUMIFS的な集計をテーブル全体に適用する操作で、「詳細」モードなら複数キー&times;複数集計も可能です。<strong>ピボット列</strong>は縦持ちデータを横持ちに変換し、<strong>ピボット解除</strong>は横持ちを縦持ちに戻します。特にピボット解除では「その他の列のピボット解除」を使うことで、列の増減に自動対応できます。これら3機能を組み合わせれば、Excel上でのデータ形状変換の悩みはほぼ解消されます。</p>
 </section>
 <nav class="nav-series">
@@ -258,7 +262,7 @@
     <a href="../../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../../script.js?v=20261101"></script>
+<script src="../../script.js?v=20261103"></script>
 </body>
 </html>
 

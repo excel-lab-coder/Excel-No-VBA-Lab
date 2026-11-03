@@ -13,21 +13,21 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="筆者が実際に検証したオプトエレクトロニクスOPI-3601・ALX-3601・L-46Xの3機種を中心に、Zebra DS2208とHoneywell Xenon 1900gで確認した範囲の特徴も補足しながら、QRリーダーの選び方・USB-HID接続・設定方法・価格帯別ガイド・購入チェックリストまで解説。 Excel QRコード作成、Excel QRリーダー連携、バーコードリーダー入力自動化を探している方向け。" name="description">
+<meta content="筆者が実際に検証したオプトエレクトロニクスOPI-3601・ALX-3601・L-46Xの3機種を中心に、Zebra DS2208とHoneywell Xenon 1900gで確認した範囲も補足し、QRリーダーの選び方・USB-HID接続・設定方法を解説します。" name="description">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/08_qr_reader_selection.html" rel="canonical">
 
 <meta content="article" property="og:type">
 <meta content="⑧ QRリーダーの選び方と接続方法 &horbar; 検証済み機種＆メーカー別特徴ガイド｜QR Automation Lab" property="og:title">
 <meta content="OPI-3601・ALX-3601・L-46Xの3機種を中心に検証。Zebra DS2208とHoneywell Xenon 1900gで確認した範囲の特徴も補足。USB-HIDの仕組みから購入前チェックまで。" property="og:description">
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/08_qr_reader_selection.html" property="og:url">
-<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="Excel &times; No VBA Lab" property="og:site_name">
 <meta content="ja_JP" property="og:locale">
 
 <meta content="summary_large_image" name="twitter:card">
 <meta content="⑧ QRリーダーの選び方と接続方法｜QR Automation Lab" name="twitter:title">
 <meta content="OPI-3601・ALX-3601・L-46Xの3機種を中心に検証。Zebra DS2208とHoneywell Xenon 1900gで確認した範囲の特徴も補足。" name="twitter:description">
-<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" name="twitter:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" name="twitter:image">
 <meta content="index, follow" name="robots">
 
 <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -36,8 +36,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
 
-<link href="../common.css?v=20261101" rel="stylesheet">
-<link href="../article.css?v=20261101" rel="stylesheet">
+<link href="../common.css?v=20261103" rel="stylesheet">
+<link href="../article.css?v=20261103" rel="stylesheet">
 
 <script type="application/ld+json">
 {
@@ -45,9 +45,9 @@
   "@type":"Article",
   "headline":"⑧ QRリーダーの選び方と接続方法 ― 検証済み機種＆メーカー別特徴ガイド",
   "description":"筆者が実際に検証したOPI-3601・ALX-3601・L-46Xを中心に、Zebra DS2208とHoneywell Xenon 1900gで筆者が確認した範囲の特徴も補足しながらQRリーダーの選び方・接続・設定を解説。",
-  "image":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png",
+  "image":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg",
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
-  "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
+  "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}},
   "datePublished":"2026-04-18",
   "dateModified":"2026-07-12",
   "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/08_qr_reader_selection.html"}
@@ -80,6 +80,7 @@
 </div>
 </div>
 </header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../#article-finder">🔍 記事を探す</a><a href="../functions/">関数</a><a href="../powerquery/">Power Query</a><a href="../cobol/">COBOL帳票</a><a href="../qr/" aria-current="true">QR入力</a><a href="../others/">現場実務</a><a href="../thinking/">技術の流れ</a><a href="../unlocked/">VBA・AI</a><a href="../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
 <div class="breadcrumb">
@@ -107,9 +108,10 @@
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
 <p style="color:#666;font-size:.88rem;">最終更新: 2026-07-12 ｜ 読了目安: 15分</p>
 </div>
+<details class="auto-toc" open><summary>目次（15項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">↵ Enter / Tab の共通整理</a></li><li><a href="#sec-2">🔥 この記事で分かること</a></li><li><a href="#sec-3">STEP 1：USB-HIDの仕組み &horbar; QRリーダーは「超高速キーボード」</a></li><li><a href="#sec-4">🎯 STEP 2：筆者検証済み3機種の比較</a></li><li><a href="#sec-5">STEP 3：本シリーズの設定項目 ＆ 各機種の対応状況</a></li><li><a href="#sec-6">STEP 4：オプトエレクトロニクスの設定方法</a></li><li><a href="#sec-7">🎯 STEP 5：接続手順</a></li><li><a href="#sec-8">STEP 6：価格帯別リーダーガイド</a></li><li><a href="#sec-9">STEP 7：接続方式の選び方</a></li><li><a href="#sec-10">STEP 8：他メーカーのリーダーについて</a></li><li><a href="#sec-11">🎯 STEP 9：購入前チェックリスト</a></li><li><a href="#sec-12">STEP 10：よくある失敗パターンと解決策</a></li><li><a href="#sec-13">STEP 11：メーカー別の考え方まとめ</a></li><li><a href="#sec-14">📝 この記事で学んだこと</a></li><li><a href="#qr-safety-title">QRリーダー連携の運用注意</a></li></ol></nav></details>
 
 <section class="method-section qr-control-guide">
-  <h2><span class="icon">↵</span> Enter / Tab の共通整理</h2>
+  <h2 id="sec-1"><span class="icon">↵</span> Enter / Tab の共通整理</h2>
   <p>QR入力では、読み取り先によって最初に試す制御を分けます。Num Enter は Excel の CHAR 関数では生成できないため、必要な場合はQRリーダー側のキー変換で確認します。</p>
   <table class="format-table">
     <thead>
@@ -125,7 +127,7 @@
 </section>
 
 <section class="goal-section">
-<h2><span class="icon">🔥</span> この記事で分かること</h2>
+<h2 id="sec-2"><span class="icon">🔥</span> この記事で分かること</h2>
 <p>
 記事①〜⑦で「QRコードに何を埋め込み、リーダーをどう設定するか」を学びました。<br>
 この記事では<strong>「どのQRリーダーを選べばいいのか」「どう接続するのか」「メーカーごとに何が違うのか」</strong>を、筆者が実際に使った機種をベースに整理します。
@@ -189,7 +191,7 @@ Keyence・デンソーウェーブなどは筆者未所有・未検証のため�
 </section>
 
 <section class="method-section">
-<h2>STEP 1：USB-HIDの仕組み &horbar; QRリーダーは「超高速キーボード」</h2>
+<h2 id="sec-3">STEP 1：USB-HIDの仕組み &horbar; QRリーダーは「超高速キーボード」</h2>
 <p>
 USB-HID（Human Interface Device）キーボードエミュレーションとは、QRリーダーをPCに接続すると<strong>「キーボードとして認識される」</strong>仕組みです。
 読み取ったQRコードの文字列を、人間がキーボードで超高速タイプしたのと同じ形でPCへ送信します。
@@ -235,7 +237,7 @@ OPI-3601 / ALX-3601 / L-46X はUSB-HIDとUSB-COMの両方に対応していま�
 </section>
 
 <section class="tips-section">
-<h2>🎯 STEP 2：筆者検証済み3機種の比較</h2>
+<h2 id="sec-4">🎯 STEP 2：筆者検証済み3機種の比較</h2>
 <p>
 以下3機種は、オプトエレクトロニクス系のリーダーです。
 ALX-3601はアルフ社のOEM版ですが、OPI-3601と近い感覚で扱えます。
@@ -470,7 +472,7 @@ Honeywellは個別の入力パターンに合わせてFormatterを作り込む�
 </section>
 
 <section class="method-section">
-<h2>STEP 3：本シリーズの設定項目 ＆ 各機種の対応状況</h2>
+<h2 id="sec-5">STEP 3：本シリーズの設定項目 ＆ 各機種の対応状況</h2>
 
 <div class="xdemo-note-info">
 <strong>ℹ️ OPI-3601 / ALX-3601の扱い:</strong><br>
@@ -584,7 +586,7 @@ Zebra DS2208は、筆者が確認した範囲では123Scan / ADFで固定順序�
 </section>
 
 <section class="method-section">
-<h2>STEP 4：オプトエレクトロニクスの設定方法</h2>
+<h2 id="sec-6">STEP 4：オプトエレクトロニクスの設定方法</h2>
 
 <h3>方法A：メニューバーコード</h3>
 <div class="flow-box">
@@ -631,7 +633,7 @@ Zebra DS2208は、筆者が確認した範囲では123Scan / ADFで固定順序�
 </section>
 
 <section class="tips-section">
-<h2>🎯 STEP 5：接続手順</h2>
+<h2 id="sec-7">🎯 STEP 5：接続手順</h2>
 
 <div class="flow-box">
 <span class="flow-step step-item">① USBをPCに接続</span>
@@ -660,7 +662,7 @@ Zebra DS2208は、筆者が確認した範囲では123Scan / ADFで固定順序�
 </section>
 
 <section class="method-section">
-<h2>STEP 6：価格帯別リーダーガイド</h2>
+<h2 id="sec-8">STEP 6：価格帯別リーダーガイド</h2>
 
 <div class="xdemo-note-warn">
 <strong>⚠️ この表の注意点:</strong>
@@ -692,7 +694,7 @@ Zebra DS2208については、筆者が確認した範囲で補足していま�
 </section>
 
 <section class="method-section">
-<h2>STEP 7：接続方式の選び方</h2>
+<h2 id="sec-9">STEP 7：接続方式の選び方</h2>
 
 <table class="format-table">
 <tr><th>項目</th><th>USB有線</th><th>Bluetooth</th><th>2.4GHz無線ドングル</th></tr>
@@ -709,7 +711,7 @@ Zebra DS2208については、筆者が確認した範囲で補足していま�
 </section>
 
 <section class="method-section">
-<h2>STEP 8：他メーカーのリーダーについて</h2>
+<h2 id="sec-10">STEP 8：他メーカーのリーダーについて</h2>
 
 <div class="xdemo-note-danger">
 <strong>⚠️ 重要：他メーカー情報の扱いについて</strong><br>
@@ -896,7 +898,7 @@ Keyence・デンソーウェーブなどは現時点では未検証のため、�
 </section>
 
 <section class="tips-section">
-<h2>🎯 STEP 9：購入前チェックリスト</h2>
+<h2 id="sec-11">🎯 STEP 9：購入前チェックリスト</h2>
 
 <table class="check-table">
 <tr><th>#</th><th>チェック項目</th><th>確認内容</th><th>重要度</th></tr>
@@ -914,7 +916,7 @@ Keyence・デンソーウェーブなどは現時点では未検証のため、�
 </section>
 
 <section class="method-section">
-<h2>STEP 10：よくある失敗パターンと解決策</h2>
+<h2 id="sec-12">STEP 10：よくある失敗パターンと解決策</h2>
 
 <table class="format-table">
 <tr><th>#</th><th>症状</th><th>原因</th><th>解決策</th><th>関連</th></tr>
@@ -929,7 +931,7 @@ Keyence・デンソーウェーブなどは現時点では未検証のため、�
 </section>
 
 <section class="method-section">
-<h2>STEP 11：メーカー別の考え方まとめ</h2>
+<h2 id="sec-13">STEP 11：メーカー別の考え方まとめ</h2>
 
 <table class="format-table">
 <tr><th>メーカー</th><th>向いている考え方</th><th>注意点</th></tr>
@@ -992,7 +994,7 @@ Data Formatterで細かく作り込む方向に向いています。
 </section>
 
 <section class="method-section">
-<h2>📝 この記事で学んだこと</h2>
+<h2 id="sec-14">📝 この記事で学んだこと</h2>
 
 <table class="format-table">
 <tr><th>項目</th><th>内容</th></tr>
@@ -1113,6 +1115,6 @@ Tab、Enter、ファンクションキー、待機時間を組み合わせると
   </p>
 </footer>
 
-<script src="../script.js?v=20261101"></script>
+<script src="../script.js?v=20261103"></script>
 </body>
 </html>

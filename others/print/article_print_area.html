@@ -21,8 +21,8 @@
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_print_area.html" rel="canonical">
-<link href="../../common.css?v=20261101-images" rel="stylesheet">
-<link href="../../article.css?v=20261101" rel="stylesheet">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
@@ -93,6 +93,8 @@
 
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-23", "dateModified": "2026-11-02", "headline":"🖨️ Excelの印刷範囲を数式で自動可変にする方法","description":"ExcelでVBAを使わずに印刷範囲を自動伸縮させる方法。名前の管理と数式でデータ量に応じてPrint_Areaが自動で広がる仕組みを解説。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_print_area.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -106,6 +108,7 @@
 </div>
 </div>
 </header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/" aria-current="true">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
 <div class="breadcrumb">
@@ -123,11 +126,12 @@
 <h1 class="article-title">🖨️ Excelの印刷範囲を数式で自動可変にする方法</h1>
 <p style="color:#555;margin-top:.3em">Print_Area &times; 数式で"データがある所まで"を自動認識させるテクニック</p>
 </div>
+<details class="auto-toc" open><summary>目次（10項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 はじめに &horbar; 固定の印刷範囲が起こす問題</a></li><li><a href="#sec-2">基本：Print_Area に数式を入れる手順</a></li><li><a href="#sec-3">数式バリエーション（3種）</a></li><li><a href="#sec-4">⚠️ 最大の落とし穴 &horbar; 名前の管理の罠</a></li><li><a href="#sec-5">📄 活用例①：案内文書の差し込み印刷をExcelだけで実現</a></li><li><a href="#sec-6">🏷️ 活用例②：ラベル印刷で無駄な空白を印刷しない</a></li><li><a href="#sec-7">応用カスタマイズ</a></li><li><a href="#verify">確認した環境と検証結果</a></li><li><a href="#sec-9">トラブルシューティング</a></li><li><a href="#sec-10">まとめ</a></li></ol></nav></details>
 <!-- ======================================================= -->
 <!-- はじめに -->
 <!-- ======================================================= -->
 <section class="goal-section">
-<h2><span class="icon">💡</span> はじめに &horbar; 固定の印刷範囲が起こす問題</h2>
+<h2 id="sec-1"><span class="icon">💡</span> はじめに &horbar; 固定の印刷範囲が起こす問題</h2>
 <p>Excelで印刷範囲を手動設定していると、データの増減に追従できず「空白ページが大量に出る」「最新データが切れる」といった問題が頻発します。</p>
 <p>本記事では<strong>Print_Area（印刷範囲の名前定義）に数式を直接入力</strong>して、常に"最終データのある行まで"を印刷範囲にする方法を解説します。さらに、この仕組みを応用した<strong>案内文書の差し込み印刷風テクニック</strong>や<strong>ラベル印刷の無駄紙削減</strong>も詳しく紹介します。</p>
 </section>
@@ -135,7 +139,7 @@
 <!-- 基本手順 -->
 <!-- ======================================================= -->
 <section class="method-section">
-<h2>基本：Print_Area に数式を入れる手順</h2>
+<h2 id="sec-2">基本：Print_Area に数式を入れる手順</h2>
 <p>ここでは「売上一覧」シートの A〜E列にデータがあり、3行目からデータが始まる場合を例にします。</p>
 <div class="excel-wrap" id="ex-basic">
 <div class="excel-sheet active" data-sheet="売上一覧">
@@ -163,7 +167,7 @@
 <!-- 数式バリエーション -->
 <!-- ======================================================= -->
 <section class="tips-section">
-<h2>数式バリエーション（3種）</h2>
+<h2 id="sec-3">数式バリエーション（3種）</h2>
 <h3>① XLOOKUP + INDEX版（Microsoft 365 推奨）</h3>
 <div class="formula-box"><span class="func">=売上一覧!$A$3:INDEX(売上一覧!$A:$E,<br>　　MAX(3, XLOOKUP(TRUE,INDEX(売上一覧!$B:$B&lt;&gt;"",0),<br>　　ROW(売上一覧!$B:$B),,0,-1)),5)</span></div>
 <p>B列を下から検索して最後の非空白セルの行番号を取得し、A3からその行のE列までを範囲とします。XLOOKUPの第5引数 <code>-1</code>（逆方向検索）がポイントです。データが0件のときは見出しの2行目が見つかるため、<code>MAX(3, &hellip;)</code> で最低でも3行目（空の1行）までにして、範囲が見出しにかからないようにしています。</p>
@@ -192,7 +196,7 @@
 <!-- 落とし穴 -->
 <!-- ======================================================= -->
 <section class="method-section">
-<h2>⚠️ 最大の落とし穴 &horbar; 名前の管理の罠</h2>
+<h2 id="sec-4">⚠️ 最大の落とし穴 &horbar; 名前の管理の罠</h2>
 <p>Print_Areaに数式を入れた後でも、<strong>「ページレイアウト &rarr; 印刷範囲の設定」を実行すると数式が上書き</strong>されます。</p>
 <div class="xdemo-note-danger">
 <strong>⚠️ やってはいけないこと：</strong>数式設定後に「印刷範囲の設定」ボタンを押す &rarr; 数式が消えて固定範囲に戻ります。変更は必ず「名前の管理」から。
@@ -205,7 +209,7 @@
 <!-- 活用例①：案内文書 -->
 <!-- ======================================================= -->
 <section class="method-section">
-<h2>📄 活用例①：案内文書の差し込み印刷をExcelだけで実現</h2>
+<h2 id="sec-5">📄 活用例①：案内文書の差し込み印刷をExcelだけで実現</h2>
 <p>Wordの差し込み印刷やVBAを使わなくても、<strong>Excelの数式とスピンボタンだけ</strong>で差し込み印刷を実現できます。IF関数で条件分岐を埋め込めば宛先ごとに文面を変える管理もでき、<strong>Excelならではの柔軟さ</strong>を最大限に活かせます。</p>
 <div class="xdemo-note-good">
 <strong>💡 メリット：</strong>VBA不要・Word連携不要。Excelの基本機能だけで差し込み印刷とほぼ同等のことが実現。10枚/50枚単位のバッチ印刷で数百件もスムーズに処理可能。さらに、<strong>Wordの差し込み印刷の操作を知らない人にファイルを渡しても</strong>、スピンボタンを押して印刷するだけなので誰でも使えます。「差し込み印刷のやり方を教える」手間がなくなるのも大きな利点です。
@@ -389,7 +393,7 @@
 <!-- 活用例②：ラベル印刷 -->
 <!-- ======================================================= -->
 <section class="tips-section">
-<h2>🏷️ 活用例②：ラベル印刷で無駄な空白を印刷しない</h2>
+<h2 id="sec-6">🏷️ 活用例②：ラベル印刷で無駄な空白を印刷しない</h2>
 <p>市販の<strong>10面ラベルシール</strong>（A4用紙1枚にラベルが10面印刷されている用紙）を使う場合、データが15件なら<strong>シール2枚目の5面目まで</strong>で印刷を止め、データがないシール3枚目は印刷したくない&horbar;&horbar;というのは自然な要求です。</p>
 <h3>考え方：シール1枚＝1ページ単位で印刷範囲を切る</h3>
 <p>1面あたり5行、左右2列 &times; 5段 = 10面なので、5行 &times; 5段 = <strong>25行で1ページ</strong>（＝シール1枚分）。個々のラベル単位ではなく<strong>ページ単位（25行区切り）</strong>で印刷範囲を決定します。あるページ内にデータが1件でもあればそのシール全体を印刷し、データが1件もないページは対象外にします。</p>
@@ -527,7 +531,7 @@
 <!-- 応用カスタマイズ -->
 <!-- ======================================================= -->
 <section class="method-section">
-<h2>応用カスタマイズ</h2>
+<h2 id="sec-7">応用カスタマイズ</h2>
 <h3>列数を動的に変える</h3>
 <p>最終列もデータに応じて変えたい場合は、INDEXの列番号部分にもCOUNTAを組み合わせます。</p>
 <h3>CEILINGでページ単位に切り上げ</h3>
@@ -546,7 +550,7 @@
 <p>この記事の活用例（案内文書・10面ラベル）の数式は、<a href="article_mail_print.html">案内文書の記事</a>と<a href="article_label_print.html">10面ラベルの記事</a>で同じ形の式を検証しています（列の範囲だけが異なります）。</p>
 </section>
 <section class="tips-section">
-<h2>トラブルシューティング</h2>
+<h2 id="sec-9">トラブルシューティング</h2>
 <h3>「印刷範囲の設定」を押して数式が消えた</h3>
 <p>離れたセルに残しておいたバックアップの数式をコピーし、名前の管理でPrint_Areaの参照範囲に貼り付けて復旧。バックアップがない場合は本記事の数式を参考に再設定してください。</p>
 <h3>印刷プレビューで範囲がおかしい</h3>
@@ -562,7 +566,7 @@
 <!-- まとめ -->
 <!-- ======================================================= -->
 <section class="goal-section">
-<h2>まとめ</h2>
+<h2 id="sec-10">まとめ</h2>
 <div class="xdemo-note-good" style="font-size:.95em">
 <strong>✅ Print_Area &times; 数式 の3つの活用パターン</strong><br><br>
 <strong>① 基本：</strong>データの最終行まで自動で印刷範囲を調整。空白ページの排除・データ切れの防止。<br><br>
@@ -607,7 +611,7 @@
     }
   }
   </script>
-<script src="../../script.js?v=20261101"></script>
+<script src="../../script.js?v=20261103"></script>
 </body>
 </html>
 

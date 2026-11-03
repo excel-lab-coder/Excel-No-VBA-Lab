@@ -25,12 +25,14 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
-<link href="../../common.css?v=20261101" rel="stylesheet">
-<link href="../../article.css?v=20261101" rel="stylesheet">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
 
 
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-23", "dateModified": "2026-04-23", "headline":"テキスト列を整形する ― 書式・置換・トリム・抽出・分割・マージ","description":"Power Queryでテキスト列を整形する方法を完全解説。トリム・クリーン・大文字小文字・値の置換・抽出（先頭/末尾/範囲/区切り文字）・列の分割・列のマージをGUI操作中心に、Before/After付きで丁寧に解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_text_operations.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -39,6 +41,7 @@
 <header class="site-header"><div class="header-inner"><div class="header-brand">
 <div class="site-title"><a href="../../">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
 </div></div></header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/" aria-current="true">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../powerquery/">パワークエリ</a><span>&gt;</span><strong>テキスト列を整形する</strong></div>
@@ -47,14 +50,15 @@
 <div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
 <h1 class="article-title">テキスト列を整形する &horbar; 書式・置換・トリム・抽出・分割・マージ</h1>
 </div>
+<details class="auto-toc" open><summary>目次（11項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">このページのゴール</a></li><li><a href="#sec-2">大前提：「変換」タブ vs 「列の追加」タブ</a></li><li><a href="#sec-3">トリムとクリーン &horbar; 見えないゴミを取り除く</a></li><li><a href="#sec-4">書式変換 &horbar; 大文字・小文字・その他</a></li><li><a href="#sec-5">値の置換 &horbar; 文字列の検索と置き換え</a></li><li><a href="#sec-6">抽出 &horbar; 文字列の一部を取り出す</a></li><li><a href="#sec-7">列の分割 &horbar; 1つの列を複数に分ける</a></li><li><a href="#sec-8">列のマージ &horbar; 複数の列を1つに結合する</a></li><li><a href="#sec-9">Excel関数との対応まとめ</a></li><li><a href="#sec-10">実践例 &horbar; CSV住所録のクリーニング</a></li><li><a href="#sec-11">まとめ</a></li></ol></nav></details>
 <!-- ============================== -->
 <section id="goal">
-<h2>このページのゴール</h2>
+<h2 id="sec-1">このページのゴール</h2>
 <p>Power Queryの「変換」タブと「列の追加」タブにあるテキスト操作機能を網羅的に理解し、「Excel関数でいうとどれに対応するか」を把握した上で、GUIだけで目的の加工ができるようになることです。</p>
 </section>
 <!-- ============================== -->
 <section id="tab-difference">
-<h2>大前提：「変換」タブ vs 「列の追加」タブ</h2>
+<h2 id="sec-2">大前提：「変換」タブ vs 「列の追加」タブ</h2>
 <p>テキスト操作のボタン（書式、抽出、分割など）は「変換」タブと「列の追加」タブの両方にあります。前ページでも触れましたが、この違いはテキスト操作で特に重要です。</p>
 <table class="ref-table">
 <thead><tr><th>タブ</th><th>動作</th><th>使いどころ</th></tr></thead>
@@ -67,7 +71,7 @@
 </section>
 <!-- ============================== -->
 <section id="trim-clean">
-<h2>トリムとクリーン &horbar; 見えないゴミを取り除く</h2>
+<h2 id="sec-3">トリムとクリーン &horbar; 見えないゴミを取り除く</h2>
 <p>Excelの TRIM関数・CLEAN関数 に対応する機能です。データベースやWebから取り込んだデータには、目に見えない余計な空白や制御文字（改行コードなど）が含まれていることが非常に多く、これを放置すると VLOOKUP に相当するマージ操作で一致しない原因になります。</p>
 <h3>トリミング &horbar; 先頭と末尾の空白を除去</h3>
 <div class="step-box">
@@ -114,7 +118,7 @@
 </section>
 <!-- ============================== -->
 <section id="format">
-<h2>書式変換 &horbar; 大文字・小文字・その他</h2>
+<h2 id="sec-4">書式変換 &horbar; 大文字・小文字・その他</h2>
 <p>アルファベットの大文字・小文字を揃えたり、プレフィックス/サフィックスを追加したりする操作です。</p>
 <table class="ref-table">
 <thead><tr><th>GUI操作</th><th>Excel関数の対応</th><th>動作</th><th>例：入力 &rarr; 出力</th></tr></thead>
@@ -136,7 +140,7 @@
 </section>
 <!-- ============================== -->
 <section id="replace">
-<h2>値の置換 &horbar; 文字列の検索と置き換え</h2>
+<h2 id="sec-5">値の置換 &horbar; 文字列の検索と置き換え</h2>
 <p>ExcelのSUBSTITUTE関数に対応する機能です。ExcelのSUBSTITUTEと同様に、セル全体ではなく文字列の一部を置き換えます。</p>
 <div class="step-box">
 <h4 aria-level="3">操作手順</h4>
@@ -161,7 +165,7 @@
 </section>
 <!-- ============================== -->
 <section id="extract">
-<h2>抽出 &horbar; 文字列の一部を取り出す</h2>
+<h2 id="sec-6">抽出 &horbar; 文字列の一部を取り出す</h2>
 <p>ExcelのLEFT・RIGHT・MID関数に相当する操作です。「変換」タブの「抽出」で実行すると元の列が書き換わり、「列の追加」タブの「テキストから抽出」で実行すると新しい列ができます。</p>
 <table class="ref-table">
 <thead><tr><th>メニュー</th><th>Excel関数の対応</th><th>パラメータ</th><th>例</th></tr></thead>
@@ -225,7 +229,7 @@
 </section>
 <!-- ============================== -->
 <section id="split">
-<h2>列の分割 &horbar; 1つの列を複数に分ける</h2>
+<h2 id="sec-7">列の分割 &horbar; 1つの列を複数に分ける</h2>
 <p>ExcelではLEFT + MID + FIND の複雑な組み合わせで行っていた「列の分割」が、Power QueryではGUIだけで完了します。</p>
 <h3>区切り文字で分割する</h3>
 <div class="step-box">
@@ -273,7 +277,7 @@
 </section>
 <!-- ============================== -->
 <section id="merge-columns">
-<h2>列のマージ &horbar; 複数の列を1つに結合する</h2>
+<h2 id="sec-8">列のマージ &horbar; 複数の列を1つに結合する</h2>
 <p>Excel の CONCATENATE関数 や & 演算子 に対応する操作です。姓と名を1列にまとめたり、年・月・日の列を結合して日付文字列にしたりする場面で使います。</p>
 <div class="step-box">
 <h4 aria-level="3">操作手順</h4>
@@ -312,7 +316,7 @@
 </section>
 <!-- ============================== -->
 <section id="excel-comparison">
-<h2>Excel関数との対応まとめ</h2>
+<h2 id="sec-9">Excel関数との対応まとめ</h2>
 <p>ここまでの内容を、Excel関数との対応表にまとめます。ブックマークしておくと便利です。</p>
 <table class="ref-table">
 <thead>
@@ -335,7 +339,7 @@
 </section>
 <!-- ============================== -->
 <section id="practice">
-<h2>実践例 &horbar; CSV住所録のクリーニング</h2>
+<h2 id="sec-10">実践例 &horbar; CSV住所録のクリーニング</h2>
 <p>あるCSVから取り込んだ住所録データを、テキスト操作だけで綺麗に整えてみましょう。</p>
 <h3>Before（取り込んだ生データ）</h3>
 <table class="ba-table">
@@ -376,7 +380,7 @@
 </section>
 <!-- ============================== -->
 <section id="summary">
-<h2>まとめ</h2>
+<h2 id="sec-11">まとめ</h2>
 <p>テキスト操作はPower Queryで最も使用頻度が高い変換カテゴリです。このページで紹介した操作を整理すると、大きく4つのグループに分けられます。</p>
 <p><strong>クリーニング系</strong>（トリミング・クリーニング）は、データを取り込んだ直後に必ず行う「衛生管理」。<strong>書式変換系</strong>（大文字・小文字・プレフィックス/サフィックス）は、表記の統一に使う。<strong>抽出・分割系</strong>（最初/最後/範囲の文字、区切り文字で分割、文字数で分割）は、1つの列から必要な情報を取り出す。<strong>結合系</strong>（列のマージ・値の置換）は、データを組み替えて使いやすい形にする。</p>
 <p>最も注意すべきは<strong>「範囲」の開始インデックスが0始まり</strong>という点と、<strong>「値の置換」は部分一致がデフォルト</strong>という点です。この2つさえ覚えておけば、テキスト操作で困ることはほとんどありません。</p>
@@ -414,6 +418,6 @@
     <a href="../../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../../script.js?v=20261101"></script>
+<script src="../../script.js?v=20261103"></script>
 </body>
 </html>

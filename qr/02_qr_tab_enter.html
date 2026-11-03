@@ -20,30 +20,30 @@
 <meta content="② Tab・Enter埋め込み実践パターン &horbar; 複数セル自動入力を完全マスター｜QR Automation Lab" property="og:title">
 <meta content="Tab・Enterの動作原理、テンキーEnter問題、初期設定の限界とその突破法まで。VBAやマクロが禁止されているExcel入力環境でも使える代替手段としてQR入力を整理します。" property="og:description">
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/02_qr_tab_enter.html" property="og:url">
-<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="Excel &times; No VBA Lab" property="og:site_name">
 <meta content="ja_JP" property="og:locale">
 <meta content="summary_large_image" name="twitter:card">
 <meta content="② Tab・Enter埋め込み実践パターン｜QR Automation Lab" name="twitter:title">
 <meta content="CHAR(9)Tab・CHAR(10)Enterの動作原理と実践パターン。マクロ禁止環境での入力自動化の代替手段として解説。" name="twitter:description">
-<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" name="twitter:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" name="twitter:image">
 <meta content="index, follow" name="robots">
 <link href="https://fonts.googleapis.com" rel="preconnect">
 <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
-<link href="../common.css?v=20261101" rel="stylesheet">
-<link href="../article.css?v=20261101" rel="stylesheet">
+<link href="../common.css?v=20261103" rel="stylesheet">
+<link href="../article.css?v=20261103" rel="stylesheet">
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
   "@type":"Article",
   "headline":"② Tab・Enter埋め込みの詳細と実践パターン ― 複数セル自動入力を完全マスター",
   "description":"QRコードにTab・Enterを埋め込み、VBAやマクロが禁止されているExcel入力環境でも複数セルへの自動入力を実現する実践テクニック。",
-  "image":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png",
+  "image":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg",
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
-  "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
+  "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}},
   "datePublished":"2026-04-17",
   "dateModified":"2026-11-01",
   "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/02_qr_tab_enter.html"}
@@ -74,6 +74,7 @@
 </div>
 </div>
 </header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../#article-finder">🔍 記事を探す</a><a href="../functions/">関数</a><a href="../powerquery/">Power Query</a><a href="../cobol/">COBOL帳票</a><a href="../qr/" aria-current="true">QR入力</a><a href="../others/">現場実務</a><a href="../thinking/">技術の流れ</a><a href="../unlocked/">VBA・AI</a><a href="../troubleshoot/">困りごと索引</a></nav>
 
 
 <main class="main-content article-layout" id="main-content">
@@ -102,9 +103,10 @@
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。VBAやマクロが禁止されているExcel環境でも、Tab/EnterをQRに埋め込めば手入力を減らせる場合があります。</p>
 <p style="color:#666;font-size:.88rem;">最終更新: 2026-07-12 ｜ 読了目安: 12分 ｜ 前提: <a href="01_qr_barcode_control.html">① QRコードでWebシステム入力を自動化</a></p>
 </div>
+<details class="auto-toc" open><summary>目次（13項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">↵ Enter / Tab の共通整理</a></li><li><a href="#sec-2">🎯 この記事のゴール</a></li><li><a href="#sec-3">📐 原理：Tab &rarr; Enter のカーソル帰還ルール</a></li><li><a href="#sec-4">⚙️ 確認必須：Excelの「Enterキー後の移動方向」設定</a></li><li><a href="#sec-5">🛠️ 実践パターン集</a></li><li><a href="#sec-6">🔥 Enterが効かない！ &horbar; 3つの原因と解決策</a></li><li><a href="#sec-7">📡 QRリーダーのサフィックス（末尾コード）設定</a></li><li><a href="#sec-8">🔄 連続スキャン運用フロー</a></li><li><a href="#sec-9">🚧 ここで「標準設定の限界」が見えてくる</a></li><li><a href="#sec-10">❓ よくある質問</a></li><li><a href="#sec-11">📝 この記事で学んだこと</a></li><li><a href="#sec-12">🔜 次に読む記事</a></li><li><a href="#qr-safety-title">QRリーダー連携の運用注意</a></li></ol></nav></details>
 
 <section class="method-section qr-control-guide">
-  <h2><span class="icon">↵</span> Enter / Tab の共通整理</h2>
+  <h2 id="sec-1"><span class="icon">↵</span> Enter / Tab の共通整理</h2>
   <p>QR入力では、読み取り先によって最初に試す制御を分けます。Num Enter は Excel の CHAR 関数では生成できないため、必要な場合はQRリーダー側のキー変換で確認します。</p>
   <table class="format-table">
     <thead>
@@ -122,7 +124,7 @@
 <!-- ゴール -->
 <!-- ========================================== -->
 <section class="goal-section">
-<h2><span class="icon">🎯</span> この記事のゴール</h2>
+<h2 id="sec-2"><span class="icon">🎯</span> この記事のゴール</h2>
 <p>
     ①ではTab用のCHAR(9)と、Enter動作の候補になるLF（CHAR(10)）・CR（CHAR(13)）を紹介しました。制御文字とキーイベントは同一ではなく、変換結果はリーダー設定で変わります。
     この記事では<strong>「なぜそう動くのか」</strong>の原理を理解し、現場で起きるトラブルを自力で解決できるレベルまで引き上げます。
@@ -141,7 +143,7 @@
 <!-- Tab→Enterの動作原理 -->
 <!-- ========================================== -->
 <section class="method-section">
-<h2>📐 原理：Tab &rarr; Enter のカーソル帰還ルール</h2>
+<h2 id="sec-3">📐 原理：Tab &rarr; Enter のカーソル帰還ルール</h2>
 <p>
     QRスキャンで複数セルに入力するとき、最も重要なのは<strong>「Enter を押したらカーソルがどこに戻るか」</strong>です。
     これを理解しないと、2行目以降のデータがずれます。
@@ -200,7 +202,7 @@ QRリーダーはPCから見るとキーボードとして動作するため、E
 <!-- Excelの設定 -->
 <!-- ========================================== -->
 <section class="method-section">
-<h2>⚙️ 確認必須：Excelの「Enterキー後の移動方向」設定</h2>
+<h2 id="sec-4">⚙️ 確認必須：Excelの「Enterキー後の移動方向」設定</h2>
 <p>
     ファイル &rarr; オプション &rarr; 詳細設定 &rarr; 「Enterキーを押した後にセルを移動する」のチェックと方向が、QR入力の動作に影響します。
   </p>
@@ -243,7 +245,7 @@ QRリーダーはPCから見るとキーボードとして動作するため、E
 <!-- 実践パターン -->
 <!-- ========================================== -->
 <section class="tips-section">
-<h2>🛠️ 実践パターン集</h2>
+<h2 id="sec-5">🛠️ 実践パターン集</h2>
 <p>現場でよくある入力レイアウトに合わせたパターンを紹介します。①の基本パターンの発展形です。</p>
 <!-- パターンA -->
 <div class="scenario-card">
@@ -358,7 +360,7 @@ QRリーダーはPCから見るとキーボードとして動作するため、E
 <!-- Enterが効かない問題 -->
 <!-- ========================================== -->
 <section class="tips-section">
-<h2>🔥 Enterが効かない！ &horbar; 3つの原因と解決策</h2>
+<h2 id="sec-6">🔥 Enterが効かない！ &horbar; 3つの原因と解決策</h2>
 <p>「Tabは動くのにEnterだけ効かない」は現場で最も多いトラブルです。原因は3パターンに絞られます。</p>
 <table class="format-table">
 <tr>
@@ -428,7 +430,7 @@ QRリーダーはPCから見るとキーボードとして動作するため、E
 <!-- リーダーのサフィックス設定 -->
 <!-- ========================================== -->
 <section class="method-section">
-<h2>📡 QRリーダーのサフィックス（末尾コード）設定</h2>
+<h2 id="sec-7">📡 QRリーダーのサフィックス（末尾コード）設定</h2>
 <p>
     多くの業務用QRリーダーは、読み取りデータの末尾に自動で付加する「サフィックス（接尾辞）」を設定できます。
     QRデータ側のCHAR(10)に加えて、リーダー側でもEnterを付けると<strong>二重Enter</strong>になるので注意が必要です。
@@ -471,7 +473,7 @@ QRリーダーはPCから見るとキーボードとして動作するため、E
 <!-- 連続スキャンの運用フロー -->
 <!-- ========================================== -->
 <section class="method-section">
-<h2>🔄 連続スキャン運用フロー</h2>
+<h2 id="sec-8">🔄 連続スキャン運用フロー</h2>
 <p>実際の現場では、同じ形式のQRを何枚も連続でスキャンします。スムーズに回すためのフローを整理します。</p>
 <table class="format-table">
 <tr><th style="width:10%">手順</th><th class="w-30">操作</th><th>ポイント</th></tr>
@@ -489,7 +491,7 @@ QRリーダーはPCから見るとキーボードとして動作するため、E
 <!-- ★ 標準設定の限界と突破法 ★ -->
 <!-- ========================================== -->
 <section class="tips-section">
-<h2>🚧 ここで「標準設定の限界」が見えてくる</h2>
+<h2 id="sec-9">🚧 ここで「標準設定の限界」が見えてくる</h2>
 <p>
     ここまで読んで、実際にQRスキャン入力を試した方は、おそらく以下のような壁にぶつかっているはずです。
   </p>
@@ -546,7 +548,7 @@ QRリーダーはPCから見るとキーボードとして動作するため、E
 <!-- よくある質問 -->
 <!-- ========================================== -->
 <section class="tips-section">
-<h2>❓ よくある質問</h2>
+<h2 id="sec-10">❓ よくある質問</h2>
 <div class="scenario-card">
 <h4 aria-level="3">Q. セル内改行（Alt+Enter）はQRに入れられますか？</h4>
 <p>Excelのセル内改行はLFとして保存されますが、QR内のLFがAlt+Enterのキー操作になるとは限りません。USB-HIDリーダーがLFをEnterへ変換する設定では、セルの確定や移動になります。Alt+Enterを送るキー設定、セル編集モード、入力先の対応を個別に確認してください。Webフォームの複数行入力欄でLFを使う話とは区別します。</p>
@@ -572,7 +574,7 @@ QRリーダーはPCから見るとキーボードとして動作するため、E
 <!-- まとめ -->
 <!-- ========================================== -->
 <section class="method-section">
-<h2>📝 この記事で学んだこと</h2>
+<h2 id="sec-11">📝 この記事で学んだこと</h2>
 <table class="format-table">
 <tr><th>項目</th><th>内容</th></tr>
 <tr><td>Tab&rarr;Enter帰還ルール</td><td>既定設定でTab入力後にEnterを押すと次行の開始位置へ戻る。QR入力での再現は実機確認</td></tr>
@@ -590,7 +592,7 @@ QRリーダーはPCから見るとキーボードとして動作するため、E
 <!-- 次へのナビ -->
 <!-- ========================================== -->
 <section class="method-section" style="background:#f0f4c3;border:2px solid #827717;border-radius:10px;padding:24px;">
-<h2 style="color:#33691e;margin-top:0;">🔜 次に読む記事</h2>
+<h2 id="sec-12" style="color:#33691e;margin-top:0;">🔜 次に読む記事</h2>
 <table class="key-table" style="background:#fff;">
 <tr><th>あなたの状況</th><th>次に読むべき記事</th></tr>
 <tr>
@@ -679,7 +681,7 @@ QRリーダーはPCから見るとキーボードとして動作するため、E
     <a href="../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../script.js?v=20261101"></script>
+<script src="../script.js?v=20261103"></script>
 
 </body>
 </html>

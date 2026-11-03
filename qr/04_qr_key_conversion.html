@@ -14,36 +14,36 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="QRリーダーのキー変換（リマップ）機能で、CHAR関数では不可能なテンキーEnter・ファンクションキー・矢印キーをQRコードから送信する方法を詳しく解説。 Excel QRコード作成、Excel QRリーダー連携、バーコードリーダー入力自動化を探している方向け。" name="description">
+<meta content="QRリーダーのキー変換（リマップ）機能で、CHAR関数では不可能なテンキーEnter・ファンクションキー・矢印キーをQRコードから送信する方法を詳しく解説。" name="description">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/04_qr_key_conversion.html" rel="canonical">
 <meta content="article" property="og:type">
 <meta content="④ キー変換テクニック &horbar; テンキーEnter・FキーをQRから送る｜QR Automation Lab" property="og:title">
 <meta content="リーダーのキー変換機能でASCIIの壁を突破。テンキーEnter・F2・矢印キーをQRから送信する方法。" property="og:description">
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/04_qr_key_conversion.html" property="og:url">
-<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="Excel &times; No VBA Lab" property="og:site_name">
 <meta content="ja_JP" property="og:locale">
 <meta content="summary_large_image" name="twitter:card">
 <meta content="④ キー変換テクニック｜QR Automation Lab" name="twitter:title">
 <meta content="テンキーEnter・ファンクションキーをQRから送信。リーダーのキー変換機能を完全解説。" name="twitter:description">
-<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" name="twitter:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" name="twitter:image">
 <meta content="index, follow" name="robots">
 <link href="https://fonts.googleapis.com" rel="preconnect">
 <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
-<link href="../common.css?v=20261101" rel="stylesheet">
-<link href="../article.css?v=20261101" rel="stylesheet">
+<link href="../common.css?v=20261103" rel="stylesheet">
+<link href="../article.css?v=20261103" rel="stylesheet">
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
   "@type":"Article",
   "headline":"④ QRコード → キー変換テクニック ― テンキーEnter・ファンクションキーをQRから送る",
   "description":"QRリーダーのキー変換機能でCHAR関数では不可能なテンキーEnter・ファンクションキー・矢印キーをQRから送信する方法。",
-  "image":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png",
+  "image":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg",
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
-  "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}},
+  "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}},
   "datePublished":"2026-04-18",
   "dateModified":"2026-07-12",
   "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/04_qr_key_conversion.html"}
@@ -74,6 +74,7 @@
 </div>
 </div>
 </header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../#article-finder">🔍 記事を探す</a><a href="../functions/">関数</a><a href="../powerquery/">Power Query</a><a href="../cobol/">COBOL帳票</a><a href="../qr/" aria-current="true">QR入力</a><a href="../others/">現場実務</a><a href="../thinking/">技術の流れ</a><a href="../unlocked/">VBA・AI</a><a href="../troubleshoot/">困りごと索引</a></nav>
 
 
 <main class="main-content article-layout" id="main-content">
@@ -102,9 +103,10 @@
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
 <p style="color:#666;font-size:.88rem;">最終更新: 2026-07-12 ｜ 読了目安: 12分 ｜ 前提: <a href="01_qr_barcode_control.html">①</a> <a href="02_qr_tab_enter.html">②</a> <a href="03_qr_character_delay.html">③</a></p>
 </div>
+<details class="auto-toc" open><summary>目次（11項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">↵ Enter / Tab の共通整理</a></li><li><a href="#sec-2">🎯 この記事のゴール</a></li><li><a href="#sec-3">🚧 CHAR関数とキーイベントの違い</a></li><li><a href="#sec-4">🔄 キー変換とは &horbar; 原理</a></li><li><a href="#sec-5">🏷️ トリガー文字の選び方</a></li><li><a href="#sec-6">🔧 設定方法 &horbar; メーカー別ガイド</a></li><li><a href="#sec-7">🧪 テスト方法</a></li><li><a href="#sec-8">⚡ 注意点</a></li><li><a href="#sec-9">📝 この記事で学んだこと</a></li><li><a href="#sec-10">🔜 次に読む記事</a></li><li><a href="#qr-safety-title">QRリーダー連携の運用注意</a></li></ol></nav></details>
 
 <section class="method-section qr-control-guide">
-  <h2><span class="icon">↵</span> Enter / Tab の共通整理</h2>
+  <h2 id="sec-1"><span class="icon">↵</span> Enter / Tab の共通整理</h2>
   <p>QR入力では、読み取り先によって最初に試す制御を分けます。Num Enter は Excel の CHAR 関数では生成できないため、必要な場合はQRリーダー側のキー変換で確認します。</p>
   <table class="format-table">
     <thead>
@@ -122,7 +124,7 @@
 <!-- ゴール -->
 <!-- ========================================== -->
 <section class="goal-section">
-<h2><span class="icon">🎯</span> この記事のゴール</h2>
+<h2 id="sec-2"><span class="icon">🎯</span> この記事のゴール</h2>
 <p>
     ②で突き当たった<strong>「テンキーEnterが送れない」「ファンクションキーが送れない」</strong>という限界。
     ExcelのCHAR関数は1〜255の数値から、利用環境の文字セットに対応する文字を返します。ただし、文字コードをQRへ入れることと、テンキーEnter、PrintScreen、Pause、PageDown、PageUpなどの<strong>物理キーイベントを送ることは別</strong>です。
@@ -143,7 +145,7 @@
 <!-- 問題の整理 -->
 <!-- ========================================== -->
 <section class="method-section">
-<h2>🚧 CHAR関数とキーイベントの違い</h2>
+<h2 id="sec-3">🚧 CHAR関数とキーイベントの違い</h2>
 <p>CHAR関数で文字・制御文字を作れることと、Windowsへ特定キーの押下イベントを送れることは同じではありません。Microsoft公式ではCHARの引数は1〜255とされていますが、QRリーダーがどう出力するかは機種・設定・入力先に依存します。<a href="https://support.microsoft.com/en-us/excel/char-function" target="_blank" rel="noopener noreferrer">Microsoft CHAR関数の説明</a></p>
 <table class="compare-table">
 <thead>
@@ -174,7 +176,7 @@ QR内にCHAR(1)〜CHAR(26)の制御文字を格納しても、それだけで「
 <!-- キー変換の原理 -->
 <!-- ========================================== -->
 <section class="method-section">
-<h2>🔄 キー変換とは &horbar; 原理</h2>
+<h2 id="sec-4">🔄 キー変換とは &horbar; 原理</h2>
 <p>
     キー変換（Key Remapping / Character Replacement）は、QRリーダーが持つ機能で、<strong>「QRデータ内の特定の文字を読み取ったとき、それを別のキーに変換してPCに送信する」</strong>というものです。
   </p>
@@ -213,7 +215,7 @@ QR内にCHAR(1)〜CHAR(26)の制御文字を格納しても、それだけで「
 <!-- トリガー文字の選び方 -->
 <!-- ========================================== -->
 <section class="tips-section">
-<h2>🏷️ トリガー文字の選び方</h2>
+<h2 id="sec-5">🏷️ トリガー文字の選び方</h2>
 <p>
     キー変換のために「データとして使わない文字」をトリガーとして予約する必要があります。
     業務データに登場しにくい記号を選ぶのがコツです。
@@ -271,7 +273,7 @@ QR内にCHAR(1)〜CHAR(26)の制御文字を格納しても、それだけで「
 <!-- メーカー別設定方法 -->
 <!-- ========================================== -->
 <section class="method-section">
-<h2>🔧 設定方法 &horbar; メーカー別ガイド</h2>
+<h2 id="sec-6">🔧 設定方法 &horbar; メーカー別ガイド</h2>
 <div class="maker-card">
 <span class="maker-name">共通の概念</span>
 <h4 aria-level="3">キー変換設定の基本ステップ</h4>
@@ -317,7 +319,7 @@ QR内にCHAR(1)〜CHAR(26)の制御文字を格納しても、それだけで「
 <!-- テスト方法 -->
 <!-- ========================================== -->
 <section class="tips-section">
-<h2>🧪 テスト方法</h2>
+<h2 id="sec-7">🧪 テスト方法</h2>
 <h3>テンキーEnter変換のテスト</h3>
 <table class="format-table">
 <tr><th style="width:10%">手順</th><th>操作</th></tr>
@@ -338,7 +340,7 @@ QR内にCHAR(1)〜CHAR(26)の制御文字を格納しても、それだけで「
 <!-- 注意点 -->
 <!-- ========================================== -->
 <section class="tips-section">
-<h2>⚡ 注意点</h2>
+<h2 id="sec-8">⚡ 注意点</h2>
 <div class="xdemo-note-warn">
 <strong>① トリガー文字はデータに使えなくなる:</strong> 例えば <span class="code-inline">/</span> をテンキーEnterに変換すると、QRデータ内に「/」という文字そのものを入力することはできなくなります。業務データに / を使わないか事前に確認してください。
   </div>
@@ -356,7 +358,7 @@ QR内にCHAR(1)〜CHAR(26)の制御文字を格納しても、それだけで「
 <!-- まとめ -->
 <!-- ========================================== -->
 <section class="method-section">
-<h2>📝 この記事で学んだこと</h2>
+<h2 id="sec-9">📝 この記事で学んだこと</h2>
 <table class="format-table">
 <tr><th>項目</th><th>内容</th></tr>
 <tr><td>CHAR関数の限界</td><td>テンキーEnter・ファンクションキー・矢印キーなど非ASCIIキーは生成不可</td></tr>
@@ -372,7 +374,7 @@ QR内にCHAR(1)〜CHAR(26)の制御文字を格納しても、それだけで「
 <!-- 次へのナビ -->
 <!-- ========================================== -->
 <section class="method-section" style="background:#f0f4c3;border:2px solid #827717;border-radius:10px;padding:24px;">
-<h2 style="color:#33691e;margin-top:0;">🔜 次に読む記事</h2>
+<h2 id="sec-10" style="color:#33691e;margin-top:0;">🔜 次に読む記事</h2>
 <table class="key-table" style="background:#fff;">
 <tr><th>あなたの状況</th><th>次に読むべき記事</th></tr>
 <tr>
@@ -461,7 +463,7 @@ QR内にCHAR(1)〜CHAR(26)の制御文字を格納しても、それだけで「
     <a href="../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../script.js?v=20261101"></script>
+<script src="../script.js?v=20261103"></script>
 
 </body>
 </html>

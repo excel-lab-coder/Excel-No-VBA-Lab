@@ -26,10 +26,12 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
-<link href="../common.css?v=20261101" rel="stylesheet">
-<link href="../article.css?v=20261101" rel="stylesheet">
+<link href="../common.css?v=20261103" rel="stylesheet">
+<link href="../article.css?v=20261103" rel="stylesheet">
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-24", "dateModified": "2026-04-24", "headline":"UIA（UI Automation）で他アプリ・Webフォームへ自動入力 — Selenium不要のRPA代替","description":"VBAからUI Automation (UIA) を使用して、Edge上のHTMLフォームへ3名分のデータをゆっくり自動入力する手法を解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_uia_automation.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 
 <body>
@@ -44,6 +46,7 @@
     </div>
   </div>
 </header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../#article-finder">🔍 記事を探す</a><a href="../functions/">関数</a><a href="../powerquery/">Power Query</a><a href="../cobol/">COBOL帳票</a><a href="../qr/">QR入力</a><a href="../others/">現場実務</a><a href="../thinking/">技術の流れ</a><a href="../unlocked/">VBA・AI</a><a href="../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
 <div class="breadcrumb">
@@ -62,6 +65,7 @@
   </div>
   <h1 class="article-title">UIA（UI Automation）で他アプリ・Webフォームへ自動入力 &horbar; Selenium不要のRPA代替</h1>
 </div>
+<details class="auto-toc" open><summary>目次（12項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">1. なぜ「UI Automation」なのか？</a></li><li><a href="#sec-2">2. このサンプルで体感できること</a></li><li><a href="#sec-3">3. 事前準備</a></li><li><a href="#sec-4">4. 貼り付けるだけで動く全部入りコード</a></li><li><a href="#sec-5">5. 実行すると何が起きるのか？</a></li><li><a href="#sec-6">6. HTML側とVBA側の対応関係</a></li><li><a href="#sec-7">7. UIAで使っている2つの操作パターン</a></li><li><a href="#sec-8">8. 待機時間を調整する</a></li><li><a href="#sec-9">9. 実務Webシステムへの応用</a></li><li><a href="#sec-10">10. UIAの実務での落とし穴と対策</a></li><li><a href="#sec-11">11. QR Automation Lab vs UIA &horbar; 環境で選ぶ自動入力手法</a></li><li><a href="#sec-12">12. 公式リファレンス</a></li></ol></nav></details>
 
 <div class="vba-box">
 <strong>💡 本編（VBAなし）との位置づけ</strong>
@@ -69,7 +73,7 @@
 </div>
 
 <section>
-<h2>1. なぜ「UI Automation」なのか？</h2>
+<h2 id="sec-1">1. なぜ「UI Automation」なのか？</h2>
 
 <p>Internet Explorerの廃止に伴い、VBAから直接DOMを操作する「IE制御」は過去のものとなりました。現在、Webスクレイピングや自動操作といえば「SeleniumBasic」やWebDriver系のツールが有名ですが、これには<strong>「ブラウザドライバのバージョン管理」「環境構築」「社内PCへの導入許可」</strong>といった実務上のハードルがあります。</p>
 
@@ -83,7 +87,7 @@
 </section>
 
 <section>
-<h2>2. このサンプルで体感できること</h2>
+<h2 id="sec-2">2. このサンプルで体感できること</h2>
 
 <p>この記事のサンプルコードを実行すると、以下の処理がすべて自動で行われます。</p>
 
@@ -112,7 +116,7 @@
 </section>
 
 <section>
-<h2>3. 事前準備</h2>
+<h2 id="sec-3">3. 事前準備</h2>
 
 <p>このサンプルでは、VBAからUI Automationを使うために、最初に1回だけ参照設定を行います。</p>
 
@@ -132,7 +136,7 @@
 </section>
 
 <section>
-<h2>4. 貼り付けるだけで動く全部入りコード</h2>
+<h2 id="sec-4">4. 貼り付けるだけで動く全部入りコード</h2>
 
 <p>以下のコードを、Excel VBAの標準モジュールにそのまま貼り付けてください。貼り付け後、<code>UIA_体感デモ_3名分_ゆっくり入力</code> を実行します。</p>
 
@@ -651,7 +655,7 @@ End Sub</code></pre>
 </section>
 
 <section>
-<h2>5. 実行すると何が起きるのか？</h2>
+<h2 id="sec-5">5. 実行すると何が起きるのか？</h2>
 
 <p>このマクロを実行すると、VBAが一時フォルダにHTMLフォームを作成し、Edgeで開きます。その後、UI Automationを使って画面上の入力欄を探し、3名分のデータを順番に入力します。</p>
 
@@ -725,7 +729,7 @@ Next i</code></pre>
 </section>
 
 <section>
-<h2>6. HTML側とVBA側の対応関係</h2>
+<h2 id="sec-6">6. HTML側とVBA側の対応関係</h2>
 
 <p>このサンプルでは、VBAが生成するHTMLの入力欄に <code>aria-label</code> を付けています。</p>
 
@@ -753,7 +757,7 @@ Set condAnd = uia.CreateAndCondition(condName, condType)</code></pre>
 </section>
 
 <section>
-<h2>7. UIAで使っている2つの操作パターン</h2>
+<h2 id="sec-7">7. UIAで使っている2つの操作パターン</h2>
 
 <p>UI Automationでは、画面上の要素を操作するために「パターン」と呼ばれる仕組みを使います。このサンプルで使っている主なパターンは2つです。</p>
 
@@ -785,7 +789,7 @@ invokePattern.Invoke</code></pre>
 </section>
 
 <section>
-<h2>8. 待機時間を調整する</h2>
+<h2 id="sec-8">8. 待機時間を調整する</h2>
 
 <p>デモの速度は、コード内の <code>DemoPause</code> の秒数で調整できます。</p>
 
@@ -807,7 +811,7 @@ invokePattern.Invoke</code></pre>
 </section>
 
 <section>
-<h2>9. 実務Webシステムへの応用</h2>
+<h2 id="sec-9">9. 実務Webシステムへの応用</h2>
 
 <p>このサンプルはローカルHTMLを自動生成して試していますが、考え方は社内Webシステムでも同じです。</p>
 
@@ -848,7 +852,7 @@ Set elm = parent.FindFirst(SCOPE_SUBTREE, condAnd)</code></pre>
 </section>
 
 <section>
-<h2>10. UIAの実務での落とし穴と対策</h2>
+<h2 id="sec-10">10. UIAの実務での落とし穴と対策</h2>
 
 <p>UIAは強力ですが、実務では以下の点に注意が必要です。</p>
 
@@ -864,7 +868,7 @@ Set elm = parent.FindFirst(SCOPE_SUBTREE, condAnd)</code></pre>
 </section>
 
 <section>
-<h2>11. QR Automation Lab vs UIA &horbar; 環境で選ぶ自動入力手法</h2>
+<h2 id="sec-11">11. QR Automation Lab vs UIA &horbar; 環境で選ぶ自動入力手法</h2>
 
 <div class="table-responsive">
 <table class="vba-compare-table">
@@ -919,7 +923,7 @@ Set elm = parent.FindFirst(SCOPE_SUBTREE, condAnd)</code></pre>
 </section>
 
 <section>
-<h2>12. 公式リファレンス</h2>
+<h2 id="sec-12">12. 公式リファレンス</h2>
 
 <p>UIAを実務で利用する場合は、以下のMicrosoft公式情報も確認しておくと理解が深まります。</p>
 
@@ -967,6 +971,6 @@ Set elm = parent.FindFirst(SCOPE_SUBTREE, condAnd)</code></pre>
   </p>
 </footer>
 
-<script src="../script.js?v=20261101"></script>
+<script src="../script.js?v=20261103"></script>
 </body>
 </html>

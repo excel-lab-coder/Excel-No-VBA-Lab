@@ -13,12 +13,12 @@
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_text_numbers_fix.html" property="og:url">
 <meta content="Excel × No VBA Lab" property="og:site_name">
 <meta content="ja_JP" property="og:locale">
-<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png" property="og:image">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
 <meta content="index, follow" name="robots">
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_text_numbers_fix.html" rel="canonical">
-<link href="../../common.css?v=20261101" rel="stylesheet">
-<link href="../../article.css?v=20261101" rel="stylesheet">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
@@ -33,14 +33,16 @@
 <div class="reading-progress" aria-hidden="true"></div>
 <a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
 <header class="site-header"><div class="header-inner"><div class="header-brand"><div class="site-title"><a href="../../">Excel × No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">現場実務ラボ</span></p></div></div></header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/" aria-current="true">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 <main class="main-content" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><strong>数字が文字列になったとき</strong></div>
 <article class="article-body">
 <div class="article-header"><div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-02</span></div><h1 class="article-title">Excelの数字が文字列になって計算・検索できないときの直し方</h1>
 <p class="article-summary" data-seo-lead="true">見た目は同じ数字なのに、SUMで合計できない・検索で見つからない。その多くは、数字が「文字列」として入っていることが原因です。見分け方と、取り込み・全角・見えない空白・末尾マイナスなど原因別の直し方をまとめます。</p></div>
+<details class="auto-toc" open><summary>目次（10項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 こんな症状はありませんか</a></li><li><a href="#sec-2">まず確かめる：数値か文字列か</a></li><li><a href="#sec-3">原因別の直し方</a></li><li><a href="#sec-4">方法1：緑の三角から「数値に変換する」</a></li><li><a href="#sec-5">方法2：「形式を選択して貼り付け」で1を掛ける</a></li><li><a href="#sec-6">方法3：「区切り位置」で列ごと変換する</a></li><li><a href="#sec-7">方法4：関数で変換する（元の列を残したいとき）</a></li><li><a href="#sec-8">検索（VLOOKUP・XLOOKUP）が #N/A になるとき</a></li><li><a href="#sec-9">数値にしてはいけない「数字」もある</a></li><li><a href="#sec-10">毎回同じデータで起きるならPower Queryで</a></li></ol></nav></details>
 
 <section class="goal-section">
-<h2><span class="icon">💡</span> こんな症状はありませんか</h2>
+<h2 id="sec-1"><span class="icon">💡</span> こんな症状はありませんか</h2>
 <ul class="line-height-2">
 <li>数字が並んでいるのに、<strong>SUMの合計が0</strong>や、一部だけの合計になる</li>
 <li>見た目は同じ番号なのに、<strong>VLOOKUPやXLOOKUPが #N/A</strong> になる</li>
@@ -51,7 +53,7 @@
 </section>
 
 <section class="method-section">
-<h2>まず確かめる：数値か文字列か</h2>
+<h2 id="sec-2">まず確かめる：数値か文字列か</h2>
 <div class="table-wrapper"><table class="comparison-table"><caption>見分け方</caption>
 <thead><tr><th>方法</th><th>数値なら</th><th>文字列なら</th></tr></thead>
 <tbody>
@@ -64,7 +66,7 @@
 </section>
 
 <section class="method-section">
-<h2>原因別の直し方</h2>
+<h2 id="sec-3">原因別の直し方</h2>
 <div class="table-wrapper"><table class="comparison-table"><caption>原因と直し方の早見表</caption>
 <thead><tr><th>原因</th><th>よくある場面</th><th>直し方</th></tr></thead>
 <tbody>
@@ -79,7 +81,7 @@
 </section>
 
 <section class="method-section">
-<h2>方法1：緑の三角から「数値に変換する」</h2>
+<h2 id="sec-4">方法1：緑の三角から「数値に変換する」</h2>
 <ol class="line-height-2">
 <li>文字列の数字が入った範囲を選びます（最初のセルが緑の三角が出ているセルになるように選びます）。</li>
 <li>表示される「！」のアイコンをクリックし、<strong>「数値に変換する」</strong>を選びます。</li>
@@ -88,7 +90,7 @@
 </section>
 
 <section class="method-section">
-<h2>方法2：「形式を選択して貼り付け」で1を掛ける</h2>
+<h2 id="sec-5">方法2：「形式を選択して貼り付け」で1を掛ける</h2>
 <ol class="line-height-2">
 <li>空いているセルに <code>1</code> と入力し、コピーします。</li>
 <li>文字列の数字の範囲を選び、<span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">Alt</span>+<span class="kbd-btn">V</span>（形式を選択して貼り付け）を押します。</li>
@@ -98,7 +100,7 @@
 </section>
 
 <section class="method-section">
-<h2>方法3：「区切り位置」で列ごと変換する</h2>
+<h2 id="sec-6">方法3：「区切り位置」で列ごと変換する</h2>
 <ol class="line-height-2">
 <li>変換したい<strong>1列</strong>を選びます。</li>
 <li>「データ」タブ →<strong>「区切り位置」</strong>を押します。</li>
@@ -109,7 +111,7 @@
 </section>
 
 <section class="method-section">
-<h2>方法4：関数で変換する（元の列を残したいとき）</h2>
+<h2 id="sec-7">方法4：関数で変換する（元の列を残したいとき）</h2>
 <div class="code-block" data-lang="excel"><span class="code-line">=VALUE(A2)</span></div><p class="code-comment">文字列の数字を数値にします。</p>
 <div class="code-block" data-lang="excel"><span class="code-line">=A2*1</span></div><p class="code-comment">同じ結果になります（「--A2」でも可）。</p>
 <div class="code-block" data-lang="excel"><span class="code-line">=VALUE(ASC(A2))</span></div><p class="code-comment">全角の数字「１２３」を半角にしてから数値にします。</p>
@@ -119,7 +121,7 @@
 </section>
 
 <section class="method-section">
-<h2>検索（VLOOKUP・XLOOKUP）が #N/A になるとき</h2>
+<h2 id="sec-8">検索（VLOOKUP・XLOOKUP）が #N/A になるとき</h2>
 <p>検索する値と、検索される表の列で、<strong>片方が数値・片方が文字列</strong>だと一致しません。表の側を直すのが基本ですが、表を触れないときは、式の中で型をそろえます。</p>
 <div class="code-block" data-lang="excel"><span class="code-line">=XLOOKUP(VALUE(A2),マスタ!A:A,マスタ!B:B,"該当なし")</span></div><p class="code-comment">検索値が文字列、表が数値のとき：検索値を数値にします。</p>
 <div class="code-block" data-lang="excel"><span class="code-line">=XLOOKUP(A2&amp;"",マスタ!A:A,マスタ!B:B,"該当なし")</span></div><p class="code-comment">検索値が数値、表が文字列のとき：検索値に「&amp;""」を付けて文字列にします。</p>
@@ -127,13 +129,13 @@
 </section>
 
 <section class="method-section">
-<h2>数値にしてはいけない「数字」もある</h2>
+<h2 id="sec-9">数値にしてはいけない「数字」もある</h2>
 <p>郵便番号・社員番号・電話番号・商品コードなど、<strong>先頭の0に意味がある番号</strong>や、<strong>16桁以上の番号</strong>は、数値にすると0が消えたり、末尾の数字が失われたりします。これらは計算に使わないので、<strong>文字列のまま</strong>にして、照合する相手の側も文字列にそろえます（<a href="article_csv_leading_zero.html">CSVのゼロが消える原因と正しい取り込み方</a>）。</p>
 <div class="xdemo-note-info"><strong>目安：</strong>足したり平均したりする数字 → 数値にする／番号として見る数字 → 文字列のまま</div>
 </section>
 
 <section class="method-section">
-<h2>毎回同じデータで起きるならPower Queryで</h2>
+<h2 id="sec-10">毎回同じデータで起きるならPower Queryで</h2>
 <p>毎月取り込むデータで毎回この作業をしているなら、Power Queryで取り込み、列のデータ型を「整数」「10進数」「テキスト」に決めておくと、次からは更新するだけで正しい型になります（<a href="../../powerquery/basic/article_pq_data_type.html">データ型の変換</a>）。</p>
 </section>
 
@@ -148,6 +150,6 @@
 </article>
 </main>
 <footer class="site-footer"><div class="site-footer-trust" aria-label="運営情報と検証方針"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Windows版 Excel 2016以降・Microsoft 365 を想定しています（XLOOKUPはMicrosoft 365／Excel 2021以降）。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
-<script src="../../script.js?v=20261101"></script>
+<script src="../../script.js?v=20261103"></script>
 </body>
 </html>

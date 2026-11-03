@@ -26,12 +26,14 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
-<link href="../../common.css?v=20261101" rel="stylesheet">
-<link href="../../article.css?v=20261101" rel="stylesheet">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
 
 
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-23", "dateModified": "2026-04-23", "headline":"行を操る ― フィルター・並べ替え・重複削除・フィル","description":"Power Queryでの行操作を完全解説。フィルター（オートフィルターとの違い）、並べ替え、重複行の削除、上位/下位行の保持/削除、フィル（上方向・下方向）をGUI操作中心に丁寧に解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_row_operations.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -40,6 +42,7 @@
 <header class="site-header"><div class="header-inner"><div class="header-brand">
 <div class="site-title"><a href="../../">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
 </div></div></header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/" aria-current="true">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../powerquery/">パワークエリ</a><span>&gt;</span><strong>行を操る</strong></div>
@@ -48,14 +51,15 @@
 <div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="article-date">更新日: 2026-04-23</span></div>
 <h1 class="article-title">行を操る &horbar; フィルター・並べ替え・重複削除・フィル</h1>
 </div>
+<details class="auto-toc" open><summary>目次（9項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">このページのゴール</a></li><li><a href="#sec-2">フィルター &horbar; 必要な行だけを残す</a></li><li><a href="#sec-3">並べ替え</a></li><li><a href="#sec-4">重複行の削除</a></li><li><a href="#sec-5">上位行・下位行の保持と削除</a></li><li><a href="#sec-6">フィル &horbar; 空欄を上（または下）のデータで埋める</a></li><li><a href="#sec-7">null・空白・エラー行の処理まとめ</a></li><li><a href="#sec-8">実践例 &horbar; 結合セルのある報告書データを整える</a></li><li><a href="#sec-9">まとめ</a></li></ol></nav></details>
 <!-- ============================== -->
 <section id="goal">
-<h2>このページのゴール</h2>
+<h2 id="sec-1">このページのゴール</h2>
 <p>Power Queryで行を絞り込む（フィルター）、順序を変える（並べ替え）、重複を消す、空欄を埋める（フィル）操作をマスターし、Excelのオートフィルターとの違いを理解することです。</p>
 </section>
 <!-- ============================== -->
 <section id="filter">
-<h2>フィルター &horbar; 必要な行だけを残す</h2>
+<h2 id="sec-2">フィルター &horbar; 必要な行だけを残す</h2>
 <h3>基本のフィルター操作</h3>
 <div class="step-box">
 <h4>操作手順</h4>
@@ -95,7 +99,7 @@
 </section>
 <!-- ============================== -->
 <section id="sort">
-<h2>並べ替え</h2>
+<h2 id="sec-3">並べ替え</h2>
 <div class="step-box">
 <h4 aria-level="3">操作手順</h4>
 <p>1. 並べ替えたい列のヘッダーにある<strong>ドロップダウン矢印（▼）</strong>をクリックします。<br>
@@ -111,7 +115,7 @@
 </section>
 <!-- ============================== -->
 <section id="remove-duplicates">
-<h2>重複行の削除</h2>
+<h2 id="sec-4">重複行の削除</h2>
 <p>Excelの「重複の削除」機能に対応しますが、Power Queryでは「どの列を基準に重複を判定するか」をより直感的に制御できます。</p>
 <div class="step-box">
 <h4 aria-level="3">操作手順</h4>
@@ -143,7 +147,7 @@
 </section>
 <!-- ============================== -->
 <section id="keep-remove-rows">
-<h2>上位行・下位行の保持と削除</h2>
+<h2 id="sec-5">上位行・下位行の保持と削除</h2>
 <p>「先頭のN行だけ残す」「末尾のN行を消す」といった操作です。前ページで「不要行の削除」としても使いましたが、ここでは全体像をまとめます。</p>
 <table class="ref-table">
 <thead><tr><th>操作</th><th>場所</th><th>動作</th><th>使いどころ</th></tr></thead>
@@ -158,7 +162,7 @@
 </section>
 <!-- ============================== -->
 <section id="fill">
-<h2>フィル &horbar; 空欄を上（または下）のデータで埋める</h2>
+<h2 id="sec-6">フィル &horbar; 空欄を上（または下）のデータで埋める</h2>
 <p>Excelでよく見かける「セル結合された表」をPower Queryに取り込むと、結合が解除されて先頭行にだけ値が入り、残りがnullになります。この「歯抜け」状態を修復するのがフィル操作です。</p>
 <div class="before-after">
 <div>
@@ -203,7 +207,7 @@
 </section>
 <!-- ============================== -->
 <section id="null-error-handling">
-<h2>null・空白・エラー行の処理まとめ</h2>
+<h2 id="sec-7">null・空白・エラー行の処理まとめ</h2>
 <p>行操作でよく遭遇する「困ったデータ」と、それぞれの対処法をまとめます。</p>
 <table class="ref-table">
 <thead><tr><th>状態</th><th>データプレビューでの見え方</th><th>対処法</th></tr></thead>
@@ -228,7 +232,7 @@
 </section>
 <!-- ============================== -->
 <section id="practice">
-<h2>実践例 &horbar; 結合セルのある報告書データを整える</h2>
+<h2 id="sec-8">実践例 &horbar; 結合セルのある報告書データを整える</h2>
 <p>部署のセルが結合された報告書をPower Queryに取り込み、フィルで空欄を埋め、不要行を除去し、特定の部署だけフィルターする一連の流れを実践してみましょう。</p>
 <div class="step-box">
 <h4 aria-level="3">Step 1：フィルで部署の空欄を埋める</h4>
@@ -250,7 +254,7 @@
 </section>
 <!-- ============================== -->
 <section id="summary">
-<h2>まとめ</h2>
+<h2 id="sec-9">まとめ</h2>
 <p>行操作のポイントは3つです。<strong>第一に</strong>、Power Queryのフィルターは行を「隠す」のではなく「除外する」操作であり、ステップとして保存されるため次回更新時も自動適用されること。<strong>第二に</strong>、フィルは null だけを対象とし、空文字列は対象外であること。セル結合データを扱うときは特に注意が必要です。<strong>第三に</strong>、並べ替えは後続の操作（フィル・インデックス列）に影響するため、「いつ並べ替えるか」を意識して配置すること。この3点を押さえれば、行操作は自信を持って使いこなせます。</p>
 </section>
 <!-- ============================== -->
@@ -286,6 +290,6 @@
     <a href="../../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../../script.js?v=20261101"></script>
+<script src="../../script.js?v=20261103"></script>
 </body>
 </html>

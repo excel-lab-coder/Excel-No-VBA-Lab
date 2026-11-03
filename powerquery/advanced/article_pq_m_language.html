@@ -27,12 +27,14 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
-<link href="../../common.css?v=20261101" rel="stylesheet">
-<link href="../../article.css?v=20261101" rel="stylesheet">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
 
 
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-05-03", "dateModified": "2026-05-14", "headline":"M言語入門 ― GUIの限界を超えるカスタム処理","description":"Power QueryのM言語を初めて読む人向けに、let...in構文、ステップ参照、列参照、if式、よく使うTable・Text・Date関数、詳細エディターでの直し方を実務目線で解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_m_language.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -41,6 +43,7 @@
 <header class="site-header"><div class="header-inner"><div class="header-brand">
 <div class="site-title"><a href="../../">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
 </div></div></header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/" aria-current="true">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../powerquery/">パワークエリ</a><span>&gt;</span><strong>M言語入門</strong></div>
@@ -49,13 +52,14 @@
 <div class="article-meta"><span class="badge badge-365">365</span><span class="badge badge-2016">2016～</span><span class="badge badge-maniac">M言語</span><span class="article-date">更新日: 2026-05-14</span></div>
 <h1 class="article-title">M言語入門 &horbar; GUIの限界を超えるカスタム処理</h1>
 </div>
+<details class="auto-toc" open><summary>目次（11項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">このページのゴール</a></li><li><a href="#sec-2">M言語はどこで使うか</a></li><li><a href="#sec-3">基本形は let ... in</a></li><li><a href="#sec-4">ステップ名・列名・行の読み方</a></li><li><a href="#sec-5">if式とnullを押さえる</a></li><li><a href="#sec-6">よく使うM関数</a></li><li><a href="#sec-7">カスタム列で使う実務例</a></li><li><a href="#sec-8">詳細エディターで安全に直す手順</a></li><li><a href="#sec-9">よくあるエラーと直し方</a></li><li><a href="#sec-10">学ぶ順番</a></li><li><a href="#sec-11">まとめ</a></li></ol></nav></details>
 <section id="goal">
-<h2>このページのゴール</h2>
+<h2 id="sec-1">このページのゴール</h2>
 <p>Power QueryのM言語を「全部書けるようになる」ことではなく、<strong>自動生成されたコードを読める、必要な1行だけ直せる、カスタム列で簡単な式を足せる</strong>状態にすることです。実務では、M言語をゼロから手書きするより、GUIで作った手順を少しだけ補正する使い方がもっとも安全です。</p>
 </section>
 
 <section id="where-to-use">
-<h2>M言語はどこで使うか</h2>
+<h2 id="sec-2">M言語はどこで使うか</h2>
 <p>Power Queryで画面操作をすると、裏側ではM言語のコードが自動で作られます。まずは「どこに出てくるか」を押さえるだけで十分です。</p>
 <table class="ref-table">
 <thead><tr><th>場所</th><th>何をするところか</th><th>実務での使い方</th></tr></thead>
@@ -73,7 +77,7 @@
 </section>
 
 <section id="let-in">
-<h2>基本形は let ... in</h2>
+<h2 id="sec-3">基本形は let ... in</h2>
 <p>M言語のクエリは、多くの場合 <code>let</code> で手順を並べ、最後に <code>in</code> で返す結果を指定します。Excelの数式というより、料理のレシピに近い構造です。</p>
 <div class="code-block">let
     ソース = Excel.CurrentWorkbook(){[Name="売上表"]}[Content],
@@ -93,7 +97,7 @@ in
 </section>
 
 <section id="step-reference">
-<h2>ステップ名・列名・行の読み方</h2>
+<h2 id="sec-4">ステップ名・列名・行の読み方</h2>
 <h3>ステップ名は変数のように扱う</h3>
 <p>Power Queryの「適用したステップ」は、M言語では1行ずつ名前付きで保存されています。次のステップは、前のステップ名を材料にして処理します。</p>
 <div class="code-block">削除された列 = Table.RemoveColumns(ソース, {"不要列"}),
@@ -107,7 +111,7 @@ in
 </section>
 
 <section id="if-null">
-<h2>if式とnullを押さえる</h2>
+<h2 id="sec-5">if式とnullを押さえる</h2>
 <p>カスタム列で最初に覚えるなら、<code>if ... then ... else ...</code> です。M言語では <code>if</code>、<code>then</code>、<code>else</code> を小文字で書きます。</p>
 <div class="code-block">if [売上] &gt;= 1000000 then "重点" else "通常"</div>
 <p>AND / OR 条件も小文字です。</p>
@@ -121,7 +125,7 @@ in
 </section>
 
 <section id="common-functions">
-<h2>よく使うM関数</h2>
+<h2 id="sec-6">よく使うM関数</h2>
 <p>関数名は <code>Text.</code>、<code>Table.</code>、<code>Date.</code> のようにカテゴリ名から始まるため、名前を見るだけで役割を推測しやすくなっています。</p>
 <table class="ref-table">
 <thead><tr><th>カテゴリ</th><th>代表例</th><th>使いどころ</th></tr></thead>
@@ -136,7 +140,7 @@ in
 </section>
 
 <section id="custom-column-examples">
-<h2>カスタム列で使う実務例</h2>
+<h2 id="sec-7">カスタム列で使う実務例</h2>
 <h3>区切り文字より前を取り出す</h3>
 <p>商品コード <code>ABC-001</code> から、ハイフンより前の <code>ABC</code> を取り出す例です。</p>
 <div class="code-block">Text.BeforeDelimiter([商品コード], "-")</div>
@@ -151,7 +155,7 @@ else "通常"</div>
 </section>
 
 <section id="advanced-editor">
-<h2>詳細エディターで安全に直す手順</h2>
+<h2 id="sec-8">詳細エディターで安全に直す手順</h2>
 <div class="step-box">
 <h4 aria-level="3">操作手順</h4>
 <p>1. Power Queryエディターで <strong>表示 タブ &rarr; 詳細エディター</strong> を開きます。<br>
@@ -167,7 +171,7 @@ else "通常"</div>
 </section>
 
 <section id="common-errors">
-<h2>よくあるエラーと直し方</h2>
+<h2 id="sec-9">よくあるエラーと直し方</h2>
 <table class="ref-table">
 <thead><tr><th>エラー・症状</th><th>よくある原因</th><th>確認する場所</th></tr></thead>
 <tbody>
@@ -180,7 +184,7 @@ else "通常"</div>
 </section>
 
 <section id="learning-order">
-<h2>学ぶ順番</h2>
+<h2 id="sec-10">学ぶ順番</h2>
 <p>M言語は一気に覚えようとすると重いので、次の順に慣れると実務に乗せやすくなります。</p>
 <ol>
 <li>GUI操作後に、数式バーで自動生成されたM式を見る。</li>
@@ -193,7 +197,7 @@ else "通常"</div>
 </section>
 
 <section id="summary">
-<h2>まとめ</h2>
+<h2 id="sec-11">まとめ</h2>
 <p>M言語は、Power Queryを「画面操作だけの便利機能」から「再利用できるデータ処理」に変えるための道具です。最初に覚えるべきことは多くありません。<strong>let...inの流れ、ステップ名の参照、列名の角かっこ、if式、よく使うText・Table・Date関数</strong>を押さえれば、GUIで作ったクエリを実務向けに少しずつ改良できるようになります。</p>
 </section>
 
@@ -229,6 +233,6 @@ else "通常"</div>
     <a href="../../privacy.html">プライバシーポリシー</a>
   </p>
 </footer>
-<script src="../../script.js?v=20261101"></script>
+<script src="../../script.js?v=20261103"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-<title>⑬ QRリーダーの設計思想比較｜【Zebra】・【Honeywell】・【Opticon】をQRリーダーによるキーボード入力自動化用途で見る｜QR Automation Lab｜Excel × No VBA Lab</title>
+<title>⑬ QRリーダーの設計思想比較｜Zebra・Honeywell・Opticonをキーボード入力自動化の用途で見る｜Excel × No VBA Lab</title>
 
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
@@ -16,7 +16,7 @@
   gtag('config', 'G-596JZ3M97H');
 </script>
 
-<meta name="description" content="QRリーダーをQRリーダーによるキーボード入力自動化・ソフトレス入力自動化の視点で見たときの、Zebra・Honeywell・Opticonの設計思想の違いを現時点の実機検証ベースで整理。ZebraとHoneywellは同系統のルールベース型だが、厳密性・柔軟性・設定難易度に差があり、Opticonは文字ごとに順番に変換・送信する方式に近い特徴があります。">
+<meta name="description" content="QRリーダーをキーボード入力自動化の視点で見たときの、Zebra・Honeywell・Opticonの設計思想の違いを現時点の実機検証ベースで整理。ZebraとHoneywellは同系統のルールベース型、Opticonは文字ごとに順番に変換・送信する方式に近い特徴があります。">
 
 <link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/13_qr_reader_comparison.html" rel="canonical">
 
@@ -24,14 +24,14 @@
 <meta property="og:title" content="⑬ QRリーダーの設計思想比較｜【Zebra】・【Honeywell】・【Opticon】をQRリーダーによるキーボード入力自動化用途で見る">
 <meta property="og:description" content="Zebra・Honeywell・Opticonを、読み取り性能ではなく入力制御エンジンとして比較。ZebraとHoneywellは同系統、Opticonは別ベクトルという視点で整理します。">
 <meta property="og:url" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/13_qr_reader_comparison.html">
-<meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<meta property="og:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg">
 <meta property="og:site_name" content="Excel × No VBA Lab">
 <meta property="og:locale" content="ja_JP">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="⑬ QRリーダーの設計思想比較｜Zebra・Honeywell・Opticon">
 <meta name="twitter:description" content="QRリーダーをQRリーダーによるキーボード入力自動化・入力制御装置として見たときの3メーカーの違いを整理します。">
-<meta name="twitter:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png">
+<meta name="twitter:image" content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg">
 
 <meta name="robots" content="index, follow">
 
@@ -41,8 +41,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
 
-<link href="../common.css?v=20261101" rel="stylesheet">
-<link href="../article.css?v=20261101" rel="stylesheet">
+<link href="../common.css?v=20261103" rel="stylesheet">
+<link href="../article.css?v=20261103" rel="stylesheet">
 
 <script type="application/ld+json">
 {
@@ -50,12 +50,12 @@
   "@type":"Article",
   "headline":"⑬ QRリーダーの設計思想比較｜【Zebra】・【Honeywell】・【Opticon】をQRリーダーによるキーボード入力自動化用途で見る",
   "description":"QRリーダーをQRリーダーによるキーボード入力自動化・ソフトレス入力自動化の視点で見たときの、Zebra・Honeywell・Opticonの設計思想の違いを整理します。",
-  "image":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png",
+  "image":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg",
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
   "publisher":{
     "@type":"Organization",
     "name":"Excel × No VBA Lab",
-    "logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp.png"}
+    "logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}
   },
   "datePublished":"2026-05-09",
   "dateModified":"2026-05-14",
@@ -91,6 +91,7 @@
     </div>
   </div>
 </header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../#article-finder">🔍 記事を探す</a><a href="../functions/">関数</a><a href="../powerquery/">Power Query</a><a href="../cobol/">COBOL帳票</a><a href="../qr/" aria-current="true">QR入力</a><a href="../others/">現場実務</a><a href="../thinking/">技術の流れ</a><a href="../unlocked/">VBA・AI</a><a href="../troubleshoot/">困りごと索引</a></nav>
 
 <main class="main-content article-layout" id="main-content">
 
@@ -1174,6 +1175,6 @@ QRリーダーで業務画面に入力する</code></pre>
 })();
 </script>
 
-<script src="../script.js?v=20261101"></script>
+<script src="../script.js?v=20261103"></script>
 </body>
 </html>
