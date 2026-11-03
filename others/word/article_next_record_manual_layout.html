@@ -109,18 +109,18 @@
 <section class="method-section" id="numbering">
 <h2>Wordの機能で番号を入れる・飛ばす</h2>
 <h2>通し番号を付ける：差し込み印刷のレコード番号</h2>
-<p class="verify-note">「ルール」メニューの項目名は、日本語表示と英語表示（Next Record・Skip Record If など）が混ざっていることがあります。環境により結果が異なる場合があります。</p>
+<p class="verify-note">「ルール」メニューの項目名は、日本語表示と英語表示（Next Record・Skip Record If など）が混ざっていることがあります。</p>
 <p>「ルール」→<strong>「差し込み印刷のレコード番号」</strong>（Merge Record #）を選ぶと、<code>«MERGEREC»</code> が入り、名簿の何人目かが印刷されます（1, 2, 3…）。3人ずつ並べても、ブロックごとに 1・2・3、次の紙に 4・5・6 と続くので、<strong>受付番号や切り分けた後の照合</strong>に使えます。</p>
-<p class="verify-note">フィルターで絞り込んだときに番号が絞り込み後の何番目になるか、名簿の行番号になるかは、環境により結果が異なる場合があります。番号を正式な受付番号として使う場合は、名簿側の番号を差し込む方が確実です。</p>
+<p class="verify-note">フィルターで絞り込んだときに番号が絞り込み後の何番目になるか、名簿の行番号になるかは確認していません。番号を正式な受付番号として使う場合は、名簿側の番号を差し込む方が確実です。</p>
 <h2>対象者を外すときはフィルターを使います</h2>
 <p>NEXTを使う複数人配置の文書では、SkipIf（レコードのスキップ条件）を併用しません。対象者は「アドレス帳の編集」のチェックやフィルターで先に決め、完成文書で人数と順番を確認します。<a href="https://support.microsoft.com/en-us/word/field-codes-next-field" rel="noopener" target="_blank">MicrosoftのNEXTの使用条件</a></p>
 <h2>3人ずつの順番を決める：並べ替え</h2>
 <p>「アドレス帳の編集」→「並べ替え」で、部署順・受講日順などに並べてから差し込むと、同じ部署の人が同じ紙にまとまりやすくなります。並べ替えた順に、上から3人ずつ埋まります。</p>
 </section><section class="method-section"><h2>自動反映で直せない場合だけコードを確認する</h2><p>Alt＋F9でコードを表示すると、「«Next Record»」は <code>{ NEXT }</code> と表示されます。両者は同じ指示の表示違いです。</p><ol class="line-height-2"><li>1面目には <code>{ NEXT }</code> を置きません。</li><li>2面目以降は、その面の最初の差し込みフィールドより前に1つだけ置きます。</li><li>追加が必要な場合は、カーソルを置いて「差し込み文書」→「ルール」→「次のレコード」を選びます。かっこの手入力は不要です。</li><li>Alt＋F9で通常表示へ戻し、完成文書を出し直して確認します。</li></ol></section>
 
-<div class="word-verified"><strong>実機で確認した内容（2026年11月3日・Word 16.0）</strong><p>同じ住所録で差し込みました。正しい配置では1ページに2人ずつ順に並びます。Next Recordがないと同じ人がくり返され、2つ入れると1人飛ばされ、先頭にも入れると2人目から始まりました。</p></div>
-<p class="word-env-note">画面はWindows版の例です。版によって名称や配置が異なる場合は、同じ操作名を探してください。</p>
+<div class="word-verified"><p><strong>実機で確認した内容</strong></p><ul><li>確認日：2026-11-03</li><li>環境：Windows版 Word 16.0</li><li>確認した範囲：正しい配置では1ページに2人ずつ順に並ぶ。Next Recordがない・2つある・先頭にある場合の症状。</li><li>確認していないこと：メニュー項目名の日本語・英語の違い。«MERGEREC»の番号がフィルター後の順か元の行か。紙への印刷。環境により結果が異なる場合があります。</li></ul></div>
 <aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>Wordの記事をさらに探す</strong></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside>
+<section class="word-history" aria-label="更新履歴"><p><strong>更新履歴</strong></p><ul><li>2026-11-03：新規作成。</li></ul></section>
 <section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2"><li><a href="article_mailmerge_multiple_records_per_page.html">1枚に複数人分を並べる方法（基本）</a></li><li><a href="article_mailmerge_label_next_record.html">全ラベルが同じ宛名になる原因</a></li><li><a href="article_field_code_basics.html">フィールドコード入門</a></li></ul></section>
 </article>
 </main>

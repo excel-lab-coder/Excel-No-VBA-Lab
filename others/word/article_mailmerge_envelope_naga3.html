@@ -38,7 +38,7 @@
 <article class="article-body">
 <div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Word差し込み印刷で長形3号の封筒に縦書きで宛名を入れる方法</h1>
 <p class="article-summary" data-seo-lead="true">A4の書類を三つ折りで入れる長形3号（120×235mm）の封筒に、Excelの住所録から縦書きで宛名を印刷します。</p></div><div class="word-answer"><span>結論</span><p><strong>「封筒」で長形3号を選び、縦書きテキストボックスに宛名を入れます。</strong>半角数字が横に寝る場合は、Excelに全角の印刷用列を作って差し込みます。</p></div>
-<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">ふつう（Lv.3）</p><ol class="word-guide-flow"><li>長形3号を選ぶ</li><li>宛名枠を作る</li><li>印刷用列を挿入</li><li>全員分を確認</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">完成イメージと、実際に起きたこと</a></li><li><a href="#guide-step-2">操作の順番</a></li><li><a href="#guide-step-3">住所録（Excel）の準備</a></li><li><a href="#step1">手順1：封筒の差し込みを始めて、長形3号を選ぶ</a></li><li><a href="#step2">手順2：縦書きテキストボックスに宛名を入れる</a></li><li><a href="#step3">手順3：縦書き用の数字はExcelの印刷用列で整える</a></li><li><a href="#step4">手順4：確認して印刷する</a></li><li><a href="#guide-step-8">よくあるつまずき</a></li></ol></nav></details></section>
+<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">ふつう（Lv.3）</p><ol class="word-guide-flow"><li>長形3号を選ぶ</li><li>宛名枠を作る</li><li>印刷用列を挿入</li><li>全員分を確認</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">完成イメージと、実際に起きたこと</a></li><li><a href="#guide-step-2">操作の順番</a></li><li><a href="#guide-step-3">住所録（Excel）の準備</a></li><li><a href="#step1">手順1：封筒の差し込みを始めて、長形3号を選ぶ</a></li><li><a href="#step2">手順2：縦書きテキストボックスに宛名を入れる</a></li><li><a href="#step3">手順3：縦書き用の数字はExcelの印刷用列で整える</a></li><li><a href="#step-zip">手順4：郵便番号は横書きの枠で赤い枠に合わせる</a></li><li><a href="#step4">手順5：確認して印刷する</a></li><li><a href="#guide-step-8">よくあるつまずき</a></li></ol></nav></details></section>
 <section class="method-section" id="guide-step-1"><h2>完成イメージと、実際に起きたこと</h2>
 <p>「封筒」機能で封筒の大きさは選べますが、そのままでは横書きです。実際のWordで作ると、次の2つが起きました。この記事ではその直し方まで説明します。</p>
 <ul><li>宛先の枠が縦書きにならなかった</li><li>半角の数字が横に寝た</li></ul>
@@ -47,6 +47,7 @@
 <section class="method-section" id="guide-step-2"><h2>操作の順番</h2>
 <p>封筒サイズを選ぶ → 住所録を接続する → 縦書きの宛名枠を作る → 印刷用列を挿入する → 全員分を出す、の順です。封筒機能の枠をそのまま使える場合は、追加の枠を作る必要はありません。</p>
 <p>撮影画像の全角化はDBCHARを使った例です。通常の手順ではExcel側で表記を整えます。画像は配置や数字の向きを見る資料として参照してください。</p>
+<!-- TODO(human): JIS列で撮り直し -->
 </section>
 <section class="method-section" id="guide-step-3"><h2>住所録（Excel）の準備</h2>
 <p>撮影には、氏名・敬称・郵便番号・住所_1・住所_2・会社・部署の列を持つExcelの住所録を使いました（<a href="article_mailmerge_hagaki_atena.html">はがき宛名面の記事</a>と同じ住所録です）。</p>
@@ -61,26 +62,32 @@
 </section>
 <section class="method-section" id="step2"><h2><span class="word-step-no">手順2</span>縦書きテキストボックスに宛名を入れる</h2>
 <ol><li>「レイアウト」タブ →「文字列の方向」→「縦書き」を選びます。用紙が縦長の向きに変わります。</li><li>撮影した環境では、封筒機能が作った宛先の枠の中の文字は横書きのままでした。そこで、宛先は縦書きのテキストボックスに入れます。</li><li>「挿入」タブ →「テキスト ボックス」→「縦書きテキスト ボックスの描画」を選び、封筒の右寄りに、宛名を入れる範囲をドラッグして作ります。</li><li>テキストボックスの中をクリックし、「差し込み文書」タブ →「差し込みフィールドの挿入」から、次の順にフィールドを入れます。行の終わりで<span class="kbd-btn">Enter</span>を押します。</li></ol>
-<div class="table-wrapper"><table class="comparison-table"><caption>テキストボックスに入れる内容（縦書きなので右の行から順に並ぶ）</caption><thead><tr><th scope="col">行</th><th scope="col">入れるもの</th></tr></thead><tbody><tr><td>1行目</td><td>«郵便番号»</td></tr><tr><td>2行目</td><td>«住所_1»</td></tr><tr><td>3行目</td><td>«住所_2»</td></tr><tr><td>4行目</td><td>«会社» «部署»</td></tr><tr><td>5行目</td><td>«氏名» «敬称»</td></tr></tbody></table></div>
+<div class="table-wrapper"><table class="comparison-table"><caption>テキストボックスに入れる内容（縦書きなので右の行から順に並ぶ）</caption><thead><tr><th scope="col">行</th><th scope="col">入れるもの</th></tr></thead><tbody><tr><td>1行目</td><td>«住所1_縦書き用»</td></tr><tr><td>2行目</td><td>«住所2_縦書き用»</td></tr><tr><td>3行目</td><td>«会社» «部署»</td></tr><tr><td>4行目</td><td>«氏名» «敬称»</td></tr></tbody></table></div>
 <ol start="5"><li>テキストボックスの中を全部選んで、文字を大きくします。氏名の行だけをさらに大きくすると、宛名らしい見た目になります（この記事の画面は、全部の行が同じ大きさです）。</li><li>テキストボックスの枠線は、「図形の書式」タブ →「図形の枠線」→「枠線なし」で消せます。</li><li>封筒機能が作った横書きの枠は、中身を消して空にしておきます。</li></ol>
 </section>
 <section class="method-section" id="step3"><h2><span class="word-step-no">手順3</span>縦書き用の数字はExcelの印刷用列で整える</h2>
 <p>半角数字が横向きになる場合は、Excelに縦書き印刷用の列を作ります。元の住所は残し、追加列へ全角表記を用意して差し込みます。</p>
-<ol><li>Excelへ「郵便番号_縦書き用」「住所1_縦書き用」「住所2_縦書き用」を追加します。</li><li>元の住所がF2なら、印刷用の2行目に <code>=IF(F2="","",JIS(F2))</code> を入力し、最終行までコピーします。</li><li>JISは数字だけでなく英字や半角カナも全角に変えます。建物名の英字などを変えたくない場合は、印刷用列へ必要な数字だけを全角にした文字列を入力します。</li><li>Excelを保存し、Wordの宛先を選び直します。テキストボックス内の元の住所フィールドを、追加した印刷用列へ置き換えます。</li></ol>
-<p class="word-check"><strong>確認</strong>プレビューで数字とハイフンの向きを確認します。ハイフンを全角にしても、縦棒へ自動変換されるとは限りません。</p>
-<aside class="word-advanced-link"><strong>Excelに列を足せない場合</strong><a href="article_field_format_switches.html">元データに列を足せないときのDBCHAR（書式スイッチ実例集）</a><span>難易度 Lv.5</span></aside>
+<ol><li>Excelへ「住所1_縦書き用」「住所2_縦書き用」を追加します。</li><li>元の住所がF2なら、印刷用の2行目に <code>=IF(F2="","",JIS(F2))</code> を入力し、最終行までコピーします。</li><li>JISは数字だけでなく英字や半角カナも全角に変えます。建物名の英字などを変えたくない場合は、印刷用列へ必要な数字だけを全角にした文字列を入力します。</li><li>Excelを保存し、Wordの宛先を選び直します。テキストボックス内の元の住所フィールドを、追加した印刷用列へ置き換えます。</li></ol>
+<p class="word-check"><strong>確認</strong>プレビューで数字とハイフンの向きを確認します。ハイフンは全角にしても横棒のままで表示されることがあります。縦棒にしたい場合は、住所録の書き方を変えます。</p>
+<aside class="word-advanced-link"><strong>Excelに列を足せない場合</strong><a href="article_field_format_switches.html">Wordのスイッチで全角にする方法（書式スイッチ実例集）</a><span>難易度 Lv.5</span></aside>
 </section>
-<section class="method-section" id="step4"><span id="guide-step-9"></span><h2><span class="word-step-no">手順4</span>確認して印刷する</h2>
+<section class="method-section" id="step-zip"><h2><span class="word-step-no">手順4</span>郵便番号は横書きの枠で赤い枠に合わせる</h2>
+<p>封筒に印刷された郵便番号の枠に1桁ずつ合わせるため、郵便番号だけを別の枠に入れます。宛名の行には入れません。</p>
+<ol><li>「挿入」→「テキスト ボックス」→「横書きテキスト ボックスの描画」で、封筒の右上に枠を作ります。</li><li>枠の中をクリックし、「差し込みフィールドの挿入」で郵便番号の列を選びます。ハイフンのない7桁の列を使います。住所録の郵便番号がハイフン付きなら、<code>=SUBSTITUTE(C2,"-","")</code> のような列を足します（<a href="article_mailmerge_postal_code.html">印刷用列の作り方</a>）。</li><li>文字を選び、「ホーム」→「フォント」の詳細設定 →「文字間隔」で、数字が枠の間隔に合うように広げます。</li><li>枠線を「枠線なし」にします。</li></ol>
+<p>枠の位置は封筒の製品によって違います。普通紙で試し印刷して、封筒に重ねて合わせます。</p>
+<!-- TODO(human): 実封筒で位置確認 -->
+</section>
+<section class="method-section" id="step4"><span id="guide-step-9"></span><h2><span class="word-step-no">手順5</span>確認して印刷する</h2>
 <ol><li>「結果のプレビュー」の ▶ で何人か切り替え、長い住所や会社名が枠に収まっているかを確認します。</li><li>「完了と差し込み」→「個々のドキュメントの編集」で「すべて」を選び、「OK」で全員分の文書を作ります。1枚ずつ確認します。</li><li>完成文書の「ファイル」→「印刷」で、長形3号・用紙の向き・プリンターを確認します。</li><li>封筒と同じ大きさに切った普通紙か、封筒1枚で試し印刷し、位置を確かめます。封筒の給紙方向はプリンターの説明に従います。</li></ol>
 <p class="word-check"><strong>確認</strong>宛名の欠けと向きが正しければ残りを印刷します。画面確認だけで本番を一括印刷しません。</p>
-<div class="xdemo-note-warn"><strong>郵便番号の赤い枠に合わせる場合</strong>この記事の例は、郵便番号を宛名の1行目に入れています。封筒に印刷された枠に1桁ずつ合わせる場合は、郵便番号だけを別の横書きテキストボックスに入れ、文字の間隔を枠に合わせて調整します。枠の位置は封筒の製品によって違うため、試し印刷での確認が必要です。郵便番号の形をそろえる方法は<a href="article_mailmerge_postal_code.html">郵便番号と日付を整える方法</a>を見てください。</div>
-<p class="word-limit">Windows版 Word（Microsoft 365）で画面上のプレビューまで確認した内容です。紙・封筒への印刷は行っていません。封筒を入れる向きや印刷できる範囲はプリンターによって違います。環境により結果が異なる場合があります。</p>
+<p>封筒を入れる向きや印刷できる範囲はプリンターによって違います。</p>
 </section>
 <section class="method-section" id="guide-step-8"><h2>よくあるつまずき</h2>
-<div class="table-wrapper"><table class="comparison-table"><caption>症状と確認すること</caption><thead><tr><th scope="col">症状</th><th scope="col">確認すること</th></tr></thead><tbody><tr><td>縦書きにしても宛先が横書きのまま</td><td>封筒機能が作った枠の中は横書きのままになることがあります。縦書きテキストボックスに入れ直します。</td></tr><tr><td>数字が横に寝る</td><td>まずExcelの縦書き用列を選びます。応用方法では郵便番号・住所のフィールドに \* DBCHAR を付けたか。付けた後に F9 で更新したか。</td></tr><tr><td>DBCHARを付けたのに変わらない</td><td>「\」と「*」の間に空白がないか。「DBCHAR」が半角の英字か。</td></tr><tr><td>封筒の裏や逆さに印刷される</td><td>「封筒オプション」→「印刷オプション」の置き方と、表を上／下にする設定が、プリンターの入れ方と合っているか。</td></tr></tbody></table></div>
-<div class="word-verified"><strong>実機で確認した内容（2026年11月3日・Word／Excel 16.0）</strong><p>Excelの `=IF(F2="","",JIS(F2))` で、「東京都1-2-3ABCｱ」は「東京都１－２－３ＡＢＣア」になりました。数字だけでなく英字とカナも全角になります。封筒サイズの文書に縦書きテキストボックスを置いて差し込み、4人で4ページになりました。</p></div>
+<div class="table-wrapper"><table class="comparison-table"><caption>症状と確認すること</caption><thead><tr><th scope="col">症状</th><th scope="col">確認すること</th></tr></thead><tbody><tr><td>縦書きにしても宛先が横書きのまま</td><td>封筒機能が作った枠の中は横書きのままになることがあります。縦書きテキストボックスに入れ直します。</td></tr><tr><td>数字が横に寝る</td><td>Excelの縦書き用の列を挿入しているか確認します。</td></tr><tr><td>封筒の裏や逆さに印刷される</td><td>「封筒オプション」→「印刷オプション」の置き方と、表を上／下にする設定が、プリンターの入れ方と合っているか。</td></tr></tbody></table></div>
 </section>
-<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>差し込み印刷の基本の流れ</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<div class="word-verified"><p><strong>実機で確認した内容</strong></p><ul><li>確認日：2026-11-03</li><li>環境：Windows版 Word / Excel（Microsoft 365）</li><li>確認した範囲：画面上のプレビュー。<code>JIS</code>で「東京都1-2-3ABCｱ」は「東京都１－２－３ＡＢＣア」になる。封筒サイズの文書で4人が4ページになる。</li><li>確認していないこと：紙・封筒への印刷、郵便番号の枠との位置合わせ。環境により結果が異なる場合があります。</li></ul></div>
+<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>差し込み印刷の基本の流れ</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="word-history" aria-label="更新履歴"><p><strong>更新履歴</strong></p><ul><li>2026-11-03：本文を書き直し。郵便番号を枠に合わせる手順を追加し、全角化をJIS関数に統一。</li></ul></section>
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
 <li><a href="article_mailmerge_hagaki_atena.html">Wordのはがき宛名面印刷（縦書き・漢数字・連名）</a></li>
 <li><a href="article_mailmerge_postal_code.html">Word差し込み印刷で郵便番号と日付を整える方法</a></li>
 <li><a href="article_mailmerge_textbox_wrap.html">長い住所・会社名を枠内で折り返す方法</a></li>

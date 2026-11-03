@@ -40,8 +40,8 @@
 <section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">入門（Lv.1）</p><ol class="word-guide-flow"><li>見出しを作る</li><li>1行1件で入力</li><li>印刷用列を足す</li><li>Wordで照合</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">目標：Wordで列を選ぶだけの住所録</a></li><li><a href="#guide-step-2">手順1：新しいシートの1行目へ見出しを入れる</a></li><li><a href="#guide-step-3">手順2：番号と日付の入れ方を決める</a></li><li><a href="#guide-step-4">手順3：表示を変える項目だけ、印刷用列を足す</a></li><li><a href="#guide-step-5">手順4：接続前に表を点検して保存する</a></li><li><a href="#guide-step-6">手順5：Wordで見出しと人数を照合する</a></li><li><a href="#guide-step-7">次に読む記事</a></li></ol></nav></details></section>
 <section class="method-section" id="guide-step-1"><h2>目標：Wordで列を選ぶだけの住所録</h2>
 <p>Excelは住所録、Wordは文面と印刷の配置に使います。守るルールは次の3つです。</p>
-<ul><li>1行に1件</li><li>1列に1項目</li><li>1行目は見出し</li></ul>
-<p>この形なら、Word側で複雑な設定をせずに済みます。</p>
+<ul><li>1行に1件</li><li>1列に1項目</li><li>1行目は見出し</li><li>1列の中で数値と文字列を混ぜない</li></ul>
+<p>この形なら、Word側で複雑な設定をせずに済みます。試すときは<a href="../../samples/word/住所録_検証用.xlsx">検証用の住所録（架空のデータ）</a>を使えます。</p>
 </section>
 <section class="method-section" id="guide-step-2"><h2><span class="word-step-no">手順1</span>新しいシートの1行目へ見出しを入れる</h2>
 <ol><li>Excelの新しいシートを開き、シート名を「住所録」にします。</li><li>A1から順に「宛先ID」「氏名」「郵便番号」「住所1」「住所2」「会社名」「敬称」と入力します。</li><li>2行目から1人ずつ入力します。建物名がない人の住所2は空欄にします。</li><li>途中に「営業部」などの見出し行や合計行は入れません。部署で分けたいときは「部署名」列を追加します。</li></ol>
@@ -49,6 +49,10 @@
 </section>
 <section class="method-section" id="guide-step-3"><h2><span class="word-step-no">手順2</span>番号と日付の入れ方を決める</h2>
 <div class="table-wrapper"><table class="comparison-table"><caption>元データの入力ルール</caption><thead><tr><th scope="col">項目</th><th scope="col">入力のしかた</th><th scope="col">理由</th></tr></thead><tbody><tr><td>郵便番号・電話番号</td><td>セルの表示形式を「文字列」にしてから入力。例：001-0001</td><td>先頭の0とハイフンが残ります。</td></tr><tr><td>日付</td><td>2026/11/2のような日付値</td><td>期間で抽出でき、日付順に並べ替えられます。</td></tr><tr><td>氏名・住所</td><td>文字列。住所1と建物名の住所2を分ける</td><td>Wordで改行位置を決めやすくなります。</td></tr><tr><td>敬称</td><td>様／御中を必要な宛先に入力</td><td>列を差し込むので、例外を管理しやすくなります。</td></tr></tbody></table></div>
+<h3>郵便番号は、次のどちらかにそろえます</h3>
+<ul><li><strong>A：すべて文字列（001-0001）で入力する。</strong> 印刷用の列は作りません。</li><li><strong>B：すべて数値で入力する。</strong> TEXT関数で印刷用の列を作ります（手順3）。</li></ul>
+<div class="xdemo-note-warn"><strong>1列の中で数値と文字列を混ぜません</strong>型が混ざると、一部の値が空欄や0で読み込まれることがあります。実際に試すと、数値が続いた後の文字列「100-0010」が0になりました。</div>
+<!-- TODO(human): 型混在の失敗画面 -->
 <div class="xdemo-note-warn"><strong>消えた先頭ゼロは戻りません</strong>数値で入力して消えた先頭ゼロは、後から「文字列」に変えても戻りません。郵便番号は7桁という前提を確認して、印刷用列で補います。電話番号など桁数が一定でない番号は、元資料と照合します。</div>
 </section>
 <section class="method-section" id="guide-step-4"><h2><span class="word-step-no">手順3</span>表示を変える項目だけ、印刷用列を足す</h2>
@@ -60,7 +64,7 @@
 <div class="xdemo-note-info"><strong>郵便番号がすでに文字列の場合</strong>最初から「001-0001」の文字列なら、その列をそのまま使えます。印刷用列は、表示を変える項目だけに作ります。</div>
 </section>
 <section class="method-section" id="guide-step-5"><h2><span class="word-step-no">手順4</span>接続前に表を点検して保存する</h2>
-<ol><li>見出しが空の列や、同じ名前の列がないか確認します。</li><li>結合セル、途中の空白行、表の下のメモを取り除きます。</li><li>「印刷対象」列を使うなら、「○」などの入力をそろえます。Excelのフィルターで隠しただけでは、Wordの対象者は限定できません。</li><li>「住所録.xlsx」など内容が分かる名前で保存し、Wordに接続する前にExcelを閉じます。</li></ol>
+<ol><li>見出しが空の列や、同じ名前の列がないか確認します。</li><li>結合セル、途中の空白行、表の下のメモを取り除きます。</li><li>同じ列で、左寄せ（文字列）と右寄せ（数値）が混ざっていないか見ます。</li><li>「印刷対象」列を使うなら、「○」などの入力をそろえます。Excelのフィルターで隠しただけでは、Wordの対象者は限定できません。</li><li>「住所録.xlsx」など内容が分かる名前で保存し、Wordに接続する前にExcelを閉じます。</li></ol>
 <figure class="article-screenshot"><a aria-label="画像を拡大：Wordが参照するのは選んだシートです。保存時のシート名と、この一覧の名前を照合します。" href="../../image/articles/2026-11-01/word-select-source-sheet.jpg" rel="noopener" target="_blank" style="--screenshot-width:987.00px"><img alt="Wordが参照するのは選んだシートです。保存時のシート名と、この一覧の名前を照合します。" decoding="async" height="483" loading="lazy" src="../../image/articles/2026-11-01/word-select-source-sheet.jpg" width="987"></a><figcaption>Wordが参照するのは選んだシートです。保存時のシート名と、この一覧の名前を照合します。 <span class="screenshot-enlarge">（クリックで拡大）</span></figcaption></figure>
 </section>
 <section class="method-section" id="guide-step-6"><h2><span class="word-step-no">手順5</span>Wordで見出しと人数を照合する</h2>
@@ -70,11 +74,12 @@
 </section>
 <section class="method-section" id="guide-step-7"><h2>次に読む記事</h2>
 <ul><li>1人ずつ文書を作る：<a href="article_mailmerge_letter_filter_print.html">レターの基本手順</a></li><li>シールへ印刷する：<a href="article_mailmerge_label_basic.html">ラベルの基本手順</a></li><li>印刷する人を絞る：<a href="article_mailmerge_filter_two_patterns.html">対象者だけを出す2つの方法</a></li></ul>
-<div class="word-verified"><strong>実機で確認した内容（2026年11月3日・Word／Excel 16.0）</strong><p>印刷用列の式をExcelで実行しました。10001は001-0001、2026/11/2は2026年11月2日、空欄は空欄のままです。Excelのオートフィルターで4人だけ表示して保存しても、Wordは8人全員を読み込みました。</p></div>
 </section>
-<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>差し込み印刷の基本の流れ</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<div class="word-verified"><p><strong>実機で確認した内容</strong></p><ul><li>確認日：2026-11-03</li><li>環境：Windows版 Word / Excel 16.0</li><li>確認した範囲：式の結果：10001は001-0001、2026/11/2は2026年11月2日、空欄は空欄。オートフィルターで隠してもWordは8人全員を読み込む。数値が続いた後の文字列は0で読み込まれる。</li><li>確認していないこと：型の混在で空欄になる条件、紙への印刷。環境により結果が異なる場合があります。</li></ul></div>
+<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>差し込み印刷の基本の流れ</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="word-history" aria-label="更新履歴"><p><strong>更新履歴</strong></p><ul><li>2026-11-03：型の混在の注意を追加。郵便番号の入力を2択に整理。</li></ul></section>
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
 <li><a href="article_mailmerge_postal_code.html">Word差し込み印刷で郵便番号と日付を整える方法</a></li>
-<li><a href="article_mailmerge_number_format.html">Word差し込み印刷で日付・金額・数値の表示崩れを直す方法</a></li>
+<li><a href="article_mailmerge_number_format.html">Word差し込み印刷で金額・割合・番号の表示崩れを直す方法</a></li>
 <li><a href="article_mailmerge_filter_two_patterns.html">差し込み印刷で必要な人だけ印刷する2つの方法（Word側のフィルター／Excel側のFILTER関数）</a></li>
 <li><a href="article_mailmerge_label_basic.html">Word差し込み印刷で宛名ラベルを作る基本手順</a></li>
 <li><a href="article_mailmerge_qrcode.html">Word差し込み印刷でQRコードを差し込む方法</a></li>

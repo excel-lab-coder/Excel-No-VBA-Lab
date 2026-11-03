@@ -1620,9 +1620,9 @@
     {
       "category": "others",
       "subcategory": "word",
-      "title": "Word差し込み印刷で日付・金額・数値の表示崩れを直す方法",
+      "title": "Word差し込み印刷で金額・割合・番号の表示崩れを直す方法",
       "url": "others/word/article_mailmerge_number_format.html",
-      "summary": "日付・金額・割合・番号の見た目を、印刷用の文字列でそろえます。",
+      "summary": "金額・割合・番号の見た目を、印刷用の文字列でそろえます。",
       "level": 2,
       "tags": [
         "impact"
@@ -1662,7 +1662,6 @@
       "summary": "応用・難易度高。Wordのフィールドコードで人ごとにQRを生成し、印刷後の読み取りまで確認します。",
       "level": 5,
       "tags": [
-        "impact",
         "rare"
       ],
       "is_highlight": true
@@ -1670,9 +1669,9 @@
     {
       "category": "others",
       "subcategory": "word",
-      "title": "Wordの「置換」でVBAなしに一括整形する（特殊文字・ワイルドカード）",
+      "title": "Wordの「置換」でVBAなしに一括整形する（特殊文字）",
       "url": "others/word/article_word_wildcard_replace.html",
-      "summary": "通常の置換を1件ずつ試してから一括整形。ワイルドカードは難易度高の応用編です。",
+      "summary": "通常の置換を1件ずつ試してから一括整形します。",
       "level": 2
     },
     {

@@ -4,12 +4,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Wordの「置換」でVBAなしに一括整形する｜特殊文字^p・^tとワイルドカード｜Excel × No VBA Lab</title>
+<title>Wordの「置換」でVBAなしに一括整形する｜特殊文字^p・^t｜Excel × No VBA Lab</title>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
-<meta content="Wordの「置換」でVBAなしに文書を一括整形する方法。通常の置換を1件ずつ試してから一括処理へ進み、特殊文字^p・^tや応用のワイルドカードも扱います。" name="description"/>
-<meta content="Wordの「置換」でVBAなしに一括整形する（特殊文字・ワイルドカード）" property="og:title"/>
-<meta content="Wordの「置換」でVBAなしに文書を一括整形する方法。通常の置換を1件ずつ試してから一括処理へ進み、特殊文字^p・^tや応用のワイルドカードも扱います。" property="og:description"/>
+<meta content="Wordの「置換」でVBAなしに文書を一括整形する方法。通常の置換を1件ずつ試してから一括処理へ進み、特殊文字^p・^tも扱います。" name="description"/>
+<meta content="Wordの「置換」でVBAなしに一括整形する（特殊文字）" property="og:title"/>
+<meta content="Wordの「置換」でVBAなしに文書を一括整形する方法。通常の置換を1件ずつ試してから一括処理へ進み、特殊文字^p・^tも扱います。" property="og:description"/>
 <meta content="article" property="og:type"/>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_word_wildcard_replace.html" property="og:url"/>
 <meta content="Excel × No VBA Lab" property="og:site_name"/>
@@ -23,7 +23,7 @@
 <link as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="preload"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" media="print" onload="this.media='all'" rel="stylesheet"/>
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="stylesheet"/></noscript>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Wordの「置換」でVBAなしに一括整形する（特殊文字・ワイルドカード）", "description": "Wordの「置換」でVBAなしに文書を一括整形する方法。通常の置換を1件ずつ試してから一括処理へ進み、特殊文字^p・^tや応用のワイルドカードも扱います。", "datePublished": "2026-11-01", "dateModified": "2026-11-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_word_wildcard_replace.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Wordの「置換」でVBAなしに一括整形する（特殊文字）", "description": "Wordの「置換」でVBAなしに文書を一括整形する方法。通常の置換を1件ずつ試してから一括処理へ進み、特殊文字^p・^tも扱います。", "datePublished": "2026-11-01", "dateModified": "2026-11-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_word_wildcard_replace.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "Wordの置換で一括整形", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_word_wildcard_replace.html"}]}
 </script>
@@ -36,11 +36,11 @@
 <main class="main-content" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><strong>Wordの置換で一括整形</strong></div>
 <article class="article-body">
-<div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Wordの「置換」でVBAなしに一括整形する（特殊文字・ワイルドカード）</h1>
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Wordの「置換」でVBAなしに一括整形する（特殊文字）</h1>
 <p class="article-summary" data-seo-lead="true">社名の表記、余分な空行、手動改行などを、Wordの「置換」でまとめて直します。まず1件だけ試してから一括で直します。</p></div><div class="word-answer"><span>結論</span><p><strong>Ctrl＋Hで、まず1件だけ置換して結果を確かめます。</strong>問題がなければ一括で置換します。作業前に必ずコピーを保存します。</p></div>
-<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">やさしい（Lv.2）</p><ol class="word-guide-flow"><li>コピーを保存</li><li>通常の置換</li><li>特殊文字で整形</li><li>結果を照合</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">この記事で扱うこと</a></li><li><a href="#guide-step-2">準備：コピーを作り、変更前を残す</a></li><li><a href="#guide-step-3">手順1：普通の文字を1件だけ置き換える</a></li><li><a href="#guide-step-4">手順2：空行を減らす（通常の検索）</a></li><li><a href="#guide-step-5">手順3：全角・半角は必要な文字だけ選ぶ</a></li><li><a href="#guide-step-8">最後に：結果を確認して保存する</a></li></ol></nav></details></section>
+<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">やさしい（Lv.2）</p><ol class="word-guide-flow"><li>コピーを保存</li><li>通常の置換</li><li>特殊文字で整形</li><li>結果を照合</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">この記事で扱うこと</a></li><li><a href="#guide-step-2">準備：コピーを作り、変更前を残す</a></li><li><a href="#guide-step-3">手順1：普通の文字を1件だけ置き換える</a></li><li><a href="#guide-step-4">手順2：空行を減らす（通常の検索）</a></li><li><a href="#guide-step-5">手順3：全角・半角は必要な文字だけ選ぶ</a></li><li><a href="#guide-step-6">最後に：結果を確認して保存する</a></li></ol></nav></details></section>
 <section class="method-section" id="guide-step-1"><h2>この記事で扱うこと</h2>
-<p>同じ文字の修正や余分な空行の整理を、Wordの「置換」で行います。フィールドコードは不要です。パターンを使うワイルドカードは、最後に案内する応用記事で説明します。</p>
+<p>同じ文字の修正や余分な空行の整理を、Wordの「置換」で行います。フィールドコードは不要です。</p>
 </section>
 <section class="method-section" id="guide-step-2"><h2>準備：コピーを作り、変更前を残す</h2>
 <ol><li>元の文書を開き、「ファイル」→「名前を付けて保存」で「整形作業用」などの名前のコピーを作ります。</li><li>まずは短い段落を選んで試します。表やタブ区切りデータと普通の文章は分けて扱います。</li><li>ホームタブの「編集記号の表示/非表示」で、段落記号やタブを見えるようにします。確認しやすくなります。</li></ol>
@@ -58,14 +58,15 @@
 </section>
 <section class="method-section" id="guide-step-5"><h2><span class="word-step-no">手順3</span>全角・半角は必要な文字だけ選ぶ</h2>
 <ol><li>変換したい文字列を選びます。文章全体ではなく、番号や英数字だけで試します。</li><li>「ホーム」→「文字種の変換」（Aaのメニュー）→「半角」または「全角」を選びます。</li><li>句読点・カナ・英字まで意図せず変わっていないか確認します。</li><li>番号の意味をそろえたり日付を計算したりする場合は、Excelへ貼り付けた後に値を整えます。</li></ol>
-<aside class="word-advanced-link"><strong>もっと高度に置換したい場合</strong><a href="article_wildcard_advanced.html">ワイルドカード置換の実例集（日付・郵便番号・番号付け）</a><span>難易度 Lv.5</span></aside>
+<aside class="word-advanced-link"><strong>パターンで置換したい場合</strong><a href="article_wildcard_advanced.html">ワイルドカードを使う方法は応用編で扱います</a><span>難易度 Lv.5</span></aside>
 </section>
-<section class="method-section" id="guide-step-8"><h2>最後に：結果を確認して保存する</h2>
+<section class="method-section" id="guide-step-6"><span id="guide-step-8"></span><h2>最後に：結果を確認して保存する</h2>
 <p>変更後の件数と、文書の先頭・途中・最後を確認します。置換の結果は <span class="kbd-btn">Ctrl</span>＋<span class="kbd-btn">Z</span> で取り消せますが、文書を閉じると取り消しの履歴は消えます。作業前のコピーを必ず残してください。</p>
 <p><a href="https://support.microsoft.com/ja-jp/word/training/find-and-replace-text-in-word" rel="noopener" target="_blank">Microsoft：文字列の検索と置換</a>／<a href="https://support.microsoft.com/ja-jp/office/foundations-experiences/undo-redo-or-repeat-an-action" rel="noopener" target="_blank">操作の取り消し</a></p>
-<div class="word-verified"><strong>実機で確認した内容（2026年11月3日・Word／Excel 16.0）</strong><p>「株式会社サンプル」は「サンプル株式会社」に置き換わりました。^l は段落区切りになりました。^p^p を1回「すべて置換」すると3連続の空行は1つ残り、本文のとおり繰り返しが必要でした。</p></div>
 </section>
-<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>Wordの記事をさらに探す</strong></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<div class="word-verified"><p><strong>実機で確認した内容</strong></p><ul><li>確認日：2026-11-03</li><li>環境：Windows版 Word 16.0</li><li>確認した範囲：「株式会社サンプル」は「サンプル株式会社」になる。^l は段落区切りになる。^p^p の「すべて置換」1回で3連続の空行は1つ残る。</li><li>確認していないこと：大きな文書、表を含む文書。環境により結果が異なる場合があります。</li></ul></div>
+<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>Wordの記事をさらに探す</strong></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="word-history" aria-label="更新履歴"><p><strong>更新履歴</strong></p><ul><li>2026-11-03：範囲を特殊文字に絞り、ワイルドカードを応用記事へ分離。</li></ul></section>
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
 <li><a href="../../functions/old/article_substitute.html">SUBSTITUTE関数で複数文字を一括置換</a></li>
 <li><a href="article_excel_to_word_paste.html">Excelの表をWordへ貼る3つの方法</a></li>
 <li><a href="article_word_compare.html">Wordの「文書の比較」で修正箇所をすぐ見つける</a></li>

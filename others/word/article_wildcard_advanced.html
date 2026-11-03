@@ -43,8 +43,9 @@
 <tr><td>郵便番号のハイフン</td><td><code>〒([0-9]{3})([0-9]{4})</code></td><td><code>〒\1-\2</code></td><td>〒1000001 → 〒100-0001</td></tr>
 <tr><td>連続スペース</td><td><code> {2,}</code>（先頭は半角スペース）</td><td>半角スペース1つ</td><td>株式会社  サンプル   商事 → 株式会社 サンプル 商事</td></tr>
 <tr><td>段落先頭の番号</td><td><code>^13[0-9]{1,3}\)</code></td><td><code>^p●</code></td><td>2) 範囲 → ● 範囲（文中の3)は変わらない）</td></tr></tbody></table></div><div class="xdemo-note-warn"><strong>文書の最初の段落は置換されません。</strong><code>^13</code> は「前の段落の終わり」に一致します。文書先頭の「1) 目的」は前に段落がないため、そのまま残りました。最初の段落は手で直します。</div></section><section class="method-section" id="guide-step-7"><h2>条番号を付け替える場合の注意</h2><p>「第[0-9]{1,3}条」を文書全体で削除すると、見出しに加え「第3条を参照」のような本文中の参照も消えます。条番号の一括削除は基本手順にしません。</p><p>見出しの番号をそろえる場合は、見出し段落を確認して「ホーム」→「アウトライン」などの自動番号を使います。本文の参照先がある文書は、番号だけでなく参照先の整合性も確認します。</p></section>
-<p class="word-env-note">2026年11月3日に、Windows版Word（バージョン16.0）で架空の文章を置換して確認しました。環境により結果が異なる場合があります。</p>
+<div class="word-verified"><p><strong>実機で確認した内容</strong></p><ul><li>確認日：2026-11-03</li><li>環境：Windows版 Word 16.0</li><li>確認した範囲：本文の表の結果は、架空の文章を置換した値。</li><li>確認していないこと：大きな文書、表や脚注を含む文書。環境により結果が異なる場合があります。</li></ul></div>
 <aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>Wordの記事をさらに探す</strong></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside>
+<section class="word-history" aria-label="更新履歴"><p><strong>更新履歴</strong></p><ul><li>2026-11-03：新規作成。</li></ul></section>
 <section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2"><li><a href="article_word_wildcard_replace.html">Wordの「置換」の基本</a></li><li><a href="article_word_compare.html">Wordの「文書の比較」で確認する</a></li></ul></section>
 </article>
 </main>

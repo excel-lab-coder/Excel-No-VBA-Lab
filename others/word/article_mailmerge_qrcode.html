@@ -37,7 +37,7 @@
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>差し込み印刷 QRコード</strong></div>
 <article class="article-body">
 <div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Word差し込み印刷でQRコードを差し込む方法：MERGEBARCODEでExcelの値をQR化</h1><p class="article-summary" data-seo-lead="true">Excelの値を、人ごとのQRコードにして文書やラベルへ入れます。フィールドコードを使う応用編です。必ず印刷後に実機で読み取ります。</p></div><div class="word-answer"><span>結論</span><p><strong>Excelの列からQRを作るなら <code>MERGEBARCODE</code>、固定の文字列なら <code>DISPLAYBARCODE</code></strong> を使います。まず短い半角IDで試し、印刷後に実機で読み取ります。</p></div>
-<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">難しい・応用（Lv.5）</p><ol class="word-guide-flow"><li>短いIDで準備</li><li>コードを挿入</li><li>全員分を出力</li><li>実機で読み取り</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">この記事でできること</a></li><li><a href="#guide-step-2">まず2件で試す（応用編）</a></li><li><a href="#guide-step-3">何が便利か</a></li><li><a href="#guide-step-5">差し込みQRコード：MERGEBARCODE</a></li><li><a href="#guide-step-4">固定のQRコード：DISPLAYBARCODE</a></li><li><a href="#guide-step-6">全角文字は避ける</a></li><li><a href="#guide-step-8">サイズと読み取りの注意点</a></li><li><a href="#guide-step-11">読み取れないときの確認順</a></li><li><a href="#guide-step-9">ExcelでQRを作る方法との使い分け</a></li><li><a href="#guide-step-10">まとめ</a></li></ol></nav></details></section>
+<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">難しい・応用（Lv.5）</p><ol class="word-guide-flow"><li>短いIDで準備</li><li>コードを挿入</li><li>全員分を出力</li><li>実機で読み取り</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">この記事でできること</a></li><li><a href="#guide-step-2">まず2件で試す（応用編）</a></li><li><a href="#guide-step-5">差し込みQRコード：MERGEBARCODE</a></li><li><a href="#guide-step-4">固定のQRコード：DISPLAYBARCODE</a></li><li><a href="#guide-step-6">全角文字は避ける</a></li><li><a href="#guide-step-8">サイズと読み取りの注意点</a></li><li><a href="#guide-step-11">読み取れないときの確認順</a></li><li><a href="#guide-step-9">ExcelでQRを作る方法との使い分け</a></li><li><a href="#guide-step-10">まとめ</a></li></ol></nav></details></section>
 <section class="method-section" id="guide-step-1"><h2>この記事でできること</h2>
 <p>Excelの管理表にあるURL、受付番号、商品ID、Webシステム入力用の文字列などを、Wordの差し込み印刷で1件ずつQRコードにします。</p>
 <div class="xdemo-note-good"><strong>使うもの</strong>Wordの MERGEBARCODE または DISPLAYBARCODE フィールドでQRコードを作れます。ExcelでQR画像を1件ずつ用意しなくても、差し込み結果からWordが生成します。</div>
@@ -49,10 +49,6 @@
 <ol start="7"><li>「個々のドキュメントの編集」→「すべて」で完成文書を出します。</li><li>印刷した2件のQRを、実際のQRリーダーやスマホで読みます。</li></ol>
 <p class="word-check"><strong>確認</strong>TEST-1001とTEST-1002がそれぞれ一致することを確認します。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：Excelの見出しがWordのフィールド一覧になります。名前を途中で変えた場合は、Word側の挿入箇所も見直します。" href="../../image/articles/2026-11-01/word-insert-mergefield-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:508.00px"><img alt="接続した列名を確認する画面です。QR用文字列の見出しがあることを確認します。この画像は通常フィールドの挿入例で、QRの生成結果ではありません。" decoding="async" height="548" loading="lazy" src="../../image/articles/2026-11-01/word-insert-mergefield-menu.jpg" width="508"></a><figcaption>接続した列名を確認する画面です。QR用文字列の見出しがあることを確認します。この画像は通常フィールドの挿入例で、QRの生成結果ではありません。 （クリックで拡大）</figcaption></figure>
-</section>
-<section class="method-section" id="guide-step-3"><h2>何が便利か</h2>
-<p>差し込みデータからWord内でQRを生成でき、レコードごとの画像ファイルを別に用意せずに済みます。別方式との文字数制限の比較は、利用する方式・版・文字種ごとに確認してください。</p>
-<div class="xdemo-note-info"><strong>ただし、無制限ではありません</strong>QRコード自体の容量、印刷サイズ、読み取り機の性能、文字種の問題があります。長い文字列ほどQRは細かくなり、印刷で読みにくくなります。</div>
 </section>
 <section class="method-section" id="guide-step-5"><h2>差し込みQRコード：MERGEBARCODE</h2>
 <p>Excelの列ごとに違うQRコードを作るときに使います。たとえば <code>QR用文字列</code> という列がある場合です。</p>
@@ -75,20 +71,26 @@
 <div class="table-wrapper"><table class="comparison-table"><caption>QR用文字列の設計</caption><thead><tr><th scope="col">入れるもの</th><th scope="col">おすすめ度</th><th scope="col">理由</th></tr></thead><tbody><tr><td>URL</td><td>高</td><td>読み取り後にWeb画面へ飛ばせます。</td></tr><tr><td>受付番号・伝票番号</td><td>高</td><td>半角英数字で安定しやすいです。</td></tr><tr><td>複数項目を区切った半角文字列</td><td>中</td><td>例：<code>ID=1001&amp;TYPE=A</code> のように設計できます。</td></tr><tr><td>日本語の住所・氏名</td><td>低</td><td>全角文字は避け、IDから参照する設計にした方が安全です。</td></tr></tbody></table></div>
 </section>
 <section class="method-section" id="guide-step-8"><h2>サイズと読み取りの注意点</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>MERGEBARCODEのスイッチ（Microsoftの説明より）</caption><thead><tr><th scope="col">スイッチ</th><th scope="col">意味</th></tr></thead><tbody><tr><td><code>\s</code></td><td>大きさの倍率。単位は%で、10〜1000を指定します。</td></tr><tr><td><code>\q</code></td><td>QRコードのエラー訂正レベル。0〜3を指定します。</td></tr><tr><td><code>\h</code></td><td>高さ。単位はTWIPS（1/1440インチ）です。</td></tr></tbody></table></div>
+<p>大きくしたいときは <code>{ MERGEBARCODE QR用文字列 QR \q 3 \s 150 }</code> のように指定します。実際に差し込むと、<code>\s 100</code> は約82pt、<code>\s 150</code> は約124pt、<code>\s 200</code> は165pt四方になりました（住所録の短い値の場合）。</p>
 <ul><li><strong>長い文字列ほどQRが細かくなる</strong>：印刷サイズが小さいと読み取りにくくなります。</li><li><strong>余白を潰しすぎない</strong>：QRコードの周囲に余白がないと読み取り精度が落ちます。</li><li><strong>レーザープリンターと実機で確認する</strong>：画面で見えても、印刷すると読めないことがあります。</li><li><strong>全角文字は慎重に扱う</strong>：日本語住所を入れるより、IDやURLにして読み取り後に参照する設計が安定します。使う場合は、必ず印刷後の読み取り結果まで確認します。</li></ul>
 </section>
 <section class="method-section" id="guide-step-11"><h2>読み取れないときの確認順</h2>
 <ol><li>コードのかっこが<span class="kbd-btn">Ctrl</span>＋<span class="kbd-btn">F9</span>で作ったものか、列名がExcelの見出しと一致するかを確認します。</li><li>長いURLや日本語を使う前に、短い半角IDで生成できるかを確認します。</li><li>QRの周囲の白い余白を残し、小さく印刷しすぎないようにします。</li><li>使うプリンター・用紙・読み取り機で、最初と最後のデータも読み取ります。</li><li>画面にQRが出たことと、正しい値として読めることは別々に確認します。</li></ol>
-<p><a href="https://support.microsoft.com/en-us/word/field-codes-mergebarcode" rel="noopener" target="_blank">Microsoft：MergeBarcodeフィールド</a>。構文と対応するスイッチの参考です。本記事の画面資料は接続操作用で、実紙の読み取り結果を保証するものではありません。</p>
+<p><a href="https://support.microsoft.com/en-us/word/field-codes-mergebarcode" rel="noopener" target="_blank">Microsoft：MergeBarcodeフィールド（英語）</a>、<a href="https://support.microsoft.com/en-us/word/field-codes-displaybarcode" rel="noopener" target="_blank">DisplayBarcodeフィールド（英語）</a>。構文とスイッチの説明です。</p>
+<!-- TODO(human): \s 100 と \s 200 で印刷し、QRリーダーかスマートフォンで読み取る -->
 </section>
-<section class="method-section" id="guide-step-9"><h2>ExcelでQRを作る方法との使い分け</h2>
+<section class="method-section" id="guide-step-9"><span id="guide-step-3"></span><h2>ExcelでQRを作る方法との使い分け</h2>
+<p>差し込みデータからWord内でQRを生成でき、レコードごとの画像ファイルを別に用意せずに済みます。別方式との文字数制限の比較は、利用する方式・版・文字種ごとに確認してください。</p>
+<div class="xdemo-note-info"><strong>ただし、無制限ではありません</strong>QRコード自体の容量、印刷サイズ、読み取り機の性能、文字種の問題があります。長い文字列ほどQRは細かくなり、印刷で読みにくくなります。</div>
 <div class="table-wrapper"><table class="comparison-table"><caption>QR作成方法の比較</caption><thead><tr><th scope="col">方法</th><th scope="col">向いている場面</th><th scope="col">注意点</th></tr></thead><tbody><tr><td>ExcelでQR画像を作る</td><td>Excel内で一覧印刷したい、画像として保存したい場合。</td><td>方式によっては文字数制限や外部サービス依存があります。</td></tr><tr><td>WordのMERGEBARCODE</td><td>宛名、ラベル、案内文に差し込みでQRを入れたい場合。</td><td>Word for Windows環境での事前検証が必要です。全角文字は避けます。</td></tr><tr><td>専用QR作成ツール</td><td>大量生成、画像保存、デザイン調整が必要な場合。</td><td>別ツール運用になるため、テンプレート管理が増えます。</td></tr></tbody></table></div>
 </section>
 <section class="method-section" id="guide-step-10"><h2>まとめ</h2>
 <p>MERGEBARCODEを使うと、Excelの値を差し込み印刷しながらQRコード化できます。Excel側でQR画像を作らなくてよいので、宛名ラベル、受付票、案内文、封筒などと相性がよい方法です。文字数だけで方式を選ばず、半角英数字・URL・ID中心で設計します。全角文字を使う場合は、表示だけで判断せず、印刷後に読み取れるか、出力文字列が崩れていないかを確認してから使用してください。</p>
-<div class="word-verified"><strong>実機で確認した内容（2026年11月3日・Word／Excel 16.0）</strong><p>4人の名簿で MERGEBARCODE を差し込み、4ページに別々のQR画像ができました。Wordが作ったQR画像をプログラムで解読すると、1人目は100-0001、2人目は530-0001で、名簿の値と一致しました。紙への印刷と読み取り機での読み取りは行っていません。実機での確認は必ず行ってください。</p></div>
 </section>
-<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>差し込み印刷の基本の流れ</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<div class="word-verified"><p><strong>実機で確認した内容</strong></p><ul><li>確認日：2026-11-03</li><li>環境：Windows版 Word / Excel 16.0</li><li>確認した範囲：4人で別々のQRができる。生成画像を解読すると、1人目は100-0001、2人目は530-0001で名簿と一致する。<code>\s</code> で大きさが変わる。</li><li>確認していないこと：紙への印刷、読み取り機・スマートフォンでの読み取り、<code>\q</code> の値と訂正レベルの対応。環境により結果が異なる場合があります。</li></ul></div>
+<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>差し込み印刷の基本の流れ</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="word-history" aria-label="更新履歴"><p><strong>更新履歴</strong></p><ul><li>2026-11-03：大きさとエラー訂正のスイッチを追加。使い分けの節を統合。</li></ul></section>
+<section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
 <li><a href="article_mailmerge_excel_source_design.html">Word差し込み印刷で失敗しにくいExcel住所録の作り方</a></li>
 <li><a href="../../qr/01_qr_barcode_control.html">QRコードでWebシステム入力を自動化</a></li>
 </ul></section>
