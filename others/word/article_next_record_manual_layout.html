@@ -118,6 +118,7 @@
 <p>「アドレス帳の編集」→「並べ替え」で、部署順・受講日順などに並べてから差し込むと、同じ部署の人が同じ紙にまとまりやすくなります。並べ替えた順に、上から3人ずつ埋まります。</p>
 </section><section class="method-section"><h2>自動反映で直せない場合だけコードを確認する</h2><p>Alt＋F9でコードを表示すると、「«Next Record»」は <code>{ NEXT }</code> と表示されます。両者は同じ指示の表示違いです。</p><ol class="line-height-2"><li>1面目には <code>{ NEXT }</code> を置きません。</li><li>2面目以降は、その面の最初の差し込みフィールドより前に1つだけ置きます。</li><li>追加が必要な場合は、カーソルを置いて「差し込み文書」→「ルール」→「次のレコード」を選びます。かっこの手入力は不要です。</li><li>Alt＋F9で通常表示へ戻し、完成文書を出し直して確認します。</li></ol></section>
 
+<div class="word-verified"><strong>実機で確認した内容（2026年11月3日・Word 16.0）</strong><p>同じ住所録で差し込みました。正しい配置では1ページに2人ずつ順に並びます。Next Recordがないと同じ人がくり返され、2つ入れると1人飛ばされ、先頭にも入れると2人目から始まりました。</p></div>
 <p class="word-env-note">画面はWindows版の例です。版によって名称や配置が異なる場合は、同じ操作名を探してください。</p>
 <aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>Wordの記事をさらに探す</strong></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside>
 <section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2"><li><a href="article_mailmerge_multiple_records_per_page.html">1枚に複数人分を並べる方法（基本）</a></li><li><a href="article_mailmerge_label_next_record.html">全ラベルが同じ宛名になる原因</a></li><li><a href="article_field_code_basics.html">フィールドコード入門</a></li></ul></section>

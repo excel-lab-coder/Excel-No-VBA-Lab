@@ -74,10 +74,11 @@
 <ol><li>「結果のプレビュー」の ▶ で何人か切り替え、長い住所や会社名が枠に収まっているかを確認します。</li><li>「完了と差し込み」→「個々のドキュメントの編集」で「すべて」を選び、「OK」で全員分の文書を作ります。1枚ずつ確認します。</li><li>完成文書の「ファイル」→「印刷」で、長形3号・用紙の向き・プリンターを確認します。</li><li>封筒と同じ大きさに切った普通紙か、封筒1枚で試し印刷し、位置を確かめます。封筒の給紙方向はプリンターの説明に従います。</li></ol>
 <p class="word-check"><strong>確認</strong>宛名の欠けと向きが正しければ残りを印刷します。画面確認だけで本番を一括印刷しません。</p>
 <div class="xdemo-note-warn"><strong>郵便番号の赤い枠に合わせる場合</strong>この記事の例は、郵便番号を宛名の1行目に入れています。封筒に印刷された枠に1桁ずつ合わせる場合は、郵便番号だけを別の横書きテキストボックスに入れ、文字の間隔を枠に合わせて調整します。枠の位置は封筒の製品によって違うため、試し印刷での確認が必要です。郵便番号の形をそろえる方法は<a href="article_mailmerge_postal_code.html">郵便番号と日付を整える方法</a>を見てください。</div>
-<p>Windows版 Word（Microsoft 365）で画面上のプレビューまで確認した内容です。紙・封筒への印刷は行っていません。封筒を入れる向きや印刷できる範囲はプリンターによって違います。環境により結果が異なる場合があります。</p>
+<p class="word-limit">Windows版 Word（Microsoft 365）で画面上のプレビューまで確認した内容です。紙・封筒への印刷は行っていません。封筒を入れる向きや印刷できる範囲はプリンターによって違います。環境により結果が異なる場合があります。</p>
 </section>
 <section class="method-section" id="guide-step-8"><h2>よくあるつまずき</h2>
 <div class="table-wrapper"><table class="comparison-table"><caption>症状と確認すること</caption><thead><tr><th scope="col">症状</th><th scope="col">確認すること</th></tr></thead><tbody><tr><td>縦書きにしても宛先が横書きのまま</td><td>封筒機能が作った枠の中は横書きのままになることがあります。縦書きテキストボックスに入れ直します。</td></tr><tr><td>数字が横に寝る</td><td>まずExcelの縦書き用列を選びます。応用方法では郵便番号・住所のフィールドに \* DBCHAR を付けたか。付けた後に F9 で更新したか。</td></tr><tr><td>DBCHARを付けたのに変わらない</td><td>「\」と「*」の間に空白がないか。「DBCHAR」が半角の英字か。</td></tr><tr><td>封筒の裏や逆さに印刷される</td><td>「封筒オプション」→「印刷オプション」の置き方と、表を上／下にする設定が、プリンターの入れ方と合っているか。</td></tr></tbody></table></div>
+<div class="word-verified"><strong>実機で確認した内容（2026年11月3日・Word／Excel 16.0）</strong><p>Excelの `=IF(F2="","",JIS(F2))` で、「東京都1-2-3ABCｱ」は「東京都１－２－３ＡＢＣア」になりました。数字だけでなく英字とカナも全角になります。封筒サイズの文書に縦書きテキストボックスを置いて差し込み、4人で4ページになりました。</p></div>
 </section>
 <aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>差し込み印刷の基本の流れ</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
 <li><a href="article_mailmerge_hagaki_atena.html">Wordのはがき宛名面印刷（縦書き・漢数字・連名）</a></li>
