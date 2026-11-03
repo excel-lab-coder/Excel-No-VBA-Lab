@@ -36,75 +36,53 @@
 <main class="main-content" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>差し込み印刷 使い分け</strong></div>
 <article class="article-body">
-<div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Excel VBA・Excel数式・Word差し込み印刷の使い分け</h1><p class="article-summary" data-seo-lead="true">通常のWord差し込みから試し、独自の計算や自動化が必要な場合に方式を比較します。</p></div><div class="word-answer"><span>結論</span><p>迷ったら<strong>Word差し込み印刷から</strong>試します。ボタン1つで配布したいならVBA（許可される場合）、Excelだけで完結させたいならExcel数式を検討します。</p></div>
-<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">やさしい（Lv.2）</p><ol class="word-guide-flow"><li>用途を決める</li><li>2件で試す</li><li>操作と保守を比較</li><li>方法を選ぶ</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">この記事でできること</a></li><li><a href="#guide-step-3">結論：3つの方法の使い分け</a></li><li><a href="#guide-step-7">自分用か、配布用かで考える</a></li><li><a href="#guide-step-8">現場での判断フロー</a></li><li><a href="#guide-step-2">迷ったら：Wordの基本操作で2件だけ作る</a></li><li><a href="#guide-step-4">Excel VBAで差し込み印刷する場合</a></li><li><a href="#guide-step-5">Excel数式で差し込み印刷風に作る場合</a></li><li><a href="#guide-step-6">Word差し込み印刷を使う場合</a></li><li><a href="#guide-step-9">まとめ</a></li></ol></nav></details></section>
-<section class="goal-section" id="guide-step-1">
-<h2>この記事でできること</h2>
-<p>宛名、案内文、ラベル、封筒、帳票を作るとき、方法は大きく3つあります。<strong>Excel VBAで自動印刷する方法</strong>、<strong>Excel数式で差し込み印刷風に作る方法</strong>、<strong>Wordの差し込み印刷を使う方法</strong>です。</p>
-<div class="xdemo-note-good"><strong>結論：誰が使うか、誰が作るか、VBAが使えるかで選びます。</strong><br/>使う人のスキルが低くても動かせる方法ほど、作る人側の設計力や保守力が求められます。一方で、Word差し込み印刷は覚えるほど本人の自力が上がり、別の印刷物にも応用しやすくなります。</div>
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Excel VBA・Excel数式・Word差し込み印刷の使い分け</h1><p class="article-summary" data-seo-lead="true">宛名や案内文を印刷する方法は、VBA、Excel数式、Word差し込みの3つです。誰が使い、誰が保守するかで選びます。</p></div><div class="word-answer"><span>結論</span><p>迷ったら<strong>Word差し込み印刷から</strong>試します。ボタン1つで配布したいならVBA（許可される場合）、Excelだけで完結させたいならExcel数式を検討します。</p></div>
+<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">やさしい（Lv.2）</p><ol class="word-guide-flow"><li>用途を決める</li><li>表で比較</li><li>2件で試す</li><li>方法を選ぶ</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">結論</a></li><li><a href="#guide-step-3">3つの方法の比較</a></li><li><a href="#guide-step-7">自分用か、配布用かで考える</a></li><li><a href="#guide-step-8">現場での判断フロー</a></li><li><a href="#guide-step-2">迷ったら：Wordの基本操作で2件だけ作る</a></li><li><a href="#guide-step-4">Excel VBAで差し込み印刷する場合</a></li><li><a href="#guide-step-5">Excel数式で差し込み印刷風に作る場合</a></li><li><a href="#guide-step-6">Word差し込み印刷を使う場合</a></li><li><a href="#guide-step-9">まとめ</a></li></ol></nav></details></section>
+<section class="method-section" id="guide-step-1"><h2>結論</h2>
+<p>宛名、案内文、ラベル、封筒、帳票を作る方法は、大きく3つあります。Excel VBAで自動印刷する方法、Excel数式で差し込み印刷風に作る方法、Wordの差し込み印刷を使う方法です。</p>
+<div class="xdemo-note-good"><strong>選ぶ基準</strong>誰が使うか、誰が作るか、VBAが使えるかで選びます。使う人が操作に慣れていなくても動かせる方法ほど、作る人に設計力と保守力が必要です。Word差し込み印刷は覚えるほど本人の力が上がり、別の印刷物にも応用しやすくなります。</div>
 </section>
-<section class="method-section" id="guide-step-3">
-<h2>結論：3つの方法の使い分け</h2>
-<div class="table-responsive"><div class="table-wrapper"><table class="comparison-table"><caption>3方式のざっくり判断</caption><thead><tr><th>方法</th><th>使う人の難易度</th><th>作る人の難易度</th><th>向いている場面</th><th>注意点</th></tr></thead><tbody>
-<tr><td>Excel VBAで差し込み印刷</td><td>低</td><td>高</td><td class="text-left">使う人が操作に弱く、ボタン1つで印刷・PDF化させたい配布用。</td><td class="text-left">利用者は楽ですが、作成者にはVBA、エラー処理、印刷制御、保守のスキルが必要です。VBA禁止環境では使えません。</td></tr>
-<tr><td>Excel数式で差し込み印刷風</td><td>中</td><td>中〜高</td><td class="text-left">VBA禁止環境。Excelだけで帳票・案内文・ラベルを見える形で作りたい場合。</td><td class="text-left">関数設計、印刷範囲、ページ構成の難易度が上がります。縦に並べるほどファイルサイズも大きくなります。</td></tr>
-<tr><td>Word差し込み印刷</td><td>中</td><td>中</td><td class="text-left">住所録と文書・ラベル・封筒を分けて管理したい場合。使う人のスキルアップも狙いたい場合。</td><td class="text-left">最初は覚えることがありますが、一度身につくと封筒、ラベル、案内文、証明書などへ自力で応用しやすくなります。</td></tr>
-</tbody></table></div></div>
-<p>つまり、<strong>利用者を楽にするほど、作成者が難しい部分を引き受ける</strong> ことになります。逆に、Word差し込み印刷のように利用者にも少し覚えてもらう方法は、作成者だけに負担が集中しにくく、使う人自身の実務スキルも上がりやすいです。</p>
+<section class="method-section" id="guide-step-3"><h2>3つの方法の比較</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>3方式のざっくり判断</caption><thead><tr><th scope="col">方法</th><th scope="col">使う人の難易度</th><th scope="col">作る人の難易度</th><th scope="col">向いている場面</th><th scope="col">注意点</th></tr></thead><tbody><tr><td>Excel VBAで差し込み印刷</td><td>低</td><td>高</td><td>使う人が操作に弱く、ボタン1つで印刷・PDF化させたい配布用。</td><td>利用者は楽ですが、作成者にはVBA、エラー処理、印刷制御、保守のスキルが必要です。VBA禁止環境では使えません。</td></tr><tr><td>Excel数式で差し込み印刷風</td><td>中</td><td>中〜高</td><td>VBA禁止環境。Excelだけで帳票・案内文・ラベルを見える形で作りたい場合。</td><td>関数設計、印刷範囲、ページ構成の難易度が上がります。縦に並べるほどファイルサイズも大きくなります。</td></tr><tr><td>Word差し込み印刷</td><td>中</td><td>中</td><td>住所録と文書・ラベル・封筒を分けて管理したい場合。使う人のスキルアップも狙いたい場合。</td><td>最初は覚えることがありますが、一度身につくと封筒、ラベル、案内文、証明書などへ自力で応用しやすくなります。</td></tr></tbody></table></div>
+<p>利用者を楽にするほど、作成者が難しい部分を引き受けます。Word差し込み印刷のように利用者にも少し覚えてもらう方法は、作成者だけに負担が集中しにくく、使う人の実務スキルも上がりやすくなります。</p>
 </section>
-<section class="method-section" id="guide-step-7">
-<h2>自分用か、配布用かで考える</h2>
-<div class="table-responsive"><div class="table-wrapper"><table class="comparison-table"><caption>使う人別の選び方</caption><thead><tr><th>使う人</th><th>おすすめ</th><th>理由</th></tr></thead><tbody>
-<tr><td>自分が使う</td><td>Word差し込み印刷 / Excel数式</td><td class="text-left">自分で構造を理解できるなら、修正しやすく、運用に合わせて変えやすいです。</td></tr>
-<tr><td>少しExcel・Wordが使える人に教える</td><td>Word差し込み印刷</td><td class="text-left">覚えると本人が自力で住所録を差し替えられます。別の文書やラベルにも応用できるため、個人のスキルアップにつながります。</td></tr>
-<tr><td>ほとんど操作できない人に配る</td><td>Excel VBA</td><td class="text-left">ボタン化できるため、操作説明を最小化できます。VBAが許可されている場合の配布用に強いです。</td></tr>
-<tr><td>VBA禁止の職場で配る</td><td>Excel数式 / Word差し込み印刷</td><td class="text-left">マクロを使わずに運用できます。Excelだけで完結させたいなら数式、文書・封筒ならWordが向きます。</td></tr>
-<tr><td>印刷順や混入を確認したい</td><td>Excel数式で縦展開 / PDF化</td><td class="text-left">ページの並びがシート上で見えるため、どこで問題が起きたか確認しやすいです。</td></tr>
-</tbody></table></div></div>
+<section class="method-section" id="guide-step-7"><h2>自分用か、配布用かで考える</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>使う人別の選び方</caption><thead><tr><th scope="col">使う人</th><th scope="col">おすすめ</th><th scope="col">理由</th></tr></thead><tbody><tr><td>自分が使う</td><td>Word差し込み印刷 / Excel数式</td><td>自分で構造を理解できるなら、修正しやすく、運用に合わせて変えやすいです。</td></tr><tr><td>少しExcel・Wordが使える人に教える</td><td>Word差し込み印刷</td><td>覚えると本人が自力で住所録を差し替えられます。別の文書やラベルにも応用できるため、個人のスキルアップにつながります。</td></tr><tr><td>ほとんど操作できない人に配る</td><td>Excel VBA</td><td>ボタン化できるため、操作説明を最小化できます。VBAが許可されている場合の配布用に強いです。</td></tr><tr><td>VBA禁止の職場で配る</td><td>Excel数式 / Word差し込み印刷</td><td>マクロを使わずに運用できます。Excelだけで完結させたいなら数式、文書・封筒ならWordが向きます。</td></tr><tr><td>印刷順や混入を確認したい</td><td>Excel数式で縦展開 / PDF化</td><td>ページの並びがシート上で見えるため、どこで問題が起きたか確認しやすいです。</td></tr></tbody></table></div>
 </section>
-<section class="method-section" id="guide-step-8">
-<h2>現場での判断フロー</h2>
-<ol class="line-height-2">
-<li>VBAが使える職場かを確認します。</li>
-<li>使う人が自分か、他人に配布するのかを決めます。</li>
-<li>配布先の人がWord差し込み印刷を理解できるかを見ます。</li>
-<li>印刷物がラベル・封筒・文書なのか、Excel帳票なのかを分けます。</li>
-<li>大量印刷なら、印刷ジョブの混入対策としてPDF化や一括出力を検討します。</li>
-</ol>
+<section class="method-section" id="guide-step-8"><h2>現場での判断フロー</h2>
+<ol><li>VBAが使える職場かを確認します。</li><li>使う人が自分か、他人に配布するのかを決めます。</li><li>配布先の人がWord差し込み印刷を理解できるかを見ます。</li><li>印刷物がラベル・封筒・文書なのか、Excel帳票なのかを分けます。</li><li>大量印刷なら、印刷ジョブの混入対策としてPDF化や一括出力を検討します。</li></ol>
 </section>
-<section class="method-section" id="guide-step-2"><h2>迷ったら：Wordの基本操作で2件だけ作る</h2><ol class="line-height-2"><li>Excelで氏名・住所などの小さな表を作り、保存します。</li><li>Wordで「レター」または「ラベル」を選びます。</li><li>「宛先の選択」でExcelへ接続し、メニューから必要な列を挿入します。</li><li>プレビュー後、「個々のドキュメントの編集」で2件分の完成文書を出します。</li><li>その結果で用件が足りるなら、通常の差し込み印刷を使います。独自の帳票計算やボタン操作が必要になってから、Excel数式やVBAの方式を検討します。</li></ol><figure class="article-screenshot"><a aria-label="画像を拡大：完了と差し込みのメニューに個々のドキュメントの編集が並ぶ画面" href="../../image/articles/2026-11-01/word-finish-merge-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:842.00px"><img alt="一般的なWord差し込み印刷の完成メニューです。ここまで通常操作で出力できるかを、方式選択の最初の判断にします。" decoding="async" height="353" loading="lazy" src="../../image/articles/2026-11-01/word-finish-merge-menu.jpg" width="842"></a><figcaption>一般的なWord差し込み印刷の完成メニューです。ここまで通常操作で出力できるかを、方式選択の最初の判断にします。 （クリックで拡大）</figcaption></figure><p>Word差し込み印刷の基本操作に、フィールドコードの編集は必須ではありません。郵便番号や日付はExcelの印刷用列で整えられます。</p></section>
-<section class="method-section" id="guide-step-4">
-<h2>Excel VBAで差し込み印刷する場合</h2>
-<p>VBA版の強みは、使う人に細かい操作をさせずに済むことです。ボタンを押すだけで、宛先を切り替え、印刷し、PDF保存し、ログを残すような仕組みにできます。</p>
-<div class="xdemo-note-good"><strong>Excelが苦手な人でも使える形にしやすい方法です。</strong><br/>「このボタンを押すだけ」という形にできるため、配布用・現場展開用にはかなり強いです。</div>
-<p>ただし、その分だけ作る人の負担は大きくなります。印刷対象の判定、ページ送り、エラー時の停止、PDF保存先、プリンター設定、誤印刷防止まで作り込む必要があります。利用者の操作を簡単にするほど、作成者が裏側の複雑さを引き受ける形です。</p>
-<div class="table-responsive"><div class="table-wrapper"><table class="formula-count-table"><caption>VBA版のメリットとデメリット</caption><thead><tr><th>メリット</th><th>デメリット</th></tr></thead><tbody>
-<tr><td class="text-left">ボタン化できる。操作ミスを減らせる。PDF保存や連続印刷も自動化しやすい。</td><td class="text-left">マクロ禁止環境では使えない。保守できる人が限られる。セキュリティ警告で止まることがあります。</td></tr>
-<tr><td class="text-left">配布先の人がWord差し込み印刷を知らなくても使える。</td><td class="text-left">1件ずつ印刷ジョブを投げる作りだと、共有プリンターで他人の印刷が間に入る可能性があります。</td></tr>
-</tbody></table></div></div>
-<p>VBAで印刷混入を避けたい場合は、1件ずつ直接印刷するより、いったん1つのPDFや1つの出力ファイルにまとめてから印刷する設計にすると安定します。</p>
+<section class="method-section" id="guide-step-2"><h2>迷ったら：Wordの基本操作で2件だけ作る</h2>
+<ol><li>Excelで氏名・住所などの小さな表を作り、保存します。</li><li>Wordで「レター」または「ラベル」を選びます。</li><li>「宛先の選択」でExcelへ接続し、メニューから必要な列を挿入します。</li><li>プレビュー後、「個々のドキュメントの編集」で2件分の完成文書を出します。</li></ol>
+<p class="word-check"><strong>確認</strong>その結果で用件が足りるなら、通常の差し込み印刷を使います。独自の帳票計算やボタン操作が必要になってから、Excel数式やVBAの方式を検討します。</p>
+<figure class="article-screenshot"><a aria-label="画像を拡大：完了と差し込みのメニューに個々のドキュメントの編集が並ぶ画面" href="../../image/articles/2026-11-01/word-finish-merge-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:842.00px"><img alt="一般的なWord差し込み印刷の完成メニューです。ここまで通常操作で出力できるかを、方式選択の最初の判断にします。" decoding="async" height="353" loading="lazy" src="../../image/articles/2026-11-01/word-finish-merge-menu.jpg" width="842"></a><figcaption>一般的なWord差し込み印刷の完成メニューです。ここまで通常操作で出力できるかを、方式選択の最初の判断にします。 （クリックで拡大）</figcaption></figure>
+<p>Word差し込み印刷の基本操作に、フィールドコードの編集は必須ではありません。郵便番号や日付はExcelの印刷用列で整えられます。</p>
 </section>
-<section class="method-section" id="guide-step-5">
-<h2>Excel数式で差し込み印刷風に作る場合</h2>
-<p>Excel数式方式は、VLOOKUP、XLOOKUP、INDEX、FILTER、SEQUENCE、Print_Areaなどを使って、Excelの中に印刷ページを作る方法です。Wordの差し込み印刷ではありませんが、実務上はかなり近いことができます。</p>
-<div class="xdemo-note-good"><strong>VBA禁止環境でも使える形にしやすい方法です。</strong><br/>マクロを使わず、数式と印刷範囲だけで動くため、社内ルールに引っかかりにくいのが大きな強みです。</div>
-<p>一方で、作る側の難易度は上がります。単に値を持ってくるだけなら簡単ですが、複数ページ、空白ページ除外、ラベル面数、開始位置、印刷範囲の自動伸縮まで入れると、関数設計と印刷設計の両方が必要になります。</p>
-<p>特に、案内文や帳票を縦方向に並べて作る方法は、印刷物の途中に何かが混ざった場合でも、どのページ・どの行のあたりで起きたかを見つけやすいです。出力内容がExcelシート上に見えているので、確認と説明がしやすくなります。</p>
-<div class="xdemo-note-warn"><strong>弱点はファイルサイズと重さです。</strong><br/>100件、500件、1000件分の帳票をシート上に縦へ展開すると、数式量・セル数・画像・罫線が増えます。見える安心感と引き換えに、ブックが大きくなりやすいです。</div>
+<section class="method-section" id="guide-step-4"><h2>Excel VBAで差し込み印刷する場合</h2>
+<p><strong>強み</strong>は、使う人に細かい操作をさせずに済むことです。ボタンを押すだけで、宛先を切り替え、印刷し、PDF保存し、ログを残す仕組みにできます。</p>
+<div class="xdemo-note-good"><strong>Excelが苦手な人でも使える形にしやすい方法です</strong>「このボタンを押すだけ」という形にできるため、配布用・現場展開用に向いています。</div>
+<p><strong>弱み</strong>は、作る人の負担です。印刷対象の判定、ページ送り、エラー時の停止、PDF保存先、プリンター設定、誤印刷防止まで作り込む必要があります。</p>
+<div class="table-wrapper"><table class="comparison-table"><caption>VBA版のメリットとデメリット</caption><thead><tr><th scope="col">メリット</th><th scope="col">デメリット</th></tr></thead><tbody><tr><td>ボタン化できる。操作ミスを減らせる。PDF保存や連続印刷も自動化しやすい。</td><td>マクロ禁止環境では使えない。保守できる人が限られる。セキュリティ警告で止まることがあります。</td></tr><tr><td>配布先の人がWord差し込み印刷を知らなくても使える。</td><td>1件ずつ印刷ジョブを投げる作りだと、共有プリンターで他人の印刷が間に入る可能性があります。</td></tr></tbody></table></div>
+<p>印刷混入を避けたい場合は、1件ずつ直接印刷するより、いったん1つのPDFや1つの出力ファイルにまとめてから印刷する設計にすると安定します。</p>
 </section>
-<section class="method-section" id="guide-step-6">
-<h2>Word差し込み印刷を使う場合</h2>
-<p>Word差し込み印刷は、住所録をExcel、印刷レイアウトをWordに分けられるのが強みです。文書、封筒、ラベル、窓あき封筒のように、Word側で見た目を整えたいものに向いています。</p>
-<div class="xdemo-note-info"><strong>使える人に教えると、自力がつきます。</strong><br/>差し込みフィールドの挿入、結果のプレビュー、複数ラベルに反映、完成文書への出力を覚えると、その人が自分で住所録を差し替えて印刷できるようになります。</div>
-<p>作る人の負担は、VBA版ほど重くありません。Wordの機能として用意されているため、基本操作を覚えればテンプレート化できます。ただし、利用者側にも「差し込み元を選ぶ」「プレビューする」「フィールドを更新する」程度の理解は必要です。</p>
-<div class="xdemo-note-good"><strong>利用者の操作をさらに減らすなら、Excel側で表示を完成させます。</strong><br/>郵便番号は <code>=TEXT(C2,"000-0000")</code>、日付は <code>=TEXT(D2,"yyyy年m月d日")</code> のように印刷用列を用意すると、Word側でフィールドコードを編集せずに済みます。元の値は計算用に残し、印刷用列だけを差し込みます。</div>
-<p>ここは欠点でもありますが、同時に大きなメリットです。Word差し込み印刷を覚えると、宛名ラベルだけでなく、送付状、案内文、封筒、会員証、参加票、請求書の差し込みなどにも考え方を流用できます。毎回作成者に依頼しなくても、自分で住所録を選び、フィールドを差し替え、印刷物を作れるようになるため、個人のレベルアップにつながりやすい方法です。</p>
-<p>一方で、操作がとても苦手な人に配るテンプレートとしては、少し説明が必要です。Wordの差し込み印刷は便利ですが、「Excelファイルを選ぶ」「差し込みフィールドを確認する」「結果のプレビューを見る」といった操作を理解してもらう必要があります。</p>
+<section class="method-section" id="guide-step-5"><h2>Excel数式で差し込み印刷風に作る場合</h2>
+<p>VLOOKUP、XLOOKUP、INDEX、FILTER、SEQUENCE、Print_Areaなどを使って、Excelの中に印刷ページを作る方法です。Wordの差し込み印刷ではありませんが、実務上はかなり近いことができます。</p>
+<div class="xdemo-note-good"><strong>VBA禁止環境でも使える形にしやすい方法です</strong>マクロを使わず、数式と印刷範囲だけで動きます。社内ルールに引っかかりにくいのが大きな強みです。</div>
+<p>作る側の難易度は上がります。値を持ってくるだけなら簡単ですが、複数ページ、空白ページ除外、ラベル面数、開始位置、印刷範囲の自動伸縮まで入れると、関数設計と印刷設計の両方が必要です。</p>
+<p>案内文や帳票を縦方向に並べて作る方法は、印刷物の途中に何かが混ざった場合でも、どのページ・どの行のあたりで起きたかを見つけやすくなります。出力内容がシート上に見えているので、確認と説明がしやすくなります。</p>
+<div class="xdemo-note-warn"><strong>弱点はファイルサイズと重さです</strong>100件、500件、1000件分の帳票をシート上に縦へ展開すると、数式量・セル数・画像・罫線が増えます。見える安心感と引き換えに、ブックが大きくなりやすいです。</div>
 </section>
-<section class="summary-section" id="guide-step-9">
-<h2><span class="icon">✅</span> まとめ</h2>
-<p>VBA版は、操作に慣れていない人でもボタンで使える、配布用に向く方法です。Excel数式版は、VBA禁止環境でも使え、縦に並べて印刷すれば混入やページ位置の確認がしやすい一方、ファイルサイズが大きくなりやすいです。Word差し込み印刷は、ラベル・封筒・案内文に強く、覚えた人が別用途にも自力で応用しやすい方法です。</p>
-<p>つまり、どれが一番優れているかではなく、<strong>誰が使うか、どこまで自力で直せるか、VBAが許可されているか</strong> で選ぶのが実務的です。特に、人を育てたい・自分でできる範囲を広げたい場面では、Word差し込み印刷を覚える価値はかなり大きいです。</p>
+<section class="method-section" id="guide-step-6"><h2>Word差し込み印刷を使う場合</h2>
+<p>住所録をExcel、印刷レイアウトをWordに分けられるのが強みです。文書、封筒、ラベル、窓あき封筒のように、Word側で見た目を整えたいものに向いています。</p>
+<div class="xdemo-note-info"><strong>使える人に教えると、自力がつきます</strong>差し込みフィールドの挿入、結果のプレビュー、複数ラベルに反映、完成文書への出力を覚えると、その人が自分で住所録を差し替えて印刷できるようになります。</div>
+<p>作る人の負担はVBA版ほど重くありません。基本操作を覚えればテンプレート化できます。ただし、利用者にも「差し込み元を選ぶ」「プレビューする」「フィールドを更新する」程度の理解は必要です。</p>
+<div class="xdemo-note-good"><strong>利用者の操作をさらに減らすなら</strong>Excel側で表示を完成させます。郵便番号は <code>=TEXT(C2,"000-0000")</code>、日付は <code>=TEXT(D2,"yyyy年m月d日")</code> のように印刷用列を用意すると、Word側でフィールドコードを編集せずに済みます。元の値は計算用に残し、印刷用列だけを差し込みます。</div>
+<p>覚えることは多いですが、それはメリットでもあります。宛名ラベルだけでなく、送付状、案内文、封筒、会員証、参加票、請求書の差し込みなどにも考え方を流用できます。毎回作成者に依頼しなくても、自分で印刷物を作れるようになります。</p>
+<p>一方で、操作がとても苦手な人に配るテンプレートとしては、少し説明が必要です。「Excelファイルを選ぶ」「差し込みフィールドを確認する」「結果のプレビューを見る」といった操作を理解してもらう必要があります。</p>
+</section>
+<section class="method-section" id="guide-step-9"><h2>まとめ</h2>
+<ul><li><strong>VBA版</strong>：操作に慣れていない人でもボタンで使える、配布用に向く方法です。</li><li><strong>Excel数式版</strong>：VBA禁止環境でも使えます。縦に並べて印刷すれば混入やページ位置の確認がしやすい一方、ファイルサイズが大きくなりやすいです。</li><li><strong>Word差し込み印刷</strong>：ラベル・封筒・案内文に強く、覚えた人が別用途にも自力で応用しやすい方法です。</li></ul>
+<p>どれが一番優れているかではなく、<strong>誰が使うか、どこまで自力で直せるか、VBAが許可されているか</strong>で選びます。人を育てたい、自分でできる範囲を広げたい場面では、Word差し込み印刷を覚える価値が大きいです。</p>
 </section>
 <aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>差し込み印刷の基本の流れ</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
 <li><a href="article_mailmerge_letter_vs_directory.html">Word差し込み印刷の「レター」と「名簿」の違いと使い分け</a></li>

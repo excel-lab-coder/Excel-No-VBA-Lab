@@ -37,39 +37,25 @@
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>はがき宛名面印刷（縦書き・連名）</strong></div>
 <article class="article-body">
 <div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Wordのはがき宛名面印刷：Excel住所録から縦書き・漢数字・連名で作る方法</h1>
-<p class="article-summary" data-seo-lead="true">Windows版のはがきウィザードで、住所録をつなぎ、連名と長い住所を確認します。</p></div><div class="word-answer"><span>結論</span><p><strong>「差し込み文書」→「はがき印刷」→「宛名面の作成」</strong>のウィザードで作ります。連名は住所録に列があっても自動で入らないことがあるため、完成後に確認して追加します。</p></div>
-<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">やさしい（Lv.2）</p><ol class="word-guide-flow"><li>住所録を準備</li><li>ウィザード</li><li>列と宛名を確認</li><li>完成・試し印刷</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">この記事でできること</a></li><li><a href="#guide-step-2">最初にそろえるものと確認する順番</a></li><li><a href="#guide-step-3">住所録（Excel）の準備</a></li><li><a href="#wizard">手順1：はがき宛名面印刷ウィザードを始める</a></li><li><a href="#mapping">手順2：フィールドの対応を確かめる</a></li><li><a href="#preview">手順3：結果のプレビューで確かめる</a></li><li><a href="#print">手順4：印刷する</a></li><li><a href="#guide-step-8">よくあるつまずき</a></li></ol></nav></details></section>
-<section class="goal-section" id="guide-step-1">
-<h2>この記事でできること</h2>
-<p>年賀状や案内はがきの<strong>宛名面</strong>を、Excelの住所録からWordで印刷したい。縦書きで、番地は「1-2-3」ではなく「一－二－三」のような<strong>漢数字</strong>にし、夫婦などの<strong>連名</strong>（山田 太郎 様・花子 様）も入れたい――という場合の手順です。</p>
-<p>Wordには<strong>「はがき宛名面印刷ウィザード」</strong>があり、画面の質問に答えるだけで、郵便番号の枠に合わせた宛名面ができます。この記事では、実際のWordでウィザードを使った画面と、撮影で気づいた注意点（連名の欄が自動で入らなかった、長い住所が折り返した）を説明します。</p>
+<p class="article-summary" data-seo-lead="true">年賀状や案内はがきの宛名面を、Excelの住所録から作ります。縦書き・漢数字・連名まで、ウィザードの手順と注意点を説明します。</p></div><div class="word-answer"><span>結論</span><p><strong>「差し込み文書」→「はがき印刷」→「宛名面の作成」</strong>のウィザードで作ります。連名は住所録に列があっても自動で入らないことがあるため、完成後に確認して追加します。</p></div>
+<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">やさしい（Lv.2）</p><ol class="word-guide-flow"><li>住所録を準備</li><li>ウィザードで作成</li><li>列と連名を確認</li><li>試し印刷</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">完成イメージ</a></li><li><a href="#guide-step-2">作業の順番</a></li><li><a href="#guide-step-3">住所録（Excel）の準備</a></li><li><a href="#wizard">手順1：はがき宛名面印刷ウィザードを始める</a></li><li><a href="#mapping">手順2：フィールドの対応を確かめる</a></li><li><a href="#preview">手順3：結果のプレビューで確かめる</a></li><li><a href="#print">手順4：印刷する</a></li><li><a href="#guide-step-8">よくあるつまずき</a></li></ol></nav></details></section>
+<section class="method-section" id="guide-step-1"><h2>完成イメージ</h2>
+<p>Wordの「はがき宛名面印刷ウィザード」は、画面の質問に答えるだけで、郵便番号の枠に合わせた宛名面を作ります。番地は「1-2-3」ではなく「一－二－三」のような漢数字にでき、連名（山田 太郎 様・花子 様）も入れられます。</p>
+<p>実際に使うと、連名の欄が自動で入らない、長い住所が折り返す、といったことが起きました。その対処も説明します。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：縦書きのはがき宛名面に、連名と漢数字の番地が差し込まれたプレビュー" href="../../image/articles/2026-11-01/word-hagaki-preview-renmei.jpg" rel="noopener" target="_blank" style="--screenshot-width:501.19px"><img alt="縦書きのはがき宛名面に、連名と漢数字の番地が差し込まれたプレビュー" decoding="async" height="1224" loading="lazy" src="../../image/articles/2026-11-01/word-hagaki-preview-renmei.jpg" width="829"></a><figcaption>完成した宛名面の「結果のプレビュー」です。番地は「千代田一－二－三」、建物の部屋番号は「一〇一」と漢数字になり、山田 太郎 様の左に連名の「花子 様」が入っています。住所録・差出人は架空のデータです。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-</section><section class="method-section" id="guide-step-2"><h2>最初にそろえるものと確認する順番</h2><p>Excel住所録、はがきの種類、差出人情報を用意します。差出人欄に以前使った住所が残る場合があるため、ウィザードの既定値も確認してください。</p><ol class="line-height-2"><li>Excelの氏名・郵便番号・住所・敬称を整えます。</li><li>ウィザードで用紙、縦横、数字の表記、差出人、住所録を順に指定します。</li><li>完成直後に「フィールドの対応」を確認します。列を対応付けても、連名欄が文書へ自動配置されるとは限りません。</li><li>連名なし・連名あり・会社あて・長い住所の4種類をプレビューします。</li><li>「個々のドキュメントの編集」→「すべて」で完成文書にし、用紙と向きを確認して1枚だけ試し印刷します。</li></ol><p>ウィザードが見当たらないMac版・Web版では、このWindows用画面と同じ操作にはなりません。</p></section>
-<section class="method-section" id="guide-step-3">
-<h2>住所録（Excel）の準備</h2>
-<p>撮影には、次の列を持つExcelの住所録を使いました。1行目が見出し、2行目から1人1行です。</p>
-<div class="table-wrapper"><table class="comparison-table"><caption>撮影に使った住所録の列</caption>
-<thead><tr><th>列の見出し</th><th>入れるもの</th><th>例</th></tr></thead>
-<tbody>
-<tr><td>氏名</td><td>姓と名の間に空白</td><td>山田 太郎</td></tr>
-<tr><td>敬称</td><td>空欄なら「様」になる（後述）</td><td>様</td></tr>
-<tr><td>連名</td><td>連名の人の名（姓は書かない）</td><td>花子</td></tr>
-<tr><td>連名敬称</td><td>連名の人の敬称</td><td>様</td></tr>
-<tr><td>郵便番号</td><td>文字列で「100-0001」の形</td><td>100-0001</td></tr>
-<tr><td>住所_1</td><td>都道府県〜番地</td><td>東京都千代田区千代田1-2-3</td></tr>
-<tr><td>住所_2</td><td>建物名・部屋番号</td><td>サンプルマンション101</td></tr>
-<tr><td>会社・部署</td><td>会社あての場合だけ</td><td>テスト工業株式会社／総務部</td></tr>
-</tbody></table></div>
-<ul class="line-height-2">
-<li>郵便番号は先頭のゼロが消えないよう、<strong>文字列</strong>で入れます（<a href="../data/article_csv_leading_zero.html">郵便番号のゼロが消える原因と対処</a>）。</li>
-<li>住所は<strong>2つの列に分けて</strong>おくと、宛名面で行を分けられます。1つの列に長く入れると、枠の中で折り返します（後述）。</li>
-<li>番地の数字は半角のままでかまいません。漢数字への変換はウィザードの設定で行います。</li>
-<li>保存して、<strong>Excelを閉じてから</strong>ウィザードを始めます。</li>
-</ul>
 </section>
-<section class="method-section" id="wizard">
-<h2><span class="word-step-no">手順1</span>はがき宛名面印刷ウィザードを始める</h2>
-<p>Wordの新しい文書で、「差し込み文書」タブ →「<strong>はがき印刷</strong>」→「<strong>宛名面の作成</strong>」を選びます。</p>
+<section class="method-section" id="guide-step-2"><h2>作業の順番</h2>
+<p>最初にExcel住所録、はがきの種類、差出人情報を用意します。差出人欄に以前使った住所が残る場合があるため、ウィザードの既定値も確認します。</p>
+<ol><li>Excelの氏名・郵便番号・住所・敬称を整えます。</li><li>ウィザードで用紙、縦横、数字の表記、差出人、住所録を順に指定します。</li><li>完成直後に「フィールドの対応」を確認します。列を対応付けても、連名欄が文書へ自動配置されるとは限りません。</li><li>連名なし・連名あり・会社あて・長い住所の4種類をプレビューします。</li><li>「個々のドキュメントの編集」→「すべて」で完成文書にし、用紙と向きを確認して1枚だけ試し印刷します。</li></ol>
+<p>ウィザードが見当たらないMac版・Web版では、このWindows用画面と同じ操作にはなりません。</p>
+</section>
+<section class="method-section" id="guide-step-3"><h2>住所録（Excel）の準備</h2>
+<p>撮影には次の列を持つExcelの住所録を使いました。1行目が見出し、2行目から1人1行です。</p>
+<div class="table-wrapper"><table class="comparison-table"><caption>撮影に使った住所録の列</caption><thead><tr><th scope="col">列の見出し</th><th scope="col">入れるもの</th><th scope="col">例</th></tr></thead><tbody><tr><td>氏名</td><td>姓と名の間に空白</td><td>山田 太郎</td></tr><tr><td>敬称</td><td>空欄なら「様」になる（後述）</td><td>様</td></tr><tr><td>連名</td><td>連名の人の名（姓は書かない）</td><td>花子</td></tr><tr><td>連名敬称</td><td>連名の人の敬称</td><td>様</td></tr><tr><td>郵便番号</td><td>文字列で「100-0001」の形</td><td>100-0001</td></tr><tr><td>住所_1</td><td>都道府県〜番地</td><td>東京都千代田区千代田1-2-3</td></tr><tr><td>住所_2</td><td>建物名・部屋番号</td><td>サンプルマンション101</td></tr><tr><td>会社・部署</td><td>会社あての場合だけ</td><td>テスト工業株式会社／総務部</td></tr></tbody></table></div>
+<ul><li>郵便番号は先頭のゼロが消えないよう、文字列で入れます（<a href="../data/article_csv_leading_zero.html">郵便番号のゼロが消える原因と対処</a>）。</li><li>住所は2つの列に分けておくと、宛名面で行を分けられます。1つの列に長く入れると、枠の中で折り返します（後述）。</li><li>番地の数字は半角のままでかまいません。漢数字への変換はウィザードの設定で行います。</li><li>保存して、Excelを閉じてからウィザードを始めます。</li></ul>
+</section>
+<section class="method-section" id="wizard"><h2><span class="word-step-no">手順1</span>はがき宛名面印刷ウィザードを始める</h2>
+<p>Wordの新しい文書で、「差し込み文書」タブ →「はがき印刷」→「宛名面の作成」を選びます。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：差し込み文書タブのはがき印刷から宛名面の作成を選ぶ画面" href="../../image/articles/2026-11-01/word-hagaki-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:420.00px"><img alt="差し込み文書タブのはがき印刷から宛名面の作成を選ぶ画面" decoding="async" height="215" loading="lazy" src="../../image/articles/2026-11-01/word-hagaki-menu.jpg" width="420"></a><figcaption>「はがき印刷」の下に「宛名面の作成」と「文面の作成」があります。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <p>ウィザードが開きます。「次へ」で進みながら、次の順に設定します。</p>
 <h3>はがきの種類</h3>
@@ -80,63 +66,35 @@
 <figure class="article-screenshot"><a aria-label="画像を拡大：フォントと、宛名住所内の数字を漢数字に変換する設定" href="../../image/articles/2026-11-01/word-hagaki-wizard-kanji.jpg" rel="noopener" target="_blank" style="--screenshot-width:1084.83px"><img alt="フォントと、宛名住所内の数字を漢数字に変換する設定" decoding="async" height="779" loading="lazy" src="../../image/articles/2026-11-01/word-hagaki-wizard-kanji.jpg" width="1142"></a><figcaption>フォントを選び、「宛名住所内の数字を漢数字に変換する」と「差出人住所内の数字を漢数字に変換する」をオンにします。縦書きのときに選べる設定です。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <h3>差出人</h3>
 <figure class="article-screenshot"><a aria-label="画像を拡大：差出人の氏名・郵便番号・住所を入力する画面" href="../../image/articles/2026-11-01/word-hagaki-wizard-sender.jpg" rel="noopener" target="_blank" style="--screenshot-width:1084.83px"><img alt="差出人の氏名・郵便番号・住所を入力する画面" decoding="async" height="779" loading="lazy" src="../../image/articles/2026-11-01/word-hagaki-wizard-sender.jpg" width="1142"></a><figcaption>差出人を印刷する場合は、氏名・郵便番号・住所などを入力します。撮影では架空の差出人を入れました。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<div class="xdemo-note-warn"><strong>差出人の氏名には、最初から名前が入っていることがあります。</strong><br/>撮影したパソコンでは、Officeに登録されている名前があらかじめ入っていました。そのまま「完了」にすると、その名前が差出人として印刷されます。必ず確認して直します。</div>
+<div class="xdemo-note-warn"><strong>差出人の氏名を必ず確認します</strong>最初から名前が入っていることがあります。撮影したパソコンでは、Officeに登録されている名前があらかじめ入っていました。そのまま「完了」にすると、その名前が差出人として印刷されます。</div>
 <h3>差し込み印刷（住所録）</h3>
 <figure class="article-screenshot"><a aria-label="画像を拡大：既存の住所録ファイルを選び、宛名の敬称を様にする画面" href="../../image/articles/2026-11-01/word-hagaki-wizard-address-list.jpg" rel="noopener" target="_blank" style="--screenshot-width:1084.83px"><img alt="既存の住所録ファイルを選び、宛名の敬称を様にする画面" decoding="async" height="779" loading="lazy" src="../../image/articles/2026-11-01/word-hagaki-wizard-address-list.jpg" width="1142"></a><figcaption>「既存の住所録ファイル」を選び、「参照」でExcelの住所録を選びます（画像ではファイルの場所をぼかしています）。宛名の敬称は「様」、「住所録で敬称が指定されているときは住所録に従う」をオンにしました。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<ul class="line-height-2">
-<li>「住所録で敬称が指定されているときは住所録に従う」をオンにすると、住所録の敬称の列に「御中」などがある人はそれが使われ、空欄の人は「様」になります。</li>
-<li>「完了」を押すと「テーブルの選択」が開きます。住所録のシート（撮影では「住所録$」）を選び、「先頭行をタイトル行として使用する」をオンのまま「OK」を押します。</li>
-</ul>
+<ul><li>「住所録で敬称が指定されているときは住所録に従う」をオンにすると、住所録の敬称の列に「御中」などがある人はそれが使われ、空欄の人は「様」になります。</li><li>「完了」を押すと「テーブルの選択」が開きます。住所録のシート（撮影では「住所録$」）を選び、「先頭行をタイトル行として使用する」をオンのまま「OK」を押します。</li></ul>
 </section>
-<section class="method-section" id="mapping">
-<h2><span class="word-step-no">手順2</span>フィールドの対応を確かめる</h2>
-<p>宛名面ができたら、住所録のどの列が、宛名面のどの欄に使われているかを確かめます。「差し込み文書」タブ →「<strong>フィールドの対応</strong>」を開きます（「はがき宛名面印刷」タブの「フィールドの一致」でも同じ画面が開きます）。</p>
+<section class="method-section" id="mapping"><h2><span class="word-step-no">手順2</span>フィールドの対応を確かめる</h2>
+<p>住所録のどの列が、宛名面のどの欄に使われているかを確かめます。「差し込み文書」タブ →「フィールドの対応」を開きます（「はがき宛名面印刷」タブの「フィールドの一致」でも同じ画面が開きます）。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：フィールドの対応画面。姓に氏名、会社名に会社、連名の名に連名が対応している" href="../../image/articles/2026-11-01/word-hagaki-field-mapping.jpg" rel="noopener" target="_blank" style="--screenshot-width:645.37px"><img alt="フィールドの対応画面。姓に氏名、会社名に会社、連名の名に連名が対応している" decoding="async" height="1087" loading="lazy" src="../../image/articles/2026-11-01/word-hagaki-field-mapping.jpg" width="948"></a><figcaption>撮影した住所録では、姓＝氏名、敬称＝敬称、会社名＝会社、住所1＝住所_1、住所2＝住所_2、郵便番号＝郵便番号、部署＝部署、連名の名＝連名が自動で対応していました（左）。「連名の敬称」は（対応なし）だったので、「連名敬称」を選びました（右）。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <p>Excelの見出しがWordの名前と少し違うと、（対応なし）になります。その欄は宛名面に何も出ないので、ここで列を選びます。</p>
 </section>
-<section class="method-section" id="preview">
-<h2><span class="word-step-no">手順3</span>結果のプレビューで確かめる</h2>
-<p>「差し込み文書」タブの「<strong>結果のプレビュー</strong>」をオンにすると、住所録の1人目が宛名面に表示されます。<span class="kbd-btn">◀</span>・<span class="kbd-btn">▶</span> のボタンで次の人に切り替えます。</p>
-<p>フィールドコード（<code>{ MERGEFIELD … }</code>）がそのまま表示される場合は、<span class="kbd-btn">Alt</span>+<span class="kbd-btn">F9</span> で結果の表示に切り替えます。</p>
-<h3>連名の欄が入っていなかった</h3>
+<section class="method-section" id="preview"><h2><span class="word-step-no">手順3</span>結果のプレビューで確かめる</h2>
+<p>「差し込み文書」タブの「結果のプレビュー」をオンにすると、住所録の1人目が宛名面に表示されます。◀・▶ のボタンで次の人に切り替えます。</p>
+<p>フィールドコード（{ MERGEFIELD … }）がそのまま表示される場合は、<span class="kbd-btn">Alt</span>＋<span class="kbd-btn">F9</span>で結果の表示に切り替えます。</p>
+<h3>連名の欄が入っていなかったとき</h3>
 <figure class="article-screenshot"><a aria-label="画像を拡大：ウィザードで作った直後の宛名面。山田 太郎 様だけで連名がない" href="../../image/articles/2026-11-01/word-hagaki-preview-before-renmei.jpg" rel="noopener" target="_blank" style="--screenshot-width:395.00px"><img alt="ウィザードで作った直後の宛名面。山田 太郎 様だけで連名がない" decoding="async" height="586" loading="lazy" src="../../image/articles/2026-11-01/word-hagaki-preview-before-renmei.jpg" width="395"></a><figcaption>ウィザードで作った直後のプレビューです。住所録に連名の列がありますが、「山田 太郎 様」だけで、連名の「花子 様」は出ていません。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<p>撮影した環境では、住所録に「連名」「連名敬称」の列があっても、<strong>ウィザードが作った宛名面には連名の欄が入りませんでした</strong>。フィールドの対応を直した後も同じだったため、宛名の枠に連名を自分で追加しました。</p>
-<ol class="line-height-2">
-<li>「結果のプレビュー」をオンにしたまま、宛名の名前（太郎）の最後をクリックし、<span class="kbd-btn">End</span> で行の最後に移動します。</li>
-<li><span class="kbd-btn">Enter</span> を押して、名前の左に新しい行を作ります。</li>
-<li>「差し込みフィールドの挿入」から「<strong>連名</strong>」を入れ、空白を1つ入力して「<strong>連名敬称</strong>」を入れます。</li>
-<li><span class="kbd-btn">Home</span> で行の先頭に移動し、全角の空白をいくつか入れて、連名の位置を名（太郎）の高さにそろえます（撮影では4つ）。</li>
-</ol>
-<p>連名がない人（連名の列が空欄の人）は、この行には何も出ません。撮影では2人目の佐藤 次郎さん（連名なし）で、名前の左が空になることを確認しました。</p>
+<p>撮影した環境では、住所録に「連名」「連名敬称」の列があっても、ウィザードが作った宛名面には連名の欄が入りませんでした。フィールドの対応を直した後も同じだったため、宛名の枠に連名を自分で追加しました。</p>
+<ol><li>「結果のプレビュー」をオンにしたまま、宛名の名前（太郎）の最後をクリックし、<span class="kbd-btn">End</span>で行の最後に移動します。</li><li><span class="kbd-btn">Enter</span>を押して、名前の左に新しい行を作ります。</li><li>「差し込みフィールドの挿入」から「連名」を入れ、空白を1つ入力して「連名敬称」を入れます。</li><li><span class="kbd-btn">Home</span>で行の先頭に移動し、全角の空白をいくつか入れて、連名の位置を名（太郎）の高さにそろえます（撮影では4つ）。</li></ol>
+<p class="word-check"><strong>確認</strong>連名がない人（連名の列が空欄の人）は、この行には何も出ません。撮影では2人目の佐藤 次郎さん（連名なし）で、名前の左が空になることを確認しました。</p>
 <h3>会社あての宛名と、長い住所</h3>
 <figure class="article-screenshot"><a aria-label="画像を拡大：会社名と部署が入った宛名面。長い住所が折り返している" href="../../image/articles/2026-11-01/word-hagaki-preview-company.jpg" rel="noopener" target="_blank" style="--screenshot-width:501.19px"><img alt="会社名と部署が入った宛名面。長い住所が折り返している" decoding="async" height="1224" loading="lazy" src="../../image/articles/2026-11-01/word-hagaki-preview-company.jpg" width="829"></a><figcaption>会社・部署の列に値がある人は、名前の右に会社名と部署が入ります。住所_1が長いと、枠の下で入りきらず「三の丸三－一－一」の最後の「一」が次の行の先頭に送られました。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<ul class="line-height-2">
-<li>住所が折り返すときは、住所録で<strong>番地の途中で住所_2に分ける</strong>か、「はがき宛名面印刷」タブの「<strong>レイアウトの微調整</strong>」で枠の大きさを変えます。</li>
-<li>漢数字への変換では、「10」は「十」ではなく「一〇」になりました（「梅田2-10-5」→「梅田二－一〇－五」）。</li>
-<li>郵便番号は漢数字にならず、郵便番号の枠に1桁ずつ入ります。</li>
-</ul>
+<ul><li>住所が折り返すときは、住所録で番地の途中で住所_2に分けるか、「はがき宛名面印刷」タブの「レイアウトの微調整」で枠の大きさを変えます。</li><li>漢数字への変換では、「10」は「十」ではなく「一〇」になりました（「梅田2-10-5」→「梅田二－一〇－五」）。</li><li>郵便番号は漢数字にならず、郵便番号の枠に1桁ずつ入ります。</li></ul>
 </section>
-<section class="method-section" id="print">
-<h2><span class="word-step-no">手順4</span>印刷する</h2>
+<section class="method-section" id="print"><h2><span class="word-step-no">手順4</span>印刷する</h2>
 <figure class="article-screenshot"><a aria-label="画像を拡大：はがき宛名面印刷タブのボタン" href="../../image/articles/2026-11-01/word-hagaki-tab.jpg" rel="noopener" target="_blank" style="--screenshot-width:1568.00px"><img alt="はがき宛名面印刷タブのボタン" decoding="async" height="226" loading="lazy" src="../../image/articles/2026-11-01/word-hagaki-tab.jpg" width="1568"></a><figcaption>ウィザードで作った文書には「はがき宛名面印刷」タブが付きます。宛名・差出人の住所の入力、レイアウトの微調整、抽出、表示中のはがきを印刷、すべて印刷、新規文書へ差し込みなどのボタンがあります。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<ol class="line-height-2">
-<li>まず「<strong>新規文書へ差し込み</strong>」で全員分の宛名面を新しい文書に作り、名前・敬称・連名・住所の折り返しを1枚ずつ確認します。</li>
-<li>普通紙に1枚だけ印刷し、はがきと重ねて郵便番号の枠や宛名の位置を確かめます。</li>
-<li>位置が合っていたら、はがきに印刷します。プリンターの設定で用紙を「はがき」にします。</li>
-</ol>
-<p class="verify-note">この記事は、Windows版 Word（Microsoft 365）で宛名面を作り、画面上のプレビューで確認した内容です。紙への印刷は行っていません。背景のはがきの絵が印刷されないか、郵便番号の枠に合うかは、お使いのプリンターで普通紙に試し印刷して確認してください。環境により結果が異なる場合があります。</p>
+<ol><li>まず「新規文書へ差し込み」で全員分の宛名面を新しい文書に作り、名前・敬称・連名・住所の折り返しを1枚ずつ確認します。</li><li>普通紙に1枚だけ印刷し、はがきと重ねて郵便番号の枠や宛名の位置を確かめます。</li><li>位置が合っていたら、はがきに印刷します。プリンターの設定で用紙を「はがき」にします。</li></ol>
+<p>この記事は、Windows版 Word（Microsoft 365）で宛名面を作り、画面上のプレビューで確認した内容です。紙への印刷は行っていません。背景のはがきの絵が印刷されないか、郵便番号の枠に合うかは、お使いのプリンターで普通紙に試し印刷して確認してください。環境により結果が異なる場合があります。</p>
 </section>
-<section class="method-section" id="guide-step-8">
-<h2>よくあるつまずき</h2>
-<div class="table-wrapper"><table class="comparison-table"><caption>症状と確認すること</caption>
-<thead><tr><th>症状</th><th>確認すること</th></tr></thead>
-<tbody>
-<tr><td>名前や住所が出ない欄がある</td><td>「フィールドの対応」で、その欄が（対応なし）になっていないか。</td></tr>
-<tr><td>連名が出ない</td><td>宛名の枠に連名のフィールドがあるか（この記事の手順3）。「連名の名」「連名の敬称」が住所録の列に対応しているか。</td></tr>
-<tr><td>番地が漢数字にならない</td><td>ウィザードの書式で「宛名住所内の数字を漢数字に変換する」をオンにしたか。縦書きを選んでいるか。</td></tr>
-<tr><td>郵便番号の先頭のゼロが消える</td><td>Excelで郵便番号を文字列にしているか。</td></tr>
-<tr><td>差出人が知らない名前になっている</td><td>ウィザードの差出人の氏名に、最初から入っていた名前が残っていないか。「はがき宛名面印刷」タブの「差出人住所の入力」で直せます。</td></tr>
-</tbody></table></div>
+<section class="method-section" id="guide-step-8"><h2>よくあるつまずき</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>症状と確認すること</caption><thead><tr><th scope="col">症状</th><th scope="col">確認すること</th></tr></thead><tbody><tr><td>名前や住所が出ない欄がある</td><td>「フィールドの対応」で、その欄が（対応なし）になっていないか。</td></tr><tr><td>連名が出ない</td><td>宛名の枠に連名のフィールドがあるか（この記事の手順3）。「連名の名」「連名の敬称」が住所録の列に対応しているか。</td></tr><tr><td>番地が漢数字にならない</td><td>ウィザードの書式で「宛名住所内の数字を漢数字に変換する」をオンにしたか。縦書きを選んでいるか。</td></tr><tr><td>郵便番号の先頭のゼロが消える</td><td>Excelで郵便番号を文字列にしているか。</td></tr><tr><td>差出人が知らない名前になっている</td><td>ウィザードの差出人の氏名に、最初から入っていた名前が残っていないか。「はがき宛名面印刷」タブの「差出人住所の入力」で直せます。</td></tr></tbody></table></div>
 </section>
 <aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>差し込み印刷の基本の流れ</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
 <li><a href="article_mailmerge_envelope_naga3.html">長形3号の封筒に縦書きで宛名を差し込む方法</a></li>

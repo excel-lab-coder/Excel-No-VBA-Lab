@@ -37,175 +37,77 @@
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>必要な人だけ印刷する2つの方法</strong></div>
 <article class="article-body">
 <div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Word差し込み印刷で必要な人だけ印刷する2つの方法：Word側で絞り込む／Excel側で対象者の表を作る</h1>
-<p class="article-summary" data-seo-lead="true">チェックやフィルターで対象者を決め、完成文書の人数を照合します。</p></div><div class="word-answer"><span>結論</span><p>条件が単純なら<strong>Wordの「アドレス帳の編集」→「フィルター」</strong>、条件が複雑なら<strong>Excelで対象者だけのシート</strong>を作ります。Excelのオートフィルターで隠すだけでは絞り込めません。</p></div>
-<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">やさしい（Lv.2）</p><ol class="word-guide-flow"><li>対象の列を用意</li><li>条件で絞る</li><li>人数と順番を確認</li><li>対象者を出力</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">「必要な人だけ印刷」の決め方は2つあります</a></li><li><a href="#guide-step-2">最初の練習：3人から2人だけ出します</a></li><li><a href="#guide-step-3">準備：名簿に「絞り込みに使う列」を作っておく</a></li><li><a href="#pattern-word">パターン1：Word側で絞り込む（アドレス帳の編集）</a></li><li><a href="#pattern-excel">パターン2：Excel側で対象者だけの表を作る</a></li><li><a href="#guide-step-6">どちらのパターンでも、印刷の前に確認すること</a></li><li><a href="#guide-step-7">よくあるつまずき</a></li></ol></nav></details></section>
-<section class="goal-section" id="guide-step-1">
-<h2><span class="icon">💡</span> 「必要な人だけ印刷」の決め方は2つあります</h2>
-<p>Excelの名簿全員ではなく、「今回の対象者だけ」に差し込み印刷したいことはよくあります。対象者の決め方は、次の2つのパターンがあります。</p>
-<div class="table-wrapper"><table class="comparison-table"><caption>2つのパターンの比較</caption>
-<thead><tr><th>観点</th><th>パターン1：Word側で絞り込む<br/>（アドレス帳の編集）</th><th>パターン2：Excel側で対象者だけの表を作る</th></tr></thead>
-<tbody>
-<tr><th>名簿ファイル</th><td>名簿をそのまま使う</td><td>名簿とは別に「印刷用」シートを作る</td></tr>
-<tr><th>絞り込む場所</th><td>Wordの「アドレス帳の編集」</td><td>Excel（FILTER関数、またはコピー）</td></tr>
-<tr><th>できること</th><td>チェックで外す／条件で絞る（最大6条件）／並べ替え／重複のチェック</td><td>Excelの関数でできることなら何でも（日付の範囲、複雑な条件など）</td></tr>
-<tr><th>苦手なこと</th><td>日付の範囲など、文字として比べにくい条件</td><td>名簿とは別のシートを管理する手間</td></tr>
-<tr><th>向いている場面</th><td>部署・地区・「印刷対象＝○」など、条件が単純なとき</td><td>条件が複雑なとき、対象者の一覧を印刷前に人に見せて確認したいとき</td></tr>
-</tbody></table></div>
-<div class="xdemo-note-warn"><strong>やってはいけない絞り込み：Excelのオートフィルター</strong><br/>Excelでオートフィルターをかけて行を隠し、保存しても、<strong>Wordには隠した行も含めて全員分が読み込まれます</strong>。絞り込みは、パターン1かパターン2のどちらかで行ってください。</div>
-<p>差し込み印刷の開始から印刷までの全体の流れは <a href="article_mailmerge_letter_filter_print.html">差し込み印刷の流れ：絞り込みから印刷まで</a> にまとめています。この記事では、その中の「絞り込み」を詳しく説明します。</p>
-</section><section class="method-section" id="guide-step-2"><h2>最初の練習：3人から2人だけ出します</h2><ol class="line-height-2"><li>名簿に「印刷対象」列を作り、山田さんと鈴木さんを「○」、佐藤さんは空欄にします。</li><li>Excelを保存した後、Wordで接続します。</li><li>Wordの「アドレス帳の編集」→「フィルター」で「印刷対象」「等しい」「○」を指定します。</li><li>一覧が山田さん・鈴木さんの2人になったことを確認します。</li><li>「個々のドキュメントの編集」→「すべて」で出力します。この「すべて」は、抽出後の2人です。</li><li>フィルターを解除した場合は、3人へ戻ったことも確認してから保存します。</li></ol></section>
-<section class="method-section" id="guide-step-3">
-<h2>準備：名簿に「絞り込みに使う列」を作っておく</h2>
-<p>どちらのパターンでも、Excelの名簿に<strong>絞り込みの目印になる列</strong>があると楽になります。</p>
-<div class="table-wrapper"><table class="comparison-table"><caption>名簿の例（シート名：名簿）</caption>
-<thead><tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th></tr>
-<tr><th>1</th><th>社員番号</th><th>氏名</th><th>部署</th><th>受講日</th><th>受講日_印刷用</th><th>印刷対象</th><th>会場</th></tr></thead>
-<tbody>
-<tr><th>2</th><td>1001</td><td>山田 太郎</td><td>営業部</td><td>2026/11/20</td><td>2026年11月20日</td><td>○</td><td>第1会議室</td></tr>
-<tr><th>3</th><td>1002</td><td>佐藤 花子</td><td>総務部</td><td>2026/11/20</td><td>2026年11月20日</td><td></td><td>第1会議室</td></tr>
-<tr><th>4</th><td>1003</td><td>鈴木 一郎</td><td>営業部</td><td>2026/11/27</td><td>2026年11月27日</td><td>○</td><td>第2会議室</td></tr>
-<tr><th>5</th><td>1004</td><td>高橋 美咲</td><td>経理部</td><td>2026/11/20</td><td>2026年11月20日</td><td>○</td><td>第1会議室</td></tr>
-<tr><th>6</th><td>1005</td><td>田中 健</td><td>製造部</td><td>2026/11/27</td><td>2026年11月27日</td><td></td><td>第2会議室</td></tr>
-<tr><th>7</th><td>1006</td><td>伊藤 由美</td><td>総務部</td><td>2026/11/27</td><td>2026年11月27日</td><td>○</td><td>第2会議室</td></tr>
-<tr><th>8</th><td>1007</td><td>渡辺 翔太</td><td>製造部</td><td>2026/11/20</td><td>2026年11月20日</td><td></td><td>第1会議室</td></tr>
-<tr><th>9</th><td>1008</td><td>中村 優子</td><td>営業部</td><td>2026/11/20</td><td>2026年11月20日</td><td></td><td>第1会議室</td></tr>
-</tbody></table></div>
-<ul class="line-height-2">
-<li><strong>印刷対象：</strong>今回送る人に「○」を付ける列です。条件を考えずに、目で見て対象者を決められます。</li>
-<li><strong>受講日_印刷用：</strong><code>=TEXT(D2,"yyyy年m月d日")</code> で作った、差し込み用の列です。</li>
-<li>保存して、Excelを閉じてからWordでつなぎます。</li>
-</ul>
+<p class="article-summary" data-seo-lead="true">名簿の一部の人だけに差し込み印刷します。条件が単純ならWord側で、複雑ならExcel側で対象者を決めます。</p></div><div class="word-answer"><span>結論</span><p>条件が単純なら<strong>Wordの「アドレス帳の編集」→「フィルター」</strong>、条件が複雑なら<strong>Excelで対象者だけのシート</strong>を作ります。Excelのオートフィルターで隠すだけでは絞り込めません。</p></div>
+<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">やさしい（Lv.2）</p><ol class="word-guide-flow"><li>目印の列を作る</li><li>方法を選ぶ</li><li>対象者を絞る</li><li>人数を照合</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">2つの方法の選び方</a></li><li><a href="#guide-step-2">最初の練習：3人から2人だけ出す</a></li><li><a href="#guide-step-3">準備：名簿に「絞り込みに使う列」を作る</a></li><li><a href="#pattern-word">パターン1：Word側で絞り込む</a></li><li><a href="#pattern-excel">パターン2：Excel側で対象者だけの表を作る</a></li><li><a href="#guide-step-6">どちらのパターンでも、印刷の前に確認すること</a></li><li><a href="#guide-step-7">よくあるつまずき</a></li></ol></nav></details></section>
+<section class="method-section" id="guide-step-1"><h2>2つの方法の選び方</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>2つのパターンの比較</caption><thead><tr><th scope="col">観点</th><th scope="col">パターン1：Word側で絞り込む</th><th scope="col">パターン2：Excel側で対象者の表を作る</th></tr></thead><tbody><tr><td>名簿ファイル</td><td>名簿をそのまま使う</td><td>名簿とは別に「印刷用」シートを作る</td></tr><tr><td>絞り込む場所</td><td>Wordの「アドレス帳の編集」</td><td>Excel（FILTER関数、またはコピー）</td></tr><tr><td>できること</td><td>チェックで外す／条件で絞る（最大6条件）／並べ替え／重複のチェック</td><td>Excelの関数でできることなら何でも（日付の範囲、複雑な条件など）</td></tr><tr><td>苦手なこと</td><td>日付の範囲など、文字として比べにくい条件</td><td>名簿とは別のシートを管理する手間</td></tr><tr><td>向いている場面</td><td>部署・地区・「印刷対象＝○」など、条件が単純なとき</td><td>条件が複雑なとき、対象者の一覧を印刷前に人に見せて確認したいとき</td></tr></tbody></table></div>
+<div class="xdemo-note-warn"><strong>やってはいけない絞り込み：Excelのオートフィルター</strong>オートフィルターで行を隠して保存しても、Wordには隠した行も含めて全員分が読み込まれます。絞り込みは、パターン1かパターン2で行います。</div>
+<p>開始から印刷までの全体の流れは<a href="article_mailmerge_letter_filter_print.html">差し込み印刷の流れ：絞り込みから印刷まで</a>にまとめています。この記事では絞り込みを詳しく説明します。</p>
 </section>
-<section class="method-section" id="pattern-word">
-<h2>パターン1：Word側で絞り込む（アドレス帳の編集）</h2>
-<p>Excelの名簿をWordにつないだ後（「宛先の選択」→「既存のリストを使用」）、<strong>「差し込み文書」タブ → 「アドレス帳の編集」</strong>を押すと、「差し込み印刷の宛先」の画面が開きます。絞り込みはすべてこの画面で行います。</p>
+<section class="method-section" id="guide-step-2"><h2>最初の練習：3人から2人だけ出す</h2>
+<ol><li>名簿に「印刷対象」列を作り、山田さんと鈴木さんを「○」、佐藤さんは空欄にします。</li><li>Excelを保存した後、Wordで接続します。</li><li>Wordの「アドレス帳の編集」→「フィルター」で「印刷対象」「等しい」「○」を指定します。</li></ol>
+<p class="word-check"><strong>確認</strong>一覧が山田さん・鈴木さんの2人になれば成功です。</p>
+<ol start="4"><li>「個々のドキュメントの編集」→「すべて」で出力します。この「すべて」は、抽出後の2人です。</li><li>フィルターを解除した場合は、3人へ戻ったことも確認してから保存します。</li></ol>
+</section>
+<section class="method-section" id="guide-step-3"><h2>準備：名簿に「絞り込みに使う列」を作る</h2>
+<p>どちらのパターンでも、目印になる列があると楽になります。</p>
+<div class="table-wrapper"><table class="comparison-table"><caption>名簿の例（シート名：名簿）</caption><thead><tr><th scope="col"></th><th scope="col">A</th><th scope="col">B</th><th scope="col">C</th><th scope="col">D</th><th scope="col">E</th><th scope="col">F</th><th scope="col">G</th></tr></thead><tbody><tr><td>1</td><td>社員番号</td><td>氏名</td><td>部署</td><td>受講日</td><td>受講日_印刷用</td><td>印刷対象</td><td>会場</td></tr><tr><td>2</td><td>1001</td><td>山田 太郎</td><td>営業部</td><td>2026/11/20</td><td>2026年11月20日</td><td>○</td><td>第1会議室</td></tr><tr><td>3</td><td>1002</td><td>佐藤 花子</td><td>総務部</td><td>2026/11/20</td><td>2026年11月20日</td><td></td><td>第1会議室</td></tr><tr><td>4</td><td>1003</td><td>鈴木 一郎</td><td>営業部</td><td>2026/11/27</td><td>2026年11月27日</td><td>○</td><td>第2会議室</td></tr><tr><td>5</td><td>1004</td><td>高橋 美咲</td><td>経理部</td><td>2026/11/20</td><td>2026年11月20日</td><td>○</td><td>第1会議室</td></tr><tr><td>6</td><td>1005</td><td>田中 健</td><td>製造部</td><td>2026/11/27</td><td>2026年11月27日</td><td></td><td>第2会議室</td></tr><tr><td>7</td><td>1006</td><td>伊藤 由美</td><td>総務部</td><td>2026/11/27</td><td>2026年11月27日</td><td>○</td><td>第2会議室</td></tr><tr><td>8</td><td>1007</td><td>渡辺 翔太</td><td>製造部</td><td>2026/11/20</td><td>2026年11月20日</td><td></td><td>第1会議室</td></tr><tr><td>9</td><td>1008</td><td>中村 優子</td><td>営業部</td><td>2026/11/20</td><td>2026年11月20日</td><td></td><td>第1会議室</td></tr></tbody></table></div>
+<ul><li><strong>印刷対象</strong>：今回送る人に「○」を付ける列です。条件を考えずに、目で見て対象者を決められます。</li><li><strong>受講日_印刷用</strong>：<code>=TEXT(D2,"yyyy年m月d日")</code> で作った、差し込み用の列です。</li><li>保存して、Excelを閉じてからWordでつなぎます。</li></ul>
+</section>
+<section class="method-section" id="pattern-word"><h2>パターン1：Word側で絞り込む</h2>
+<p>Excelの名簿をWordにつないだ後（「宛先の選択」→「既存のリストを使用」）、「差し込み文書」タブ →「アドレス帳の編集」を押します。「差し込み印刷の宛先」の画面が開きます。絞り込みはすべてこの画面で行います。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：絞り込み後の対象者4名が表示されたWordの宛先一覧" href="../../image/articles/2026-11-01/word-recipients-filtered.jpg" rel="noopener" target="_blank" style="--screenshot-width:1301.26px"><img alt="絞り込み後の対象者4名が表示されたWordの宛先一覧" decoding="async" height="828" loading="lazy" src="../../image/articles/2026-11-01/word-recipients-filtered.jpg" width="1456"></a><figcaption>「印刷対象＝○」で絞り込んだ後の例です。一覧の上で宛先とチェックを確認し、下の「フィルター」「並べ替え」から条件を変更します。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <h3>1-1. チェックボックスで外す（数人だけ外したいとき）</h3>
-<ul class="line-height-2">
-<li>一覧の左のチェックを外した人は、差し込み・印刷の対象から外れます。</li>
-<li>見出しのチェックボックスで、全員のチェックをまとめて付けたり外したりできます。「全員外してから、送る人だけチェックを付ける」という使い方もできます。</li>
-<li>列の見出しをクリックすると、その列で並べ替えて表示できるので、探しやすくなります。</li>
-</ul>
-<p class="verify-note">チェックを外した状態が次回文書を開いたときにも残るかは、環境により結果が異なる場合があります。毎回同じ人を外すなら、1-2のフィルターを使う方が確実です。</p>
+<ul><li>一覧の左のチェックを外した人は、差し込み・印刷の対象から外れます。</li><li>見出しのチェックボックスで、全員のチェックをまとめて付けたり外したりできます。全員外してから送る人だけチェックする使い方もできます。</li><li>列の見出しをクリックすると、その列で並べ替えて表示でき、探しやすくなります。</li></ul>
+<p>チェックを外した状態が次回文書を開いたときにも残るかは、環境により結果が異なる場合があります。毎回同じ人を外すなら、1-2のフィルターを使う方が確実です。</p>
 <h3>1-2. フィルターで条件を指定する（おすすめ）</h3>
-<ol class="line-height-2">
-<li>画面下の「アドレス帳の絞り込み」から<strong>「フィルター」</strong>を押します。</li>
-<li>「フィルターと並べ替え」の画面の<strong>「レコードのフィルター」</strong>タブで、1行目に条件を入れます。
-<ul>
-<li><strong>フィールド：</strong>どの列で絞るか（例：印刷対象）</li>
-<li><strong>条件：</strong>どう比べるか（例：が値と等しい）</li>
-<li><strong>比較対象：</strong>何と比べるか（例：○）</li>
-</ul></li>
-<li>「OK」を押すと、一覧が条件に合う人だけになります。</li>
-</ol>
+<ol><li>画面下の「アドレス帳の絞り込み」から「フィルター」を押します。</li><li>「フィルターと並べ替え」の画面の「レコードのフィルター」タブで、1行目に条件を入れます。<ul><li>フィールド：どの列で絞るか（例：印刷対象）</li><li>条件：どう比べるか（例：が値と等しい）</li><li>比較対象：何と比べるか（例：○）</li></ul></li><li>「OK」を押すと、一覧が条件に合う人だけになります。</li></ol>
 <figure class="article-screenshot"><a aria-label="画像を拡大：印刷対象が○と等しいというWordのフィルター設定" href="../../image/articles/2026-11-01/word-filter-print-target.jpg" rel="noopener" target="_blank" style="--screenshot-width:1286.00px"><img alt="印刷対象が○と等しいというWordのフィルター設定" decoding="async" height="622" loading="lazy" src="../../image/articles/2026-11-01/word-filter-print-target.jpg" width="1286"></a><figcaption>「印刷対象」「が値と等しい」「○」の1条件で絞る例です。画面の「条件」は、本文でいう比較方法に当たります。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<div class="table-wrapper"><table class="comparison-table"><caption>「条件」で選べる主なもの（画面では「が値と等しい」のように表示されます）</caption>
-<thead><tr><th>条件</th><th>意味</th><th>使用例</th></tr></thead>
-<tbody>
-<tr><td>が値と等しい</td><td>比較対象と同じ</td><td>印刷対象 等しい ○</td></tr>
-<tr><td>等しくない</td><td>比較対象と違う</td><td>部署 等しくない 役員室</td></tr>
-<tr><td>より小さい／より大きい</td><td>未満／超える</td><td>社員番号 より大きい 2000</td></tr>
-<tr><td>以下／以上</td><td>その値を含む</td><td>社員番号 以上 1000</td></tr>
-<tr><td>空白</td><td>何も入っていない</td><td>メールアドレス 空白（紙で送る人だけ）</td></tr>
-<tr><td>空白でない</td><td>何か入っている</td><td>氏名 空白でない（空の行を除く）</td></tr>
-<tr><td>含む／含まない</td><td>文字の一部が入っている／いない</td><td>住所1 含む 千代田区</td></tr>
-</tbody></table></div>
-<p class="verify-note">「が値と等しい」は実画面で確認済みです。それ以外の条件の表示名は、環境により結果が異なる場合があります（「が値と等しくない」「が空白」のような形で表示されます）。</p>
+<div class="table-wrapper"><table class="comparison-table"><caption>「条件」で選べる主なもの（画面では「が値と等しい」のように表示されます）</caption><thead><tr><th scope="col">条件</th><th scope="col">意味</th><th scope="col">使用例</th></tr></thead><tbody><tr><td>が値と等しい</td><td>比較対象と同じ</td><td>印刷対象 等しい ○</td></tr><tr><td>等しくない</td><td>比較対象と違う</td><td>部署 等しくない 役員室</td></tr><tr><td>より小さい／より大きい</td><td>未満／超える</td><td>社員番号 より大きい 2000</td></tr><tr><td>以下／以上</td><td>その値を含む</td><td>社員番号 以上 1000</td></tr><tr><td>空白</td><td>何も入っていない</td><td>メールアドレス 空白（紙で送る人だけ）</td></tr><tr><td>空白でない</td><td>何か入っている</td><td>氏名 空白でない（空の行を除く）</td></tr><tr><td>含む／含まない</td><td>文字の一部が入っている／いない</td><td>住所1 含む 千代田区</td></tr></tbody></table></div>
+<p>「が値と等しい」は実画面で確認済みです。それ以外の条件の表示名は、環境により結果が異なる場合があります（「が値と等しくない」「が空白」のような形で表示されます）。</p>
 <h3>1-3. 条件を組み合わせる（AND／OR）</h3>
-<p>2行目以降にも条件を入れると、条件を組み合わせられます（最大6行）。2行目の左端で<strong>「AND」</strong>か<strong>「OR」</strong>を選びます。</p>
-<div class="table-wrapper"><table class="comparison-table"><caption>組み合わせの例</caption>
-<thead><tr><th>やりたいこと</th><th>1行目</th><th>2行目</th></tr></thead>
-<tbody>
-<tr><td>営業部で、今回の対象の人</td><td>部署 等しい 営業部</td><td><strong>AND</strong> 印刷対象 等しい ○</td></tr>
-<tr><td>営業部か総務部の人</td><td>部署 等しい 営業部</td><td><strong>OR</strong> 部署 等しい 総務部</td></tr>
-<tr><td>11月20日受講で、氏名が空でない人</td><td>受講日_印刷用 等しい 2026年11月20日</td><td><strong>AND</strong> 氏名 空白でない</td></tr>
-</tbody></table></div>
-<div class="xdemo-note-info"><strong>AND と OR を混ぜるときは注意</strong><br/>「営業部か総務部で、かつ印刷対象が○」のように AND と OR を3行以上混ぜると、意図しない組み合わせになることがあります。迷ったら、Excelの「印刷対象」列に○を付けて、Word側は「印刷対象 等しい ○」の1条件にするのが確実です。</div>
+<p>2行目以降にも条件を入れられます（最大6行）。2行目の左端で「AND」か「OR」を選びます。</p>
+<div class="table-wrapper"><table class="comparison-table"><caption>組み合わせの例</caption><thead><tr><th scope="col">やりたいこと</th><th scope="col">1行目</th><th scope="col">2行目</th></tr></thead><tbody><tr><td>営業部で、今回の対象の人</td><td>部署 等しい 営業部</td><td>AND 印刷対象 等しい ○</td></tr><tr><td>営業部か総務部の人</td><td>部署 等しい 営業部</td><td>OR 部署 等しい 総務部</td></tr><tr><td>11月20日受講で、氏名が空でない人</td><td>受講日_印刷用 等しい 2026年11月20日</td><td>AND 氏名 空白でない</td></tr></tbody></table></div>
+<div class="xdemo-note-info"><strong>AND と OR を混ぜるときは注意</strong>「営業部か総務部で、かつ印刷対象が○」のように3行以上混ぜると、意図しない組み合わせになることがあります。迷ったら、Excelの「印刷対象」列に○を付けて、Word側は「印刷対象 等しい ○」の1条件にするのが確実です。</div>
 <h3>1-4. 並べ替える（印刷する順番）</h3>
-<ol class="line-height-2">
-<li>「フィルターと並べ替え」の画面の<strong>「レコードの並べ替え」</strong>タブを開きます。</li>
-<li>「最優先されるフィールド」「2番目に優先されるフィールド」…と、最大3つまで指定し、昇順・降順を選びます（例：部署 → 社員番号）。</li>
-</ol>
+<ol><li>「フィルターと並べ替え」の画面の「レコードの並べ替え」タブを開きます。</li><li>「最優先されるフィールド」「2番目に優先されるフィールド」…と、最大3つまで指定し、昇順・降順を選びます（例：部署 → 社員番号）。</li></ol>
 <p>配る順番に並べて印刷すると、仕分けの手間が減ります。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：部署の昇順に続いて社員番号の昇順を指定した画面" href="../../image/articles/2026-11-01/word-sort-department-id.jpg" rel="noopener" target="_blank" style="--screenshot-width:1286.00px"><img alt="部署の昇順に続いて社員番号の昇順を指定した画面" decoding="async" height="622" loading="lazy" src="../../image/articles/2026-11-01/word-sort-department-id.jpg" width="1286"></a><figcaption>印刷する順番を、部署→社員番号の順で指定した例です。フィルターで対象者を決めた後に、配りやすい順番へ並べ替えます。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <h3>1-5. 重複のチェック・宛先の検索</h3>
-<ul class="line-height-2">
-<li><strong>重複のチェック：</strong>同じ内容の行がないか探して、重複した行のチェックを外せます。同じ人に2通送るのを防げます。</li>
-<li><strong>宛先の検索：</strong>名前などで特定の人を探し、チェックが付いているか確認できます。</li>
-</ul>
+<ul><li><strong>重複のチェック</strong>：同じ内容の行がないか探して、重複した行のチェックを外せます。同じ人に2通送るのを防げます。</li><li><strong>宛先の検索</strong>：名前などで特定の人を探し、チェックが付いているか確認できます。</li></ul>
 <h3>1-6. 絞り込みを解除する・確認する</h3>
-<ul class="line-height-2">
-<li>フィルターの画面の<strong>「すべてクリア」</strong>で、条件をすべて外します。</li>
-<li>フィルターの設定は差し込み文書と一緒に保存されます。次回開いたときに前回の条件が残っていることがあるので、<strong>印刷の前に必ず「アドレス帳の編集」で件数と条件を確認</strong>します。</li>
-</ul>
+<ul><li>フィルターの画面の「すべてクリア」で、条件をすべて外します。</li><li>フィルターの設定は差し込み文書と一緒に保存されます。次回も前回の条件が残っていることがあるので、印刷の前に必ず「アドレス帳の編集」で件数と条件を確認します。</li></ul>
 <h3>1-7. 日付・数値で絞るときの注意</h3>
-<p>Word側の比較は、Excelのように日付を「日付の値」として比べられないことがあります。「受講日が11月1日〜11月30日」のような<strong>範囲の条件は、Word側では失敗しやすい</strong>ため、次のどちらかにします。</p>
-<ul class="line-height-2">
-<li>Excelの名簿に「対象月」列（<code>=TEXT(D2,"yyyy年m月")</code>）を作り、Word側で「対象月 等しい 2026年11月」にする。</li>
-<li>パターン2（Excel側で対象者だけの表を作る）を使う。</li>
-</ul>
-<p class="verify-note">日付・数値の比較のされ方は、環境により結果が異なる場合があります。結果のプレビューで件数を必ず確認してください。</p>
+<p>Word側の比較は、Excelのように日付を「日付の値」として比べられないことがあります。「受講日が11月1日〜11月30日」のような範囲の条件は失敗しやすいので、次のどちらかにします。</p>
+<ul><li>Excelの名簿に「対象月」列（<code>=TEXT(D2,"yyyy年m月")</code>）を作り、Word側で「対象月 等しい 2026年11月」にする。</li><li>パターン2（Excel側で対象者だけの表を作る）を使う。</li></ul>
+<p>日付・数値の比較のされ方は、環境により結果が異なる場合があります。結果のプレビューで件数を必ず確認してください。</p>
 </section>
-<section class="method-section" id="pattern-excel">
-<h2>パターン2：Excel側で対象者だけの表を作る</h2>
-<p>条件が複雑なときや、印刷前に「この人たちに送ります」という一覧を上司に確認してもらいたいときは、Excel側で対象者だけの表を作り、<strong>その表をWordにつなぎます</strong>。</p>
+<section class="method-section" id="pattern-excel"><h2>パターン2：Excel側で対象者だけの表を作る</h2>
+<p>条件が複雑なときや、印刷前に「この人たちに送ります」という一覧を上司に確認してもらいたいときの方法です。</p>
 <h3>2-1. Excelのフィルターで対象者をコピーする（通常の方法）</h3>
-<ol class="line-height-2">
-<li>名簿でオートフィルターをかけ、対象者だけを表示します。</li>
-<li>見出しを含めて表示されている範囲を選び、<span class="kbd-btn">Alt</span>+<span class="kbd-btn">;</span>（可視セルの選択）を押してからコピーします。</li>
-<li>新しいシート「印刷用」のA1セルに、<strong>値として貼り付け</strong>ます。</li>
-<li>対象外の人が混ざっていないか、件数と氏名を照合します。</li>
-<li>保存して閉じ、Wordで「印刷用$」を選んでつなぎます。</li>
-</ol>
-<p>この方法は、毎回コピーし直す必要があります。くり返す作業なら、パターン1（Word側のフィルター）で「印刷対象 等しい ○」にする方が手間がかかりません。</p>
+<ol><li>名簿でオートフィルターをかけ、対象者だけを表示します。</li><li>見出しを含めて表示されている範囲を選び、<span class="kbd-btn">Alt</span>＋<span class="kbd-btn">;</span>（可視セルの選択）を押してからコピーします。</li><li>新しいシート「印刷用」のA1セルに、値として貼り付けます。</li><li>対象外の人が混ざっていないか、件数と氏名を照合します。</li><li>保存して閉じ、Wordで「印刷用$」を選んでつなぎます。</li></ol>
+<p>この方法は、毎回コピーし直す必要があります。くり返す作業なら、パターン1で「印刷対象 等しい ○」にする方が手間がかかりません。</p>
 <h3>2-2. FILTER関数で自動抽出する（対応するExcelを使う場合）</h3>
-<ol class="line-height-2">
-<li>新しいシートを作り、名前を「印刷用」にします。</li>
-<li>1行目に、名簿と同じ見出しを入力します（名簿の1行目をコピーして貼り付けると確実です）。</li>
-<li>A2セルに次の式を入れます。条件に合う人だけが、2行目から下に並びます。</li>
-</ol>
+<ol><li>新しいシートを作り、名前を「印刷用」にします。</li><li>1行目に、名簿と同じ見出しを入力します（名簿の1行目をコピーして貼り付けると確実です）。</li><li>A2セルに次の式を入れます。条件に合う人だけが、2行目から下に並びます。</li></ol>
 <div class="code-block" data-lang="excel"><span class="code-line">=FILTER(名簿!A2:G500, 名簿!F2:F500="○", "")</span></div>
-<p class="code-comment">名簿のF列（印刷対象）が「○」の行だけを取り出します。該当者がいないときは空になります。</p>
+<p>名簿のF列（印刷対象）が「○」の行だけを取り出します。該当者がいないときは空になります。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：印刷用シートのA2にFILTER関数を入れ、印刷対象の4名だけが並んだExcelの画面" href="../../image/articles/2026-11-01/excel-print-sheet-filter.jpg" rel="noopener" target="_blank" style="--screenshot-width:1337.00px"><img alt="印刷用シートのA2にFILTER関数を入れ、印刷対象の4名だけが並んだExcelの画面" decoding="async" height="415" loading="lazy" src="../../image/articles/2026-11-01/excel-print-sheet-filter.jpg" width="1337"></a><figcaption>撮影に使った「印刷用」シートです。1行目は見出しを入力し、A2に <code>=FILTER(名簿!A2:G500,名簿!F2:F500="○","")</code> を入れると、8名の名簿から○の4名だけが並びました。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <p>条件の例：</p>
 <div class="code-block" data-lang="excel"><span class="code-line">=FILTER(名簿!A2:G500, (名簿!C2:C500="営業部")*(名簿!D2:D500&gt;=DATE(2026,11,1))*(名簿!D2:D500&lt;=DATE(2026,11,30)), "")</span></div>
-<p class="code-comment">営業部で、受講日が2026年11月中の人。<code>*</code> は「かつ（AND）」、<code>+</code> にすると「または（OR）」になります。日付の範囲もExcel側なら正確に絞れます。</p>
-<ol class="line-height-2" start="4">
-<li>Excelを保存して閉じます。</li>
-<li>Wordで「宛先の選択」→「既存のリストを使用」から同じExcelファイルを選び、「テーブルの選択」で<strong>「印刷用$」</strong>を選びます。</li>
-</ol>
+<p>営業部で、受講日が2026年11月中の人です。* は「かつ（AND）」、+ にすると「または（OR）」になります。日付の範囲もExcel側なら正確に絞れます。</p>
+<ol start="4"><li>Excelを保存して閉じます。</li><li>Wordで「宛先の選択」→「既存のリストを使用」から同じExcelファイルを選び、「テーブルの選択」で「印刷用$」を選びます。</li></ol>
 <figure class="article-screenshot"><a aria-label="画像を拡大：印刷用と名簿の2シートから印刷用を選択した画面" href="../../image/articles/2026-11-01/word-select-print-sheet.jpg" rel="noopener" target="_blank" style="--screenshot-width:987.00px"><img alt="印刷用と名簿の2シートから印刷用を選択した画面" decoding="async" height="483" loading="lazy" src="../../image/articles/2026-11-01/word-select-print-sheet.jpg" width="987"></a><figcaption>Excelで抽出した人だけを使う場合は「印刷用$」を選びます。「名簿$」と取り違えないように、シート名を確認して「OK」を押します。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<p>FILTER関数の詳しい使い方は <a href="../../functions/latest/article_filter.html">FILTER関数の記事</a> を見てください。</p>
+<p>FILTER関数の詳しい使い方は<a href="../../functions/latest/article_filter.html">FILTER関数の記事</a>を見てください。</p>
 <h3>2-3. パターン2の注意</h3>
-<ul class="line-height-2">
-<li><strong>空の行が宛先として読み込まれることがあります。</strong>「印刷用」シートに書式や式だけが入った行があると、Wordが空の宛先として数えることがあります。Word側で「氏名 空白でない」のフィルターを1つ足しておくと安心です。</li>
-<li>FILTER関数の結果は、Excelで<strong>保存したときの値</strong>がWordに読み込まれます。名簿の○を付け直したら、Excelで再計算された状態で保存してから、Wordで「最新の情報に更新」を押します。</li>
-<li>見出しの列名は、名簿と同じにしておくと、差し込みフィールドを入れ直さずに済みます。</li>
-</ul>
-<p class="verify-note">空の行の読み込まれ方・FILTER関数の結果の読み込まれ方は、環境により結果が異なる場合があります。</p>
+<ul><li><strong>空の行が宛先として読み込まれることがあります。</strong> 「印刷用」シートに書式や式だけが入った行があると、Wordが空の宛先として数えることがあります。Word側で「氏名 空白でない」のフィルターを1つ足しておくと安心です。</li><li><strong>FILTER関数の結果は、Excelで保存したときの値が読み込まれます。</strong> 名簿の○を付け直したら、再計算された状態で保存してから、Wordで「最新の情報に更新」を押します。</li><li><strong>見出しの列名は名簿と同じにします。</strong> 差し込みフィールドを入れ直さずに済みます。</li></ul>
+<p>空の行の読み込まれ方・FILTER関数の結果の読み込まれ方は、環境により結果が異なる場合があります。</p>
 </section>
-<section class="method-section" id="guide-step-6">
-<h2>どちらのパターンでも、印刷の前に確認すること</h2>
-<ol class="line-height-2">
-<li><strong>件数：</strong>「アドレス帳の編集」の一覧、または「結果のプレビュー」で、対象者の人数が合っているか。</li>
-<li><strong>1件ずつの表示：</strong>結果のプレビューで、名前・日付が正しく表示されているか。</li>
-<li><strong>試し印刷：</strong>「完了と差し込み」→「文書の印刷」→「現在のレコード」で1枚だけ印刷して確認。</li>
-<li><strong>全員分の印刷：</strong>「完了と差し込み」→「個々のドキュメントの編集」で新しい文書に書き出して全体を確認してから印刷するか、「文書の印刷」→「すべて」で印刷します。</li>
-</ol>
-<p>印刷の手順の詳細は <a href="article_mailmerge_letter_filter_print.html">差し込み印刷の流れ（絞り込み・印刷）</a> の手順6・7を見てください。</p>
+<section class="method-section" id="guide-step-6"><h2>どちらのパターンでも、印刷の前に確認すること</h2>
+<ul><li><strong>件数</strong>：「アドレス帳の編集」の一覧、または「結果のプレビュー」で、対象者の人数が合っているか。</li><li><strong>1件ずつの表示</strong>：結果のプレビューで、名前・日付が正しく表示されているか。</li><li><strong>試し印刷</strong>：「完了と差し込み」→「文書の印刷」→「現在のレコード」で1枚だけ印刷して確認。</li><li><strong>全員分の印刷</strong>：「完了と差し込み」→「個々のドキュメントの編集」で新しい文書に書き出して全体を確認してから印刷するか、「文書の印刷」→「すべて」で印刷します。</li></ul>
+<p>印刷の手順の詳細は<a href="article_mailmerge_letter_filter_print.html">差し込み印刷の流れ（絞り込み・印刷）</a>の手順6・7を見てください。</p>
 </section>
-<section class="method-section" id="guide-step-7">
-<h2>よくあるつまずき</h2>
-<div class="table-wrapper"><table class="comparison-table"><caption>症状と確認すること</caption>
-<thead><tr><th>症状</th><th>確認すること</th></tr></thead>
-<tbody>
-<tr><td>Excelで絞り込んだのに全員分が印刷される</td><td>Excelのオートフィルターは反映されません。パターン1か2で絞り込みます。</td></tr>
-<tr><td>フィルターしたら0件になった</td><td>比較対象の文字が名簿と一字一句同じか（全角・半角、「○」と「〇」の違い、前後の空白）。「が値と等しい」で合わないときは、「含む」の条件（表示例：が値を含む）を試します。</td></tr>
-<tr><td>前回の条件のまま印刷してしまった</td><td>フィルター設定は文書に保存されます。印刷前に「アドレス帳の編集」→「フィルター」で条件を確認します。</td></tr>
-<tr><td>日付の範囲で絞れない</td><td>1-7のとおり「対象月」列を作るか、パターン2のFILTER関数で絞ります。</td></tr>
-<tr><td>空白のページが混ざる</td><td>「氏名 空白でない」のフィルターを追加します。パターン2では「印刷用」シートの余分な行を確認します。</td></tr>
-<tr><td>○を付け直したのにWordに反映されない</td><td>Excelを保存して閉じてから、「アドレス帳の編集」でデータ ソースを選んで「最新の情報に更新」を押します。</td></tr>
-</tbody></table></div>
+<section class="method-section" id="guide-step-7"><h2>よくあるつまずき</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>症状と確認すること</caption><thead><tr><th scope="col">症状</th><th scope="col">確認すること</th></tr></thead><tbody><tr><td>Excelで絞り込んだのに全員分が印刷される</td><td>Excelのオートフィルターは反映されません。パターン1か2で絞り込みます。</td></tr><tr><td>フィルターしたら0件になった</td><td>比較対象の文字が名簿と一字一句同じか（全角・半角、「○」と「〇」の違い、前後の空白）。「が値と等しい」で合わないときは、「含む」の条件（表示例：が値を含む）を試します。</td></tr><tr><td>前回の条件のまま印刷してしまった</td><td>フィルター設定は文書に保存されます。印刷前に「アドレス帳の編集」→「フィルター」で条件を確認します。</td></tr><tr><td>日付の範囲で絞れない</td><td>1-7のとおり「対象月」列を作るか、パターン2のFILTER関数で絞ります。</td></tr><tr><td>空白のページが混ざる</td><td>「氏名 空白でない」のフィルターを追加します。パターン2では「印刷用」シートの余分な行を確認します。</td></tr><tr><td>○を付け直したのにWordに反映されない</td><td>Excelを保存して閉じてから、「アドレス帳の編集」でデータ ソースを選んで「最新の情報に更新」を押します。</td></tr></tbody></table></div>
 </section>
 <p class="word-env-note">画面はWindows版の例です。版によって名称や配置が異なる場合は、同じ操作名を探してください。</p>
 <aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>差し込み印刷の基本の流れ</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">

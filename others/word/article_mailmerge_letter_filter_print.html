@@ -37,169 +37,90 @@
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>差し込み印刷（レター）の流れ</strong></div>
 <article class="article-body">
 <div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Word差し込み印刷（レター）の流れ：Excel名簿をつないで、絞り込んで、印刷するまで</h1>
-<p class="article-summary" data-seo-lead="true">Excelの名簿から、1人ずつ渡す案内文を作ります。</p></div><div class="word-answer"><span>結論</span><p><strong>「レター」を選ぶ → Excel名簿をつなぐ → 列を挿入 → 対象者を絞る → プレビュー → 完成文書で確認して印刷</strong>、の順です。1人に1枚の案内文はこの流れで作れます。</p></div>
-<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">入門（Lv.1）</p><ol class="word-guide-flow"><li>名簿を接続</li><li>文面と列を配置</li><li>対象者を確認</li><li>全員分を完成</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">この記事でできること</a></li><li><a href="#guide-step-2">準備と完成の見分け方</a></li><li><a href="#prepare-source">手順1：Excelの名簿を整える</a></li><li><a href="#start-merge">手順2：Wordで差し込みを開始する</a></li><li><a href="#connect-source">手順3：Excelの名簿をつなぐ</a></li><li><a href="#insert-fields">手順4：差し込みフィールドを入れる</a></li><li><a href="#filter">手順5：印刷する人を絞り込む（フィルター・並べ替え）</a></li><li><a href="#preview-results">手順6：結果のプレビューで確認する</a></li><li><a href="#finish-print">手順7：印刷する</a></li><li><a href="#guide-step-10">次回また使うとき</a></li><li><a href="#guide-step-11">よくあるつまずき</a></li><li><a href="#guide-step-12">個人情報の扱い</a></li></ol></nav></details></section>
-<section class="goal-section" id="guide-step-1">
-<h2><span class="icon">💡</span> この記事でできること</h2>
-<p>Excelの名簿をWordの案内文や通知書に差し込み、<strong>必要な人だけに絞り込んで印刷する</strong>までの流れを、最初から順番に説明します。</p>
-<div class="xdemo-note-good"><strong>全体の流れ</strong><br/>
-① Excelの名簿を整える → ② Wordで差し込みを開始（レター） → ③ 名簿をつなぐ → ④ 差し込みフィールドを入れる → ⑤ 印刷する人を絞り込む（フィルター・並べ替え・チェック） → ⑥ 結果のプレビュー → ⑦ 印刷（全員／一部／新規文書に書き出して確認）</div>
-<nav aria-label="差し込み印刷の手順"></nav>
+<p class="article-summary" data-seo-lead="true">1人に1枚の案内文を作る基本の流れです。Excel名簿をつなぎ、必要な人に絞って、確認してから印刷します。</p></div><div class="word-answer"><span>結論</span><p><strong>「レター」を選ぶ → Excel名簿をつなぐ → 列を挿入 → 対象者を絞る → プレビュー → 完成文書で確認して印刷</strong>、の順です。1人に1枚の案内文はこの流れで作れます。</p></div>
+<section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">入門（Lv.1）</p><ol class="word-guide-flow"><li>名簿をつなぐ</li><li>列を挿入</li><li>対象者を絞る</li><li>確認して印刷</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">この記事でできること</a></li><li><a href="#guide-step-2">最初の練習と、完成の見分け方</a></li><li><a href="#guide-step-3">手順1：Excelの名簿を整える</a></li><li><a href="#guide-step-4">手順2：Wordで差し込みを開始する</a></li><li><a href="#guide-step-5">手順3：Excelの名簿をつなぐ</a></li><li><a href="#guide-step-6">手順4：差し込みフィールドを入れる</a></li><li><a href="#filter">手順5：印刷する人を絞り込む（フィルター・並べ替え）</a></li><li><a href="#guide-step-8">手順6：結果のプレビューで確認する</a></li><li><a href="#guide-step-9">手順7：印刷する</a></li><li><a href="#guide-step-10">次回また使うとき</a></li><li><a href="#guide-step-11">よくあるつまずき</a></li><li><a href="#guide-step-12">個人情報の扱い</a></li></ol></nav></details></section>
+<section class="method-section" id="guide-step-1"><h2>この記事でできること</h2>
+<p>Excelの名簿をWordの案内文や通知書に差し込み、必要な人だけ印刷します。作業は7つの手順です。</p>
+<ul><li>宛名ラベルを作る場合は<a href="article_mailmerge_label_basic.html">宛名ラベルの基本手順</a>を見てください。手順3〜7の考え方は同じです。</li><li>「レター」は1人に1枚の文書を作る種類です。1枚に続けて並べる「名簿」や、ラベル・封筒・はがきとの違いは<a href="article_mailmerge_letter_vs_directory.html">レターと名簿の違いと使い分け</a>を見てください。</li></ul>
 <p>画像はWindows版Word・Excelで架空の名簿を使って撮影しています。小さい文字は画像をクリックすると拡大できます。画面の名称や配置は、お使いの版で異なる場合があります。</p>
-<p>宛名ラベルを作る場合は <a href="article_mailmerge_label_basic.html">宛名ラベルの基本手順</a> を見てください。③〜⑦の考え方は同じです。</p>
-<div class="xdemo-note-info"><strong>この記事は「レター」の手順です</strong><br/>「レター」は1人に1枚の文書を作る、いちばんよく使う種類です。1枚に続けて並べる「名簿」や、ラベル・封筒・はがきとの違いは <a href="article_mailmerge_letter_vs_directory.html">レターと名簿の違いと使い分け</a> を見てください。</div>
-</section><section class="method-section" id="guide-step-2"><h2>準備と完成の見分け方</h2><p>用意するのは、1行1人のExcel名簿と、1人分のWord文面です。最初は3人程度で練習します。</p><ol class="line-height-2"><li>Excelを保存し、Wordで「レター」を選んで接続します。</li><li>本文へ差し込みフィールドを挿入します。「«氏名»」などを手入力しません。</li><li>対象者を絞ったら、チェックが付いた人数を控えます。</li><li>プレビューの矢印は1人分の表示を切り替える操作です。ここではまだ全員分の文書はできていません。</li><li>「個々のドキュメントの編集」→「すべて」で完成文書を出します。1ページのひな形で対象2人なら、完成は2ページかを見ます。</li></ol><p>本文が長く1人分で2ページになる場合は、人数とページ数は一致しません。各人の先頭と最後の文が欠けていないか確認します。</p></section>
-<section class="method-section" id="guide-step-3">
-<h2 id="prepare-source"><span class="word-step-no">手順1</span>Excelの名簿を整える</h2>
-<p>Wordにつなぐ名簿は、<strong>1行目が見出し、2行目から1行1件</strong>の形にします。空白行・結合セル・メモ行は入れません。</p>
-<div class="table-wrapper"><table class="comparison-table"><caption>名簿の例（「印刷対象」列を作っておくと絞り込みが楽になります）</caption>
-<thead><tr><th>社員番号</th><th>氏名</th><th>部署</th><th>受講日</th><th>受講日_印刷用</th><th>印刷対象</th><th>会場</th></tr></thead>
-<tbody>
-<tr><td>1001</td><td>山田 太郎</td><td>営業部</td><td>2026/11/20</td><td>2026年11月20日</td><td>○</td><td>第1会議室</td></tr>
-<tr><td>1002</td><td>佐藤 花子</td><td>総務部</td><td>2026/11/20</td><td>2026年11月20日</td><td></td><td>第1会議室</td></tr>
-<tr><td>1003</td><td>鈴木 一郎</td><td>営業部</td><td>2026/11/27</td><td>2026年11月27日</td><td>○</td><td>第2会議室</td></tr>
-<tr><td>1004</td><td>高橋 美咲</td><td>経理部</td><td>2026/11/20</td><td>2026年11月20日</td><td>○</td><td>第1会議室</td></tr>
-<tr><td>1005</td><td>田中 健</td><td>製造部</td><td>2026/11/27</td><td>2026年11月27日</td><td></td><td>第2会議室</td></tr>
-<tr><td>1006</td><td>伊藤 由美</td><td>総務部</td><td>2026/11/27</td><td>2026年11月27日</td><td>○</td><td>第2会議室</td></tr>
-<tr><td>1007</td><td>渡辺 翔太</td><td>製造部</td><td>2026/11/20</td><td>2026年11月20日</td><td></td><td>第1会議室</td></tr>
-<tr><td>1008</td><td>中村 優子</td><td>営業部</td><td>2026/11/20</td><td>2026年11月20日</td><td></td><td>第1会議室</td></tr>
-</tbody></table></div>
-<ul class="line-height-2">
-<li>日付や郵便番号は、Excel側で、元の日付がD2にある場合は <code>=TEXT(D2,"yyyy年m月d日")</code> のように<strong>印刷用の列</strong>を作ると、Wordで表示が崩れません（<a href="article_mailmerge_number_format.html">日付・金額の表示崩れを直す方法</a>）。</li>
-<li>「今回だけ送る人」が決まっている場合は、<strong>「印刷対象」列に○を付けておく</strong>と、手順5の絞り込みが1つの条件で済みます。</li>
-<li>名簿を保存して、<strong>Excelを閉じておきます</strong>。開いたままだと、Wordからつなぐときにエラーや読み取り専用の確認が出ることがあります。</li>
-</ul>
-<div class="xdemo-note-warn"><strong>注意：Excelのオートフィルターで隠した行も、Wordにはすべて読み込まれます。</strong><br/>Excelで絞り込んで保存しても、Wordの差し込みには反映されません。絞り込みはWord側（手順5）で行うか、送る人だけの別シートを作ります。</div>
-<figure class="article-screenshot"><a aria-label="画像を拡大：名簿シートに社員番号・氏名・部署・受講日・印刷用の受講日・印刷対象・会場を用意したExcelの画面" href="../../image/articles/2026-11-01/mailmerge-excel-source.jpg" rel="noopener" target="_blank" style="--screenshot-width:1337.00px"><img alt="名簿シートに社員番号・氏名・部署・受講日・印刷用の受講日・印刷対象・会場を用意したExcelの画面" decoding="async" height="415" loading="lazy" src="../../image/articles/2026-11-01/mailmerge-excel-source.jpg" width="1337"></a><figcaption>撮影に使う8名分の名簿です（架空のデータ）。E列の「受講日_印刷用」は、D列の日付から <code>=TEXT(D2,"yyyy年m月d日")</code> で作った差し込み用の列です。「印刷対象」に○がある4名だけを、後の手順で選びます。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<p>列の作り方の詳細は <a href="article_mailmerge_excel_source_design.html">失敗しにくいExcel住所録の作り方</a> にまとめています。</p>
 </section>
-<section class="method-section" id="guide-step-4">
-<h2 id="start-merge"><span class="word-step-no">手順2</span>Wordで差し込みを開始する</h2>
-<ol class="line-height-2">
-<li>Wordで案内文のひな形（差し込みたい場所以外を書いた文書）を開きます。</li>
-<li><strong>「差し込み文書」タブ → 「差し込み印刷の開始」 → 「レター」</strong>を選びます。</li>
-</ol>
-<p>同じメニューの「段階的な差し込み印刷ウィザード」を選ぶと、画面右側の案内に沿って同じ手順を進めることもできます。</p>
+<section class="method-section" id="guide-step-2"><h2>最初の練習と、完成の見分け方</h2>
+<p>用意するのは、1行1人のExcel名簿と、1人分のWord文面です。最初は3人程度で練習します。</p>
+<ul><li>「«氏名»」などは手入力せず、フィールドとして挿入します。</li><li>対象者を絞ったら、チェックが付いた人数を控えます。</li><li>プレビューの矢印は1人分の表示を切り替える操作です。ここではまだ全員分の文書はできていません。</li><li>「個々のドキュメントの編集」→「すべて」で完成文書を出します。</li></ul>
+<p class="word-check"><strong>確認</strong>1ページのひな形で対象2人なら、完成は2ページです。本文が長く1人分で2ページになる場合は人数とページ数が一致しないので、各人の先頭と最後の文が欠けていないか確認します。</p>
+</section>
+<section class="method-section" id="guide-step-3"><span id="prepare-source"></span><h2><span class="word-step-no">手順1</span>Excelの名簿を整える</h2>
+<p>1行目が見出し、2行目から1行1件の形にします。空白行・結合セル・メモ行は入れません。</p>
+<div class="table-wrapper"><table class="comparison-table"><caption>名簿の例（「印刷対象」列を作っておくと絞り込みが楽になります）</caption><thead><tr><th scope="col">社員番号</th><th scope="col">氏名</th><th scope="col">部署</th><th scope="col">受講日</th><th scope="col">受講日_印刷用</th><th scope="col">印刷対象</th><th scope="col">会場</th></tr></thead><tbody><tr><td>1001</td><td>山田 太郎</td><td>営業部</td><td>2026/11/20</td><td>2026年11月20日</td><td>○</td><td>第1会議室</td></tr><tr><td>1002</td><td>佐藤 花子</td><td>総務部</td><td>2026/11/20</td><td>2026年11月20日</td><td></td><td>第1会議室</td></tr><tr><td>1003</td><td>鈴木 一郎</td><td>営業部</td><td>2026/11/27</td><td>2026年11月27日</td><td>○</td><td>第2会議室</td></tr><tr><td>1004</td><td>高橋 美咲</td><td>経理部</td><td>2026/11/20</td><td>2026年11月20日</td><td>○</td><td>第1会議室</td></tr><tr><td>1005</td><td>田中 健</td><td>製造部</td><td>2026/11/27</td><td>2026年11月27日</td><td></td><td>第2会議室</td></tr><tr><td>1006</td><td>伊藤 由美</td><td>総務部</td><td>2026/11/27</td><td>2026年11月27日</td><td>○</td><td>第2会議室</td></tr><tr><td>1007</td><td>渡辺 翔太</td><td>製造部</td><td>2026/11/20</td><td>2026年11月20日</td><td></td><td>第1会議室</td></tr><tr><td>1008</td><td>中村 優子</td><td>営業部</td><td>2026/11/20</td><td>2026年11月20日</td><td></td><td>第1会議室</td></tr></tbody></table></div>
+<ul><li><strong>日付や郵便番号</strong>：元の日付がD2にある場合は <code>=TEXT(D2,"yyyy年m月d日")</code> のように印刷用の列を作ります。Wordで表示が崩れません（<a href="article_mailmerge_number_format.html">日付・金額の表示崩れを直す方法</a>）。</li><li><strong>今回だけ送る人</strong>：「印刷対象」列に○を付けておくと、手順5の絞り込みが1つの条件で済みます。</li><li><strong>保存</strong>：保存してExcelを閉じます。開いたままだと、接続時にエラーや読み取り専用の確認が出ることがあります。</li></ul>
+<div class="xdemo-note-warn"><strong>Excelのオートフィルターは効きません</strong>オートフィルターで隠した行も、Wordにはすべて読み込まれます。絞り込みはWord側（手順5）で行うか、送る人だけの別シートを作ります。</div>
+<figure class="article-screenshot"><a aria-label="画像を拡大：名簿シートに社員番号・氏名・部署・受講日・印刷用の受講日・印刷対象・会場を用意したExcelの画面" href="../../image/articles/2026-11-01/mailmerge-excel-source.jpg" rel="noopener" target="_blank" style="--screenshot-width:1337.00px"><img alt="名簿シートに社員番号・氏名・部署・受講日・印刷用の受講日・印刷対象・会場を用意したExcelの画面" decoding="async" height="415" loading="lazy" src="../../image/articles/2026-11-01/mailmerge-excel-source.jpg" width="1337"></a><figcaption>撮影に使う8名分の名簿です（架空のデータ）。E列の「受講日_印刷用」は、D列の日付から <code>=TEXT(D2,"yyyy年m月d日")</code> で作った差し込み用の列です。「印刷対象」に○がある4名だけを、後の手順で選びます。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<p>列の作り方の詳細は<a href="article_mailmerge_excel_source_design.html">失敗しにくいExcel住所録の作り方</a>にまとめています。</p>
+</section>
+<section class="method-section" id="guide-step-4"><span id="start-merge"></span><h2><span class="word-step-no">手順2</span>Wordで差し込みを開始する</h2>
+<ol><li>Wordで案内文のひな形（差し込みたい場所以外を書いた文書）を開きます。</li><li>「差し込み文書」タブ →「差し込み印刷の開始」→「レター」を選びます。</li></ol>
+<p>同じメニューの「段階的な差し込み印刷ウィザード」を選ぶと、画面右側の案内に沿って同じ手順を進められます。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：Wordの差し込み印刷の開始メニュー" href="../../image/articles/2026-11-01/word-start-mailmerge-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:850.00px"><img alt="Wordの差し込み印刷の開始メニュー" decoding="async" height="643" loading="lazy" src="../../image/articles/2026-11-01/word-start-mailmerge-menu.jpg" width="850"></a><figcaption>「差し込み文書」→「差し込み印刷の開始」で「レター」を選びます。宛名ラベルの場合は「ラベル」です。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 </section>
-<section class="method-section" id="guide-step-5">
-<h2 id="connect-source"><span class="word-step-no">手順3</span>Excelの名簿をつなぐ</h2>
-<ol class="line-height-2">
-<li><strong>「宛先の選択」 → 「既存のリストを使用」</strong>を選びます。</li>
-<li>手順1のExcelファイルを選んで「開く」を押します。</li>
-<li>「テーブルの選択」で名簿のシート（例：<code>名簿$</code>）を選び、<strong>「先頭行をタイトル行として使用する」にチェック</strong>が入っていることを確認して「OK」を押します。</li>
-</ol>
+<section class="method-section" id="guide-step-5"><span id="connect-source"></span><h2><span class="word-step-no">手順3</span>Excelの名簿をつなぐ</h2>
+<ol><li>「宛先の選択」→「既存のリストを使用」を選びます。</li><li>手順1のExcelファイルを選んで「開く」を押します。</li></ol>
 <figure class="article-screenshot"><a aria-label="画像を拡大：宛先の選択で既存のリストを使用を選ぶメニュー" href="../../image/articles/2026-11-01/word-select-recipients-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:664.00px"><img alt="宛先の選択で既存のリストを使用を選ぶメニュー" decoding="async" height="415" loading="lazy" src="../../image/articles/2026-11-01/word-select-recipients-menu.jpg" width="664"></a><figcaption>「宛先の選択」→「既存のリストを使用」を選び、保存したExcelファイルを開きます。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<ol start="3"><li>「テーブルの選択」で名簿のシート（例：名簿$）を選びます。</li><li>「先頭行をタイトル行として使用する」にチェックが入っていることを確認して「OK」を押します。</li></ol>
 <figure class="article-screenshot"><a aria-label="画像を拡大：テーブルの選択で名簿シートを選んだ画面" href="../../image/articles/2026-11-01/word-select-source-sheet.jpg" rel="noopener" target="_blank" style="--screenshot-width:987.00px"><img alt="テーブルの選択で名簿シートを選んだ画面" decoding="async" height="483" loading="lazy" src="../../image/articles/2026-11-01/word-select-source-sheet.jpg" width="987"></a><figcaption>「名簿$」を選び、「先頭行をタイトル行として使用する」をオンにします。Excelに複数のシートがある場合は、使う名簿のシート名を確認してください。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 </section>
-<section class="method-section" id="guide-step-6">
-<h2 id="insert-fields"><span class="word-step-no">手順4</span>差し込みフィールドを入れる</h2>
-<ol class="line-height-2">
-<li>文書の中で、名前を入れたい位置をクリックします。</li>
-<li><strong>「差し込みフィールドの挿入」</strong>の▼から「氏名」を選びます。文書に <code>«氏名»</code> と入ります。</li>
-<li>同じようにして「部署」「受講日_印刷用」などを入れます。「様」や「殿」などの敬称は、フィールドの後ろに普通に入力します。</li>
-</ol>
+<section class="method-section" id="guide-step-6"><span id="insert-fields"></span><h2><span class="word-step-no">手順4</span>差し込みフィールドを入れる</h2>
+<ol><li>文書の中で、名前を入れたい位置をクリックします。</li><li>「差し込みフィールドの挿入」の▼から「氏名」を選びます。文書に «氏名» と入ります。</li></ol>
 <figure class="article-screenshot"><a aria-label="画像を拡大：差し込みフィールドの挿入にExcel名簿の列名が表示されたメニュー" href="../../image/articles/2026-11-01/word-insert-mergefield-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:508.00px"><img alt="差し込みフィールドの挿入にExcel名簿の列名が表示されたメニュー" decoding="async" height="548" loading="lazy" src="../../image/articles/2026-11-01/word-insert-mergefield-menu.jpg" width="508"></a><figcaption>「差し込みフィールドの挿入」の▼を開くと、Excelの列見出しが並びます。必要な列を1つずつ挿入します。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<p>部署によって文面を変えたい場合は、<strong>「ルール」 → 「If…Then…Else」</strong>で「部署が営業部なら○○、それ以外なら△△」のような分岐も入れられます。</p>
+<ol start="3"><li>同じようにして「部署」「受講日_印刷用」などを入れます。</li><li>「様」や「殿」などの敬称は、フィールドの後ろに普通に入力します。</li></ol>
 <figure class="article-screenshot"><a aria-label="画像を拡大：部署・氏名・受講日・会場を差し込みフィールドで配置した案内文" href="../../image/articles/2026-11-01/word-letter-mergefields.jpg" rel="noopener" target="_blank" style="--screenshot-width:995.00px"><img alt="部署・氏名・受講日・会場を差し込みフィールドで配置した案内文" decoding="async" height="601" loading="lazy" src="../../image/articles/2026-11-01/word-letter-mergefields.jpg" width="995"></a><figcaption>フィールドを入れた状態です。«部署»・«氏名»・«受講日_印刷用»・«会場»は名簿の値に置き換わり、「様」などの固定文字はそのまま残ります。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<p>部署によって文面を変えたい場合は、「ルール」→「If…Then…Else」で「部署が営業部なら○○、それ以外なら△△」のように分岐できます（<a href="article_if_skipif_conditions.html">条件で文面を変える方法</a>）。</p>
 </section>
-<section class="method-section" id="filter">
-<h2><span class="word-step-no">手順5</span>印刷する人を絞り込む（フィルター・並べ替え）</h2>
-<p><strong>「アドレス帳の編集」</strong>を押すと、「差し込み印刷の宛先」の画面が開きます。ここで、印刷する人を選びます。</p>
-<p>条件の種類・AND／ORの組み合わせ・Excel側で対象者を決める方法まで詳しく知りたい場合は <a href="article_mailmerge_filter_two_patterns.html">必要な人だけ印刷する2つの方法</a> を見てください。</p>
+<section class="method-section" id="filter"><h2><span class="word-step-no">手順5</span>印刷する人を絞り込む（フィルター・並べ替え）</h2>
+<p>「アドレス帳の編集」を押すと、「差し込み印刷の宛先」の画面が開きます。ここで印刷する人を選びます。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：印刷対象の4名だけが表示された差し込み印刷の宛先一覧" href="../../image/articles/2026-11-01/word-recipients-filtered.jpg" rel="noopener" target="_blank" style="--screenshot-width:1301.26px"><img alt="印刷対象の4名だけが表示された差し込み印刷の宛先一覧" decoding="async" height="828" loading="lazy" src="../../image/articles/2026-11-01/word-recipients-filtered.jpg" width="1456"></a><figcaption>絞り込み後の一覧の例です。8名の名簿から、印刷対象が○の山田さん・鈴木さん・高橋さん・伊藤さんの4名が、部署→社員番号の順で残りました。「受講日」の列は「11/20/2026」の形で読み込まれているため、差し込みには「受講日_印刷用」を使います。意図した人が残っているか、チェックが付いているかを確認します。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<p>条件の種類、AND／ORの組み合わせ、Excel側で対象者を決める方法は、<a href="article_mailmerge_filter_two_patterns.html">必要な人だけ印刷する2つの方法</a>を見てください。</p>
 <h3>方法A：チェックを外す（少人数のとき）</h3>
-<p>一覧の左のチェックボックスを外した人は、差し込みの対象から外れます。数人だけ外したいときに手早い方法です。</p>
+<p>一覧の左のチェックボックスを外した人は、差し込みの対象から外れます。</p>
 <h3>方法B：フィルターで条件を指定する（おすすめ）</h3>
-<ol class="line-height-2">
-<li>画面下の「アドレス帳の絞り込み」から<strong>「フィルター」</strong>を選びます。</li>
-<li>「レコードのフィルター」タブで、<strong>フィールド</strong>・<strong>条件</strong>・<strong>比較対象</strong>を指定します。
-<ul>
-<li>例1：「印刷対象」「が値と等しい」「○」</li>
-<li>例2：「部署」「が値と等しい」「営業部」</li>
-<li>例3：「受講日_印刷用」「が値を含む」「11月20日」</li>
-</ul></li>
-<li>条件を2つ以上使う場合は、2行目の左端で<strong>「AND」</strong>（両方に当てはまる）か<strong>「OR」</strong>（どちらかに当てはまる）を選びます。</li>
-<li>「OK」を押すと、一覧が条件に合う人だけになります。</li>
-</ol>
+<ol><li>画面下の「アドレス帳の絞り込み」から「フィルター」を選びます。</li><li>「レコードのフィルター」タブで、フィールド・条件・比較対象を指定します。<ul><li>例1：「印刷対象」「が値と等しい」「○」</li><li>例2：「部署」「が値と等しい」「営業部」</li><li>例3：「受講日_印刷用」「が値を含む」「11月20日」</li></ul></li><li>条件を2つ以上使う場合は、2行目の左端で「AND」（両方に当てはまる）か「OR」（どちらかに当てはまる）を選びます。</li><li>「OK」を押すと、一覧が条件に合う人だけになります。</li></ol>
 <figure class="article-screenshot"><a aria-label="画像を拡大：印刷対象が○と等しいというフィルター設定" href="../../image/articles/2026-11-01/word-filter-print-target.jpg" rel="noopener" target="_blank" style="--screenshot-width:1286.00px"><img alt="印刷対象が○と等しいというフィルター設定" decoding="async" height="622" loading="lazy" src="../../image/articles/2026-11-01/word-filter-print-target.jpg" width="1286"></a><figcaption>フィールド＝「印刷対象」、条件＝「が値と等しい」、比較対象＝「○」の例です。名簿の○と同じ文字を入力して「OK」を押します。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
+<div class="xdemo-note-info"><strong>「印刷対象」列を使う理由</strong>毎回「部署が○○で、日付が△△で…」と条件を組み立てると、設定ミスが起きやすくなります。Excel側で○を付け、Word側は「印刷対象＝○」だけにすれば、誰が見ても対象者が分かり、引き継ぎもしやすくなります。</div>
 <h3>並べ替え</h3>
-<p>同じ画面の<strong>「レコードの並べ替え」</strong>タブで、印刷する順番を決められます（例：部署 → 社員番号の順）。配る順番に並べておくと、印刷後の仕分けが楽になります。</p>
+<p>同じ画面の「レコードの並べ替え」タブで、印刷する順番を決められます（例：部署 → 社員番号の順）。配る順番に並べておくと、印刷後の仕分けが楽になります。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：部署を最優先、社員番号を2番目に優先する並べ替え設定" href="../../image/articles/2026-11-01/word-sort-department-id.jpg" rel="noopener" target="_blank" style="--screenshot-width:1286.00px"><img alt="部署を最優先、社員番号を2番目に優先する並べ替え設定" decoding="async" height="622" loading="lazy" src="../../image/articles/2026-11-01/word-sort-department-id.jpg" width="1286"></a><figcaption>「レコードの並べ替え」で、最優先＝部署、2番目＝社員番号、どちらも昇順にした例です。部署内では社員番号順になります。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <h3>条件を外すとき</h3>
-<p>フィルターの画面で<strong>「すべてクリア」</strong>を押すと、絞り込みがなくなり全員が対象に戻ります。</p>
-<p class="verify-note">「条件」の欄の表示名（「が値と等しい」「が値を含む」など）は、環境により結果が異なる場合があります。「が値と等しい」は撮影した画面で確認しています。</p>
-<div class="xdemo-note-info"><strong>「印刷対象」列を使う理由</strong><br/>毎回「部署が○○で、日付が△△で…」と条件を組み立てると、設定ミスが起きやすくなります。Excel側で○を付けてWord側は「印刷対象＝○」だけにしておくと、誰が見ても対象者が分かり、引き継ぎもしやすくなります。</div>
+<p>フィルターの画面で「すべてクリア」を押すと、全員が対象に戻ります。</p>
+<p>「条件」の欄の表示名（「が値と等しい」「が値を含む」など）は、環境により結果が異なる場合があります。「が値と等しい」は撮影した画面で確認しています。</p>
 </section>
-<section class="method-section" id="guide-step-8">
-<h2 id="preview-results"><span class="word-step-no">手順6</span>結果のプレビューで確認する</h2>
-<ol class="line-height-2">
-<li><strong>「結果のプレビュー」</strong>を押すと、<code>«氏名»</code> が実際の名前に変わります。</li>
-<li>左右の矢印で1件ずつ切り替え、件数が絞り込みどおりになっているか、表示が崩れていないかを確認します。</li>
-<li>特定の人を探すときは「宛先の検索」を使います。</li>
-</ol>
+<section class="method-section" id="guide-step-8"><span id="preview-results"></span><h2><span class="word-step-no">手順6</span>結果のプレビューで確認する</h2>
+<ol><li>「結果のプレビュー」を押すと、«氏名» が実際の名前に変わります。</li><li>左右の矢印で1件ずつ切り替えます。</li><li>特定の人を探すときは「宛先の検索」を使います。</li></ol>
+<p class="word-check"><strong>確認</strong>件数が絞り込みどおりで、表示が崩れていなければ次へ進みます。氏名だけでなく、日付と会場も一緒に確認します。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：結果のプレビューで山田太郎さんの氏名と日付を表示した案内文" href="../../image/articles/2026-11-01/word-letter-preview.jpg" rel="noopener" target="_blank" style="--screenshot-width:995.00px"><img alt="結果のプレビューで山田太郎さんの氏名と日付を表示した案内文" decoding="async" height="601" loading="lazy" src="../../image/articles/2026-11-01/word-letter-preview.jpg" width="995"></a><figcaption>「結果のプレビュー」をオンにすると、1件目の山田さんの氏名・受講日・会場が表示されます。フィールドの文字から、実際の値に変わることを確認します。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<p>撮影した例では、右矢印で2件目へ進むと鈴木さん・2026年11月27日・第2会議室に切り替わりました。氏名だけでなく、日付と会場も一緒に確認します。</p>
-<p>日付が「11/20/2026」のようになる場合は、手順1の印刷用の列を差し込みます。</p>
+<p>撮影した例では、右矢印で2件目へ進むと鈴木さん・2026年11月27日・第2会議室に切り替わりました。日付が「11/20/2026」のようになる場合は、手順1の印刷用の列を差し込みます。</p>
 </section>
-<section class="method-section" id="guide-step-9">
-<h2 id="finish-print"><span class="word-step-no">手順7</span>印刷する</h2>
-<p><strong>「完了と差し込み」</strong>から、次のどちらかを選びます。</p>
+<section class="method-section" id="guide-step-9"><span id="finish-print"></span><h2><span class="word-step-no">手順7</span>印刷する</h2>
+<p>「完了と差し込み」から、次のどちらかを選びます。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：完了と差し込みのメニューに文書の編集と文書の印刷が並ぶ画面" href="../../image/articles/2026-11-01/word-finish-merge-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:842.00px"><img alt="完了と差し込みのメニューに文書の編集と文書の印刷が並ぶ画面" decoding="async" height="353" loading="lazy" src="../../image/articles/2026-11-01/word-finish-merge-menu.jpg" width="842"></a><figcaption>全体を確認してから印刷する場合は「個々のドキュメントの編集」、直接印刷する場合は「文書の印刷」を選びます。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <h3>7-1. 個々のドキュメントの編集（確認してから印刷する／おすすめ）</h3>
-<ol class="line-height-2">
-<li>「完了と差し込み」 → <strong>「個々のドキュメントの編集」</strong> → 「すべて」 → 「OK」。</li>
-<li>差し込み済みの文書が<strong>新しい文書</strong>（「レター1」など）として開きます。この1ページのひな形では、1人1ページで並びます。</li>
-<li>全体をスクロールして確認し、必要なら1人分だけ手で直します。</li>
-<li><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">P</span> で印刷します。PDFにして配る場合は「ファイル → 名前を付けて保存」でPDFを選びます。</li>
-</ol>
+<ol><li>「完了と差し込み」→「個々のドキュメントの編集」→「すべて」→「OK」を選びます。</li><li>差し込み済みの文書が新しい文書（「レター1」など）として開きます。この1ページのひな形では、1人1ページで並びます。</li><li>全体をスクロールして確認し、必要なら1人分だけ手で直します。</li><li><span class="kbd-btn">Ctrl</span>＋<span class="kbd-btn">P</span>で印刷します。PDFにして配る場合は「ファイル → 名前を付けて保存」でPDFを選びます。</li></ol>
 <figure class="article-screenshot"><a aria-label="画像を拡大：新規文書への差し込みで全レコードを選択した画面" href="../../image/articles/2026-11-01/word-merge-to-new-document.jpg" rel="noopener" target="_blank" style="--screenshot-width:813.00px"><img alt="新規文書への差し込みで全レコードを選択した画面" decoding="async" height="345" loading="lazy" src="../../image/articles/2026-11-01/word-merge-to-new-document.jpg" width="813"></a><figcaption>「すべて」は、宛先の絞り込み後に残った人が対象です。この例では「すべて」で4名分、1人1ページの新しい文書になることを確認しました。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <figure class="article-screenshot"><a aria-label="画像を拡大：レターで差し込んだ新しい文書。1人分の後ろにセクション区切りが入る" href="../../image/articles/2026-11-01/word-letter-result-sections.jpg" rel="noopener" target="_blank" style="--screenshot-width:1173.09px"><img alt="レターで差し込んだ新しい文書。1人分の後ろにセクション区切りが入る" decoding="async" height="868" loading="lazy" src="../../image/articles/2026-11-01/word-letter-result-sections.jpg" width="1376"></a><figcaption>差し込んだ新しい文書を「表示」→「下書き」で見た画面です。1人分の案内文の後ろに「セクション区切り（次のページから新しいセクション）」が自動で入り、次の人は次のページから始まります。撮影では4名分・4ページになりました。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<p>この新しい文書は、差し込み元の名簿とはつながっていません。<strong>印刷の記録として保存しておく</strong>と、「誰に何を送ったか」を後から確認できます（個人情報を含むので、保存場所に注意してください）。</p>
+<p>この新しい文書は、差し込み元の名簿とはつながっていません。印刷の記録として保存しておくと、「誰に何を送ったか」を後から確認できます（個人情報を含むので、保存場所に注意してください）。</p>
 <h3>7-2. 文書の印刷（そのまま印刷する）</h3>
-<ol class="line-height-2">
-<li>「完了と差し込み」 → <strong>「文書の印刷」</strong>を選びます。</li>
-<li>印刷する範囲を選びます。
-<ul>
-<li><strong>すべて：</strong>絞り込んだ全員分</li>
-<li><strong>現在のレコード：</strong>プレビューで表示中の1人分（試し印刷に便利）</li>
-<li><strong>最初のレコード／最後のレコード：</strong>「1」から「10」のように範囲を指定</li>
-</ul></li>
-<li>「OK」を押すと、プリンターの画面が開きます。</li>
-</ol>
+<ol><li>「完了と差し込み」→「文書の印刷」を選びます。</li><li>印刷する範囲を選びます。<ul><li>すべて：絞り込んだ全員分</li><li>現在のレコード：プレビューで表示中の1人分（試し印刷に便利）</li><li>最初のレコード／最後のレコード：「1」から「10」のように範囲を指定</li></ul></li><li>「OK」を押すと、プリンターの画面が開きます。</li></ol>
 <figure class="article-screenshot"><a aria-label="画像を拡大：プリンターに差し込みで現在のレコードを選んだ画面" href="../../image/articles/2026-11-01/word-print-current-record.jpg" rel="noopener" target="_blank" style="--screenshot-width:813.00px"><img alt="プリンターに差し込みで現在のレコードを選んだ画面" decoding="async" height="345" loading="lazy" src="../../image/articles/2026-11-01/word-print-current-record.jpg" width="813"></a><figcaption>まずは「現在のレコード」を選ぶと、プレビューで表示中の1名分を試し印刷できます。この後のプリンター設定でも、用紙サイズと印刷先を確認します。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<p class="verify-note">「最初のレコード～最後のレコード」の番号が、絞り込み後の何件目を指すかは、環境により結果が異なる場合があります。プレビューの番号で確認してから印刷してください。</p>
+<p>「最初のレコード～最後のレコード」の番号が、絞り込み後の何件目を指すかは、環境により結果が異なる場合があります。プレビューの番号で確認してから印刷してください。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：最初のレコード1から最後のレコード2までを指定した印刷範囲の画面" href="../../image/articles/2026-11-01/word-print-record-range.jpg" rel="noopener" target="_blank" style="--screenshot-width:813.00px"><img alt="最初のレコード1から最後のレコード2までを指定した印刷範囲の画面" decoding="async" height="345" loading="lazy" src="../../image/articles/2026-11-01/word-print-record-range.jpg" width="813"></a><figcaption>一部の範囲を指定する例です。ここでは最初＝1、最後＝2にしています。社員番号を入れる欄ではなく、差し込み対象のレコード番号を指定する欄です。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<div class="xdemo-note-warn"><strong>いきなり全員分を印刷しない：</strong>まず「現在のレコード」で1枚だけ普通紙に印刷し、位置・文字・敬称を確認してから全員分を印刷します。</div>
+<div class="xdemo-note-warn"><strong>いきなり全員分を印刷しない</strong>まず「現在のレコード」で1枚だけ普通紙に印刷し、位置・文字・敬称を確認してから全員分を印刷します。</div>
 </section>
-<section class="method-section" id="guide-step-10">
-<h2>次回また使うとき</h2>
-<ul class="line-height-2">
-<li>差し込みを設定したWord文書（ひな形）を保存しておくと、名簿とのつながりとフィルターの設定も一緒に保存されます。</li>
-<li>次に開くと「この文書を開くと、次の SQL コマンドが実行されます」と表示されます。<strong>名簿のつながりを使う場合は「はい」</strong>を選びます。</li>
-<li>Excelの名簿を別の場所へ移したり名前を変えたりすると、つながりが切れます。その場合は手順3の「宛先の選択」からつなぎ直します。</li>
-<li>前回のフィルターが残っていないか、印刷前に「アドレス帳の編集」で確認します。</li>
-</ul>
+<section class="method-section" id="guide-step-10"><h2>次回また使うとき</h2>
+<ul><li>ひな形のWord文書を保存しておくと、名簿とのつながりとフィルターの設定も一緒に保存されます。</li><li>次に開くと「この文書を開くと、次の SQL コマンドが実行されます」と表示されます。名簿のつながりを使う場合は「はい」を選びます。</li><li>Excelの名簿を別の場所へ移したり名前を変えたりすると、つながりが切れます。手順3の「宛先の選択」からつなぎ直します。</li><li>前回のフィルターが残っていないか、印刷前に「アドレス帳の編集」で確認します。</li></ul>
 </section>
-<section class="method-section" id="guide-step-11">
-<h2>よくあるつまずき</h2>
-<div class="table-wrapper"><table class="comparison-table"><caption>症状と確認すること</caption>
-<thead><tr><th>症状</th><th>確認すること</th></tr></thead>
-<tbody>
-<tr><td>Excelで絞り込んだのに全員分が出る</td><td>ExcelのオートフィルターはWordに反映されません。Wordの「アドレス帳の編集 → フィルター」で絞り込みます。</td></tr>
-<tr><td>フィルターしたのに0件になる</td><td>比較対象の文字が一字一句同じか（全角・半角、前後の空白）を確認します。「が値と等しい」で合わないときは、「含む」の条件（表示例：が値を含む）を試します。</td></tr>
-<tr><td>日付や金額の表示がおかしい</td><td>Excel側の印刷用の列（TEXT関数）を差し込みます。<a href="article_mailmerge_number_format.html">表示崩れの直し方</a></td></tr>
-<tr><td>空白のページや空白の人が出る</td><td>名簿の途中に空白行がないか確認します。フィルターに「氏名」「空白でない」を追加しても除けます。</td></tr>
-<tr><td>名簿が開けない・選べない</td><td>Excelの名簿を閉じてから、もう一度「宛先の選択」を行います。</td></tr>
-<tr><td>長い住所や会社名がはみ出す</td><td><a href="article_mailmerge_textbox_wrap.html">テキストボックスで折り返す方法</a>を使います。</td></tr>
-</tbody></table></div>
+<section class="method-section" id="guide-step-11"><h2>よくあるつまずき</h2>
+<div class="table-wrapper"><table class="comparison-table"><caption>症状と確認すること</caption><thead><tr><th scope="col">症状</th><th scope="col">確認すること</th></tr></thead><tbody><tr><td>Excelで絞り込んだのに全員分が出る</td><td>ExcelのオートフィルターはWordに反映されません。Wordの「アドレス帳の編集 → フィルター」で絞り込みます。</td></tr><tr><td>フィルターしたのに0件になる</td><td>比較対象の文字が一字一句同じか（全角・半角、前後の空白）を確認します。「が値と等しい」で合わないときは、「含む」の条件（表示例：が値を含む）を試します。</td></tr><tr><td>日付や金額の表示がおかしい</td><td>Excel側の印刷用の列（TEXT関数）を差し込みます。[[表示崩れの直し方</td><td>article_mailmerge_number_format.html]]</td></tr><tr><td>空白のページや空白の人が出る</td><td>名簿の途中に空白行がないか確認します。フィルターに「氏名」「空白でない」を追加しても除けます。</td></tr><tr><td>名簿が開けない・選べない</td><td>Excelの名簿を閉じてから、もう一度「宛先の選択」を行います。</td></tr><tr><td>長い住所や会社名がはみ出す</td><td>[[テキストボックスで折り返す方法</td><td>article_mailmerge_textbox_wrap.html]]を使います。</td></tr></tbody></table></div>
 </section>
-<section class="method-section" id="guide-step-12">
-<h2>個人情報の扱い</h2>
-<ul class="line-height-2">
-<li>名簿・差し込み後の文書・PDFには個人情報が含まれます。保存場所とアクセスできる人を社内ルールに合わせて決めます。</li>
-<li>印刷物の取り忘れがないよう、印刷枚数と対象人数が合っているか確認します。</li>
-</ul>
+<section class="method-section" id="guide-step-12"><h2>個人情報の扱い</h2>
+<ul><li>名簿・差し込み後の文書・PDFには個人情報が含まれます。保存場所とアクセスできる人を社内ルールに合わせて決めます。</li><li>印刷物の取り忘れがないよう、印刷枚数と対象人数が合っているか確認します。</li></ul>
 </section>
 <p class="word-env-note">画面はWindows版の例です。版によって名称や配置が異なる場合は、同じ操作名を探してください。</p>
 <aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>差し込み印刷の基本の流れ</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
