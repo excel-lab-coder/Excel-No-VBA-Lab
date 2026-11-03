@@ -45,7 +45,7 @@
   "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
   "publisher":{"@type":"Organization","name":"Excel × No VBA Lab","logo":{"@type":"ImageObject","url":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}},
   "datePublished":"2026-04-18",
-  "dateModified":"2026-07-12",
+  "dateModified":"2026-11-03",
   "mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/04_qr_key_conversion.html"}
 }
 </script>
@@ -101,7 +101,7 @@
 </details>
 
 <p class="article-summary" data-seo-lead="true">ExcelでQRコードを作成し、QRリーダーやバーコードリーダーで読み取って、Excel入力・Webシステム入力・業務システム入力を自動化したい場面を想定しています。</p>
-<p style="color:#666;font-size:.88rem;">最終更新: 2026-07-12 ｜ 読了目安: 12分 ｜ 前提: <a href="01_qr_barcode_control.html">①</a> <a href="02_qr_tab_enter.html">②</a> <a href="03_qr_character_delay.html">③</a></p>
+<p style="color:#666;font-size:.88rem;">最終更新: 2026-11-03 ｜ 読了目安: 12分 ｜ 前提: <a href="01_qr_barcode_control.html">①</a> <a href="02_qr_tab_enter.html">②</a> <a href="03_qr_character_delay.html">③</a></p>
 </div>
 <details class="auto-toc" open><summary>目次（11項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">↵ Enter / Tab の共通整理</a></li><li><a href="#sec-2">🎯 この記事のゴール</a></li><li><a href="#sec-3">🚧 CHAR関数とキーイベントの違い</a></li><li><a href="#sec-4">🔄 キー変換とは &horbar; 原理</a></li><li><a href="#sec-5">🏷️ トリガー文字の選び方</a></li><li><a href="#sec-6">🔧 設定方法 &horbar; メーカー別ガイド</a></li><li><a href="#sec-7">🧪 テスト方法</a></li><li><a href="#sec-8">⚡ 注意点</a></li><li><a href="#sec-9">📝 この記事で学んだこと</a></li><li><a href="#sec-10">🔜 次に読む記事</a></li><li><a href="#qr-safety-title">QRリーダー連携の運用注意</a></li></ol></nav></details>
 
@@ -169,7 +169,7 @@
 QR内にCHAR(1)〜CHAR(26)の制御文字を格納しても、それだけで「Ctrlキーを押しながらA〜Zを押した」というキーボードイベントになるとは限りません。対応機種では、メーカー設定ツール、ADF、キーイベント設定などで、予約文字を目的のキー操作へ明示的に割り当てます。
 </div>
 <div class="xdemo-note-danger">
-<strong>🔥 特にテンキーEnter:</strong> 業務システム（基幹系・POS・医療システムなど）では「テンキーEnterでしか確定できない」ものが非常に多く、QR自動入力で最も頻繁にぶつかる壁です。
+<strong>🔥 特にテンキーEnter:</strong> 業務システム（基幹系・POS・医療システムなど）では「テンキーEnterでしか確定できない」画面があります。その場合はCHAR関数では確定できないため、キー変換が必要です。
   </div>
 </section>
 <!-- ========================================== -->
@@ -386,8 +386,8 @@ QR内にCHAR(1)〜CHAR(26)の制御文字を格納しても、それだけで「
 <td><a href="06_qr_wait_time.html"><strong>⑥ Sleep（一時停止）で固定時間を空ける</strong></a></td>
 </tr>
 <tr>
-<td>全テクニックを組み合わせた完成形を見たい</td>
-<td><a href="07_qr_full_system.html"><strong>⑦ フルシステム統合 &horbar; 22手作業を8秒に</strong></a></td>
+<td>リーダーの設定を順番どおりに確認したい</td>
+<td><a href="07_qr_full_system.html"><strong>⑦ QRリーダー設定の全体像</strong></a></td>
 </tr>
 </table>
 </section>
@@ -398,7 +398,7 @@ QR内にCHAR(1)〜CHAR(26)の制御文字を格納しても、それだけで「
       <h3>📱 QR Automation Lab ― 全19記事一覧</h3>
       <p class="text-sm-gray">
         <span class="text-blue-primary">🔵 基本</span>（⓪〜③）＝ まずここから ／
-        <span class="color-orange">🟠 応用</span>（④〜⑱）＝ さらに自動化を極める
+        <span class="color-orange">🟠 応用</span>（④〜⑲）＝ さらに自動化を極める
       </p>
 
       <ol>
@@ -421,6 +421,7 @@ QR内にCHAR(1)〜CHAR(26)の制御文字を格納しても、それだけで「
         <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="18_qr_num_enter_numpad_enter.html">⑱ Num Enter・Numpad Enter・通常Enterの違い</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="19_qr_rpa_selenium_excel_qr_alternative.html">⑲ RPA・Selenium代替案</a></li>
       </ol>
     </nav>
 <section class="qr-safety-note" aria-labelledby="qr-safety-title">

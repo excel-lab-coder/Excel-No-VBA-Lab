@@ -1193,7 +1193,7 @@
       "subcategory": "input",
       "title": "④ QRコードの中の1文字がキーボード操作に変わる — 文字→キー変換の仕組み",
       "url": "qr/04_qr_key_conversion.html",
-      "summary": "「#」をF2に、「$」をEscに変換。QRリーダーを命令実行エンジンに変える概念の転換点です。",
+      "summary": "「/」をテンキーEnterに、「^」をF2に変換。CHAR関数で送れないキーをQRから送る仕組みです。",
       "level": 5,
       "tags": [
         "rare"
@@ -1206,7 +1206,7 @@
       "subcategory": "input",
       "title": "⑤ QRコード1回で業務システムを操作する — 変換ルール実践編",
       "url": "qr/05_qr_key_practice.html",
-      "summary": "在庫管理・イベント受付・既存データの部分更新など、実務シナリオでQRプログラムを設計します。",
+      "summary": "在庫管理・検品・棚卸し・業務システム入力など、実務シナリオごとの数式テンプレートを紹介します。",
       "level": 6,
       "tags": [
         "impact"
@@ -1227,9 +1227,9 @@
     {
       "category": "qr",
       "subcategory": "input",
-      "title": "⑦ QRコード1回で業務システムの全操作を完結させる — 6つの技術を統合した入力自動化システム",
+      "title": "⑦ QRリーダー設定の全体像 — Webシステム入力向けフルシステム構築ガイド",
       "url": "qr/07_qr_full_system.html",
-      "summary": "VBA・マクロ禁止でPower Queryが届かない画面入力を、QR読み取り1回に圧縮します。",
+      "summary": "接続、サフィックス、ディレイ、キー変換、Sleep、本番想定テスト、設定の記録までを順番に進める手順書です。",
       "level": 7,
       "tags": [
         "impact"

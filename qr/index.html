@@ -255,7 +255,7 @@
                            "name":  "閉域環境での運用は安全ですか？",
                            "acceptedAnswer":  {
                                                   "@type":  "Answer",
-                                                  "text":  "転送ルールとデータ形式を固定すれば、安全性と再現性を両立できます。"
+                                                  "text":  "転送ルールとデータ形式を固定すると、同じ手順を再現しやすくなります。安全性は方式だけでは決まらないため、紙の保管・廃棄や持ち出しの社内ルールまで含めて確認してください。"
                                               }
                        },
                        {
@@ -370,7 +370,7 @@
       <strong>Excelで作ったQR用データ</strong>と
       <strong>QRリーダー本体のキー送信設定</strong>を組み合わせることで入力作業を自動化できます。
       さらに閉域環境へのデータ転送、システム間移行まで扱います。全角QR生成の記事は現在、動作再確認のため一時非公開です。
-      <strong>Excel側の設計・QR生成・リーダー設定・実機検証を組み合わせる</strong>、他に類を見ないアプローチです。
+      <strong>Excel側の設計・QR生成・リーダー設定・実機検証を組み合わせる</strong>アプローチです。
     </p>
 
     <div class="category-hero hero-concept-wall mx-auto max-width-800 my-20">
@@ -468,7 +468,7 @@
         <span class="tag-row"><span class="tag-rare">💎 応用例</span></span>
       </div>
       <a class="article-link" href="../qr/04_qr_key_conversion.html">④ QRコードの中の1文字がキーボード操作に変わる — 文字→キー変換の仕組み</a>
-      <p class="article-summary">「#」をF2に、「$」をEscに変換。QRリーダーを命令実行エンジンに変える概念の転換点です。</p>
+      <p class="article-summary">「/」をテンキーEnterに、「^」をF2に変換。CHAR関数で送れないキーをQRから送る仕組みです。</p>
     </li>
 
     <li class="article-item">
@@ -478,7 +478,7 @@
         <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
       </div>
       <a class="article-link" href="../qr/05_qr_key_practice.html">⑤ QRコード1回で業務システムを操作する — 変換ルール実践編</a>
-      <p class="article-summary">在庫管理・イベント受付・既存データの部分更新など、実務シナリオでQRプログラムを設計します。</p>
+      <p class="article-summary">在庫管理・検品・棚卸し・業務システム入力など、実務シナリオごとの数式テンプレートを紹介します。</p>
     </li>
 
     <li class="article-item">
@@ -496,8 +496,8 @@
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="qr_series"></span></span>
       </div>
-      <a class="article-link" href="../qr/07_qr_full_system.html">⑦ QRコード1回で業務システムの全操作を完結させる — 6つの技術を統合した入力自動化システム</a>
-      <p class="article-summary">メニュー選択→画面遷移→検索→待機→データ入力→登録。手作業をQR読み取り1回に圧縮します。</p>
+      <a class="article-link" href="../qr/07_qr_full_system.html">⑦ QRリーダー設定の全体像 — Webシステム入力向けフルシステム構築ガイド</a>
+      <p class="article-summary">接続、サフィックス、ディレイ、キー変換、Sleep、本番想定テスト、設定の記録までを順番に進める手順書です。</p>
     </li>
   </ul>
 
@@ -656,7 +656,7 @@
       <li class="article-item"><p class="article-link">Q. どのQRリーダーでも使えますか？</p><p class="article-summary">A. 設定項目（接尾キー、ディレイ、文字変換）の有無が重要です。カテゴリ内の選定記事を参照してください。</p></li>
       <li class="article-item"><p class="article-link">Q. QRリーダーはほぼどんなソフトでも使えますか？</p><p class="article-summary">A. 入力欄がキーボード入力を受け付けるソフトなら使える可能性があります。ただしQRリーダーは画面を読めないため、条件分岐やエラー判断はできません。記事⑲で使いどころを整理しています。</p></li>
       <li class="article-item"><p class="article-link">Q. Enterは効くのに、基幹システムで確定できないことがありますか？</p><p class="article-summary">A. あります。通常EnterではなくNum Enter / Numpad Enterを要求する画面があります。記事⑱で、CHAR(13)との違い、メモ帳では判別しにくい点、実機での確認方法を整理しています。</p></li>
-      <li class="article-item"><p class="article-link">Q. 閉域環境での運用は安全ですか？</p><p class="article-summary">A. 転送ルールとデータ形式を固定すれば、安全性と再現性を両立できます。</p></li>
+      <li class="article-item"><p class="article-link">Q. 閉域環境での運用は安全ですか？</p><p class="article-summary">A. 転送ルールとデータ形式を固定すると、同じ手順を再現しやすくなります。安全性は方式だけでは決まらないため、紙の保管・廃棄や持ち出しの社内ルールまで含めて確認してください。</p></li>
       <li class="article-item"><p class="article-link">Q. 日本語や全角データも扱えますか？</p><p class="article-summary">A. 対応できますが、方式選定が前提です。Microsoft Barcode Controlは半角ASCII中心の運用が安全で、全角は文字化け・無視の可能性があります。全角データは、UTF-8/Shift-JISなどの文字コード、桁数、QR生成方式、リーダー設定を合わせて実機確認してください。</p></li>
       <li class="article-item"><p class="article-link">Q. 導入時の最初の一歩は？</p><p class="article-summary">A. まず記事⑫で手元のQRリーダーを安全に確認し、記事①〜③で入力系の基本設定を固め、記事⑧・⑬で機種選定の考え方を整理します。Zebra、Honeywell、Opticonを使う場合は、記事⑭〜⑯の検証メモと記事⑰の選定比較も確認してから転送運用へ進むのが安全です。</p></li>
     </ul>

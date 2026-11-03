@@ -36,7 +36,7 @@
     "author":{"@type":"Organization","name":"Excel × No VBA Lab"},
     "publisher":{"@type":"Organization","name":"Excel × No VBA Lab"},
     "datePublished":"2026-04-17",
-    "dateModified":"2026-07-12",
+    "dateModified":"2026-11-03",
     "mainEntityOfPage":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/10_qr_system_migration.html"
   }
   </script>
@@ -171,7 +171,7 @@
 <tr><td>手入力</td><td>なし</td><td>確実</td><td>膨大な時間・ミス多発</td></tr>
 <tr><td><strong>QRコード移行</strong></td><td>Excel + QRリーダー</td><td>導入ゼロ・画面操作を自動化・閉域OK</td><td>本記事は半角のみ・255文字/QR。全角は別途検証済み手段が必要</td></tr>
 </table>
-<p>QRコード移行の最大の利点は、<strong>新システム側に特別な機能や権限が一切不要</strong>なことです。キーボードで入力できる画面さえあれば、QRリーダーがキーボードの代わりにデータを打ち込みます。RPAと同じ発想ですが、ソフトウェアのインストールが不要なため、IT部門の許可なしで即日導入できる場合が多いです。</p>
+<p>QRコード移行の最大の利点は、<strong>新システム側に特別な機能を追加しなくてよい</strong>ことです。キーボードで入力できる画面さえあれば、QRリーダーがキーボードの代わりにデータを打ち込みます。RPAと同じ発想ですが、PCへのソフトウェアのインストールは不要です。ただし、USB機器の接続や本番での利用は、社内ルールに従って管理者の承認を得てください。</p>
 </section>
 <!-- ===== 記事⑨との違い ===== -->
 <section class="method-section">
@@ -189,7 +189,7 @@
 <tr><td>繰り返し</td><td>QRを順番に読むだけ</td><td>1件ごとに「新規登録&rarr;入力&rarr;保存」のサイクル</td></tr>
 </tbody>
 </table>
-<p>つまり本記事は、記事⑦（全体システム設計）の技法を「移行」という文脈で再構成したものです。記事①〜⑦の全技術を総動員します。</p>
+<p>つまり本記事は、記事⑦（設定の全体像）までの技法を「移行」という文脈で再構成したものです。記事①〜⑦の全技術を総動員します。</p>
 </section>
 <!-- ===== 全体フロー ===== -->
 <section class="method-section">
@@ -241,12 +241,12 @@
 <!-- ===== フェーズ②：画面分析 ===== -->
 <section class="tips-section">
 <h2 id="sec-8">フェーズ②：新システムの入力画面を操作分析する</h2>
-<p>QR移行の成否は、新システムの画面操作をどれだけ正確に分析できるかにかかっています。記事⑦で学んだ<strong>「操作を1キーずつ分解する」</strong>手法を使います。</p>
+<p>QR移行の成否は、新システムの画面操作をどれだけ正確に分析できるかにかかっています。まず<strong>「操作を1キーずつ分解する」</strong>ことから始めます。</p>
 <div class="setup-step">
 <div class="setup-step-header">
 <span class="step-number">2</span>
 <span class="step-title">画面操作を1キーずつ書き出す</span>
-<span class="step-ref">記事⑦</span>
+<span class="step-ref">記事④⑥</span>
 <span class="step-time">所要 1〜2時間</span>
 <span class="level-badge level-design">設計</span>
 </div>
@@ -257,18 +257,18 @@
 </thead>
 <tbody>
 <tr><td class="text-center">1</td><td>メニュー画面</td><td>「2」（新規登録）</td><td>2</td><td>メニュー番号で選択</td></tr>
-<tr><td class="text-center">2</td><td>画面遷移中</td><td>（3秒の固定待機例）</td><td>!</td><td>記事⑥。画面完了の検知ではない</td></tr>
+<tr><td class="text-center">2</td><td>画面遷移中</td><td>（1秒×3回＝3秒の固定待機例）</td><td>!!!</td><td>記事⑥。画面完了の検知ではない</td></tr>
 <tr><td class="text-center">3</td><td>顧客コード欄にカーソル</td><td>コード入力</td><td>(データ)</td><td>半角英数</td></tr>
 <tr><td class="text-center">4</td><td>顧客コード欄</td><td>Tab</td><td>CHAR(9)</td><td>次フィールドへ</td></tr>
 <tr><td class="text-center">5</td><td>顧客名欄（自動表示）</td><td>Tab</td><td>CHAR(9)</td><td>スキップ（自動入力欄）</td></tr>
 <tr><td class="text-center">6</td><td>電話番号欄</td><td>電話番号入力</td><td>(データ)</td><td>半角数字・ハイフン</td></tr>
 <tr><td class="text-center">7</td><td>電話番号欄</td><td>Tab</td><td>CHAR(9)</td><td>&mdash;</td></tr>
-<tr><td class="text-center">8</td><td>区分ドロップダウン</td><td>&darr;キー&times;n回</td><td>^（n回）</td><td>記事④の文字&rarr;キー変換</td></tr>
+<tr><td class="text-center">8</td><td>区分ドロップダウン</td><td>&darr;キー&times;n回</td><td>`（n回）</td><td>記事⑦の変換例（` &rarr; &darr;）</td></tr>
 <tr><td class="text-center">9</td><td>区分確定</td><td>Tab</td><td>CHAR(9)</td><td>&mdash;</td></tr>
 <tr><td class="text-center">10</td><td>備考欄</td><td>（空でスキップ）</td><td>CHAR(9)</td><td>Tab で通過</td></tr>
 <tr><td class="text-center">11</td><td>登録ボタンにフォーカス</td><td>Enter</td><td>CHAR(13)</td><td>登録実行</td></tr>
 <tr><td class="text-center">12</td><td>確認ダイアログ</td><td>Enter</td><td>CHAR(13)</td><td>「はい」を確定</td></tr>
-<tr><td class="text-center">13</td><td>登録操作後&rarr;メニューへ戻る想定</td><td>（3秒の固定待機例）</td><td>!</td><td>結果確認は別途必要</td></tr>
+<tr><td class="text-center">13</td><td>登録操作後&rarr;メニューへ戻る想定</td><td>（1秒×3回＝3秒の固定待機例）</td><td>!!!</td><td>結果確認は別途必要</td></tr>
 </tbody>
 </table>
 </div>
@@ -279,7 +279,7 @@
 <tr><td>確認ダイアログ</td><td>「登録しますか？ はい/いいえ」</td><td>Enter or Tab+Enter を追加</td></tr>
 <tr><td>ドロップダウン選択</td><td>区分・カテゴリ等</td><td>&darr;キー回数 or 頭文字入力（記事④⑤）</td></tr>
 <tr><td>日付欄の書式変換</td><td>自動で「/」が入る欄</td><td>「20260417」のように数字だけ入力</td></tr>
-<tr><td>既存値のクリア</td><td>デフォルト値が入っている欄</td><td>Delete(`) で消してから入力</td></tr>
+<tr><td>既存値のクリア</td><td>デフォルト値が入っている欄</td><td>Deleteキー用の記号をキー変換に追加し、消してから入力（記事④）</td></tr>
 <tr><td>画面遷移の待ち時間差</td><td>初回や混雑時だけ遅くなる場合がある</td><td>遅い条件で固定待機を試験し、結果確認と停止手順も用意</td></tr>
 </table>
 </section>
@@ -312,7 +312,7 @@
 <tr><td>そのまま転記</td><td>半角テキスト</td><td>フィールドにそのまま入力</td><td><span class="code-inline">A2</span></td></tr>
 <tr><td>ハイフン除去</td><td>"03-1234-5678"</td><td>"0312345678"</td><td><span class="code-inline">=SUBSTITUTE(B2,"-","")</span></td></tr>
 <tr><td>日付書式変換</td><td>"2026/04/17"</td><td>"20260417"</td><td><span class="code-inline">=TEXT(D2,"YYYYMMDD")</span></td></tr>
-<tr><td>区分&rarr;選択回数</td><td>区分"3"</td><td>&darr;キー3回</td><td><span class="code-inline">=REPT("^",C2)</span></td></tr>
+<tr><td>区分&rarr;選択回数</td><td>区分"3"</td><td>&darr;キー3回</td><td><span class="code-inline">=REPT("`",C2)</span></td></tr>
 <tr><td>フラグ&rarr;チェック</td><td>"1"(有効)</td><td>Spaceキー</td><td><span class="code-inline">=IF(E2="1"," ","")</span></td></tr>
 <tr><td>旧にない項目</td><td>&mdash;</td><td>空でTab通過</td><td><span class="code-inline">CHAR(9)</span></td></tr>
 <tr><td>新にない項目</td><td>存在する</td><td>移行しない</td><td>数式から除外</td></tr>
@@ -326,21 +326,21 @@
 <div class="setup-step-header">
 <span class="step-number">4</span>
 <span class="step-title">データ＋キー操作を1つの数式にまとめる</span>
-<span class="step-ref">記事⑦</span>
+<span class="step-ref">記事⑤⑥</span>
 <span class="step-time">所要 1〜2時間</span>
 <span class="level-badge level-design">設計</span>
 </div>
-<p>記事⑦の「QRプログラム」の構造をそのまま適用します。1レコード（1件の移行データ）に対して、「メニュー操作&rarr;画面遷移待ち&rarr;データ入力&rarr;登録&rarr;画面遷移待ち」の全操作を1つの文字列にまとめます。</p>
+<p>記事⑤⑥の数式の組み立て方を使います。1レコード（1件の移行データ）に対して、「メニュー操作&rarr;画面遷移待ち&rarr;データ入力&rarr;登録&rarr;画面遷移待ち」の全操作を1つの文字列にまとめます。</p>
 <div class="formula-box">
 <button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-<code>= "2" & CHAR(13) & "!"
+<code>= "2" & CHAR(13) & "!!!"
   & A2 & CHAR(9)
   & CHAR(9)
   & SUBSTITUTE(B2,"-","") & CHAR(9)
-  & REPT("^",C2) & CHAR(9)
+  & REPT("`",C2) & CHAR(9)
   & IF(D2="","",D2) & CHAR(9)
   & CHAR(13) & CHAR(13)
-  & "!"</code>
+  & "!!!"</code>
 </div>
 <h3>数式の分解</h3>
 <table class="key-table">
@@ -348,20 +348,20 @@
 <tr><th>部分</th><th>数式</th><th>動作</th><th>参照</th></tr>
 </thead>
 <tbody>
-<tr><td>メニュー選択</td><td><span class="code-inline">"2" & CHAR(13)</span></td><td>「2」入力 &rarr; Enter で新規登録画面へ</td><td>⑦</td></tr>
-<tr><td>画面遷移待ち</td><td><span class="code-inline">"!"</span></td><td>3秒の固定待機例（完了検知ではない）</td><td>⑥</td></tr>
+<tr><td>メニュー選択</td><td><span class="code-inline">"2" & CHAR(13)</span></td><td>「2」入力 &rarr; Enter で新規登録画面へ</td><td>②</td></tr>
+<tr><td>画面遷移待ち</td><td><span class="code-inline">"!!!"</span></td><td>1秒×3回＝3秒の固定待機例（完了検知ではない）</td><td>⑥</td></tr>
 <tr><td>顧客コード</td><td><span class="code-inline">A2 & CHAR(9)</span></td><td>データ入力 &rarr; Tab</td><td>②</td></tr>
 <tr><td>顧客名スキップ</td><td><span class="code-inline">CHAR(9)</span></td><td>自動表示欄を Tab で通過</td><td>②</td></tr>
 <tr><td>電話番号</td><td><span class="code-inline">SUBSTITUTE(B2,"-","") & CHAR(9)</span></td><td>ハイフン除去して入力 &rarr; Tab</td><td>&mdash;</td></tr>
-<tr><td>区分選択</td><td><span class="code-inline">REPT("^",C2) & CHAR(9)</span></td><td>&darr;キーをC2回 &rarr; Tab</td><td>④⑤</td></tr>
+<tr><td>区分選択</td><td><span class="code-inline">REPT("`",C2) & CHAR(9)</span></td><td>&darr;キーをC2回 &rarr; Tab（` &rarr; &darr; の変換が必要）</td><td>④⑤</td></tr>
 <tr><td>備考</td><td><span class="code-inline">IF(D2="","",D2) & CHAR(9)</span></td><td>備考があれば入力 &rarr; Tab</td><td>&mdash;</td></tr>
 <tr><td>登録実行</td><td><span class="code-inline">CHAR(13) & CHAR(13)</span></td><td>Enter（登録）&rarr; Enter（確認ダイアログ）</td><td>②</td></tr>
-<tr><td>登録操作後の待機</td><td><span class="code-inline">"!"</span></td><td>3秒の固定待機例。メニュー復帰と登録結果は別に確認</td><td>⑥</td></tr>
+<tr><td>登録操作後の待機</td><td><span class="code-inline">"!!!"</span></td><td>1秒×3回＝3秒の固定待機例。メニュー復帰と登録結果は別に確認</td><td>⑥</td></tr>
 </tbody>
 </table>
 <div class="xdemo-note-info">
 <strong>📝 1QR＝1レコードが原則</strong><br>
-            記事⑨では複数レコードを1QRにまとめましたが、システム移行では1件ごとに「登録&rarr;画面遷移&rarr;次の新規登録」というサイクルがあるため、<strong>1QR＝1レコード</strong>が原則です。1件あたりの文字数を <span class="code-inline">=LEN(E2)</span> で確認してください。上記の例は約55文字なので255文字以内に余裕で収まります。
+            記事⑨では複数レコードを1QRにまとめましたが、システム移行では1件ごとに「登録&rarr;画面遷移&rarr;次の新規登録」というサイクルがあるため、<strong>1QR＝1レコード</strong>が原則です。1件あたりの文字数を <span class="code-inline">=LEN(E2)</span> で確認してください。上記の例は、顧客コード8桁・電話番号11桁・区分2で備考なしなら36文字なので、255文字以内に余裕で収まります。
           </div>
 <div class="xdemo-note-warn">
 <strong>⚠️ 1レコードが255文字を超える場合</strong><br>
@@ -414,37 +414,37 @@
 <table class="key-table">
 <thead><tr><th>項目</th><th>内容</th></tr></thead>
 <tbody>
-<tr><td>データ項目</td><td>顧客コード(8) ＋ 電話番号(11) ＋ 担当者コード(4) ＋ 区分(1桁&rarr;DD) ＋ 登録日(8) ＝ 計約32文字 ＋ 操作約25文字 ＝ <strong>約57文字/件</strong></td></tr>
+<tr><td>データ項目</td><td>顧客コード(8) ＋ 電話番号(11) ＋ 担当者コード(4) ＋ 登録日(8) ＝ 31文字 ＋ 操作18文字（メニュー選択・待機・Tab・&darr;キー2回・Enter）＝ <strong>49文字/件</strong></td></tr>
 <tr><td>1件あたり実行時間</td><td>約12秒</td></tr>
 <tr><td>キー入力の理論時間</td><td>350件 &times; 12秒 ＝ 4,200秒 &fallingdotseq; <strong>約70分</strong>（準備・照合・再実行を除く）</td></tr>
 </tbody>
 </table>
 <h3>QR数式</h3>
 <div class="sample-box">
-<pre>= "3" & CHAR(13) & "!"
+<pre>= "3" & CHAR(13) & "!!!"
   & A2 & CHAR(9)
   & CHAR(9)
   & SUBSTITUTE(B2,"-","") & CHAR(9)
   & C2 & CHAR(9)
-  & REPT("^", D2) & CHAR(9)
+  & REPT("`", D2) & CHAR(9)
   & TEXT(E2,"YYYYMMDD") & CHAR(9)
   & CHAR(13) & CHAR(13)
-  & "!"</pre>
+  & "!!!"</pre>
 </div>
 <h3>タイムライン（正常に進んだ1件の例）</h3>
 <table class="format-table">
 <tr><th>時間</th><th>QR内の送信内容</th><th>画面の動き</th></tr>
 <tr><td>0.0s</td><td>"3" &rarr; Enter</td><td>メニューから「3:顧客登録」を選択</td></tr>
-<tr><td>0.1&ndash;3.1s</td><td>!（3秒の固定待機例）</td><td>この例では顧客登録画面が開く想定。表示完了は検知しない</td></tr>
+<tr><td>0.1&ndash;3.1s</td><td>!!!（1秒×3回＝3秒の固定待機例）</td><td>この例では顧客登録画面が開く想定。表示完了は検知しない</td></tr>
 <tr><td>3.1s</td><td>"CUS-0042" &rarr; Tab</td><td>顧客コード入力 &rarr; 次フィールドへ</td></tr>
 <tr><td>3.3s</td><td>Tab</td><td>顧客名（自動表示）をスキップ</td></tr>
 <tr><td>3.4s</td><td>"0312345678" &rarr; Tab</td><td>電話番号入力 &rarr; 次フィールドへ</td></tr>
 <tr><td>3.6s</td><td>"T012" &rarr; Tab</td><td>担当者コード入力 &rarr; 次フィールドへ</td></tr>
-<tr><td>3.8s</td><td>"^^" &rarr; Tab</td><td>&darr;キー2回（区分2を選択）&rarr; 次フィールドへ</td></tr>
+<tr><td>3.8s</td><td>"``" &rarr; Tab</td><td>&darr;キー2回（区分2を選択）&rarr; 次フィールドへ</td></tr>
 <tr><td>4.0s</td><td>"20260417" &rarr; Tab</td><td>登録日入力 &rarr; 登録ボタンへ</td></tr>
 <tr><td>4.2s</td><td>Enter</td><td>登録ボタン押下</td></tr>
 <tr><td>4.3s</td><td>Enter</td><td>確認ダイアログ「はい」</td></tr>
-<tr><td>4.4&ndash;7.4s</td><td>!（3秒の固定待機例）</td><td>この例ではメニュー画面へ戻る想定。登録成功は別に確認</td></tr>
+<tr><td>4.4&ndash;7.4s</td><td>!!!（1秒×3回＝3秒の固定待機例）</td><td>この例ではメニュー画面へ戻る想定。登録成功は別に確認</td></tr>
 </table>
 <p>この正常系だけなら1件約7.4秒、350件で約43分という計算です。ただし、約70分を移行完了の約束にはできません。準備、承認、バッチごとの件数・合計照合、エラー対応、再実行、最終確認の時間を別に見積もります。</p>
 </section>
@@ -520,7 +520,7 @@
       <h3>📱 QR Automation Lab ― 全19記事一覧</h3>
       <p class="text-sm-gray">
         <span class="text-blue-primary">🔵 基本</span>（⓪〜③）＝ まずここから ／
-        <span class="color-orange">🟠 応用</span>（④〜⑱）＝ さらに自動化を極める
+        <span class="color-orange">🟠 応用</span>（④〜⑲）＝ さらに自動化を極める
       </p>
 
       <ol>
@@ -543,6 +543,7 @@
         <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="18_qr_num_enter_numpad_enter.html">⑱ Num Enter・Numpad Enter・通常Enterの違い</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="19_qr_rpa_selenium_excel_qr_alternative.html">⑲ RPA・Selenium代替案</a></li>
       </ol>
     </nav>
 <section class="qr-safety-note" aria-labelledby="qr-safety-title">

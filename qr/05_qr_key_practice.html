@@ -28,7 +28,7 @@
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-05-03", "dateModified": "2026-10-07", "headline":"QRコード実践パターン集！Excel＆業務システムで即使える数式テンプレート10選","description":"CHAR関数＋キー変換を組み合わせた実践QRコード数式テンプレート10選。Excel横入力・縦入力・セルスキップ・自動保存から、業務システムのNUM Enter確定・F5検索・PrintScreenまで現場で即コピペで使える。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/05_qr_key_practice.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-05-03", "dateModified": "2026-11-03", "headline":"QRコード実践パターン集！Excel＆業務システムで即使える数式テンプレート10選","description":"CHAR関数＋キー変換を組み合わせた実践QRコード数式テンプレート10選。Excel横入力・縦入力・セルスキップ・自動保存から、業務システムのNUM Enter確定・F5検索・PrintScreenまで現場で即コピペで使える。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/05_qr_key_practice.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
 </head>
@@ -317,12 +317,12 @@
 </div>
 <div class="formula-box">
 <button class="copy-btn" onclick="copyFormula(this)">コピー</button>
-<code>="^" & " / CHECKED " & TEXT(NOW(),"HH:MM") & CHAR(10)</code>
+<code>="^" & " - CHECKED " & TEXT(NOW(),"HH:MM") & CHAR(10)</code>
 </div>
-<p>スキャンすると、選択中のセルが編集モードになり、末尾に「 / CHECKED 14:30」のようなテキストが追記されます。</p>
+<p>スキャンすると、選択中のセルが編集モードになり、末尾に「 - CHECKED 14:30」のようなテキストが追記されます。区切りに <code>/</code> を使うと、<code>/ → NUM Enter</code> の変換が働いて入力が途中で確定されるため、<code>-</code> を使っています。</p>
 <div class="xdemo-note-danger">
 <strong>🔥 キー変換が未設定だと <code>^</code> がそのまま入力されます</strong><br>
-          F2 のキー変換は記事④で設定済みであることが前提です。変換が効いていない場合、セルに <code>^ / CHECKED 14:30</code> という文字列がそのまま入ってしまいます。
+          F2 のキー変換は記事④で設定済みであることが前提です。変換が効いていない場合、セルに <code>^ - CHECKED 14:30</code> という文字列がそのまま入ってしまいます。
         </div>
 </section>
 <!-- ========================================== -->
@@ -598,14 +598,14 @@
 <strong>💡 次のステップ</strong><br>
 <strong>業務システムで画面遷移の待ち時間が必要</strong> &rarr; 記事⑥「Sleep（一時停止）で固定時間を空ける」へ。処理完了の確認は別に必要です。<br>
 <strong>①〜⑤の設定をまとめて全体像を確認したい</strong> &rarr; 記事⑦「リーダー設定の全体像 &horbar; フルシステム構築ガイド」へ。<br>
-<strong>QRコード自体の生成方法をもっと詳しく知りたい</strong> &rarr; 記事①「バーコードコントロールでQRコード生成」に戻る。
+<strong>QRコード自体の生成方法をもっと詳しく知りたい</strong> &rarr; 記事①「QRコードでWebシステム入力を自動化」に戻る。
         </div>
 </section>
     <nav class="series-nav">
       <h3>📱 QR Automation Lab ― 全19記事一覧</h3>
       <p class="text-sm-gray">
         <span class="text-blue-primary">🔵 基本</span>（⓪〜③）＝ まずここから ／
-        <span class="color-orange">🟠 応用</span>（④〜⑱）＝ さらに自動化を極める
+        <span class="color-orange">🟠 応用</span>（④〜⑲）＝ さらに自動化を極める
       </p>
 
       <ol>
@@ -628,6 +628,7 @@
         <li><span class="lv-adv">[応用]</span> <a href="16_qr_opticon_universalconfig_streaming_control.html">⑯ Opticon UniversalConfig実機検証メモ</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="17_qr_reader_recommendation_opticon_zebra_honeywell.html">⑰ QR自動入力におすすめのQRリーダー比較</a></li>
         <li><span class="lv-adv">[応用]</span> <a href="18_qr_num_enter_numpad_enter.html">⑱ Num Enter・Numpad Enter・通常Enterの違い</a></li>
+        <li><span class="lv-adv">[応用]</span> <a href="19_qr_rpa_selenium_excel_qr_alternative.html">⑲ RPA・Selenium代替案</a></li>
       </ol>
     </nav>
 <section class="qr-safety-note" aria-labelledby="qr-safety-title">
