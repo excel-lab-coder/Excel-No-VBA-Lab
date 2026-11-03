@@ -982,6 +982,7 @@
           if (entry.article.category === term) score += 4;
         }
         if (entry.article.is_highlight) score += 1;
+        if (entry.article.kind === 'hub' && query.terms.length) score += 8;
         if (entry.article.category === 'thinking') score -= 2;
         if (entry.article.category === 'unlocked') score -= 1;
         return { entry: entry, score: score, order: order };
@@ -1122,12 +1123,13 @@
 
   // 記事を探すときの表記ゆれ（全角半角・カタカナ表記・送り仮名）をそろえる。
   var SEARCH_CATEGORIES = { functions: '関数', powerquery: 'Power Query', cobol: 'COBOL帳票', qr: 'QR入力', others: '現場実務', thinking: '技術の流れ', unlocked: 'VBA・AI', resources: '資料' };
-  var SEARCH_SUBCATEGORIES = { word: 'Word', print: '印刷', speed: '速度 高速化', pdf: 'PDF', ai: 'AI', vba: 'VBA', data: 'データ整理', office: 'Office', ui: '操作' };
+  var SEARCH_SUBCATEGORIES = { word: 'Word', print: '印刷', speed: '速度 高速化', pdf: 'PDF', ai: 'AI', vba: 'VBA', data: 'データ整理', office: '録画 手順共有', ui: '操作', migration: '移行 マクロ' };
   var SEARCH_HUBS = { functions: 'functions/', powerquery: 'powerquery/', cobol: 'cobol/', qr: 'qr/', others: 'others/', thinking: 'thinking/', unlocked: 'unlocked/' };
   function normalizeSearchText(value) {
     return String(value || '').normalize('NFKC').toLocaleLowerCase()
       .replace(/power\s*query|パワークエリ|パワクエ/g, 'powerquery')
       .replace(/コボル/g, 'cobol')
+      .replace(/ワード/g, 'word')
       .replace(/キューアール/g, 'qr')
       .replace(/差し込み|差込み|差込/g, '差込');
   }
@@ -1184,7 +1186,7 @@
     var current = decodeURI(window.location.pathname).slice(decodeURI(new URL(SITE_ROOT).pathname).length);
     function build() {
       loadCatalog().then(function (data) {
-        var list = data.articles.filter(function (article) { return !article.is_prep && article.url.indexOf('?') < 0; });
+        var list = data.articles.filter(function (article) { return !article.is_prep && !article.kind && article.url.indexOf('?') < 0; });
         var self = list.filter(function (article) { return article.url === current; })[0];
         if (!self || !SEARCH_HUBS[self.category]) return;
         var siblings = list.filter(function (article) { return article.category === self.category && article.subcategory === self.subcategory; });
@@ -1206,8 +1208,9 @@
         addLink(siblings[position + 1], '次の記事 →', 'article-neighbor-next');
         var hub = document.createElement('a');
         hub.className = 'article-neighbor-hub';
-        hub.href = SITE_ROOT + SEARCH_HUBS[self.category];
-        hub.textContent = SEARCH_CATEGORIES[self.category] + 'の記事一覧へ';
+        var isWordGuide = self.subcategory === 'word';
+        hub.href = SITE_ROOT + (isWordGuide ? 'others/word/' : SEARCH_HUBS[self.category]);
+        hub.textContent = isWordGuide ? 'Word差し込み印刷ガイドへ' : SEARCH_CATEGORIES[self.category] + 'の記事一覧へ';
         nav.appendChild(hub);
         var feedback = body.querySelector('.article-feedback');
         body.insertBefore(nav, feedback && feedback.parentNode === body ? feedback : null);

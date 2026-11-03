@@ -2311,6 +2311,31 @@ body > section.main-content .hero-contact .hero-copy-kicker {
 .search-more button { width: 100%; min-height: 44px; padding: 8px 16px; font: inherit; font-weight: 700; color: var(--color-primary); background: #edf4fb; border: 1px solid #cfd8dc; border-radius: 6px; cursor: pointer; }
 .search-more button:hover { background: #dceaf7; }
 
+.shelf-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; padding: 12px; background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius); }
+.shelf-nav a { display: inline-flex; align-items: center; min-height: 40px; padding: 6px 12px; font-size: 0.88rem; font-weight: 700; color: var(--color-primary); background: #edf4fb; border: 1px solid #cfd8dc; border-radius: 8px; }
+.shelf-nav a:hover { background: #dceaf7; text-decoration: none; }
+[id^="shelf-"], [id^="make-"], [id^="word-"] { scroll-margin-top: calc(var(--header-height) + var(--tab-nav-height) + 16px); }
+.shelf-subheading { margin: 28px 0 12px; font-size: 1rem; color: var(--color-primary); }
+.shelf-more { margin: 16px 0 8px; }
+.shelf-more > summary { min-height: 44px; padding: 10px 14px; font-weight: 700; color: var(--color-primary); background: #edf4fb; border: 1px solid #cfd8dc; border-radius: 6px; cursor: pointer; }
+.shelf-more[open] > summary { margin-bottom: 12px; }
+.word-make-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 12px 0; font-size: 0.88rem; color: #44525f; }
+.word-make-nav a { display: inline-flex; align-items: center; min-height: 36px; padding: 4px 12px; font-weight: 700; color: var(--color-primary); background: #fff; border: 1px solid #b8c7d9; border-radius: 999px; }
+.word-make-nav a:hover { background: #edf4fb; text-decoration: none; }
+.word-entry-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin: 12px 0 28px; }
+.word-entry-card { padding: 14px 16px; background: #f8fafc; border: 1px solid #d9e2ec; border-radius: var(--radius); }
+.method-section .word-entry-card h3 { margin: 0 0 4px; padding: 0; font-size: 1rem; color: var(--color-primary); border: 0; }
+@media (max-width: 600px) {
+  .word-entry-grid { gap: 8px; margin-bottom: 20px; }
+  .word-entry-card { padding: 10px 12px; }
+  .word-entry-card p { display: none; }
+}
+.word-entry-card p { margin: 0 0 8px; font-size: 0.86rem; color: #4b5563; line-height: 1.6; }
+.word-entry-card ul { margin: 0; padding-left: 1.2em; font-size: 0.92rem; line-height: 1.8; }
+.word-trouble-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+.word-trouble-list a { display: flex; align-items: center; min-height: 44px; height: 100%; padding: 8px 14px; font-size: 0.92rem; font-weight: 700; background: #fff; border: 1px solid #cfd8dc; border-radius: 6px; }
+.word-trouble-list a:hover { border-color: var(--color-link); text-decoration: none; }
+
 .news-more { margin-top: 6px; }
 .news-more summary, .philosophy-details > summary { min-height: 44px; padding: 10px 14px; font-weight: 700; color: var(--color-primary); background: #edf4fb; border: 1px solid #cfd8dc; border-radius: 6px; cursor: pointer; }
 .news-more[open] summary { margin-bottom: 8px; }

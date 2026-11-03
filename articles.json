@@ -1489,6 +1489,15 @@
     {
       "category": "others",
       "subcategory": "word",
+      "kind": "hub",
+      "title": "Word差し込み印刷 実務ガイド",
+      "url": "others/word/index.html",
+      "summary": "Excelの住所録からレター・名簿・宛名ラベル・封筒・はがきを作る記事を、作りたい物と困りごとから探せる入口です。",
+      "tags": []
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
       "title": "Word差し込み印刷で失敗しにくいExcel住所録の作り方",
       "url": "others/word/article_mailmerge_excel_source_design.html",
       "summary": "入力用の列と印刷用の列を分け、Wordにつなげる住所録を用意します。",
@@ -1497,14 +1506,6 @@
         "impact"
       ],
       "is_highlight": true
-    },
-    {
-      "category": "others",
-      "subcategory": "word",
-      "title": "Wordの名簿差し込みを完成させる手順：レターとの違いと全員分の出力",
-      "url": "others/word/article_mailmerge_directory_finish.html",
-      "summary": "1人分のひな形から、全員が続けて並ぶ一覧を完成させます。",
-      "level": 1
     },
     {
       "category": "others",
@@ -1525,6 +1526,14 @@
     {
       "category": "others",
       "subcategory": "word",
+      "title": "Wordの名簿差し込みを完成させる手順：レターとの違いと全員分の出力",
+      "url": "others/word/article_mailmerge_directory_finish.html",
+      "summary": "1人分のひな形から、全員が続けて並ぶ一覧を完成させます。",
+      "level": 1
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
       "title": "Word差し込み印刷で必要な人だけ印刷する2つの方法：Word側で絞り込む／Excel側で対象者の表を作る",
       "url": "others/word/article_mailmerge_filter_two_patterns.html",
       "summary": "チェックやフィルターで対象者を決め、完成文書の人数を照合します。",
@@ -1533,60 +1542,25 @@
     {
       "category": "others",
       "subcategory": "word",
+      "title": "Word差し込み印刷で会社ごとに1枚の送付状を作る方法",
+      "url": "others/word/article_mailmerge_cover_letter_per_company.html",
+      "summary": "会社で絞って1社ずつ作る方法と、会社1行の表でまとめて出す方法を案内します。",
+      "level": 2
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Word差し込み印刷で1枚に複数人分を並べる方法：3人ずつ・4人ずつ・表・一覧",
+      "url": "others/word/article_mailmerge_multiple_records_per_page.html",
+      "summary": "通常はラベルの自動反映を使い、3人ずつなど同じ大きさで並べます。",
+      "level": 3
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
       "title": "Word差し込み印刷で宛名ラベルを作る基本手順",
       "url": "others/word/article_mailmerge_label_basic.html",
       "summary": "用紙の品番を選び、1面目から全ラベルへ自動反映して印刷します。",
-      "level": 2,
-      "tags": [
-        "impact"
-      ],
-      "is_highlight": true
-    },
-    {
-      "category": "others",
-      "subcategory": "word",
-      "title": "Excel VBA・Excel数式・Word差し込み印刷の使い分け",
-      "url": "others/word/article_mailmerge_method_comparison.html",
-      "summary": "通常のWord差し込みから試し、独自の計算や自動化が必要な場合に方式を比較します。",
-      "level": 2,
-      "tags": [
-        "impact"
-      ],
-      "is_highlight": true
-    },
-    {
-      "category": "others",
-      "subcategory": "word",
-      "title": "Word差し込み印刷で郵便番号と日付を整える方法",
-      "url": "others/word/article_mailmerge_postal_code.html",
-      "summary": "Excelの印刷用列で郵便番号と日付を整え、Wordでは列を選ぶだけにします。",
-      "level": 2,
-      "tags": [
-        "impact",
-        "important",
-        "rare"
-      ],
-      "is_highlight": true
-    },
-    {
-      "category": "others",
-      "subcategory": "word",
-      "title": "Word差し込み印刷で長い住所・会社名を枠内で折り返す方法：テキストボックスで宛名崩れを防ぐ",
-      "url": "others/word/article_mailmerge_textbox_wrap.html",
-      "summary": "宛名枠の幅と高さを決め、長い住所が欠けないように確認します。",
-      "level": 3,
-      "tags": [
-        "impact",
-        "important"
-      ],
-      "is_highlight": true
-    },
-    {
-      "category": "others",
-      "subcategory": "word",
-      "title": "Word差し込み印刷で日付・金額・数値の表示崩れを直す方法",
-      "url": "others/word/article_mailmerge_number_format.html",
-      "summary": "日付・金額・割合・番号の見た目を、印刷用の文字列でそろえます。",
       "level": 2,
       "tags": [
         "impact"
@@ -1608,43 +1582,9 @@
     {
       "category": "others",
       "subcategory": "word",
-      "title": "Word差し込み印刷で1枚に複数人分を並べる方法：3人ずつ・4人ずつ・表・一覧",
-      "url": "others/word/article_mailmerge_multiple_records_per_page.html",
-      "summary": "通常はラベルの自動反映を使い、3人ずつなど同じ大きさで並べます。",
-      "level": 3
-    },
-    {
-      "category": "others",
-      "subcategory": "word",
       "title": "Word差し込み印刷で同じ会社の2人目・3人目を1枚のラベルに入れる方法（連名ラベル）",
       "url": "others/word/article_mailmerge_renmei_label.html",
       "summary": "通常は1社1行の印刷用表で連名を作成。1人1行をまとめるコード方式は応用Lv.5として残しています。",
-      "level": 2
-    },
-    {
-      "category": "others",
-      "subcategory": "print",
-      "title": "Excelで2ページ目以降にも見出しを印刷する方法（印刷タイトルと改ページプレビュー）",
-      "url": "others/print/article_print_titles_page_break.html",
-      "summary": "2ページ目以降に見出しが出ない表を、印刷タイトルのタイトル行で解決。ページの切れ目は改ページプレビューでドラッグして決める。実画面で解説。",
-      "level": 1,
-      "version": "Excel 2016以降",
-      "min_excel": 2016
-    },
-    {
-      "category": "others",
-      "subcategory": "word",
-      "title": "Word差し込み印刷で会社ごとに1枚の送付状を作る方法",
-      "url": "others/word/article_mailmerge_cover_letter_per_company.html",
-      "summary": "会社で絞って1社ずつ作る方法と、会社1行の表でまとめて出す方法を案内します。",
-      "level": 2
-    },
-    {
-      "category": "others",
-      "subcategory": "word",
-      "title": "Wordのはがき宛名面印刷：Excel住所録から縦書き・漢数字・連名で作る方法",
-      "url": "others/word/article_mailmerge_hagaki_atena.html",
-      "summary": "Windows版のはがきウィザードで、住所録をつなぎ、連名と長い住所を確認します。",
       "level": 2
     },
     {
@@ -1658,6 +1598,65 @@
     {
       "category": "others",
       "subcategory": "word",
+      "title": "Wordのはがき宛名面印刷：Excel住所録から縦書き・漢数字・連名で作る方法",
+      "url": "others/word/article_mailmerge_hagaki_atena.html",
+      "summary": "Windows版のはがきウィザードで、住所録をつなぎ、連名と長い住所を確認します。",
+      "level": 2
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Word差し込み印刷で郵便番号と日付を整える方法",
+      "url": "others/word/article_mailmerge_postal_code.html",
+      "summary": "Excelの印刷用列で郵便番号と日付を整え、Wordでは列を選ぶだけにします。",
+      "level": 2,
+      "tags": [
+        "impact",
+        "important",
+        "rare"
+      ],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Word差し込み印刷で日付・金額・数値の表示崩れを直す方法",
+      "url": "others/word/article_mailmerge_number_format.html",
+      "summary": "日付・金額・割合・番号の見た目を、印刷用の文字列でそろえます。",
+      "level": 2,
+      "tags": [
+        "impact"
+      ],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Word差し込み印刷で長い住所・会社名を枠内で折り返す方法：テキストボックスで宛名崩れを防ぐ",
+      "url": "others/word/article_mailmerge_textbox_wrap.html",
+      "summary": "宛名枠の幅と高さを決め、長い住所が欠けないように確認します。",
+      "level": 3,
+      "tags": [
+        "impact",
+        "important"
+      ],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Excel VBA・Excel数式・Word差し込み印刷の使い分け",
+      "url": "others/word/article_mailmerge_method_comparison.html",
+      "summary": "通常のWord差し込みから試し、独自の計算や自動化が必要な場合に方式を比較します。",
+      "level": 2,
+      "tags": [
+        "impact"
+      ],
+      "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
       "title": "Word差し込み印刷でQRコードを差し込む方法：MERGEBARCODEでExcelの値をQR化",
       "url": "others/word/article_mailmerge_qrcode.html",
       "summary": "応用・難易度高。Wordのフィールドコードで人ごとにQRを生成し、印刷後の読み取りまで確認します。",
@@ -1667,6 +1666,40 @@
         "rare"
       ],
       "is_highlight": true
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Wordの「置換」でVBAなしに一括整形する（特殊文字・ワイルドカード）",
+      "url": "others/word/article_word_wildcard_replace.html",
+      "summary": "通常の置換を1件ずつ試してから一括整形。ワイルドカードは難易度高の応用編です。",
+      "level": 2
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Wordの「文書の比較」で修正箇所をすぐ見つける",
+      "url": "others/word/article_word_compare.html",
+      "summary": "変更前後の2文書を比較し、変更履歴を確認して別名で保存します。",
+      "level": 1
+    },
+    {
+      "category": "others",
+      "subcategory": "word",
+      "title": "Excelの表をWordへ貼る3つの方法（貼り付け／リンク貼り付け／オブジェクト）",
+      "url": "others/word/article_excel_to_word_paste.html",
+      "summary": "まずは通常のWordの表として貼り、更新が必要な場合だけリンクや埋め込みを選びます。",
+      "level": 1
+    },
+    {
+      "category": "others",
+      "subcategory": "print",
+      "title": "Excelで2ページ目以降にも見出しを印刷する方法（印刷タイトルと改ページプレビュー）",
+      "url": "others/print/article_print_titles_page_break.html",
+      "summary": "2ページ目以降に見出しが出ない表を、印刷タイトルのタイトル行で解決。ページの切れ目は改ページプレビューでドラッグして決める。実画面で解説。",
+      "level": 1,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
     },
     {
       "category": "others",
@@ -1733,7 +1766,7 @@
     },
     {
       "category": "others",
-      "subcategory": "misc",
+      "subcategory": "ui",
       "title": "実務で本当に使うショートカットキー厳選集",
       "url": "others/misc/article_shortcuts.html",
       "summary": "日常業務で本当に役立つExcelショートカットだけを厳選して紹介します。",
@@ -1747,7 +1780,7 @@
     },
     {
       "category": "others",
-      "subcategory": "misc",
+      "subcategory": "print",
       "title": "FILTER関数とリンク図で候補を確認し、連番だけで封筒ラベル印刷する方法",
       "url": "others/misc/article_linked_picture_filter_serial_label.html",
       "summary": "FILTER関数とリンク図で候補一覧を見ながら、連番だけで封筒ラベル印刷を行う実務テクニックです。",
@@ -1760,7 +1793,7 @@
     },
     {
       "category": "others",
-      "subcategory": "misc",
+      "subcategory": "office",
       "title": "Windows 11 スニッピングツールで画面録画する方法",
       "url": "others/misc/article_snipping_tool_video.html",
       "summary": "追加インストール不可の職場でも使いやすい、Windows標準の画面録画。フリーソフト導入やウイルス不安を増やさず手順共有できます。",
@@ -1802,7 +1835,7 @@
     },
     {
       "category": "others",
-      "subcategory": "misc",
+      "subcategory": "office",
       "title": "Windows 10で画面録画する方法の比較（PowerPoint・Game Bar・スニッピングツール）",
       "url": "others/misc/article_screen_record_win10.html",
       "summary": "Windows 10ならPowerPointの画面録画が手軽。追加インストールなしで使える4つの方法を、範囲指定・デスクトップ録画・音声・保存形式で比較します。",
@@ -1826,31 +1859,7 @@
     },
     {
       "category": "others",
-      "subcategory": "word",
-      "title": "Wordの「置換」でVBAなしに一括整形する（特殊文字・ワイルドカード）",
-      "url": "others/word/article_word_wildcard_replace.html",
-      "summary": "通常の置換を1件ずつ試してから一括整形。ワイルドカードは難易度高の応用編です。",
-      "level": 2
-    },
-    {
-      "category": "others",
-      "subcategory": "word",
-      "title": "Wordの「文書の比較」で修正箇所をすぐ見つける",
-      "url": "others/word/article_word_compare.html",
-      "summary": "変更前後の2文書を比較し、変更履歴を確認して別名で保存します。",
-      "level": 1
-    },
-    {
-      "category": "others",
-      "subcategory": "word",
-      "title": "Excelの表をWordへ貼る3つの方法（貼り付け／リンク貼り付け／オブジェクト）",
-      "url": "others/word/article_excel_to_word_paste.html",
-      "summary": "まずは通常のWordの表として貼り、更新が必要な場合だけリンクや埋め込みを選びます。",
-      "level": 1
-    },
-    {
-      "category": "others",
-      "subcategory": "misc",
+      "subcategory": "migration",
       "title": "Microsoft 365に移行したときの数式チェックリスト（#SPILL!・@記号・旧版との共有）",
       "url": "others/misc/article_m365_migration_formula_checklist.html",
       "summary": "Office 2016／2019・2021のサポート終了を受けた移行時の確認点。#SPILL!、数式に付く@、古い版の人と共有するときの新しい関数の注意。",
@@ -1859,7 +1868,7 @@
     },
     {
       "category": "others",
-      "subcategory": "misc",
+      "subcategory": "migration",
       "title": "「マクロの実行がブロックされました」と表示されたとき",
       "url": "others/misc/article_macro_blocked.html",
       "summary": "表示の意味と、Microsoft公式の案内にある対応だけを紹介。マクロを許可してよいかは、必ず社内規程を確認してください。",
@@ -1876,7 +1885,7 @@
     },
     {
       "category": "others",
-      "subcategory": "misc",
+      "subcategory": "ui",
       "title": "【保存版】ユーザー定義の表示形式＆TEXT関数 逆引き一覧",
       "url": "others/misc/article_format.html",
       "summary": "表示形式コードとTEXT関数の使い方を逆引きで整理します。",
@@ -1889,7 +1898,7 @@
     },
     {
       "category": "others",
-      "subcategory": "misc",
+      "subcategory": "ui",
       "title": "電卓不要！ステータスバー（オートカルク）の活用術",
       "url": "others/misc/article_statusbar.html",
       "summary": "数式を立てずに合計・平均・件数を瞬時に確認できる機能を活用します。",

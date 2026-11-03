@@ -74,7 +74,7 @@
     </div>
   </div>
 </header>
-<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/" aria-current="true">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/" aria-current="true">Word差し込み</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 <main class="main-content" id="main-content">
   <nav aria-label="パンくずリスト">
     <div class="breadcrumb">
@@ -85,6 +85,20 @@
   <section class="method-section">
     <h1>Word差し込み印刷 実務ガイド</h1>
     <p class="article-summary">Excelの住所録をWordにつないで、案内文（レター）・一覧（名簿）・宛名ラベル・封筒・はがきを作る記事をまとめています。各記事は実際のWord・Excelの画面写真で手順を追えます。</p>
+  </section>
+
+  <section class="method-section" id="word-entry">
+    <h2><span class="icon">🎯</span> 何を作りますか</h2>
+    <div class="word-entry-grid">
+      <div class="word-entry-card" id="make-letter"><h3>📨 1人1枚の案内文</h3><p>Excel名簿から1人ずつ渡す文書を作ります。</p><ul><li><a href="article_mailmerge_letter_filter_print.html">レターの流れ</a></li><li><a href="article_mailmerge_cover_letter_per_company.html">会社ごとの送付状</a></li></ul></div>
+      <div class="word-entry-card" id="make-list"><h3>📋 全員が並ぶ一覧</h3><p>1人分のひな形から、全員が続く一覧を作ります。</p><ul><li><a href="article_mailmerge_directory_finish.html">名簿を完成させる</a></li><li><a href="article_mailmerge_multiple_records_per_page.html">1枚に複数人分を並べる</a></li></ul></div>
+      <div class="word-entry-card" id="make-label"><h3>🏷 宛名ラベル</h3><p>用紙の品番を選び、全ラベルへ反映します。</p><ul><li><a href="article_mailmerge_label_basic.html">ラベルの基本手順</a></li><li><a href="article_mailmerge_renmei_label.html">連名ラベル</a></li></ul></div>
+      <div class="word-entry-card" id="make-envelope"><h3>✉ 封筒・はがき</h3><p>縦書きの宛名を印刷します。</p><ul><li><a href="article_mailmerge_envelope_naga3.html">長形3号の封筒</a></li><li><a href="article_mailmerge_hagaki_atena.html">はがき宛名面</a></li></ul></div>
+      <div class="word-entry-card" id="make-qr"><h3>🔳 QRコード入りの文書</h3><p>人ごとのQRを生成する応用編です（Lv.5）。</p><ul><li><a href="article_mailmerge_qrcode.html">QRコードを差し込む</a></li></ul></div>
+      <div class="word-entry-card" id="make-compare"><h3>⚖ 方法から比べたい</h3><p>どの種類・どの方式を選ぶか整理します。</p><ul><li><a href="article_mailmerge_letter_vs_directory.html">レターと名簿の違い</a></li><li><a href="article_mailmerge_method_comparison.html">VBA・数式・Wordの使い分け</a></li></ul></div>
+    </div>
+    <h2 id="word-trouble"><span class="icon">🩺</span> 困っていること</h2>
+    <ul class="word-trouble-list"><li><a href="article_mailmerge_label_next_record.html">全ラベルが同じ宛名になる</a></li><li><a href="article_mailmerge_filter_two_patterns.html">必要な人だけ印刷したい</a></li><li><a href="article_mailmerge_postal_code.html">郵便番号・日付の形が崩れる</a></li><li><a href="article_mailmerge_number_format.html">金額・数値の表示が崩れる</a></li><li><a href="article_mailmerge_textbox_wrap.html">長い住所・会社名が枠に収まらない</a></li><li><a href="article_mailmerge_excel_source_design.html">住所録の作り方から見直したい</a></li></ul>
   </section>
 
   <section class="method-section">
@@ -107,7 +121,8 @@
   </p>
 
   <div class="xdemo-note-info" id="word-learning-path"><strong>Wordは通常の画面操作から始めます</strong><ol><li><a href="article_mailmerge_excel_source_design.html">住所録を準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類を選ぶ</a></li><li><a href="article_mailmerge_letter_filter_print.html">レター</a>・<a href="article_mailmerge_label_basic.html">ラベル</a>・<a href="article_mailmerge_directory_finish.html">名簿</a>を完成させる</li><li>抽出・表示形式・封筒・連名へ進む。コードを使う説明は応用編です。</li><li><a href="article_mailmerge_qrcode.html">QRコード生成は難しい（Lv.5）</a>として残しています。</li></ol></div>
-<ul class="article-list" id="list-others-word">
+<h3 class="subcategory-heading" id="word-list-basic">準備・種類の選び方</h3>
+  <ul class="article-list" id="list-others-word">
     <li class="article-item highlight">
       <div class="level-bar lv-1">
         <span class="level-label">Lv.1 入門</span>
@@ -123,18 +138,21 @@
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
       </div>
-      <a class="article-link" href="article_mailmerge_directory_finish.html">Wordの名簿差し込みを完成させる手順：レターとの違いと全員分の出力</a>
-      <p class="article-summary">1人分のひな形から、全員が続けて並ぶ一覧を完成させます。</p>
-    </li>
-    <li class="article-item">
-      <div class="level-bar lv-1">
-        <span class="level-label">Lv.1 入門</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
       <a class="article-link" href="article_mailmerge_letter_vs_directory.html">Word差し込み印刷の「レター」と「名簿」の違いと使い分け（ラベル・封筒・はがきも）</a>
       <p class="article-summary">レターと名簿を、プレビューではなく完成した文書で比べます。</p>
     </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="article_mailmerge_method_comparison.html">Excel VBA・Excel数式・Word差し込み印刷の使い分け</a>
+      <p class="article-summary">通常のWord差し込みから試し、独自の計算や自動化が必要な場合に方式を比較します。</p>
+    </li>
+  </ul>
+  <h3 class="subcategory-heading" id="word-list-letter">案内文・一覧</h3>
+  <ul class="article-list">
     <li class="article-item">
       <div class="level-bar lv-1">
         <span class="level-label">Lv.1 入門</span>
@@ -145,6 +163,15 @@
       <p class="article-summary">Excelの名簿から、1人ずつ渡す案内文を作ります。</p>
     </li>
     <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="article_mailmerge_directory_finish.html">Wordの名簿差し込みを完成させる手順：レターとの違いと全員分の出力</a>
+      <p class="article-summary">1人分のひな形から、全員が続けて並ぶ一覧を完成させます。</p>
+    </li>
+    <li class="article-item">
       <div class="level-bar lv-2">
         <span class="level-label">Lv.2 やさしい</span>
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
@@ -153,22 +180,27 @@
       <a class="article-link" href="article_mailmerge_filter_two_patterns.html">Word差し込み印刷で必要な人だけ印刷する2つの方法：Word側で絞り込む／Excel側で対象者の表を作る</a>
       <p class="article-summary">チェックやフィルターで対象者を決め、完成文書の人数を照合します。</p>
     </li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="article_mailmerge_cover_letter_per_company.html">Word差し込み印刷で会社ごとに1枚の送付状を作る方法</a>
+      <p class="article-summary">会社で絞って1社ずつ作る方法と、会社1行の表でまとめて出す方法を案内します。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="article_mailmerge_multiple_records_per_page.html">Word差し込み印刷で1枚に複数人分を並べる方法：3人ずつ・4人ずつ・表・一覧</a>
+      <p class="article-summary">通常はラベルの自動反映を使い、3人ずつなど同じ大きさで並べます。</p>
+    </li>
+  </ul>
+  <h3 class="subcategory-heading" id="word-list-label">ラベル</h3>
+  <ul class="article-list">
     <li class="article-item highlight">
       <div class="level-bar lv-2">
         <span class="level-label">Lv.2 やさしい</span>
@@ -184,44 +216,8 @@
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
       </div>
-      <a class="article-link" href="article_mailmerge_method_comparison.html">Excel VBA・Excel数式・Word差し込み印刷の使い分け</a>
-      <p class="article-summary">通常のWord差し込みから試し、独自の計算や自動化が必要な場合に方式を比較します。</p>
-    </li>
-    <li class="article-item highlight">
-      <div class="level-bar lv-2">
-        <span class="level-label">Lv.2 やさしい</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-important">⚠ 重要</span><span class="tag-rare">💎 応用例</span></span>
-      </div>
-      <a class="article-link" href="article_mailmerge_postal_code.html">Word差し込み印刷で郵便番号と日付を整える方法</a>
-      <p class="article-summary">Excelの印刷用列で郵便番号と日付を整え、Wordでは列を選ぶだけにします。</p>
-    </li>
-    <li class="article-item highlight">
-      <div class="level-bar lv-3">
-        <span class="level-label">Lv.3 ふつう</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-important">⚠ 重要</span></span>
-      </div>
-      <a class="article-link" href="article_mailmerge_textbox_wrap.html">Word差し込み印刷で長い住所・会社名を枠内で折り返す方法</a>
-      <p class="article-summary">宛名枠の幅と高さを決め、長い住所が欠けないように確認します。</p>
-    </li>
-    <li class="article-item highlight">
-      <div class="level-bar lv-2">
-        <span class="level-label">Lv.2 やさしい</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
-      </div>
-      <a class="article-link" href="article_mailmerge_number_format.html">Word差し込み印刷で日付・金額・数値の表示崩れを直す方法</a>
-      <p class="article-summary">日付・金額・割合・番号の見た目を、印刷用の文字列でそろえます。</p>
-    </li>
-    <li class="article-item">
-      <div class="level-bar lv-3">
-        <span class="level-label">Lv.3 ふつう</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
-      <a class="article-link" href="article_mailmerge_multiple_records_per_page.html">Word差し込み印刷で1枚に複数人分を並べる方法：3人ずつ・4人ずつ・表・一覧</a>
-      <p class="article-summary">通常はラベルの自動反映を使い、3人ずつなど同じ大きさで並べます。</p>
+      <a class="article-link" href="article_mailmerge_label_next_record.html">Wordラベル差し込みで全ラベルが同じ宛名になる原因と直し方</a>
+      <p class="article-summary">自動反映をやり直し、宛名が順に切り替わる状態へ戻します。</p>
     </li>
     <li class="article-item">
       <div class="level-bar lv-2">
@@ -232,15 +228,17 @@
       <a class="article-link" href="article_mailmerge_renmei_label.html">Word差し込み印刷で同じ会社の2人目・3人目を1枚のラベルに入れる方法（連名ラベル）</a>
       <p class="article-summary">通常は1社1行の印刷用表で連名を作成。1人1行をまとめるコード方式は応用Lv.5として残しています。</p>
     </li>
-
+  </ul>
+  <h3 class="subcategory-heading" id="word-list-envelope">封筒・はがき</h3>
+  <ul class="article-list">
     <li class="article-item">
-      <div class="level-bar lv-2">
-        <span class="level-label">Lv.2 やさしい</span>
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
       </div>
-      <a class="article-link" href="article_mailmerge_cover_letter_per_company.html">Word差し込み印刷で会社ごとに1枚の送付状を作る方法</a>
-      <p class="article-summary">会社で絞って1社ずつ作る方法と、会社1行の表でまとめて出す方法を案内します。</p>
+      <a class="article-link" href="article_mailmerge_envelope_naga3.html">Word差し込み印刷で長形3号の封筒に縦書きで宛名を入れる方法</a>
+      <p class="article-summary">封筒のサイズと宛名枠を決め、縦書き用の印刷列を使って配置します。</p>
     </li>
     <li class="article-item">
       <div class="level-bar lv-2">
@@ -251,14 +249,17 @@
       <a class="article-link" href="article_mailmerge_hagaki_atena.html">Wordのはがき宛名面印刷：Excel住所録から縦書き・漢数字・連名で作る方法</a>
       <p class="article-summary">Windows版のはがきウィザードで、住所録をつなぎ、連名と長い住所を確認します。</p>
     </li>
-    <li class="article-item">
-      <div class="level-bar lv-3">
-        <span class="level-label">Lv.3 ふつう</span>
+  </ul>
+  <h3 class="subcategory-heading" id="word-list-format">表示を整える</h3>
+  <ul class="article-list">
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-important">⚠ 重要</span><span class="tag-rare">💎 応用例</span></span>
       </div>
-      <a class="article-link" href="article_mailmerge_envelope_naga3.html">Word差し込み印刷で長形3号の封筒に縦書きで宛名を入れる方法</a>
-      <p class="article-summary">封筒のサイズと宛名枠を決め、縦書き用の印刷列を使って配置します。</p>
+      <a class="article-link" href="article_mailmerge_postal_code.html">Word差し込み印刷で郵便番号と日付を整える方法</a>
+      <p class="article-summary">Excelの印刷用列で郵便番号と日付を整え、Wordでは列を選ぶだけにします。</p>
     </li>
     <li class="article-item highlight">
       <div class="level-bar lv-2">
@@ -266,9 +267,21 @@
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
       </div>
-      <a class="article-link" href="article_mailmerge_label_next_record.html">Wordラベル差し込みで全ラベルが同じ宛名になる原因と直し方</a>
-      <p class="article-summary">自動反映をやり直し、宛名が順に切り替わる状態へ戻します。</p>
+      <a class="article-link" href="article_mailmerge_number_format.html">Word差し込み印刷で日付・金額・数値の表示崩れを直す方法</a>
+      <p class="article-summary">日付・金額・割合・番号の見た目を、印刷用の文字列でそろえます。</p>
     </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-important">⚠ 重要</span></span>
+      </div>
+      <a class="article-link" href="article_mailmerge_textbox_wrap.html">Word差し込み印刷で長い住所・会社名を枠内で折り返す方法</a>
+      <p class="article-summary">宛名枠の幅と高さを決め、長い住所が欠けないように確認します。</p>
+    </li>
+  </ul>
+  <h3 class="subcategory-heading" id="word-list-advanced">応用</h3>
+  <ul class="article-list">
     <li class="article-item highlight">
       <div class="level-bar lv-5">
         <span class="level-label">Lv.5 難しい</span>
@@ -279,12 +292,40 @@
       <p class="article-summary">応用・難易度高。Wordのフィールドコードで人ごとにQRを生成し、印刷後の読み取りまで確認します。</p>
     </li>
   </ul>
+  <h3 class="subcategory-heading" id="word-other-tools">Wordの差し込み以外の機能</h3>
+  <ul class="article-list">
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="article_word_wildcard_replace.html">Wordの「置換」でVBAなしに一括整形する（特殊文字・ワイルドカード）</a>
+      <p class="article-summary">通常の置換を1件ずつ試してから一括整形。ワイルドカードは難易度高の応用編です。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="article_word_compare.html">Wordの「文書の比較」で修正箇所をすぐ見つける</a>
+      <p class="article-summary">変更前後の2文書を比較し、変更履歴を確認して別名で保存します。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="article_excel_to_word_paste.html">Excelの表をWordへ貼る3つの方法（貼り付け／リンク貼り付け／オブジェクト）</a>
+      <p class="article-summary">まずは通常のWordの表として貼り、更新が必要な場合だけリンクや埋め込みを選びます。</p>
+    </li>
+  </ul>
+
   </section>
 
   <section class="method-section method-section-spaced">
     <h2><span class="icon">🔗</span> 関連する記事・カテゴリ</h2>
     <ul class="article-list">
-      <li class="article-item"><a class="article-link" href="../">🛠 現場実務ラボ</a><p class="article-summary">印刷・速度・入力UIなど、Excelの実務改善テクニックの一覧です。</p></li>
+      <li class="article-item"><a class="article-link" href="../">🛠 現場実務ラボ</a><p class="article-summary">印刷・データ整理・入力・速度など、Excelの実務改善テクニックの一覧です。</p></li>
       <li class="article-item"><a class="article-link" href="../print/article_mail_print.html">Excelだけで案内文書を1件1ページで印刷する方法</a><p class="article-summary">Wordを使わずに、スピンボタンとPrint_Areaで差し込み印刷風に印刷します。</p></li>
       <li class="article-item"><a class="article-link" href="../print/article_label_print.html">Excelだけで10面ラベルを印刷する方法</a><p class="article-summary">Wordを使わずに、VLOOKUPとPrint_Areaでラベルシールに印刷します。</p></li>
     </ul>

@@ -453,10 +453,16 @@
         <span class="quick-route-text">QRコードをその場で作成し、キーボード扱いのQRリーダー連携を試す</span>
       </a>
 
+      <a class="quick-route-card qrc-qr" href="others/word/">
+        <span class="quick-route-icon">📄</span>
+        <span class="quick-route-title">Wordで差し込み印刷したい</span>
+        <span class="quick-route-text">案内文・名簿・宛名ラベル・封筒・はがきを、Excel住所録から作る</span>
+      </a>
+
       <a class="quick-route-card qrc-functions" href="#others" data-tab-trigger="others" data-tab-scroll="true" data-tab-focus="true" data-tab-update-hash="true">
         <span class="quick-route-icon">🛠</span>
         <span class="quick-route-title">印刷・操作・速度を改善したい</span>
-        <span class="quick-route-text">Word差し込み印刷、ラベル印刷、重いExcelの軽量化など現場の実務</span>
+        <span class="quick-route-text">ラベル印刷、データの照合、重いExcelの軽量化など現場の実務</span>
       </a>
 
       <a class="quick-route-card qrc-thinking" href="./troubleshoot/">
@@ -465,11 +471,6 @@
         <span class="quick-route-text">症状や困りごとの索引から、該当する記事へ移動</span>
       </a>
 
-      <a class="quick-route-card qrc-cobol" href="samples/">
-        <span class="quick-route-icon">📂</span>
-        <span class="quick-route-title">サンプルで試したい</span>
-        <span class="quick-route-text">全角半角混在のCOBOL帳票300行など、検証用のサンプルデータ集</span>
-      </a>
     </div>
   </section>
 
@@ -3045,7 +3046,7 @@
     <div class="hero-copy">
       <div class="hero-copy-kicker">Practical Excel Lab</div>
       <div class="hero-copy-title">現場実務ラボ</div>
-      <div class="hero-copy-sub">印刷・速度・UIまで、日々の手間を減らす。</div>
+      <div class="hero-copy-sub">Word差し込み・印刷・データ整理・速度まで、日々の手間を減らす。</div>
     </div>
   </div>
 
@@ -3078,172 +3079,26 @@
     </div>
   </div>
 
-  <h3 class="subcategory-heading">🚀 限界突破の計算速度</h3>
+  <nav class="shelf-nav" aria-label="現場実務ラボの分類"><a href="#shelf-word">📄 Word差し込み・Word</a><a href="#shelf-print">🖨 Excelの印刷・ラベル</a><a href="#shelf-data">🧹 データ整理・照合</a><a href="#shelf-input">🎛 入力・操作・表示</a><a href="#shelf-speed">🚀 速度・軽量化</a><a href="#shelf-record">🎥 画面録画・手順共有</a><a href="#shelf-migrate">🔁 移行・マクロ</a></nav>
 
-  <div class="category-hero hero-overlay hero-small hero-others-speed margin-y-16-24 max-width-800">
-    <picture>
-      <source media="(max-width: 600px)" type="image/avif" data-srcset="./image/hero_others_speed_clean-480.avif 480w, ./image/hero_others_speed_clean-768.avif 768w" sizes="100vw">
-      <source type="image/avif" data-srcset="./image/hero_others_speed_clean-768.avif 768w, ./image/hero_others_speed_clean-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
-      <source media="(max-width: 600px)" type="image/webp" data-srcset="./image/hero_others_speed_clean-480.webp 480w, ./image/hero_others_speed_clean-768.webp 768w" sizes="100vw">
-      <source type="image/webp" data-srcset="./image/hero_others_speed_clean-768.webp 768w, ./image/hero_others_speed_clean-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
-      <img alt="Excel Speed Lab 業務高速化" decoding="async" height="576" loading="lazy" data-src="./image/hero_others_speed_clean.png" src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" width="1024">
-    </picture>
-    <div class="hero-copy">
-      <div class="hero-copy-kicker">Performance</div>
-      <div class="hero-copy-title">Excel Speed Lab</div>
-      <div class="hero-copy-sub">重いブックを、数式設計から軽くする。</div>
-    </div>
-  </div>
-
-  <p class="text-desc">
-    VLOOKUPをINDEX+MATCHに変えても遅いまま？本当の原因はメモリスワップにあるかもしれません。
-    検索関数の選び方から数式の高速化テクニックまで、Excelの処理速度を見直すノウハウです。
-  </p>
-
-  <ul class="article-list" id="list-others-speed">
-    <li class="article-item highlight">
-      <div class="level-bar lv-2">
-        <span class="level-label">Lv.2 やさしい</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
-      </div>
-      <a class="article-link" href="others/speed/article_excel_diet_emergency.html">「Excelが重い・落ちる・開かない」ときの緊急ダイエットマニュアル</a>
-      <p class="article-summary">数十MBに肥大化したファイルをVBAなしで手動軽量化。UsedRange初期化（Ctrl+Endのズレ解消）、ゴースト図形一括削除、重複した条件付き書式の整理手順を徹底解説。</p>
-    </li>
-
-    <li class="article-item">
-      <div class="level-bar lv-4">
-        <span class="level-label">Lv.4 やや難</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
-      </div>
-      <a class="article-link" href="others/speed/article_memory_swap.html">Excelが遅い本当の原因 — メモリスワップと数式設計の関係</a>
-      <p class="article-summary">VLOOKUPをINDEX+MATCHに変えても遅いまま？RAM・SSD・32ビット制限・数式設計の考え方を解説します。</p>
-    </li>
-
-    <li class="article-item highlight">
-      <div class="level-bar lv-5">
-        <span class="level-label">Lv.5 難しい</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="speed_lookup"></span></span>
-      </div>
-      <a class="article-link" href="others/speed/article_01_lookup_speed.html">検索関数の速度と参照範囲</a>
-      <p class="article-summary">VLOOKUP・INDEX+MATCH・XLOOKUPの参照範囲の違いと、検索設計による高速化を解説します。</p>
-    </li>
-
-    <li class="article-item highlight">
-      <div class="level-bar lv-6">
-        <span class="level-label">Lv.6 かなり難</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="speed_formula"></span></span>
-      </div>
-      <a class="article-link" href="others/speed/article_02_formula_techniques.html">数式の速度UPテクニック集</a>
-      <p class="article-summary">数式の処理速度を改善する実践テクニック集です。</p>
-    </li>
-  </ul>
-
-  <h3 class="subcategory-heading">🖨 印刷自動化・ラベル印刷</h3>
-
-  <div class="category-hero hero-overlay hero-small hero-others-print margin-y-16-24 max-width-800">
-    <picture>
-      <source media="(max-width: 600px)" type="image/avif" data-srcset="./image/hero_others_print_main-480.avif 480w, ./image/hero_others_print_main-768.avif 768w" sizes="100vw">
-      <source type="image/avif" data-srcset="./image/hero_others_print_main-768.avif 768w, ./image/hero_others_print_main-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
-      <source media="(max-width: 600px)" type="image/webp" data-srcset="./image/hero_others_print_main-480.webp 480w, ./image/hero_others_print_main-768.webp 768w" sizes="100vw">
-      <source type="image/webp" data-srcset="./image/hero_others_print_main-768.webp 768w, ./image/hero_others_print_main-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
-      <img alt="印刷自動化・ラベル印刷 特集" decoding="async" height="576" loading="lazy" data-src="./image/hero_others_print_main.png" src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" width="1024">
-    </picture>
-    <div class="hero-copy">
-      <div class="hero-copy-kicker">Print Automation</div>
-      <div class="hero-copy-title">印刷自動化ラボ</div>
-      <div class="hero-copy-sub">印刷範囲・ラベル・帳票出力をVBAなしで制御。</div>
-    </div>
-  </div>
-
-  <p class="text-desc">
-    Print_Area、スピンボタン、XLOOKUP、VLOOKUPを組み合わせ、
-    VBAなしで印刷範囲・ラベル・案内文書を自動化する実務シリーズです。
-  </p>
-
-  <ul class="article-list" id="list-others-print">
-    <li class="article-item">
-      <div class="level-bar lv-1">
-        <span class="level-label">Lv.1 入門</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
-      <a class="article-link" href="others/print/article_print_titles_page_break.html">Excelで2ページ目以降にも見出しを印刷する方法（印刷タイトルと改ページプレビュー）</a>
-      <p class="article-summary">2ページ目以降に見出しが出ない表を、印刷タイトルのタイトル行で解決。ページの切れ目は改ページプレビューでドラッグして決める。実画面で解説。</p>
-    </li>
-
-
-
-    <li class="article-item highlight">
-      <div class="level-bar lv-3">
-        <span class="level-label">Lv.3 ふつう</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
-      </div>
-      <a class="article-link" href="others/misc/article_linked_picture_filter_serial_label.html">FILTER関数とリンク図で候補を確認し、連番だけで封筒ラベル印刷する方法</a>
-      <p class="article-summary">候補一覧をリンク図で表示し、連番を入力するだけで宛名・住所を切り替えて封筒ラベルを印刷する方法です。</p>
-    </li>
-
-    <li class="article-item highlight">
-      <div class="level-bar lv-4">
-        <span class="level-label">Lv.4 やや難</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="print_area"></span></span>
-      </div>
-      <a class="article-link" href="others/print/article_print_area.html">VBAなしで印刷範囲を自動で伸縮させる方法（名前の管理）</a>
-      <p class="article-summary">データが増えたら印刷範囲も自動で広がり、空白行は印刷されないようにする方法です。</p>
-    </li>
-
-    <li class="article-item">
-      <div class="level-bar lv-4">
-        <span class="level-label">Lv.4 やや難</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-      </div>
-      <a class="article-link" href="others/print/article_label_print.html">Excel 10面ラベル印刷 — Print_Area数式で空白シールを自動除外</a>
-      <p class="article-summary">データ件数に応じてPrint_Areaが自動伸縮。VBAもWordも不要でラベル印刷を制御します。</p>
-    </li>
-
-    <li class="article-item">
-      <div class="level-bar lv-4">
-        <span class="level-label">Lv.4 やや難</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-rare" data-rare-id="label_scrap"></span></span>
-      </div>
-      <a class="article-link" href="others/print/article_label_scrap.html">Excelシール残骸を活用 — 開始位置を指定して途中から印刷する方法</a>
-      <p class="article-summary">使いかけのラベルシールを無駄なく活用する方法です。</p>
-    </li>
-
-    <li class="article-item">
-      <div class="level-bar lv-3">
-        <span class="level-label">Lv.3 ふつう</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-      </div>
-      <a class="article-link" href="others/print/article_mail_print.html">宛名1ページ1枚 案内文書インスタント印刷 — スピンボタン＋Print_Area</a>
-      <p class="article-summary">スピンボタン＋VLOOKUPで差し込み印刷をExcelだけで実現します。</p>
-    </li>
-  </ul>
-
-  <h3 class="subcategory-heading">📄 Word差し込み印刷</h3>
-
+  <h3 class="subcategory-heading" id="shelf-word">📄 Word差し込み印刷・Word活用</h3>
+  <p class="word-make-nav"><span>作りたい物から：</span><a href="others/word/#make-letter">案内文</a><a href="others/word/#make-list">一覧・名簿</a><a href="others/word/#make-label">宛名ラベル</a><a href="others/word/#make-envelope">封筒・はがき</a><a href="others/word/#make-qr">QRコード</a><a href="others/word/#word-trouble">困ったとき</a></p>
+  <p class="text-desc"><a class="article-link" href="others/word/">📄 Word差し込み印刷ガイド（目的別・全17記事）へ &rarr;</a></p>
   <p class="text-desc">
     Wordの差し込み印刷を安定させるため、Excel側の印刷用列とWord側の表示設定を使い分ける実務シリーズです。
     住所録の準備から完成・試し印刷までを画像で案内します。通常操作を中心に、コードが必要な方法は難易度高の応用編として掲載しています。
   </p>
 
   <div class="xdemo-note-info" id="word-learning-path"><strong>Wordは通常の画面操作から始めます</strong><ol><li><a href="others/word/article_mailmerge_excel_source_design.html">住所録を準備</a> → <a href="others/word/article_mailmerge_letter_vs_directory.html">種類を選ぶ</a></li><li><a href="others/word/article_mailmerge_letter_filter_print.html">レター</a>・<a href="others/word/article_mailmerge_label_basic.html">ラベル</a>・<a href="others/word/article_mailmerge_directory_finish.html">名簿</a>を完成させる</li><li>抽出・表示形式・封筒・連名へ進む。コードを使う説明は応用編です。</li><li><a href="others/word/article_mailmerge_qrcode.html">QRコード生成は難しい（Lv.5）</a>として残しています。</li></ol></div>
-<p class="text-desc"><a class="article-link" href="others/word/">📄 Word差し込み印刷の記事一覧（専用ページ）へ &rarr;</a></p>
-<ul class="article-list" id="list-others-word">
-    <li class="article-item">
+  <ul class="article-list" id="list-others-word">
+    <li class="article-item highlight">
       <div class="level-bar lv-1">
         <span class="level-label">Lv.1 入門</span>
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
       </div>
-      <a class="article-link" href="others/word/article_mailmerge_directory_finish.html">Wordの名簿差し込みを完成させる手順：レターとの違いと全員分の出力</a>
-      <p class="article-summary">1人分のひな形から、全員が続けて並ぶ一覧を完成させます。</p>
+      <a class="article-link" href="others/word/article_mailmerge_excel_source_design.html">Word差し込み印刷で失敗しにくいExcel住所録の作り方</a>
+      <p class="article-summary">入力用の列と印刷用の列を分け、Wordにつなげる住所録を用意します。</p>
     </li>
     <li class="article-item">
       <div class="level-bar lv-1">
@@ -3263,27 +3118,6 @@
       <a class="article-link" href="others/word/article_mailmerge_letter_filter_print.html">Word差し込み印刷（レター）の流れ：Excel名簿をつないで、絞り込んで、印刷するまで</a>
       <p class="article-summary">Excelの名簿から、1人ずつ渡す案内文を作ります。</p>
     </li>
-    <li class="article-item">
-      <div class="level-bar lv-2">
-        <span class="level-label">Lv.2 やさしい</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
-      <a class="article-link" href="others/word/article_mailmerge_filter_two_patterns.html">Word差し込み印刷で必要な人だけ印刷する2つの方法：Word側で絞り込む／Excel側で対象者の表を作る</a>
-      <p class="article-summary">チェックやフィルターで対象者を決め、完成文書の人数を照合します。</p>
-    </li>
-
-
-
-
-
-
-
-
-
-
-
-
     <li class="article-item highlight">
       <div class="level-bar lv-2">
         <span class="level-label">Lv.2 やさしい</span>
@@ -3293,23 +3127,81 @@
       <a class="article-link" href="others/word/article_mailmerge_label_basic.html">Word差し込み印刷で宛名ラベルを作る基本手順</a>
       <p class="article-summary">用紙の品番を選び、1面目から全ラベルへ自動反映して印刷します。</p>
     </li>
+  </ul>
+
+  <details class="shelf-more"><summary>差し込み印刷の残り13記事を表示</summary>
+  <ul class="article-list">
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="others/word/article_mailmerge_directory_finish.html">Wordの名簿差し込みを完成させる手順：レターとの違いと全員分の出力</a>
+      <p class="article-summary">1人分のひな形から、全員が続けて並ぶ一覧を完成させます。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="others/word/article_mailmerge_filter_two_patterns.html">Word差し込み印刷で必要な人だけ印刷する2つの方法：Word側で絞り込む／Excel側で対象者の表を作る</a>
+      <p class="article-summary">チェックやフィルターで対象者を決め、完成文書の人数を照合します。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="others/word/article_mailmerge_cover_letter_per_company.html">Word差し込み印刷で会社ごとに1枚の送付状を作る方法</a>
+      <p class="article-summary">会社で絞って1社ずつ作る方法と、会社1行の表でまとめて出す方法を案内します。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="others/word/article_mailmerge_multiple_records_per_page.html">Word差し込み印刷で1枚に複数人分を並べる方法：3人ずつ・4人ずつ・表・一覧</a>
+      <p class="article-summary">通常はラベルの自動反映を使い、3人ずつなど同じ大きさで並べます。</p>
+    </li>
     <li class="article-item highlight">
       <div class="level-bar lv-2">
         <span class="level-label">Lv.2 やさしい</span>
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
       </div>
-      <a class="article-link" href="others/word/article_mailmerge_method_comparison.html">Excel VBA・Excel数式・Word差し込み印刷の使い分け</a>
-      <p class="article-summary">通常のWord差し込みから試し、独自の計算や自動化が必要な場合に方式を比較します。</p>
+      <a class="article-link" href="others/word/article_mailmerge_label_next_record.html">Wordラベル差し込みで全ラベルが同じ宛名になる原因と直し方</a>
+      <p class="article-summary">自動反映をやり直し、宛名が順に切り替わる状態へ戻します。</p>
     </li>
-    <li class="article-item highlight">
-      <div class="level-bar lv-1">
-        <span class="level-label">Lv.1 入門</span>
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
       </div>
-      <a class="article-link" href="others/word/article_mailmerge_excel_source_design.html">Word差し込み印刷で失敗しにくいExcel住所録の作り方</a>
-      <p class="article-summary">入力用の列と印刷用の列を分け、Wordにつなげる住所録を用意します。</p>
+      <a class="article-link" href="others/word/article_mailmerge_renmei_label.html">Word差し込み印刷で同じ会社の2人目・3人目を1枚のラベルに入れる方法（連名ラベル）</a>
+      <p class="article-summary">通常は1社1行の印刷用表で連名を作成。1人1行をまとめるコード方式は応用Lv.5として残しています。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="others/word/article_mailmerge_envelope_naga3.html">Word差し込み印刷で長形3号の封筒に縦書きで宛名を入れる方法</a>
+      <p class="article-summary">封筒のサイズと宛名枠を決め、縦書き用の印刷列を使って配置します。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="others/word/article_mailmerge_hagaki_atena.html">Wordのはがき宛名面印刷：Excel住所録から縦書き・漢数字・連名で作る方法</a>
+      <p class="article-summary">Windows版のはがきウィザードで、住所録をつなぎ、連名と長い住所を確認します。</p>
     </li>
     <li class="article-item highlight">
       <div class="level-bar lv-2">
@@ -3319,6 +3211,15 @@
       </div>
       <a class="article-link" href="others/word/article_mailmerge_postal_code.html">Word差し込み印刷で郵便番号と日付を整える方法</a>
       <p class="article-summary">Excelの印刷用列で郵便番号と日付を整え、Wordでは列を選ぶだけにします。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/word/article_mailmerge_number_format.html">Word差し込み印刷で日付・金額・数値の表示崩れを直す方法</a>
+      <p class="article-summary">日付・金額・割合・番号の見た目を、印刷用の文字列でそろえます。</p>
     </li>
     <li class="article-item highlight">
       <div class="level-bar lv-3">
@@ -3335,63 +3236,8 @@
         <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
         <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
       </div>
-      <a class="article-link" href="others/word/article_mailmerge_number_format.html">Word差し込み印刷で日付・金額・数値の表示崩れを直す方法</a>
-      <p class="article-summary">日付・金額・割合・番号の見た目を、印刷用の文字列でそろえます。</p>
-    </li>
-    <li class="article-item">
-      <div class="level-bar lv-3">
-        <span class="level-label">Lv.3 ふつう</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
-      <a class="article-link" href="others/word/article_mailmerge_multiple_records_per_page.html">Word差し込み印刷で1枚に複数人分を並べる方法：3人ずつ・4人ずつ・表・一覧</a>
-      <p class="article-summary">通常はラベルの自動反映を使い、3人ずつなど同じ大きさで並べます。</p>
-    </li>
-    <li class="article-item">
-      <div class="level-bar lv-2">
-        <span class="level-label">Lv.2 やさしい</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
-      <a class="article-link" href="others/word/article_mailmerge_renmei_label.html">Word差し込み印刷で同じ会社の2人目・3人目を1枚のラベルに入れる方法（連名ラベル）</a>
-      <p class="article-summary">通常は1社1行の印刷用表で連名を作成。1人1行をまとめるコード方式は応用Lv.5として残しています。</p>
-    </li>
-
-    <li class="article-item">
-      <div class="level-bar lv-2">
-        <span class="level-label">Lv.2 やさしい</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
-      <a class="article-link" href="others/word/article_mailmerge_cover_letter_per_company.html">Word差し込み印刷で会社ごとに1枚の送付状を作る方法</a>
-      <p class="article-summary">会社で絞って1社ずつ作る方法と、会社1行の表でまとめて出す方法を案内します。</p>
-    </li>
-    <li class="article-item">
-      <div class="level-bar lv-2">
-        <span class="level-label">Lv.2 やさしい</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
-      <a class="article-link" href="others/word/article_mailmerge_hagaki_atena.html">Wordのはがき宛名面印刷：Excel住所録から縦書き・漢数字・連名で作る方法</a>
-      <p class="article-summary">Windows版のはがきウィザードで、住所録をつなぎ、連名と長い住所を確認します。</p>
-    </li>
-    <li class="article-item">
-      <div class="level-bar lv-3">
-        <span class="level-label">Lv.3 ふつう</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
-      <a class="article-link" href="others/word/article_mailmerge_envelope_naga3.html">Word差し込み印刷で長形3号の封筒に縦書きで宛名を入れる方法</a>
-      <p class="article-summary">封筒のサイズと宛名枠を決め、縦書き用の印刷列を使って配置します。</p>
-    </li>
-    <li class="article-item highlight">
-      <div class="level-bar lv-2">
-        <span class="level-label">Lv.2 やさしい</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
-      </div>
-      <a class="article-link" href="others/word/article_mailmerge_label_next_record.html">Wordラベル差し込みで全ラベルが同じ宛名になる原因と直し方</a>
-      <p class="article-summary">自動反映をやり直し、宛名が順に切り替わる状態へ戻します。</p>
+      <a class="article-link" href="others/word/article_mailmerge_method_comparison.html">Excel VBA・Excel数式・Word差し込み印刷の使い分け</a>
+      <p class="article-summary">通常のWord差し込みから試し、独自の計算や自動化が必要な場合に方式を比較します。</p>
     </li>
     <li class="article-item highlight">
       <div class="level-bar lv-5">
@@ -3404,150 +3250,9 @@
     </li>
   </ul>
 
-  <h3 class="subcategory-heading">🎛 操作UI・入力補助</h3>
-
-  <div class="category-hero hero-overlay hero-small hero-others-ui margin-y-16-24 max-width-800">
-    <picture>
-      <source media="(max-width: 600px)" type="image/avif" data-srcset="./image/hero_others_ui_plain-480.avif 480w, ./image/hero_others_ui_plain-768.avif 768w" sizes="100vw">
-      <source type="image/avif" data-srcset="./image/hero_others_ui_plain-768.avif 768w, ./image/hero_others_ui_plain-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
-      <source media="(max-width: 600px)" type="image/webp" data-srcset="./image/hero_others_ui_plain-480.webp 480w, ./image/hero_others_ui_plain-768.webp 768w" sizes="100vw">
-      <source type="image/webp" data-srcset="./image/hero_others_ui_plain-768.webp 768w, ./image/hero_others_ui_plain-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
-      <img alt="操作UI・入力補助 利便性向上" decoding="async" height="576" loading="lazy" data-src="./image/hero_others_ui_plain.png" src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" width="1024">
-    </picture>
-    <div class="hero-copy">
-      <div class="hero-copy-kicker">Input Support</div>
-      <div class="hero-copy-title">操作UI・入力補助</div>
-      <div class="hero-copy-sub">入力・選択・表示を、現場で使いやすく。</div>
-    </div>
-  </div>
-
-  <ul class="article-list" id="list-others-ui">
-    <li class="article-item highlight">
-      <div class="level-bar lv-2">
-        <span class="level-label">Lv.2 やさしい</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
-      </div>
-      <a class="article-link" href="others/ui/article_hyperlink_jump_last_row.html">最終行・次の空き行へジャンプ｜HYPERLINK関数でVBA不要</a>
-      <p class="article-summary">処理票を1件ずつ追加する台帳で、入力済み最終行や次の貼り付け行へクリック移動します。</p>
-    </li>
-
-    <li class="article-item highlight">
-      <div class="level-bar lv-3">
-        <span class="level-label">Lv.3 ふつう</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 ミス防止</span></span>
-      </div>
-      <a class="article-link" href="others/ui/article_select_input_range.html">入力欄だけ範囲選択して初期化｜数式を消さずにDelete</a>
-      <p class="article-summary">名前付き範囲から手入力セルだけを選び、数式と書式を残したまま安全に消します。</p>
-    </li>
-
-    <li class="article-item">
-      <div class="level-bar lv-2">
-        <span class="level-label">Lv.2 やさしい</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
-      </div>
-      <a class="article-link" href="others/ui/article_form_controls.html">🎛️ 開発タブ＆フォームコントロールの使い方</a>
-      <p class="article-summary">スピンボタンなどのフォームコントロールを使い、VBAなしで操作性を改善します。</p>
-    </li>
-
-    <li class="article-item highlight">
-      <div class="level-bar lv-6">
-        <span class="level-label">Lv.6 かなり難</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-rare" data-rare-id="shape_circle"></span></span>
-      </div>
-      <a class="article-link" href="others/ui/article_shape_circle.html">セルの文字を○で囲む 表示／非表示 — 名前の管理＋図形（VBA不要）</a>
-      <p class="article-summary">入力値に応じて図形の○を自動表示する、Excelの隠れた仕様を活用したテクニックです。</p>
-    </li>
-  </ul>
-
-  <h3 class="subcategory-heading">⌨ 日常時短・表示整形</h3>
-
-  <ul class="article-list" id="list-others-misc">
-    <li class="article-item highlight">
-      <div class="level-bar lv-1">
-        <span class="level-label">Lv.1 入門</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
-      </div>
-      <a class="article-link" href="others/misc/article_shortcuts.html">実務で本当に使うショートカットキー厳選集</a>
-      <p class="article-summary">日常業務で本当に役立つExcelショートカットだけを厳選して紹介します。</p>
-    </li>
-
-    <li class="article-item highlight">
-      <div class="level-bar lv-1">
-        <span class="level-label">Lv.1 入門</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
-      </div>
-      <a class="article-link" href="others/misc/article_snipping_tool_video.html">Windows 11 スニッピングツールで画面録画する方法</a>
-      <p class="article-summary">追加インストール不可の職場でも使いやすい、Windows標準の画面録画。フリーソフト導入やウイルス不安を増やさず手順共有できます。</p>
-    </li>
-    <li class="article-item">
-      <div class="level-bar lv-2">
-        <span class="level-label">Lv.2 やさしい</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
-      <a class="article-link" href="others/data/article_compare_two_lists.html">Excelで2つの名簿を比較し、追加・削除・変更された人を見つける</a>
-      <p class="article-summary">前月と今月の名簿をCOUNTIFとINDEX＋MATCH（XLOOKUP）で照合し、追加・削除・変更を自動判定。変わったセルは条件付き書式で色付け。</p>
-    </li>
-    <li class="article-item">
-      <div class="level-bar lv-1">
-        <span class="level-label">Lv.1 入門</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
-      <a class="article-link" href="others/data/article_csv_leading_zero.html">CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方</a>
-      <p class="article-summary">郵便番号・社員番号・16桁以上の管理番号を守る取り込み方。「テキストまたはCSVから」で列をテキストにする手順と、消えたゼロの戻し方。</p>
-    </li>
-    <li class="article-item">
-      <div class="level-bar lv-1">
-        <span class="level-label">Lv.1 入門</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
-      <a class="article-link" href="others/data/article_text_numbers_fix.html">Excelの数字が文字列になって計算・検索できないときの直し方</a>
-      <p class="article-summary">SUMが0、VLOOKUPが#N/Aになる原因を見分け、数値に変換・乗算の貼り付け・区切り位置・VALUE/ASC関数で原因別に直す方法。</p>
-    </li>
-    <li class="article-item">
-      <div class="level-bar lv-2">
-        <span class="level-label">Lv.2 やさしい</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
-      <a class="article-link" href="others/ui/article_input_validation_sheet_protection.html">Excelで入力欄だけ編集できるようにする：入力規則とシート保護</a>
-      <p class="article-summary">入力欄のロック解除、リスト・日付・桁数と重複チェックの入力規則、Tabで入力欄だけ移動するシート保護。配布用ファイルの作り方。</p>
-    </li>
-    <li class="article-item">
-      <div class="level-bar lv-1">
-        <span class="level-label">Lv.1 入門</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
-      <a class="article-link" href="others/misc/article_screen_record_win10.html">Windows 10で画面録画する方法の比較（PowerPoint・Game Bar・スニッピングツール）</a>
-      <p class="article-summary">Windows 10ならPowerPointの画面録画が手軽。追加インストールなしで使える4つの方法を、範囲指定・デスクトップ録画・音声・保存形式で比較します。</p>
-    </li>
-    <li class="article-item">
-      <div class="level-bar lv-1">
-        <span class="level-label">Lv.1 入門</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
-      <a class="article-link" href="others/office/article_ppt_screen_recording.html">PowerPointの画面録画で操作マニュアル動画を作る</a>
-      <p class="article-summary">挿入 → 画面録画で範囲を選んで録画し、MP4で保存。Excel手順の引き継ぎやQRリーダー設定の共有に。録画ボタンがない・音が入らないときの確認も。</p>
-    </li>
-    <li class="article-item">
-      <div class="level-bar lv-1">
-        <span class="level-label">Lv.1 入門</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
-      </div>
-      <a class="article-link" href="others/office/article_ppt_record_slideshow_video.html">PowerPointの「スライドショーの記録」でナレーション付き動画にする</a>
-      <p class="article-summary">スライドを進めながら話した声を記録し、「ビデオのエクスポート」でMP4に。社内研修・Excel勉強会の資料づくりに使えます。</p>
-    </li>
+  </details>
+  <h4 class="shelf-subheading">Wordの差し込み以外の機能</h4>
+  <ul class="article-list" id="list-others-word-tools">
     <li class="article-item">
       <div class="level-bar lv-2">
         <span class="level-label">Lv.2 やさしい</span>
@@ -3575,6 +3280,320 @@
       <a class="article-link" href="others/word/article_excel_to_word_paste.html">Excelの表をWordへ貼る3つの方法（貼り付け／リンク貼り付け／オブジェクト）</a>
       <p class="article-summary">まずは通常のWordの表として貼り、更新が必要な場合だけリンクや埋め込みを選びます。</p>
     </li>
+  </ul>
+
+  <h3 class="subcategory-heading" id="shelf-print">🖨 Excelの印刷自動化・ラベル印刷</h3>
+  <div class="category-hero hero-overlay hero-small hero-others-print margin-y-16-24 max-width-800">
+    <picture>
+      <source media="(max-width: 600px)" type="image/avif" data-srcset="./image/hero_others_print_main-480.avif 480w, ./image/hero_others_print_main-768.avif 768w" sizes="100vw">
+      <source type="image/avif" data-srcset="./image/hero_others_print_main-768.avif 768w, ./image/hero_others_print_main-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <source media="(max-width: 600px)" type="image/webp" data-srcset="./image/hero_others_print_main-480.webp 480w, ./image/hero_others_print_main-768.webp 768w" sizes="100vw">
+      <source type="image/webp" data-srcset="./image/hero_others_print_main-768.webp 768w, ./image/hero_others_print_main-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <img alt="印刷自動化・ラベル印刷 特集" decoding="async" height="576" loading="lazy" data-src="./image/hero_others_print_main.png" src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Print Automation</div>
+      <div class="hero-copy-title">印刷自動化ラボ</div>
+      <div class="hero-copy-sub">印刷範囲・ラベル・帳票出力をVBAなしで制御。</div>
+    </div>
+  </div>
+
+  <p class="text-desc">
+    Print_Area、スピンボタン、XLOOKUP、VLOOKUPを組み合わせ、
+    VBAなしで印刷範囲・ラベル・案内文書を自動化する実務シリーズです。
+  </p>
+
+  
+  <ul class="article-list" id="list-others-print">
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="others/print/article_print_titles_page_break.html">Excelで2ページ目以降にも見出しを印刷する方法（印刷タイトルと改ページプレビュー）</a>
+      <p class="article-summary">2ページ目以降に見出しが出ない表を、印刷タイトルのタイトル行で解決。ページの切れ目は改ページプレビューでドラッグして決める。実画面で解説。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/misc/article_linked_picture_filter_serial_label.html">FILTER関数とリンク図で候補を確認し、連番だけで封筒ラベル印刷する方法</a>
+      <p class="article-summary">候補一覧をリンク図で表示し、連番を入力するだけで宛名・住所を切り替えて封筒ラベルを印刷する方法です。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="print_area"></span></span>
+      </div>
+      <a class="article-link" href="others/print/article_print_area.html">VBAなしで印刷範囲を自動で伸縮させる方法（名前の管理）</a>
+      <p class="article-summary">データが増えたら印刷範囲も自動で広がり、空白行は印刷されないようにする方法です。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="others/print/article_label_print.html">Excel 10面ラベル印刷 — Print_Area数式で空白シールを自動除外</a>
+      <p class="article-summary">データ件数に応じてPrint_Areaが自動伸縮。VBAもWordも不要でラベル印刷を制御します。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="label_scrap"></span></span>
+      </div>
+      <a class="article-link" href="others/print/article_label_scrap.html">Excelシール残骸を活用 — 開始位置を指定して途中から印刷する方法</a>
+      <p class="article-summary">使いかけのラベルシールを無駄なく活用する方法です。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="others/print/article_mail_print.html">宛名1ページ1枚 案内文書インスタント印刷 — スピンボタン＋Print_Area</a>
+      <p class="article-summary">スピンボタン＋VLOOKUPで差し込み印刷をExcelだけで実現します。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading" id="shelf-data">🧹 データの整理・照合</h3>
+  <p class="text-desc">
+    CSVを開くと0が消える、数字が文字列になって計算・検索できない、2つの名簿のどこが変わったか分からない――
+    取り込んだデータの型をそろえて、名簿を正しく照合するための記事です。
+  </p>
+  <ul class="article-list" id="list-others-data">
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="others/data/article_csv_leading_zero.html">CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方</a>
+      <p class="article-summary">郵便番号・社員番号・16桁以上の管理番号を守る取り込み方。「テキストまたはCSVから」で列をテキストにする手順と、消えたゼロの戻し方。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="others/data/article_text_numbers_fix.html">Excelの数字が文字列になって計算・検索できないときの直し方</a>
+      <p class="article-summary">SUMが0、VLOOKUPが#N/Aになる原因を見分け、数値に変換・乗算の貼り付け・区切り位置・VALUE/ASC関数で原因別に直す方法。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="others/data/article_compare_two_lists.html">Excelで2つの名簿を比較し、追加・削除・変更された人を見つける</a>
+      <p class="article-summary">前月と今月の名簿をCOUNTIFとINDEX＋MATCH（XLOOKUP）で照合し、追加・削除・変更を自動判定。変わったセルは条件付き書式で色付け。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading" id="shelf-input">🎛 入力・操作・表示</h3>
+  <div class="category-hero hero-overlay hero-small hero-others-ui margin-y-16-24 max-width-800">
+    <picture>
+      <source media="(max-width: 600px)" type="image/avif" data-srcset="./image/hero_others_ui_plain-480.avif 480w, ./image/hero_others_ui_plain-768.avif 768w" sizes="100vw">
+      <source type="image/avif" data-srcset="./image/hero_others_ui_plain-768.avif 768w, ./image/hero_others_ui_plain-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <source media="(max-width: 600px)" type="image/webp" data-srcset="./image/hero_others_ui_plain-480.webp 480w, ./image/hero_others_ui_plain-768.webp 768w" sizes="100vw">
+      <source type="image/webp" data-srcset="./image/hero_others_ui_plain-768.webp 768w, ./image/hero_others_ui_plain-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <img alt="操作UI・入力補助 利便性向上" decoding="async" height="576" loading="lazy" data-src="./image/hero_others_ui_plain.png" src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Input Support</div>
+      <div class="hero-copy-title">操作UI・入力補助</div>
+      <div class="hero-copy-sub">入力・選択・表示を、現場で使いやすく。</div>
+    </div>
+  </div>
+
+  
+  <ul class="article-list" id="list-others-ui">
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/ui/article_hyperlink_jump_last_row.html">最終行・次の空き行へジャンプ｜HYPERLINK関数でVBA不要</a>
+      <p class="article-summary">処理票を1件ずつ追加する台帳で、入力済み最終行や次の貼り付け行へクリック移動します。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-3">
+        <span class="level-label">Lv.3 ふつう</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 ミス防止</span></span>
+      </div>
+      <a class="article-link" href="others/ui/article_select_input_range.html">入力欄だけ範囲選択して初期化｜数式を消さずにDelete</a>
+      <p class="article-summary">名前付き範囲から手入力セルだけを選び、数式と書式を残したまま安全に消します。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="others/ui/article_input_validation_sheet_protection.html">Excelで入力欄だけ編集できるようにする：入力規則とシート保護</a>
+      <p class="article-summary">入力欄のロック解除、リスト・日付・桁数と重複チェックの入力規則、Tabで入力欄だけ移動するシート保護。配布用ファイルの作り方。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/ui/article_form_controls.html">🎛️ 開発タブ＆フォームコントロールの使い方</a>
+      <p class="article-summary">スピンボタンなどのフォームコントロールを使い、VBAなしで操作性を改善します。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-rare" data-rare-id="shape_circle"></span></span>
+      </div>
+      <a class="article-link" href="others/ui/article_shape_circle.html">セルの文字を○で囲む 表示／非表示 — 名前の管理＋図形（VBA不要）</a>
+      <p class="article-summary">入力値に応じて図形の○を自動表示する、Excelの隠れた仕様を活用したテクニックです。</p>
+    </li>
+  </ul>
+
+  <h4 class="shelf-subheading">⌨ 日常時短・表示整形</h4>
+  <ul class="article-list" id="list-others-misc">
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/misc/article_shortcuts.html">実務で本当に使うショートカットキー厳選集</a>
+      <p class="article-summary">日常業務で本当に役立つExcelショートカットだけを厳選して紹介します。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/misc/article_format.html">【保存版】ユーザー定義の表示形式＆TEXT関数 逆引き一覧</a>
+      <p class="article-summary">表示形式コードとTEXT関数の使い方を逆引きで整理します。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+      </div>
+      <a class="article-link" href="others/misc/article_statusbar.html">電卓不要！ステータスバー（オートカルク）の活用術</a>
+      <p class="article-summary">数式を立てずに合計・平均・件数を瞬時に確認できる機能を活用します。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading" id="shelf-speed">🚀 限界突破の計算速度</h3>
+  <div class="category-hero hero-overlay hero-small hero-others-speed margin-y-16-24 max-width-800">
+    <picture>
+      <source media="(max-width: 600px)" type="image/avif" data-srcset="./image/hero_others_speed_clean-480.avif 480w, ./image/hero_others_speed_clean-768.avif 768w" sizes="100vw">
+      <source type="image/avif" data-srcset="./image/hero_others_speed_clean-768.avif 768w, ./image/hero_others_speed_clean-1024.avif 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <source media="(max-width: 600px)" type="image/webp" data-srcset="./image/hero_others_speed_clean-480.webp 480w, ./image/hero_others_speed_clean-768.webp 768w" sizes="100vw">
+      <source type="image/webp" data-srcset="./image/hero_others_speed_clean-768.webp 768w, ./image/hero_others_speed_clean-1024.webp 1024w" sizes="(max-width: 1100px) 90vw, 1024px">
+      <img alt="Excel Speed Lab 業務高速化" decoding="async" height="576" loading="lazy" data-src="./image/hero_others_speed_clean.png" src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" width="1024">
+    </picture>
+    <div class="hero-copy">
+      <div class="hero-copy-kicker">Performance</div>
+      <div class="hero-copy-title">Excel Speed Lab</div>
+      <div class="hero-copy-sub">重いブックを、数式設計から軽くする。</div>
+    </div>
+  </div>
+
+  <p class="text-desc">
+    VLOOKUPをINDEX+MATCHに変えても遅いまま？本当の原因はメモリスワップにあるかもしれません。
+    検索関数の選び方から数式の高速化テクニックまで、Excelの処理速度を見直すノウハウです。
+  </p>
+
+  
+  <ul class="article-list" id="list-others-speed">
+    <li class="article-item highlight">
+      <div class="level-bar lv-2">
+        <span class="level-label">Lv.2 やさしい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/speed/article_excel_diet_emergency.html">「Excelが重い・落ちる・開かない」ときの緊急ダイエットマニュアル</a>
+      <p class="article-summary">数十MBに肥大化したファイルをVBAなしで手動軽量化。UsedRange初期化（Ctrl+Endのズレ解消）、ゴースト図形一括削除、重複した条件付き書式の整理手順を徹底解説。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-4">
+        <span class="level-label">Lv.4 やや難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/speed/article_memory_swap.html">Excelが遅い本当の原因 — メモリスワップと数式設計の関係</a>
+      <p class="article-summary">VLOOKUPをINDEX+MATCHに変えても遅いまま？RAM・SSD・32ビット制限・数式設計の考え方を解説します。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-5">
+        <span class="level-label">Lv.5 難しい</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="speed_lookup"></span></span>
+      </div>
+      <a class="article-link" href="others/speed/article_01_lookup_speed.html">検索関数の速度と参照範囲</a>
+      <p class="article-summary">VLOOKUP・INDEX+MATCH・XLOOKUPの参照範囲の違いと、検索設計による高速化を解説します。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-6">
+        <span class="level-label">Lv.6 かなり難</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare" data-rare-id="speed_formula"></span></span>
+      </div>
+      <a class="article-link" href="others/speed/article_02_formula_techniques.html">数式の速度UPテクニック集</a>
+      <p class="article-summary">数式の処理速度を改善する実践テクニック集です。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading" id="shelf-record">🎥 画面録画・手順の共有</h3>
+  <p class="text-desc">PowerPointやWindowsの標準機能で画面を録画し、操作手順を共有・引き継ぐための記事です。</p>
+  <ul class="article-list" id="list-others-office">
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="others/office/article_ppt_screen_recording.html">PowerPointの画面録画で操作マニュアル動画を作る</a>
+      <p class="article-summary">挿入 → 画面録画で範囲を選んで録画し、MP4で保存。Excel手順の引き継ぎやQRリーダー設定の共有に。録画ボタンがない・音が入らないときの確認も。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="others/office/article_ppt_record_slideshow_video.html">PowerPointの「スライドショーの記録」でナレーション付き動画にする</a>
+      <p class="article-summary">スライドを進めながら話した声を記録し、「ビデオのエクスポート」でMP4に。社内研修・Excel勉強会の資料づくりに使えます。</p>
+    </li>
+    <li class="article-item">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-new">🆕 新着</span></span>
+      </div>
+      <a class="article-link" href="others/misc/article_screen_record_win10.html">Windows 10で画面録画する方法の比較（PowerPoint・Game Bar・スニッピングツール）</a>
+      <p class="article-summary">Windows 10ならPowerPointの画面録画が手軽。追加インストールなしで使える4つの方法を、範囲指定・デスクトップ録画・音声・保存形式で比較します。</p>
+    </li>
+    <li class="article-item highlight">
+      <div class="level-bar lv-1">
+        <span class="level-label">Lv.1 入門</span>
+        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
+      </div>
+      <a class="article-link" href="others/misc/article_snipping_tool_video.html">Windows 11 スニッピングツールで画面録画する方法</a>
+      <p class="article-summary">追加インストール不可の職場でも使いやすい、Windows標準の画面録画。フリーソフト導入やウイルス不安を増やさず手順共有できます。</p>
+    </li>
+  </ul>
+
+  <h3 class="subcategory-heading" id="shelf-migrate">🔁 Microsoft 365移行・マクロのトラブル</h3>
+  <p class="text-desc">Microsoft 365へ移行したときの数式の確認と、マクロの実行がブロックされたときの対応をまとめています。</p>
+  <ul class="article-list" id="list-others-migration">
     <li class="article-item">
       <div class="level-bar lv-2">
         <span class="level-label">Lv.2 やさしい</span>
@@ -3593,26 +3612,8 @@
       <a class="article-link" href="others/misc/article_macro_blocked.html">「マクロの実行がブロックされました」と表示されたとき</a>
       <p class="article-summary">表示の意味と、Microsoft公式の案内にある対応だけを紹介。マクロを許可してよいかは、必ず社内規程を確認してください。</p>
     </li>
-
-    <li class="article-item">
-      <div class="level-bar lv-2">
-        <span class="level-label">Lv.2 やさしい</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
-      </div>
-      <a class="article-link" href="others/misc/article_format.html">【保存版】ユーザー定義の表示形式＆TEXT関数 逆引き一覧</a>
-      <p class="article-summary">表示形式コードとTEXT関数の使い方を逆引きで整理します。</p>
-    </li>
-
-    <li class="article-item">
-      <div class="level-bar lv-1">
-        <span class="level-label">Lv.1 入門</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-      </div>
-      <a class="article-link" href="others/misc/article_statusbar.html">電卓不要！ステータスバー（オートカルク）の活用術</a>
-      <p class="article-summary">数式を立てずに合計・平均・件数を瞬時に確認できる機能を活用します。</p>
-    </li>
   </ul>
+
 </div>
 <!-- /tab-panel#others -->
 
