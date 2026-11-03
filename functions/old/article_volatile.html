@@ -32,7 +32,7 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "datePublished": "2026-05-03",
-  "dateModified": "2026-07-11",
+  "dateModified": "2026-11-03",
   "headline": "【保存版】Excel揮発性関数 完全ガイド",
   "author": {
     "@type": "Person",
@@ -91,7 +91,7 @@
 <div class="article-header">
 <div class="article-meta">
 <span class="badge badge-all">Excel 2016以降</span>
-<span class="article-date">更新日: 2026-07-11</span>
+<span class="article-date">更新日: 2026-11-03</span>
 </div>
 <h1 class="article-title">Excel 揮発性関数 完全ガイド<br><span style="font-size:.55em;font-weight:400;color:#666;">&horbar; 再計算の3種類・INDIRECT問題・条件付き書式の超揮発性・シート間設計・構成変更時の落とし穴まで全網羅 &horbar;</span></h1>
 </div>
@@ -143,8 +143,8 @@
 <tr>
 <td class="col-item">② 揮発性関数による再計算</td>
 <td>ブック内のどこかで何かが変わったとき</td>
-<td>揮発性関数を<strong>含む</strong>セルすべて</td>
-<td><span class="diff-ng">揮発性数式の数 &times; 計算コスト</span></td>
+<td>揮発性関数を<strong>含む</strong>セルと、その<strong>依存セル</strong>すべて</td>
+<td><span class="diff-ng">（揮発性数式＋依存セル）の計算コスト</span></td>
 </tr>
 <tr>
 <td class="col-item">③ 揮発性アクションによる再計算</td>
@@ -155,14 +155,29 @@
 </table></div>
 <div class="xdemo-note">
 <strong>②の重要な性質</strong><br>
-          揮発性関数を含むセルは毎回再計算されます。しかし、再計算した結果が前回と同じ値なら、そこから先の依存セルは①の判断で「変化なし＝再計算不要」となり動きません。<strong>揮発性は「そのセルだけ」で止まり、値が変わらなければ先に伝染しない</strong>のです。
+          揮発性関数を含むセルは毎回再計算され、そのセルに依存するセルも一緒に再計算されます。<strong>再計算した結果が前回と同じ値でも、依存セルの計算は止まりません。</strong>Microsoftの<a href="https://learn.microsoft.com/en-us/office/client-developer/excel/excel-recalculation" rel="noopener" target="_blank">Excel Recalculation（英語）</a>と<a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/excel-performance/excel-improving-calculation-performance" rel="noopener" target="_blank">Excel performance（英語）</a>も、同じ動作を説明しています。
+        </div>
+<div class="xdemo-note-warn">
+<strong>実際のExcelで確認した結果（2026-11-03 訂正）</strong><br>
+          この記事は以前、「値が変わらなければ依存セルは再計算されない」と説明していましたが、誤りでした。下の表は、計算の重い列 B1:B2000（2万行を調べるSUMPRODUCT）が参照するセルZ1の中身だけを変え、再計算（Calculate）を3回測った結果です。どの行でもZ1の値は変わっていません。
+<ul>
+<li>Z1 が揮発性なし（<code>=Y1+0</code>）：<strong>約0.01〜0.04秒</strong></li>
+<li>Z1 が <code>=TODAY()</code>：<strong>約1.2〜1.6秒</strong></li>
+<li>Z1 が <code>=OFFSET(Y1,0,0)</code>：<strong>約1.1秒</strong></li>
+<li>Z1 が <code>=INDIRECT("Y1")</code>：<strong>約1.1秒</strong></li>
+<li>重い列が <code>=TODAY()</code> の2段下（Z2 <code>=Z1</code> を参照）：<strong>約1.4〜1.5秒</strong></li>
+<li>重い列と無関係なセルに <code>=TODAY()</code>：<strong>約0.005秒</strong></li>
+<li>参考：全セルの再計算（CalculateFull）：<strong>約1.0秒</strong></li>
+</ul>
+          Excel 16.0 ビルド20527で測りました。時間はPCとデータで変わります。
+          揮発性のセルに依存する列は、値が同じでも全セルの再計算と同じくらいの時間がかかりました。依存していないセルには広がりません。
         </div>
 <div class="xdemo-note-good">
 <strong>例で理解する</strong><br>
           Z1に <code>=TODAY()</code> を入れ、B1:B1000が <code>=IF(A1&lt;$Z$1,"期限切れ","OK")</code> と参照しているとします。何かのセルを編集すると：<br>
           1. Z1（揮発性）が再計算される &rarr; 同じ日の作業中は結果が変わらない<br>
-          2. Z1の値が変わらないため、B1:B1000は再計算されない（Smart Recalc）<br>
-          3. 日付が変わった翌日の初回再計算ではZ1の値が変わり、B1:B1000も再計算される（正常な依存関係再計算）
+          2. Z1の値が同じでも、Z1に依存するB1:B1000も再計算される<br>
+          3. Z1を参照していないセルは、この再計算の対象にならない
         </div>
 </section>
 <!-- ==========================================================
@@ -170,7 +185,7 @@
       ========================================================== -->
 <section class="method-section" id="sec-core">
 <h2>【2】核心：「動く列」と「動かない列」を図で理解する</h2>
-<p>揮発性関数のパフォーマンス問題を理解するうえで最も重要なポイントは、<strong>「揮発性数式のセルは毎回動くが、その結果が変わらなければ参照先は動かない」</strong>ということです。</p>
+<p>揮発性関数のパフォーマンス問題を理解するうえで最も重要なポイントは、<strong>「揮発性数式のセルは毎回動き、その結果が変わらなくても、依存するセルまで動く」</strong>ということです。</p>
 <h3>シナリオ：関係ないセル（Z1）を編集したとき</h3>
 <div class="diagram-wrap">
 <div class="diagram-flex">
@@ -208,24 +223,24 @@
 </div>
 <div class="diagram-col arrow-col">
 <div class="big-arrow">&rarr;</div>
-<div class="big-arrow-label">値が<br>変わった？</div>
+<div class="big-arrow-label">値が同じ<br>でも計算</div>
 </div>
-<div class="diagram-col nv">
+<div class="diagram-col v">
 <div class="diagram-col-head">B列（A列を参照する数式）</div>
 <div class="diagram-cell">
 <code>B1 =A1&"："&C1</code><br>
-<span class="st-skip">💤 再計算しない（A1の値が変わっていないから）</span>
+<span class="st-run">⚡ 再計算された（A1に依存するため）</span>
 </div>
 <div class="diagram-cell">
 <code>B2 =A2&"："&C2</code><br>
-<span class="st-skip">💤 再計算しない（A2の値が変わっていないから）</span>
+<span class="st-run">⚡ 再計算された（A2に依存するため）</span>
 </div>
 <div class="diagram-cell">
 <code>B3 =A3&"："&C3</code><br>
-<span class="st-skip">💤 再計算しない（A3の値が変わっていないから）</span>
+<span class="st-run">⚡ 再計算された（A3に依存するため）</span>
 </div>
-<div class="diagram-cell" style="text-align:center;color:#2e7d32;font-weight:700">
-                ︙ 30,000行すべてスキップ ︙
+<div class="diagram-cell" style="text-align:center;color:#c62828;font-weight:700">
+                ︙ 30,000行すべて再計算 ︙
               </div>
 </div>
 </div>
@@ -245,19 +260,19 @@
 <div class="tl-arrow">&rarr;</div>
 <div class="tl-step s-chk">
 <strong>STEP 3</strong><br>
-            A列の結果を<br>前回の値と比較<br>
-<span style="color:#f57f17">&rarr; 全行「同じ」</span>
+            A列の結果は<br>前回と同じ<br>
+<span style="color:#f57f17">&rarr; それでも計算は続く</span>
 </div>
 <div class="tl-arrow">&rarr;</div>
-<div class="tl-step s-skip">
+<div class="tl-step s-run">
 <strong>STEP 4</strong><br>
-            B列は<br><strong>全行スキップ</strong><br>
-<span style="color:#2e7d32">（計算しない）</span>
+            B列も<br><strong>全行再計算</strong><br>
+<span style="color:#c62828">（A列に依存するため）</span>
 </div>
 </div>
 <div class="xdemo-note-fire">
 <strong>問題の本質はここ</strong><br>
-          B列は動かない。これは良いことです。しかし STEP 2 でA列の30,000個のINDIRECT数式が再計算対象になること自体が、待ち時間の原因になり得ます。INDIRECTは揮発性関数で、通常の再計算でも再評価されます。また、INDIRECTの計算部分はシングルスレッドです。
+          A列の30,000個のINDIRECT数式だけでなく、A列に依存するB列も毎回再計算の対象になります。B列が重いほど、待ち時間は長くなります。また、INDIRECTの計算部分はシングルスレッドです。
         </div>
 <h3>INDEX+MATCH に置き換えた場合</h3>
 <div class="diagram-wrap">
@@ -310,7 +325,7 @@
 <strong>違いは明白</strong><br>
           INDEX+MATCH は非揮発性なので、Z1の編集とは無関係 &rarr; A列もB列も一切動かない &rarr; フリーズしない。
         </div>
-<h3>まとめ：同じ「B列が動かない」でも天と地の差</h3>
+<h3>まとめ：INDIRECTはB列まで動き、INDEX+MATCHはどちらも動かない</h3>
 <div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
 <tr>
 <th class="w-20" scope="col"></th>
@@ -324,7 +339,7 @@
 </tr>
 <tr>
 <td class="col-item">B列</td>
-<td><span class="diff-ok">0回（A列の値が変わらないため）</span></td>
+<td><span class="diff-ng">30,000回再計算（A列の値が同じでも）</span></td>
 <td><span class="diff-ok">0回（同じ）</span></td>
 </tr>
 <tr>
@@ -333,8 +348,13 @@
 <td><span class="diff-ok">再計算対象を絞りやすい</span></td>
 </tr>
 <tr>
+<td class="col-item">実測（30,000行）</td>
+<td><span class="diff-ng">A列だけ約0.13秒、B列（300行を調べる式）も付けると約0.43秒</span></td>
+<td><span class="diff-ok">同じB列を付けて約0.001秒</span></td>
+</tr>
+<tr>
 <td class="col-item">原因</td>
-<td><span class="diff-ng">A列の「無駄な再計算」コスト</span></td>
+<td><span class="diff-ng">A列と、依存するB列の再計算コスト</span></td>
 <td>&horbar;</td>
 </tr>
 </table></div>
@@ -349,12 +369,12 @@
 <tr><th scope="col">関数</th><th scope="col">揮発性</th><th scope="col">リスク・備考</th></tr>
 <tr><td><span class="format-code">INDIRECT()</span></td><td><span class="tag-v">揮発性</span></td><td>シングルスレッド動作・閉じたブック不可・代替推奨</td></tr>
 <tr><td><span class="format-code">OFFSET()</span></td><td><span class="tag-v">揮発性</span></td><td>INDEXで代替可能</td></tr>
-<tr><td><span class="format-code">TODAY()</span></td><td><span class="tag-v">揮発性</span></td><td>1セルに閉じ込めれば影響最小</td></tr>
+<tr><td><span class="format-code">TODAY()</span></td><td><span class="tag-v">揮発性</span></td><td>1セルにまとめても、依存セルは毎回再計算</td></tr>
 <tr><td><span class="format-code">NOW()</span></td><td><span class="tag-v">揮発性</span></td><td>同上</td></tr>
-<tr><td><span class="format-code">RAND()</span></td><td><span class="tag-v">揮発性</span></td><td>毎回値が変わるため依存先も毎回再計算</td></tr>
+<tr><td><span class="format-code">RAND()</span></td><td><span class="tag-v">揮発性</span></td><td>依存先も毎回再計算</td></tr>
 <tr><td><span class="format-code">RANDBETWEEN()</span></td><td><span class="tag-v">揮発性</span></td><td>同上</td></tr>
 <tr><td><span class="format-code">RANDARRAY()</span></td><td><span class="tag-v">揮発性</span></td><td>365/2021以降</td></tr>
-<tr><td><span class="format-code">CELL()</span></td><td><span class="tag-v">揮発性</span></td><td>引数によらず揮発性</td></tr>
+<tr><td><span class="format-code">CELL()</span></td><td><span class="tag-v">揮発性</span></td><td>引数によって揮発性（Microsoftの説明）</td></tr>
 <tr><td><span class="format-code">INFO()</span></td><td><span class="tag-v">揮発性</span></td><td>使用頻度は低い</td></tr>
 <tr><td><span class="format-code">SUMIF()</span></td><td><span class="tag-sv">条件付き揮発性</span></td><td>第1引数と第3引数のサイズが異なると揮発性（<a href="#sec-sumif">詳細</a>）</td></tr>
 </table></div>
@@ -421,7 +441,7 @@
 <tr style="background:#fff9c4">
 <td class="col-item" style="font-size:.85em"><code>=IF(1&gt;0, 1, A1)</code><br>（A1に <code>=RAND()</code>）</td>
 <td><span class="tag-nv">非揮発性</span></td>
-<td style="text-align:left;font-size:.85em">構文には「A1」というアドレスだけ。A1の中身は検査されない</td>
+<td style="text-align:left;font-size:.85em">構文には「A1」というアドレスだけ。ただしA1に依存するので、再計算はされる</td>
 </tr>
 <tr>
 <td class="col-item" style="font-size:.85em"><code>=IF(A1&lt;TODAY(), "期限切れ", "OK")</code></td>
@@ -431,12 +451,12 @@
 <tr style="background:#fff9c4">
 <td class="col-item" style="font-size:.85em"><code>=IF(A1&lt;$Z$1, "期限切れ", "OK")</code><br>（Z1に <code>=TODAY()</code>）</td>
 <td><span class="tag-nv">非揮発性</span></td>
-<td style="text-align:left;font-size:.85em">数式テキストに揮発性関数名なし。$Z$1はただのアドレス</td>
+<td style="text-align:left;font-size:.85em">数式テキストに揮発性関数名なし。ただしZ1に依存するので、再計算はされる</td>
 </tr>
 </table></div>
 <div class="xdemo-note">
 <strong>セル参照が揮発性を「感染」させない理由</strong><br>
-          構文解析では <code>$Z$1</code> は「アドレス」として処理されるだけで、Z1の中身を見に行きません。これが「1セルに閉じ込める」パターンの根拠です。
+          構文解析では <code>$Z$1</code> は「アドレス」として処理されるだけで、Z1の中身を見に行きません。そのため、数式そのものは揮発性になりません。ただし、Z1に依存しているので、再計算のたびにZ1と一緒に計算されます。「感染」しないのは揮発性という分類だけで、再計算は依存セルへ広がります。
         </div>
 <div class="xdemo-note-warn">
 <strong>AND / OR に注意</strong><br>
@@ -470,11 +490,15 @@
 </div>
 <div class="code-readonly" data-lang="excel">
 <span class="code-line">&rarr; 揮発性数式はZ1の1つだけ</span>
-<span class="code-line">&rarr; 同じ日の作業中はZ1の値が変わらないのでB列も動かない</span>
+<span class="code-line">&rarr; ただし、B列はZ1に依存するので、再計算のたびに一緒に計算される</span>
 </div>
 <div class="xdemo-note-good">
 <strong>なぜ B1:B1000 は非揮発性なのか？</strong><br>
-          前セクションで説明した構文解析の規則のとおり、<code>$Z$1</code> はただのセル参照であり、Excelは Z1 の中身を見に行きません。数式テキスト <code>IF(A1&lt;$Z$1,"期限切れ","OK")</code> に揮発性関数名が含まれないため、非揮発性と判定されます。
+          前セクションで説明した構文解析の規則のとおり、<code>$Z$1</code> はただのセル参照であり、Excelは Z1 の中身を見に行きません。数式テキスト <code>IF(A1&lt;$Z$1,"期限切れ","OK")</code> に揮発性関数名が含まれないため、非揮発性と判定されます。それでもZ1の依存セルなので、再計算の対象からは外れません。
+        </div>
+<div class="xdemo-note-warn">
+<strong>1セルにまとめても、速くなるとは限りません</strong><br>
+          30,000行で測ると、再計算1回の時間は、全行に <code>TODAY()</code> を書いた場合も、Z1を参照した場合も約0.01秒で、差は出ませんでした（Z1を値に固定すると約0.003秒）。Z1にまとめる利点は、日付を1か所で管理できることです。依存する列が重くて待たされるときは、Z1を値に固定して必要なときに更新する方法も比べてください。
         </div>
 </section>
 <!-- ==========================================================
@@ -657,7 +681,7 @@
 <div class="code-readonly" data-lang="excel">
 <span class="code-line">&rarr; 条件付き書式は単純な値比較だけ（高速）</span>
 <span class="code-line">&rarr; TODAY() の評価は Z1 の1回だけ</span>
-<span class="code-line">&rarr; F列の再計算は Smart Recalc で必要なときだけ</span>
+<span class="code-line">&rarr; F列はZ1に依存するので、再計算のたびに計算される</span>
 </div>
 <div class="xdemo-note">
 <strong>条件付き書式の範囲を限定する</strong><br>
@@ -683,7 +707,7 @@
 <tr><td>2</td><td class="text-left">整形シート自体に揮発性関数がある</td><td>② 揮発性関数による再計算</td></tr>
 <tr><td>3</td><td class="text-left">整形シートに揮発性アクション（フィルタ操作・行挿入・シート名変更等）が行われた</td><td>③ 揮発性アクション</td></tr>
 </table></div>
-<p>出力シートで操作しても、整形シートの元データが変わっていなければ、整形シートの数式は動きません（条件2と3に該当しない限り）。出力シートにある揮発性関数は出力シートだけで再計算され、その結果が変わらなければ整形シートには一切波及しません。</p>
+<p>出力シートで操作しても、整形シートの元データが変わっていなければ、整形シートの数式は動きません（条件2と3に該当しない限り）。出力シートにある揮発性関数に整形シートが依存していなければ、整形シートには波及しません。依存している場合は、値が同じでも依存する数式まで再計算されます。</p>
 <h3>整形シートの状態別：影響の比較</h3>
 <div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
 <tr>
@@ -700,21 +724,21 @@
 </tr>
 <tr>
 <td class="col-item">TODAY() が1セルだけ</td>
-<td>1</td>
-<td><span class="diff-ok">ほぼゼロ</span></td>
-<td>同じ日なら値が変わらないためなし</td>
+<td>1＋依存セル</td>
+<td>依存セルの数と重さで決まる</td>
+<td>依存していれば、同じ日でも再計算のたびに連鎖</td>
 </tr>
 <tr>
 <td class="col-item">OFFSET が100個</td>
-<td>100</td>
-<td>中程度</td>
-<td>結果が同じならなし（ただし100回の計算コストは発生）</td>
+<td>100＋依存セル</td>
+<td>中程度以上</td>
+<td>依存していれば、結果が同じでも連鎖</td>
 </tr>
 <tr>
 <td class="col-item" style="color:#c62828">INDIRECT が数千〜数万個</td>
-<td><span class="diff-ng">数千〜数万</span></td>
+<td><span class="diff-ng">数千〜数万＋依存セル</span></td>
 <td><span class="diff-ng">非常に重い</span></td>
-<td>結果が同じでも計算自体でフリーズ</td>
+<td>依存していれば、結果が同じでも連鎖。計算自体も重い</td>
 </tr>
 </table></div>
 <h3>判定フローチャート</h3>
@@ -725,7 +749,7 @@
 <span class="code-line">  &boxv;</span>
 <span class="code-line">  &boxur;&boxh; Yes &rarr; 揮発性数式はいくつ？</span>
 <span class="code-line">            &boxv;</span>
-<span class="code-line">            &boxvr;&boxh; 少数（1〜数個） &rarr; 注意 コストほぼゼロ。許容範囲</span>
+<span class="code-line">            &boxvr;&boxh; 少数（1〜数個） &rarr; 依存する数式が軽ければ許容範囲</span>
 <span class="code-line">            &boxv;                     （TODAY 1個、CELL("filename") 1個 等）</span>
 <span class="code-line">            &boxv;</span>
 <span class="code-line">            &boxur;&boxh; 多数（数百〜数万） &rarr; 要改善！</span>
@@ -752,7 +776,7 @@
 <div class="tl-arrow">&rarr;</div>
 <div class="tl-step s-chk">
 <strong>④</strong><br>
-            ③の結果が<br>変わった場合<br>&rarr; 出力シートも<br><strong>再度</strong>再計算
+            ③に依存する<br>出力シートも<br>値が同じでも<br><strong>再計算</strong>
           </div>
 </div>
 <p>このような連鎖が発生する場合は、整形シートの揮発性関数を減らすことが有効な対策候補です。</p>
@@ -845,52 +869,52 @@
 </div>
 <div class="diagram-col arrow-col">
 <div class="big-arrow">&rarr;</div>
-<div class="big-arrow-label">値が<br>変わった？<br><strong>No</strong></div>
+<div class="big-arrow-label">値が同じ<br>でも計算</div>
 </div>
-<div class="diagram-col nv">
+<div class="diagram-col v">
 <div class="diagram-col-head">B列：A列を参照 &times; 30,000行</div>
 <div class="diagram-cell">
 <code>B1 =A1*1.1</code><br>
-<span class="st-skip">💤 スキップ</span>
+<span class="st-run">⚡ 再計算された</span>
 </div>
 <div class="diagram-cell">
 <code>B2 =A2*1.1</code><br>
-<span class="st-skip">💤 スキップ</span>
+<span class="st-run">⚡ 再計算された</span>
 </div>
-<div class="diagram-cell" style="text-align:center;color:#2e7d32;font-weight:700">
-                ︙ 30,000行すべてスキップ ︙<br>
-<span style="font-size:.8em">A列の値が変わっていないから</span>
+<div class="diagram-cell" style="text-align:center;color:#c62828;font-weight:700">
+                ︙ 30,000行すべて再計算 ︙<br>
+<span style="font-size:.8em">A列の値が同じでも、A列に依存しているため</span>
 </div>
 </div>
 </div>
 </div>
 <h3>INDIRECTの結果が変わらない場合の詳細</h3>
-<p>元データが一切変更されていない場合、30,000個のINDIRECTは全て再計算されますが、結果の値は前回と同じです。この場合：</p>
+<p>元データが一切変更されていない場合、30,000個のINDIRECTは全て再計算されますが、結果の値は前回と同じです。それでも、依存するB列の計算は止まりません。</p>
 <div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
 <tr><th class="w-30" scope="col">状況</th><th class="w-35" scope="col">A列（INDIRECT）の再計算</th><th class="w-35" scope="col">B列（A列参照）の再計算</th></tr>
 <tr>
 <td class="col-item">元データ変更なし</td>
 <td><span class="diff-ng">30,000回すべて再計算（値は変わらない）</span></td>
-<td><span class="diff-ok">0回（値が変わらないためSmart Recalcでスキップ）</span></td>
+<td><span class="diff-ng">30,000回すべて再計算（値が同じでもA列に依存するため）</span></td>
 </tr>
 <tr>
 <td class="col-item">元データ1セル変更</td>
 <td><span class="diff-ng">30,000回すべて再計算（1つだけ値が変わる）</span></td>
-<td>変わった1セルに依存するB列の数式だけ</td>
+<td>A列に依存するB列の数式すべて</td>
 </tr>
 <tr>
 <td class="col-item">元データ大量変更</td>
 <td><span class="diff-ng">30,000回すべて再計算</span></td>
-<td>変わったセルに依存するB列の数式すべて</td>
+<td>A列に依存するB列の数式すべて</td>
 </tr>
 </table></div>
-<p>つまり、この例では<strong>依存先への連鎖</strong>だけでなく、<strong>INDIRECT数式自体が再評価されるコスト</strong>を確認する必要があります。INDIRECTを含む計算部分はシングルスレッドで処理されます。</p>
+<p>つまり、この例では<strong>依存先への連鎖</strong>と<strong>INDIRECT数式自体が再評価されるコスト</strong>の両方を確認する必要があります。INDIRECTを含む計算部分はシングルスレッドで処理されます。</p>
 <h3>INDEX+MATCH / FILTER に置き換えた場合の比較</h3>
 <div class="table-wrapper"><table class="diff-table"><caption>データテーブル</caption>
 <tr><th class="w-30" scope="col">方式</th><th scope="col" style="width:28%">元データ変更なし時</th><th scope="col" style="width:22%">マルチスレッド</th><th class="w-20" scope="col">体感</th></tr>
 <tr>
 <td class="col-item">INDIRECT &times; 30,000</td>
-<td><span class="diff-ng">30,000回</span></td>
+<td><span class="diff-ng">A列30,000回＋依存するB列</span></td>
 <td><span class="diff-ng">不可（シングルスレッド）</span></td>
 <td><span class="diff-ng">環境により待ち時間が発生</span></td>
 </tr>
@@ -909,7 +933,7 @@
 </table></div>
 <div class="xdemo-note-fire">
 <strong>結論</strong><br>
-          「結果が変わらなければB列は動かない」としても、A列のINDIRECT自体は通常の再計算で再評価されます。大量に使って待ち時間が発生している場合は、INDEX+MATCHやFILTERに置き換えることで再計算対象を減らせる可能性があります。
+          結果が変わらなくても、A列のINDIRECTと、それに依存するB列は通常の再計算で再評価されます。大量に使って待ち時間が発生している場合は、INDEX+MATCHやFILTERに置き換えることで再計算対象を減らせる可能性があります。
         </div>
 </section>
 <!-- ==========================================================
@@ -921,7 +945,7 @@
 <h3>適切なケース</h3>
 <div class="table-wrapper"><table class="format-table"><caption>データテーブル</caption>
 <tr><th scope="col">ケース</th><th scope="col">関数</th><th scope="col">理由</th></tr>
-<tr><td>ダッシュボードの日付表示（1セル）</td><td><span class="format-code">TODAY()</span></td><td>1セルだけなのでコストほぼゼロ</td></tr>
+<tr><td>ダッシュボードの日付表示（1セル）</td><td><span class="format-code">TODAY()</span></td><td>依存する数式がなければコストはほぼゼロ</td></tr>
 <tr><td>乱数によるシミュレーション</td><td><span class="format-code">RAND()</span></td><td>毎回変わることが目的。使い終わったら値で貼り付け</td></tr>
 <tr><td>ファイルパスの取得（1セル）</td><td><span class="format-code">CELL("filename")</span></td><td>コスト軽微</td></tr>
 <tr><td>少数のシート動的参照</td><td><span class="format-code">INDIRECT()</span></td><td>数個なら影響は限定的。数百以上ならCHOOSE/XLOOKUPに置換</td></tr>
@@ -993,9 +1017,9 @@
 <div class="table-wrapper"><table class="diff-table" style="margin-top:16px"><caption>データテーブル</caption>
 <tr><th scope="col" style="width:8%">#</th><th scope="col" style="width:92%">チェック項目</th></tr>
 <tr><td>1</td><td class="text-left">再計算は3種類：① Smart Recalc、② 揮発性関数、③ 揮発性アクション。②と③を最小化する</td></tr>
-<tr><td>2</td><td class="text-left">揮発性関数は「そのセル」が毎回動く。しかし<strong>結果が変わらなければ依存先は動かない</strong></td></tr>
-<tr><td>3</td><td class="text-left">問題は「依存先への連鎖」ではなく<strong>「揮発性数式自体の計算コスト &times; 数」</strong>。INDIRECTはシングルスレッド</td></tr>
-<tr><td>4</td><td class="text-left">IF / CHOOSEの揮発性は構文解析レベル。<strong>セル参照は揮発性を「感染」させない</strong>。AND/ORは全引数を常に評価する</td></tr>
+<tr><td>2</td><td class="text-left">揮発性関数は「そのセル」と依存セルが毎回動く。<strong>結果が変わらなくても依存先の計算は止まらない</strong></td></tr>
+<tr><td>3</td><td class="text-left">問題は<strong>「揮発性数式の数」と「依存する数式の重さ」</strong>の両方。INDIRECTはシングルスレッド</td></tr>
+<tr><td>4</td><td class="text-left">IF / CHOOSEの揮発性は構文解析レベル。<strong>セル参照は揮発性という分類を「感染」させない</strong>が、再計算は依存セルへ広がる。AND/ORは全引数を常に評価する</td></tr>
 <tr><td>5</td><td class="text-left">TODAY / NOW は1セルに閉じ込め、名前の管理にも直接書かない（名前は使用箇所ごとに再評価される）</td></tr>
 <tr><td>6</td><td class="text-left">ROW / COLUMN / ROWS / COLUMNS / INDEX / FILTER は<strong>非揮発性</strong>。安心して大量に使える</td></tr>
 <tr><td>7</td><td class="text-left">SUMIFは範囲サイズを一致させる（不一致で揮発性化）</td></tr>
@@ -1004,7 +1028,7 @@
 <tr><td>10</td><td class="text-left">名前の追加/変更/削除は揮発性アクション。一括操作時はフリーズ注意</td></tr>
 <tr><td>11</td><td class="text-left"><strong>ブック構成の変更（シート名変更・行列挿入削除・シート移動削除）は再計算の契機になる</strong>。重いブックではバックアップ後に手動計算モードも検討し、作業後に元へ戻す</td></tr>
 <tr><td>12</td><td class="text-left">整形シートでは揮発性関数を必要な箇所に限定する。大量のINDIRECTと出力シートへの依存連鎖に注意</td></tr>
-<tr><td>13</td><td class="text-left">揮発性関数は「悪」ではない。少数・浅い依存なら問題ない。排除しすぎて保守性を犠牲にしない</td></tr>
+<tr><td>13</td><td class="text-left">揮発性関数は「悪」ではない。少数で、依存する数式が軽ければ問題になりにくい。排除しすぎて保守性を犠牲にしない</td></tr>
 <tr><td>14</td><td class="text-left">シート名・シート構成・名前の定義は<strong>最初の設計段階で確定</strong>させる。後からの変更は揮発性アクションの嵐になる</td></tr>
 </table></div>
 </section>

@@ -58,7 +58,7 @@
       }
     },
     "datePublished": "2026-03-18",
-    "dateModified":"2026-07-12"
+    "dateModified":"2026-11-03"
   }
   </script>
 <script type="application/ld+json">
@@ -248,7 +248,7 @@
 <span class="badge badge-maniac" style="background-color:#000;color:#fff;">難易度：&starf;&starf;&starf;&starf;&star;（超高度）</span>
 <span class="badge badge-all">Excel 2016以降対応あり</span>
 <span class="badge badge-maniac">COBOL/マニアック</span>
-<span class="article-date">更新日: 2026-07-12</span>
+<span class="article-date">更新日: 2026-11-03</span>
 </div>
 <h1 class="article-title">【複合関数編】複雑なCOBOL帳票の整理｜ヘッダー紐付け・フィルダウンをExcel関数で自動化</h1>
 <p class="article-summary" data-seo-lead="true">ヘッダー行の情報（伝票番号・日付など）を下の明細行へ引き継ぐ「フィルダウン」を関数で行い、親子構造の帳票を1行1レコードの表に整える複合式を解説します。</p>
@@ -461,8 +461,8 @@
           </div>
 <!-- 速度チューニング -->
 <h3 style="color:#ef6c00;border-bottom:2px solid #ffe0b2;padding-bottom:5px;margin-top:30px;">【速度チューニング】INDEX+SMALLが遅い場合の奥の手 &horbar; MATCH方式</h3>
-<p>上記の <code>INDEX+SMALL</code> 方式はシンプルで分かりやすいのですが、実は<strong>SMALL関数は内部的にデータ全体をソート（並べ替え）してからk番目を探す</strong>という処理を行っています。そのため、貼付シートの行数が数万行を超えてくると、抽出シートの各行で毎回ソートが走り、<strong>体感的に目に見えて遅くなる</strong>ことがあります。</p>
-<p>この速度問題を根本から解決するのが、<strong>貼付シートA列のフラグをROW（行番号）ではなく「連番（1, 2, 3&hellip;）」にして、抽出シート側では SMALL の代わりに MATCH 関数で行位置を取得する</strong>方式です。</p>
+<p>上記の <code>INDEX+SMALL</code> 方式はシンプルで分かりやすいのですが、貼付シートの行数が数万行を超えてくると、<strong>目に見えて遅くなる</strong>ことがあります。SMALL関数の内部の処理はMicrosoftの資料に書かれていないため断定できませんが、下の実測でも、行数が増えるほど時間が大きく伸びました。</p>
+<p>この速度問題を軽くする候補が、<strong>貼付シートA列のフラグをROW（行番号）ではなく「連番（1, 2, 3&hellip;）」にして、抽出シート側では SMALL の代わりに MATCH 関数で行位置を取得する</strong>方式です。</p>
 <p><a href="../../functions/old/article_countif_extract.html">抽出方式の比較はこちら：【FILTER代替】4つの複数抽出方式を比較</a><br>ROW+SMALL、AGGREGATE、上行参照など、行数が増えたときの方式選択を汎用データで比較しています。</p>
 <p class="code-label">貼付シート!A列（連番フラグに変更）</p>
 <div class="code-block" data-lang="excel">
@@ -533,8 +533,8 @@
 </table>
 </div>
 <div class="xdemo-note-good">
-<strong>なぜMATCH方式が爆速なのか？</strong><br>
-            SMALL関数は呼ばれるたびにA列全体の中からk番目に小さい値を探す（＝毎回ソートに近い処理を行う）ため、行数が増えるほど急激に遅くなります。一方、MATCH関数は「指定した値がA列の何行目にあるか？」を探すだけの<strong>単純な検索処理</strong>です。連番（1, 2, 3&hellip;）であれば各値がA列に1つしか存在しないため、見つかった瞬間に処理が完了します。この差がデータ量が大きくなるほど如実に表れ、<strong>数万行規模のデータでは体感で数倍～数十倍の速度差</strong>になることがあります。
+<strong>SMALL方式とMATCH方式の実測比較</strong><br>
+            5行に1行を抽出する同じデータで、この記事の2つの式を1回計算した時間です。5,000行：SMALL 約0.14秒、MATCH 約0.02〜0.04秒。20,000行：SMALL 約2.3秒、MATCH 約0.02秒。60,000行：SMALL 約26秒、MATCH 約0.08秒（Excel 16.0 ビルド20527、2026-11-03）。時間はデータとPCで変わるので、実データでも比べてください。
           </div>
 <div class="xdemo-note-warn">
 <strong>ただし、連番フラグの作り方で悩む方が多いのも事実です。</strong><br>
