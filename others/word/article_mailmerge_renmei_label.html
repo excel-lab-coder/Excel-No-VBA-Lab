@@ -7,9 +7,9 @@
 <title>Word差し込み印刷で同じ会社の2人目・3人目を1枚のラベルに入れる方法｜連名ラベル（Next Record If）｜Excel × No VBA Lab</title>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-596JZ3M97H');</script>
-<meta content="通常は1社1行の印刷用表で連名を作成。1人1行をまとめるコード方式は応用Lv.5として残しています。" name="description"/>
+<meta content="通常は1社1行の印刷用表で連名を作ります。1人1行のまままとめるコード方式は応用編（Lv.5）で説明します。" name="description"/>
 <meta content="Word差し込み印刷で同じ会社の2人目・3人目を1枚のラベルに入れる方法（連名ラベル）" property="og:title"/>
-<meta content="通常は1社1行の印刷用表で連名を作成。1人1行をまとめるコード方式は応用Lv.5として残しています。" property="og:description"/>
+<meta content="通常は1社1行の印刷用表で連名を作ります。1人1行のまままとめるコード方式は応用編（Lv.5）で説明します。" property="og:description"/>
 <meta content="article" property="og:type"/>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_renmei_label.html" property="og:url"/>
 <meta content="Excel × No VBA Lab" property="og:site_name"/>
@@ -23,11 +23,11 @@
 <link as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="preload"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" media="print" onload="this.media='all'" rel="stylesheet"/>
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="stylesheet"/></noscript>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Word差し込み印刷で同じ会社の2人目・3人目を1枚のラベルに入れる方法（連名ラベル）", "description": "通常は1社1行の印刷用表で連名を作成。1人1行をまとめるコード方式は応用Lv.5として残しています。", "datePublished": "2026-11-01", "dateModified": "2026-11-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_renmei_label.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Word差し込み印刷で同じ会社の2人目・3人目を1枚のラベルに入れる方法（連名ラベル）", "description": "通常は1社1行の印刷用表で連名を作ります。1人1行のまままとめるコード方式は応用編（Lv.5）で説明します。", "datePublished": "2026-11-01", "dateModified": "2026-11-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_renmei_label.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "Word差し込み印刷", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/"}, {"@type": "ListItem", "position": 4, "name": "同じ会社を1枚のラベルに（連名）", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_renmei_label.html"}]}
 </script>
-<link href="word-guide.css?v=20261102-images" rel="stylesheet"/><meta content="2" name="difficulty"/></head>
+<link href="word-guide.css?v=20261103" rel="stylesheet"/><meta content="2" name="difficulty"/></head>
 <body class="article-layout word-guide">
 <div aria-hidden="true" class="reading-progress"></div>
 <a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
@@ -36,17 +36,17 @@
 <main class="main-content" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>同じ会社を1枚のラベルに（連名）</strong></div>
 <article class="article-body">
-<div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-02</span></div><h1 class="article-title">Word差し込み印刷で同じ会社の2人目・3人目を1枚のラベルに入れる方法（連名ラベル）</h1>
-<p class="article-summary" data-seo-lead="true">通常は1社1行の印刷用表で連名を作成。1人1行をまとめるコード方式は応用Lv.5として残しています。</p></div><section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">やさしい（Lv.2） ／ コードを使う応用は本文で区別</p><ol class="word-guide-flow"><li>1社1行に整理</li><li>連名をセル内改行</li><li>ラベルへ挿入</li><li>人数別に確認</li></ol><details class="word-guide-toc"><summary>手順の目次を開く</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">基本の方法：Excelを1社1行にするとコードを使わず作れます</a></li><li><a href="#guide-step-2">手順1：連名の印刷用シートを用意する</a></li><li><a href="#guide-step-3">手順2：ラベルを作り、連名の列を挿入する</a></li><li><a href="#guide-step-4">手順3：人数が違う会社を確認して完成させる</a></li></ol></nav></details></section>
-<section class="method-section" id="guide-step-1"><h2>基本の方法：Excelを1社1行にするとコードを使わず作れます</h2><p>通常は、会社名・郵便番号・住所・連名_印刷用を<strong>1社1行</strong>にまとめた別シートを用意し、普通のラベル差し込みを使います。名簿を1人1行のまま使ってWord内でまとめる方法は、後半の応用編に残しています。</p></section><section class="method-section" id="guide-step-2"><h2>手順1：連名の印刷用シートを用意する</h2><ol class="line-height-2"><li>元の担当者名簿を残し、「連名印刷用」という別シートを作ります。</li><li>1行目に「会社ID」「会社名」「郵便番号_印刷用」「住所1」「住所2」「連名_印刷用」を入力します。</li><li>1社を1行とし、連名_印刷用のセルへ「営業部 山田 太郎 様」を入力します。</li><li>同じセルの中でAlt＋Enterを押し、「営業部 佐藤 花子 様」など次の担当者を入力します。人数が少ない会社は、その人数分だけ入力します。</li><li>Excelの「折り返して全体を表示する」で内容を見やすくし、同じ会社の人の漏れや重複がないことを確認して保存します。</li></ol><p>会社名が同じ別拠点を誤ってまとめないよう、会社IDや送付先IDで区別します。4人以上も入力できますが、用紙のラベルに全員が収まることは別途確認が必要です。</p></section><section class="method-section" id="guide-step-3"><h2>手順2：ラベルを作り、連名の列を挿入する</h2><ol class="line-height-2"><li>Wordで「差し込み印刷の開始」→「ラベル」を選び、用紙の品番を指定します。</li><li>「宛先の選択」→「既存のリストを使用」で、作成したExcelと「連名印刷用$」を選びます。</li><li>左上の1面へ、郵便番号_印刷用、住所1、住所2、会社名、連名_印刷用を「差し込みフィールドの挿入」から配置します。</li><li>連名_印刷用に「様」を含めた場合は、Word側へ「様」を追加しません。</li><li>「複数ラベルに反映」を押して全体へコピーします。2面目以降の次のレコード指示は自動で入ります。</li></ol><figure class="article-screenshot"><a aria-label="画像を拡大：3段ラベルのフィールド配置をWordで100％表示した実画面です。各段の本文を切り出し、余白を省いて上から順に並べています。1段目にはなく、2・3段目に«Next Record»があることを確認します。画像の列名は研修名簿で撮影した例です。連名ラベルでは«連名_印刷用»などの列が入ります。" href="../../image/articles/2026-11-02/word-image-fixes/three-label-fields.png" rel="noopener" target="_blank" style="--screenshot-width:560.00px"><img alt="3段ラベルのフィールド配置をWordで100％表示した実画面です。各段の本文を切り出し、余白を省いて上から順に並べています。1段目にはなく、2・3段目に«Next Record»があることを確認します。画像の列名は研修名簿で撮影した例です。連名ラベルでは«連名_印刷用»などの列が入ります。" decoding="async" height="534" loading="lazy" src="../../image/articles/2026-11-02/word-image-fixes/three-label-fields.png" width="560"></a><figcaption>3段ラベルのフィールド配置をWordで100％表示した実画面です。各段の本文を切り出し、余白を省いて上から順に並べています。1段目にはなく、2・3段目に«Next Record»があることを確認します。画像の列名は研修名簿で撮影した例です。連名ラベルでは«連名_印刷用»などの列が入ります。 <span class="screenshot-enlarge">（クリックで拡大・原寸表示）</span></figcaption></figure></section><section class="method-section" id="guide-step-4"><h2>手順3：人数が違う会社を確認して完成させる</h2><ol class="line-height-2"><li>「結果のプレビュー」で、担当者が1名・2名・3名以上の会社を切り替えます。</li><li>連名セルの改行が表示され、最後の担当者名までラベル内に収まるか確認します。</li><li>「完了と差し込み」→「個々のドキュメントの編集」→「すべて」→「OK」で完成文書を出します。</li><li>会社数とラベル枚数を照合し、最後の余り面に固定文字が残っていないか確認します。</li><li>普通紙で試し印刷し、位置が合ってからラベル用紙へ印刷します。</li></ol><figure class="article-screenshot"><a aria-label="画像を拡大：完了と差し込みのメニューに個々のドキュメントの編集が並ぶ画面" href="../../image/articles/2026-11-01/word-finish-merge-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:842.00px"><img alt="完成文書を出してから、会社数・担当者数・余り面を確認します。" decoding="async" height="353" loading="lazy" src="../../image/articles/2026-11-01/word-finish-merge-menu.jpg" width="842"></a><figcaption>完成文書を出してから、会社数・担当者数・余り面を確認します。 （クリックで拡大）</figcaption></figure></section><details class="mailmerge-advanced"><summary>応用・難易度高（Lv.5）：1人1行の名簿をNEXTIF・SET・IFで連名にまとめる</summary><div class="mailmerge-advanced-content"><div class="xdemo-note-warn"><strong>この先は応用編です。</strong>上の方法が使えず、1人1行のままWordでグループ化したい場合だけ使います。掲載検証は3名・2名・1名の3社です。4名以上、多数ページ、用紙境界の条件は別途検証が必要です。コード画像は全体配置の確認用で、入力する全文は本文のコード例を参照します。</div><section class="goal-section">
-<h2><span class="icon">💡</span> やりたいこと</h2>
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Word差し込み印刷で同じ会社の2人目・3人目を1枚のラベルに入れる方法（連名ラベル）</h1>
+<p class="article-summary" data-seo-lead="true">通常は1社1行の印刷用表で連名を作ります。1人1行のまままとめるコード方式は応用編（Lv.5）で説明します。</p></div><section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">やさしい（Lv.2） ／ 応用編は折りたたんでいます</p><ol class="word-guide-flow"><li>1社1行に整理</li><li>連名をセル内改行</li><li>ラベルへ挿入</li><li>人数別に確認</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">基本の方法：Excelを1社1行にするとコードを使わず作れます</a></li><li><a href="#guide-step-2">手順1：連名の印刷用シートを用意する</a></li><li><a href="#guide-step-3">手順2：ラベルを作り、連名の列を挿入する</a></li><li><a href="#guide-step-4">手順3：人数が違う会社を確認して完成させる</a></li><li><a href="#advanced-1">応用・難易度高（Lv.5）：1人1行の名簿をNEXTIF・SET・IFで連名にまとめる</a></li></ol></nav></details></section>
+<section class="method-section" id="guide-step-1"><h2>基本の方法：Excelを1社1行にするとコードを使わず作れます</h2><p>通常は、会社名・郵便番号・住所・連名_印刷用を<strong>1社1行</strong>にまとめた別シートを用意し、普通のラベル差し込みを使います。名簿を1人1行のまま使ってWord内でまとめる方法は、後半の応用編で説明します。</p></section><section class="method-section" id="guide-step-2"><h2><span class="word-step-no">手順1</span>連名の印刷用シートを用意する</h2><ol class="line-height-2"><li>元の担当者名簿を残し、「連名印刷用」という別シートを作ります。</li><li>1行目に「会社ID」「会社名」「郵便番号_印刷用」「住所1」「住所2」「連名_印刷用」を入力します。</li><li>1社を1行とし、連名_印刷用のセルへ「営業部 山田 太郎 様」を入力します。</li><li>同じセルの中でAlt＋Enterを押し、「営業部 佐藤 花子 様」など次の担当者を入力します。人数が少ない会社は、その人数分だけ入力します。</li><li>Excelの「折り返して全体を表示する」で内容を見やすくし、同じ会社の人の漏れや重複がないことを確認して保存します。</li></ol><p>会社名が同じ別拠点を誤ってまとめないよう、会社IDや送付先IDで区別します。4人以上も入力できますが、用紙のラベルに全員が収まることは別途確認が必要です。</p></section><section class="method-section" id="guide-step-3"><h2><span class="word-step-no">手順2</span>ラベルを作り、連名の列を挿入する</h2><ol class="line-height-2"><li>Wordで「差し込み印刷の開始」→「ラベル」を選び、用紙の品番を指定します。</li><li>「宛先の選択」→「既存のリストを使用」で、作成したExcelと「連名印刷用$」を選びます。</li><li>左上の1面へ、郵便番号_印刷用、住所1、住所2、会社名、連名_印刷用を「差し込みフィールドの挿入」から配置します。</li><li>連名_印刷用に「様」を含めた場合は、Word側へ「様」を追加しません。</li><li>「複数ラベルに反映」を押して全体へコピーします。2面目以降の次のレコード指示は自動で入ります。</li></ol><figure class="article-screenshot"><a aria-label="画像を拡大：3段ラベルのフィールド配置をWordで100％表示した実画面です。各段の本文を切り出し、余白を省いて上から順に並べています。1段目にはなく、2・3段目に«Next Record»があることを確認します。画像の列名は研修名簿で撮影した例です。連名ラベルでは«連名_印刷用»などの列が入ります。" href="../../image/articles/2026-11-02/word-image-fixes/three-label-fields.png" rel="noopener" target="_blank" style="--screenshot-width:560.00px"><img alt="3段ラベルのフィールド配置をWordで100％表示した実画面です。各段の本文を切り出し、余白を省いて上から順に並べています。1段目にはなく、2・3段目に«Next Record»があることを確認します。画像の列名は研修名簿で撮影した例です。連名ラベルでは«連名_印刷用»などの列が入ります。" decoding="async" height="534" loading="lazy" src="../../image/articles/2026-11-02/word-image-fixes/three-label-fields.png" width="560"></a><figcaption>3段ラベルのフィールド配置をWordで100％表示した実画面です。各段の本文を切り出し、余白を省いて上から順に並べています。1段目にはなく、2・3段目に«Next Record»があることを確認します。画像の列名は研修名簿で撮影した例です。連名ラベルでは«連名_印刷用»などの列が入ります。 <span class="screenshot-enlarge">（クリックで拡大・原寸表示）</span></figcaption></figure></section><section class="method-section" id="guide-step-4"><h2><span class="word-step-no">手順3</span>人数が違う会社を確認して完成させる</h2><ol class="line-height-2"><li>「結果のプレビュー」で、担当者が1名・2名・3名以上の会社を切り替えます。</li><li>連名セルの改行が表示され、最後の担当者名までラベル内に収まるか確認します。</li><li>「完了と差し込み」→「個々のドキュメントの編集」→「すべて」→「OK」で完成文書を出します。</li><li>会社数とラベル枚数を照合し、最後の余り面に固定文字が残っていないか確認します。</li><li>普通紙で試し印刷し、位置が合ってからラベル用紙へ印刷します。</li></ol><figure class="article-screenshot"><a aria-label="画像を拡大：完了と差し込みのメニューに個々のドキュメントの編集が並ぶ画面" href="../../image/articles/2026-11-01/word-finish-merge-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:842.00px"><img alt="完成文書を出してから、会社数・担当者数・余り面を確認します。" decoding="async" height="353" loading="lazy" src="../../image/articles/2026-11-01/word-finish-merge-menu.jpg" width="842"></a><figcaption>完成文書を出してから、会社数・担当者数・余り面を確認します。 （クリックで拡大）</figcaption></figure></section><details class="mailmerge-advanced" id="advanced-1"><summary>応用・難易度高（Lv.5）：1人1行の名簿をNEXTIF・SET・IFで連名にまとめる</summary><div class="mailmerge-advanced-content"><div class="xdemo-note-warn"><strong>この先は応用編です。</strong>上の方法が使えず、1人1行のままWordでグループ化したい場合だけ使います。掲載検証は3名・2名・1名の3社です。4名以上、多数ページ、用紙境界の条件は別途検証が必要です。コード画像は全体配置の確認用で、入力する全文は本文のコード例を参照します。</div><section class="goal-section">
+<h3>この方法でできること</h3>
 <p>取引先に宛名ラベルを作るとき、同じ会社に3人いると、普通の差し込みでは<strong>会社名が同じラベルが3枚</strong>できます。これを、<strong>会社名は1回だけ、その下に2人目・3人目の名前を並べた1枚のラベル</strong>にしたい――という方法です。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：Wordを200％表示し、各社の宛名部分を切り出した実画面です。ラベル間の余白を省いて縦に並べています。サンプル商事3名・テスト工業2名・みどり物産1名が、それぞれ1枚にまとまった結果です。住所録は架空です。" href="../../image/articles/2026-11-02/word-image-fixes/renmei-label-preview.png" rel="noopener" target="_blank" style="--screenshot-width:500.00px"><img alt="Wordを200％表示し、各社の宛名部分を切り出した実画面です。ラベル間の余白を省いて縦に並べています。サンプル商事3名・テスト工業2名・みどり物産1名が、それぞれ1枚にまとまった結果です。住所録は架空です。" decoding="async" height="484" loading="lazy" src="../../image/articles/2026-11-02/word-image-fixes/renmei-label-preview.png" width="500"></a><figcaption>Wordを200％表示し、各社の宛名部分を切り出した実画面です。ラベル間の余白を省いて縦に並べています。サンプル商事3名・テスト工業2名・みどり物産1名が、それぞれ1枚にまとまった結果です。住所録は架空です。 （クリックで拡大・原寸表示）</figcaption></figure>
 <div class="xdemo-note-good"><strong>この記事の方法でできること</strong><br/>
 ・同じ会社の人は、<strong>最大3人まで</strong>同じラベルに並べます（4人目以降は次のラベルに会社名付きで出ます）。<br/>
 ・ラベルの作成・差し込みはWordで行います。名簿には、<strong>「次の行も同じ会社か」を表す目印の列を1列だけ</strong>Excelの式で用意します。</div>
 </section><section class="method-section">
-<h2>仕組み：ラベルの中で「次の人」へ進むかどうかを決める</h2>
+<h3>仕組み：ラベルの中で「次の人」へ進むかどうかを決める</h3>
 <p>ラベルの差し込みでは、2枚目以降の枠の先頭に <code>«Next Record»</code> が入り、<strong>1枠に1人ずつ</strong>次の人へ進みます（<a href="article_mailmerge_label_next_record.html">Next Recordの基本</a>）。</p>
 <p>連名ラベルでは、1枠の中に<strong>「次の人も同じ会社なら、この枠の中で次の人へ進む」</strong>という指示を入れます。これがWordの <strong>NEXTIF</strong>（Next Record If：条件に合うときだけ次のレコードへ進む）です。</p>
 <div class="table-wrapper"><table class="comparison-table"><caption>1枚のラベルの中身（この記事の例）</caption>
@@ -59,7 +59,7 @@
 </tbody></table></div>
 <p>Wordは「次の行の会社名」を先読みできません。そのため、名簿の側に<strong>「次の行も同じ会社なら○」</strong>という目印を用意し、Wordはその○を見て進むかどうかを決めます。</p>
 </section><section class="method-section" id="step1">
-<h2>手順1：名簿を会社名順に並べて、目印の列を作る</h2>
+<h3><span class="word-step-no">手順1</span>名簿を会社名順に並べて、目印の列を作る</h3>
 <ol class="line-height-2">
 <li>Excelの名簿を<strong>会社名で並べ替え</strong>て、同じ会社の人が続けて並ぶようにします（「データ」→「並べ替え」）。</li>
 <li>空いている列の見出しに「<strong>次も同じ会社</strong>」と入力します（例：F1）。</li>
@@ -74,7 +74,7 @@
 </ul>
 <div class="xdemo-note-warn"><strong>並べ替え・絞り込みはExcel側で済ませます。</strong><br/>目印の○は「Excelで1つ下の行」と比べた結果です。Wordの「アドレス帳の編集」で並べ替えたり、途中の人をフィルターやチェックで外したりすると、○と実際の並びがずれて、別の会社の人が同じラベルに入ることがあります。印刷する人を減らすときは、Excelで対象者だけのシートを作ってから目印の式を入れます（<a href="article_mailmerge_filter_two_patterns.html">必要な人だけ印刷する2つの方法</a>のパターン2）。</div>
 </section><section class="method-section" id="step2">
-<h2>手順2：Wordでラベルを作り、名簿をつなぐ</h2>
+<h3><span class="word-step-no">手順2</span>Wordでラベルを作り、名簿をつなぐ</h3>
 <ol class="line-height-2">
 <li>Wordの新しい文書で「差し込み文書」→「差し込み印刷の開始」→<strong>「ラベル」</strong>を選びます。</li>
 <li>使うラベル用紙の製品番号を選びます。一覧にない場合は「新しいラベル」で寸法を入力します。この記事ではA4の10面（2列×5段）を作りました。</li>
@@ -84,10 +84,10 @@
 <p>名簿をつなぐと、2枚目以降のラベルには自動で <code>«Next Record»</code> が入ります。<strong>1枚目（左上）のラベルだけ</strong>を作り、最後に全体へ反映します。</p>
 <p class="verify-note">寸法は撮影用の例です。プリンターの印刷できる範囲によって位置がずれる場合があります。紙に印刷して位置を確かめる作業は、この記事では行っていません。</p>
 </section><section class="method-section" id="step3">
-<h2>手順3：1枚目のラベルにフィールドを入れる</h2>
-<h3>1行目と2行目（1人目）</h3>
+<h3><span class="word-step-no">手順3</span>1枚目のラベルにフィールドを入れる</h3>
+<h4>1行目と2行目（1人目）</h4>
 <p>「差し込みフィールドの挿入」から、1行目に «会社名»、2行目に «部署» «氏名» を入れ、氏名の後ろに「 様」と入力します。ここは普通のラベルと同じです。</p>
-<h3>3行目（2人目）：フィールドコードを入力する</h3>
+<h4>3行目（2人目）：フィールドコードを入力する</h4>
 <p>3行目には、次のフィールドコードを入れます。<strong>「{ }」はキーボードで入力した波かっこでは動きません。</strong><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押すと、フィールド用の「{ }」が入ります。</p>
 <pre class="code-block" data-lang="word"><code>{ SET f1 "{ MERGEFIELD 次も同じ会社 }" }{ NEXTIF { MERGEFIELD 次も同じ会社 } = "○" }{ IF { REF f1 } = "○" "{ MERGEFIELD 部署 } { MERGEFIELD 氏名 } 様" "" }</code></pre>
 <p class="code-comment">上のコードは入力の見本です。コピーして貼り付けても、波かっこがフィールドにならないため動きません。下の「入力のしかた」の順に入力してください。</p>
@@ -99,10 +99,10 @@
 <tr><td><code>IF f1 = "○" "部署 氏名 様" ""</code></td><td>覚えておいた目印が○（＝次の人へ進んだ）ときだけ、2人目の部署・氏名を表示する。○でなければ何も表示しない</td></tr>
 </tbody></table></div>
 <p>IFを付けているのは、次の人へ進まなかったときに、1人目の名前がもう一度表示されるのを防ぐためです。</p>
-<h3>4行目（3人目）</h3>
+<h4>4行目（3人目）</h4>
 <p>3行目と同じ形で、f1 を <strong>f2</strong> に変えたものを入れます。2人目の目印が○なら、さらに3人目へ進みます。</p>
 <pre class="code-block" data-lang="word"><code>{ SET f2 "{ MERGEFIELD 次も同じ会社 }" }{ NEXTIF { MERGEFIELD 次も同じ会社 } = "○" }{ IF { REF f2 } = "○" "{ MERGEFIELD 部署 } { MERGEFIELD 氏名 } 様" "" }</code></pre>
-<h3>入力のしかた（3行目の例）</h3>
+<h4>入力のしかた（3行目の例）</h4>
 <ol class="line-height-2">
 <li>3行目の先頭で <span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押し、<code>SET f1 "</code> と入力します。</li>
 <li>続けて <span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押し、内側の「{ }」に <code>MERGEFIELD 次も同じ会社</code> と入力します。</li>
@@ -117,14 +117,14 @@
 ・<code>MERGEFIELD</code> の後ろの列名は、Excelの見出しと同じにします（この例では「次も同じ会社」「部署」「氏名」）。<br/>
 ・○は、Excelの式と同じ文字にします。</div>
 </section><section class="method-section" id="step4">
-<h2>手順4：全体に反映して、プレビューで確かめる</h2>
+<h3><span class="word-step-no">手順4</span>全体に反映して、プレビューで確かめる</h3>
 <ol class="line-height-2">
 <li>「差し込み文書」タブの<strong>「複数ラベルに反映」</strong>を押します。1枚目の中身が、先頭に <code>«Next Record»</code> の付いた形で全ラベルにコピーされます。</li>
 <li><span class="kbd-btn">Alt</span>+<span class="kbd-btn">F9</span> でコードの表示を戻し、<strong>「結果のプレビュー」</strong>をオンにします。</li>
 <li>同じ会社の人が1枚にまとまり、次のラベルが次の会社から始まっているかを確認します（この記事の冒頭の画面）。</li>
 </ol>
 </section><section class="method-section" id="step5">
-<h2>手順5：新しい文書に差し込んで確認してから印刷する</h2>
+<h3><span class="word-step-no">手順5</span>新しい文書に差し込んで確認してから印刷する</h3>
 <ol class="line-height-2">
 <li>「完了と差し込み」→<strong>「個々のドキュメントの編集」</strong>→「すべて」→「OK」。</li>
 <li>差し込み済みのラベルが新しい文書として開きます。会社ごとにまとまっているかを全ページ確認します。</li>
@@ -137,7 +137,7 @@
 </ul>
 <p class="verify-note">紙への印刷は行っていません。印刷位置は、お使いのプリンターとラベル用紙で確認してください。</p>
 </section><section class="method-section">
-<h2>4人以上いる会社、ラベルに入りきらないとき</h2>
+<h3>4人以上いる会社、ラベルに入りきらないとき</h3>
 <ul class="line-height-2">
 <li>この記事のコードは3人目まで。4人目は、目印が○のままでも次のラベルに進み、会社名付きで表示されます。</li>
 <li>4人目まで入れたい場合は、4行目と同じ形で f3 を使った5行目を足します。ただし、ラベルの高さに収まる行数までにします。</li>
@@ -145,7 +145,7 @@
 </ul>
 <p class="verify-note">4人以上の会社での動きは、この記事の撮影では確認していません。環境により結果が異なる場合があります。</p>
 </section><section class="method-section">
-<h2>よくあるつまずき</h2>
+<h3>よくあるつまずき</h3>
 <div class="table-wrapper"><table class="comparison-table"><caption>症状と確認すること</caption>
 <thead><tr><th>症状</th><th>確認すること</th></tr></thead>
 <tbody>
@@ -156,7 +156,7 @@
 <tr><td>2人目の行がずっと空になる</td><td>NEXTIFとIFの「○」の前後のかぎかっこが半角の「"」になっているか。<code>=</code> の前後に半角スペースがあるか。</td></tr>
 </tbody></table></div>
 </section></div></details>
-<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>基本の流れを確認する</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p>通常操作で完成できる方法を先に紹介しています。コードを使う方法は、必要な場合に応用編を開いて参照してください。</p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>差し込み印刷の基本の流れ</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
 <li><a href="article_mailmerge_label_basic.html">Word差し込み印刷で宛名ラベルを作る基本手順</a></li>
 <li><a href="article_mailmerge_label_next_record.html">全ラベルが同じ宛名になる原因と直し方（Next Recordの基本）</a></li>
 <li><a href="article_mailmerge_multiple_records_per_page.html">1枚に複数人分を並べる方法（3人ずつ・4人ずつ）</a></li>
@@ -168,6 +168,6 @@
 </main>
 <footer class="site-footer"><div aria-label="運営情報と検証方針" class="site-footer-trust"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Windows版 Word / Excel（Microsoft 365）で撮影・確認しています。Word 2016以降でも同じフィールドコードを使えますが、画面の表示は版によって異なる場合があります。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>© Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
 <script src="../../script.js?v=20261103"></script>
-<script src="word-images.js?v=20261102-images" defer></script>
+<script src="word-images.js?v=20261103" defer></script>
 </body>
 </html>

@@ -1,3 +1,19 @@
+// A link to a heading inside a collapsed advanced section has to open that section first.
+(() => {
+  function openTarget() {
+    if (!location.hash) return;
+    const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (!target) return;
+    let wasClosed = false;
+    for (let node = target; node; node = node.parentElement) {
+      if (node.tagName === 'DETAILS' && !node.open) { node.open = true; wasClosed = true; }
+    }
+    if (wasClosed) target.scrollIntoView();
+  }
+  window.addEventListener('hashchange', openTarget);
+  openTarget();
+})();
+
 // Keep the image link usable when JavaScript or <dialog> is unavailable.
 (() => {
   const links = document.querySelectorAll('.word-guide .article-screenshot a');

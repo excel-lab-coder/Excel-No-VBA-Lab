@@ -6,9 +6,18 @@
 .word-guide-flow li{padding:12px;background:#fff;border:1px solid #d4e5dc;border-radius:6px;line-height:1.6;font-size:.92rem;overflow-wrap:anywhere;}
 .word-guide-flow li:before{counter-increment:guide;content:counter(guide);display:block;color:#186543;font-weight:700;font-size:1.2rem;margin-bottom:4px;}
 .word-guide-toc summary{cursor:pointer;font-weight:700;line-height:1.8;padding:6px 0;text-decoration:underline;text-underline-offset:4px;}
-.word-guide-toc ol{padding-left:1.5em;line-height:1.9;}
-.word-guide-toc li{margin:8px 0;}
-.word-guide section[id]{scroll-margin-top:24px;}
+.word-guide-toc ol{padding-left:1.5em;line-height:1.7;}
+.word-guide-toc li{margin:3px 0;}
+/* Same full-width header and footer as the other articles; only the reading column is limited. */
+body.article-layout.word-guide{width:100%;max-width:none;margin:0;padding:0;}
+body.article-layout.word-guide .main-content{width:min(100%,1080px);}
+.word-guide section[id],.word-guide details[id]{scroll-margin-top:calc(var(--header-height) + 16px);}
+.word-step-no{display:inline-block;margin-right:.55em;padding:.08em .55em;border-radius:6px;background:#185b3f;color:#fff;font-size:.78em;font-weight:700;line-height:1.5;vertical-align:.08em;}
+.word-subsection{margin:24px 0 8px;padding:0;scroll-margin-top:calc(var(--header-height) + 16px);}
+.word-env-note{margin:24px 0 0;font-size:.88rem;color:#5f6b76;}
+.word-guide-toc[open] summary{margin-bottom:2px;}
+.word-guide .mailmerge-advanced{margin:24px 0;}
+.word-guide .mailmerge-advanced>summary{min-height:44px;cursor:pointer;}
 .word-guide .method-section>ol{padding-left:1.7em;}
 .word-guide .method-section>ol>li{margin:10px 0;line-height:1.95;padding-left:3px;}
 .word-guide .method-section>ol>li::marker{font-weight:700;color:#176343;}
@@ -32,5 +41,6 @@
 @media(max-width:600px){.word-image-viewer{width:calc(100vw - 12px);height:calc(100dvh - 12px);padding:10px;}.word-image-toolbar{gap:6px;}.word-image-toolbar button,.word-image-toolbar a{font-size:.82rem;padding:10px 8px;}.word-image-toolbar [data-close]{margin-left:0;}.word-image-description{max-height:4.8em;}}
 .word-guide-end{padding:18px 20px;margin:28px 0;border-left:4px solid #278457;background:#f4f7f5;line-height:1.9;}
 .word-guide-end p{margin:6px 0;}
+@media(max-width:768px){.word-guide-toc ol{max-height:15em;overflow-y:auto;}}
 @media(max-width:600px){.word-guide-intro{padding:16px 12px;}.word-guide-flow{grid-template-columns:repeat(2,minmax(0,1fr));}.word-guide .mailmerge-advanced-content{padding:0 12px 16px;}.word-guide-toc a{display:inline-block;padding:3px 0;}.word-guide .article-screenshot figcaption{font-size:.88rem;}}
 @media print{.word-guide-toc,.word-guide-end{display:none;}.word-guide-flow{display:flex;}.word-guide-flow li{flex:1;}.word-guide-intro{break-inside:avoid;}}

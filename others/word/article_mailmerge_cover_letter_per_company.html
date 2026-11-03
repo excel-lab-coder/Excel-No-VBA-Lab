@@ -23,11 +23,11 @@
 <link as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="preload"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" media="print" onload="this.media='all'" rel="stylesheet"/>
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="stylesheet"/></noscript>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Word差し込み印刷で会社ごとに1枚の送付状を作る方法", "description": "Word差し込み印刷で会社ごとに1枚の送付状を作る方法。会社で絞って1社ずつ作る方法と、会社1行の表でまとめて出す方法を順に案内します。", "datePublished": "2026-11-01", "dateModified": "2026-11-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_cover_letter_per_company.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Word差し込み印刷で会社ごとに1枚の送付状を作る方法", "description": "Word差し込み印刷で会社ごとに1枚の送付状を作る方法。会社で絞って1社ずつ作る方法と、会社1行の表でまとめて出す方法を順に案内します。", "datePublished": "2026-11-01", "dateModified": "2026-11-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_cover_letter_per_company.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "Word差し込み印刷", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/"}, {"@type": "ListItem", "position": 4, "name": "会社ごとに1枚の送付状", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_cover_letter_per_company.html"}]}
 </script>
-<link href="word-guide.css?v=20261102-images" rel="stylesheet"/><meta content="2" name="difficulty"/></head>
+<link href="word-guide.css?v=20261103" rel="stylesheet"/><meta content="2" name="difficulty"/></head>
 <body class="article-layout word-guide">
 <div aria-hidden="true" class="reading-progress"></div>
 <a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
@@ -36,52 +36,53 @@
 <main class="main-content" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>会社ごとに1枚の送付状</strong></div>
 <article class="article-body">
-<div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-02</span></div><h1 class="article-title">Word差し込み印刷で会社ごとに1枚の送付状を作る方法</h1><p class="article-summary" data-seo-lead="true">会社で絞って1社ずつ作る方法と、会社1行の表でまとめて出す方法を案内します。</p></div><section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">やさしい（Lv.2） ／ コードを使う応用は本文で区別</p><ol class="word-guide-flow"><li>作り方を選ぶ</li><li>会社・担当者を指定</li><li>通常操作で出力</li><li>宛名・ページを確認</li></ol><details class="word-guide-toc"><summary>手順の目次を開く</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">まずは会社名で絞り、1社ずつ作ります</a></li><li><a href="#guide-step-2">準備：1社ずつ作る方法と一括で出す方法を選びます</a></li><li><a href="#choose-method">方法はこの順で選びます</a></li><li><a href="#simple-start">方法1・手順1：「名簿」を選び、担当者名簿をつなぐ</a></li><li><a href="#simple-filter">手順2：送付先の会社だけに絞る</a></li><li><a href="#simple-fields">手順3：担当者1人分の行だけ作る</a></li><li><a href="#simple-finish">手順4：「個々のドキュメントの編集」で3名分を完成させる</a></li><li><a href="#simple-heading">手順5：新しい文書に会社名と送付文を1回だけ加える</a></li><li><a href="#company-row">方法2：会社を1行にまとめれば、レターで会社ごとに出せます</a></li><li><a href="#guide-step-10">方法2の具体的な操作：会社1行の表からレターで出す</a></li><li><a href="#advanced">応用編：ほかの方法で足りないときだけフィールドコードを使う</a></li><li><a href="#guide-step-24">確認した環境・参考</a></li></ol></nav></details></section>
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Word差し込み印刷で会社ごとに1枚の送付状を作る方法</h1><p class="article-summary" data-seo-lead="true">会社で絞って1社ずつ作る方法と、会社1行の表でまとめて出す方法を案内します。</p></div><section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">やさしい（Lv.2） ／ 応用編は折りたたんでいます</p><ol class="word-guide-flow"><li>作り方を選ぶ</li><li>会社・担当者を指定</li><li>通常操作で出力</li><li>宛名・ページを確認</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">まずは会社名で絞り、1社ずつ作ります</a></li><li><a href="#choose-method">方法の選び方</a></li><li><a href="#guide-step-2">どの方法でも、先に確認すること</a></li><li><a href="#method-1">方法1：会社名で絞り、1社ずつ作る</a></li><li><a href="#company-row">方法2：会社を1行にまとめ、レターで一括で出す</a></li><li><a href="#advanced">応用編：ほかの方法で足りないときだけフィールドコードを使う</a></li><li><a href="#guide-step-24">確認した環境・参考</a></li></ol></nav></details></section>
 <section class="goal-section" id="guide-step-1"><h2>まずは会社名で絞り、1社ずつ作ります</h2>
 <p>1行1人の担当者名簿をそのまま使い、<strong>Wordで会社名を絞る→「名簿」でその会社の担当者を並べる→完成文書に会社名と送付文を1回だけ加える</strong>方法です。フィールドコードの編集は不要です。</p>
 <p>少数の会社へ送るときは、まずこの方法で作れます。会社数が多い場合は、後半の「会社を1行にまとめてレターで作る方法」を検討してください。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：会社名と送付文を1回だけ置き3名の担当者を並べた送付状" href="../../image/articles/2026-11-01/directory-basic/cover-simple-result.jpg" rel="noopener" target="_blank" style="--screenshot-width:855.00px"><img alt="会社名と送付文を1回だけ置き3名の担当者を並べた送付状" decoding="async" height="430" loading="lazy" src="../../image/articles/2026-11-01/directory-basic/cover-simple-result.jpg" width="855"></a><figcaption>フィールドコードを編集せず作った送付状の簡単な完成例です。Wordを150％表示にし、本文を大きく撮影しています。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<p>撮影例は株式会社サンプル商事の3名です。送付状に必要な日付、差出人、同封書類の名称・部数などは、完成文書へ加えて使います。</p></section><section class="method-section" id="guide-step-2"><h2>準備：1社ずつ作る方法と一括で出す方法を選びます</h2><p>少数の会社なら、下の「名簿で1社ずつ」が分かりやすい方法です。会社数が多く、一括出力したい場合は、Excelを1社1行にする方法を先に検討します。</p><ol class="line-height-2"><li>担当者が1人1行の住所録をそのまま使うなら、会社名で絞って1社分ずつ出します。</li><li>一括出力用の別シートを作れるなら、会社名・担当者1・担当者2・担当者3・担当者一覧などを1社1行で用意します。</li><li>会社が同名でも別送付先なら、会社名だけでまとめず会社ID・送付先IDで区別します。</li><li>人数が多い会社は1ページに入るかを確認します。必ず1枚に収まる機能ではありません。</li></ol></section>
-<section class="method-section" id="choose-method"><h2>方法はこの順で選びます</h2>
+<p>撮影例は株式会社サンプル商事の3名です。送付状に必要な日付、差出人、同封書類の名称・部数などは、完成文書へ加えて使います。</p></section>
+<section class="method-section" id="choose-method"><h2>方法の選び方</h2>
 <div class="table-wrapper"><table class="comparison-table"><thead><tr><th>状況</th><th>先に試す方法</th></tr></thead><tbody>
 <tr><td>元の1行1人の名簿を使い、少数の会社へ送りたい</td><td><a href="#simple-start">方法1：会社で絞って名簿を完成し、見出しを加える</a></td></tr>
 <tr><td>会社ごとの印刷用データを用意できる</td><td><a href="#company-row">方法2：1行1社にして、レターで差し込む</a></td></tr>
 <tr><td>元の1行1人のデータから、会社別の改ページも一括で自動化したい</td><td><a href="#advanced">最後に検討する応用編：フィールドコード</a></td></tr>
 </tbody></table></div><p>Wordの「名簿」は人の情報を続けて並べますが、<strong>会社が変わるたびに自動で1枚へまとめる設定ではありません。</strong>会社別の区切りをどう作るかを、先に決めます。</p></section>
-<section class="method-section" id="simple-start"><h2>方法1・手順1：「名簿」を選び、担当者名簿をつなぐ</h2>
+<section class="method-section" id="guide-step-2"><h2>どの方法でも、先に確認すること</h2><ol class="line-height-2"><li>担当者が1人1行の住所録をそのまま使うなら、会社名で絞って1社分ずつ出します。</li><li>一括出力用の別シートを作れるなら、会社名・担当者1・担当者2・担当者3・担当者一覧などを1社1行で用意します。</li><li>会社が同名でも別送付先なら、会社名だけでまとめず会社ID・送付先IDで区別します。</li><li>人数が多い会社は1ページに入るかを確認します。必ず1枚に収まる機能ではありません。</li></ol></section>
+<section class="method-section" id="method-1"><h2>方法1：会社名で絞り、1社ずつ作る</h2><p>少数の会社へ送るときの方法です。元の1行1人の名簿をそのまま使います。</p></section>
+<section class="method-section" id="simple-start"><h3><span class="word-step-no">手順1</span>「名簿」を選び、担当者名簿をつなぐ</h3>
 <ol class="line-height-2"><li>Excelを「会社名」「部署」「氏名」の見出しで、1人1行にします。保存して閉じます。</li><li>Wordの白紙文書で「差し込み文書」→「差し込み印刷の開始」→<strong>「名簿」</strong>を選びます。</li><li>「宛先の選択」→「既存のリストを使用」でExcelファイルを開き、使うシートを選びます。</li></ol>
 <figure class="article-screenshot"><a aria-label="画像を拡大：Wordの差し込み印刷の開始で名簿を選ぶメニュー" href="../../image/articles/2026-11-01/directory-basic/start-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:610.00px"><img alt="Wordの差し込み印刷の開始で名簿を選ぶメニュー" decoding="async" height="650" loading="lazy" src="../../image/articles/2026-11-01/directory-basic/start-menu.jpg" width="610"></a><figcaption>担当者を続けて並べるため、ここでは「名簿」を選びます。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <p>名簿の開始から完成までを詳しく見たい場合は、<a href="article_mailmerge_directory_finish.html">名簿差し込みを完成させる手順</a>を参照してください。</p></section>
-<section class="method-section" id="simple-filter"><h2>手順2：送付先の会社だけに絞る</h2>
+<section class="method-section" id="simple-filter"><h3><span class="word-step-no">手順2</span>送付先の会社だけに絞る</h3>
 <ol class="line-height-2"><li>「アドレス帳の編集」→「フィルター」を開きます。</li><li>フィールドを<strong>「会社名」</strong>、条件を<strong>「が値と等しい」</strong>、比較対象を送付先の会社名にします。</li><li>「OK」を押し、残った人の会社名と氏名、チェックを確認します。</li><li>宛先一覧でも「OK」を押して戻ります。</li></ol>
 <figure class="article-screenshot"><a aria-label="画像を拡大：会社名が株式会社サンプル商事と等しいというフィルター設定" href="../../image/articles/2026-11-01/directory-basic/filter-company.jpg" rel="noopener" target="_blank" style="--screenshot-width:1292.00px"><img alt="会社名が株式会社サンプル商事と等しいというフィルター設定" decoding="async" height="638" loading="lazy" src="../../image/articles/2026-11-01/directory-basic/filter-company.jpg" width="1292"></a><figcaption>フィールド＝会社名、条件＝が値と等しい、比較対象＝株式会社サンプル商事。条件欄を読みやすいように拡大しています。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <figure class="article-screenshot"><a aria-label="画像を拡大：対象会社の山田太郎・佐藤花子・鈴木一郎の3名に絞られた一覧" href="../../image/articles/2026-11-01/directory-basic/recipients-company.jpg" rel="noopener" target="_blank" style="--screenshot-width:990.00px"><img alt="対象会社の山田太郎・佐藤花子・鈴木一郎の3名に絞られた一覧" decoding="async" height="350" loading="lazy" src="../../image/articles/2026-11-01/directory-basic/recipients-company.jpg" width="990"></a><figcaption>絞り込み後の宛先一覧の上部です。同じ会社の3名が残り、チェックが付いていることを確認します。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <p>会社名は名簿と同じ表記を使います。「株式会社」の有無や前後の空白で一致しない場合があります。ここでは全6名のうち、株式会社サンプル商事の3名だけを対象にしました。</p></section>
-<section class="method-section" id="simple-fields"><h2>手順3：担当者1人分の行だけ作る</h2>
+<section class="method-section" id="simple-fields"><h3><span class="word-step-no">手順3</span>担当者1人分の行だけ作る</h3>
 <ol class="line-height-2"><li>「差し込みフィールドの挿入」の▼から「部署」を入れます。</li><li>全角スペースを入れ、同じメニューから「氏名」を挿入し、「様」と入力します。</li><li>最後にEnterで改行します。会社名と送付文は、まだ本文に入れません。</li></ol>
 <figure class="article-screenshot"><a aria-label="画像を拡大：部署と氏名だけを配置した名簿の1人分のひな形" href="../../image/articles/2026-11-01/directory-basic/fields.jpg" rel="noopener" target="_blank" style="--screenshot-width:755.00px"><img alt="部署と氏名だけを配置した名簿の1人分のひな形" decoding="async" height="170" loading="lazy" src="../../image/articles/2026-11-01/directory-basic/fields.jpg" width="755"></a><figcaption>繰り返すのは担当者の行だけです。会社名・タイトル・送付文は、まだ本文に入れません。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <p>名簿では、ひな形の本文が人数分くり返されます。<strong>会社名や送付文を1回だけ載せたいので、完成後の文書に加えます。</strong>「結果のプレビュー」で1人しか出なくても正常です。</p></section>
-<section class="method-section" id="simple-finish"><h2>手順4：「個々のドキュメントの編集」で3名分を完成させる</h2>
+<section class="method-section" id="simple-finish"><h3><span class="word-step-no">手順4</span>「個々のドキュメントの編集」で3名分を完成させる</h3>
 <ol class="line-height-2"><li>「完了と差し込み」→<strong>「個々のドキュメントの編集」</strong>を選びます。</li><li>「新規文書への差し込み」で<strong>「すべて」</strong>→「OK」を押します。</li><li>新しい文書（「ディレクトリ3」など）に、選んだ会社の担当者だけが並んだことを確認します。</li></ol>
 <figure class="article-screenshot"><a aria-label="画像を拡大：完了と差し込みから個々のドキュメントの編集を選ぶ画面" href="../../image/articles/2026-11-01/directory-basic/finish-menu.jpg" rel="noopener" target="_blank" style="--screenshot-width:520.00px"><img alt="完了と差し込みから個々のドキュメントの編集を選ぶ画面" decoding="async" height="360" loading="lazy" src="../../image/articles/2026-11-01/directory-basic/finish-menu.jpg" width="520"></a><figcaption>名簿も「個々のドキュメントの編集」で完成文書に出力します。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <figure class="article-screenshot"><a aria-label="画像を拡大：新しい文書に株式会社サンプル商事の3名だけが並んだ結果" href="../../image/articles/2026-11-01/directory-basic/result-company-three.jpg" rel="noopener" target="_blank" style="--screenshot-width:755.00px"><img alt="新しい文書に株式会社サンプル商事の3名だけが並んだ結果" decoding="async" height="240" loading="lazy" src="../../image/articles/2026-11-01/directory-basic/result-company-three.jpg" width="755"></a><figcaption>差し込み後の新しい文書です。元の6名のうち、選んだ会社の3名だけになりました。この文書へ会社名と送付文を加えます。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <p>絞り込み後の「すべて」は、全社の6名ではなく、いま対象になっている3名です。「現在のレコード」を選ぶと1名しか出ません。</p></section>
-<section class="method-section" id="simple-heading"><h2>手順5：新しい文書に会社名と送付文を1回だけ加える</h2>
+<section class="method-section" id="simple-heading"><h3><span class="word-step-no">手順5</span>新しい文書に会社名と送付文を1回だけ加える</h3>
 <ol class="line-height-2"><li><strong>差し込み後の新しい文書</strong>の先頭へ移動します。</li><li>会社名、「書類送付のご案内」、説明文を普通の文字で入力し、それぞれEnterで改行します。</li><li>日付・差出人・同封書類の名称と部数などを加え、人数・宛名・ページ数を確認します。</li><li>「送付状_サンプル商事」など会社名入りの別名で保存し、この文書から印刷します。</li></ol>
 <p>撮影例では「株式会社サンプル商事」「書類送付のご案内」「下記の皆様へ書類をお送りします。」の3行を加えました。会社名の行に敬称は付けず、担当者名に「様」を付けています。</p>
 <div class="xdemo-note-info"><strong>次の会社を作るときは、ひな形へ戻ります。</strong><br/>宛先のフィルターで比較対象の会社名を変更し、対象者を確認して「完了と差し込み」をもう一度実行します。前の会社の完成文書で名前だけ入れ替える作り方は、差し込みの再実行にはなりません。</div>
 <p>人数や文量が多いと、1社でも複数ページになります。必ず1枚に収まる機能ではないため、用紙・余白・文字サイズを見て調整します。</p></section>
-<section class="method-section" id="company-row"><h2>方法2：会社を1行にまとめれば、レターで会社ごとに出せます</h2>
+<section class="method-section" id="company-row"><h2>方法2：会社を1行にまとめ、レターで一括で出す</h2>
 <p>会社数が多く、送付文も毎回同じなら、印刷用の別シートを<strong>1行1社</strong>にします。Wordが扱う1件を「1人」から「1社」に変える考え方です。</p>
 <div class="table-wrapper"><table class="comparison-table"><caption>会社ごとの印刷用シートの例（元の担当者名簿は残す）</caption><thead><tr><th>会社名</th><th>担当者一覧</th></tr></thead><tbody>
 <tr><td>株式会社サンプル商事</td><td>営業部 山田 太郎 様<br/>営業部 佐藤 花子 様<br/>総務部 鈴木 一郎 様</td></tr>
 <tr><td>テスト工業株式会社</td><td>経理部 田中 大地 様<br/>経理部 高橋 美咲 様</td></tr>
 <tr><td>みどり物産株式会社</td><td>総務部 伊藤 健 様</td></tr>
 </tbody></table></div>
-<ol class="line-height-2"><li>Excelで会社ごとに1行を作り、「担当者一覧」を1セルにまとめます。まずは名前を「／」などで区切った文字列にすれば、複雑な式なしで用意できます。</li><li>Wordでは「差し込み印刷の開始」→<strong>「レター」</strong>を選び、その印刷用シートをつなぎます。</li><li>1社分の送付文を作り、«会社名»と«担当者一覧»を「差し込みフィールドの挿入」から入れます。</li><li>「結果のプレビュー」で担当者の抜けと折り返しを確認し、「完了と差し込み」→「個々のドキュメントの編集」→「すべて」で完成文書を作ります。</li></ol>
-<p>担当者を縦に並べたい場合は、Excelのセル内でAlt+Enterを使って改行し、Word側の出力で改行と行間を確認します。長い一覧は1ページに収まらないことがあります。この方法の表はデータの構成例で、今回実操作で撮影したのは方法1です。</p><section class="method-section" id="guide-step-10"><h2>方法2の具体的な操作：会社1行の表からレターで出す</h2><ol class="line-height-2"><li>元の担当者名簿を残し、「送付状用」という別シートを作ります。</li><li>見出しを「会社ID」「会社名」「担当者一覧」にし、1社を1行に入力します。</li><li>担当者一覧の同じセルで改行したい位置は、ExcelでAlt＋Enterを押します。例：「営業部 山田 太郎 様」の次の行へ「総務部 鈴木 一郎 様」を入力します。</li><li>Wordの新しい文書で「レター」を開始し、「送付状用$」へ接続します。</li><li>会社名と担当者一覧をメニューから挿入し、送付文・日付・差出人を普通の文字で作ります。</li><li>「結果のプレビュー」で、担当者一覧の改行と長さを確認します。</li><li>「完了と差し込み」→「個々のドキュメントの編集」→「すべて」で全社分を出し、会社数と各社の担当者を照合します。</li></ol><p>担当者一覧は印刷用にまとめた値です。元の1人1行の名簿は検索・更新用として残します。</p></section></section>
-<section class="method-section" id="advanced"><h2>応用編：ほかの方法で足りないときだけフィールドコードを使う</h2><p>元の1行1人のデータを変えず、多数の会社の見出しと改ページまで一括で自動化したい場合の方法です。まず上の2つの方法で運用できるか検討してください。以下は従来の記事に掲載していた、コードを使う手順です。</p><details class="mailmerge-advanced"><summary>応用・難易度高：フィールドコードによる会社別の自動改ページ手順を開く</summary><div class="mailmerge-advanced-content"><section class="method-section">
-<h2>全体の流れ</h2>
+<p>担当者を縦に並べたい場合は、Excelのセル内でAlt+Enterを使って改行し、Word側の出力で改行と行間を確認します。長い一覧は1ページに収まらないことがあります。この方法の表はデータの構成例で、今回実操作で撮影したのは方法1です。</p><section class="method-section" id="guide-step-10"><p>「担当者一覧」は、まず名前を「／」などで区切った文字列にすれば、複雑な式なしで用意できます。</p><h3>具体的な操作</h3><ol class="line-height-2"><li>元の担当者名簿を残し、「送付状用」という別シートを作ります。</li><li>見出しを「会社ID」「会社名」「担当者一覧」にし、1社を1行に入力します。</li><li>担当者一覧の同じセルで改行したい位置は、ExcelでAlt＋Enterを押します。例：「営業部 山田 太郎 様」の次の行へ「総務部 鈴木 一郎 様」を入力します。</li><li>Wordの新しい文書で「レター」を開始し、「送付状用$」へ接続します。</li><li>会社名と担当者一覧をメニューから挿入し、送付文・日付・差出人を普通の文字で作ります。</li><li>「結果のプレビュー」で、担当者一覧の改行と長さを確認します。</li><li>「完了と差し込み」→「個々のドキュメントの編集」→「すべて」で全社分を出し、会社数と各社の担当者を照合します。</li></ol><p>担当者一覧は印刷用にまとめた値です。元の1人1行の名簿は検索・更新用として残します。</p></section></section>
+<section class="method-section" id="advanced"><h2>応用編：ほかの方法で足りないときだけフィールドコードを使う</h2><p>元の1行1人のデータを変えず、多数の会社の見出しと改ページまで一括で自動化したい場合の方法です。まず上の2つの方法で運用できるか検討してください。</p><details class="mailmerge-advanced" id="advanced-1"><summary>応用・難易度高：フィールドコードによる会社別の自動改ページ手順を開く</summary><div class="mailmerge-advanced-content"><section class="method-section">
+<h3>全体の流れ</h3>
 <ol class="line-height-2">
 <li><a href="#prepare">Excelの名簿を用意する</a></li>
 <li><a href="#step1">Wordで「名簿」の差し込みを始める</a></li>
@@ -96,7 +97,7 @@
 <p>手順5までは、ボタンとメニューを順に押すだけです。手順7だけはキーボードで入力する部分があるので、押すキーを1つずつ表にしています。</p>
 </section>
 <section class="method-section" id="prepare">
-<h2>準備：Excelの名簿を用意する</h2>
+<h3>準備：Excelの名簿を用意する</h3>
 <figure class="article-screenshot"><a aria-label="画像を拡大：会社名・部署・氏名の3列で6名分の担当者名簿を作ったExcelの画面" href="../../image/articles/2026-11-01/word-cover-letter-excel-list.jpg" rel="noopener" target="_blank" style="--screenshot-width:871.00px"><img alt="会社名・部署・氏名の3列で6名分の担当者名簿を作ったExcelの画面" decoding="async" height="353" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-excel-list.jpg" width="871"></a><figcaption>撮影に使った名簿です（シート名「担当者」）。1行目が見出し、2行目から1人1行。3社・6名の架空のデータです。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <ol class="line-height-2">
 <li>1行目に見出し（会社名・部署・氏名）、2行目から1人1行で入力します。空白行は入れません。</li>
@@ -106,7 +107,7 @@
 </ol>
 </section>
 <section class="method-section" id="step1">
-<h2>手順1：Wordで「名簿」の差し込みを始める</h2>
+<h3><span class="word-step-no">手順1</span>Wordで「名簿」の差し込みを始める</h3>
 <ol class="line-height-2">
 <li>Wordを起動して<strong>白紙の文書</strong>を開きます。</li>
 <li>「<strong>差し込み文書</strong>」タブ →「<strong>差し込み印刷の開始</strong>」→「<strong>名簿(D)</strong>」を選びます。</li>
@@ -116,7 +117,7 @@
 レターは1人ごとに新しいページを作ります。名簿は、文書の中身を1人分ずつ<strong>続けて</strong>差し込み、ページを分けません。どこで改ページするかを、こちらで決められるのは名簿のほうです。</div>
 </section>
 <section class="method-section" id="step2">
-<h2>手順2：Excelファイルとシートを指定する</h2>
+<h3><span class="word-step-no">手順2</span>Excelファイルとシートを指定する</h3>
 <ol class="line-height-2">
 <li>「<strong>宛先の選択</strong>」→「<strong>既存のリストを使用(E)</strong>」を選びます。</li>
 </ol>
@@ -128,7 +129,7 @@
 <figure class="article-screenshot"><a aria-label="画像を拡大：テーブルの選択で担当者シートを選んだ画面" href="../../image/articles/2026-11-01/word-cover-letter-select-table.jpg" rel="noopener" target="_blank" style="--screenshot-width:987.00px"><img alt="テーブルの選択で担当者シートを選んだ画面" decoding="async" height="483" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-select-table.jpg" width="987"></a><figcaption>シート名の後ろに「$」が付いて表示されます。シートが複数ある場合は、名簿のシートを選びます。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 </section>
 <section class="method-section" id="step3">
-<h2>手順3：宛先の一覧を確認する</h2>
+<h3><span class="word-step-no">手順3</span>宛先の一覧を確認する</h3>
 <p>「<strong>アドレス帳の編集</strong>」を押すと、「差し込み印刷の宛先」が開きます。Excelの名簿が読み込まれているかを確認します。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：差し込み印刷の宛先に6名の担当者が会社名順に並んだ画面" href="../../image/articles/2026-11-01/word-cover-letter-recipients.jpg" rel="noopener" target="_blank" style="--screenshot-width:1314.05px"><img alt="差し込み印刷の宛先に6名の担当者が会社名順に並んだ画面" decoding="async" height="767" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-recipients.jpg" width="1362"></a><figcaption>6名すべてにチェックが入り、会社名順に並んでいます。列の順番はExcelと違って表示されることがありますが、問題ありません。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <ul class="line-height-2">
@@ -138,7 +139,7 @@
 </ul>
 </section>
 <section class="method-section" id="step4">
-<h2>手順4：文面を入力し、差し込みフィールドを入れる</h2>
+<h3><span class="word-step-no">手順4</span>文面を入力し、差し込みフィールドを入れる</h3>
 <p>文書に、次の4行を作ります。«　» の部分は、手で入力せず「<strong>差し込みフィールドの挿入</strong>」から入れます。</p>
 <div class="table-wrapper"><table class="comparison-table"><caption>入力する内容</caption>
 <thead><tr><th>行</th><th>内容</th><th>入れ方</th></tr></thead>
@@ -153,7 +154,7 @@
 <figure class="article-screenshot"><a aria-label="画像を拡大：会社名 御中、本文2行、部署 氏名 様の4行と最後の空行を入力した画面" href="../../image/articles/2026-11-01/word-cover-letter-fields-placed.jpg" rel="noopener" target="_blank" style="--screenshot-width:995.00px"><img alt="会社名 御中、本文2行、部署 氏名 様の4行と最後の空行を入力した画面" decoding="async" height="363" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-fields-placed.jpg" width="995"></a><figcaption>入力が終わった状態です（「ホーム」タブの編集記号の表示をオンにしています）。«会社名» などが差し込みフィールドです。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 </section>
 <section class="method-section" id="step5">
-<h2>手順5：結果のプレビューで確認する</h2>
+<h3><span class="word-step-no">手順5</span>結果のプレビューで確認する</h3>
 <p>「差し込み文書」タブの「<strong>結果のプレビュー</strong>」を押すと、«会社名» などが名簿の1人目の値に変わります。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：結果のプレビューで1人目の株式会社サンプル商事 営業部 山田太郎様が表示された画面" href="../../image/articles/2026-11-01/word-cover-letter-preview-1.jpg" rel="noopener" target="_blank" style="--screenshot-width:995.00px"><img alt="結果のプレビューで1人目の株式会社サンプル商事 営業部 山田太郎様が表示された画面" decoding="async" height="363" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-preview-1.jpg" width="995"></a><figcaption>1人目（株式会社サンプル商事・営業部・山田 太郎）が表示されました。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <ul class="line-height-2">
@@ -163,22 +164,22 @@
 </ul>
 </section>
 <section class="method-section" id="step6">
-<h2>手順6：いったん差し込んで、何が足りないか見る</h2>
+<h3><span class="word-step-no">手順6</span>いったん差し込んで、何が足りないか見る</h3>
 <p>この状態で「<strong>完了と差し込み</strong>」→「<strong>個々のドキュメントの編集</strong>」→「すべて」→「OK」を押すと、次のような新しい文書ができます。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：見出しの3行が担当者1人ごとにくり返された差し込み結果" href="../../image/articles/2026-11-01/word-cover-letter-before-repeat.jpg" rel="noopener" target="_blank" style="--screenshot-width:694.92px"><img alt="見出しの3行が担当者1人ごとにくり返された差し込み結果" decoding="async" height="985" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-before-repeat.jpg" width="925"></a><figcaption>手順4のままで差し込んだ結果です。「株式会社サンプル商事 御中」と本文が、担当者1人ごとにくり返されています。改ページもありません。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <p>欲しいのは「会社名と本文は<strong>会社が変わったときだけ</strong>出し、その前で改ページする」形です。これを手順7で設定します。確認したら、この新しい文書は保存せずに閉じます。</p>
 </section>
 <section class="method-section" id="step7">
-<h2>手順7：会社が変わったときだけ見出しを出す設定</h2>
+<h3><span class="word-step-no">手順7</span>会社が変わったときだけ見出しを出す設定</h3>
 <p>ここからは<strong>フィールドコード</strong>を使います。ボタンにはない設定なので、キーボードで入力します。押すキーを順番に表にしたので、その通りに進めてください。</p>
-<h3>7-1. フィールドコードを表示する</h3>
+<h4>7-1. フィールドコードを表示する</h4>
 <ol class="line-height-2">
 <li>「結果のプレビュー」がオフになっていることを確認します。</li>
 <li><span class="kbd-btn">Alt</span>+<span class="kbd-btn">F9</span> を押します。«会社名» が <code>{ MERGEFIELD 会社名 }</code> の形に変わります。もう一度押すと元に戻ります。</li>
 <li>「<strong>表示</strong>」タブ →「<strong>下書き</strong>」にすると、改ページが点線1本で表示され、作業しやすくなります。</li>
 </ol>
 <figure class="article-screenshot"><a aria-label="画像を拡大：Alt+F9でフィールドコードを表示した状態の文書" href="../../image/articles/2026-11-01/word-cover-letter-codes-basic.jpg" rel="noopener" target="_blank" style="--screenshot-width:995.00px"><img alt="Alt+F9でフィールドコードを表示した状態の文書" decoding="async" height="363" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-codes-basic.jpg" width="995"></a><figcaption>Alt+F9でコードを表示した状態です。「{ MERGEFIELD 会社名 }」のように表示されます。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<h3>7-2. フィールド用のかっこ「{ }」の入れ方</h3>
+<h4>7-2. フィールド用のかっこ「{ }」の入れ方</h4>
 <p>フィールドコードの「{ }」は、キーボードの波かっこでは動きません。<strong><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押すと入る、灰色の「{ }」</strong>を使います。</p>
 <figure class="article-screenshot"><a aria-label="画像を拡大：Ctrl+F9で空のフィールドのかっこが入った画面" href="../../image/articles/2026-11-01/word-cover-letter-ctrl-f9.jpg" rel="noopener" target="_blank" style="--screenshot-width:995.00px"><img alt="Ctrl+F9で空のフィールドのかっこが入った画面" decoding="async" height="363" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-ctrl-f9.jpg" width="995"></a><figcaption>Ctrl+F9を押すと、灰色の「{ }」が入り、カーソルがその中に入ります。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <ul class="line-height-2">
@@ -186,15 +187,15 @@
 <li>「"」は<strong>半角</strong>で入力します。<code>=</code>、<code>&lt;&gt;</code>、<code>&gt;</code> の前後には半角スペースを入れます。</li>
 <li>間違えたら <span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">Z</span> で戻せます。</li>
 </ul>
-<h3>7-3. 見出しの3行を「会社が変わったときだけ」にする</h3>
+<h4>7-3. 見出しの3行を「会社が変わったときだけ」にする</h4>
 <div class="table-wrapper"><table class="comparison-table"><caption>見出しの3行をIFで囲む操作</caption><thead><tr><th>順</th><th>操作</th><th>画面の状態</th></tr></thead><tbody><tr><td style="white-space:nowrap">1</td><td>見出しの3行（«会社名» 御中 〜 お送りします。）を、行の左側をドラッグして<strong>3行まとめて選択</strong></td><td>3行が反転表示になる</td></tr><tr><td style="white-space:nowrap">2</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押す</td><td>3行全体が「{{ }}」で囲まれる（下の画面）</td></tr><tr><td style="white-space:nowrap">3</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">Home</span> で文書の先頭へ移動し、<span class="kbd-btn">→</span> を1回押す</td><td>カーソルが外側の「{」のすぐ後ろに入る</td></tr><tr><td style="white-space:nowrap">4</td><td><code>IF </code> と入力（IFの後ろに半角スペース）</td><td></td></tr><tr><td style="white-space:nowrap">5</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>MERGEFIELD 会社名</code> と入力し、<span class="kbd-btn">→</span> <span class="kbd-btn">→</span></td><td>内側の「{ }」から外に出る</td></tr><tr><td style="white-space:nowrap">6</td><td><code> &lt;&gt; "</code> と入力（前後に半角スペース、最後は半角の「"」）</td><td></td></tr><tr><td style="white-space:nowrap">7</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>REF 前社</code> と入力し、<span class="kbd-btn">→</span> <span class="kbd-btn">→</span></td><td></td></tr><tr><td style="white-space:nowrap">8</td><td><code>" "</code> と入力</td><td>ここまでで「前社と違うとき、次の" "の中を表示する」という形になる</td></tr><tr><td style="white-space:nowrap">9</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>IF </code> と入力、もう一度 <span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>MERGESEQ</code> と入力し、<span class="kbd-btn">→</span> <span class="kbd-btn">→</span></td><td></td></tr><tr><td style="white-space:nowrap">10</td><td><code> &gt; 1 "</code> と入力</td><td></td></tr><tr><td style="white-space:nowrap">11</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">Enter</span> を押す</td><td>「改ページ」の線が入る（2社目以降の前だけ改ページするため）</td></tr><tr><td style="white-space:nowrap">12</td><td><code>" ""</code> と入力して <span class="kbd-btn">→</span> <span class="kbd-btn">→</span></td><td>改ページ用のIFが閉じる。この後ろに元の«会社名» 御中が続いている</td></tr><tr><td style="white-space:nowrap">13</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">End</span> で文書の最後へ移動し、<span class="kbd-btn">↑</span> で«部署»の行へ移動して <span class="kbd-btn">Home</span></td><td>カーソルが行頭（外側の「}」の前）に来る</td></tr><tr><td style="white-space:nowrap">14</td><td><code>" ""</code> と入力</td><td>外側のIFが閉じる（違わないときは何も表示しない、の意味）</td></tr></tbody></table></div>
 <figure class="article-screenshot"><a aria-label="画像を拡大：見出しの3行を選択してCtrl+F9を押し、3行全体が波かっこで囲まれた画面" href="../../image/articles/2026-11-01/word-cover-letter-wrap-field.jpg" rel="noopener" target="_blank" style="--screenshot-width:1131.00px"><img alt="見出しの3行を選択してCtrl+F9を押し、3行全体が波かっこで囲まれた画面" decoding="async" height="207" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-wrap-field.jpg" width="1131"></a><figcaption>表の2番目の状態です。選んでいた3行全体が「{」と「}」で囲まれ、閉じかっこは4行目の先頭に来ています。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
-<h3>7-4. 名前の行で「今の会社名」を覚える</h3>
+<h4>7-4. 名前の行で「今の会社名」を覚える</h4>
 <div class="table-wrapper"><table class="comparison-table"><caption>«部署» «氏名» 様 の後ろに入れる操作</caption><thead><tr><th>順</th><th>操作</th><th>画面の状態</th></tr></thead><tbody><tr><td style="white-space:nowrap">1</td><td>«部署»の行で <span class="kbd-btn">End</span> を押し、「様」の後ろへ移動</td><td></td></tr><tr><td style="white-space:nowrap">2</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>SET 前社 "</code> と入力</td><td></td></tr><tr><td style="white-space:nowrap">3</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>MERGEFIELD 会社名</code> と入力し、<span class="kbd-btn">→</span> <span class="kbd-btn">→</span></td><td></td></tr><tr><td style="white-space:nowrap">4</td><td><code>"</code> と入力</td><td>今の人の会社名を「前社」として覚える形になる</td></tr></tbody></table></div>
-<h3>7-5. 文書の先頭に、1人目のための準備を入れる</h3>
+<h4>7-5. 文書の先頭に、1人目のための準備を入れる</h4>
 <div class="table-wrapper"><table class="comparison-table"><caption>文書の先頭に入れる操作</caption><thead><tr><th>順</th><th>操作</th><th>画面の状態</th></tr></thead><tbody><tr><td style="white-space:nowrap">1</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">Home</span> で文書の先頭（外側の「{」の前）へ移動</td><td></td></tr><tr><td style="white-space:nowrap">2</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>IF </code> と入力、<span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>MERGESEQ</code> と入力し、<span class="kbd-btn">→</span> <span class="kbd-btn">→</span></td><td></td></tr><tr><td style="white-space:nowrap">3</td><td><code> = 1 "</code> と入力</td><td></td></tr><tr><td style="white-space:nowrap">4</td><td><span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> を押して <code>SET 前社 "（なし）"</code> と入力し、<span class="kbd-btn">→</span> <span class="kbd-btn">→</span></td><td>「（なし）」は全角でかまいません</td></tr><tr><td style="white-space:nowrap">5</td><td><code>" ""</code> と入力</td><td>1人目のときだけ「前社」を空の値で用意する形になる</td></tr></tbody></table></div>
 <p>これがないと、1人目のときに「前社」がまだ決まっていないため、差し込みで<strong>「レコード 1 でフィールドの計算エラー」</strong>が出ました。</p>
-<h3>7-6. 完成したフィールドコード</h3>
+<h4>7-6. 完成したフィールドコード</h4>
 <figure class="article-screenshot"><a aria-label="画像を拡大：送付状の完成したフィールドコードを下書き表示で表示した画面" href="../../image/articles/2026-11-01/word-cover-letter-fieldcodes.jpg" rel="noopener" target="_blank" style="--screenshot-width:1518.00px"><img alt="送付状の完成したフィールドコードを下書き表示で表示した画面" decoding="async" height="375" loading="lazy" src="../../image/articles/2026-11-01/word-cover-letter-fieldcodes.jpg" width="1518"></a><figcaption>下書き表示でAlt+F9を押した状態です。1段目の途中から改ページの点線までが「会社が変わったとき」の部分、「様」の後ろの { SET 前社 … } が会社名を覚える部分です。 <span class="screenshot-enlarge">（画像をクリックで拡大）</span></figcaption></figure>
 <p>文字で書くと次の形です（「［改ページ］」は <span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">Enter</span> で入れた改ページ、行の終わりは <span class="kbd-btn">Enter</span>）。</p>
 <pre class="code-block" data-lang="word"><code>{ IF { MERGESEQ } = 1 "{ SET 前社 "（なし）" }" "" }{ IF { MERGEFIELD 会社名 } &lt;&gt; "{ REF 前社 }" "{ IF { MERGESEQ } &gt; 1 "［改ページ］" "" }{ MERGEFIELD 会社名 } 御中
@@ -214,7 +215,7 @@
 <p>入力が終わったら <span class="kbd-btn">Alt</span>+<span class="kbd-btn">F9</span> でコードの表示を戻し、「表示」タブ →「印刷レイアウト」に戻します。作った文書は名前を付けて保存しておくと、次回は名簿を差し替えるだけで使えます。</p>
 </section>
 <section class="method-section" id="step8">
-<h2>手順8：新しい文書に差し込んで確認・印刷する</h2>
+<h3><span class="word-step-no">手順8</span>新しい文書に差し込んで確認・印刷する</h3>
 <ol class="line-height-2">
 <li>「<strong>完了と差し込み</strong>」→「<strong>個々のドキュメントの編集</strong>」を選びます。</li>
 </ol>
@@ -234,7 +235,7 @@
 <p class="verify-note">撮影した例（3社・6名）では、エラーなく3ページにまとまりました。紙への印刷は行っていません。担当者が多く1ページに入りきらない会社は、次のページにはみ出します。環境により結果が異なる場合があります。</p>
 </section>
 <section class="method-section">
-<h2>応用：送付状に入れたいものを足す</h2>
+<h3>応用：送付状に入れたいものを足す</h3>
 <ul class="line-height-2">
 <li><strong>日付・差出人・あいさつ文：</strong>見出しのIF（7-3で作った外側の「{ }」）の中、«会社名» 御中 の前後に書きます。外に書くと、担当者の人数分くり返されます。</li>
 <li><strong>担当者の前に「・」を付ける：</strong>«部署»の行の先頭に入力します。</li>
@@ -242,7 +243,7 @@
 </ul>
 </section>
 <section class="method-section">
-<h2>よくあるつまずき</h2>
+<h3>よくあるつまずき</h3>
 <div class="table-wrapper"><table class="comparison-table"><caption>症状と確認すること</caption>
 <thead><tr><th>症状</th><th>確認すること</th></tr></thead>
 <tbody>
@@ -256,11 +257,11 @@
 <tr><td>コードがそのまま印刷される</td><td><span class="kbd-btn">Alt</span>+<span class="kbd-btn">F9</span> でコードの表示を戻したか。「{ }」を <span class="kbd-btn">Ctrl</span>+<span class="kbd-btn">F9</span> で入れたか。</td></tr>
 </tbody></table></div>
 </section>
-</div></details></section><section class="method-section" id="guide-step-24"><h2>確認した環境・参考</h2><p>Windows版Word（Microsoft 365）で架空の3社・6名のデータを使って確認しました。本文の画面は150％表示で撮影し、操作箇所を切り出しています。小さいメニュー・ダイアログは拡大しています。紙への印刷は行っていません。</p><p>操作の参考：<a href="https://support.microsoft.com/ja-jp/word/create-a-directory-of-names-addresses-and-other-information" rel="noopener" target="_blank">Microsoft公式「名前、アドレス、その他の情報の名簿を作成する」</a>。全員分を新しい文書に出力した後、1回だけ必要な見出しなどを追加する流れを確認できます。</p></section><aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>基本の流れを確認する</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p>通常操作で完成できる方法を先に紹介しています。コードを使う方法は、必要な場合に応用編を開いて参照してください。</p></aside><section class="related-articles-section"><h2>関連記事</h2><ul><li><a href="article_mailmerge_directory_finish.html">名簿差し込みを完成させる手順：プレビューと完成文書の違い</a></li><li><a href="article_mailmerge_letter_vs_directory.html">レターと名簿の違いと使い分け</a></li><li><a href="article_mailmerge_filter_two_patterns.html">必要な人だけ印刷する2つの方法</a></li></ul></section>
+</div></details></section><section class="method-section" id="guide-step-24"><h2>確認した環境・参考</h2><p>Windows版Word（Microsoft 365）で架空の3社・6名のデータを使って確認しました。本文の画面は150％表示で撮影し、操作箇所を切り出しています。小さいメニュー・ダイアログは拡大しています。紙への印刷は行っていません。</p><p>操作の参考：<a href="https://support.microsoft.com/ja-jp/word/create-a-directory-of-names-addresses-and-other-information" rel="noopener" target="_blank">Microsoft公式「名前、アドレス、その他の情報の名簿を作成する」</a>。全員分を新しい文書に出力した後、1回だけ必要な見出しなどを追加する流れを確認できます。</p></section><aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>差し込み印刷の基本の流れ</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="related-articles-section"><h2>関連記事</h2><ul><li><a href="article_mailmerge_directory_finish.html">名簿差し込みを完成させる手順：プレビューと完成文書の違い</a></li><li><a href="article_mailmerge_letter_vs_directory.html">レターと名簿の違いと使い分け</a></li><li><a href="article_mailmerge_filter_two_patterns.html">必要な人だけ印刷する2つの方法</a></li></ul></section>
 </article>
 </main>
 <footer class="site-footer"><div aria-label="運営情報と検証方針" class="site-footer-trust"><p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p><p><strong>想定する環境:</strong> Windows版 Word / Excel（Microsoft 365）で撮影・確認しています。画面の名称や配置は、お使いの版によって異なる場合があります。</p><p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。画面の名前や位置は、バージョンや更新状況によって変わることがあります。</p></div><div class="footer-contact-wrap"><a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a></div><p>© Excel × No VBA Lab — コンテンツは随時追加中です</p><p class="site-footer-legal-links"><a href="../../about.html">運営者情報</a><span>|</span><a href="../../disclaimer.html">免責事項</a><span>|</span><a href="../../privacy.html">プライバシーポリシー</a></p></footer>
 <script src="../../script.js?v=20261103"></script>
-<script src="word-images.js?v=20261102-images" defer></script>
+<script src="word-images.js?v=20261103" defer></script>
 </body>
 </html>
