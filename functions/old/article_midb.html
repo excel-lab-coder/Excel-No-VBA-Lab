@@ -32,7 +32,7 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "datePublished": "2026-05-03",
-  "dateModified": "2026-11-01",
+  "dateModified": "2026-11-04",
   "headline": "MID / MIDB関数 完全ガイド",
   "author": {
     "@type": "Person",
@@ -66,6 +66,8 @@
 }</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 </head>
 <body class="article-layout">
 <div class="reading-progress" aria-hidden="true"></div>
@@ -91,7 +93,7 @@
 <div class="article-header">
 <div class="article-meta">
 <span class="badge badge-all">既存環境向け</span>
-<span class="article-date">更新日: 2026-11-01</span>
+<span class="article-date">更新日: 2026-11-04</span>
 </div>
 <h1 class="article-title">MID / MIDB 関数 完全ガイド &horbar; 「文字数」と「バイト数」で文字列を自在に抽出する</h1>
 </div>
@@ -122,7 +124,7 @@ Microsoftは現在、<a href="https://support.microsoft.com/en-us/excel/function
 <section class="goal-section" id="diff">
 <h2><span class="section-num">1</span> MID と MIDB の違い</h2>
 <p>文字列の「途中」から指定した分だけテキストを抜き出す関数です。Excelには文字をカウントする基準が2つあります。</p>
-<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="compare-table"><caption class="sr-only">データテーブル</caption>
 <tr>
 <th scope="col">関数</th>
 <th scope="col">カウント基準</th>
@@ -156,7 +158,7 @@ Microsoftは現在、<a href="https://support.microsoft.com/en-us/excel/function
 </div>
 <h3>具体例</h3>
 <p>対象文字列：<code>ABあいう123</code></p>
-<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-head">文字</td><td>A</td><td>B</td><td class="xd-target">あ</td><td class="xd-target">い</td><td>う</td><td>1</td><td>2</td><td>3</td></tr>
 <tr><td class="xd-head">何文字目</td><td>1</td><td>2</td><td class="xd-target">3</td><td class="xd-target">4</td><td>5</td><td>6</td><td>7</td><td>8</td></tr>
 </table></div>
@@ -177,14 +179,14 @@ Microsoftは現在、<a href="https://support.microsoft.com/en-us/excel/function
 <span class="code-line">=MIDB(文字列, 開始バイト位置, バイト数)</span>
 </div>
 <h3>バイト数の数え方</h3>
-<div class="table-wrapper"><table class="byte-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="byte-table"><caption class="sr-only">データテーブル</caption>
 <tr><th scope="col">文字種別</th><th scope="col">例</th><th scope="col">バイト数</th></tr>
 <tr><td>半角英数・半角カナ・半角スペース</td><td class="half">A, 1, ｱ</td><td class="half">1バイト</td></tr>
 <tr><td>全角ひらがな・漢字・全角英数</td><td class="full">あ, 漢, Ａ</td><td class="full">2バイト</td></tr>
 </table></div>
 <h3>具体例</h3>
 <p>対象文字列：<code>ABあいう123</code></p>
-<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-head">文字</td><td class="xd-target">A</td><td class="xd-target">B</td><td>あ</td><td>い</td><td>う</td><td>1</td><td>2</td><td>3</td></tr>
 <tr><td class="xd-head">バイト位置</td><td class="xd-target">1</td><td class="xd-target">2</td><td>3-4</td><td>5-6</td><td>7-8</td><td>9</td><td>10</td><td>11</td></tr>
 </table></div>
@@ -221,7 +223,7 @@ Microsoftは現在、<a href="https://support.microsoft.com/en-us/excel/function
 <section class="method-section" id="family">
 <h2><span class="section-num">5</span> 関連関数ファミリー（LEFT/RIGHT/LEN のB付き）</h2>
 <p>MID / MIDB と同様に、LEFT / RIGHT / LEN にも「B付き」のバイト版があります。既存のDBCS互換環境で固定長データを扱う場合に、これらを組み合わせることがあります。</p>
-<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="compare-table"><caption class="sr-only">データテーブル</caption>
 <tr>
 <th scope="col">文字数ベース</th>
 <th scope="col">バイト数ベース</th>
@@ -275,7 +277,7 @@ CP932／Shift-JIS互換で「対象の全角文字は2バイト、半角文字�
 <h2><span class="section-num">7</span> レイアウト定義書の読み方</h2>
 <p>固定長データを安全に分割するには「レイアウト定義書（フィールド仕様書）」でバイト位置とバイト数を確認します。文字コードと取り込み条件が定義書の前提を保っている場合に、その位置と長さを MIDB の引数として使えます。</p>
 <h3>定義書の例</h3>
-<div class="table-wrapper"><table class="layout-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="layout-table"><caption class="sr-only">データテーブル</caption>
 <tr><th scope="col">項目名</th><th scope="col">開始バイト</th><th scope="col">バイト数</th><th scope="col">型</th><th scope="col">備考</th></tr>
 <tr><td class="lt-field">従業員ID</td><td class="lt-byte">1</td><td class="lt-byte">6</td><td>半角英数</td><td></td></tr>
 <tr><td class="lt-field">氏名</td><td class="lt-byte">7</td><td class="lt-byte">16</td><td>混在</td><td>半角カナまたは全角。不足分はスペース埋め</td></tr>
@@ -356,7 +358,7 @@ CP932／Shift-JIS互換で「対象の全角文字は2バイト、半角文字�
 <p class="code-comment">FINDを2回ネストして「2番目のハイフン」の位置を特定。例："ABC-DEF-GHI" &rarr; "GHI"</p>
 <div class="xdemo-note-good">
 <strong>✅ TEXTAFTER / TEXTBEFORE が使えるなら</strong><br>
-          上記のような MID+FIND の組み合わせは、TEXTAFTER / TEXTBEFORE 関数でもっと簡潔に書けます。詳しくは<a href="#vs-new">セクション11</a>で比較しています。
+          上記のような MID+FIND の組み合わせは、TEXTAFTER / TEXTBEFORE 関数（Excel 2024 / Microsoft 365）でもっと簡潔に書けます。詳しくは<a href="#vs-new">セクション11</a>で比較しています。
         </div>
 </section>
 <!-- ===== 10. 実務パターン集 ===== -->
@@ -426,8 +428,8 @@ CP932／Shift-JIS互換で「対象の全角文字は2バイト、半角文字�
 <!-- ===== 11. TEXTBEFORE/TEXTAFTER ===== -->
 <section class="method-section" id="vs-new">
 <h2><span class="section-num">11</span> TEXTBEFORE / TEXTAFTER との比較</h2>
-<p>区切り文字で文字列を分割する用途では、MID+FIND の組み合わせよりも TEXTBEFORE / TEXTAFTER のほうが圧倒的に簡潔です。</p>
-<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<p>区切り文字で文字列を分割する用途では、MID+FIND の組み合わせよりも TEXTBEFORE / TEXTAFTER（Excel 2024 / Microsoft 365）のほうが簡潔です。</p>
+<div class="table-wrapper"><table class="compare-table"><caption class="sr-only">データテーブル</caption>
 <tr>
 <th scope="col">やりたいこと</th>
 <th scope="col">MID + FIND</th>
@@ -457,7 +459,7 @@ CP932／Shift-JIS互換で「対象の全角文字は2バイト、半角文字�
 <!-- ===== 12. まとめ ===== -->
 <section class="goal-section" id="summary">
 <h2><span class="section-num">12</span> まとめ</h2>
-<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="compare-table"><caption class="sr-only">データテーブル</caption>
 <tr><th scope="col">場面</th><th scope="col">方法の例</th></tr>
 <tr><td>固定フォーマット（半角のみ）の切り出し</td><td class="good">MID</td></tr>
 <tr><td>区切り文字での分割</td><td class="good">MID + FIND（または TEXTAFTER/TEXTBEFORE）</td></tr>
@@ -477,10 +479,10 @@ CP932／Shift-JIS互換で「対象の全角文字は2バイト、半角文字�
 <section class="method-section">
 <h2><span class="icon">🔗</span> 関連記事</h2>
 <ul class="line-height-2">
-<li><a href="../latest/article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
-<li><a href="../latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
-<li><a href="../latest/article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
-<li><a href="../latest/article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+<li><a href="../latest/article_textbefore.html">TEXTBEFORE / TEXTAFTER関数</a></li>
+<li><a href="article_substitute.html">SUBSTITUTE 多段ネスト</a></li>
+<li><a href="../../cobol/formula/01_article_cobol_basic.html">COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）</a></li>
+<li><a href="article_zip_reverse.html">住所→郵便番号 逆引き（最長一致検索）</a></li>
 </ul>
 </section>
 

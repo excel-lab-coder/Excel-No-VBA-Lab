@@ -1,5 +1,11 @@
 // Run with: node scripts/verify-site.cjs
 // articles.json is the authority for article levels and public search entries.
+// warnings（失敗扱いにしない検査。issues とは別に出力する）:
+// W-1 速度の言い切りや記事の口調から浮く強い表現が、本文に残るのを防ぐ。
+// W-2 「関連記事」の一覧に、そのページ自身へのリンクが混ざるのを防ぐ。
+// W-3 表示の更新日・JSON-LD の dateModified・sitemap.xml の lastmod の食い違いや欠落を防ぐ。
+// W-4 「差し込み予定」「準備中」などの作りかけの文言が、公開ページに残るのを防ぐ。
+// W-5 articles.json に Lv がある記事のカードで、一覧の Lv バッジが抜けるのを防ぐ。
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
@@ -132,5 +138,87 @@ const shared = fs.readFileSync(path.join(root, 'script.js'), 'utf8');
 new vm.Script(shared);
 new vm.Script(fs.readFileSync(path.join(root, 'others/word/word-images.js'), 'utf8'));
 if (/form\.submit\(\)|article_comment_submit|commentAlreadySent/.test(shared)) issues.push('Unverified hidden comment submission');
-console.log(JSON.stringify({pages: pages.size,entries: catalog.length,searchable: catalog.filter(a => !a.is_prep).length,issues}, null, 2));
+
+// ---- warnings: exitCode には影響しない ----
+const warnings = [];
+// W-1 の例外。例: {file: 'functions/latest/article_filter.html', word: '劇的'}
+const STRONG_WORD_ALLOWLIST = [];
+const STRONG_WORDS = ['定数時間', '一瞬で', '1万行で一瞬', '歴然', '劇的', '絶対に壊れない', '完全に解消', '完全に代替', '狂気', '呪文', '駆逐', '最凶', '侵食', '激重', 'フリーズ級'];
+const UNFINISHED_WORDS = ['差し込み予定', 'スクリーンショット予定', '準備中', 'TODO', '後で書く'];
+const stripNonContent = raw => raw
+  .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+  .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
+  .replace(/<!--[\s\S]*?-->/g, '');
+const bodyOf = html => html.match(/<body\b[^>]*>([\s\S]*)<\/body>/i)?.[1] ?? html;
+const toText = html => html.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ');
+function findWords(file, text, words, check) {
+  for (const word of words) {
+    let at = text.indexOf(word);
+    while (at !== -1) {
+      const context = text.slice(Math.max(0, at - 20), at + word.length + 20);
+      warnings.push(`${check} ${file}: 「${word}」 … ${context}`);
+      at = text.indexOf(word, at + word.length);
+    }
+  }
+}
+const lastmods = new Map([...fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8').matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)].map(m => {
+  const relative = decodeURI(m[1].trim()).slice(base.length);
+  return [!relative || relative.endsWith('/') ? relative + 'index.html' : relative, m[2].trim().slice(0, 10)];
+}));
+const pad = value => value.padStart(2, '0');
+for (const [file, raw] of pages) {
+  const metas = [...raw.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '').matchAll(/<meta\b[^>]*>/g)].map(m => attributes(m[0]));
+  if (metas.find(a => a.name === 'robots')?.content?.includes('noindex') || /http-equiv=["']refresh/i.test(raw)) continue;
+  const clean = stripNonContent(raw);
+  const body = bodyOf(clean);
+  const text = toText(body);
+
+  findWords(file, text, STRONG_WORDS.filter(word => !STRONG_WORD_ALLOWLIST.some(a => a.file === file && a.word === word)), 'W-1');
+
+  for (const heading of body.matchAll(/<h([1-6])\b[^>]*>((?:(?!<\/h[1-6]>)[\s\S])*?関連記事(?:(?!<\/h[1-6]>)[\s\S])*?)<\/h\1>/g)) {
+    const rest = body.slice(heading.index + heading[0].length);
+    const section = rest.slice(0, rest.search(/<h[1-6]\b|<\/section>/) === -1 ? rest.length : rest.search(/<h[1-6]\b|<\/section>/));
+    for (const link of section.matchAll(/<a\b[^>]*>/g)) {
+      const href = attributes(link[0]).href;
+      const dest = href && resolve(file, href);
+      if (dest?.target === file) warnings.push(`W-2 ${file}: 関連記事に自己リンク ${href}`);
+    }
+  }
+
+  const isListPage = /(^|\/)index\.html$/.test(file);
+  if (!isListPage && !['about.html', 'privacy.html', 'disclaimer.html', '404.html'].includes(file) && (byUrl.has(file) || /class=["'][^"']*article-body/.test(body))) {
+    const shown = text.match(/(?:最終)?更新日?\s*[:：]\s*(\d{4})[-\/年.](\d{1,2})[-\/月.](\d{1,2})/);
+    const displayed = shown ? `${shown[1]}-${pad(shown[2])}-${pad(shown[3])}` : null;
+    const modified = raw.match(/"dateModified"\s*:\s*"([^"]+)"/)?.[1].slice(0, 10) ?? null;
+    const lastmod = lastmods.get(file) ?? null;
+    const missing = [displayed ? null : '表示の更新日', modified ? null : 'dateModified', lastmod ? null : 'sitemap lastmod'].filter(Boolean);
+    if (missing.length) warnings.push(`W-3 ${file}: 欠落 ${missing.join('・')}（表示 ${displayed ?? '-'} / dateModified ${modified ?? '-'} / lastmod ${lastmod ?? '-'}）`);
+    if (new Set([displayed, modified, lastmod].filter(Boolean)).size > 1) warnings.push(`W-3 ${file}: 日付の不一致（表示 ${displayed ?? '-'} / dateModified ${modified ?? '-'} / lastmod ${lastmod ?? '-'}）`);
+  }
+
+  // カテゴリページの「準備中」バッジ（badge-prep）は明示された予告なので対象外。
+  findWords(file, toText(body.replace(/<span\b[^>]*class=["'][^"']*badge-prep[^"']*["'][^>]*>[\s\S]*?<\/span>/g, '')), UNFINISHED_WORDS, 'W-4');
+
+  // Lv バッジを使っていない一覧（troubleshoot、samples など）は対象外。
+  // 同じ記事がページ内の別カードで Lv 付きなら、案内用のリンクとみなして出さない。
+  if (isListPage && /class=["'](?:level-label|rank-badge)\b/.test(body)) {
+    const cards = new Map();
+    for (const card of body.matchAll(/<li\b[^>]*class=["']article-item[^"']*["'][^>]*>[\s\S]*?<\/li>|<article\b[^>]*class=["']curated-card\b[^"']*["'][^>]*>[\s\S]*?<\/article>/g)) {
+      const link = [...card[0].matchAll(/<a\b[^>]*>/g)].map(m => attributes(m[0])).find(a => a.href && (a.class === 'article-link' || card[0].startsWith('<article')));
+      const dest = link && resolve(file, link.href);
+      const expected = dest && byUrl.get(dest.key)?.level;
+      if (expected == null) continue;
+      const label = card[0].match(/class=["'](?:level-label|rank-badge)[^"']*["'][^>]*>([^<]*)/)?.[1].trim() ?? '';
+      const state = cards.get(dest.key) ?? {expected, hasBadge: false, labels: new Set()};
+      // Lv.7・Lv.8 の記事は「仕組みを解説」「数式例・解説あり」と表示する方針なので、Lv バッジと同じ扱いにする。
+      if (/Lv\.\d/.test(label) || (expected >= 7 && ['仕組みを解説', '数式例・解説あり'].includes(label))) state.hasBadge = true;
+      state.labels.add(label || 'なし');
+      cards.set(dest.key, state);
+    }
+    for (const [key, state] of cards) {
+      if (!state.hasBadge) warnings.push(`W-5 ${file}: Lv バッジなし ${key}（articles.json: Lv.${state.expected} / 表示: ${[...state.labels].join('、')}）`);
+    }
+  }
+}
+console.log(JSON.stringify({pages: pages.size,entries: catalog.length,searchable: catalog.filter(a => !a.is_prep).length,issues,warnings}, null, 2));
 process.exitCode = issues.length ? 1 : 0;

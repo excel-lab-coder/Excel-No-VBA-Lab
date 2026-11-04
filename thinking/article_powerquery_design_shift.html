@@ -40,7 +40,7 @@
   "headline": "コラム：Power QueryはVBAの代替ではなく、データ整形思想だった",
   "image": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg",
   "datePublished": "2026-05-24",
-  "dateModified": "2026-05-24",
+  "dateModified": "2026-11-04",
   "author": {
     "@type": "Organization",
     "name": "Excel × No VBA Lab"
@@ -99,7 +99,7 @@
 <div class="breadcrumb"><a href="../">ホーム</a><span>&gt;</span><a href="./">技術の流れ</a><span>&gt;</span><strong>設計思想・コラム</strong></div>
 <article class="article-body">
 <div class="article-header">
-  <div class="article-meta"><span class="badge badge-365">Power Query</span><span class="badge badge-column">コラム</span><span class="article-date">公開日: 2026-05-24</span><span class="article-reading-time">📖 約12分</span></div>
+  <div class="article-meta"><span class="badge badge-365">Power Query</span><span class="badge badge-column">コラム</span><span class="article-date">公開日: 2026-05-24 ｜ 更新日: 2026-11-04</span><span class="article-reading-time">📖 約12分</span></div>
   <h1 class="article-title">コラム：Power QueryはVBAの代替ではなく、データ整形思想だった</h1>
 </div>
 
@@ -154,7 +154,7 @@
 
 <section class="method-section" id="non-destructive">
   <h3>破壊的変更と非破壊的変更という決定的な違い</h3>
-  <p>さらに現場の保守性を劇的に変えるのが「非破壊的変更」という思想です。</p>
+  <p>さらに現場の保守性を大きく変えるのが「非破壊的変更」という思想です。</p>
   <p>VBAで `Cells(1,1).Value = ""` と実行すれば、元のデータは消え去り、二度と元には戻りません（Undoも効きません）。これは「破壊的変更」です。そのためVBAでは、必ず「元データのバックアップを取る処理」を最初に書くのが定石でした。</p>
   <p>Power Queryは全く逆です。すべてのステップは「前のステップの状態を入力として受け取り、新しい状態を出力する」という純粋な関数的アプローチを取ります（非破壊的変更）。</p>
   <ul>
@@ -163,7 +163,7 @@
     <li>ステップ3：不要な列を削除する</li>
   </ul>
   <p>もし「ステップ3で間違えて必要な列を消してしまった」と後から気づいても、右側の「適用したステップ」の×ボタンを押すだけで、いつでも「ステップ2」の無傷な状態に戻れます。元データそのものは1ミリも改変されていません。</p>
-  <p>この「いつ変更しても元データが壊れない安心感」は、複雑なデータクレンジングを行う上で、心理的ハードルを劇的に下げてくれます。トライアンドエラーが無限に許される設計なのです。</p>
+  <p>この「いつ変更しても元データが壊れない安心感」は、複雑なデータクレンジングを行う上で、心理的ハードルを大きく下げてくれます。トライアンドエラーが無限に許される設計なのです。</p>
 </section>
 
 <section class="method-section" id="etl">
@@ -228,9 +228,24 @@
   </a>
 </nav>
 
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../powerquery/basic/article_powerquery_intro.html">Power QueryとVBAの違い</a></li>
+<li><a href="article_stage4_no_macro_powerquery.html">段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期</a></li>
+<li><a href="article_no_vba_thinking.html">VBA禁止時の思考法：自動操作を捨て、データの流れを設計する</a></li>
+<li><a href="../powerquery/advanced/article_pq_folder_monthly.html">Power Queryで毎月のファイルをまとめる：翌月も更新だけで使える設計</a></li>
+</ul>
+</section>
 </article>
 </main>
 <footer class="site-footer">
+<div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../samples/">サンプルデータ</a></p>
+  </div>
   <div class="footer-inner">
     <div class="footer-info">
       <p class="footer-copyright">&copy; Excel &times; No VBA Lab</p>

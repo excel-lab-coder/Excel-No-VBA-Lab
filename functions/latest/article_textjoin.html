@@ -32,7 +32,7 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "datePublished": "2026-05-03",
-  "dateModified": "2026-11-01",
+  "dateModified": "2026-11-04",
   "headline": "TEXTJOIN（2019～）",
   "author": {
     "@type": "Person",
@@ -66,6 +66,8 @@
 }</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 </head>
 <body class="article-layout">
 <div class="reading-progress" aria-hidden="true"></div>
@@ -85,7 +87,7 @@
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../functions/">関数</a><span>&gt;</span><strong>TEXTJOIN</strong></div>
 <article class="article-body">
 <div class="article-header">
-<div class="article-meta"><span class="badge badge-2019">2019～</span></div>
+<div class="article-meta"><span class="badge badge-2019">2019～</span><span class="article-date">更新日: 2026-11-04</span></div>
 <h1 class="article-title">TEXTJOIN：区切り文字を挟みながら複数セルの文字列を一括結合</h1>
 </div>
 <section class="goal-section">
@@ -108,6 +110,30 @@
         <strong>確定方法は版で異なります：</strong>Microsoft 365／Excel 2021以降は Enter だけで確定できます。Excel 2019では配列数式として <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd> で確定してください（Enterだけだと正しく結合されない場合があります）。
       </div>
 </section>
+<section class="method-section">
+<h3>実務でよく使う例</h3>
+<h4>空白セルの位置も残す</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXTJOIN(",", FALSE, A1:A3)</span>
+</div>
+<p class="code-comment">第2引数を FALSE にすると、A2が空白のとき「田中,,佐藤」のように区切りを残します。列の位置を保ちたいときに使います。</p>
+<h4>セル内で改行して並べる</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXTJOIN(CHAR(10), TRUE, A1:A10)</span>
+</div>
+<p class="code-comment">結果のセルに「折り返して全体を表示する」を設定すると、1行に1件ずつ表示されます。</p>
+<h4>日付の形を保って結合する</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXTJOIN(" / ", TRUE, TEXT(A1:A3,"yyyy/m/d"))</span>
+</div>
+<p class="code-comment">そのまま結合すると日付はシリアル値（46000など）になるため、TEXT関数で形をそろえます。Excel 2019では <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd> で確定します。</p>
+<h4>FILTERと組み合わせる（Excel 2021以降）</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXTJOIN(", ", TRUE, FILTER(A1:A10, B1:B10="営業部", ""))</span>
+</div>
+<p class="code-comment">IFを使う書き方と同じ結果です。条件が増えたときは、こちらのほうが読みやすくなります。</p>
+<div class="xdemo-note-warn"><strong>⚠️ 文字数の上限</strong><br>結果が1セルの上限（32,767文字）を超えると <code>#VALUE!</code> になります。</div>
+</section>
 <section class="legacy-section">
 <h3>旧バージョンでの代替法</h3>
 <p>TEXTJOINがない環境では、<code>=A1&", "&A2&", "&A3&...</code> と1セルずつ手動で繋ぐか、CONCATENATE関数で同様に個別指定するしかありませんでした。「空白セルをスキップ」する機能はなく、「, , , 佐藤」のように余計な区切り文字が残る問題に対して、SUBSTITUTE関数で「,,」を除去する後処理が必要でした。</p>
@@ -115,10 +141,11 @@
 <section class="method-section">
 <h2><span class="icon">🔗</span> 関連記事</h2>
 <ul class="line-height-2">
-<li><a href="article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
-<li><a href="article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
-<li><a href="article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
-<li><a href="article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+<li><a href="../old/article_phonetic_furigana.html">PHONETIC関数でフリガナを取り出す</a></li>
+<li><a href="article_concat.html">CONCAT vs CONCATENATE vs「&amp;」徹底比較</a></li>
+<li><a href="article_textsplit.html">TEXTSPLIT</a></li>
+<li><a href="article_filter.html">FILTER関数</a></li>
+<li><a href="../old/article_substitute.html">SUBSTITUTE 多段ネスト</a></li>
 </ul>
 </section>
 

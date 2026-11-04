@@ -20,13 +20,16 @@
 <link as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="preload"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" media="print" onload="this.media='all'" rel="stylesheet"/>
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="stylesheet"/></noscript>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Word差し込み印刷で失敗しにくいExcel住所録の作り方", "description": "Word差し込み印刷で失敗しにくいExcel住所録の作り方。入力用の列と印刷用の列を分け、見出し・番号・日付の持ち方を決めて、Wordにつなぐ前に点検します。", "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}}, "datePublished": "2026-06-22", "dateModified": "2026-11-03"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Word差し込み印刷で失敗しにくいExcel住所録の作り方", "description": "Word差し込み印刷で失敗しにくいExcel住所録の作り方。入力用の列と印刷用の列を分け、見出し・番号・日付の持ち方を決めて、Wordにつなぐ前に点検します。", "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}}, "datePublished": "2026-06-22", "dateModified": "2026-11-04"}</script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"現場実務ラボ","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":3,"name":"Word差し込み印刷","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/"},{"@type":"ListItem","position":4,"name":"Word差し込み印刷で失敗しにくいExcel住所録の作り方","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_excel_source_design.html"}]}
 </script>
 <link href="word-guide.css?v=20261103" rel="stylesheet"/><meta content="1" name="difficulty"/>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_excel_source_design.html" property="og:url">
 </head>
 <body class="article-layout word-guide">
 <div aria-hidden="true" class="reading-progress"></div>
@@ -36,7 +39,7 @@
 <main class="main-content" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>差し込み印刷 住所録設計</strong></div>
 <article class="article-body">
-<div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Word差し込み印刷で失敗しにくいExcel住所録の作り方</h1><p class="article-summary" data-seo-lead="true">差し込み印刷の失敗は、多くがExcelの表の形で防げます。Wordにつなぐ前に、住所録の形を整えます。</p></div><div class="word-answer"><span>結論</span><p><strong>1行目は見出し、2行目から1行1件。元の値は残して、表示を変える項目だけ右に印刷用列を足します。</strong>この形にすれば、Word側は列を選ぶだけで済みます。</p></div>
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Windows版 Word / Excel</span><span class="article-date">更新日: 2026-11-04</span></div><h1 class="article-title">Word差し込み印刷で失敗しにくいExcel住所録の作り方</h1><p class="article-summary" data-seo-lead="true">差し込み印刷の失敗は、多くがExcelの表の形で防げます。Wordにつなぐ前に、住所録の形を整えます。</p></div><div class="word-answer"><span>結論</span><p><strong>1行目は見出し、2行目から1行1件。元の値は残して、表示を変える項目だけ右に印刷用列を足します。</strong>この形にすれば、Word側は列を選ぶだけで済みます。</p></div>
 <section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">入門（Lv.1）</p><ol class="word-guide-flow"><li>見出しを作る</li><li>1行1件で入力</li><li>印刷用列を足す</li><li>Wordで照合</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#guide-step-1">目標：Wordで列を選ぶだけの住所録</a></li><li><a href="#guide-step-2">手順1：新しいシートの1行目へ見出しを入れる</a></li><li><a href="#guide-step-3">手順2：番号と日付の入れ方を決める</a></li><li><a href="#guide-step-4">手順3：表示を変える項目だけ、印刷用列を足す</a></li><li><a href="#guide-step-5">手順4：接続前に表を点検して保存する</a></li><li><a href="#guide-step-6">手順5：Wordで見出しと人数を照合する</a></li><li><a href="#guide-step-7">次に読む記事</a></li></ol></nav></details></section>
 <section class="method-section" id="guide-step-1"><h2>目標：Wordで列を選ぶだけの住所録</h2>
 <p>Excelは住所録、Wordは文面と印刷の配置に使います。守るルールは次の3つです。</p>
@@ -78,6 +81,7 @@
 <div class="word-verified"><p><strong>実機で確認した内容</strong></p><ul><li>確認日：2026-11-03</li><li>環境：Windows版 Word / Excel 16.0</li><li>確認した範囲：式の結果：10001は001-0001、2026/11/2は2026年11月2日、空欄は空欄。オートフィルターで隠してもWordは8人全員を読み込む。数値が続いた後の文字列は0で読み込まれる。</li><li>確認していないこと：型の混在で空欄になる条件、紙への印刷。環境により結果が異なる場合があります。</li></ul></div>
 <aside aria-label="次に読むWord記事" class="word-guide-end"><p><strong>差し込み印刷の基本の流れ</strong></p><p><a href="article_mailmerge_excel_source_design.html">Excel住所録の準備</a> → <a href="article_mailmerge_letter_vs_directory.html">種類の選び方</a> → <a href="article_mailmerge_letter_filter_print.html">レター</a> ／ <a href="article_mailmerge_label_basic.html">ラベル</a> ／ <a href="article_mailmerge_directory_finish.html">名簿の完成</a></p><p><a href="./">Word差し込み印刷ガイドで、作りたい物や困りごとから探す</a></p></aside><section class="word-history" aria-label="更新履歴"><p><strong>更新履歴</strong></p><ul><li>2026-11-03：型の混在の注意を追加。郵便番号の入力を2択に整理。</li></ul></section>
 <section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="../data/article_name_split_flash_fill.html">Excelで氏名を姓と名に分ける</a></li>
 <li><a href="article_mailmerge_postal_code.html">Word差し込み印刷で郵便番号と日付を整える方法</a></li>
 <li><a href="article_mailmerge_number_format.html">Word差し込み印刷で金額・割合・番号の表示崩れを直す方法</a></li>
 <li><a href="article_mailmerge_filter_two_patterns.html">差し込み印刷で必要な人だけ印刷する2つの方法（Word側のフィルター／Excel側のFILTER関数）</a></li>

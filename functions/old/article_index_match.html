@@ -32,7 +32,7 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "datePublished": "2026-05-03",
-  "dateModified": "2026-10-07",
+  "dateModified": "2026-11-04",
   "headline": "INDEX + MATCH（Excel 2016以降対応）",
   "author": {
     "@type": "Person",
@@ -66,6 +66,8 @@
 }</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 </head>
 <body class="article-layout">
 <div class="reading-progress" aria-hidden="true"></div>
@@ -87,13 +89,13 @@
 </div>
 <article class="article-body">
 <div class="article-header">
-<div class="article-meta"><span class="badge badge-all">Excel 2016以降対応</span></div>
+<div class="article-meta"><span class="badge badge-all">Excel 2016以降対応</span><span class="article-date">更新日: 2026-11-04</span></div>
 <h1 class="article-title">INDEX + MATCH：Excel 2016以降対応の王道検索テクニック</h1>
 </div>
 <section class="goal-section">
 <h2><span class="icon">💡</span> やりたいこと</h2>
 <p>「検索キーより左側にある列」のデータを取得したいが、XLOOKUPが存在しない旧バージョンのExcelを使っている。<br>
-        列の挿入や削除で数式が壊れない、安全な検索の仕組みを作りたい。</p>
+        列を挿入・移動しても数式がずれにくい、安全な検索の仕組みを作りたい。</p>
 </section>
 <section class="method-section">
 <h3>Excel 2016以降対応の定番の組み合わせ：INDEX関数 ＋ MATCH関数</h3>
@@ -111,12 +113,12 @@
 <div class="xdemo-wrap">
 <div class="xdemo-note">
 <strong>🔥 なぜVLOOKUPより優秀なのか？</strong><br>
-            ・取得したい列（A列）と検索する列（C列）を独立して指定するため、<strong>「どちらの列を挿入・削除しても数式が絶対に壊れない（ズレない）」</strong>という強靭さを持ちます。<br>
+            ・取得したい列（A列）と検索する列（C列）を独立して指定するため、<strong>列を挿入・移動してもずれにくくなります</strong>（VLOOKUPのように列番号を数え直す必要がありません）。ただし、参照している列そのものを削除すると <code>#REF!</code> になります。<br>
             ・検索キーが一番右にあっても左端のデータを難なく取得できます。
           </div>
 <div class="xdemo-note-warn">
 <strong>⚠️ MATCHの第3引数「0」を絶対に忘れないこと</strong><br>
-<code>, 0</code> を書き忘れると近似一致検索になってしまい、間違った行番号を返して大事故に繋がります。
+<code>, 0</code> を書き忘れると近似一致検索になってしまい、間違った行番号を返して誤った結果につながります。
           </div>
 </div>
 </section>
@@ -142,10 +144,10 @@
 <section class="method-section">
 <h2><span class="icon">🔗</span> 関連記事</h2>
 <ul class="line-height-2">
-<li><a href="../latest/article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
-<li><a href="../latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
-<li><a href="../latest/article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
-<li><a href="../latest/article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+<li><a href="article_index_match_multi.html">INDEX + MATCH + 結合キー列</a></li>
+<li><a href="../latest/article_xlookup_vs.html">XLOOKUP比較編：VLOOKUP・INDEX+MATCHとの使い分け</a></li>
+<li><a href="article_vlookup.html">VLOOKUP完全ガイド — 基本から限界まで</a></li>
+<li><a href="article_small_row_index_extract.html">旧ExcelでFILTER関数を代用する方法</a></li>
 </ul>
 </section>
 

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>VBAでふりがなをまとめて付ける｜CSVや貼り付けた名簿をSetPhoneticで処理｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="CSVや貼り付けた名簿に、VBAのSetPhoneticで推定のふりがなをまとめて生成する方法を、実機検証の結果とともに解説。生成される読みは推定であること、PHONETIC・GetPhoneticとの違い、イミディエイトウィンドウの利点とリスク、使うべきでない場面まで整理します。" name="description">
+<meta content="VBAでふりがなをまとめて付ける｜CSVや貼り付けた名簿をSetPhoneticで処理｜Excel &times; No VBA Lab" property="og:title">
+<meta content="CSVや貼り付けた名簿に、VBAのSetPhoneticで推定のふりがなをまとめて生成する方法を、実機検証の結果とともに解説。生成される読みは推定であること、PHONETIC・GetPhoneticとの違い、イミディエイトウィンドウの利点とリスク、使うべきでない場面まで整理します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_set_phonetic.html" property="og:url">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_set_phonetic.html" rel="canonical">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+<link href="../common.css?v=20261103" rel="stylesheet">
+<link href="../article.css?v=20261103" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished":"2026-11-04","dateModified":"2026-11-04","headline":"VBAでふりがなをまとめて付ける｜CSVや貼り付けた名簿をSetPhoneticで処理","description":"CSVや貼り付けた名簿に、VBAのSetPhoneticで推定のふりがなをまとめて生成する方法を、実機検証の結果とともに解説。生成される読みは推定であること、PHONETIC・GetPhoneticとの違い、イミディエイトウィンドウの利点とリスク、使うべきでない場面まで整理します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_set_phonetic.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"制限解除ラボ","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/unlocked/"},{"@type":"ListItem","position":3,"name":"ふりがなをまとめて付ける","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_set_phonetic.html"}]}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+</head>
+<body>
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+<header class="site-header"><div class="header-inner"><div class="header-brand">
+<div class="site-title"><a href="../">Excel &times; No VBA Lab</a></div><p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div></div></header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../#article-finder">🔍 記事を探す</a><a href="../functions/">関数</a><a href="../powerquery/">Power Query</a><a href="../cobol/">COBOL帳票</a><a href="../qr/">QR入力</a><a href="../others/word/">Word差し込み</a><a href="../others/">現場実務</a><a href="../thinking/">技術の流れ</a><a href="../unlocked/" aria-current="true">VBA・AI</a><a href="../troubleshoot/">困りごと索引</a></nav>
+
+<main class="main-content article-layout" id="main-content">
+<div class="breadcrumb"><a href="../">ホーム</a><span>&rsaquo;</span><a href="../unlocked/">制限解除ラボ</a><span>&rsaquo;</span><strong>ふりがなをまとめて付ける</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-all">VBA OK</span><span class="article-date">更新日: 2026-11-04</span></div>
+<h1 class="article-title">VBAでふりがなをまとめて付ける：CSVや貼り付けた名簿をSetPhoneticで処理</h1>
+</div>
+<p>CSVや貼り付けた氏名データには読みの情報がないため、PHONETIC関数を使っても漢字のまま返ります。VBAの <code>SetPhonetic</code> を使うと、読みを推定してまとめて生成できます。この記事では、仕組みと手順に加えて、どんな場合に使ってよく、どんな場合に使うべきでないかを説明します。</p>
+<div class="xdemo-note-warn"><strong>⚠️ 重要：自動生成されるフリガナは推定結果です</strong><br>SetPhoneticは漢字から一般的な読みを生成しますが、本人の正式なフリガナを保証する機能ではありません。特に氏名・地名・固有名詞では、誤った読みが生成される場合があります。宛名印刷、各種申請書、名寄せ、顧客管理などに使う場合は、本人の申告や元資料と照合してください。元のシステムに正式なフリガナが保存されている場合は、その情報を優先してください。</div>
+<div class="vba-box">
+<strong>💡 本編（VBAなし）との位置づけ</strong>
+<p>この記事は、VBAの使用が許可されている環境向けです。VBAが使えない環境では、<a href="../functions/old/article_phonetic_furigana.html">PHONETIC関数でフリガナを取り出す</a>の方法を使ってください。</p>
+</div>
+<details class="auto-toc" open><summary>目次（11項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">使ってよい場面・使うべきでない場面</a></li><li><a href="#sec-2">読みのない漢字から生成できる理由</a></li><li><a href="#sec-3">方法の選び方</a></li><li><a href="#sec-4">実行する前に確認すること</a></li><li><a href="#sec-5">イミディエイトウィンドウで実行する</a></li><li><a href="#sec-6">確認済みの読みを守る</a></li><li><a href="#sec-7">フィルターで絞った行だけに実行する</a></li><li><a href="#sec-8">元のふりがな情報を変更せず、別列に推定読みを生成する</a></li><li><a href="#sec-9">ひらがな・カタカナ・半角に切り替える</a></li><li><a href="#sec-10">業務で使うときの注意</a></li><li><a href="#sec-11">検証結果</a></li></ol></nav></details>
+<section>
+<h2 id="sec-1">1. 使ってよい場面・使うべきでない場面</h2>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">使ってよいかの判断</caption>
+<thead><tr><th scope="col">判断</th><th scope="col">場面</th></tr></thead>
+<tbody>
+<tr><td><strong>向いている</strong></td><td>VBAが許可されていて、読みのない名簿に、検索の補助や仮の並べ替え用の読みを1回だけ付けたいとき</td></tr>
+<tr><td><strong>確認してから使う</strong></td><td>宛名印刷や案内状など、人の目に触れるものに使うとき（生成後に元資料や本人の申告と照合します）</td></tr>
+<tr><td><strong>使わない</strong></td><td>VBAやマクロが禁止されている職場／元のシステムに正式なフリガナがあるとき／確認済みの読みが入った名簿全体／推定の読みを本人の情報として登録するとき／氏名の読みで同一人物かを判定するとき</td></tr>
+</tbody>
+</table></div>
+</section>
+<section>
+<h2 id="sec-2">2. 読みのない漢字から生成できる理由</h2>
+<p>CSVには文字だけが入っていて、読みの情報はありません。それでもふりがなを付けられるのは、<strong>元の読みを取り出しているのではなく、文字列から読みを新しく推定して作っている</strong>からです。似た名前の3つの機能は、役割が違います。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">3つの機能の違い</caption>
+<thead><tr><th scope="col">機能</th><th scope="col">やっていること</th><th scope="col">読みのないCSVの「山田太郎」</th></tr></thead>
+<tbody>
+<tr><td><code>PHONETIC</code> 関数</td><td>セルに保存されたふりがな情報を<strong>取り出す</strong></td><td>「山田太郎」のまま返る</td></tr>
+<tr><td><code>Range.SetPhonetic</code></td><td>セルにふりがな情報を<strong>作る</strong></td><td>読みが作られ、PHONETICで「ヤマダタロウ」と取り出せるようになる</td></tr>
+<tr><td><code>Application.GetPhonetic</code></td><td>文字列から読みの候補を<strong>取得する</strong>（セルは変えない）</td><td>「ヤマダタロウ」という文字列を返す</td></tr>
+</tbody>
+</table></div>
+<p>推定なので、読みが複数ある氏名では、本人の読みと違う結果になることがあります。次は検証環境での結果です。別の環境でも同じ読みになるとは限りません。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">読みが複数ある氏名の生成結果</caption>
+<thead><tr><th scope="col">氏名の漢字</th><th scope="col">考えられる読みの例</th><th scope="col">検証環境で生成された読み</th></tr></thead>
+<tbody>
+<tr><td>角田</td><td>カクタ、ツノダ、カドタ</td><td>カクタ</td></tr>
+<tr><td>海野</td><td>ウミノ、ウンノ</td><td>ウンノ</td></tr>
+<tr><td>東海林</td><td>ショウジ、トウカイリン</td><td>トウカイリン</td></tr>
+<tr><td>和子</td><td>カズコ、ワコ</td><td>カズコ</td></tr>
+</tbody>
+</table></div>
+<p class="verify-note">読みを決める辞書や仕組みは、Microsoftの資料には書かれていません。検証環境：Windows版 Excel（バージョン16.0、ビルド20625）、2026年11月4日。</p>
+</section>
+<section>
+<h2 id="sec-3">3. 方法の選び方</h2>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">フリガナを用意する方法の比較</caption>
+<thead><tr><th scope="col">方法</th><th scope="col">向いている場面</th><th scope="col">注意点</th></tr></thead>
+<tbody>
+<tr><td>元のシステムから正式な読みを取得</td><td><strong>正式な読みが必要なとき（最優先）</strong></td><td>出力の項目に読みがあるか確認が必要</td></tr>
+<tr><td>Excel標準の「ふりがなの編集」</td><td>少数のデータ、1件ずつの修正</td><td>1セルずつ操作する。<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>↑</kbd></td></tr>
+<tr><td><code>PHONETIC</code> 関数</td><td>読みがあるセルから、読みの列を作るとき</td><td>読みのないセルからは読みを作れない</td></tr>
+<tr><td>イミディエイトウィンドウの <code>SetPhonetic</code></td><td>単発の大量処理</td><td>VBAの実行にあたる。読みは推定</td></tr>
+<tr><td>通常のVBAマクロ</td><td>継続運用、条件判定を含む処理</td><td>マクロの保存と管理が必要</td></tr>
+</tbody>
+</table></div>
+<p>「ふりがなの表示」は、セルにあるふりがなを表示する操作です。読みのないCSVに読みを一括で作る操作ではありません。Microsoftの説明でも、他のプログラムで作成したファイルを開いた場合、ふりがなは自動では生成されないとされています。</p>
+<p>VBAが禁止されている場合は、「ふりがなの編集」か、元データの読みの列を使ってください。手順は<a href="../functions/old/article_phonetic_furigana.html">PHONETIC関数の記事</a>で説明しています。</p>
+</section>
+<section>
+<h2 id="sec-4">4. 実行する前に確認すること</h2>
+<div class="xdemo-note-warn"><strong>⚠️ VBA禁止の職場では使えない場合があります</strong><br>1行だけの実行で保存もしませんが、VBAを動かしていることに変わりはありません。VBEが開けない設定の職場もあります。実行してよいかは、社内ルールを確認してください。</div>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">職場の状況と対応</caption>
+<thead><tr><th scope="col">状況</th><th scope="col">対応</th></tr></thead>
+<tbody>
+<tr><td>社内ルールでVBA・マクロが禁止されている</td><td><strong>実行しません。</strong>この方法は禁止の規則を回避する手段ではありません。必要なら担当部署に相談します。</td></tr>
+<tr><td>ルールがはっきりしない</td><td>実行する前に、情報システム部門などに確認します。</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>F11</kbd> を押してもVBEが開かない</td><td>管理者がVBAを止めているか、VBAが導入されていない可能性があります。<strong>設定やレジストリを変更して回避しません。</strong></td></tr>
+<tr><td>VBAが許可されている</td><td>次の手順に進みます。</td></tr>
+</tbody>
+</table></div>
+<p>Microsoftは、管理者がVBAを止める方法として、グループ ポリシー「Disable VBA for Office applications」や、Officeの導入時にVBAを外す方法を案内しています。</p>
+</section>
+<section>
+<h2 id="sec-5">5. イミディエイトウィンドウで実行する</h2>
+<p>この方法は「マクロを使わない方法」ではなく、<strong>マクロを登録・保存せずにVBAの命令を実行する方法</strong>です。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">イミディエイトウィンドウのメリットと制約</caption>
+<thead><tr><th scope="col">メリット</th><th scope="col">制約</th></tr></thead>
+<tbody>
+<tr><td>標準モジュールを作らなくてよい</td><td>VBAの実行にあたる。VBA禁止の社内規則を回避する手段ではない</td></tr>
+<tr><td>1行の命令をその場で実行できる</td><td>実行後は「元に戻す」が使えなくなる（検証環境で確認）</td></tr>
+<tr><td>実行用のコードをブックに保存しなくてよい</td><td>選択範囲を間違えると、対象外のセルにも読みが付く</td></tr>
+<tr><td>結果を通常の <code>.xlsx</code> で保存できる（検証環境で警告なし）</td><td>複雑な処理や継続運用には、通常のVBAマクロが適している</td></tr>
+<tr><td>単発の一括処理に向いている</td><td>実行した内容が記録に残らない</td></tr>
+</tbody>
+</table></div>
+<h3>手順</h3>
+<ol class="line-height-2">
+<li><strong>ブックをコピーして、コピーのほうを開きます。</strong>原本は変更しません。</li>
+<li>読みを付ける氏名のセルだけを選びます。見出しを含めると、見出しにも読みが付きます。</li>
+<li><kbd>Alt</kbd>+<kbd>F11</kbd> でVBEを開き、<kbd>Ctrl</kbd>+<kbd>G</kbd> でイミディエイトウィンドウを開きます。</li>
+<li>次の1行を入力し、その行で <kbd>Enter</kbd> を押します。</li>
+</ol>
+<div class="code-readonly">
+<span class="code-line">Selection.SetPhonetic</span>
+</div>
+<p>シートに戻り、隣の列で <code>=PHONETIC(A2)</code> を使うと、生成された読みを確認できます。</p>
+</section>
+<section>
+<h2 id="sec-6">6. 確認済みの読みを守る</h2>
+<p>Microsoftの説明では、指定した範囲にある既存のふりがなは、新しいものに<strong>上書き（削除）されます</strong>。本人確認済みの読みが入った名簿に実行すると、その情報が失われるおそれがあります。</p>
+<p class="verify-note">検証環境では、既存の読みは残り、読みのない部分だけが補われました（例：「和子」の「ワコ」はそのまま、「山田」だけ「アイウ」と登録した「山田太郎」は「アイウタロウ」）。ただし公式の説明と異なり、版や環境によって変わる可能性があります。<strong>上書きされる前提で作業してください。</strong></p>
+<ol class="line-height-2">
+<li>原本は変更せず、コピーで作業します。</li>
+<li>正式な読みが保存されている列は、対象から外します。</li>
+<li>読みを生成する行を、新しく取り込んだ行などに限定します。</li>
+<li>生成した読みは、別の列で元の値と比べて確認します。</li>
+<li>確認済みの読みと推定の読みを、同じ列に混在させません。</li>
+</ol>
+<h3>対象の候補を探す簡易的な式</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(PHONETIC(A2)=A2,"要確認","")</span>
+</div>
+<p>読みが未設定の可能性がある候補を拾う式です。読みの有無を厳密に判定するものではありません。この式だけを根拠に、上書きしてよいと判断しないでください。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">簡易的な式の結果</caption>
+<thead><tr><th scope="col">セルの状態</th><th scope="col">結果</th><th scope="col">実際</th></tr></thead>
+<tbody>
+<tr><td>読みのない漢字</td><td>要確認</td><td>正しく拾える</td></tr>
+<tr><td>読みのある漢字</td><td>空欄</td><td>正しく除外できる</td></tr>
+<tr><td>カタカナだけ</td><td>要確認</td><td>読みがなくても問題ないのに拾う</td></tr>
+<tr><td>読みが一部だけ（ヤマダ太郎）</td><td>空欄</td><td>未完成なのに拾えない</td></tr>
+<tr><td>ひらがなだけ</td><td>空欄</td><td>PHONETICがカタカナで返すため一致しない</td></tr>
+<tr><td>数値・数式</td><td>空欄</td><td>PHONETICが空欄を返すため一致しない</td></tr>
+</tbody>
+</table></div>
+</section>
+<section>
+<h2 id="sec-7">7. フィルターで絞った行だけに実行する</h2>
+<div class="xdemo-note-warn"><strong>⚠️ フィルターで隠れた行も対象になります</strong><br>検証環境では、<code>Selection.SetPhonetic</code> は、選択範囲の中でフィルターで隠れている行にも読みを付けました。</div>
+<p>見えている行だけにするには、次の1行を使います。氏名の範囲を2セル以上選んでから実行します。</p>
+<div class="code-readonly">
+<span class="code-line">Selection.SpecialCells(xlCellTypeVisible).SetPhonetic</span>
+</div>
+<p>検証環境では、イミディエイトウィンドウで実行でき、隠れた行には読みが付きませんでした。変数の宣言も繰り返しも要らないので、次のような書き方より誤操作が少なくなります。</p>
+<div class="code-readonly">
+<span class="code-line">For Each c In Selection.SpecialCells(xlCellTypeVisible): c.SetPhonetic: Next</span>
+</div>
+<p class="code-comment">こちらも同じ結果でした。イミディエイトウィンドウでは <code>Dim</code> は使えませんが、宣言なしの変数 <code>c</code> で動きました。</p>
+<p>空白・数値・数式・エラーのセルが範囲に混ざっていても、エラーにはならず、読みも付きませんでした。文字列の結果を返す数式のセルにも読みは付きません。値に変換してから実行します。</p>
+</section>
+<section>
+<h2 id="sec-8">8. 元のふりがな情報を変更せず、別列に推定読みを生成する</h2>
+<p><code>GetPhonetic</code> は、文字列から読みの候補を新しく取得する命令です。セルに保存された読みを読み取るものではありません。実際に、セルに「ワコ」と登録した「和子」でも、検証環境の <code>GetPhonetic("和子")</code> は「カズコ」を返しました。セルのふりがなは変わらないので、推定の読みを別の列で確認したいときに向いています。</p>
+<div class="code-readonly">
+<span class="code-line">For Each c In Selection: c.Offset(0, 1).Value = Application.GetPhonetic(c.Value): Next</span>
+</div>
+<p class="code-comment">選んだセルの1つ右の列に、読みを書き込みます。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">実行時の注意（検証環境の結果）</caption>
+<thead><tr><th scope="col">状況</th><th scope="col">起きること</th><th scope="col">対策</th></tr></thead>
+<tbody>
+<tr><td>右の列にデータがある</td><td><strong>確認なしで上書きされる</strong></td><td>先に空の列を挿入する</td></tr>
+<tr><td>フィルターで隠れた行</td><td>隠れた行の右の列にも書き込まれる</td><td>フィルターを解除するか、選択を分ける</td></tr>
+<tr><td>エラーのセル（#N/A など）</td><td>実行時エラー13で止まる。それより上の行だけ書き込まれた状態になる</td><td>実行前にエラーを解消する</td></tr>
+<tr><td>数値</td><td>全角の数字として取得される（セルに書くと数値に戻る）</td><td>氏名の列だけを選ぶ</td></tr>
+<tr><td>英数字</td><td>「Smith」は「Ｓｍｉｔｈ」のように全角になる</td><td>結果を確認する</td></tr>
+<tr><td>空白セル</td><td>空欄のまま</td><td>特になし</td></tr>
+<tr><td>複数の読みがある氏名</td><td>検証した氏名では、候補は1つだけ返った</td><td>候補の順番や数に頼らない</td></tr>
+</tbody>
+</table></div>
+<p class="verify-note"><code>GetPhonetic</code> は、Officeの言語設定で日本語が選択またはインストールされている場合にだけ使えます。</p>
+</section>
+<section>
+<h2 id="sec-9">9. ひらがな・カタカナ・半角に切り替える</h2>
+<p>生成した読みの種類をまとめて変更できます。PHONETIC関数の結果も、この設定に従います。</p>
+<div class="code-readonly">
+<span class="code-line">Selection.Phonetics.CharacterType = xlHiragana</span>
+</div>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">指定できる種類</caption>
+<thead><tr><th scope="col">定数</th><th scope="col">値</th><th scope="col">種類</th><th scope="col">検証環境の結果</th></tr></thead>
+<tbody>
+<tr><td><code>xlKatakana</code></td><td>1</td><td>全角カタカナ</td><td>ヤマダタロウ</td></tr>
+<tr><td><code>xlKatakanaHalf</code></td><td>0</td><td>半角カタカナ</td><td>ﾔﾏﾀﾞﾀﾛｳ</td></tr>
+<tr><td><code>xlHiragana</code></td><td>2</td><td>ひらがな</td><td>やまだたろう</td></tr>
+<tr><td><code>xlNoConversion</code></td><td>3</td><td>変換なし</td><td>エラー（設定できず）</td></tr>
+</tbody>
+</table></div>
+<p>セルの上にふりがなを表示して確認するには、次の1行を実行します。元に戻すときは <code>False</code> にします。</p>
+<div class="code-readonly">
+<span class="code-line">Selection.Phonetics.Visible = True</span>
+</div>
+<ul class="line-height-2">
+<li><strong><code>Phonetics</code> と <code>Phonetic</code>：</strong><code>Phonetics</code> は範囲内のふりがな全体です。<code>Range.Phonetic</code> は以前の版との互換のためのプロパティなので、この記事では <code>Phonetics</code> を使います。</li>
+<li><strong>隠れた行：</strong>どちらの命令も、フィルターで隠れた行を含む選択範囲全体に効きます。</li>
+<li><strong>読みのないセル：</strong>検証環境ではエラーにならず、何も変わりませんでした。</li>
+</ul>
+</section>
+<section>
+<h2 id="sec-10">10. 業務で使うときの注意</h2>
+<p>生成した読みは、<strong>「推定読み」</strong>として扱い、<strong>「本人確認済みの読み」</strong>と区別します。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">推定読みの使い分け</caption>
+<thead><tr><th scope="col">用途</th><th scope="col">推定読みの扱い</th></tr></thead>
+<tbody>
+<tr><td>名簿の検索補助、仮の並べ替え</td><td>使える。「仮」であることが分かるようにする</td></tr>
+<tr><td>顧客名簿・従業員名簿への登録</td><td>そのまま登録しない。元資料や本人の申告と照合してから</td></tr>
+<tr><td>郵送用の宛名</td><td>照合してから使う</td></tr>
+<tr><td>行政手続きで使う氏名情報</td><td>使わない。本人の申告や正式な資料の読みを使う</td></tr>
+<tr><td>氏名をキーとした名寄せ</td><td>使わない。読みが同じでも同一人物とは限らず、番号など別の項目で照合する</td></tr>
+</tbody>
+</table></div>
+<h3>確認済みの読みは列にして残す</h3>
+<p>CSVは文字だけの形式なので、ふりがな情報は保存されません（検証環境でも、CSVに保存して開き直すと読みは消えました）。残したい読みは、セルのふりがなに頼らず、独立した列に保存します。</p>
+<ol class="line-height-2">
+<li>「推定読み」の列を作り、<code>=PHONETIC(A2)</code> の結果を値として貼り付けます。</li>
+<li>照合が終わった読みだけを、「確認済みの読み」の列に入れます。</li>
+<li>他のシステムやCSVに渡すときは、「確認済みの読み」の列を使います。</li>
+</ol>
+<p>カタカナ・半角・ひらがなへの変換は、<a href="../functions/old/article_phonetic_furigana.html">PHONETIC関数の記事</a>で説明しています。</p>
+</section>
+<section>
+<h2 id="sec-11">11. 検証結果</h2>
+<p>架空のサンプルで比較した結果です。検証環境：Windows版 Excel（バージョン16.0、ビルド20625）、2026年11月4日。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">状態ごとの比較</caption>
+<thead><tr><th scope="col">状態</th><th scope="col">PHONETIC（実行前）</th><th scope="col">SetPhonetic後のPHONETIC</th><th scope="col">GetPhonetic</th></tr></thead>
+<tbody>
+<tr><td>A. CSV由来の漢字（山田太郎）</td><td>山田太郎</td><td>ヤマダタロウ</td><td>ヤマダタロウ</td></tr>
+<tr><td>B. 読みが保存された漢字（和子＝ワコ）</td><td>ワコ</td><td>ワコ（変わらず）</td><td>カズコ</td></tr>
+<tr><td>C. 手動で修正した読み（東海林太郎＝ショウジタロウ）</td><td>ショウジタロウ</td><td>ショウジタロウ（変わらず）</td><td>東海林は「トウカイリン」</td></tr>
+<tr><td>D. 複数の読みがある氏名（角田一郎）</td><td>角田一郎</td><td>カクタイチロウ</td><td>角田は「カクタ」</td></tr>
+<tr><td>E. カタカナ（ヤマダ）</td><td>ヤマダ</td><td>ヤマダ</td><td>ヤマダ</td></tr>
+<tr><td>E. ひらがな（やまだ）</td><td>ヤマダ</td><td>ヤマダ</td><td>ヤマダ</td></tr>
+<tr><td>E. 混合（山田A1）</td><td>山田A1</td><td>ヤマダA1</td><td>ヤマダＡ１</td></tr>
+<tr><td>E. 数値（123）</td><td>空欄</td><td>空欄</td><td>１２３</td></tr>
+<tr><td>E. 空白</td><td>空欄</td><td>空欄</td><td>空欄</td></tr>
+</tbody>
+</table></div>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">情報の根拠</caption>
+<thead><tr><th scope="col">区分</th><th scope="col">内容</th></tr></thead>
+<tbody>
+<tr><td>Microsoftの資料で確認</td><td>SetPhoneticが読みを作ること、既存の読みの上書き、GetPhoneticの候補と日本語環境の条件、イミディエイトウィンドウにコードを保存できないこと、定数の種類</td></tr>
+<tr><td>実機で確認</td><td>この記事の「検証環境」と書いた結果すべて。イミディエイトウィンドウでの実行、フィルターとの関係、元に戻せないこと、xlsxとCSVへの保存</td></tr>
+<tr><td>未確認</td><td>Excel 2016・2019での動作／日本語入力で付いた読みへの影響（検証では登録命令で再現）／読みを決める仕組み／読みの結果が環境で変わるかどうか</td></tr>
+</tbody>
+</table></div>
+<p class="verify-note">表のBとCは、VBAの命令で読みを登録して再現しました。読みの結果は説明用の例で、お使いの環境で同じになるとは限りません。業務で使う前に、コピーしたファイルと架空の名簿で試してください。</p>
+</section>
+<section>
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../functions/old/article_phonetic_furigana.html">PHONETIC関数でフリガナを取り出す（VBAなしの方法）</a></li>
+<li><a href="../others/data/article_name_split_flash_fill.html">Excelで氏名を姓と名に分ける</a></li>
+<li><a href="../others/misc/article_macro_blocked.html">「マクロの実行がブロックされました」と表示されたとき</a></li>
+<li><a href="article_vba_file_rename.html">VBAでフォルダ内ファイル一括処理</a></li>
+<li><a href="https://learn.microsoft.com/ja-jp/office/vba/api/excel.range.setphonetic" rel="noopener" target="_blank">Range.SetPhonetic（Microsoft公式）</a></li>
+<li><a href="https://learn.microsoft.com/ja-jp/office/vba/api/excel.application.getphonetic" rel="noopener" target="_blank">Application.GetPhonetic（Microsoft公式）</a></li>
+<li><a href="https://learn.microsoft.com/ja-jp/office/vba/language/reference/user-interface-help/immediate-window" rel="noopener" target="_blank">イミディエイト ウィンドウ（Microsoft公式）</a></li>
+<li><a href="https://learn.microsoft.com/en-us/previous-versions/office/troubleshoot/office-developer/turn-off-visual-basic-for-application" rel="noopener" target="_blank">How to turn off VBA when you deploy Office（Microsoft公式・英語）</a></li>
+<li><a href="https://learn.microsoft.com/en-us/office/vba/api/excel.phonetics" rel="noopener" target="_blank">Phonetics object（Microsoft公式・英語）</a></li>
+<li><a href="https://support.microsoft.com/ja-jp/excel/use-furigana-phonetic-guides-with-japanese-text" rel="noopener" target="_blank">日本語の文字列にふりがなを使用する（Microsoft公式）</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../samples/">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel &times; No VBA Lab &horbar; 制限環境こそが最高の教師。</p>
+  <p class="site-footer-legal-links">
+    <a href="../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../script.js?v=20261103"></script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>SUBTOTAL関数｜フィルターで絞り込んだ行だけ合計・件数を出す方法｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="ExcelのSUBTOTAL関数で、フィルターで絞り込んだ行だけを合計・カウントする方法を解説。9と109の違い、絞り込んでも崩れない連番、条件と組み合わせる方法、AGGREGATEとの使い分けまで、VBAなしで使える形でまとめます。" name="description">
+<meta content="SUBTOTAL関数｜フィルターで絞り込んだ行だけ合計・件数を出す方法｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのSUBTOTAL関数で、フィルターで絞り込んだ行だけを合計・カウントする方法を解説。9と109の違い、絞り込んでも崩れない連番、条件と組み合わせる方法、AGGREGATEとの使い分けまで、VBAなしで使える形でまとめます。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_subtotal.html" property="og:url">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_subtotal.html" rel="canonical">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"SUBTOTAL関数｜フィルターで絞り込んだ行だけ合計・件数を出す方法","description":"ExcelのSUBTOTAL関数で、フィルターで絞り込んだ行だけを合計・カウントする方法を解説。9と109の違い、絞り込んでも崩れない連番、条件と組み合わせる方法、AGGREGATEとの使い分けまで、VBAなしで使える形でまとめます。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"datePublished":"2026-11-04","dateModified":"2026-11-04","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_subtotal.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"関数","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/"},{"@type":"ListItem","position":3,"name":"SUBTOTAL関数","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_subtotal.html"}]}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/" aria-current="true">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/">Word差し込み</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../functions/">関数</a><span>&gt;</span><strong>SUBTOTAL関数</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-04</span></div>
+<h1 class="article-title">SUBTOTAL関数：フィルターで絞り込んだ行だけ合計・件数を出す</h1>
+<p class="article-lead">SUMで合計を出していると、フィルターで絞り込んでも合計は全行のままです。SUBTOTALを使うと、表示されている行だけを集計できます。絞り込んでも崩れない連番の作り方まで説明します。</p>
+</div>
+<details class="auto-toc" open><summary>目次（6項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 基本の使い方</a></li><li><a href="#sec-2">🔢 集計方法の番号と、9と109の違い</a></li><li><a href="#sec-3">🔁 絞り込んでも崩れない連番</a></li><li><a href="#sec-4">🎯 表示されている行を、さらに条件で集計する</a></li><li><a href="#sec-5">🛠️ エラーがある列はAGGREGATE</a></li><li><a href="#sec-6">⚠️ つまずきやすい点</a></li></ol></nav></details>
+<section class="method-section">
+<h2 id="sec-1">💡 基本の使い方</h2>
+<p>第1引数に集計の種類を番号で指定します。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUBTOTAL(集計方法, 範囲)</span>
+</div>
+<div class="table-wrapper"><table class="demo-table"><caption class="sr-only">サンプルデータ：売上明細</caption>
+<thead><tr><th scope="col">行</th><th scope="col">A: 支店</th><th scope="col">B: 部署</th><th scope="col">C: 売上</th></tr></thead>
+<tbody>
+<tr><td>2</td><td>東京</td><td>営業部</td><td>120,000</td></tr>
+<tr><td>3</td><td>大阪</td><td>営業部</td><td>200,000</td></tr>
+<tr><td>4</td><td>東京</td><td>企画部</td><td>85,000</td></tr>
+<tr><td>5</td><td>福岡</td><td>営業部</td><td>150,000</td></tr>
+<tr><td>6</td><td>東京</td><td>営業部</td><td>95,000</td></tr>
+</tbody>
+</table></div>
+<p>C7以降に行を足す可能性があるので、合計は表の上（E1など）に置きます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUBTOTAL(9, C2:C100)</span>
+</div>
+<p class="code-comment">絞り込んでいないときは650,000です。A列を「東京」で絞り込むと、300,000（120,000＋85,000＋95,000）に変わります。</p>
+<div class="tip-box">💡 <strong>集計欄は表の上に置く</strong><br>表のすぐ下に置くと、並べ替えやフィルターの対象に入ったり、行の追加の邪魔になったりすることがあります。見出しより上に置くと扱いやすくなります。</div>
+</section>
+<section class="method-section">
+<h2 id="sec-2">🔢 集計方法の番号と、9と109の違い</h2>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">集計方法の番号</caption>
+<thead><tr><th scope="col">番号</th><th scope="col">手動で隠した行も除く番号</th><th scope="col">集計</th><th scope="col">「東京」で絞り込んだ結果</th></tr></thead>
+<tbody>
+<tr><td>9</td><td>109</td><td>合計（SUM）</td><td>300,000</td></tr>
+<tr><td>3</td><td>103</td><td>空白以外の個数（COUNTA）</td><td>3</td></tr>
+<tr><td>2</td><td>102</td><td>数値の個数（COUNT）</td><td>3</td></tr>
+<tr><td>1</td><td>101</td><td>平均（AVERAGE）</td><td>100,000</td></tr>
+<tr><td>4</td><td>104</td><td>最大（MAX）</td><td>120,000</td></tr>
+<tr><td>5</td><td>105</td><td>最小（MIN）</td><td>85,000</td></tr>
+</tbody>
+</table></div>
+<p>他に、6（積）、7・8（標準偏差）、10・11（分散）があります。</p>
+<h3>9と109の違い</h3>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">9と109の違い</caption>
+<thead><tr><th scope="col">行の状態</th><th scope="col">9（1〜11）</th><th scope="col">109（101〜111）</th></tr></thead>
+<tbody>
+<tr><td>フィルターで隠れた行</td><td>集計しない</td><td>集計しない</td></tr>
+<tr><td>右クリックの「非表示」で隠した行</td><td><strong>集計する</strong></td><td>集計しない</td></tr>
+</tbody>
+</table></div>
+<p>どちらもフィルターで隠れた行は除きます。手で非表示にした行も除きたいときは109を使います。迷ったら、見えている行だけを集計する109が分かりやすいでしょう。</p>
+<div class="xdemo-note-info"><strong>小計を重ねても二重に数えない</strong><br>範囲の中に別のSUBTOTALがあると、その値は集計から除かれます。部署ごとの小計を入れた表でも、全体を <code>=SUBTOTAL(9, C2:C100)</code> で集計できます。</div>
+</section>
+<section class="method-section">
+<h2 id="sec-3">🔁 絞り込んでも崩れない連番</h2>
+<p>ROW関数の連番は、絞り込むと飛び飛びになります。SUBTOTALで「ここまでに見えている行の数」を数えると、表示された行に1から順に番号が付きます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUBTOTAL(103, $B$2:B2)</span>
+</div>
+<p class="code-comment">連番用に追加した列の先頭（2行目）に入力して、下へコピーします。範囲の始まりを固定し、終わりが1行ずつ伸びるので、見えている行だけを順に数えます。B列は空白のない列を指定してください。</p>
+<p class="verify-note">行数が多いと、絞り込みのたびに範囲を数え直すため、再計算が重くなる場合があります。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-4">🎯 表示されている行を、さらに条件で集計する</h2>
+<p>SUBTOTALには条件を指定できません。「絞り込んだ結果のうち営業部だけ」を集計するときは、表示中かどうかを判定する作業列を作り、SUMIFSと組み合わせます。</p>
+<h3>ステップ1：D列に判定を入れる</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUBTOTAL(103, A2)</span>
+</div>
+<p class="code-comment">D2に入力して下へコピーします。その行が表示されていれば1、隠れていれば0になります。</p>
+<h3>ステップ2：SUMIFSで集計する</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUMIFS(C2:C100, B2:B100, "営業部", D2:D100, 1)</span>
+</div>
+<p class="code-comment">「東京」で絞り込んでいるときは、215,000（120,000＋95,000）になります。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-5">🛠️ エラーがある列はAGGREGATE</h2>
+<p>範囲の中に <code>#N/A</code> などのエラーがあると、SUBTOTALの結果もエラーになります。AGGREGATE関数なら、隠れた行とエラーを両方除いて集計できます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=AGGREGATE(9, 7, C2:C100)</span>
+</div>
+<p class="code-comment">第1引数の9は合計、第2引数の7は「隠れた行とエラーを無視する」指定です。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">SUBTOTALとAGGREGATEの比較</caption>
+<thead><tr><th scope="col"></th><th scope="col">SUBTOTAL</th><th scope="col">AGGREGATE</th></tr></thead>
+<tbody>
+<tr><td>隠れた行を除く</td><td>できる</td><td>できる</td></tr>
+<tr><td>エラーを除く</td><td>できない</td><td>できる</td></tr>
+<tr><td>分かりやすさ</td><td>番号が少なく読みやすい</td><td>番号の指定が多い</td></tr>
+</tbody>
+</table></div>
+<p>エラーの原因を直せるなら、先に直してSUBTOTALを使うほうが、数式を読む人にとって分かりやすくなります。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-6">⚠️ つまずきやすい点</h2>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">SUBTOTALのよくある疑問</caption>
+<thead><tr><th scope="col">症状</th><th scope="col">確認すること</th></tr></thead>
+<tbody>
+<tr><td>絞り込んでも合計が変わらない</td><td>SUMのままになっていないか確認します。</td></tr>
+<tr><td>非表示にした行が集計に入る</td><td>第1引数を9から109に変えます。</td></tr>
+<tr><td>列を非表示にしても結果が変わらない</td><td>SUBTOTALが除くのは行だけです。隠した列は集計されます。</td></tr>
+<tr><td>結果がエラーになる</td><td>範囲内のエラーを直すか、AGGREGATEを使います。</td></tr>
+</tbody>
+</table></div>
+<p>テーブル機能の「集計行」は、内部でこのSUBTOTALを使っています。テーブルで管理している表なら、集計行をオンにするだけで同じ集計ができます。</p>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_round.html">ROUND関数 &horbar; 四捨五入・切り上げ・切り捨てと消費税の端数処理</a></li>
+<li><a href="article_countifs_sumifs.html">COUNTIFS・SUMIFS：複数条件の件数と合計</a></li>
+<li><a href="article_small_row_index_extract.html">旧ExcelでFILTER関数を代用する方法｜ROW・SMALL・INDEXで複数行抽出</a></li>
+<li><a href="article_countifs_serial_number.html">複数条件に合う行だけ連番を振る方法</a></li>
+<li><a href="../../others/misc/article_statusbar.html">電卓不要！ステータスバー（オートカルク）の活用術</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js?v=20261103"></script>
+</body>
+</html>

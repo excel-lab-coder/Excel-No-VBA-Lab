@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Excelの「リンクが含まれています」の警告を解決する｜別ブック参照の確認とリンクの解除｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="Excelを開くと表示される「リンクが含まれています」の警告の意味と、更新するかどうかの判断、別ブックへのリンクの探し方と解除方法を解説。名前の定義・条件付き書式・グラフに隠れたリンクの見つけ方もまとめます。" name="description">
+<meta content="Excelの「リンクが含まれています」の警告を解決する｜別ブック参照の確認とリンクの解除｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Excelを開くと表示される「リンクが含まれています」の警告の意味と、更新するかどうかの判断、別ブックへのリンクの探し方と解除方法を解説。名前の定義・条件付き書式・グラフに隠れたリンクの見つけ方もまとめます。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_external_links_break.html" property="og:url">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_external_links_break.html" rel="canonical">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Excelの「リンクが含まれています」の警告を解決する｜別ブック参照の確認とリンクの解除","description":"Excelを開くと表示される「リンクが含まれています」の警告の意味と、更新するかどうかの判断、別ブックへのリンクの探し方と解除方法を解説。名前の定義・条件付き書式・グラフに隠れたリンクの見つけ方もまとめます。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"datePublished":"2026-11-04","dateModified":"2026-11-04","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_external_links_break.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"現場実務","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":3,"name":"リンクの警告と解除","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_external_links_break.html"}]}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/">Word差し込み</a><a href="../../others/" aria-current="true">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務</a><span>&gt;</span><strong>リンクの警告と解除</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-04</span></div>
+<h1 class="article-title">「リンクが含まれています」の警告を解決する：別ブック参照の確認とリンクの解除</h1>
+<p class="article-lead">ブックを開くたびに出るリンクの警告は、別のブックを参照している数式や設定があるという知らせです。更新してよいかの判断、リンクの探し方、解除の手順を順に説明します。</p>
+</div>
+<details class="auto-toc" open><summary>目次（6項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 警告の意味と、最初の判断</a></li><li><a href="#sec-2">🤔 身に覚えのないリンクができる理由</a></li><li><a href="#sec-3">🔍 リンク先を確認する</a></li><li><a href="#sec-4">✂️ リンクを解除する</a></li><li><a href="#sec-5">🕵️ 解除しても警告が消えないとき</a></li><li><a href="#sec-6">🛠️ リンクを使い続けるときの注意</a></li></ol></nav></details>
+<section class="method-section">
+<h2 id="sec-1">💡 警告の意味と、最初の判断</h2>
+<p>別のブックのセルを参照していると、開くときに参照先を読み直すかどうかを聞かれます。文言は版によって異なり、画面上部に「セキュリティの警告」として出ることもあります。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">更新するかどうか</caption>
+<thead><tr><th scope="col">選択</th><th scope="col">起きること</th><th scope="col">向いている場面</th></tr></thead>
+<tbody>
+<tr><td>更新する</td><td>参照先のファイルから最新の値を読み直す</td><td>参照先を知っていて、最新にしたいとき</td></tr>
+<tr><td>更新しない</td><td>前回保存したときの値のまま開く</td><td>人から届いたファイル、参照先が分からないとき</td></tr>
+</tbody>
+</table></div>
+<div class="xdemo-note-warn"><strong>⚠️ 迷ったら「更新しない」</strong><br>参照先が分からないファイルは、更新せずに開いて、次の手順でリンク先を確認します。参照先のファイルがなければ、更新しても値は最新になりません。</div>
+<p>別ブックを参照する数式は、次のような形です。参照先を閉じていると、ファイルの場所まで表示されます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">='[売上.xlsx]4月'!$C$2</span>
+<span class="code-line">='C:\data\[売上.xlsx]4月'!$C$2</span>
+</div>
+</section>
+<section class="method-section">
+<h2 id="sec-2">🤔 身に覚えのないリンクができる理由</h2>
+<p>自分で参照した覚えがなくても、次の操作でリンクができることがあります。</p>
+<ul class="line-height-2">
+<li><strong>別のブックからシートや数式をコピーした：</strong>数式が元のブックを指したまま残ります。</li>
+<li><strong>グラフをコピーした：</strong>データの範囲が元のブックを指したままになります。</li>
+<li><strong>シートをコピーしたときに、名前の定義も一緒に来た：</strong>使っていない名前でも、リンクとして残ります。</li>
+<li><strong>条件付き書式や入力規則をコピーした：</strong>セルを見ても気づきにくい場所です。</li>
+</ul>
+</section>
+<section class="method-section">
+<h2 id="sec-3">🔍 リンク先を確認する</h2>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">リンクの一覧を開く場所</caption>
+<thead><tr><th scope="col">環境</th><th scope="col">操作</th></tr></thead>
+<tbody>
+<tr><td>Microsoft 365 など</td><td>「データ」タブの「クエリと接続」グループにある「ブックのリンク」</td></tr>
+<tr><td>それ以前の版</td><td>「データ」→「リンクの編集」</td></tr>
+</tbody>
+</table></div>
+<p>参照先のファイル名と場所、状態が一覧で表示されます。「リンクの編集」が押せない（灰色の）場合、そのブックに解除できるリンクはありません。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-4">✂️ リンクを解除する</h2>
+<div class="xdemo-note-warn"><strong>⚠️ 解除は元に戻せません</strong><br>解除すると、そのリンクを使う数式は現在の値に置き換わります。先にブックをコピーして残してください。</div>
+<ol class="line-height-2">
+<li>ブックのコピーを保存します。</li>
+<li>値を最新にしたい場合は、参照先がある状態で先に更新します。</li>
+<li>リンクの一覧を開き、解除したいリンクの「リンクの解除」を選びます。</li>
+<li>保存して開き直し、警告が出ないことを確認します。</li>
+</ol>
+<p>数式を残す必要があるリンクは、解除せず、「ソースの変更」で正しいファイルを指定し直します。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-5">🕵️ 解除しても警告が消えないとき</h2>
+<p>リンクはセル以外にも残ります。上から順に確認します。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">リンクが残りやすい場所</caption>
+<thead><tr><th scope="col">場所</th><th scope="col">確認の方法</th></tr></thead>
+<tbody>
+<tr><td>セルの数式</td><td><kbd>Ctrl</kbd>+<kbd>F</kbd> で「オプション」を開き、検索場所を「ブック」、検索対象を「数式」にして <code>.xls</code> を検索します。</td></tr>
+<tr><td>名前の定義</td><td>「数式」→「名前の管理」で、参照範囲にファイル名や <code>#REF!</code> がある名前を探し、不要なら削除します。</td></tr>
+<tr><td>条件付き書式</td><td>「ホーム」→「条件付き書式」→「ルールの管理」で、シートごとに確認します。</td></tr>
+<tr><td>入力規則</td><td>「データ」→「データの入力規則」で、リストの元の値を確認します。</td></tr>
+<tr><td>グラフ</td><td>グラフを選び、「データの選択」で系列の参照先を確認します。</td></tr>
+<tr><td>図形・テキストボックス</td><td>図形を選び、数式バーにブック名を参照する式がないか確認します。</td></tr>
+</tbody>
+</table></div>
+<p>それでも見つからないときは、<strong>「ファイル」→「情報」→「問題のチェック」→「ドキュメント検査」</strong>で確認できます。検査の結果は、確認してから処理してください。処理すると元に戻せないものがあります。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-6">🛠️ リンクを使い続けるときの注意</h2>
+<p>別ブックへの参照を残す場合は、次の点に注意します。</p>
+<ul class="line-height-2">
+<li><strong>閉じたブックでは動かない関数があります。</strong>SUMIF・SUMIFS・COUNTIF・COUNTIFS・INDIRECT・OFFSET は、参照先を閉じていると <code>#VALUE!</code> になることがあります。</li>
+<li><strong>ファイルを移動するとリンクが切れます。</strong>置き場所を決めてから作成し、変更するときは「ソースの変更」で直します。</li>
+<li><strong>警告を出さない設定は、根本の解決にはなりません。</strong>起動時の確認の設定を変える前に、社内のルールを確認してください。</li>
+</ul>
+<p>毎月同じ形のファイルを読み込むなら、Power Queryに置き換えると、関数の制約やリンクの警告を避けられます。</p>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../../powerquery/advanced/article_pq_sheets_combine.html">Power Queryで複数シートを1つにまとめる</a></li>
+<li><a href="../../powerquery/advanced/article_pq_folder_monthly.html">Power Queryで毎月のファイルをまとめる：翌月も更新だけで使える設計</a></li>
+<li><a href="../../functions/old/article_volatile.html">揮発性関数とは？Excelが重くなるのを防ぐ</a></li>
+<li><a href="../misc/article_macro_blocked.html">「マクロの実行がブロックされました」と表示されたとき</a></li>
+<li><a href="https://support.microsoft.com/en-us/office/break-a-link-to-an-external-reference-in-excel-f1ca8b08-4f24-4af6-92e5-f4fdb1442748">Break a link to an external reference（Microsoft公式・英語）</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js?v=20261103"></script>
+</body>
+</html>

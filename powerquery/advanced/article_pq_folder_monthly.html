@@ -23,11 +23,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "Article", "headline": "Power Queryで毎月のファイルをまとめる：翌月も更新だけで使える設計", "description": "Power Queryの「フォルダーから」で、毎月届くCSVやExcelファイルを1つの表にまとめる方法を解説。ファイル名のルール、余計なファイルの除外、二重取り込みの確認、列名が変わった月の対応まで扱います。", "datePublished": "2026-11-01", "dateModified": "2026-11-01", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_folder_monthly.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}
+{"@context": "https://schema.org", "@type": "Article", "headline": "Power Queryで毎月のファイルをまとめる：翌月も更新だけで使える設計", "description": "Power Queryの「フォルダーから」で、毎月届くCSVやExcelファイルを1つの表にまとめる方法を解説。ファイル名のルール、余計なファイルの除外、二重取り込みの確認、列名が変わった月の対応まで扱います。", "datePublished": "2026-11-01", "dateModified": "2026-11-04", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_folder_monthly.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}
 </script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "パワークエリ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/"}, {"@type": "ListItem", "position": 3, "name": "毎月のファイルをまとめる", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_folder_monthly.html"}]}
 </script>
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 </head>
 <body class="article-layout">
 <div class="reading-progress" aria-hidden="true"></div>
@@ -37,7 +39,7 @@
 <main class="main-content" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../powerquery/">パワークエリ</a><span>&gt;</span><strong>毎月のファイルをまとめる</strong></div>
 <article class="article-body">
-<div class="article-header"><div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-01</span></div><h1 class="article-title">Power Queryで毎月のファイルをまとめる：翌月も更新だけで使える設計</h1>
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-04</span></div><h1 class="article-title">Power Queryで毎月のファイルをまとめる：翌月も更新だけで使える設計</h1>
 <p class="article-summary" data-seo-lead="true">毎月届くファイルのコピー＆貼り付けを、Power Queryの「フォルダーから」で自動化します。翌月以降もファイルを入れて更新するだけで使えるように、フォルダーの決め方、二重取り込みの防ぎ方、列名が変わった月への対処まで、月次業務の例で説明します。</p></div>
 <details class="auto-toc" open><summary>目次（9項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 やりたいこと</a></li><li><a href="#sec-2">手順1：フォルダーとファイル名のルールを決める</a></li><li><a href="#sec-3">手順2：フォルダーから取り込む</a></li><li><a href="#sec-4">手順3：余計なファイルを読み込まない絞り込みを入れる</a></li><li><a href="#sec-5">手順4：どのファイルの行か分かるようにする（Source.Name）</a></li><li><a href="#sec-6">手順5：二重取り込みを防ぐ</a></li><li><a href="#sec-7">手順6：列名が変わった月に備える</a></li><li><a href="#sec-8">手順7：読み込んで、翌月からの運用を決める</a></li><li><a href="#sec-9">月次運用のチェックリスト</a></li></ol></nav></details>
 
@@ -75,8 +77,6 @@
 <li>「ファイルの結合」画面でサンプルにするファイル（最初のファイルで構いません）を選び、CSVなら文字コード（「932: 日本語 (シフト JIS)」など）を確認して「OK」を押します。</li>
 </ol>
 <p>Power Queryエディターが開き、全ファイルの中身が1つの表につながった状態になります。左側には、自動で作られた補助のクエリ（「パラメーター」「サンプル ファイル」「サンプル ファイルの変換」「ファイルの変換」）が並びます。</p>
-<figure class="screenshot-placeholder" data-todo="screenshot"><div class="screenshot-placeholder-box">スクリーンショット差し込み予定</div><figcaption>「フォルダーから」で表示されるファイル一覧と「結合」ボタン</figcaption></figure>
-<figure class="screenshot-placeholder" data-todo="screenshot"><div class="screenshot-placeholder-box">スクリーンショット差し込み予定</div><figcaption>自動で作られる補助クエリ（ヘルパー クエリ）</figcaption></figure>
 <p class="verify-note">画面の名前・ボタンの位置は、環境により結果が異なる場合があります。お使いの版で表示を確認してください。</p>
 <div class="xdemo-note-info"><strong>「サンプル ファイルの変換」の役割</strong><br>ここに加えた処理（不要な行の削除、見出しの昇格、列名の変更など）は、<strong>すべてのファイルに同じように</strong>適用されます。「1ファイルずつの下ごしらえ」はここで、「全部つないだ後の処理」は最終のクエリで行う、と分けて考えると整理しやすくなります。</div>
 </section>
@@ -170,6 +170,8 @@
 </section>
 
 <section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="../../others/data/article_batch_merge_text.html">バッチファイルでフォルダ内のCSV・テキストを1つに結合する</a></li>
+<li><a href="article_pq_sheets_combine.html">Power Queryで複数シートを1つにまとめる</a></li>
 <li><a href="article_pq_import_patterns.html">データ取り込みパターン集 ― CSV・Excel・PDF・Web・フォルダ</a></li>
 <li><a href="article_pq_parameter_query.html">パラメータークエリでファイルの場所を管理する</a></li>
 <li><a href="article_pq_group_pivot.html">グループ化とピボット</a></li>

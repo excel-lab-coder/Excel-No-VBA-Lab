@@ -32,7 +32,7 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "datePublished": "2026-05-03",
-  "dateModified": "2026-07-11",
+  "dateModified": "2026-11-04",
   "headline": "XLOOKUP応用編",
   "author": {
     "@type": "Person",
@@ -66,6 +66,8 @@
 }</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 </head>
 <body class="article-layout">
 <div class="reading-progress" aria-hidden="true"></div>
@@ -93,7 +95,7 @@
 <div class="article-meta">
 <span class="badge badge-365">365</span>
 <span class="badge badge-2021">2021～</span>
-<span class="article-date">更新日: 2026-07-11</span>
+<span class="article-date">更新日: 2026-11-04</span>
 </div>
 <h1 class="article-title">XLOOKUP 応用編：複数列一括返却・高速化・後ろから検索</h1>
 </div>
@@ -118,7 +120,7 @@
 <!-- ① マスタ表 -->
 <div class="xdemo-wrap">
 <div class="xdemo-step-label">① マスタ表（F〜I列）</div>
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col"></td>
 <td class="xd-col">F</td>
@@ -165,7 +167,7 @@
 <div class="code-block" data-lang="excel">
 <span class="code-line">=XLOOKUP(A2, F:F, G:I, "未登録")</span>
 </div>
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col"></td>
 <td class="xd-col">A</td>
@@ -196,7 +198,7 @@
 <!-- ③ 結果 -->
 <div class="xdemo-wrap">
 <div class="xdemo-step-label">③ 結果イメージ（スピル展開後）</div>
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col"></td>
 <td class="xd-col">A</td>
@@ -236,7 +238,7 @@
 <!-- ④ INDEX+MATCH との対比 -->
 <div class="xdemo-wrap">
 <div class="xdemo-step-label">④ INDEX+MATCH &horbar; 3本の数式が必要</div>
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col"></td>
 <td class="xd-col">A</td>
@@ -267,7 +269,7 @@
 <!-- ⑤ 比較サマリー -->
 <div class="xdemo-wrap">
 <div class="xdemo-step-label">⑤ 比較サマリー（3列取得したい場合）</div>
-<div class="table-wrapper"><table class="formula-count-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="formula-count-table"><caption class="sr-only">データテーブル</caption>
 <thead>
 <tr>
 <th scope="col">比較項目</th>
@@ -309,7 +311,7 @@
 </table></div>
 </div>
 <div class="xdemo-note-tip">
-          💡 <strong>取得したい列が隣接していない場合（CHOOSECOLS）</strong><br>
+          💡 <strong>取得したい列が隣接していない場合（CHOOSECOLS：Excel 2024 / Microsoft 365）</strong><br>
           XLOOKUPの戻り配列は<em>連続した範囲</em>である必要があります。「氏名（G列）と役職（I列）だけ」のように
           <strong>列が飛んでいるケース</strong>では、<code>CHOOSECOLS</code> 関数と組み合わせることで対応できます。<br>
 <a href="article_choosecols.html">&rarr; CHOOSECOLSの詳細はこちら</a>
@@ -325,7 +327,7 @@
           データの特性に応じて使い分けると検索負荷を抑えられる場合があります。</p>
 <h4>第5引数：一致モード（match_mode）</h4>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="arg-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="arg-table"><caption class="sr-only">データテーブル</caption>
 <thead>
 <tr><th scope="col">値</th><th scope="col">意味</th></tr>
 </thead>
@@ -351,7 +353,7 @@
 </div>
 <h4>第6引数：検索モード（search_mode）</h4>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="arg-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="arg-table"><caption class="sr-only">データテーブル</caption>
 <thead>
 <tr><th scope="col">値</th><th scope="col">意味</th></tr>
 </thead>
@@ -421,7 +423,7 @@
 <p class="code-comment" style="margin:4px 0 0;">
 <code>SORTBY(A2:C1000, A2:A1000, 1)</code>：A〜C列全体をA列の昇順で並べた配列を生成<br>
 <code>CHOOSECOLS(sorted, 1)</code>：並べ替え済み配列の1列目（検索キー）<br>
-<code>CHOOSECOLS(sorted, 2, 3)</code>：並べ替え済み配列の2・3列目（戻り配列）<br>
+<code>CHOOSECOLS(sorted, 2, 3)</code>：並べ替え済み配列の2・3列目（戻り配列）。CHOOSECOLS は Excel 2024 / Microsoft 365 の関数です<br>
 <code>LET</code> で配列を一度だけ計算して再利用 &rarr; <strong>計算コストを最小化</strong>
 </p>
 <strong>【まとめ：SORT/SORTBY + XLOOKUP バイナリ検索の利点】</strong>

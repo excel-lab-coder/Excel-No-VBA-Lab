@@ -54,6 +54,7 @@
       "subcategory": "modern_search",
       "title": "XLOOKUP比較編：VLOOKUP・INDEX+MATCHとの使い分け",
       "url": "functions/latest/article_xlookup_vs.html",
+      "tags": ["列 挿入", "数式 壊れる"],
       "summary": "VLOOKUPの弱点、INDEX+MATCHの強み、XLOOKUPの便利さを比較して使い分けます。",
       "level": 2,
       "version": "Excel 2016以降",
@@ -114,9 +115,9 @@
     {
       "category": "functions",
       "subcategory": "modern_search",
-      "title": "LAMBDA（ラムダ）関数は「何のために使うのか？」 — 式の怪獣化を防ぎ、会社ルールを自作関数化する実務ガイド",
+      "title": "LAMBDA（ラムダ）関数は「何のために使うのか？」 — 長い式の乱立を防ぎ、会社ルールを自作関数化する実務ガイド",
       "url": "functions/latest/article_lambda_basic.html",
-      "summary": "「DATEDIFを忘れるから」程度では使わない！セルに直書きすると破綻する怪獣数式をLETと組み合わせて自作関数化し、会社ルールの修正を一撃で完結させる実務ガイド。",
+      "summary": "「DATEDIFを忘れるから」程度では使わない！セルに直書きすると破綻する長い数式をLETと組み合わせて自作関数化し、会社ルールの修正を一撃で完結させる実務ガイド。",
       "level": 3,
       "tags": [
         "impact"
@@ -292,9 +293,7 @@
       "url": "functions/latest/article_filter.html",
       "summary": "条件に合うデータを複数件まとめて動的抽出します。抽出作業の自動化に非常に強力です。",
       "level": 2,
-      "tags": [
-        "impact"
-      ],
+      "tags": ["impact", "オートフィルター", "抽出"],
       "is_highlight": true,
       "version": "Excel 2021以降",
       "min_excel": 2021
@@ -345,6 +344,7 @@
       "subcategory": "modern_search",
       "title": "SORT / SORTBY関数",
       "url": "functions/latest/article_sort.html",
+      "tags": ["ランキング", "上位", "並び替え"],
       "summary": "抽出結果や一覧を、条件に応じて自動で並べ替えます。",
       "level": 2,
       "version": "Excel 2021以降",
@@ -369,7 +369,7 @@
       "subcategory": "modern_logic",
       "title": "IFS関数",
       "url": "functions/latest/article_ifs.html",
-      "summary": "条件が多段階あるとき、IF関数のネスト地獄を避けて読みやすく分岐できます。",
+      "summary": "条件が多段階あるとき、IF関数の深いネストを避けて読みやすく分岐できます。",
       "level": 1,
       "tags": [
         "impact"
@@ -393,6 +393,7 @@
       "subcategory": "modern_logic",
       "title": "LET深掘り②：SORT・SORTBYの重複計算を減らす",
       "url": "functions/latest/article_let_iferror.html",
+      "tags": ["ランキング", "上位"],
       "summary": "ソート結果を変数化して再利用し、INDEX・SEQUENCEで上位件数を抽出します。Excel 2021対応、該当0件の分岐付き。",
       "level": 4,
       "version": "Excel 2021以降",
@@ -482,13 +483,11 @@
     {
       "category": "functions",
       "subcategory": "old_search",
-      "title": "INDEX + MATCH（全ver対象）",
+      "title": "INDEX + MATCH（Excel 2016以降）",
       "url": "functions/old/article_index_match.html",
       "summary": "検索キーより左側にある列のデータを取得したい場合など、旧バージョンで強力な検索手法です。",
       "level": 3,
-      "tags": [
-        "impact"
-      ],
+      "tags": ["impact", "列 挿入", "数式 壊れる", "#REF!"],
       "is_highlight": true,
       "version": "Excel 2016以降",
       "min_excel": 2016
@@ -562,9 +561,7 @@
       "url": "functions/old/article_small_row_index_extract.html",
       "summary": "ROW・SMALL・INDEXの動きを図で追い、旧Excelの複数抽出をセル単位で徹底解説します。",
       "level": 3,
-      "tags": [
-        "impact"
-      ],
+      "tags": ["impact", "オートフィルター", "抽出"],
       "is_highlight": true,
       "version": "Excel 2016以降",
       "min_excel": 2016
@@ -606,9 +603,7 @@
       "url": "functions/old/article_iferror.html",
       "summary": "#N/Aだけを処理したいのか、他のエラーもまとめて処理したいのかで使い分けます。",
       "level": 1,
-      "tags": [
-        "impact"
-      ],
+      "tags": ["impact", "#N/A", "#VALUE!", "#REF!", "エラー 消す"],
       "version": "Excel 2016以降",
       "min_excel": 2016
     },
@@ -619,9 +614,7 @@
       "url": "functions/old/article_errortype.html",
       "summary": "セルのエラー種類によって表示メッセージや処理を変えたい場合に使います。",
       "level": 2,
-      "tags": [
-        "rare"
-      ],
+      "tags": ["rare", "#N/A", "#VALUE!", "#REF!", "#DIV/0!"],
       "version": "Excel 2016以降",
       "min_excel": 2016
     },
@@ -632,6 +625,17 @@
       "url": "functions/old/article_substitute.html",
       "summary": "複数の文字置換を一気に済ませたいときの定番テクニックです。",
       "level": 3,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_other",
+      "title": "PHONETIC関数でフリガナを取り出す：カタカナ・ひらがな・半角への変換",
+      "url": "functions/old/article_phonetic_furigana.html",
+      "summary": "氏名からフリガナを取り出し、全角カタカナ・半角カナ・ひらがなにそろえます。貼り付けた名簿で漢字のまま返るときの対処と、読みの確認まで。",
+      "level": 2,
+      "tags": ["ふりがな","フリガナ","カタカナ","ひらがな","半角カナ","読み","JIS","ASC","五十音順"],
       "version": "Excel 2016以降",
       "min_excel": 2016
     },
@@ -694,13 +698,11 @@
     {
       "category": "functions",
       "subcategory": "old_other",
-      "title": "【要注意】揮発性関数とは？激重Excel化を防ぐ",
+      "title": "【要注意】揮発性関数とは？Excelが重くなるのを防ぐ",
       "url": "functions/old/article_volatile.html",
       "summary": "INDIRECT・OFFSETなどの揮発性関数による再計算負荷を理解し、重いブックを防ぎます。",
       "level": 4,
-      "tags": [
-        "impact"
-      ],
+      "tags": ["impact", "遅い", "重い"],
       "rarity_id": "volatile",
       "version": "Excel 2016以降",
       "min_excel": 2016
@@ -845,9 +847,9 @@
     {
       "category": "powerquery",
       "subcategory": "pdf",
-      "title": "WordファイルからPower Queryでデータを取り込む",
+      "title": "旧式：WordでPDFを開いてExcelに取り込む方法",
       "url": "powerquery/basic/article_pdf_word.html",
-      "summary": "Wordドキュメント内のテーブルをPower Queryで取り込む方法を解説します。",
+      "summary": "WordでPDFを開き、表を確認・修正してExcelへ貼り付ける方法と限界を解説します。",
       "level": 2
     },
     {
@@ -871,6 +873,17 @@
       "url": "powerquery/advanced/article_pq_folder_monthly.html",
       "summary": "フォルダー取り込みを月次業務の例で解説。ファイル名のルール、余計なファイルの除外、二重取り込みの確認表、列名が変わった月への対処まで。",
       "level": 4,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
+    },
+    {
+      "category": "powerquery",
+      "subcategory": "advanced",
+      "title": "Power Queryで複数シートを1つにまとめる：シートが増えても更新だけで使える",
+      "url": "powerquery/advanced/article_pq_sheets_combine.html",
+      "summary": "月別・支店別のシートを1つの表にまとめます。集計シートの除外、二重計上の防ぎ方、同じブックの中でまとめる方法、数式との使い分けまで。",
+      "level": 3,
+      "tags": ["シートをまとめる","複数シート","シート 結合","Excel.Workbook","VSTACK","3D参照"],
       "version": "Excel 2016以降",
       "min_excel": 2016
     },
@@ -1063,7 +1076,7 @@
     {
       "category": "cobol",
       "subcategory": "formula",
-      "title": "【関数複合関数編】複雑なCOBOL帳票の整理｜ヘッダー紐付け・フィルダウンをExcel関数で自動化",
+      "title": "【複合関数編】複雑なCOBOL帳票の整理｜ヘッダー紐付け・フィルダウンをExcel関数で自動化",
       "url": "cobol/formula/03_article_cobol_expert.html",
       "summary": "COBOL帳票のヘッダー紐付け・フィルダウンを、Excel関数だけで自動化する上級テクニックです。",
       "level": 8,
@@ -1080,7 +1093,7 @@
       "subcategory": "formula",
       "title": "【不規則明細・完結編】行数がバラバラなデータの正規化展開",
       "url": "cobol/formula/04_article_cobol_irregular.html",
-      "summary": "最凶の不規則帳票に、数式だけで立ち向かう完結編です。",
+      "summary": "明細行数が不規則な帳票に、数式だけで立ち向かう完結編です。",
       "level": 8,
       "rarity_id": "cobol_irregular",
       "is_highlight": true,
@@ -1387,9 +1400,7 @@
       "url": "others/speed/article_memory_swap.html",
       "summary": "VLOOKUPをINDEX+MATCHに変えても遅いまま？RAM・SSD・32ビット制限・数式設計の考え方を解説します。",
       "level": 4,
-      "tags": [
-        "impact"
-      ],
+      "tags": ["impact", "遅い", "重い"],
       "version": "Excel 2016以降",
       "min_excel": 2016
     },
@@ -1415,9 +1426,7 @@
       "url": "others/speed/article_excel_diet_emergency.html",
       "summary": "数十MBに肥大化したファイルをVBAなしで手動軽量化。UsedRange初期化（Ctrl+Endのズレ解消）、ゴースト図形一括削除、重複した条件付き書式の整理手順を徹底解説。",
       "level": 2,
-      "tags": [
-        "impact"
-      ],
+      "tags": ["impact", "ファイルサイズ", "遅い", "重い", "容量"],
       "is_highlight": true,
       "version": "Excel 2016以降",
       "min_excel": 2016
@@ -1429,9 +1438,7 @@
       "url": "others/speed/article_02_formula_techniques.html",
       "summary": "数式の処理速度を改善する実践テクニック集です。",
       "level": 6,
-      "tags": [
-        "impact"
-      ],
+      "tags": ["impact", "遅い", "重い"],
       "rarity_id": "speed_formula",
       "is_highlight": true,
       "version": "Excel 2016以降",
@@ -1810,6 +1817,7 @@
       "subcategory": "ui",
       "title": "Excelで入力欄だけ編集できるようにする：入力規則とシート保護",
       "url": "others/ui/article_input_validation_sheet_protection.html",
+      "tags": ["プルダウン", "ドロップダウン", "リスト入力", "ロック"],
       "summary": "入力欄のロック解除、リスト・日付・桁数と重複チェックの入力規則、Tabで入力欄だけ移動するシート保護。配布用ファイルの作り方。",
       "level": 2,
       "version": "Excel 2016以降",
@@ -1822,9 +1830,7 @@
       "url": "others/ui/article_form_controls.html",
       "summary": "スピンボタンなどのフォームコントロールを使い、VBAなしで操作性を改善します。",
       "level": 2,
-      "tags": [
-        "impact"
-      ],
+      "tags": ["impact", "ドロップダウン", "スピンボタン", "チェックボックス"],
       "version": "Excel 2016以降",
       "min_excel": 2016
     },
@@ -1874,9 +1880,7 @@
       "url": "others/misc/article_snipping_tool_video.html",
       "summary": "追加インストール不可の職場でも使いやすい、Windows標準の画面録画。フリーソフト導入やウイルス不安を増やさず手順共有できます。",
       "level": 1,
-      "tags": [
-        "impact"
-      ],
+      "tags": ["impact", "スクリーンショット", "動画"],
       "is_highlight": true
     },
     {
@@ -1884,6 +1888,7 @@
       "subcategory": "data",
       "title": "Excelの数字が文字列になって計算・検索できないときの直し方",
       "url": "others/data/article_text_numbers_fix.html",
+      "tags": ["文字列 数値", "緑の三角", "#N/A"],
       "summary": "SUMが0、VLOOKUPが#N/Aになる原因を見分け、数値に変換・乗算の貼り付け・区切り位置・VALUE/ASC関数で原因別に直す方法。",
       "level": 1,
       "version": "Excel 2016以降",
@@ -1894,6 +1899,7 @@
       "subcategory": "data",
       "title": "CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方",
       "url": "others/data/article_csv_leading_zero.html",
+      "tags": ["先頭ゼロ", "先頭の0", "ゼロ落ち", "0が消える", "文字列"],
       "summary": "郵便番号・社員番号・16桁以上の管理番号を守る取り込み方。「テキストまたはCSVから」で列をテキストにする手順と、消えたゼロの戻し方。",
       "level": 1,
       "version": "Excel 2016以降",
@@ -1907,6 +1913,39 @@
       "summary": "前月と今月の名簿をCOUNTIFとINDEX＋MATCH（XLOOKUP）で照合し、追加・削除・変更を自動判定。変わったセルは条件付き書式で色付け。",
       "level": 2,
       "version": "Excel 2016以降",
+      "min_excel": 2016
+    },
+    {
+      "category": "others",
+      "subcategory": "data",
+      "title": "Excelで氏名を姓と名に分ける：関数・フラッシュフィルとスペースのそろえ方",
+      "url": "others/data/article_name_split_flash_fill.html",
+      "summary": "全角・半角のスペースをそろえ、LEFT・MID・FINDやフラッシュフィルで姓と名に分けます。スペースのない氏名の扱い、名簿を整えるときの注意まで。",
+      "level": 2,
+      "tags": ["氏名 分割","姓 名","フラッシュフィル","Ctrl+E","全角スペース","名簿","ふりがな"],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
+    },
+    {
+      "category": "others",
+      "subcategory": "data",
+      "title": "「リンクが含まれています」の警告を解決する：別ブック参照の確認とリンクの解除",
+      "url": "others/data/article_external_links_break.html",
+      "summary": "開くたびに出るリンクの警告の意味と、更新の判断、リンクの探し方と解除の手順。名前の定義や条件付き書式、グラフに残ったリンクも見つけます。",
+      "level": 2,
+      "tags": ["外部参照","別ブック","リンク 解除","リンクの編集","ブックのリンク","セキュリティの警告","#REF!"],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
+    },
+    {
+      "category": "others",
+      "subcategory": "data",
+      "title": "バッチファイルでフォルダ内のCSV・テキストを1つに結合する",
+      "url": "others/data/article_batch_merge_text.html",
+      "summary": "copyコマンドの落とし穴と、見出しを1行だけ残すバッチファイルの作り方を、実機検証の結果とともに解説。文字コードの注意とPower Queryとの使い分けまで。",
+      "level": 2,
+      "tags": ["バッチファイル","bat","CSV 結合","テキスト 結合","copy","フォルダ","コマンドプロンプト","ファイル 結合"],
+      "version": "Windows",
       "min_excel": 2016
     },
     {
@@ -1938,6 +1977,7 @@
       "subcategory": "migration",
       "title": "Microsoft 365に移行したときの数式チェックリスト（#SPILL!・@記号・旧版との共有）",
       "url": "others/misc/article_m365_migration_formula_checklist.html",
+      "tags": ["#SPILL!", "スピル", "@"],
       "summary": "Office 2016／2019・2021のサポート終了を受けた移行時の確認点。#SPILL!、数式に付く@、古い版の人と共有するときの新しい関数の注意。",
       "level": 2,
       "version": "Microsoft 365"
@@ -1947,6 +1987,7 @@
       "subcategory": "migration",
       "title": "「マクロの実行がブロックされました」と表示されたとき",
       "url": "others/misc/article_macro_blocked.html",
+      "tags": ["マクロ 無効", "マクロ 有効化", "セキュリティの警告"],
       "summary": "表示の意味と、Microsoft公式の案内にある対応だけを紹介。マクロを許可してよいかは、必ず社内規程を確認してください。",
       "level": 1,
       "version": "Microsoft 365"
@@ -2005,6 +2046,15 @@
       "tags": [
         "vba"
       ]
+    },
+    {
+      "category": "unlocked",
+      "subcategory": "vba",
+      "title": "VBAでふりがなをまとめて付ける：CSVや貼り付けた名簿をSetPhoneticで処理",
+      "url": "vba/article_vba_set_phonetic.html",
+      "summary": "PHONETICが漢字のまま返る名簿に、イミディエイトウィンドウの1行で推定のふりがなを生成します。使ってよい場面、確認済みの読みの守り方、GetPhoneticとの違いも解説します。<br><small>対応する本編：PHONETIC関数でフリガナを取り出す</small>",
+      "level": 3,
+      "tags": ["vba","ふりがな","フリガナ","SetPhonetic","GetPhonetic","イミディエイト","CSV","名簿","PHONETIC"]
     },
     {
       "category": "unlocked",
@@ -2104,6 +2154,28 @@
       "url": "functions/old/article_countifs_sumifs.html",
       "summary": "複数条件の件数・合計・集計表を作る基本を解説します。基本式はExcel 2016以降、MAXIFS・MINIFSの補足は2019以降。",
       "level": 3,
+      "version": "Excel 2016以降",
+      "min_excel": 2016
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_math",
+      "title": "ROUND関数：四捨五入・切り上げ・切り捨てと消費税の端数処理",
+      "url": "functions/old/article_round.html",
+      "summary": "ROUND・ROUNDUP・ROUNDDOWNの桁数の指定、消費税の端数処理、表示形式との違い、合計が合わないときの直し方を解説します。",
+      "level": 1,
+      "tags": ["四捨五入","切り上げ","切り捨て","消費税","端数","インボイス","小数点","ROUNDUP","ROUNDDOWN","MROUND"],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_math",
+      "title": "SUBTOTAL関数：フィルターで絞り込んだ行だけ合計・件数を出す",
+      "url": "functions/old/article_subtotal.html",
+      "summary": "フィルターで絞り込んだ行だけを集計します。9と109の違い、絞り込んでも崩れない連番、条件との組み合わせ、AGGREGATEとの使い分けを解説します。",
+      "level": 2,
+      "tags": ["小計","フィルター 集計","オートフィルター","非表示","可視セル","表示されている行","連番","AGGREGATE"],
       "version": "Excel 2016以降",
       "min_excel": 2016
     },

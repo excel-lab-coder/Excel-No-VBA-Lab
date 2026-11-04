@@ -32,7 +32,7 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "datePublished": "2026-05-03",
-  "dateModified": "2026-10-07",
+  "dateModified": "2026-11-04",
   "headline": "INDEX + MATCH + 結合キー列",
   "author": {
     "@type": "Person",
@@ -66,6 +66,8 @@
 }</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 </head>
 
 <body class="article-layout">
@@ -92,7 +94,7 @@
 <div class="article-header">
 <div class="article-meta">
 <span class="badge badge-all">Excel 2016以降</span>
-</div>
+<span class="article-date">更新日: 2026-11-04</span></div>
 <h1 class="article-title">INDEX + MATCH + 結合キー列：Excel 2016以降対応の「旧来型・多条件検索」</h1>
 </div>
 <section class="goal-section">
@@ -103,7 +105,7 @@
 <h3>Excel 2016以降対応の王道テクニック</h3>
 <p>VLOOKUPや通常のMATCH関数は「1つの列」しか検索できません。そこで長年使われてきたのが、<strong>検索用の「結合キー列（合体させた列）」を新しく作ってしまい、それを検索対象にする</strong>という物理的なアプローチです。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.75em;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.75em;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col"></td>
 <td class="xd-col" style="background:#ffcc80;">A (新規追加)</td>
@@ -146,12 +148,30 @@
         </div>
 </section>
 <section class="method-section">
+<h3>実務での注意点</h3>
+<h4>結合するときは区切り文字を入れる</h4>
+<p>そのまま結合すると、「1」と「23」も「12」と「3」も同じ「123」になり、別のデータを拾うおそれがあります。データに出てこない記号をはさむと防げます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=B2&amp;"|"&amp;C2</span>
+</div>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=INDEX($D:$D, MATCH(F2&amp;"|"&amp;G2, $A:$A, 0))</span>
+</div>
+<p class="code-comment">F2に店舗、G2に商品を入力する例です。検索する値も、同じ形で結合します。</p>
+<h4>作業列を追加できない場合</h4>
+<p>表の形を変えられないときは、条件を掛け算する書き方があります。Excel 2016でも、配列数式（<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd>）にせず使えます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=INDEX(D2:D100, MATCH(1, INDEX((B2:B100=F2)*(C2:C100=G2),0), 0))</span>
+</div>
+<p class="code-comment">両方の条件に合う行だけが 1 になり、その最初の位置をMATCHで探します。範囲が広いと重くなるので、必要な行に絞って指定します。</p>
+</section>
+<section class="method-section">
 <h2><span class="icon">🔗</span> 関連記事</h2>
 <ul class="line-height-2">
-<li><a href="../latest/article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
-<li><a href="../latest/article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
-<li><a href="../latest/article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
-<li><a href="../latest/article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+<li><a href="article_index_match.html">INDEX + MATCH（Excel 2016以降）</a></li>
+<li><a href="../latest/article_xlookup_multi.html">XLOOKUP ネスト（多条件検索）</a></li>
+<li><a href="../latest/article_xlookup_joined_key.html">検索列2列を1つの検索値で探す方法</a></li>
+<li><a href="article_countifs_serial_number.html">複数条件に合う行だけ連番を振る方法</a></li>
 </ul>
 </section>
 

@@ -49,7 +49,7 @@
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
     "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}},
     "datePublished": "2026-03-20",
-    "dateModified": "2026-04-23"
+    "dateModified": "2026-11-04"
   }
   </script>
 <script type="application/ld+json">
@@ -87,6 +87,9 @@
   </style>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/intro/01_article_cobol_fixed.html" property="og:url">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -113,7 +116,7 @@
 <div class="article-meta">
 <span class="badge badge-all">Excel 2016以降</span>
 <span class="badge badge-maniac">基礎知識</span>
-<span class="article-date">更新日: 2026-04-23</span>
+<span class="article-date">更新日: 2026-11-04</span>
 </div>
 <h1 class="article-title">扱っているデータはCOBOL帳票？固定長データの見分け方と基礎知識</h1>
 <p class="article-summary" data-seo-lead="true">手元のテキストがCOBOL系の固定長データかどうかを、「区切り文字がない」「1行の長さが同じ」「ゼロ埋め・空白埋め」などの特徴から見分け、MIDBで切り出す前に確認することを整理します。</p>
@@ -239,7 +242,7 @@ MIDBの例は、Excelへ取り込んだ文字列がCP932／Shift-JIS互換の配
 <tr>
 <td class="text-center-bold">COBOL帳票<br>（不定行数型）<br><span style="font-size:0.82em; font-weight:normal; color:#666;">明細の行数が<br>毎回バラバラ</span></td>
 <td>
-              上記の「罠」に加え、最凶の要素が加わる：
+              上記の「罠」に加え、さらに難しい要素が加わる：
               <ul style="margin-top:6px; line-height:1.8;">
 <li><strong>1件あたりの明細行数が毎回異なる</strong>（A社は2行、B社は7行、C社は10行&hellip;など）</li>
 <li>「ここからここまでが1件」の境界を<strong>データの内容から判定する</strong>必要がある</li>
@@ -251,7 +254,7 @@ MIDBの例は、Excelへ取り込んだ文字列がCP932／Shift-JIS互換の配
 </table>
 <div class="xdemo-note-warn">
 <strong>つまり：</strong>「システムから出た謎のテキストデータ」が<strong>1行＝1レコードのシンプルな固定長</strong>で、文字コードとバイト配置を確認できる既存環境なら、<span class="code-inline">MIDB</span> ＋ <span class="code-inline">TRIM</span> はExcel上で処理する方法の一つです。<br><br>
-          しかし、実務で遭遇するCOBOL帳票は「ヘッダー混在＋固定行数」パターン、さらには「明細行数が毎回バラバラ」という最凶パターンまで存在し、単純な切り出しだけでは歯が立ちません。当サイトでは、<strong>シンプルなケースから最凶の不規則帳票まで段階的に攻略する方法</strong>を解説しています。
+          しかし、実務で遭遇するCOBOL帳票は「ヘッダー混在＋固定行数」パターン、さらには「明細行数が毎回バラバラ」という難しいパターンまで存在し、単純な切り出しだけでは歯が立ちません。当サイトでは、<strong>シンプルなケースから明細行数が不規則な帳票まで段階的に攻略する方法</strong>を解説しています。
         </div>
 </section>
 <section class="tips-section" style="background:#fcfcfc;">

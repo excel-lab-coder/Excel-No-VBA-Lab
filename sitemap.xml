@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/about.html</loc>
@@ -22,11 +22,11 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/</loc>
@@ -34,11 +34,11 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/</loc>
@@ -46,11 +46,11 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/troubleshoot/</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/unlocked/</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/01_article_cobol_basic.html</loc>
@@ -58,11 +58,11 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/02_article_cobol_advanced.html</loc>
-    <lastmod>2026-07-12</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/03_article_cobol_expert.html</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/04_article_cobol_irregular.html</loc>
@@ -74,11 +74,11 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/intro/01_article_cobol_fixed.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/intro/02_article_cobol_approach.html</loc>
-    <lastmod>2026-07-12</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/intro/03_article_cobol_output_patterns.html</loc>
@@ -86,11 +86,11 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/pq/01_article_cobol_pq.html</loc>
-    <lastmod>2026-07-12</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/pq/02_article_cobol_pq3.html</loc>
-    <lastmod>2026-07-12</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/pq/03_article_cobol_pq_midb_ref.html</loc>
@@ -98,7 +98,7 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_choosecols.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_torow_wraprows_choosecols.html</loc>
@@ -106,19 +106,19 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_concat.html</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_filter.html</loc>
-    <lastmod>2023-10-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_ifs.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_let.html</loc>
-    <lastmod>2023-10-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_let_if.html</loc>
@@ -142,11 +142,11 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_breakthrough_moments.html</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage1_functions_printing.html</loc>
-    <lastmod>2026-05-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage2_vba_macro_recording.html</loc>
@@ -162,15 +162,15 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage4_no_macro_powerquery.html</loc>
-    <lastmod>2026-05-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_stage5_qr_input_design_shift.html</loc>
-    <lastmod>2026-05-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_spill_design_shift.html</loc>
-    <lastmod>2026-05-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_vba_omnipotence_trap.html</loc>
@@ -186,47 +186,47 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_powerquery_design_shift.html</loc>
-    <lastmod>2026-05-24</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/thinking/article_cobol_structure_shift.html</loc>
-    <lastmod>2026-05-24</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_sort.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_unique_filter_sort.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_unique_filter.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_switch.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_textbefore.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_textjoin.html</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_textsplit.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_unique.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_xlookup_advanced.html</loc>
-    <lastmod>2026-07-11</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_xlookup_basic.html</loc>
@@ -234,11 +234,11 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_xlookup_multi.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_xlookup_joined_key.html</loc>
-    <lastmod>2026-06-22</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_xlookup_vs.html</loc>
@@ -246,7 +246,7 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_xmatch.html</loc>
-    <lastmod>2026-07-11</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countif_extract.html</loc>
@@ -262,7 +262,15 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countifs_sumifs.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-04</lastmod>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_round.html</loc>
+    <lastmod>2026-11-04</lastmod>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_subtotal.html</loc>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_sumifs_month_employee.html</loc>
@@ -282,51 +290,51 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_datedif.html</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_errortype.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_iferror.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_match.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_match_multi.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_midb.html</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_substitute.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_text_date.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_vlookup.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_volatile.html</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_zip_reverse.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_format.html</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_linked_picture_filter_serial_label.html</loc>
@@ -334,7 +342,7 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_shortcuts.html</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_snipping_tool_video.html</loc>
@@ -342,27 +350,27 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/misc/article_statusbar.html</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_label_print.html</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_label_scrap.html</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_mail_print.html</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_print_area.html</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_excel_source_design.html</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_postal_code.html</loc>
@@ -406,11 +414,11 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/speed/article_excel_diet_emergency.html</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_form_controls.html</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_hyperlink_jump_last_row.html</loc>
@@ -422,7 +430,7 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_shape_circle.html</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_add_columns.html</loc>
@@ -430,7 +438,7 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_column_delete.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_group_pivot.html</loc>
@@ -462,7 +470,7 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_split_column.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_text_operations.html</loc>
@@ -470,7 +478,7 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pdf_overview.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pdf_powerquery_advanced.html</loc>
@@ -482,23 +490,23 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pdf_word.html</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_powerquery_intro.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_powerquery_intro_deep.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pq_data_type.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pq_editor_ui.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pq_editor_ui_2.html</loc>
@@ -506,7 +514,7 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pq_fill.html</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pq_first_steps.html</loc>
@@ -526,7 +534,7 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/02_qr_tab_enter.html</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/03_qr_character_delay.html</loc>
@@ -598,15 +606,15 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_uia_automation.html</loc>
-    <lastmod>2026-04-24</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_tocol_torow.html</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_lambda_basic.html</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/unlocked/article_chatgpt_excel.html</loc>
@@ -690,11 +698,11 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_compare_two_lists.html</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_csv_leading_zero.html</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_text_numbers_fix.html</loc>
@@ -706,7 +714,7 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_folder_monthly.html</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_multiple_records_per_page.html</loc>
@@ -746,30 +754,54 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_field_code_basics.html</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_field_format_switches.html</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_if_skipif_conditions.html</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_next_record_manual_layout.html</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_cover_letter_auto_page_break.html</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_renmei_nextif.html</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-04</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_wildcard_advanced.html</loc>
-    <lastmod>2026-11-03</lastmod>
+    <lastmod>2026-11-04</lastmod>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_sheets_combine.html</loc>
+    <lastmod>2026-11-04</lastmod>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_external_links_break.html</loc>
+    <lastmod>2026-11-04</lastmod>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_name_split_flash_fill.html</loc>
+    <lastmod>2026-11-04</lastmod>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_phonetic_furigana.html</loc>
+    <lastmod>2026-11-04</lastmod>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_set_phonetic.html</loc>
+    <lastmod>2026-11-04</lastmod>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_batch_merge_text.html</loc>
+    <lastmod>2026-11-04</lastmod>
   </url>
 </urlset>

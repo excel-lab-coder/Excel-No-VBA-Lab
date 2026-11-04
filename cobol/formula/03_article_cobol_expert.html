@@ -58,7 +58,7 @@
       }
     },
     "datePublished": "2026-03-18",
-    "dateModified":"2026-11-03"
+    "dateModified":"2026-11-04"
   }
   </script>
 <script type="application/ld+json">
@@ -220,6 +220,9 @@
 </style>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/03_article_cobol_expert.html" property="og:url">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -248,7 +251,7 @@
 <span class="badge badge-maniac" style="background-color:#000;color:#fff;">難易度：&starf;&starf;&starf;&starf;&star;（超高度）</span>
 <span class="badge badge-all">Excel 2016以降対応あり</span>
 <span class="badge badge-maniac">COBOL/マニアック</span>
-<span class="article-date">更新日: 2026-11-03</span>
+<span class="article-date">更新日: 2026-11-04</span>
 </div>
 <h1 class="article-title">【複合関数編】複雑なCOBOL帳票の整理｜ヘッダー紐付け・フィルダウンをExcel関数で自動化</h1>
 <p class="article-summary" data-seo-lead="true">ヘッダー行の情報（伝票番号・日付など）を下の明細行へ引き継ぐ「フィルダウン」を関数で行い、親子構造の帳票を1行1レコードの表に整える複合式を解説します。</p>
@@ -603,7 +606,7 @@
 <p>目的は、文字列を切り出す対象を必要な明細行に絞り、数式の役割を分けることです。貼付シートがヘッダー行・罫線行・空白行・合計行を含む10万～30万行になる場合、全行・複数列にMIDBやTRIMを配置すると、不要行も計算対象になり、再計算が重くなる可能性があります。</p>
 <p>本記事では貼付シートをIF・ROWによる仕分けに留め、抽出後の明細だけにMIDB・TRIMを適用します。例えば30万行のうち明細が5,000行なら、文字列切り出しの対象数は30万行から5,000行（60分の1）になります。ただし、実際の速度は数式・参照範囲・Excelのバージョン・PC環境でも変わるため、コピーしたブックで確認してください。</p>
 <div class="xdemo-note-good"><strong>本記事の役割分担</strong><br>貼付シートでは行種を判定し、抽出シートでは必要な明細と親情報だけをMIDB・TRIMで整形します。全行へ切り出し式を置く案と、必要行へ絞る案を実測で比較してください。</div>
-<p>再計算が重い場合、数式の書き方以外に揮発性関数とメモリ側の要因もあります。<br><a href="../../functions/old/article_volatile.html">揮発性関数とは？激重Excel化を防ぐ</a><br><a href="../../others/speed/article_memory_swap.html">Excelが遅い原因＝メモリスワップ</a></p>
+<p>再計算が重い場合、数式の書き方以外に揮発性関数とメモリ側の要因もあります。<br><a href="../../functions/old/article_volatile.html">揮発性関数とは？Excelが重くなるのを防ぐ</a><br><a href="../../others/speed/article_memory_swap.html">Excelが遅い原因＝メモリスワップ</a></p>
 </div>
 </section>
 <!-- ==========================================================
@@ -618,7 +621,7 @@
 <h2><span class="icon">🔗</span> 関連記事</h2>
 <ul class="line-height-2">
 <li><a href="../../functions/old/article_countif_extract.html">抽出方式の比較はこちら：【FILTER代替】4つの複数抽出方式を比較</a></li>
-<li><a href="../../functions/old/article_volatile.html">揮発性関数とは？激重Excel化を防ぐ</a></li>
+<li><a href="../../functions/old/article_volatile.html">揮発性関数とは？Excelが重くなるのを防ぐ</a></li>
 <li><a href="../../others/speed/article_memory_swap.html">Excelが遅い原因＝メモリスワップ</a></li>
 </ul>
 </section>

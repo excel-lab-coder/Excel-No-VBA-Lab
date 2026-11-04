@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Excelで氏名を姓と名に分ける｜関数・フラッシュフィルとスペースのそろえ方｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="Excelの名簿で氏名を姓と名に分ける方法を解説。全角・半角のスペースのそろえ方、LEFT・MID・FINDの式、フラッシュフィル（Ctrl+E）の使い方と注意点、スペースのない氏名の扱い方までまとめます。" name="description">
+<meta content="Excelで氏名を姓と名に分ける｜関数・フラッシュフィルとスペースのそろえ方｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Excelの名簿で氏名を姓と名に分ける方法を解説。全角・半角のスペースのそろえ方、LEFT・MID・FINDの式、フラッシュフィル（Ctrl+E）の使い方と注意点、スペースのない氏名の扱い方までまとめます。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_name_split_flash_fill.html" property="og:url">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_name_split_flash_fill.html" rel="canonical">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Excelで氏名を姓と名に分ける｜関数・フラッシュフィルとスペースのそろえ方","description":"Excelの名簿で氏名を姓と名に分ける方法を解説。全角・半角のスペースのそろえ方、LEFT・MID・FINDの式、フラッシュフィル（Ctrl+E）の使い方と注意点、スペースのない氏名の扱い方までまとめます。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"datePublished":"2026-11-04","dateModified":"2026-11-04","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_name_split_flash_fill.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"現場実務","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":3,"name":"氏名を姓と名に分ける","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_name_split_flash_fill.html"}]}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/">Word差し込み</a><a href="../../others/" aria-current="true">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務</a><span>&gt;</span><strong>氏名を姓と名に分ける</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-04</span></div>
+<h1 class="article-title">Excelで氏名を姓と名に分ける：関数・フラッシュフィルとスペースのそろえ方</h1>
+<p class="article-lead">名簿の「山田 太郎」を、姓と名の列に分ける方法を説明します。全角と半角のスペースが混ざった名簿の整え方から、関数とフラッシュフィルの使い分け、スペースのない氏名の扱いまで扱います。</p>
+</div>
+<details class="auto-toc" open><summary>目次（6項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">🧹 最初にスペースをそろえる</a></li><li><a href="#sec-2">✏️ 関数で分ける</a></li><li><a href="#sec-3">⚡ フラッシュフィルで分ける</a></li><li><a href="#sec-4">🚧 スペースのない氏名</a></li><li><a href="#sec-5">🔤 ふりがなを付ける</a></li><li><a href="#sec-6">📌 名簿を整えるときの注意</a></li></ol></nav></details>
+<section class="method-section">
+<h2 id="sec-1">🧹 最初にスペースをそろえる</h2>
+<p>名簿には、全角スペース、半角スペース、2つ続いたスペースが混ざっていることがあります。先に半角1つへそろえると、後の式が単純になります。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TRIM(SUBSTITUTE(A2,"　"," "))</span>
+</div>
+<p class="code-comment">全角スペースを半角に置き換え、TRIMで前後の空白と連続した空白を整えます。ここではB列に入れて、以降の式はB列を使います。</p>
+<div class="table-wrapper"><table class="demo-table"><caption class="sr-only">スペースをそろえた結果</caption>
+<thead><tr><th scope="col">A列（元の氏名）</th><th scope="col">B列（そろえた結果）</th></tr></thead>
+<tbody>
+<tr><td>山田　太郎</td><td>山田 太郎</td></tr>
+<tr><td>佐々木  花子</td><td>佐々木 花子</td></tr>
+<tr><td>長谷川 一郎</td><td>長谷川 一郎</td></tr>
+</tbody>
+</table></div>
+<p>スペースのない行は、次の式で見つけられます。TRUEになった行は、次の手順で分けられません。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=ISERROR(FIND(" ",B2))</span>
+</div>
+</section>
+<section class="method-section">
+<h2 id="sec-2">✏️ 関数で分ける</h2>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">姓と名を取り出す式</caption>
+<thead><tr><th scope="col">取り出すもの</th><th scope="col">式</th><th scope="col">「佐々木 花子」の結果</th></tr></thead>
+<tbody>
+<tr><td>姓</td><td><code>=LEFT(B2,FIND(" ",B2)-1)</code></td><td>佐々木</td></tr>
+<tr><td>名</td><td><code>=MID(B2,FIND(" ",B2)+1,LEN(B2))</code></td><td>花子</td></tr>
+</tbody>
+</table></div>
+<p>FINDでスペースの位置を探し、その前を姓、後ろを名として取り出します。MIDの第3引数は「残り全部」の意味で、十分に長い値として <code>LEN(B2)</code> を指定しています。</p>
+<p>スペースのない行でエラーを出したくないときは、IFERRORで囲みます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IFERROR(LEFT(B2,FIND(" ",B2)-1),B2)</span>
+</div>
+<p class="code-comment">スペースがなければ氏名全体を姓の列に入れます。後で確認しやすいよう、前の手順の判定列と一緒に使います。</p>
+<p>Excel 2024 / Microsoft 365 では、TEXTBEFORE・TEXTAFTERで短く書けます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=TEXTBEFORE(B2," ")</span>
+<span class="code-line">=TEXTAFTER(B2," ")</span>
+</div>
+</section>
+<section class="method-section">
+<h2 id="sec-3">⚡ フラッシュフィルで分ける</h2>
+<p>Excel 2013以降では、例を1つ入力するだけで、規則を読み取って残りを埋める機能が使えます。</p>
+<ol class="line-height-2">
+<li>氏名の隣の列の先頭に、姓を入力します（例：山田）。</li>
+<li>下のセルに移り、<kbd>Ctrl</kbd>+<kbd>E</kbd> を押します。</li>
+<li>結果を上から確認します。名の列も同じように作ります。</li>
+</ol>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">関数とフラッシュフィルの使い分け</caption>
+<thead><tr><th scope="col"></th><th scope="col">関数</th><th scope="col">フラッシュフィル</th></tr></thead>
+<tbody>
+<tr><td>結果</td><td>数式</td><td>値</td></tr>
+<tr><td>元の氏名を直したとき</td><td>自動で変わる</td><td>変わらない（やり直す）</td></tr>
+<tr><td>新しい行</td><td>式をコピーする</td><td>やり直す</td></tr>
+<tr><td>向いている場面</td><td>毎月使う名簿</td><td>1回だけの整理</td></tr>
+</tbody>
+</table></div>
+<div class="xdemo-note-warn"><strong>⚠️ 結果は確認してから使う</strong><br>フラッシュフィルは例から規則を推測します。スペースの有無がそろっていない名簿では、間違った分け方になることがあります。行数の多い名簿では、エラーが出ないまま誤った値が入るので、特に確認が必要です。</div>
+<p class="verify-note">Ctrl+E で何も起きないときは、「ファイル」→「オプション」→「詳細設定」の「フラッシュ フィル オプション」に関する設定を確認してください。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-4">🚧 スペースのない氏名</h2>
+<p>「山田太郎」のようにスペースがない氏名を、規則だけで正しく分けることはできません。姓が1文字とは限らず、「林」「長谷川」「東海林」のように文字数がさまざまだからです。</p>
+<p>姓の一覧がある場合は、最も長く一致する姓を探す方法で候補を作れます。D2:D100に姓の一覧を、<strong>文字数の少ない順</strong>に並べておきます。空白のセルがあると正しく動かないので、範囲は一覧の行数に合わせます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LOOKUP(2,1/(LEFT(A2,LEN($D$2:$D$100))=$D$2:$D$100),$D$2:$D$100)</span>
+</div>
+<p class="code-comment">一覧の中で、氏名の先頭と一致する最後の姓を返します。文字数の少ない順に並べるので、最も長い姓が選ばれます。一致しなければ #N/A になります。</p>
+<p>これは候補を作る方法です。「東海林太郎」と「東 海林太郎」のように、一覧だけでは決められない場合があります。本人の情報と照らして、人が確認してください。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-5">🔤 ふりがなを付ける</h2>
+<p>五十音順に並べるには、ふりがなの列があると便利です。Excelで入力した氏名なら、PHONETIC関数で取り出せます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=PHONETIC(A2)</span>
+</div>
+<p>他のシステムから貼り付けた名簿では、漢字のまま返ることがあります。カタカナ・ひらがな・半角への変換と合わせて、<a href="../../functions/old/article_phonetic_furigana.html">PHONETIC関数の記事</a>で説明しています。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-6">📌 名簿を整えるときの注意</h2>
+<ul class="line-height-2">
+<li><strong>元の列を残す：</strong>分けた後も元の氏名の列を消さず、確認できるようにします。</li>
+<li><strong>姓名を戻す：</strong><code>=C2&amp;" "&amp;D2</code> のように結合すると、スペースのそろった氏名になります。</li>
+<li><strong>同姓同名：</strong>氏名だけでの照合は避け、社員番号などの番号で照合します。</li>
+<li><strong>異体字：</strong>「高」と「髙」、「崎」と「﨑」は別の文字として扱われます。置き換えるときは、本人の表記を確認してください。</li>
+<li><strong>個人情報：</strong>試すときは、架空の名簿か、コピーしたファイルを使います。</li>
+</ul>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../../functions/old/article_phonetic_furigana.html">PHONETIC関数でフリガナを取り出す</a></li>
+<li><a href="article_compare_two_lists.html">Excelで2つの名簿を比較し、追加・削除・変更された人を見つける</a></li>
+<li><a href="article_csv_leading_zero.html">CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方</a></li>
+<li><a href="../word/article_mailmerge_excel_source_design.html">Word差し込み印刷で失敗しにくいExcel住所録の作り方</a></li>
+<li><a href="../../functions/latest/article_textbefore.html">TEXTBEFORE / TEXTAFTER関数</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js?v=20261103"></script>
+</body>
+</html>

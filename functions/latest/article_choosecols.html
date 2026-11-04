@@ -31,7 +31,7 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "datePublished": "2026-04-23",
-  "dateModified": "2026-04-23",
+  "dateModified": "2026-11-04",
   "headline": "CHOOSECOLS関数（対応環境向け）― 離れた列を自在に抽出",
   "author": {
     "@type": "Person",
@@ -65,6 +65,8 @@
 }</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 </head>
 <body class="article-layout">
 <div class="reading-progress" aria-hidden="true"></div>
@@ -90,7 +92,7 @@
 <div class="article-header">
 <div class="article-meta">
 <span class="badge badge-365">2024/365</span>
-<span class="article-date">更新日: 2026-04-23</span>
+<span class="article-date">更新日: 2026-11-04</span>
 </div>
 <h1 class="article-title">CHOOSECOLS &horbar; 離れた列を自在に抽出・並び替え・絞り込み</h1>
 </div>
@@ -124,7 +126,7 @@
 <div class="xdemo-layout">
 <div class="xdemo-block">
 <div class="xdemo-block-title">① 元テーブル（A〜E列）</div>
-<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col"></td>
 <td class="xd-col">A (1)</td>
@@ -171,7 +173,7 @@
 <div class="xdemo-arrow">&rarr;</div>
 <div class="xdemo-block">
 <div class="xdemo-block-title">② G2 に 1本だけ入力 &rarr; スピル</div>
-<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col"></td>
 <td class="xd-col">G</td>
@@ -255,7 +257,7 @@
 <div class="xdemo-layout">
 <div class="xdemo-block">
 <div class="xdemo-block-title">① FILTER後（26列まだある）</div>
-<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.75em;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.75em;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col">1</td>
 <td class="xd-col">2</td>
@@ -297,7 +299,7 @@
 <div class="xdemo-arrow">&rarr;</div>
 <div class="xdemo-block">
 <div class="xdemo-block-title">② CHOOSECOLSで列絞り</div>
-<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.75em;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.75em;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col">ID</td>
 <td class="xd-col">部署</td>
@@ -334,7 +336,7 @@
 <div class="xdemo-layout">
 <div class="xdemo-block">
 <div class="xdemo-block-title">① 社員マスタ（A〜F列）</div>
-<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.78em;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.78em;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col">A</td>
 <td class="xd-col">B(1)</td>
@@ -364,7 +366,7 @@
 <div class="xdemo-arrow">&rarr;</div>
 <div class="xdemo-block">
 <div class="xdemo-block-title">② 結果（1本）</div>
-<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.78em;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.78em;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col">氏名</td>
 <td class="xd-col">部署</td>
@@ -464,7 +466,7 @@
 <div class="xdemo-layout">
 <div class="xdemo-block">
 <div class="xdemo-block-title">左テーブル（ID順）</div>
-<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col">ID</td>
 <td class="xd-col">氏名</td>
@@ -482,7 +484,7 @@
 <div class="xdemo-block" style="padding-top:30px;font-size:1.4em;color:#bbb;">＋</div>
 <div class="xdemo-block">
 <div class="xdemo-block-title">右テーブル（別の順）</div>
-<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col">ID</td>
 <td class="xd-col">評価</td>
@@ -500,7 +502,7 @@
 <div class="xdemo-arrow">&rarr;</div>
 <div class="xdemo-block">
 <div class="xdemo-block-title">HSTACK結果（ズレている）</div>
-<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="font-size:0.8em;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col">ID</td>
 <td class="xd-col">氏名</td>
@@ -529,7 +531,7 @@
       ========================================================= -->
 <section class="tips-section">
 <h3>【5】組み合わせパターン早見表</h3>
-<div class="table-wrapper"><table class="pattern-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="pattern-table"><caption class="sr-only">データテーブル</caption>
 <thead>
 <tr>
 <th scope="col">組み合わせ</th>
@@ -603,7 +605,7 @@
 <li><strong>LET関数で計算をまとめる：</strong> 同じ範囲の集計や結合をLET内で1度だけ計算させ、メモリ上で使い回す。</li>
 <li><strong>作業シートに展開する：</strong> 重い処理（VSTACKでの全シート結合など）は別シートに一度スピルで出力しておき、最終的な帳票からそのスピル範囲を参照する。</li>
 <li><strong>スピルで1本の数式にまとめる：</strong>
-              XLOOKUPなどでVSTACKした範囲を検索する際、オートフィルで下に何千行もコピーするとVSTACKの重い結合処理が「行数分」毎回走ってしまいます。検索値を配列で指定してスピルさせれば、VSTACKの処理は<strong>1回だけ</strong>で終わるため劇的に軽くなります。</li>
+              XLOOKUPなどでVSTACKした範囲を検索する際、オートフィルで下に何千行もコピーするとVSTACKの重い結合処理が「行数分」毎回走ってしまいます。検索値を配列で指定してスピルさせれば、VSTACKの処理は<strong>1回だけ</strong>で終わるため、その分軽くなります。</li>
 </ul>
 </div>
 </section>

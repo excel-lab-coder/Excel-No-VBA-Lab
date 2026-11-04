@@ -13,9 +13,9 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="ExcelのIFS関数（2019～）でIF関数のネスト地獄を解消。多段階条件分岐を直感的に書く方法をVBA禁止環境向けに解説。" name="description">
+<meta content="ExcelのIFS関数（2019～）でIF関数の深いネストを解消。多段階条件分岐を直感的に書く方法をVBA禁止環境向けに解説。" name="description">
 <meta content="IFS関数（2019～）｜Excel &times; No VBA Lab" property="og:title">
-<meta content="ExcelのIFS関数（2019～）でIF関数のネスト地獄を解消。多段階条件分岐を直感的に書く方法をVBA禁止環境向けに解説。" property="og:description">
+<meta content="ExcelのIFS関数（2019～）でIF関数の深いネストを解消。多段階条件分岐を直感的に書く方法をVBA禁止環境向けに解説。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
@@ -32,13 +32,13 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "datePublished": "2026-05-03",
-  "dateModified": "2026-10-07",
+  "dateModified": "2026-11-04",
   "headline": "IFS関数（2019～）",
   "author": {
     "@type": "Person",
     "name": "Excel × No VBA Lab"
   },
-  "description": "ExcelのIFS関数（2019～）でIF関数のネスト地獄を解消。多段階条件分岐を直感的に書く方法をVBA禁止環境向けに解説。"
+  "description": "ExcelのIFS関数（2019～）でIF関数の深いネストを解消。多段階条件分岐を直感的に書く方法をVBA禁止環境向けに解説。"
 }</script>
 <script type="application/ld+json">{
   "@context": "https://schema.org",
@@ -66,6 +66,8 @@
 }</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 </head>
 <body class="article-layout">
 <div class="reading-progress" aria-hidden="true"></div>
@@ -86,7 +88,7 @@
 <article class="article-body">
 <!-- ===== ヘッダー ===== -->
 <div class="article-header">
-<div class="article-meta"><span class="badge badge-2019">2019～</span></div>
+<div class="article-meta"><span class="badge badge-2019">2019～</span><span class="article-date">更新日: 2026-11-04</span></div>
 <h1 class="article-title">IFS関数 完全ガイド：IFネスト・SWITCH・CHOOSE・XLOOKUPとの使い分け</h1>
 </div>
 <!-- ===== 目次 ===== -->
@@ -112,7 +114,7 @@
 <!-- ========================================== -->
 <section class="goal-section" id="goal">
 <h2><span class="section-num">1</span> やりたいこと</h2>
-<p>「90点以上ならA、80点以上ならB、70点以上ならC&hellip;」のように、条件が多段階あるときにIF関数のネスト地獄を回避したい。</p>
+<p>「90点以上ならA、80点以上ならB、70点以上ならC&hellip;」のように、条件が多段階あるときにIF関数の深いネストを回避したい。</p>
 <p>さらに「完全一致で分岐したいのか」「範囲（以上・以下）で分岐したいのか」によって最適な関数が異なります。本記事では IFS・IF・SWITCH・CHOOSE・XLOOKUP を横断的に比較し、場面ごとの最適解を示します。</p>
 </section>
 <!-- ========================================== -->
@@ -148,7 +150,7 @@
 <div class="code-block" data-lang="excel">
 <span class="code-line">=IF(A1&gt;=90, "A", IF(A1&gt;=80, "B", IF(A1&gt;=70, "C", IF(A1&gt;=60, "D", "F"))))</span>
 </div>
-<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="compare-table"><caption class="sr-only">データテーブル</caption>
 <thead>
 <tr><th scope="col">比較項目</th><th scope="col">IFネスト</th><th scope="col">IFS</th></tr>
 </thead>
@@ -180,7 +182,7 @@
 <span class="code-line">=SWITCH(B2, "S", "営業部", "E", "技術部", "A", "総務部", "不明")</span>
 </div>
 <h3>IFS vs SWITCH：核心の違い</h3>
-<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="compare-table"><caption class="sr-only">データテーブル</caption>
 <thead>
 <tr><th scope="col">比較項目</th><th scope="col">IFS</th><th scope="col">SWITCH</th></tr>
 </thead>
@@ -209,7 +211,7 @@
 <span class="code-line">=SWITCH(TRUE, A1&gt;=90,"A", A1&gt;=80,"B", A1&gt;=70,"C", A1&gt;=60,"D", "F")</span>
 </div>
 <p class="code-comment">TRUE を「探すべき値」にセットし、各条件式の中で最初に TRUE を返したものが採用される。<br>末尾の <code>"F"</code> がデフォルト値。IFS と違い自然にデフォルト値を書ける。</p>
-<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="compare-table"><caption class="sr-only">データテーブル</caption>
 <thead>
 <tr><th scope="col">比較項目</th><th scope="col">IFS</th><th scope="col">SWITCH(TRUE,...)</th></tr>
 </thead>
@@ -239,7 +241,7 @@
 <div class="code-block" data-lang="excel">
 <span class="code-line">=CHOOSE(MONTH(A1), "Q1","Q1","Q1","Q2","Q2","Q2","Q3","Q3","Q3","Q4","Q4","Q4")</span>
 </div>
-<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="compare-table"><caption class="sr-only">データテーブル</caption>
 <thead>
 <tr><th scope="col">比較項目</th><th scope="col">IFS</th><th scope="col">SWITCH</th><th scope="col">CHOOSE</th></tr>
 </thead>
@@ -263,7 +265,7 @@
 <h2><span class="section-num">7</span> XLOOKUP / VLOOKUPとの比較</h2>
 <p>条件分岐が多くなる場合、そもそも<strong>数式内にロジックを書かず、別表（マスタ）に持たせる</strong>設計が有力な選択肢になります。</p>
 <h3>マスタ参照方式</h3>
-<div class="table-wrapper"><table class="sample-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="sample-table"><caption class="sr-only">データテーブル</caption>
 <thead><tr><th scope="col">コード(E列)</th><th scope="col">部署名(F列)</th></tr></thead>
 <tbody>
 <tr><td>S</td><td>営業部</td></tr>
@@ -274,7 +276,8 @@
 <div class="code-block" data-lang="excel">
 <span class="code-line">=XLOOKUP(B2, E:E, F:F, "不明")</span>
 </div>
-<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<p class="code-comment">XLOOKUP は Excel 2021以降で使えます。</p>
+<div class="table-wrapper"><table class="compare-table"><caption class="sr-only">データテーブル</caption>
 <thead>
 <tr><th scope="col">比較項目</th><th scope="col">IFS / SWITCH</th><th scope="col">XLOOKUP（マスタ参照）</th></tr>
 </thead>
@@ -297,7 +300,7 @@
 <!-- ========================================== -->
 <section class="method-section" id="compare-table">
 <h2><span class="section-num">8</span> 5関数 総合比較表</h2>
-<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="compare-table"><caption class="sr-only">データテーブル</caption>
 <thead>
 <tr>
 <th scope="col">項目</th>
@@ -435,7 +438,7 @@
 <!-- ========================================== -->
 <section class="goal-section" id="summary">
 <h2><span class="section-num">12</span> まとめ</h2>
-<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="compare-table"><caption class="sr-only">データテーブル</caption>
 <thead>
 <tr><th scope="col">場面</th><th scope="col">最適な関数</th></tr>
 </thead>
@@ -458,10 +461,10 @@
 <section class="method-section">
 <h2><span class="icon">🔗</span> 関連記事</h2>
 <ul class="line-height-2">
-<li><a href="article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
-<li><a href="article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
-<li><a href="article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
-<li><a href="article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+<li><a href="article_switch.html">SWITCH関数</a></li>
+<li><a href="article_xlookup_vs.html">XLOOKUP比較編：VLOOKUP・INDEX+MATCHとの使い分け</a></li>
+<li><a href="article_let_if.html">LET + IF の複雑ロジック</a></li>
+<li><a href="article_let.html">LET関数で可読性を上げる</a></li>
 </ul>
 </section>
 

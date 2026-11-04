@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>PHONETIC関数でフリガナを取り出す｜カタカナ・ひらがな・半角への変換と漢字のまま返るときの対処｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="ExcelのPHONETIC関数で氏名からフリガナを取り出し、全角カタカナ・半角カナ・ひらがなにそろえる方法を解説。貼り付けた名簿で漢字のまま返るときの原因と対処、読みの確認、五十音順の並べ替えまでまとめます。" name="description">
+<meta content="PHONETIC関数でフリガナを取り出す｜カタカナ・ひらがな・半角への変換と漢字のまま返るときの対処｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのPHONETIC関数で氏名からフリガナを取り出し、全角カタカナ・半角カナ・ひらがなにそろえる方法を解説。貼り付けた名簿で漢字のまま返るときの原因と対処、読みの確認、五十音順の並べ替えまでまとめます。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_phonetic_furigana.html" property="og:url">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_phonetic_furigana.html" rel="canonical">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"PHONETIC関数でフリガナを取り出す｜カタカナ・ひらがな・半角への変換と漢字のまま返るときの対処","description":"ExcelのPHONETIC関数で氏名からフリガナを取り出し、全角カタカナ・半角カナ・ひらがなにそろえる方法を解説。貼り付けた名簿で漢字のまま返るときの原因と対処、読みの確認、五十音順の並べ替えまでまとめます。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"datePublished":"2026-11-04","dateModified":"2026-11-04","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_phonetic_furigana.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"関数","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/"},{"@type":"ListItem","position":3,"name":"PHONETIC関数","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_phonetic_furigana.html"}]}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/" aria-current="true">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/">Word差し込み</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../functions/">関数</a><span>&gt;</span><strong>PHONETIC関数</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-04</span></div>
+<h1 class="article-title">PHONETIC関数でフリガナを取り出す：カタカナ・ひらがな・半角への変換</h1>
+<p class="article-lead">氏名からフリガナを取り出し、必要な形にそろえて、確認してから値にするまでの流れを説明します。貼り付けた名簿で漢字のまま返る場合の対処も扱います。</p>
+</div>
+<details class="auto-toc" open><summary>目次（6項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 基本の使い方</a></li><li><a href="#sec-2">🔁 全体の流れ</a></li><li><a href="#sec-3">🔤 カタカナ・半角・ひらがなにそろえる</a></li><li><a href="#sec-4">🚧 漢字のまま返るとき</a></li><li><a href="#sec-5">👀 読みの確認</a></li><li><a href="#sec-6">📋 値にして残す・並べ替える</a></li></ol></nav></details>
+<section class="method-section">
+<h2 id="sec-1">💡 基本の使い方</h2>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=PHONETIC(A2)</span>
+</div>
+<div class="table-wrapper"><table class="demo-table"><caption class="sr-only">PHONETICの結果の例</caption>
+<thead><tr><th scope="col">A列（氏名）</th><th scope="col">結果</th></tr></thead>
+<tbody>
+<tr><td>山田太郎</td><td>ヤマダタロウ</td></tr>
+<tr><td>佐藤 花子</td><td>サトウ ハナコ</td></tr>
+</tbody>
+</table></div>
+<p>PHONETICは、漢字から読みを推測しているのではありません。<strong>セルに保存されているふりがな情報</strong>を取り出しています。Excelで入力すると、変換前の読みがふりがなとして保存されます。</p>
+<ul class="line-height-2">
+<li>範囲を指定すると、左上のセルのふりがなだけを返します。1セルずつ指定して、下へコピーします。</li>
+<li>離れた複数のセルを指定すると <code>#N/A</code> になります。</li>
+</ul>
+</section>
+<section class="method-section">
+<h2 id="sec-2">🔁 全体の流れ</h2>
+<p>次の順に進めると、読みの間違いや変換漏れを減らせます。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">フリガナ列を作る手順</caption>
+<thead><tr><th scope="col">手順</th><th scope="col">やること</th><th scope="col">使うもの</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>フリガナを取り出す</td><td><code>PHONETIC</code></td></tr>
+<tr><td>2</td><td>漢字が残っていないか確認する</td><td>判定の式</td></tr>
+<tr><td>3</td><td>必要な形にそろえる</td><td><code>JIS</code>・<code>ASC</code>・変換の式</td></tr>
+<tr><td>4</td><td>読みを確認する</td><td>目視・元の資料</td></tr>
+<tr><td>5</td><td>値にして残す</td><td>「値の貼り付け」</td></tr>
+</tbody>
+</table></div>
+</section>
+<section class="method-section">
+<h2 id="sec-3">🔤 カタカナ・半角・ひらがなにそろえる</h2>
+<p>システムの取り込み形式などに合わせて、形をそろえます。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">形をそろえる式</caption>
+<thead><tr><th scope="col">ほしい形</th><th scope="col">式</th><th scope="col">結果の例</th></tr></thead>
+<tbody>
+<tr><td>全角カタカナ</td><td><code>=JIS(PHONETIC(A2))</code></td><td>ヤマダタロウ</td></tr>
+<tr><td>半角カナ</td><td><code>=ASC(PHONETIC(A2))</code></td><td>ﾔﾏﾀﾞﾀﾛｳ</td></tr>
+<tr><td>ひらがな</td><td>下の2つの方法</td><td>やまだたろう</td></tr>
+</tbody>
+</table></div>
+<h3>ひらがなにする方法1：ふりがなの設定を変える</h3>
+<p>「ホーム」タブのふりがなのボタン（「亜」）の右の▼から<strong>「ふりがなの設定」</strong>を開き、種類を「ひらがな」にします。PHONETICの結果もひらがなになります。氏名の列を選んで設定します。</p>
+<h3>ひらがなにする方法2：式で変換する（Excel 2021以降）</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">  s, JIS(PHONETIC(A2)),</span>
+<span class="code-line">  c, UNICODE(MID(s, SEQUENCE(LEN(s)), 1)),</span>
+<span class="code-line">  TEXTJOIN("", FALSE, UNICHAR(IF((c&gt;=12449)*(c&lt;=12534), c-96, c)))</span>
+<span class="code-line">)</span>
+</div>
+<p class="code-comment">A2のフリガナを1文字ずつに分け、カタカナだけをひらがなに置き換えて、つなぎ直します。</p>
+<p>文字にはそれぞれ番号があり、カタカナの「ァ（12449）」から「ヶ（12534）」は、対応するひらがなより96大きい番号です。そこで、この範囲の文字だけ96を引きます。長音の「ー」やスペースは範囲の外なので、そのまま残ります。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">式の各部分</caption>
+<thead><tr><th scope="col">部分</th><th scope="col">役割</th></tr></thead>
+<tbody>
+<tr><td><code>JIS(PHONETIC(A2))</code></td><td>フリガナを取り出し、半角カナを全角にそろえる</td></tr>
+<tr><td><code>MID(s, SEQUENCE(LEN(s)), 1)</code></td><td>1文字ずつに分ける</td></tr>
+<tr><td><code>UNICODE(…)</code></td><td>各文字を番号にする</td></tr>
+<tr><td><code>IF(…, c-96, c)</code></td><td>カタカナの範囲だけ96を引く</td></tr>
+<tr><td><code>TEXTJOIN("", FALSE, UNICHAR(…))</code></td><td>番号を文字に戻してつなぐ</td></tr>
+</tbody>
+</table></div>
+<h3>反対に、ひらがなをカタカナにする</h3>
+<p>B2のひらがなをカタカナにするには、ひらがなの範囲（12353〜12438）だけ96を足します。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">  s, B2,</span>
+<span class="code-line">  c, UNICODE(MID(s, SEQUENCE(LEN(s)), 1)),</span>
+<span class="code-line">  TEXTJOIN("", FALSE, UNICHAR(IF((c&gt;=12353)*(c&lt;=12438), c+96, c)))</span>
+<span class="code-line">)</span>
+</div>
+<p class="verify-note">Excel 2016・2019ではLETとSEQUENCEが使えないため、方法1を使います。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-4">🚧 漢字のまま返るとき</h2>
+<p>他のシステムやCSVから貼り付けた氏名、Power Queryで読み込んだ氏名には、ふりがな情報がありません。この場合、PHONETICは元の文字をそのまま返します。一部だけ入力し直したセルでは、漢字とカタカナが混ざることもあります。</p>
+<h3>漢字が残っている行を見つける（Excel 2021以降）</h3>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">  s, PHONETIC(A2),</span>
+<span class="code-line">  c, UNICODE(MID(s, SEQUENCE(LEN(s)), 1)),</span>
+<span class="code-line">  IF(SUM((c&gt;=19968)*(c&lt;=40959))&gt;0, "要確認", "")</span>
+<span class="code-line">)</span>
+</div>
+<p class="code-comment">結果の中に漢字の範囲の文字があれば「要確認」と表示します。この範囲に入らない一部の漢字は判定できません。</p>
+<p>Excel 2016・2019では、次の式で読みが未設定の可能性がある行を簡易的に拾えます。カタカナだけのセルも「要確認」になり、読みが一部だけのセルやひらがなのセルは拾えないので、目視でも確認します。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(PHONETIC(A2)=A2,"要確認","")</span>
+</div>
+<h3>ふりがなを付ける</h3>
+<ul class="line-height-2">
+<li><strong>1件ずつ付ける：</strong>セルを選び、<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>↑</kbd> を押します。読みの候補が表示されるので、確認・修正して <kbd>Enter</kbd> を押します。</li>
+<li><strong>読みの列をもらう：</strong>件数が多いときは、元のシステムからフリガナの列も一緒に出力できないか確認します。正確さの面でも、この方法が確実です。</li>
+<li><strong>入力し直す：</strong>氏名を入力し直すと、そのときの読みがふりがなになります。</li>
+</ul>
+<p>VBAの使用が許可されている環境なら、<code>SetPhonetic</code> で複数のセルに推定の読みをまとめて生成できます。手順と注意点は、制限解除ラボの<a href="../../vba/article_vba_set_phonetic.html">VBAでふりがなをまとめて付ける</a>で説明しています。VBAやマクロが禁止されている職場では使わないでください。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-5">👀 読みの確認</h2>
+<p>PHONETICの結果が、その人の正しい読みとは限りません。</p>
+<ul class="line-height-2">
+<li><strong>入力したときの読みが残ります。</strong>「和子」を「わこ」と入力して変換すると、本人の読みが「かずこ」でも「ワコ」になります。</li>
+<li><strong><kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>↑</kbd> の候補は推測です。</strong>人名では特に間違えることがあります。</li>
+<li><strong>送付物や公的な書類に使うときは、</strong>元の資料や本人の申告と照らして確認してください。</li>
+</ul>
+</section>
+<section class="method-section">
+<h2 id="sec-6">📋 値にして残す・並べ替える</h2>
+<p>確認が終わったら、フリガナの列をコピーし、<strong>「形式を選択して貼り付け」→「値」</strong>で値にします。別のブックやシステムに渡しても、式のように結果が変わることがありません。元の氏名の列は残しておきます。</p>
+<p>氏名の列で並べ替えると、Excelは保存されたふりがなを使います。ふりがな情報のない行が混ざると、五十音順になりません。確認済みのフリガナの列を基準にして並べ替えると、順番がそろいます。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">よくある症状と対処</caption>
+<thead><tr><th scope="col">症状</th><th scope="col">対処</th></tr></thead>
+<tbody>
+<tr><td>漢字のまま返る</td><td>ふりがな情報がありません。上の手順で付けます。</td></tr>
+<tr><td>ひらがなで返ってくる</td><td>ふりがなの設定の種類を確認します。</td></tr>
+<tr><td>半角カナで返ってくる</td><td>ふりがなの設定の種類を確認するか、<code>JIS</code> で全角にします。</td></tr>
+<tr><td>五十音順にならない</td><td>フリガナの列で並べ替えます。</td></tr>
+<tr><td><code>#N/A</code> になる</td><td>離れたセルを指定していないか確認します。</td></tr>
+<tr><td>空欄が返る</td><td>数値や数式のセルでは、PHONETICは空欄を返します。文字列の値にしてから使います。</td></tr>
+</tbody>
+</table></div>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../../others/data/article_name_split_flash_fill.html">Excelで氏名を姓と名に分ける</a></li>
+<li><a href="../latest/article_textjoin.html">TEXTJOIN</a></li>
+<li><a href="article_substitute.html">SUBSTITUTE 多段ネスト</a></li>
+<li><a href="../../others/data/article_compare_two_lists.html">Excelで2つの名簿を比較し、追加・削除・変更された人を見つける</a></li>
+<li><a href="https://support.microsoft.com/ja-jp/excel/functions/phonetic-function">PHONETIC 関数（Microsoft公式）</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js?v=20261103"></script>
+</body>
+</html>

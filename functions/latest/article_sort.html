@@ -32,7 +32,7 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "datePublished": "2026-05-03",
-  "dateModified": "2026-10-07",
+  "dateModified": "2026-11-04",
   "headline": "SORT / SORTBY関数（2021～）",
   "author": {
     "@type": "Person",
@@ -66,6 +66,8 @@
 }</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 </head>
 <body class="article-layout">
 <div class="reading-progress" aria-hidden="true"></div>
@@ -87,7 +89,7 @@
 </div>
 <article class="article-body">
 <div class="article-header">
-<div class="article-meta"><span class="badge badge-2021">2021～</span><span class="badge badge-365" style="margin-left:5px;">365</span></div>
+<div class="article-meta"><span class="badge badge-2021">2021～</span><span class="badge badge-365" style="margin-left:5px;">365</span><span class="article-date">更新日: 2026-11-04</span></div>
 <h1 class="article-title">SORT / SORTBY：数式で動的に「並び替え」を実現する</h1>
 </div>
 <details class="auto-toc" open><summary>目次（9項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 やりたいこと</a></li><li><a href="#sec-2">🔍 SORT vs SORTBY &boxh;&boxh; どう使い分ける？</a></li><li><a href="#sec-3">📘 SORT関数 &boxh;&boxh; 引数と挙動を深掘り</a></li><li><a href="#sec-4">📗 SORTBY関数 &boxh;&boxh; SORTにはできない技</a></li><li><a href="#sec-5">🔒 知っておくべき：安定ソート（Stable Sort）</a></li><li><a href="#sec-6">🚀 他の関数との組み合わせ &boxh;&boxh; 実務で使える組み合わせ集</a></li><li><a href="#sec-7">⚡ SORTが切り拓く「バイナリ検索」&boxh;&boxh; 大規模データの速度革命</a></li><li><a href="#sec-8">⚠️ よくあるエラーと注意点</a></li><li><a href="#sec-9">📌 まとめ：SORT / SORTBY 使い分けチャート</a></li></ol></nav></details>
@@ -132,7 +134,7 @@
 <strong>🔥 FILTER・UNIQUEとの合わせ技（定番の組み合わせ）</strong><br>
 <code>=SORT(UNIQUE(A:A))</code>  （マスタ一覧をあいうえお順に）<br>
 <code>=TAKE(SORT(FILTER(A2:E100, B2:B100="東京"), 5, -1), 10)</code><br>
-          （東京のデータだけを抽出し、売上の高い順に並び替え、その上位10件だけを表示する）<br>
+          （東京のデータだけを抽出し、売上の高い順に並び替え、その上位10件だけを表示する。TAKE は Excel 2024 / Microsoft 365 の関数です）<br>
           このように、関数をマトリョーシカのように入れ子（ネスト）にしていくことで、VBAで数十行書かざるを得なかった集計処理が1行で完結します。
         </div>
 </section>
@@ -143,7 +145,7 @@
 <h2 id="sec-2">🔍 SORT vs SORTBY &boxh;&boxh; どう使い分ける？</h2>
 <h3>① 2つの関数の引数を並べて比較</h3>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table" style="min-width:680px;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:680px;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-head" style="min-width:160px;">比較項目</td>
 <td class="xd-head" style="min-width:250px;">SORT</td>
@@ -199,7 +201,7 @@
 <h2 id="sec-3">📘 SORT関数 &boxh;&boxh; 引数と挙動を深掘り</h2>
 <h3>② 全4引数の詳細</h3>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table" style="min-width:640px;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:640px;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-head">引数</td>
 <td class="xd-head">必須?</td>
@@ -234,7 +236,7 @@
 </div>
 <h3>③ 基本例：1列ソート（名前を五十音順に）</h3>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col"></td><td class="xd-col">D</td><td class="xd-col">E</td></tr>
 <tr><td class="xd-row">1</td><td class="xd-head">名前</td><td class="xd-head">売上</td><td class="xd-row" style="background:#fff;"></td><td class="xd-head">名前</td><td class="xd-head">売上</td></tr>
 <tr><td class="xd-row">2</td><td>田中</td><td>500</td><td></td><td class="xd-spill-origin">伊藤</td><td class="xd-spill">180</td></tr>
@@ -253,7 +255,7 @@
 <span class="code-line">=SORT(A2:B6, 2, -1)</span>
 </div>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">D</td><td class="xd-col">E</td></tr>
 <tr><td class="xd-row">2</td><td class="xd-spill-origin">田中</td><td class="xd-spill">500</td></tr>
 <tr><td class="xd-row">3</td><td class="xd-spill">山田</td><td class="xd-spill">410</td></tr>
@@ -266,7 +268,7 @@
 <h3>⑤ 複数キーのソート（配列定数を使う方法）</h3>
 <p>SORTで複数列を基準にするには、sort_index と sort_order に <strong>配列定数 <code>{}</code></strong> を使います。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col">C</td></tr>
 <tr><td class="xd-row">1</td><td class="xd-head">部署</td><td class="xd-head">名前</td><td class="xd-head">売上</td></tr>
 <tr><td class="xd-row">2</td><td>営業</td><td>田中</td><td>500</td></tr>
@@ -281,7 +283,7 @@
 </div>
 <p class="code-comment">第1キー：1列目（部署）を昇順 &rarr; 第2キー：3列目（売上）を降順。<br>結果：営業グループの中では売上の高い順、開発グループの中でも売上の高い順に並ぶ。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">E</td><td class="xd-col">F</td><td class="xd-col">G</td><td style="border:none;background:#fff;font-size:0.75em;color:#888;text-align:left;padding-left:10px;">&larr; 結果</td></tr>
 <tr><td class="xd-row">2</td><td class="xd-spill-origin">営業</td><td class="xd-spill">田中</td><td class="xd-spill">500</td><td class="border-none"></td></tr>
 <tr><td class="xd-row">3</td><td class="xd-spill">営業</td><td class="xd-spill">加藤</td><td class="xd-spill">210</td><td class="border-none"></td></tr>
@@ -310,7 +312,7 @@
 <h3>⑦ 計算値でソート：文字数順</h3>
 <p>「名前の短い順に並べたい」など、データそのものにはない「計算した値」を基準にする場合、SORTBYの独壇場です。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col"></td><td class="xd-col">C</td></tr>
 <tr><td class="xd-row">1</td><td class="xd-head">国名</td><td></td><td class="xd-head">結果</td></tr>
 <tr><td class="xd-row">2</td><td>Japan</td><td></td><td class="xd-spill-origin">Cuba</td></tr>
@@ -326,7 +328,7 @@
 <h3>⑧ カスタム順序ソート（高&rarr;中&rarr;低 など）</h3>
 <p>「高・中・低」のような独自の優先順位で並べたい場合、XMATCH（またはMATCH）で順位を数値化し、それを基準にSORTBYへ渡します。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col"></td><td class="xd-col">D</td></tr>
 <tr><td class="xd-row">1</td><td class="xd-head">タスク</td><td class="xd-head">優先度</td><td></td><td class="xd-head">順序マスタ</td></tr>
 <tr><td class="xd-row">2</td><td>レポート作成</td><td>低</td><td></td><td>高</td></tr>
@@ -357,7 +359,7 @@
 <h2 id="sec-5">🔒 知っておくべき：安定ソート（Stable Sort）</h2>
 <p>SORT・SORTBYはどちらも<strong>「安定ソート」</strong>です。これは「ソート基準の値が同じ行は、元データでの並び順がそのまま維持される」ということを意味します。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col"></td><td class="xd-col">D</td><td class="xd-col">E</td></tr>
 <tr><td class="xd-row">1</td><td class="xd-head">名前</td><td class="xd-head">部署</td><td></td><td class="xd-head">名前</td><td class="xd-head">部署</td></tr>
 <tr><td class="xd-row">2</td><td>田中</td><td>営業</td><td></td><td class="xd-spill-origin">田中</td><td class="xd-spill">営業</td></tr>
@@ -381,7 +383,7 @@
 <h3>コンボ① FILTER + SORT：条件抽出 &rarr; 並び替え</h3>
 <p>最も使用頻度が高い鉄板の組み合わせ。FILTERで絞り込んだ結果を、そのままSORT（またはSORTBY）に渡します。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col">C</td><td class="xd-col">D</td></tr>
 <tr><td class="xd-row">1</td><td class="xd-head">地域</td><td class="xd-head">商品</td><td class="xd-head">売上</td><td class="xd-head">月</td></tr>
 <tr><td class="xd-row">2</td><td>東京</td><td>PC</td><td>500</td><td>4月</td></tr>
@@ -396,7 +398,7 @@
 <span class="code-line">=SORT(FILTER(A2:D7, A2:A7="東京"), 3, -1)</span>
 </div>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">F</td><td class="xd-col">G</td><td class="xd-col">H</td><td class="xd-col">I</td><td style="border:none;background:#fff;font-size:0.75em;color:#888;text-align:left;padding-left:10px;">&larr; 結果</td></tr>
 <tr><td class="xd-row">2</td><td class="xd-spill-origin">東京</td><td class="xd-spill">PC</td><td class="xd-spill">500</td><td class="xd-spill">4月</td><td class="border-none"></td></tr>
 <tr><td class="xd-row">3</td><td class="xd-spill">東京</td><td class="xd-spill">モニター</td><td class="xd-spill">350</td><td class="xd-spill">5月</td><td class="border-none"></td></tr>
@@ -414,12 +416,13 @@
         </div>
 <!-- ----- コンボ2: FILTER + SORT + TAKE ----- -->
 <h3>コンボ② FILTER + SORT + TAKE：Top N 抽出（上位&cir;件）</h3>
+<p>※ TAKE は Excel 2024 / Microsoft 365 の関数で、Excel 2021 では使えません。Excel 2021 での書き方は<a href="article_let_iferror.html">LET深掘り②</a>で説明しています。</p>
 <div class="code-block" data-lang="excel">
 <span class="code-line">=TAKE(SORT(FILTER(A2:D7, A2:A7="東京"), 3, -1), 3)</span>
 </div>
 <p class="code-comment">東京のデータを売上降順に並べ、<strong>上位3件だけ</strong>を返す。<br>TAKEの第2引数が取得行数。マイナスにすると末尾から取得できます。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">F</td><td class="xd-col">G</td><td class="xd-col">H</td><td class="xd-col">I</td></tr>
 <tr><td class="xd-row">2</td><td class="xd-spill-origin">東京</td><td class="xd-spill">PC</td><td class="xd-spill">500</td><td class="xd-spill">4月</td></tr>
 <tr><td class="xd-row">3</td><td class="xd-spill">東京</td><td class="xd-spill">モニター</td><td class="xd-spill">350</td><td class="xd-spill">5月</td></tr>
@@ -440,7 +443,7 @@
 <h3>コンボ④ XLOOKUP + SORT：検索結果をソートして表示</h3>
 <p>XLOOKUPが複数列を返す場合、その結果をさらにSORT / SORTBYで並べ替えるパターンです。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col">C</td><td class="xd-col">D</td><td class="xd-col">E</td></tr>
 <tr><td class="xd-row">1</td><td class="xd-head">社員ID</td><td class="xd-head">名前</td><td class="xd-head">4月</td><td class="xd-head">5月</td><td class="xd-head">6月</td></tr>
 <tr><td class="xd-row">2</td><td>E001</td><td>田中</td><td>120</td><td>150</td><td>180</td></tr>
@@ -457,7 +460,7 @@
 <h3>コンボ⑤ SORTBY + XLOOKUP：別テーブルの値を基準にソート</h3>
 <p>SORTBYの基準配列にXLOOKUPを入れると、「別テーブルにある値を基準にして、手元のテーブルを並べ替える」ことができます。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td>
 <td class="xd-col" style="background:#fff;border:none;width:20px;"></td>
@@ -506,6 +509,7 @@
 <span class="code-line">    TAKE(sorted, 10)</span>
 <span class="code-line">)</span>
 </div>
+<p class="code-comment">TAKE は Excel 2024 / Microsoft 365 の関数です。</p>
 <p class="code-comment">LET関数で data &rarr; filtered &rarr; sorted と名前をつけて段階的に処理。<br>最終行の TAKE(sorted, 10) で上位10件を返す。<br>やっていることは「=TAKE(SORT(FILTER(...),3,-1),10)」と同じだが、読みやすさが段違い。</p>
 </section>
 <!-- ============================================ -->
@@ -517,7 +521,7 @@
 <!-- ----- 線形検索 vs バイナリ検索 ----- -->
 <h3>⑪ 線形検索 vs バイナリ検索 &boxh;&boxh; 何がどう違うのか</h3>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table" style="min-width:640px;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:640px;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-head" style="min-width:130px;">比較項目</td>
 <td class="xd-head" style="min-width:230px;">線形検索（デフォルト）</td>
@@ -551,7 +555,7 @@
 <tr>
 <td class="text-left-bold">体感速度</td>
 <td>数千行まではOK。万単位で重くなる</td>
-<td>100万行でも一瞬</td>
+<td>行数が増えても比較回数はあまり増えない</td>
 </tr>
 </table></div>
 </div>
@@ -565,7 +569,7 @@
 <h3>⑫ XLOOKUP / XMATCH でバイナリ検索を有効にする</h3>
 <p>どちらの関数も、最後の引数 <code>search_mode</code> に <code>2</code>（昇順）または <code>-2</code>（降順）を指定するだけです。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table" style="min-width:660px;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:660px;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-head">関数</td>
 <td class="xd-head">通常（線形検索）</td>
@@ -588,7 +592,7 @@
           検索列のデータが<strong>正しくソートされていること</strong>。ソートされていない状態でバイナリ検索を使うと、<strong>エラーにならず間違った結果</strong>が返ります。見た目は正常なので発見が非常に困難です。
         </div>
 <!-- ----- SORT × バイナリ検索の実践ワークフロー ----- -->
-<h3>⑬ 実践ワークフロー：SORT で作業シートを作り、バイナリ検索で爆速化</h3>
+<h3>⑬ 実践ワークフロー：SORT で作業シートを作り、バイナリ検索で高速化</h3>
 <p>元データがソートされていないケースは実務で非常に多いです。「入力順」「更新順」などバラバラの並びが普通です。<br>
         そんなときこそ <strong>SORT関数で「ソート済みの作業シート」を1回だけ自動生成</strong>し、以後のすべての検索をバイナリ検索で行うアーキテクチャが有効です。</p>
 <h4>ステップ1：作業シート「_sorted」にソート済みデータをスピル</h4>
@@ -615,13 +619,13 @@
 </div>
 <h4>構成図</h4>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table" style="min-width:700px; font-size:0.82em;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:700px; font-size:0.82em;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-head" style="background:#e8eaf6; min-width:200px;">シート「rawData」<br>（元データ・未ソート）</td>
 <td style="border:none; background:#fff; font-size:1.3em; padding:0 16px;">&rarr;<br><span style="font-size:0.6em; color:#888;">SORT関数<br>（1回だけ）</span></td>
 <td class="xd-head" style="background:#c8e6c9; min-width:200px;">シート「_sorted」<br>（ソート済み・自動更新）</td>
 <td style="border:none; background:#fff; font-size:1.3em; padding:0 16px;">&rarr;<br><span style="font-size:0.6em; color:#888;">XLOOKUP<br>バイナリ検索</span></td>
-<td class="xd-head" style="background:#bbdefb; min-width:200px;">シート「検索結果」<br>（爆速で値を取得）</td>
+<td class="xd-head" style="background:#bbdefb; min-width:200px;">シート「検索結果」<br>（高速に値を取得）</td>
 </tr>
 <tr>
 <td style="font-size:0.78em; text-align:left; padding:8px;">商品ID：P-312, P-101, P-510...<br>（入力順・バラバラ）</td>
@@ -677,7 +681,7 @@
 <!-- ----- いつバイナリ検索を使うべきか ----- -->
 <h3>⑰ バイナリ検索を使うべきタイミング</h3>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table" style="min-width:600px;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:600px;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-head">状況</td>
 <td class="xd-head">推奨</td>
@@ -723,7 +727,7 @@
 <section class="method-section" id="errors">
 <h2 id="sec-8">⚠️ よくあるエラーと注意点</h2>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table" style="min-width:620px;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:620px;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-head">エラー</td>
 <td class="xd-head">原因</td>
@@ -798,7 +802,7 @@
 <br>
 <strong>Q. 大規模データの検索が遅い？</strong><br>
           　&boxvr; 作業シートに <strong>SORT</strong> でソート済みデータを1回スピル<br>
-          　&boxur; <strong>XLOOKUP / XMATCH</strong> の search_mode = <strong class="color-red">2</strong> でバイナリ検索 &rarr; 爆速化
+          　&boxur; <strong>XLOOKUP / XMATCH</strong> の search_mode = <strong class="color-red">2</strong> でバイナリ検索 &rarr; 高速化
         </div>
 <div class="xdemo-note">
 <strong>💡 最後に</strong><br>
@@ -810,10 +814,10 @@
 <h2><span class="icon">🔗</span> 関連記事</h2>
 <ul class="line-height-2">
 <li><a href="article_unique_filter_sort.html">UNIQUE×FILTER×SORT &horbar; 条件付きリストを並び替える</a></li>
-<li><a href="article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
-<li><a href="article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
-<li><a href="article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
-<li><a href="article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+<li><a href="article_filter.html">FILTER関数</a></li>
+<li><a href="article_unique_filter_sort.html">UNIQUE×FILTER×SORTで条件付きリストを並び替える</a></li>
+<li><a href="article_let_iferror.html">LET深掘り②：SORT・SORTBYの重複計算を減らす</a></li>
+<li><a href="article_sequence.html">SEQUENCE で日付リスト自動生成</a></li>
 </ul>
 </section>
 

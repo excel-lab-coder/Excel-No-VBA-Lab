@@ -32,7 +32,7 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "datePublished": "2026-05-03",
-  "dateModified": "2026-07-11",
+  "dateModified": "2026-11-04",
   "headline": "XMATCH関数",
   "author": {
     "@type": "Person",
@@ -66,6 +66,8 @@
 }</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 </head>
 <body class="article-layout">
 <div class="reading-progress" aria-hidden="true"></div>
@@ -91,7 +93,7 @@
 <div class="article-header">
 <div class="article-meta">
 <span class="badge badge-2021">2021～</span>
-<span class="article-date">更新日: 2026-07-11</span>
+<span class="article-date">更新日: 2026-11-04</span>
 </div>
 <h1 class="article-title">XMATCH：MATCHの後継関数。完全一致がデフォルトになり「0」の書き忘れから解放</h1>
 </div>
@@ -114,7 +116,7 @@
         </p>
 <div class="xdemo-note">
 <strong>🔥 旧MATCHでの悲劇（第3引数を忘れた場合）</strong><br>
-          旧来の <code>=MATCH("売上", A1:Z1)</code> は、第3引数である <code>[照合の種類]</code> を省略すると<strong>「1（近似値、昇順ソート必須）」</strong>という謎の挙動がデフォルトになっていました。初心者が <code>0</code>（完全一致）を指定し忘れた結果、「見つからないのになぜか隣の列の番号が返ってきて、後続のINDEX関数で全く違う数値を取得し、誤ったレポートが作成される」という大事故が世界中の実務で多発していました。<br><br>
+          旧来の <code>=MATCH("売上", A1:Z1)</code> は、第3引数である <code>[照合の種類]</code> を省略すると<strong>「1（近似値、昇順ソート必須）」</strong>という謎の挙動がデフォルトになっていました。初心者が <code>0</code>（完全一致）を指定し忘れた結果、「見つからないのになぜか隣の列の番号が返ってきて、後続のINDEX関数で全く違う数値を取得し、誤ったレポートが作成される」という事故が実務で起きていました。<br><br>
           XMATCHでは、XLOOKUP同様<strong>「省略すると完全一致」</strong>という安全な仕様に修正されたため、このトラップを踏むことが物理的になくなりました。
         </div>
 <h4>後ろからの検索とバイナリ検索</h4>
@@ -127,7 +129,7 @@
 </div>
 <div class="xdemo-note-warn">
 <strong>⚠️ 最後の <code>, 0</code> は絶対に忘れないこと！</strong><br>
-          省略すると近似値検索になり、並び順次第で大事故に直結します。
+          省略すると近似値検索になり、並び順次第で誤った結果につながります。
         </div>
 </section>
 <!-- ============================================ -->
@@ -138,7 +140,7 @@
 <!-- ===== 1. 全体像の図解 ===== -->
 <h3>① 全体像：7つの決定的な違い</h3>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table" style="min-width:680px;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:680px;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-col" style="width:30px;"></td>
 <td class="xd-head" style="min-width:180px;">比較項目</td>
@@ -198,7 +200,7 @@
 <h3>② 最大の違い：デフォルト挙動の図解</h3>
 <p>以下の図は、まったく同じデータに対して<strong>「第3引数を省略した」</strong>場合に MATCH と XMATCH がどう振る舞うかを示しています。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <!-- 列ヘッダ -->
 <tr>
 <td class="xd-col"></td>
@@ -250,7 +252,7 @@
 <h3>③ 引数体系の完全対比図</h3>
 <p>MATCHとXMATCHでは引数の「番号 &rarr; 意味」の対応が逆転している部分があるので要注意です。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table" style="min-width:700px;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:700px;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-head" colspan="3" style="background:#ffcdd2;">MATCH（旧）の照合の種類（第3引数）</td>
 <td class="xd-head" style="background:#ddd; width:10px;"></td>
@@ -300,7 +302,7 @@
 <h4>🔄 逆方向検索（最後に一致した位置を取得）</h4>
 <p>たとえば「担当：田中」が複数行ある場合に、<strong>最後の</strong>田中の位置を取りたいケースです。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td></tr>
 <tr><td class="xd-row">1</td><td class="xd-head">日付</td><td class="xd-head">担当</td></tr>
 <tr><td class="xd-row">2</td><td>4/1</td><td>田中</td></tr>
@@ -354,7 +356,7 @@
 <h3>⑤ 第4引数「検索モード」の全体像</h3>
 <p>XMATCHにだけ存在する第4引数は、<strong>検索の方向とアルゴリズム</strong>を制御します。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table" style="min-width:560px;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:560px;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-head">検索モード</td>
 <td class="xd-head">方向</td>
@@ -390,7 +392,7 @@
 <!-- ===== 6. 置き換え早見表 ===== -->
 <h3>⑥ MATCHからの置き換え早見表</h3>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table" style="min-width:700px;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="min-width:700px;"><caption class="sr-only">データテーブル</caption>
 <tr>
 <td class="xd-head">やりたいこと</td>
 <td class="xd-head" style="background:#ffcdd2;">MATCH（旧）</td>
@@ -431,7 +433,7 @@
 <!-- ===== 7. INDEX+XMATCH の実践例 ===== -->
 <h3>⑦ 実践：INDEX + XMATCH（MATCH の完全代替）</h3>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col">C</td><td class="xd-col">D</td></tr>
 <tr><td class="xd-row">1</td><td class="xd-head">商品ID</td><td class="xd-head">商品名</td><td class="xd-head">単価</td><td class="xd-head">在庫</td></tr>
 <tr><td class="xd-row">2</td><td>P-101</td><td>ノートPC</td><td>89,000</td><td>25</td></tr>
@@ -462,7 +464,7 @@
 <h4>📐 2次元検索：INDEX + XMATCH &times; 2（XLOOKUPにはできない技）</h4>
 <p>行と列の両方を動的に決めたい場合、INDEX の行引数・列引数の両方にXMATCHを入れることで実現できます。</p>
 <div class="xdemo-wrap">
-<div class="table-wrapper"><table class="xdemo-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">A</td><td class="xd-col">B</td><td class="xd-col">C</td><td class="xd-col">D</td></tr>
 <tr><td class="xd-row">1</td><td class="xd-head"></td><td class="xd-head">Q1</td><td class="xd-head">Q2</td><td class="xd-head">Q3</td></tr>
 <tr><td class="xd-row">2</td><td>東京</td><td>150</td><td>200</td><td>180</td></tr>
@@ -497,10 +499,9 @@
 <section class="method-section">
 <h2><span class="icon">🔗</span> 関連記事</h2>
 <ul class="line-height-2">
-<li><a href="article_xlookup_basic.html">XLOOKUP &horbar; VLOOKUPの後継、新しい検索の標準</a></li>
-<li><a href="article_filter.html">FILTER関数 &horbar; 条件に合うデータを動的抽出</a></li>
-<li><a href="article_let.html">LET関数 &horbar; 数式に変数を使って可読性と速度を改善</a></li>
-<li><a href="article_unique.html">UNIQUE関数 &horbar; 重複を排除してリスト化</a></li>
+<li><a href="article_xlookup_basic.html">XLOOKUP 基本編</a></li>
+<li><a href="../old/article_index_match.html">INDEX + MATCH（Excel 2016以降）</a></li>
+<li><a href="article_xlookup_vs.html">XLOOKUP比較編：VLOOKUP・INDEX+MATCHとの使い分け</a></li>
 </ul>
 </section>
 

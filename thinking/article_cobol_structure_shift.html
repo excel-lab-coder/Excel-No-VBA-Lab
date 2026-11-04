@@ -40,7 +40,7 @@
   "headline": "コラム：COBOL帳票処理で学んだ、固定長データを構造として読む考え方",
   "image": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg",
   "datePublished": "2026-05-24",
-  "dateModified": "2026-05-24",
+  "dateModified": "2026-11-04",
   "author": {
     "@type": "Organization",
     "name": "Excel × No VBA Lab"
@@ -99,7 +99,7 @@
 <div class="breadcrumb"><a href="../">ホーム</a><span>&gt;</span><a href="./">技術の流れ</a><span>&gt;</span><strong>設計思想・コラム</strong></div>
 <article class="article-body">
 <div class="article-header">
-  <div class="article-meta"><span class="badge badge-365">Data Structure</span><span class="badge badge-column">コラム</span><span class="article-date">公開日: 2026-05-24</span><span class="article-reading-time">📖 約11分</span></div>
+  <div class="article-meta"><span class="badge badge-365">Data Structure</span><span class="badge badge-column">コラム</span><span class="article-date">公開日: 2026-05-24 ｜ 更新日: 2026-11-04</span><span class="article-reading-time">📖 約11分</span></div>
   <h1 class="article-title">コラム：COBOL帳票処理で学んだ、固定長データを構造として読む考え方</h1>
 </div>
 
@@ -139,7 +139,7 @@
 <span class="code-line"> 株式会社〇〇〇〇             売上明細レポート       PAGE: 2</span>
   </div>
   <p>ページヘッダー、飾り線、無駄な空白行、そして「ページが変わるたびに繰り返されるタイトル」。これはデータではありません。「ドットインパクトプリンターで印刷するためのレイアウト」です。</p>
-  <p>ここからデータ分析を始めなければならないという現実に、多くの人がエクセルにテキストを貼り付け、手作業で行を消していく地獄の作業を開始します。</p>
+  <p>ここからデータ分析を始めなければならないという現実に、多くの人がエクセルにテキストを貼り付け、手作業で行を消していく作業を始めます。</p>
 </section>
 
 <section class="method-section" id="vba-trap">
@@ -171,7 +171,7 @@
     <li><strong>フィルタリング：</strong> 「伝票番号列が数値に変換できない行（つまりヘッダーや飾り線、小計行）」を丸ごとフィルターで除外する。</li>
   </ol>
   <p>VBAで何百行も書いた「ヘッダーを飛ばす条件分岐」は、Power Queryの「エラー行の削除」や「テキストフィルター」というたった1ステップに昇華されます。</p>
-  <p>人間を騙すための「見た目の飾り」を一瞬で剥ぎ取り、背後に隠された「固定長のデータ構造」だけを抽出する。このプロセスを経ることで、カオスだった印刷データは、美しいリレーショナルデータベースのテーブル（二次元表）へと生まれ変わります。</p>
+  <p>人間を騙すための「見た目の飾り」を取り除き、背後に隠された「固定長のデータ構造」だけを抽出する。このプロセスを経ることで、カオスだった印刷データは、美しいリレーショナルデータベースのテーブル（二次元表）へと生まれ変わります。</p>
 </section>
 
 <section class="method-section" id="rarity">
@@ -229,9 +229,24 @@
   </a>
 </nav>
 
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../cobol/intro/02_article_cobol_approach.html">COBOL帳票処理の3大アプローチ：難易度と完成時のメリット</a></li>
+<li><a href="../cobol/intro/03_article_cobol_output_patterns.html">COBOL帳票データの出力パターン集：Excelで整形しやすい帳票・難しい帳票</a></li>
+<li><a href="../cobol/intro/01_article_cobol_fixed.html">扱っているデータはCOBOL固定長？見分け方と基礎知識</a></li>
+<li><a href="../tools/fixed-width-formula-maker.html">固定長レイアウトからMIDB式／M言語を作るツール</a></li>
+</ul>
+</section>
 </article>
 </main>
 <footer class="site-footer">
+<div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../samples/">サンプルデータ</a></p>
+  </div>
   <div class="footer-inner">
     <div class="footer-info">
       <p class="footer-copyright">&copy; Excel &times; No VBA Lab</p>

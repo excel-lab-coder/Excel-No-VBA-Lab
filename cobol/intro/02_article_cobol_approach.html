@@ -49,7 +49,7 @@
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
     "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}},
     "datePublished": "2026-03-28",
-    "dateModified":"2026-07-12"
+    "dateModified":"2026-11-04"
   }
   </script>
 <script type="application/ld+json">
@@ -65,6 +65,9 @@
   </script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/intro/02_article_cobol_approach.html" property="og:url">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -91,7 +94,7 @@
 <div class="article-meta">
 <span class="badge badge-all">Excel 2016以降</span>
 <span class="badge badge-maniac">コラム</span>
-<span class="article-date">更新日: 2026-07-12</span>
+<span class="article-date">更新日: 2026-11-04</span>
 </div>
 <h1 class="article-title">COBOL帳票処理の3大アプローチ：難易度と完成時のメリット</h1>
 <p class="article-summary" data-seo-lead="true">COBOL帳票の整形を、VBA・Power Query・ワークシート関数の3つの方法で比べ、難易度と完成後のメリットから、職場の制限に合った進め方を選べるようにします。会社でVBAやマクロが禁止されて困ったときも、関数版とPower Query版の違いを理解しておくと代替手段を選びやすくなります。</p>
@@ -173,7 +176,7 @@
 </td></tr>
 <tr class="benefit-row"><th>【完成時のメリット】<br>利用者の負担ゼロ</th><td>
 <strong>ボタン1つで全自動化される「アプリ」のような完成度</strong><br>
-            マクロさえ許可されていれば、ファイル選択から加工、別名保存まで裏側で完結させることができます。他の担当者に引き継いだり共有したりする際、相手にExcelの知識が全くなくても「このボタンを押すだけ」で運用できるのが最強のメリットです。
+            マクロさえ許可されていれば、ファイル選択から加工、別名保存まで裏側で完結させることができます。他の担当者に引き継いだり共有したりする際、相手にExcelの知識が全くなくても「このボタンを押すだけ」で運用できるのが大きなメリットです。
           </td></tr>
 </table>
 </section>
@@ -226,7 +229,7 @@
 <strong>①「ループ処理」ができないことによるアプローチの難しさ</strong><br>
               数式が難しく感じる最大の理由は、VBAのように「上から順に処理する」ことができない点です。作業列をうまく使うか、「全体の行数を割って、何番目と何番目を拾うか」という座標計算（配列処理）のロジックを組む必要があります。<br><br>
 <strong>② 自動拡張（スピル）の難易度とファイル肥大化</strong><br>
-              従来のExcelでは「データ行数が分からないから1万行目まで数式をコピーしておく」という力技でファイルが激重になりがちでした。現在は「スピル」と「最終行カウント」を使えばデータ量に合わせた自動拡張が可能ですが、判定ロジックが少しでも破綻すると <code>#SPILL!</code> エラーを連発するため、完璧に制御するにはかなりの設計スキルが求められます。
+              従来のExcelでは「データ行数が分からないから1万行目まで数式をコピーしておく」という力技でファイルが重くなりがちでした。現在は「スピル」と「最終行カウント」を使えばデータ量に合わせた自動拡張が可能ですが、判定ロジックが少しでも破綻すると <code>#SPILL!</code> エラーを連発するため、完璧に制御するにはかなりの設計スキルが求められます。
             </div>
 </td></tr>
 <tr class="benefit-row"><th>【完成時のメリット】<br>究極の手軽さと<br>ポータビリティ</th><td>
@@ -258,7 +261,7 @@
 <div class="xdemo-note-good" style="margin-top: 20px;">
 <strong>だからこそ「自力で解決できる人材」は圧倒的に希少で価値がある</strong><br>
           「基幹システムの仕様（固定長・バイト数）を理解し」「自部署の業務要件を把握しており」「予算ゼロ・VBA禁止という過酷な制約の中で、パワークエリやモダン関数を駆使してツールを組み上げられる」人材は、大げさではなく<strong>数千人に一人レベルの希少な存在（ユニコーン）</strong>です。<br>
-          職場で誰もできないような「気合いの入った数式」や「緻密なクエリ」を組むことは、ただの自己満足ではありません。システム化の壁に阻まれ、手作業で疲弊している現場を救うための「最強の実務ハック」なのです。
+          職場で誰もできないような「気合いの入った数式」や「緻密なクエリ」を組むことは、ただの自己満足ではありません。システム化の壁に阻まれ、手作業で疲弊している現場を救うための「実務の工夫」なのです。
         </div>
 </section>
 <section class="tips-section" style="background:#fcfcfc;">
@@ -281,6 +284,16 @@
 </ul>
 </section>
 
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="01_article_cobol_fixed.html">扱っているデータはCOBOL固定長？見分け方と基礎知識</a></li>
+<li><a href="03_article_cobol_output_patterns.html">COBOL帳票データの出力パターン集：Excelで整形しやすい帳票・難しい帳票</a></li>
+<li><a href="../../thinking/article_cobol_structure_shift.html">COBOL帳票処理で学んだ、固定長データを構造として読む考え方</a></li>
+<li><a href="../formula/01_article_cobol_basic.html">COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）</a></li>
+<li><a href="../pq/01_article_cobol_pq.html">【パワークエリ編】COBOL帳票データの不要行除去と一括結合</a></li>
+</ul>
+</section>
 </article>
 </main>
 <footer class="site-footer">

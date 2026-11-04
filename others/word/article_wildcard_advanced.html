@@ -14,7 +14,7 @@
 <meta content="Excel × No VBA Lab" property="og:site_name"/>
 <meta content="ja_JP" property="og:locale"/>
 <meta content="index, follow" name="robots"/>
-<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_mailmerge_label_basic.html" rel="canonical"/>
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_wildcard_advanced.html" rel="canonical"/>
 <link href="../../common.css?v=20261103" rel="stylesheet"/>
 <link href="../../article.css?v=20261103" rel="stylesheet"/>
 <link as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="preload"/>
@@ -23,8 +23,11 @@
 <link href="word-guide.css?v=20261103" rel="stylesheet"/><meta content="5" name="difficulty"/>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Wordのワイルドカード置換の実例：日付・郵便番号・連続スペース・番号付け", "description": "Wordの置換でワイルドカードを使う実例集です。日付、郵便番号、連続スペース、段落先頭の番号を、実際に置換した結果と、置換されない場合の注意とともに説明します。", "datePublished": "2026-11-03", "dateModified": "2026-11-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_wildcard_advanced.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Wordのワイルドカード置換の実例：日付・郵便番号・連続スペース・番号付け", "description": "Wordの置換でワイルドカードを使う実例集です。日付、郵便番号、連続スペース、段落先頭の番号を、実際に置換した結果と、置換されない場合の注意とともに説明します。", "datePublished": "2026-11-03", "dateModified": "2026-11-04", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_wildcard_advanced.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "Word差し込み印刷", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/"}, {"@type": "ListItem", "position": 4, "name": "ワイルドカード置換の実例", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_wildcard_advanced.html"}]}</script>
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_wildcard_advanced.html" property="og:url">
 </head>
 <body class="article-layout word-guide">
 <div aria-hidden="true" class="reading-progress"></div>
@@ -33,7 +36,7 @@
 <nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/" aria-current="true">Word差し込み</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
 <main class="main-content" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../">現場実務ラボ</a><span>&gt;</span><a href="./">Word差し込み印刷</a><span>&gt;</span><strong>ワイルドカード置換の実例</strong></div>
-<article class="article-body"><div class="article-header"><div class="article-meta"><span class="badge badge-maniac">応用・難易度高</span><span class="badge badge-all">Windows版 Word</span><span class="article-date">更新日: 2026-11-03</span></div><h1 class="article-title">Wordのワイルドカード置換の実例：日付・郵便番号・連続スペース・番号付け</h1><p class="article-summary" data-seo-lead="true">Wordの置換でワイルドカードを使う実例集です。日付、郵便番号、連続スペース、段落先頭の番号を、実際に置換した結果と、置換されない場合の注意とともに説明します。</p></div>
+<article class="article-body"><div class="article-header"><div class="article-meta"><span class="badge badge-maniac">応用・難易度高</span><span class="badge badge-all">Windows版 Word</span><span class="article-date">更新日: 2026-11-04</span></div><h1 class="article-title">Wordのワイルドカード置換の実例：日付・郵便番号・連続スペース・番号付け</h1><p class="article-summary" data-seo-lead="true">Wordの置換でワイルドカードを使う実例集です。日付、郵便番号、連続スペース、段落先頭の番号を、実際に置換した結果と、置換されない場合の注意とともに説明します。</p></div>
 <div class="word-answer"><span>結論</span><p><strong>「ワイルドカードを使用する」をオンにし、1件ずつ確認してから置換します。</strong>Wordの記号は一般的な正規表現と違います。作業前に必ずコピーを保存します。</p></div>
 <section aria-label="この記事の進め方" class="word-guide-intro"><p class="word-guide-level">難しい（Lv.5）／ 通常の操作で足りる場合は基本記事を先に読んでください</p><ol class="word-guide-flow"><li>コピーを保存</li><li>検索式を入力</li><li>1件ずつ確認</li><li>結果を照合</li></ol><details class="word-guide-toc" open><summary>目次</summary><nav aria-label="記事内の目次"><ol><li><a href="#date">日付の区切りを変える</a></li><li><a href="#results">実際に置換した結果</a></li><li><a href="#guide-step-7">条番号を付け替える場合の注意</a></li></ol></nav></details></section>
 <section class="method-section"><h2 id="date">日付の区切りを変える</h2><p>対象を半角数字の「2026/11/2」のような日付表記に限定した例です。検索は日付の妥当性までは判断しません。</p><div class="table-wrapper"><table class="comparison-table"><caption>半角数字の日付表記の変換</caption><thead><tr><th scope="col">欄</th><th scope="col">入力</th></tr></thead><tbody><tr><td>検索する文字列</td><td>([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})</td></tr><tr><td>置換後の文字列</td><td>\1年\2月\3日</td></tr></tbody></table></div><ol class="line-height-2"><li>Ctrl＋H→「オプション」で「ワイルドカードを使用する」をオンにします。</li><li>表の検索式と置換文字列を、半角で入力します。</li><li>「次を検索」で、周辺の数字を巻き込んでいないか確認します。</li><li>「置換」を1件ずつ実行します。日付以外の番号が混ざる文書では、すべて置換を使わず個別に判断します。</li><li>作業後はワイルドカードをオフに戻します。</li></ol><p>Wordのワイルドカードは一般的な正規表現とは異なります。検索式を他のアプリからそのまま流用しないでください。</p></section>

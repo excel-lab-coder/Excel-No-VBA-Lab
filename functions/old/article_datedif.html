@@ -32,7 +32,7 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "datePublished": "2026-05-03",
-  "dateModified": "2026-11-01",
+  "dateModified": "2026-11-04",
   "headline": "DATEDIF完全ガイド：隠し関数の落とし穴と安全な年齢・勤続計算",
   "author": {
     "@type": "Person",
@@ -42,6 +42,9 @@
 }</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"関数","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/"},{"@type":"ListItem","position":3,"name":"DATEDIF 完全ガイド","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_datedif.html"}]}</script>
 </head>
 
 <body class="article-layout">
@@ -66,7 +69,7 @@
 </div>
 <article class="article-body">
 <div class="article-header">
-<div class="article-meta"><span class="badge badge-all">Excel 2016以降</span></div>
+<div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-04</span></div>
 <h1 class="article-title">DATEDIF 完全ガイド：隠し関数の落とし穴と安全な年齢・勤続計算<br><span style="font-size:.55em;font-weight:400;color:#666;">&horbar; MDバグの正体・終了日+1の是非・パワークエリの罠まで &horbar;</span></h1>
 </div>
 <div class="toc-box">
@@ -97,7 +100,7 @@
 </div>
 <p class="code-comment">開始日と終了日の間の期間を、指定した単位で返す。開始日 &leqq; 終了日でなければ #NUM! エラー。</p>
 <h3>全6単位の一覧</h3>
-<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="compare-table"><caption class="sr-only">データテーブル</caption>
 <tr>
 <th scope="col">単位</th>
 <th scope="col">意味</th>
@@ -172,7 +175,7 @@
         "MD"（1月に満たない日数）と "YD"（1年に満たない日数）には、うるう年を挟む計算で<strong>マイナス値や明らかに間違った値</strong>が返るバグが存在します。Microsoftの公式ドキュメントでも、"MD" 引数は不正確な結果を返すことがあると書かれています（<a href="https://support.microsoft.com/ja-jp/office/datedif-%E9%96%A2%E6%95%B0-25dba1a4-2812-480b-84dd-8b32a451b35c" target="_blank" rel="noopener">Microsoft サポート：DATEDIF 関数</a>）。+1 では回避できないため、"MD" の代わりに後述の方法を使ってください。
       </div>
 <h3>"MD" のバグ実例</h3>
-<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">A（開始日）</td><td class="xd-col">B（終了日）</td><td class="xd-col">C（DATEDIF "MD"）</td><td class="xd-col">D（期待値の例）</td></tr>
 <tr><td class="xd-row">1</td><td class="xd-data">2026/1/31</td><td class="xd-data">2026/3/1</td><td class="xd-bad">-2</td><td class="xd-result">1</td></tr>
 <tr><td class="xd-row">2</td><td class="xd-data">2026/3/31</td><td class="xd-data">2026/5/1</td><td class="xd-bad">-2</td><td class="xd-result">1</td></tr>
@@ -180,7 +183,7 @@
 <tr><td class="xd-row">4</td><td class="xd-data">2026/1/29</td><td class="xd-data">2026/3/1</td><td class="xd-bad">-1</td><td class="xd-result">1</td></tr>
 </table></div>
 <h3>"YD" のバグ実例</h3>
-<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="xdemo-table" style="margin:12px 0;"><caption class="sr-only">データテーブル</caption>
 <tr><td class="xd-col"></td><td class="xd-col">A（開始日）</td><td class="xd-col">B（終了日）</td><td class="xd-col">C（DATEDIF "YD"）</td><td class="xd-col">D（期待値の例）</td></tr>
 <tr><td class="xd-row">1</td><td class="xd-data">2015/1/1</td><td class="xd-data">2016/2/29</td><td class="xd-result">59</td><td class="xd-result">59（OK）</td></tr>
 <tr><td class="xd-row">2</td><td class="xd-data">2015/1/1</td><td class="xd-data">2016/3/1</td><td class="xd-bad">59</td><td class="xd-result">60</td></tr>
@@ -235,7 +238,7 @@
 <span class="code-line"> DATEDIF(A1,TODAY(),"YM") & "ヶ月" &</span>
 <span class="code-line"> DAY(TODAY())-DAY(A1)+IF(DAY(TODAY())&lt;DAY(A1),DAY(DATE(YEAR(TODAY()),MONTH(TODAY()),0)),0) & "日"</span>
 </div>
-<h3>方法② LET で読みやすく整理する</h3>
+<h3>方法② LET で読みやすく整理する（Excel 2021以降）</h3>
 <div class="code-block" data-lang="excel">
 <span class="code-line">=LET(</span>
 <span class="code-line">    開始, A1,</span>
@@ -324,7 +327,7 @@
 </section>
 <section class="method-section" id="sec-compare">
 <h2><span class="section-num">11</span> 方式比較表</h2>
-<div class="table-wrapper"><table class="compare-table"><caption>データテーブル</caption>
+<div class="table-wrapper"><table class="compare-table"><caption class="sr-only">データテーブル</caption>
 <tr>
 <th scope="col">比較項目</th>
 <th scope="col">DATEDIF "Y"</th>

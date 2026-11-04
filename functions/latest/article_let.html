@@ -36,7 +36,7 @@
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
     "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}},
     "datePublished": "2023-10-01",
-    "dateModified": "2023-10-01"
+    "dateModified": "2026-11-04"
   }
   </script>
 <script type="application/ld+json">
@@ -52,6 +52,9 @@
   </script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/latest/article_let.html" property="og:url">
 </head>
 <body class="article-layout">
 <div class="reading-progress" aria-hidden="true"></div>
@@ -71,7 +74,7 @@
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../functions/">関数</a><span>&gt;</span><strong>LET関数</strong></div>
 <article class="article-body">
 <div class="article-header">
-<div class="article-meta"><span class="badge badge-2021">2021～</span></div>
+<div class="article-meta"><span class="badge badge-2021">2021～</span><span class="article-date">更新日: 2026-11-04</span></div>
 <h1 class="article-title">LET関数：数式に「変数」を導入して可読性と速度を改善</h1>
 </div>
 <section class="goal-section">
@@ -93,12 +96,35 @@
 <p class="code-comment">意味：「税率」「小計」という名前を定義し、最後の行で使っている。<br>同じ計算（B2*C2）を2回書く必要がなくなり、Excelも内部で1回しか計算しない。</p>
 <div class="xdemo-note-info">
 <strong>🔥 LETの真価：パフォーマンス向上</strong><br>
-        LETを使わないと同じ部分式が複数回評価されます。例えば <code>XLOOKUP(...)</code> を3回使う数式では、LETで1回だけ評価して変数に入れれば計算量が1/3になります。大量行での速度差は歴然です。
+        LETを使わないと同じ部分式が複数回評価されます。例えば <code>XLOOKUP(...)</code> を3回使う数式では、LETで1回だけ評価して変数に入れれば、同じXLOOKUPを何度も書かずに済み、その部分の計算は1回で済みます。ブック全体がどれだけ速くなるかは、式の構成やデータ量で変わります。
       </div>
+</section>
+<section class="method-section">
+<h3>書き換え例：同じXLOOKUPを何度も書かない</h3>
+<p>商品コードから価格を検索し、見つからなければ「未登録」、10,000円以上なら「高額」、それ以外は「通常」と表示する例です。</p>
+<h4>LETを使わない場合</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=IF(XLOOKUP(A2,商品!A:A,商品!C:C,0)=0,"未登録",IF(XLOOKUP(A2,商品!A:A,商品!C:C,0)&gt;=10000,"高額","通常"))</span>
+</div>
+<p class="code-comment">同じXLOOKUPを2回書いています。検索範囲を変えるときは、2か所とも直す必要があります。</p>
+<h4>LETを使う場合</h4>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">  価格, XLOOKUP(A2,商品!A:A,商品!C:C,0),</span>
+<span class="code-line">  IF(価格=0,"未登録",IF(価格&gt;=10000,"高額","通常"))</span>
+<span class="code-line">)</span>
+</div>
+<p class="code-comment">検索は「価格」の1か所だけです。最後の行を読めば、何を判定しているかが分かります。</p>
+<h4>使うときの注意</h4>
+<ul class="line-height-2">
+<li>最後の引数が、結果として返す計算式です。名前と値は必ず組で書きます。</li>
+<li>「A1」「B2」のようなセル番地と同じ名前は使えません。</li>
+<li>名前は上から順に定義します。前に定義した名前は、後の値の中で使えます。</li>
+</ul>
 </section>
 <section class="legacy-section">
 <h3>旧バージョンでの代替法</h3>
-<p>LETがない環境では、中間計算の結果を「ヘルパー列（作業列）」に出力し、それを参照する方式にするしかありません。数式の可読性のためだけにシートに列が増えるのが欠点ですが、パフォーマンス面では同等に有効です。</p>
+<p>LETがない環境では、中間計算の結果を「ヘルパー列（作業列）」に出力し、それを参照する方法があります。数式の可読性のためだけにシートに列が増えるのが欠点ですが、パフォーマンス面では同等に有効です。</p>
 </section>
 <div class="series-nav" style="margin-top:40px; padding: 20px; background: #f0f4f8; border-radius: 8px;">
 <h4>LET関数 深掘りシリーズ</h4>

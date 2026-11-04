@@ -29,12 +29,17 @@
 <link href="../common.css?v=20261103" rel="stylesheet">
 <link href="../article.css?v=20261103" rel="stylesheet">
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-24", "dateModified": "2026-04-24", "headline":"UIA（UI Automation）で他アプリ・Webフォームへ自動入力 — Selenium不要のRPA代替","description":"VBAからUI Automation (UIA) を使用して、Edge上のHTMLフォームへ3名分のデータをゆっくり自動入力する手法を解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_uia_automation.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-24", "dateModified": "2026-11-04", "headline":"UIA（UI Automation）で他アプリ・Webフォームへ自動入力 — Selenium不要のRPA代替","description":"VBAからUI Automation (UIA) を使用して、Edge上のHTMLフォームへ3名分のデータをゆっくり自動入力する手法を解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_uia_automation.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_uia_automation.html" property="og:url">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"制限解除ラボ","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/unlocked/"},{"@type":"ListItem","position":3,"name":"UIA（UI Automation）連携","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_uia_automation.html"}]}</script>
 </head>
 
 <body>
+<div class="reading-progress" aria-hidden="true"></div>
 <!-- スキップリンク -->
 <a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
 
@@ -61,7 +66,7 @@
 <div class="article-header">
   <div class="article-meta">
     <span class="badge badge-all">VBA OK</span>
-    <span class="article-date">更新日: 2026-04-24</span>
+    <span class="article-date">更新日: 2026-11-04</span>
   </div>
   <h1 class="article-title">UIA（UI Automation）で他アプリ・Webフォームへ自動入力 &horbar; Selenium不要のRPA代替</h1>
 </div>
@@ -82,7 +87,7 @@
 <p>UIAは、EdgeやChromeなどのモダンブラウザだけでなく、ERP、会計ソフト、受注システム、社内向けのWindowsアプリなどにも応用できます。</p>
 
 <div class="tip-box">
-<strong>この記事の方針：</strong> 電卓のボタン操作ではなく、実務に近い<strong>「HTMLフォームへExcel VBAから自動入力する例」</strong>で説明します。さらに、通常のUIA操作は一瞬で終わってしまうため、この記事では3名分のデータをあえてゆっくり入力し、読者が動きを目で追えるデモにしています。
+<strong>この記事の方針：</strong> 電卓のボタン操作ではなく、実務に近い<strong>「HTMLフォームへExcel VBAから自動入力する例」</strong>で説明します。さらに、通常のUIA操作はすぐに終わってしまうため、この記事では3名分のデータをあえてゆっくり入力し、読者が動きを目で追えるデモにしています。
 </div>
 </section>
 
@@ -659,7 +664,7 @@ End Sub</code></pre>
 
 <p>このマクロを実行すると、VBAが一時フォルダにHTMLフォームを作成し、Edgeで開きます。その後、UI Automationを使って画面上の入力欄を探し、3名分のデータを順番に入力します。</p>
 
-<p>今回のデモでは、あえて入力ごとに短い待機を入れています。通常のUIA操作は非常に高速なため、待機を入れないと一瞬で完了してしまい、読者が何が起きたのか分かりにくくなるためです。</p>
+<p>今回のデモでは、あえて入力ごとに短い待機を入れています。通常のUIA操作は非常に高速なため、待機を入れないとすぐに完了してしまい、読者が何が起きたのか分かりにくくなるためです。</p>
 
 <p>中心となる処理は以下です。</p>
 

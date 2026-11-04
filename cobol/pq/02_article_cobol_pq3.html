@@ -48,7 +48,7 @@
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
     "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}},
     "datePublished": "2026-03-20",
-    "dateModified":"2026-07-12"
+    "dateModified":"2026-11-04"
   }
   </script>
 <script type="application/ld+json">
@@ -215,6 +215,9 @@
 </style>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/pq/02_article_cobol_pq3.html" property="og:url">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -245,13 +248,13 @@
 <span class="badge badge-maniac">パワークエリ</span>
 <span class="badge badge-maniac">M言語</span>
 <span class="badge badge-maniac">COBOL/マニアック</span>
-<span class="article-date">更新日: 2026-07-12</span>
+<span class="article-date">更新日: 2026-11-04</span>
 </div>
 <h1 class="article-title">【参考資料】パワークエリでCOBOL帳票を処理する全テクニック<br>
 <small style="font-size:0.5em;color:#607d8b;">&horbar; 自作関数なしでどこまでできるか ＋ MIDB自作関数の実装 &horbar;</small></h1>
 <p class="article-summary" data-seo-lead="true">Power Queryの標準機能でCOBOL帳票を扱うときの手順（不要行除去・固定長切り出し・縦持ち展開など）を一覧できる参考資料です。必要な箇所から参照してください。</p>
 </div>
-<details class="auto-toc" open><summary>目次（19項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 この資料の目的</a></li><li><a href="#sec-2">前半：自作関数なし（標準機能だけ）でできること</a></li><li><a href="#sec-3">パターンA 半角のみの固定長データ &rarr; Text.Middle で直接切り出し</a></li><li><a href="#sec-4">パターンB 全角文字混在でも「文字数」が固定 &rarr; Text.Middle で対応可能</a></li><li><a href="#sec-5">パターンC 不要行の除去・フィルダウン &rarr; 標準機能で一瞬</a></li><li><a href="#sec-6">パターンD 2行にまたがるデータを1行に結合 &rarr; インデックス＋行ずらし</a></li><li><a href="#sec-7">パターンE 「目印」を頼りに可変長フィールドを切り出す</a></li><li><a href="#sec-8">判定表：自分の帳票はどのパターンか？</a></li><li><a href="#sec-9">後半：自作関数が必要なケース &horbar; M言語でMIDB相当を作る</a></li><li><a href="#sec-10">核心技術：バイナリ経由のバイト位置切り出し</a></li><li><a href="#sec-11">fx_MIDB（自作関数）&horbar; バイト位置で切り出す（本丸）</a></li><li><a href="#sec-12">fx_MIDB_Safe（自作関数）&horbar; エラー処理付き安全版</a></li><li><a href="#sec-13">⚡ パフォーマンス改善：一括バイナリ変換パターン</a></li><li><a href="#sec-14">カスタム関数の登録手順</a></li><li><a href="#sec-15">エンコーディングとコードページ</a></li><li><a href="#sec-16">🔧 よくあるトラブル</a></li><li><a href="#sec-17">Excel関数 &harr; パワークエリ 対応表</a></li><li><a href="#sec-18">🎯 まとめ</a></li><li><a href="#sec-19">参考情報</a></li></ol></nav></details>
+<details class="auto-toc" open><summary>目次（19項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 この資料の目的</a></li><li><a href="#sec-2">前半：自作関数なし（標準機能だけ）でできること</a></li><li><a href="#sec-3">パターンA 半角のみの固定長データ &rarr; Text.Middle で直接切り出し</a></li><li><a href="#sec-4">パターンB 全角文字混在でも「文字数」が固定 &rarr; Text.Middle で対応可能</a></li><li><a href="#sec-5">パターンC 不要行の除去・フィルダウン &rarr; 標準機能で対応</a></li><li><a href="#sec-6">パターンD 2行にまたがるデータを1行に結合 &rarr; インデックス＋行ずらし</a></li><li><a href="#sec-7">パターンE 「目印」を頼りに可変長フィールドを切り出す</a></li><li><a href="#sec-8">判定表：自分の帳票はどのパターンか？</a></li><li><a href="#sec-9">後半：自作関数が必要なケース &horbar; M言語でMIDB相当を作る</a></li><li><a href="#sec-10">核心技術：バイナリ経由のバイト位置切り出し</a></li><li><a href="#sec-11">fx_MIDB（自作関数）&horbar; バイト位置で切り出す（本丸）</a></li><li><a href="#sec-12">fx_MIDB_Safe（自作関数）&horbar; エラー処理付き安全版</a></li><li><a href="#sec-13">⚡ パフォーマンス改善：一括バイナリ変換パターン</a></li><li><a href="#sec-14">カスタム関数の登録手順</a></li><li><a href="#sec-15">エンコーディングとコードページ</a></li><li><a href="#sec-16">🔧 よくあるトラブル</a></li><li><a href="#sec-17">Excel関数 &harr; パワークエリ 対応表</a></li><li><a href="#sec-18">🎯 まとめ</a></li><li><a href="#sec-19">参考情報</a></li></ol></nav></details>
 <!-- ======================== 導入 ======================== -->
 <section class="goal-section">
 <h2 id="sec-1"><span class="icon">💡</span> この資料の目的</h2>
@@ -392,7 +395,7 @@
 </section>
 <!-- ======== パターンC ======== -->
 <section class="method-section">
-<h2 id="sec-5"><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンC</span> 不要行の除去・フィルダウン &rarr; 標準機能で一瞬</h2>
+<h2 id="sec-5"><span style="background:#00acc1;color:#fff;padding:2px 12px;border-radius:4px;font-size:0.85em;">パターンC</span> 不要行の除去・フィルダウン &rarr; 標準機能で対応</h2>
 <p>ヘッダー行・罫線行・ページ区切り行の除去、および親情報の空白埋め（フィルダウン）は、<strong>全角混在であっても標準機能だけで完璧に処理</strong>できます。fx_MIDB（自作関数）でフィールド分解する前の前処理として、またfx_MIDB（自作関数）で切り出した後の仕上げとしても使います。</p>
 <div class="pq-step-box">
 <h3 class="pq-step-title">不要行の除去</h3>

@@ -40,7 +40,7 @@
   "headline": "段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期",
   "image": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg",
   "datePublished": "2026-05-23",
-  "dateModified": "2026-05-23",
+  "dateModified": "2026-11-04",
   "author": {
     "@type": "Organization",
     "name": "Excel × No VBA Lab"
@@ -99,7 +99,7 @@
 <div class="breadcrumb"><a href="../">ホーム</a><span>&gt;</span><a href="./">技術の流れ</a><span>&gt;</span><strong>段階5</strong></div>
 <article class="article-body">
 <div class="article-header">
-  <div class="article-meta"><span class="badge badge-365">Power Query</span><span class="badge badge-all">No VBA</span><span class="article-date">公開日: 2026-05-23</span><span class="article-reading-time">📖 約8分</span></div>
+  <div class="article-meta"><span class="badge badge-365">Power Query</span><span class="badge badge-all">No VBA</span><span class="article-date">公開日: 2026-05-23 ｜ 更新日: 2026-11-04</span><span class="article-reading-time">📖 約8分</span></div>
   <h1 class="article-title">段階5：マクロ禁止で、Power Queryと関数に活路を見出す時期</h1>
 </div>
 
@@ -184,7 +184,7 @@
 
 <section class="method-section" id="function">
   <h3>関数も作り直すことになる</h3>
-  <p>マクロ禁止環境では、関数の価値も上がります。VBAで一瞬だった抽出や分類を、COUNTIFS、SUMIFS、INDEX + MATCH、IFERROR、作業列で組み直す必要が出てきます。</p>
+  <p>マクロ禁止環境では、関数の価値も上がります。VBAならすぐ終わった抽出や分類を、COUNTIFS、SUMIFS、INDEX + MATCH、IFERROR、作業列で組み直す必要が出てきます。</p>
   <p>この時期に重要なのは、VBAの発想をそのまま関数に押し込まないことです。関数は手続きではなく、結果を宣言する道具です。欲しい結果をどういう配列や条件に分解するか、という考え方に切り替える必要があります。</p>
   <p>たとえば、VBAなら「上から順番に見て、条件に合う行を別シートへコピーする」と考えます。関数では「条件に合うかどうかの判定列を作り、その判定をもとに抽出結果を組む」と考えます。やりたいことは似ていても、頭の使い方が違います。</p>
   <p>ここで作業列の価値も見直します。作業列はダサいものではありません。複雑な処理を分解し、途中結果を見えるようにする設計部品です。VBAの中で見えなくなっていた途中処理を、シート上で可視化する役割があります。</p>
@@ -343,6 +343,12 @@ Power Queryで取得・整形・結合
 </article>
 </main>
 <footer class="site-footer">
+<div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../samples/">サンプルデータ</a></p>
+  </div>
   <div class="footer-inner">
     <div class="footer-info">
       <p class="footer-copyright">&copy; Excel &times; No VBA Lab</p>

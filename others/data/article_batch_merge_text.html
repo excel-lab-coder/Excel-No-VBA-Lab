@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>バッチファイルでフォルダ内のCSV・テキストを1つに結合する｜見出しと文字コードの注意点｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="フォルダ内のCSVやテキストファイルを、バッチファイルで1つに結合する方法を実機検証の結果とともに解説。copyコマンドの落とし穴、見出しを1行だけ残す手順、改行がないファイルの扱い、文字コードの注意、Power Queryとの使い分けまでまとめます。" name="description">
+<meta content="バッチファイルでフォルダ内のCSV・テキストを1つに結合する｜見出しと文字コードの注意点｜Excel &times; No VBA Lab" property="og:title">
+<meta content="フォルダ内のCSVやテキストファイルを、バッチファイルで1つに結合する方法を実機検証の結果とともに解説。copyコマンドの落とし穴、見出しを1行だけ残す手順、改行がないファイルの扱い、文字コードの注意、Power Queryとの使い分けまでまとめます。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_batch_merge_text.html" property="og:url">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_batch_merge_text.html" rel="canonical">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"バッチファイルでフォルダ内のCSV・テキストを1つに結合する｜見出しと文字コードの注意点","description":"フォルダ内のCSVやテキストファイルを、バッチファイルで1つに結合する方法を実機検証の結果とともに解説。copyコマンドの落とし穴、見出しを1行だけ残す手順、改行がないファイルの扱い、文字コードの注意、Power Queryとの使い分けまでまとめます。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"datePublished":"2026-11-04","dateModified":"2026-11-04","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_batch_merge_text.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"現場実務","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":3,"name":"CSV・テキストの結合","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_batch_merge_text.html"}]}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/">Word差し込み</a><a href="../../others/" aria-current="true">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務</a><span>&gt;</span><strong>CSV・テキストの結合</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-all">Windows</span><span class="article-date">更新日: 2026-11-04</span></div>
+<h1 class="article-title">バッチファイルでフォルダ内のCSV・テキストを1つに結合する</h1>
+<p class="article-lead">毎月のCSVや分割されたテキストファイルを、コピー＆貼り付けせずに1つにまとめます。よく紹介される <code>copy</code> コマンドの落とし穴と、見出しを1行だけ残すバッチファイルの作り方を、実機で確認した結果とともに説明します。</p>
+</div>
+<details class="auto-toc" open><summary>目次（7項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">どの方法を使うか</a></li><li><a href="#sec-2">copyコマンドの落とし穴</a></li><li><a href="#sec-3">見出しを1行だけ残すバッチファイル</a></li><li><a href="#sec-4">テキストファイルをつなぐだけのとき</a></li><li><a href="#sec-5">結合の順番</a></li><li><a href="#sec-6">うまくいかないとき</a></li><li><a href="#sec-7">結合後の確認</a></li></ol></nav></details>
+<section class="method-section">
+<h2 id="sec-1">1. どの方法を使うか</h2>
+<p>毎月届くCSVや、分割されたテキストファイルを1つにまとめる方法はいくつかあります。結合だけなら、バッチファイルが手軽です。整形や集計まで続けるなら、Power Queryが向いています。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">結合の方法の比較</caption>
+<thead><tr><th scope="col">方法</th><th scope="col">向いている場面</th><th scope="col">注意点</th></tr></thead>
+<tbody>
+<tr><td><code>copy /b</code> の1行</td><td>見出しのないファイルを、その場でつなぐ</td><td>見出しが重複する。最後に改行がないと行がつながる</td></tr>
+<tr><td><strong>バッチファイル（この記事）</strong></td><td>見出しが同じCSVを、毎回同じ手順で1つにする</td><td>シフトJIS向け。整形はできない</td></tr>
+<tr><td><a href="../../powerquery/advanced/article_pq_folder_monthly.html">Power Queryのフォルダー取り込み</a></td><td>UTF-8のCSV、ファイル名の列がほしい、整形や集計まで行う</td><td>Excelの中で作業する</td></tr>
+</tbody>
+</table></div>
+<div class="tip-box">💡 <strong>VBAではありませんが、実行前に確認を</strong><br>バッチファイルはVBAやマクロではありません。ただし、職場によってはバッチファイルやコマンド プロンプトの実行が制限されています。社内ルールに従ってください。実行できないときは、設定を変更して回避せず、Power Queryの方法を使ってください。</div>
+</section>
+<section class="method-section">
+<h2 id="sec-2">2. copyコマンドの落とし穴</h2>
+<p>よく紹介される方法は、コマンド1行です。対象のフォルダーを開き、アドレスバーに <code>cmd</code> と入力して <kbd>Enter</kbd> を押すと、そのフォルダーでコマンド プロンプトが開きます。</p>
+<div class="code-readonly">
+<span class="code-line">mkdir output</span>
+<span class="code-line">copy /b *.csv output\merged.csv</span>
+</div>
+<p>見出しのないファイルなら、これで足ります。ただし、次のような落とし穴があります。いずれも検証で確認しました。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">copy コマンドの落とし穴</caption>
+<thead><tr><th scope="col">状況</th><th scope="col">起きること</th></tr></thead>
+<tbody>
+<tr><td>見出しのあるCSV</td><td>見出しがファイルの数だけ途中に入る</td></tr>
+<tr><td>最後に改行がないファイル</td><td>次のファイルの1行目とつながる（例：<code>2026/5/1,田中,300日付,担当,金額</code>）</td></tr>
+<tr><td><code>/b</code> を付けない</td><td>結果の末尾に制御文字（<code>0x1A</code>）が入る</td></tr>
+<tr><td>BOM付きUTF-8のファイル</td><td>BOMがファイルの数だけ途中に入る</td></tr>
+</tbody>
+</table></div>
+<p>行がつながると、Excelで開いたときに列がずれたり、データが1行消えたように見えたりします。件数の確認が大切です。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-3">3. 見出しを1行だけ残すバッチファイル</h2>
+<p>次のバッチファイルは、見出しを先頭の1行だけ残し、改行のないファイルがあっても行がつながらないようにします。<strong>元のCSVは変更しません。</strong></p>
+<div class="code-readonly">
+<span class="code-line">@echo off</span>
+<span class="code-line">chcp 932 &gt;nul</span>
+<span class="code-line">setlocal</span>
+<span class="code-line">cd /d "%~dp0"</span>
+<span class="code-line"> </span>
+<span class="code-line">rem 設定（ここを実際の内容に合わせて変えます）</span>
+<span class="code-line">set "HEADER=日付,担当,金額"</span>
+<span class="code-line">set "OUT=output\結合結果.csv"</span>
+<span class="code-line">set "WORK=output\作業用.tmp"</span>
+<span class="code-line"> </span>
+<span class="code-line">if not exist output mkdir output</span>
+<span class="code-line">if exist "%WORK%" del "%WORK%"</span>
+<span class="code-line"> </span>
+<span class="code-line">rem CSVを順につなぐ（最後に改行がないファイルに備えて、1行足す）</span>
+<span class="code-line">for %%F in (*.csv) do (</span>
+<span class="code-line">  type "%%F" &gt;&gt; "%WORK%"</span>
+<span class="code-line">  echo(&gt;&gt; "%WORK%"</span>
+<span class="code-line">)</span>
+<span class="code-line"> </span>
+<span class="code-line">rem 見出しを1行だけ残し、残りの見出しと空行を除く</span>
+<span class="code-line">&gt; "%OUT%" echo %HEADER%</span>
+<span class="code-line">findstr /v /b /c:"%HEADER%" "%WORK%" | findstr /v "^$" &gt;&gt; "%OUT%"</span>
+<span class="code-line">del "%WORK%"</span>
+<span class="code-line"> </span>
+<span class="code-line">echo 完了しました。結果: %OUT%</span>
+<span class="code-line">pause</span>
+</div>
+<h3>作り方</h3>
+<ol class="line-height-2">
+<li>結合したいCSVを、専用のフォルダーにコピーします。</li>
+<li>メモ帳を開き、上のコードを貼り付けます。</li>
+<li><code>HEADER=</code> の後ろを、CSVの1行目と<strong>まったく同じ文字</strong>に書き換えます。</li>
+<li>「名前を付けて保存」で、ファイル名を <code>結合.bat</code>、ファイルの種類を「すべてのファイル」、エンコードを <strong>ANSI</strong> にして、CSVと同じフォルダーに保存します。保存後、メモ帳の右下に「Windows (CRLF)」と「ANSI」と表示されていることを確認します。</li>
+<li><code>結合.bat</code> をダブルクリックします。</li>
+<li><code>output</code> フォルダーの <code>結合結果.csv</code> を確認します。</li>
+</ol>
+<div class="xdemo-note-warn"><strong>⚠️ エンコードはANSIで保存します</strong><br>メモ帳の既定はUTF-8です。UTF-8のまま保存すると、検証ではファイル名が文字化けし、見出しも正しく書き込まれませんでした。改行が「Unix (LF)」の場合は、結果がまったく出力されませんでした。</div>
+<h3>処理の流れ</h3>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">バッチファイルの処理</caption>
+<thead><tr><th scope="col">行</th><th scope="col">役割</th></tr></thead>
+<tbody>
+<tr><td><code>chcp 932</code></td><td>シフトJISとして読み書きする</td></tr>
+<tr><td><code>cd /d "%~dp0"</code></td><td>バッチファイルのあるフォルダーで処理する</td></tr>
+<tr><td><code>type</code> と <code>echo(</code></td><td>ファイルを順につなぎ、ファイルごとに改行を足す</td></tr>
+<tr><td><code>&gt; "%OUT%" echo %HEADER%</code></td><td>結果の1行目に見出しを書く</td></tr>
+<tr><td><code>findstr /v /b /c:"…"</code></td><td>見出しで始まる行を除く</td></tr>
+<tr><td><code>findstr /v "^$"</code></td><td>空行を除く</td></tr>
+<tr><td><code>del "%WORK%"</code></td><td>作業用ファイルだけを消す（元のCSVは消さない）</td></tr>
+</tbody>
+</table></div>
+<p>結果は <code>output</code> フォルダーに出すので、もう一度実行しても、前回の結果を読み込むことはありません。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-4">4. テキストファイルをつなぐだけのとき</h2>
+<p>見出しのないテキストファイルなら、見出しの処理を省きます。空行は取り除かれます。</p>
+<div class="code-readonly">
+<span class="code-line">@echo off</span>
+<span class="code-line">chcp 932 &gt;nul</span>
+<span class="code-line">setlocal</span>
+<span class="code-line">cd /d "%~dp0"</span>
+<span class="code-line">set "OUT=output\結合結果.txt"</span>
+<span class="code-line">set "WORK=output\作業用.tmp"</span>
+<span class="code-line">if not exist output mkdir output</span>
+<span class="code-line">if exist "%WORK%" del "%WORK%"</span>
+<span class="code-line">for %%F in (*.txt) do (</span>
+<span class="code-line">  type "%%F" &gt;&gt; "%WORK%"</span>
+<span class="code-line">  echo(&gt;&gt; "%WORK%"</span>
+<span class="code-line">)</span>
+<span class="code-line">findstr /v "^$" "%WORK%" &gt; "%OUT%"</span>
+<span class="code-line">del "%WORK%"</span>
+<span class="code-line">echo 完了しました。結果: %OUT%</span>
+<span class="code-line">pause</span>
+</div>
+</section>
+<section class="method-section">
+<h2 id="sec-5">5. 結合の順番</h2>
+<p>検証では、ファイル名の文字順につながりました。数値の大きさの順ではないので、桁数をそろえます。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">ファイル名と結合の順番</caption>
+<thead><tr><th scope="col">ファイル名</th><th scope="col">結合された順番</th></tr></thead>
+<tbody>
+<tr><td>1.txt, 2.txt, 10.txt</td><td>1 → 10 → 2</td></tr>
+<tr><td>売上_3月.txt, 売上_12月.txt</td><td>売上_12月 → 売上_3月</td></tr>
+<tr><td><strong>売上_2026-03.txt, 売上_2026-12.txt</strong></td><td>売上_2026-03 → 売上_2026-12（おすすめ）</td></tr>
+</tbody>
+</table></div>
+<p class="verify-note">順番が重要なときは、結合後にExcelで並べ替えて確認します。ネットワーク上のフォルダーなど、環境によって順番が変わるかどうかは確認していません。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-6">6. うまくいかないとき</h2>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">よくある症状と対処</caption>
+<thead><tr><th scope="col">症状</th><th scope="col">原因</th><th scope="col">対処</th></tr></thead>
+<tbody>
+<tr><td>見出しが途中に残る</td><td><code>HEADER</code> と1行目が違う（「担当」と「担当者」など）</td><td>列の構成が違う可能性があります。ファイルを確認して、列をそろえます。</td></tr>
+<tr><td>見出しが文字化けする／全部の見出しが残る</td><td>データがUTF-8、またはバッチファイルの保存形式が違う</td><td>この記事のバッチファイルはシフトJIS向けです。UTF-8のCSVはPower Queryを使います。</td></tr>
+<tr><td>結果のファイルができない</td><td>改行が「Unix (LF)」で保存されている</td><td>メモ帳の右下を確認し、「Windows (CRLF)」にして保存し直します。</td></tr>
+<tr><td>空行が消えた</td><td><code>findstr /v "^$"</code> で除いている</td><td>空行に意味があるデータには使いません。</td></tr>
+<tr><td>結果を開くと先頭のゼロが消える</td><td>Excelで直接開いた</td><td><a href="article_csv_leading_zero.html">「テキストまたはCSVから」で取り込みます。</a></td></tr>
+<tr><td>どのファイルの行か分からない</td><td>ファイル名を列に入れていない</td><td>Power Queryの「Source.Name」列を使います。</td></tr>
+</tbody>
+</table></div>
+<h3>文字コードが混ざるとき</h3>
+<p>シフトJISとUTF-8のファイルを同じバッチファイルで結合しないでください。バッチファイルは文字コードを変換しないので、結果の一部が文字化けします。</p>
+<h3>記事で使わなかった方法</h3>
+<p>見出しを除く方法としてよく紹介されるものの、検証で問題があったので、この記事では使っていません。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">使わなかった方法</caption>
+<thead><tr><th scope="col">方法</th><th scope="col">検証で起きたこと</th></tr></thead>
+<tbody>
+<tr><td><code>more +1</code></td><td>7万行のファイルで30秒たっても終わらなかった。タブが空白に変わった</td></tr>
+<tr><td><code>for /f</code> で1行ずつ出力</td><td>空行と、<code>;</code> で始まる行が消えた</td></tr>
+</tbody>
+</table></div>
+</section>
+<section class="method-section">
+<h2 id="sec-7">7. 結合後の確認</h2>
+<ol class="line-height-2">
+<li><strong>行数：</strong>元のファイルの行数の合計から、ファイル数を引き（見出しの分）、1を足した数と一致するか確認します。</li>
+<li><strong>見出し：</strong>2行目以降に見出しが残っていないか、Excelのフィルターで確認します。</li>
+<li><strong>文字化け：</strong>日本語の列を確認します。</li>
+<li><strong>つながった行：</strong>列の数が多い行がないか確認します。</li>
+</ol>
+<h3>検証結果</h3>
+<p>架空のデータで確認しました。検証環境：Windows 11 Home（10.0.26300）のコマンド プロンプト、2026年11月4日。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">検証の結果</caption>
+<thead><tr><th scope="col">確認した内容</th><th scope="col">結果</th></tr></thead>
+<tbody>
+<tr><td>改行のないファイル、空白や <code>&amp;</code> を含むファイル名</td><td>正しく結合された</td></tr>
+<tr><td><code>"東京,本社"</code>、<code>100%</code>、<code>!注意!</code>、タブ、<code>;</code> で始まる行</td><td>変わらずに残った</td></tr>
+<tr><td>「表」「ソ」を含む見出し</td><td>正しく除けた</td></tr>
+<tr><td>もう一度実行</td><td>結果は増えなかった</td></tr>
+<tr><td>7万行のファイル2つ</td><td>140,001行で、約0.3秒で完了</td></tr>
+<tr><td>この記事のコードをメモ帳に貼り付け、ANSIで保存して実行</td><td>正しく結合された。貼り付けると改行は「Windows (CRLF)」になった</td></tr>
+</tbody>
+</table></div>
+<p class="verify-note">確認していないこと：コマンド プロンプトの既定の文字コードが932のPCでの実行（検証したPCの既定は65001で、バッチファイルの <code>chcp 932</code> で切り替えました）、Windows 10、ネットワーク上のフォルダー。業務で使う前に、コピーしたファイルで試してください。</p>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../../powerquery/advanced/article_pq_folder_monthly.html">Power Queryで毎月のファイルをまとめる：翌月も更新だけで使える設計</a></li>
+<li><a href="../../powerquery/advanced/article_pq_sheets_combine.html">Power Queryで複数シートを1つにまとめる</a></li>
+<li><a href="article_csv_leading_zero.html">CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方</a></li>
+<li><a href="article_text_numbers_fix.html">Excelの数字が文字列になって計算・検索できないときの直し方</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js?v=20261103"></script>
+</body>
+</html>

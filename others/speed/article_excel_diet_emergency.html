@@ -40,7 +40,7 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "datePublished": "2026-10-07",
-  "dateModified": "2026-11-02",
+  "dateModified": "2026-11-04",
   "headline": "「Excelが重い・落ちる・開かない」ときの緊急ダイエットマニュアル：UsedRangeリセット・ゴースト図形削除・条件付き書式整理",
   "description": "数十MBまで肥大化して開くだけで固まる・スクロールバーが米粒大になったExcelファイルを、VBAを使わずに手動で軽量化する3つの緊急処置マニュアル。使用済みセル範囲のリセット、ゴースト図形一括削除、重複・分裂した条件付き書式の整理手順を具体例付きで解説します。",
   "mainEntityOfPage": {
@@ -57,6 +57,7 @@
   }
 }
 </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"現場実務ラボ","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":3,"name":"計算速度・最適化","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":4,"name":"緊急ダイエットマニュアル","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/speed/article_excel_diet_emergency.html"}]}</script>
 </head>
 
 <body class="article-layout">
@@ -87,7 +88,7 @@
       <div class="article-meta">
         <span class="badge badge-all">Excel 2016以降対応 (2016〜365)</span>
         <span class="badge badge-level">Lv.2 実務必須</span>
-        <span class="article-date">公開日: 2026-09-15</span>
+        <span class="article-date">公開日: 2026-09-15 ｜ 更新日: 2026-11-04</span>
       </div>
       <h1 class="article-title">「Excelが重い・落ちる・開かない」ときの緊急ダイエットマニュアル</h1>
       <p class="article-summary">データは数百行しかないのにファイルサイズが30MB超、開くだけで固まる、スクロールバーのつまみが極小化して操作できない……そんな「ゾンビ化したExcelファイル」を、VBAを使わずに手動の標準機能だけで数十MB &rarr; 数百KBまで小さくできる場合もある、3つの軽量化の方法を解説します。</p>
@@ -164,7 +165,7 @@
           <strong>余計な行を一括選択する：</strong><br>
           実際のデータ最終行の<strong>「すぐ下の行番号」</strong>をクリックして1行丸ごと選択します。<br>
           その状態のまま、<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>&darr;</kbd>（下矢印）を押します。<br>
-          &rarr; これにより、シートの物理的最下行（1,048,576行目）までが一瞬で全選択されます。
+          &rarr; これにより、シートの物理的最下行（1,048,576行目）までがまとめて選択されます。
         </li>
         <li>
           <strong>行を「削除」する（※重要：Deleteキーは厳禁！）：</strong><br>
@@ -198,7 +199,7 @@
       <h2>【処方箋2】非表示の「ゴースト図形・透明オブジェクト」を一括駆除</h2>
 
       <div class="method-card">
-        <div class="method-card-title method-card-title-red">なぜ起きるのか？ コピペが生み出す「目に見えない数万個の亡霊」</div>
+        <div class="method-card-title method-card-title-red">なぜ起きるのか？ コピペが生み出す「目に見えない数万個の図形」</div>
         <p>社内で何年も使い回されている見積書や台帳、Webシステムや別ソフトからセル範囲をコピー＆ペーストした表には、<strong>目に見えない透明な図形（0px × 0pxの四角形、空白のテキストボックス、微小なドロップダウン）</strong>が紛れ込んでいることが多々あります。</p>
         <p>行をコピーして貼り付けるたびにこれらの図形も倍々ゲームで複製され、気付いたときには<strong>シート上に3万個〜5万個もの図形オブジェクト</strong>が折り重なっています。Excelは画面を描画するたびにこれら数万個の図形の位置を計算するため、激しいカクつきやフリーズを引き起こします。</p>
       </div>
@@ -222,7 +223,7 @@
           <strong>一括消去：</strong><br>
           もし画面上に無数の小さな四角形や選択マーカーがびっしり浮かび上がったら、それがゴースト図形です。<br>
           そのままキーボードの <kbd>Delete</kbd> キーを押します。<br>
-          &rarr; 数千個の亡霊が一瞬で消滅し、スクロールや行挿入の引っかかりが嘘のように解消されます。
+          &rarr; 数千個の図形が消え、スクロールや行挿入の引っかかりが嘘のように解消されます。
         </li>
       </ol>
 
@@ -235,7 +236,7 @@
       <!-- 行削除で図形が塊になる現象の徹底解説 -->
       <div class="method-card" style="margin-top:24px;border-left:4px solid #d9534f;">
         <div class="method-card-title method-card-title-red">⚠️ 実務最大の落とし穴：「行をまとめて削除したのに、図形が1箇所に塊になって残る」現象の正体</div>
-        <p>「不要なデータ行を1,000行丸ごと選択して『行削除』したから、図形も一緒に消えたはず」……<strong>実はこれが、Excelが激重になる最大の原因の一つです。</strong>文字は消えているのに、図形だけが消えずに1本の罫線上にギュッと押しつぶされて重なり合う怪現象が起きます。</p>
+        <p>「不要なデータ行を1,000行丸ごと選択して『行削除』したから、図形も一緒に消えたはず」……<strong>実はこれが、Excelが重くなる大きな原因の一つです。</strong>文字は消えているのに、図形だけが消えずに1本の罫線上にギュッと押しつぶされて重なり合う怪現象が起きます。</p>
 
         <h4>1. なぜ行を削除したのに図形が残るのか？（Excelの仕様と根拠）</h4>
         <p>Excelのすべての図形・オブジェクトには、<strong>「プロパティ（オブジェクトの位置関係）」</strong>という内部設定が存在します。標準（デフォルト）では以下の設定になっています：</p>
@@ -269,7 +270,7 @@
           </li>
           <li>
             <strong>そのまま一括削除：</strong><br>
-            選択された状態のままキーボードの <kbd>Delete</kbd> キーを押します。これで凝縮されていた数千個の塊が一瞬で全滅します。
+            選択された状態のままキーボードの <kbd>Delete</kbd> キーを押します。これで凝縮されていた数千個の塊がまとめて消えます。
           </li>
           <li>
             <strong>【今後の予防策】行削除の「前」にオブジェクト選択を実行する：</strong><br>
@@ -359,8 +360,8 @@
               </tr>
               <tr>
                 <td><strong>ファイルを開く処理<br>（最初の立ち上げ）</strong></td>
-                <td><strong>【激重】ZIP解凍 ＋ 膨大なXMLパース</strong><br>数百万行のXMLテキストを行ごとに読み解き、型変換してメモリ構造へ再構築するためCPU負荷が非常に高い。</td>
-                <td><strong>【爆速】ZIP解凍 ＋ メモリへの直流し込み</strong><br>展開したバイナリデータをExcelがメモリ上で扱う内部形式へほぼそのまま転送（バルクコピー）できる。</td>
+                <td><strong>【重い】ZIP解凍 ＋ 膨大なXMLパース</strong><br>数百万行のXMLテキストを行ごとに読み解き、型変換してメモリ構造へ再構築するためCPU負荷が非常に高い。</td>
+                <td><strong>【速い】ZIP解凍 ＋ メモリへの直流し込み</strong><br>展開したバイナリデータをExcelがメモリ上で扱う内部形式へほぼそのまま転送（バルクコピー）できる。</td>
               </tr>
               <tr>
                 <td><strong>開いた後の再計算速度</strong></td>
@@ -371,7 +372,7 @@
           </table>
         </div>
 
-        <h4>2. 初回起動と保存が爆速になる真の理由：XMLパース処理が「ゼロ」になる</h4>
+        <h4>2. 初回起動と保存が速くなる理由：XMLパース処理が「ゼロ」になる</h4>
         <p>巨大な <code>.xlsx</code> を開くときに時間がかかる最大の原因は、ZIP解凍ではなく<strong>「膨大なXMLテキストの構文解析（パース）とデータ型変換」</strong>です。Excelは開くたびに、何千万文字ものタグを1文字ずつ読み、「これは文字列か数値か」「どのセル番地か」「共有文字列の何番目を参照しているか」をCPUをフル回転させて解析し直しています。</p>
         <p>一方、<code>.xlsb</code> はこの<strong>「XMLテキスト解析」の工程が不要</strong>になります。解凍したバイナリをそのままメモリ（RAM）へダイレクトに流し込むだけで開くため、最初のExcel立ち上げや保存時間が短くなることがあります。</p>
 
@@ -551,7 +552,7 @@
     <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
     <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
     <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
-    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/clean-excess-cell-formatting-on-a-worksheet-e744fc21-e73e-4b45-a74e-76579ec19543" rel="noopener" target="_blank">余分なセルの書式設定をクリーンアップする</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="../../samples/">サンプルデータ</a></p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="../../samples/">サンプルデータ</a></p>
   </div>
   <div class="footer-contact-wrap">
     <a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener" target="_blank">✉ お問い合わせ (Google Forms)</a>

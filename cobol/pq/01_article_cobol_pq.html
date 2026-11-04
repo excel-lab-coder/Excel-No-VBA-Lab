@@ -48,7 +48,7 @@
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
     "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}},
     "datePublished": "2026-03-18",
-    "dateModified":"2026-07-12"
+    "dateModified":"2026-11-04"
   }
   </script>
 <script type="application/ld+json">
@@ -135,6 +135,9 @@
 </style>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/pq/01_article_cobol_pq.html" property="og:url">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -163,7 +166,7 @@
 <span class="badge badge-all">Excel 2016以降</span>
 <span class="badge badge-maniac">パワークエリ</span>
 <span class="badge badge-maniac">COBOL/マニアック</span>
-<span class="article-date">更新日: 2026-07-12</span>
+<span class="article-date">更新日: 2026-11-04</span>
 </div>
 <h1 class="article-title">【パワークエリ編】COBOL帳票データの不要行除去と一括結合</h1>
 <p class="article-summary" data-seo-lead="true">Power Queryで帳票テキストを読み込み、見出し・区切り線などの不要行を除去して、複数ファイルを1つの表にまとめる手順を、更新ボタンで繰り返せる形で解説します。VBAが使えない、マクロが禁止されている会社では、定期的なCOBOL帳票整形の代替手段としてPower Queryを検討できます。</p>
@@ -217,8 +220,8 @@
 <h2 id="sec-4">💡 壁を越えた後：関数パイプラインより簡潔に処理できる</h2>
 <p>MIDB相当の自作関数を一度用意してしまえば、パワークエリはCOBOL帳票の整形において<strong>関数パイプラインよりもはるかに簡潔で効率的な手段</strong>になります。その理由を具体的に見ていきます。</p>
 <div class="pq-step-box">
-<h3 class="pq-step-title">1. 不要行の除去が一瞬で終わる</h3>
-<p>関数パイプラインでは、各行にフラグを立てて明細行を判定し、抽出シートで取り出す &horbar; という複数ステップが必要でした。パワークエリなら、<strong>列のフィルター（▼）で不要行のパターンを除外するだけ</strong>です。「===」で始まる行、「---」で始まる行、空白行&hellip;チェックを外すだけで、何万行のゴミ行も一瞬で消えます。</p>
+<h3 class="pq-step-title">1. 不要行の除去が短い手順で済む</h3>
+<p>関数パイプラインでは、各行にフラグを立てて明細行を判定し、抽出シートで取り出す &horbar; という複数ステップが必要でした。パワークエリなら、<strong>列のフィルター（▼）で不要行のパターンを除外するだけ</strong>です。「===」で始まる行、「---」で始まる行、空白行&hellip;チェックを外すだけで、何万行あっても不要な行をまとめて除けます。</p>
 <div class="code-block-large">
 <span class="color-808080">=== 2026/03/18 === 売上明細レポート === PAGE 1 ===</span>
 <span class="color-808080">----------------------------------------------------</span>

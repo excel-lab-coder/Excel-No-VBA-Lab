@@ -29,9 +29,13 @@
 
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-23", "dateModified": "2026-04-23", "headline":"PDFデータをExcelに取り込む方法｜Power Query・Word活用","description":"PDFの表データをExcelに取り込む方法を比較。Power Queryの基本・応用、旧式Wordを使う手順、対応できるPDFと限界・注意点をまとめて解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pdf_overview.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-23", "dateModified": "2026-11-04", "headline":"PDFデータをExcelに取り込む方法｜Power Query・Word活用","description":"PDFの表データをExcelに取り込む方法を比較。Power Queryの基本・応用、旧式Wordを使う手順、対応できるPDFと限界・注意点をまとめて解説します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pdf_overview.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pdf_overview.html" property="og:url">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"パワークエリ","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/"},{"@type":"ListItem","position":3,"name":"PDFデータ取得テクニック","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/basic/article_pdf_overview.html"}]}</script>
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -58,7 +62,7 @@
 <div class="article-header">
 <div class="article-meta">
 <span class="badge badge-all">Excel 2013〜</span>
-<span class="article-date">更新日: 2026-04-23</span>
+<span class="article-date">更新日: 2026-11-04</span>
 </div>
 <h1 class="article-title">ExcelでPDFのデータを取得する全テクニック<br><span style="font-size:.55em;font-weight:400;color:#666;">&horbar; 旧式Word変換からパワークエリまで &horbar;</span></h1>
 </div>
@@ -80,7 +84,7 @@
       ========================================================== -->
 <section class="goal-section" id="sec-why">
 <h2><span class="icon">💡</span> なぜPDFからExcelへの取り込みが必要なのか</h2>
-<p>取引先から届く請求書、官公庁が公開する統計データ、社内システムから出力されるレポート &horbar; これらの多くはPDF形式で提供されます。PDF内の表データを手作業で転記するのは時間がかかるだけでなく、入力ミスの温床にもなります。PDFの表をExcelに正確に取り込む技術を持っていれば、月次の集計作業やデータ分析の前処理が劇的に効率化されます。</p>
+<p>取引先から届く請求書、官公庁が公開する統計データ、社内システムから出力されるレポート &horbar; これらの多くはPDF形式で提供されます。PDF内の表データを手作業で転記するのは時間がかかるだけでなく、入力ミスの温床にもなります。PDFの表をExcelに正確に取り込む技術を持っていれば、月次の集計作業やデータ分析の前処理を大きく効率化できます。</p>
 <p>しかしPDFは「印刷物の見た目を再現する」ためのフォーマットであり、内部にセル構造やデータ型の情報を持ちません。そのため取り込みには「PDFの文字列情報を解析して表の構造を推定する」というステップが必要で、完璧な変換は保証されません。この前提を理解した上で、現在使える2つの主要な方法を解説します。</p>
 </section>
 <!-- ==========================================================

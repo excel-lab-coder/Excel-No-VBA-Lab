@@ -102,6 +102,7 @@
     <h2>🔍 検索・抽出の悩み</h2>
     <ul class="article-list">
 <li class="article-item"><p class="article-link">複数条件の件数や合計を集計したい</p><p class="article-summary"><a class="article-link" href="../functions/old/article_countifs_sumifs.html">COUNTIFS・SUMIFSの条件指定と集計表の作り方へ</a></p></li>
+      <li class="article-item"><p class="article-link">フィルターで絞り込んだ行だけ合計・件数を出したい</p><p class="article-summary"><a class="article-link" href="../functions/old/article_subtotal.html">SUBTOTALで表示中の行だけを集計し、崩れない連番も作る手順へ</a></p></li>
       <li class="article-item"><p class="article-link">VLOOKUPが使えない / 動かない</p><p class="article-summary"><a class="article-link" href="../functions/old/article_vlookup.html">一致条件・検索範囲・近似一致を総点検してVLOOKUPを安定運用する手順へ</a></p></li>
       <li class="article-item"><p class="article-link">列を挿入したらVLOOKUPが壊れた</p><p class="article-summary"><a class="article-link" href="../functions/latest/article_xlookup_vs.html">列挿入に強いXLOOKUPへ移行し、壊れない検索式に置き換える比較ガイドへ</a></p></li>
       <li class="article-item"><p class="article-link">検索キーより左の列を取りたい</p><p class="article-summary"><a class="article-link" href="../functions/old/article_index_match.html">左方向検索に対応するINDEX+MATCHの基本設計と実装手順へ</a></p></li>
@@ -138,10 +139,12 @@
       <li class="article-item"><p class="article-link">コード値で分岐したいが式が長くなる</p><p class="article-summary"><a class="article-link" href="../functions/latest/article_switch.html">SWITCHで辞書型分岐に置き換える設計手順へ</a></p></li>
       <li class="article-item"><p class="article-link">エラーの種類ごとに処理を分けたい</p><p class="article-summary"><a class="article-link" href="../functions/old/article_errortype.html">ERROR.TYPEで#N/Aや#DIV/0!を分岐処理する実装ガイドへ</a></p></li>
       <li class="article-item"><p class="article-link">年齢や勤続年数の計算がずれる</p><p class="article-summary"><a class="article-link" href="../functions/old/article_datedif.html">DATEDIFの落とし穴を回避し安全に年月差を計算する方法へ</a></p></li>
+      <li class="article-item"><p class="article-link">四捨五入や消費税の端数処理をしたい・合計が合わない</p><p class="article-summary"><a class="article-link" href="../functions/old/article_round.html">ROUND・ROUNDUP・ROUNDDOWNの使い方と、表示形式との違いへ</a></p></li>
       <li class="article-item"><p class="article-link">西暦を和暦表示に変換したい</p><p class="article-summary"><a class="article-link" href="../functions/old/article_text_date.html">TEXT関数の書式コードで和暦表示を安定化する逆引きガイドへ</a></p></li>
       <li class="article-item"><p class="article-link">1セルの文字列を一気に分割したい</p><p class="article-summary"><a class="article-link" href="../functions/latest/article_textsplit.html">TEXTSPLITで区切り文字分割をスピル展開する方法へ</a></p></li>
       <li class="article-item"><p class="article-link">記号の前後だけを抜き出したい</p><p class="article-summary"><a class="article-link" href="../functions/latest/article_textbefore.html">TEXTBEFORE/TEXTAFTERで前後抽出を安定化する手順へ</a></p></li>
       <li class="article-item"><p class="article-link">長くて複雑な数式をチーム共通の自作関数にしてスッキリさせたい</p><p class="article-summary"><a class="article-link" href="../functions/latest/article_lambda_basic.html">LAMBDA関数でVBAを使わずに名前付き自作関数を定義する手順へ</a></p></li>
+      <li class="article-item"><p class="article-link">Microsoft 365に移行したら数式の結果や表示が変わった</p><p class="article-summary"><a class="article-link" href="../others/misc/article_m365_migration_formula_checklist.html">#SPILL!・数式に付く@・旧版との共有を確認する移行チェックリストへ</a></p></li>
     </ul>
   </section>
 
@@ -158,6 +161,13 @@
       <li class="article-item"><p class="article-link">PDFデータをExcelで使える形にしたい</p><p class="article-summary"><a class="article-link" href="../powerquery/basic/article_pdf_powerquery_basic.html">PDFコネクタが利用できる環境で、PDFから表を取り込む基本手順の記事へ（Excel 2019以前は非搭載）</a></p></li>
       <li class="article-item"><p class="article-link">CSV・PDF・Webなど取り込み元が毎回違う</p><p class="article-summary"><a class="article-link" href="../powerquery/advanced/article_pq_import_patterns.html">ソース別に最短手順を選べる取り込みパターン集へ</a></p></li>
       <li class="article-item"><p class="article-link">複数ファイルの表を結合・追加したい</p><p class="article-summary"><a class="article-link" href="../powerquery/advanced/article_pq_merge_append.html">マージと追加を使い分ける実務フロー設計ガイドへ</a></p></li>
+      <li class="article-item"><p class="article-link">月別・支店別のシートを1つの表にまとめたい</p><p class="article-summary"><a class="article-link" href="../powerquery/advanced/article_pq_sheets_combine.html">Power Queryで複数シートを縦につなぎ、更新だけで増やせる手順へ</a></p></li>
+      <li class="article-item"><p class="article-link">フォルダ内のCSVやテキストファイルを1つにまとめたい</p><p class="article-summary"><a class="article-link" href="../others/data/article_batch_merge_text.html">見出しを1行だけ残して結合するバッチファイルの作り方へ</a></p></li>
+      <li class="article-item"><p class="article-link">氏名を姓と名の列に分けたい</p><p class="article-summary"><a class="article-link" href="../others/data/article_name_split_flash_fill.html">スペースをそろえて、関数やフラッシュフィルで分ける手順へ</a></p></li>
+      <li class="article-item"><p class="article-link">氏名からフリガナの列を作りたい・漢字のまま返る</p><p class="article-summary"><a class="article-link" href="../functions/old/article_phonetic_furigana.html">PHONETIC関数で取り出し、カタカナ・ひらがな・半角にそろえる手順へ</a></p></li>
+      <li class="article-item"><p class="article-link">前月と今月の名簿を比べて、追加・削除・変更された人を見つけたい</p><p class="article-summary"><a class="article-link" href="../others/data/article_compare_two_lists.html">COUNTIFとINDEX+MATCHで照合し、変わったセルに色を付ける手順へ</a></p></li>
+      <li class="article-item"><p class="article-link">CSVを開くと郵便番号や社員番号の先頭のゼロが消える</p><p class="article-summary"><a class="article-link" href="../others/data/article_csv_leading_zero.html">「テキストまたはCSVから」で列をテキストとして取り込み、消えたゼロを戻す手順へ</a></p></li>
+      <li class="article-item"><p class="article-link">数字が文字列になって計算・検索できない</p><p class="article-summary"><a class="article-link" href="../others/data/article_text_numbers_fix.html">SUMが0、VLOOKUPが#N/Aになる原因を見分け、原因別に数値へ直す方法へ</a></p></li>
     </ul>
   </section>
 
@@ -174,6 +184,13 @@
       <li class="article-item"><p class="article-link">印刷範囲をデータ量に合わせて自動変更したい</p><p class="article-summary"><a class="article-link" href="../others/print/article_print_area.html">Print_Areaを数式連動で可変化する実装手順へ</a></p></li>
       <li class="article-item"><p class="article-link">ラベル用紙の途中から無駄なく印刷したい</p><p class="article-summary"><a class="article-link" href="../others/print/article_label_scrap.html">開始位置指定で残ラベルを活かす印刷制御ガイドへ</a></p></li>
       <li class="article-item"><p class="article-link">宛名や案内文を1ページずつ自動印刷したい</p><p class="article-summary"><a class="article-link" href="../others/print/article_mail_print.html">スピンボタン＋Print_Areaで差し込み風印刷を実現する手順へ</a></p></li>
+      <li class="article-item"><p class="article-link">Excelの名簿からWordで宛名や案内文を差し込み印刷したい</p><p class="article-summary"><a class="article-link" href="../others/word/">レター・名簿・宛名ラベル・封筒・はがきを、作りたい物と困りごとから探せる実務ガイドへ</a></p></li>
+      <li class="article-item"><p class="article-link">Wordのラベル差し込みで全部同じ宛名になる</p><p class="article-summary"><a class="article-link" href="../others/word/article_mailmerge_label_next_record.html">自動反映をやり直し、宛名が順に切り替わる状態へ戻す手順へ</a></p></li>
+      <li class="article-item"><p class="article-link">Wordの差し込みで金額や番号の表示が崩れる</p><p class="article-summary"><a class="article-link" href="../others/word/article_mailmerge_number_format.html">金額・割合・番号の表示を整える手順へ</a></p></li>
+      <li class="article-item"><p class="article-link">Wordの宛名で長い住所や会社名が枠からはみ出す</p><p class="article-summary"><a class="article-link" href="../others/word/article_mailmerge_textbox_wrap.html">テキストボックスで枠内に折り返す手順へ</a></p></li>
+      <li class="article-item"><p class="article-link">配布するExcelで入力欄だけ編集できるようにしたい</p><p class="article-summary"><a class="article-link" href="../others/ui/article_input_validation_sheet_protection.html">入力欄のロック解除・入力規則・シート保護で配布用ファイルを作る手順へ</a></p></li>
+      <li class="article-item"><p class="article-link">「マクロの実行がブロックされました」と表示された</p><p class="article-summary"><a class="article-link" href="../others/misc/article_macro_blocked.html">表示の意味とMicrosoft公式の案内にある対応を確認する記事へ（許可してよいかは社内規程を確認）</a></p></li>
+      <li class="article-item"><p class="article-link">開くたびに「リンクが含まれています」と表示される</p><p class="article-summary"><a class="article-link" href="../others/data/article_external_links_break.html">別ブックへのリンクを探し、更新の判断と解除を行う手順へ</a></p></li>
     </ul>
   </section>
 

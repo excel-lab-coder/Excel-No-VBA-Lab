@@ -67,9 +67,13 @@
   </style>
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-05-03", "dateModified": "2026-10-07", "headline":"住所から郵便番号を逆引きする方法（最長一致検索）","description":"Excel関数（INDEX・MATCH・MAX・LEFT・LEN）だけで住所から郵便番号を逆引きする方法。最長一致検索のほうが精度が高い理由、安全装置の付け方まで丁寧に解説。VBA不要。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_zip_reverse.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-05-03", "dateModified": "2026-11-04", "headline":"住所から郵便番号を逆引きする方法（最長一致検索）","description":"Excel関数（INDEX・MATCH・MAX・LEFT・LEN）だけで住所から郵便番号を逆引きする方法。最長一致検索のほうが精度が高い理由、安全装置の付け方まで丁寧に解説。VBA不要。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_zip_reverse.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_zip_reverse.html" property="og:url">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"Excel関数テクニック","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/"},{"@type":"ListItem","position":3,"name":"旧式の関数","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/"},{"@type":"ListItem","position":4,"name":"住所&rarr;郵便番号 逆引き（最長一致検索）","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_zip_reverse.html"}]}</script>
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -89,7 +93,7 @@
 </div>
 <article class="article-body">
 <div class="article-header">
-<div class="article-meta"><span class="badge badge-classic">Excel 2016以降対応</span><span class="badge badge-classic">Excel 2016でも可</span></div>
+<div class="article-meta"><span class="badge badge-classic">Excel 2016以降対応</span><span class="badge badge-classic">Excel 2016でも可</span><span class="article-date">更新日: 2026-11-04</span></div>
 <h1 class="article-title">住所から郵便番号を逆引きする方法（最長一致検索）</h1>
 </div>
 <details class="auto-toc" open><summary>目次（13項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 やりたいこと</a></li><li><a href="#sec-2">シート構成（2つだけ）</a></li><li><a href="#sec-3">最長一致検索のアイデア</a></li><li><a href="#sec-4">数式（たった2つ）</a></li><li><a href="#sec-5">1つのセルで何が起きているか &boxh;&boxh; 処理トレース</a></li><li><a href="#sec-6">ここから先：精度を上げる・安全装置をつける</a></li><li><a href="#sec-7">郵便番号簿シートの準備（utf_all.csv）</a></li><li><a href="#sec-8">入力住所の正規化（精度を上げるための前処理）</a></li><li><a href="#sec-9">安全装置 &boxh;&boxh; 問題のある行を自動で検知する</a></li><li><a href="#sec-10">既知の落とし穴</a></li><li><a href="#sec-11">パフォーマンスの注意</a></li><li><a href="#sec-12">推奨ワークフロー</a></li><li><a href="#sec-13">まとめ</a></li></ol></nav></details>
@@ -170,7 +174,7 @@
 <span class="code-line">&rarr; 短い方から見つけると大雑把すぎて使えない。</span>
 <span class="code-line">&rarr; だから長い方から探して「一番詳しくマッチしたもの」を採用する！</span>
 </div>
-<h3>数式は「1つのセルの中」でこれを一瞬でやる</h3>
+<h3>数式は「1つのセルの中」でこれをまとめて行う</h3>
 <div class="flow-diagram">
 <span class="flow-step">入力住所<br><span style="font-size:.72em;font-weight:400">A2セル</span></span>
 <span class="flow-arrow">&rarr;</span>
@@ -509,6 +513,14 @@
 </table>
 </section>
 
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_midb.html">MID / MIDB関数 — 文字数やバイト数で文字列を抽出する</a></li>
+<li><a href="article_index_match.html">INDEX + MATCH（Excel 2016以降）</a></li>
+<li><a href="../latest/article_xlookup_basic.html">XLOOKUP 基本編</a></li>
+</ul>
+</section>
 </article>
 </main>
 <footer class="site-footer">

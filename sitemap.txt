@@ -64,6 +64,8 @@ https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countif
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_small_row_index_extract.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countifs_serial_number.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_countifs_sumifs.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_round.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_subtotal.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_sumifs_month_employee.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_edate_eomonth_sumifs_monthly.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_wareki_datevalue_serial.html
@@ -191,3 +193,9 @@ https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_next_reco
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_cover_letter_auto_page_break.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_renmei_nextif.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/word/article_wildcard_advanced.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_sheets_combine.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_external_links_break.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_name_split_flash_fill.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_phonetic_furigana.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_set_phonetic.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_batch_merge_text.html

@@ -48,7 +48,7 @@
     "author": {"@type": "Organization", "name": "Excel × No VBA Lab"},
     "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab", "logo": {"@type": "ImageObject", "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg"}},
     "datePublished": "2026-03-18",
-    "dateModified":"2026-07-12"
+    "dateModified":"2026-11-04"
   }
   </script>
 <script type="application/ld+json">
@@ -64,6 +64,9 @@
   </script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/cobol/formula/02_article_cobol_advanced.html" property="og:url">
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -92,7 +95,7 @@
 <span class="badge badge-maniac" style="background-color:#d32f2f;">難易度：&starf;&starf;&starf;&star;&star;</span>
 <span class="badge badge-all">Excel 2016以降対応あり</span>
 <span class="badge badge-maniac">COBOL/マニアック</span>
-<span class="article-date">更新日: 2026-07-12</span>
+<span class="article-date">更新日: 2026-11-04</span>
 </div>
 <h1 class="article-title">【関数応用編】不規則なCOBOL帳票の整理（不要行の除外・縦持ちデータの横展開）</h1>
 <p class="article-summary" data-seo-lead="true">見出し行・区切り線などの不要行を関数で除外し、縦に並んだ明細を横1行に展開する応用の式を扱います。Power Queryを使わず、ワークシート関数だけで組み立てます。</p>
@@ -122,7 +125,7 @@
       ========================================================== -->
 <section class="method-section" id="sec-pipeline">
 <h2>【0】実務でおすすめの「3層シート構成」と自動処理フロー</h2>
-<p>実は、不規則なCOBOL帳票を関数で相手にする際、<strong>同じシート内で抽出から切り出し（MIDB）まで全てを書こうとすると、数式がカオスになり一瞬で破綻</strong>します。実務では数式を組む前に、必ず以下の「3層構造（パイプライン）」になるようにExcelファイル（シート構成）を設計します。</p>
+<p>実は、不規則なCOBOL帳票を関数で相手にする際、<strong>同じシート内で抽出から切り出し（MIDB）まで全てを書こうとすると、数式が複雑になり、すぐに破綻</strong>します。実務では数式を組む前に、必ず以下の「3層構造（パイプライン）」になるようにExcelファイル（シート構成）を設計します。</p>
 <div class="pipeline-grid">
 <div class="pipeline-card paste">
 <h4 aria-level="3">1. 「貼付」シート</h4>
@@ -236,7 +239,7 @@
 <div class="code-block" data-lang="excel">
 <span class="code-line">=WRAPROWS(貼付シート!B1:B100, 2)</span>
 </div>
-<p style="margin-top:10px;">これを打つだけで、スピルによって抽出シート側に「左の列に1行目の情報」「右の列に2行目の情報」が綺麗に横並びになります。COBOLの縦持ちデータという悪魔を一瞬で浄化する神関数です。</p>
+<p style="margin-top:10px;">これを打つだけで、スピルによって抽出シート側に「左の列に1行目の情報」「右の列に2行目の情報」が綺麗に横並びになります。COBOLの縦持ちデータの整形に向いた関数です。</p>
 </div>
 <div class="attack-box">
 <h3 class="attack-title">基本解法：フラグ行番号 ＋ INDEX ＋ SMALL で横持ちに変換（Excel 2016以降対応）</h3>
@@ -380,8 +383,8 @@
          【参考コラム】大容量データでのフリーズ原因と対策
       ========================================================== -->
 <section class="method-section" id="sec-freeze" style="background:#fff3e0;border-top:3px solid #ffb74d;border-radius:0 0 8px 8px;padding:24px;margin-top:40px;">
-<h2 style="color:#e65100;">【参考コラム】なぜ作業列で COUNTIF や MAX を使うとExcelがフリーズ（激重に）するのか？</h2>
-<p>作業列で連番を作る際、ネットの解説記事ではよく以下のような数式が「便利だから」「素直だから」という理由で紹介されます。しかし、これらの数式を数十万行のCOBOLデータに使ってしまうと、<strong>Excelが再計算地獄に陥り完全にフリーズ（あるいは激重・応答なし）</strong>してしまいます。</p>
+<h2 style="color:#e65100;">【参考コラム】なぜ作業列で COUNTIF や MAX を使うとExcelが極端に重くなるのか？</h2>
+<p>作業列で連番を作る際、ネットの解説記事ではよく以下のような数式が「便利だから」「素直だから」という理由で紹介されます。しかし、これらの数式を数十万行のCOBOLデータに使ってしまうと、<strong>再計算が長引き、Excelが極端に重くなったり応答しなくなったり</strong>することがあります。</p>
 <p class="color-red">危険な累積範囲の数式例（大容量データの場合）</p>
 <div class="code-readonly" data-lang="excel">
 <span class="code-line">❌【COUNTIF型】 =IF(条件, COUNTIF($A$1:A1, A1), "")</span>
@@ -401,6 +404,15 @@
 <p>何万行もあるCOBOL帳票では、行ごとに参照範囲が拡張する式を大量に配置すると負荷が増えやすいため注意が必要です。この記事のステップ1で紹介した <code>=ROW()</code> などをフラグに使う手法は、各行で参照範囲を拡張しないため、比較的負荷を抑えやすい方法です。ただし、20万行での処理時間はPC性能、Excelのバージョン・ビット数、同じブック内の数式量によって変わるため、実データの複製で計測してください。</p>
 </section>
 
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="01_article_cobol_basic.html">COBOL固定長データの切り出しと整形（MIDB＋TRIM 基本編）</a></li>
+<li><a href="03_article_cobol_expert.html">【複合関数編】複雑なCOBOL帳票の整理</a></li>
+<li><a href="04_article_cobol_irregular.html">【不規則明細・完結編】行数がバラバラなデータの正規化展開</a></li>
+<li><a href="../../tools/fixed-width-formula-maker.html">固定長レイアウトからMIDB式／M言語を作るツール</a></li>
+</ul>
+</section>
 </article>
 </main>
 

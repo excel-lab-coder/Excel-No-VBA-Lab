@@ -23,11 +23,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "Article", "headline": "Excelで2つの名簿を比較し、追加・削除・変更された人を見つける", "description": "前月と今月の社員名簿や取引先一覧を、Excelの関数で照合する方法。COUNTIFで追加・削除を判定し、比較用の列とINDEX＋MATCH（またはXLOOKUP）で変更を見つけ、条件付き書式で変わったセルに色を付けます。文字列と数値の違い、空白、重複など照合ミスの対策も解説します。", "datePublished": "2026-11-01", "dateModified": "2026-11-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_compare_two_lists.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}
+{"@context": "https://schema.org", "@type": "Article", "headline": "Excelで2つの名簿を比較し、追加・削除・変更された人を見つける", "description": "前月と今月の社員名簿や取引先一覧を、Excelの関数で照合する方法。COUNTIFで追加・削除を判定し、比較用の列とINDEX＋MATCH（またはXLOOKUP）で変更を見つけ、条件付き書式で変わったセルに色を付けます。文字列と数値の違い、空白、重複など照合ミスの対策も解説します。", "datePublished": "2026-11-01", "dateModified": "2026-11-04", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_compare_two_lists.html"}, "author": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "publisher": {"@type": "Organization", "name": "Excel × No VBA Lab"}, "inLanguage": "ja"}
 </script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"}, {"@type": "ListItem", "position": 2, "name": "現場実務ラボ", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"}, {"@type": "ListItem", "position": 3, "name": "2つの名簿の比較", "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_compare_two_lists.html"}]}
 </script>
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
 </head>
 <body class="article-layout">
 <div class="reading-progress" aria-hidden="true"></div>
@@ -37,7 +39,7 @@
 <main class="main-content" id="main-content">
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><strong>2つの名簿の比較</strong></div>
 <article class="article-body">
-<div class="article-header"><div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-02</span></div><h1 class="article-title">Excelで2つの名簿を比較し、追加・削除・変更された人を見つける</h1>
+<div class="article-header"><div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-04</span></div><h1 class="article-title">Excelで2つの名簿を比較し、追加・削除・変更された人を見つける</h1>
 <p class="article-summary" data-seo-lead="true">前月と今月の社員名簿、取引先一覧などを見比べて、追加された人・いなくなった人・内容が変わった人を関数で見つける方法です。Excel 2016でも使える式と、Microsoft 365向けの短い式の両方を載せ、照合ミスが起きる原因と対策もまとめます。</p></div>
 <details class="auto-toc" open><summary>目次（8項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 やりたいこと</a></li><li><a href="#sec-2">準備：2つの名簿を同じブックに並べる</a></li><li><a href="#sec-3">手順1：追加された人を見つける（今月にだけいる）</a></li><li><a href="#sec-4">手順2：いなくなった人を見つける（前月にだけいる）</a></li><li><a href="#sec-5">手順3：内容が変わった人を見つける</a></li><li><a href="#sec-6">手順4：結果を一覧にする（Microsoft 365／Excel 2021以降）</a></li><li><a href="#sec-7">正しく比べるための注意</a></li><li><a href="#sec-8">毎月くり返すならPower Queryも検討</a></li></ol></nav></details>
 
@@ -137,6 +139,7 @@
 </section>
 
 <section class="related-articles-section" style="margin-top:30px; border-top:2px dashed #ccc; padding-top:20px;"><h2><span class="icon">🔗</span> 関連記事</h2><ul class="line-height-2">
+<li><a href="article_name_split_flash_fill.html">Excelで氏名を姓と名に分ける</a></li>
 <li><a href="article_text_numbers_fix.html">Excelの数字が文字列になって計算・検索できないときの直し方</a></li>
 <li><a href="article_csv_leading_zero.html">CSVを直接開くと郵便番号のゼロが消える原因と、正しい取り込み方</a></li>
 <li><a href="../../functions/old/article_index_match.html">INDEX＋MATCHの基本</a></li>

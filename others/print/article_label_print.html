@@ -77,9 +77,13 @@
   </style>
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-23", "dateModified": "2026-11-02", "headline":"Excel 10面ラベル印刷 ― Print_Area数式で空白シールを自動除外","description":"Excelで10面ラベルシート印刷をVBA・Word不要で実現。Print_Area数式を使いデータ件数に応じて印刷範囲が自動伸縮する実務テクニック。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_label_print.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-23", "dateModified": "2026-11-04", "headline":"Excel 10面ラベル印刷 ― Print_Area数式で空白シールを自動除外","description":"Excelで10面ラベルシート印刷をVBA・Word不要で実現。Print_Area数式を使いデータ件数に応じて印刷範囲が自動伸縮する実務テクニック。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_label_print.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_label_print.html" property="og:url">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"現場実務ラボ","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":3,"name":"小技","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":4,"name":"10面ラベル印刷","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/print/article_label_print.html"}]}</script>
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -94,7 +98,7 @@
 <div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../others/">現場実務ラボ</a><span>&gt;</span><a href="../../others/">小技</a><span>&gt;</span><strong>10面ラベル印刷</strong></div>
 <article class="article-body">
 <div class="article-header">
-<div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-02</span></div>
+<div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-04</span></div>
 <h1 class="article-title">Excel 10面ラベル印刷 &horbar; Print_Area数式で空白シールを自動除外</h1>
 </div>
 <div class="toc">
@@ -476,6 +480,16 @@
 <h2 id="sec10">10. まとめ</h2>
 <p>10面ラベルシール印刷は、1面＝5行・1ページ＝25行という単位を基準に VLOOKUP で宛先を配置し、Print_Area に動的数式（XLOOKUP＋CEILING、または宛先リストの件数から計算する COUNT 版）を設定することで実現します。データ件数に応じて印刷枚数が自動調整されるため、空白シールだけのページは印刷されません。Word の差し込み印刷が使えない人にも渡せる手軽さがある反面、テンプレートを多く仕込む分ファイルサイズが大きくなる点、数式のセットアップミスがそのまま印刷ミスにつながる点には注意が必要です。</p>
 
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_label_scrap.html">Excelシール残骸を活用 — 開始位置を指定して途中から印刷する方法</a></li>
+<li><a href="article_mail_print.html">宛名1ページ1枚 案内文書インスタント印刷 — スピンボタン＋Print_Area</a></li>
+<li><a href="article_print_area.html">VBAなしで印刷範囲を自動で伸縮させる方法（名前の管理）</a></li>
+<li><a href="../misc/article_linked_picture_filter_serial_label.html">FILTER関数とリンク図で候補を確認し、連番だけで封筒ラベル印刷する方法</a></li>
+<li><a href="../word/article_mailmerge_label_basic.html">Word差し込み印刷で宛名ラベルを作る基本手順</a></li>
+</ul>
+</section>
 </article>
 </main>
 <footer class="site-footer">

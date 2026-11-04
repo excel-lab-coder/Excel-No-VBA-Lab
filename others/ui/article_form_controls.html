@@ -96,9 +96,14 @@
   </style>
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-23", "dateModified": "2026-11-02", "headline":"🎛️ 開発タブ＆フォームコントロールの使い方 ― スピンボタン×XLOOKUP でラベル印刷を自動化","description":"Excelの開発タブを表示してスピンボタン・チェックボックス・スクロールバーなどのフォームコントロールを活用する方法を解説。スピンボタンとXLOOKUPを組み合わせてデータを5件ずつ切り替え、ラベル印刷と連携する実践テクニックを紹介します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_form_controls.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","datePublished": "2026-04-23", "dateModified": "2026-11-04", "headline":"🎛️ 開発タブ＆フォームコントロールの使い方 ― スピンボタン×XLOOKUP でラベル印刷を自動化","description":"Excelの開発タブを表示してスピンボタン・チェックボックス・スクロールバーなどのフォームコントロールを活用する方法を解説。スピンボタンとXLOOKUPを組み合わせてデータを5件ずつ切り替え、ラベル印刷と連携する実践テクニックを紹介します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_form_controls.html"},"author":{"@type":"Organization","name":"Excel × No VBA Lab"},"publisher":{"@type":"Organization","name":"Excel × No VBA Lab"}}</script>
 <meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
 <meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_form_controls.html" property="og:url">
+<meta content="Excelの開発タブを表示してスピンボタン・チェックボックス・スクロールバーなどのフォームコントロールを活用する方法を解説。スピンボタンとXLOOKUPを組み合わせてデータを5件ずつ切り替え、ラベル印刷と連携する実践テクニックを紹介します。" property="og:description">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"現場実務ラボ","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":3,"name":"小技","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/"},{"@type":"ListItem","position":4,"name":"フォームコントロール＆スピンボタン活用術","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/ui/article_form_controls.html"}]}</script>
 </head>
 <body>
 <div class="reading-progress" aria-hidden="true"></div>
@@ -125,7 +130,7 @@
 <div class="article-header">
 <div class="article-meta">
 <span class="badge badge-all">Excel 2016以降</span>
-<span class="article-date">更新日: 2026-11-02</span>
+<span class="article-date">更新日: 2026-11-04</span>
 </div>
 <h1 class="article-title">🎛️ 開発タブ＆フォームコントロールの使い方 &horbar; スピンボタン&times;XLOOKUP でラベル印刷を自動化</h1>
 <p style="color:#555;margin-top:.4em">スピンボタンをワンクリックするだけで表示データが切り替わる。VBA不要・マウスだけで動く「インタラクティブExcel」の作り方。</p>
@@ -280,7 +285,7 @@
 </div>
 </div>
 <!-- 設定パラメータ表 -->
-<table class="format-table">
+<div class="table-wrapper"><table class="format-table">
 <tr>
 <th>設定項目</th>
 <th>内容</th>
@@ -311,7 +316,7 @@
 <td>スピンボタンの値を書き込むセル</td>
 <td style="color: #2e7d32; font-weight: bold;">$Z$1（印刷範囲外の隅のセル）</td>
 </tr>
-</table>
+</table></div>
 <!-- インタラクティブデモ -->
 <div class="spin-demo-box">
 <div class="spin-demo-label">▼ スピンボタン デモ（▲▼を押してZ1セルの値が変わる様子）</div>
@@ -349,7 +354,7 @@
 <h3>シートの構成例（宛先リスト + ラベルシート）</h3>
 <div class="excel-wrap">
 <div class="excel-header-bar">宛先リスト シート</div>
-<table class="excel-grid">
+<div class="table-wrapper"><table class="excel-grid">
 <tr>
 <th></th><th>A</th><th>B（氏名）</th><th>C（郵便番号）</th><th>D（住所）</th>
 </tr>
@@ -358,11 +363,11 @@
 <tr><td class="row-num">3</td><td>2</td><td>鈴木花子</td><td>530-0001</td><td>大阪府大阪市&hellip;</td></tr>
 <tr><td class="row-num">4</td><td>3</td><td>佐藤一郎</td><td>460-0001</td><td>愛知県名古屋市&hellip;</td></tr>
 <tr><td class="row-num" style="color:#aaa">&hellip;</td><td colspan="4" style="color:#aaa">（〜100件）</td></tr>
-</table>
+</table></div>
 </div>
 <div class="excel-wrap">
 <div class="excel-header-bar">ラベル シート（Z1にスピンボタンを配置）</div>
-<table class="excel-grid">
+<div class="table-wrapper"><table class="excel-grid">
 <tr>
 <th></th><th>A</th><th>B</th><th>C</th>
 <th style="color:#aaa">&hellip;</th>
@@ -394,7 +399,7 @@
 <td class="row-num" style="color:#aaa">&hellip;</td>
 <td colspan="5" style="color:#aaa;text-align:center;font-size:.75rem">（3件目は Z1+2、4件目は Z1+3、5件目は Z1+4）</td>
 </tr>
-</table>
+</table></div>
 </div>
 <h3>基本数式（Z1 = 1 の時、1件目を取得）</h3>
 <div class="formula-box">
@@ -448,14 +453,14 @@
 </div>
 </div>
 <h3>スピンボタンの設定値（5件ずつラベル印刷）</h3>
-<table class="cmp-table">
+<div class="table-wrapper"><table class="cmp-table">
 <tr><th>設定項目</th><th>値</th><th>理由</th></tr>
 <tr><td>現在値</td><td class="rec">1</td><td>最初は1件目から表示</td></tr>
 <tr><td>最小値</td><td class="rec">1</td><td>0以下にならないようにする</td></tr>
 <tr><td>最大値</td><td>96（100件の場合）</td><td>1から5ずつ増やしたときの最後の値。計算式は INT((件数&minus;1)/5)&times;5+1（100件なら96、12件なら11）</td></tr>
 <tr><td>変化の増分</td><td class="rec">5</td><td>1クリックで5件分スキップ</td></tr>
 <tr><td>リンクするセル</td><td class="rec">$Z$1</td><td>印刷エリア外（A列からZ列は通常遠い）に置いて印刷に含めない</td></tr>
-</table>
+</table></div>
 <h3>Print_Area の動的数式（Print_Areaと組み合わせることで空白ページなし）</h3>
 <p>5件&times;5行=25行を1バッチとする場合の Print_Area 数式例です。名前の管理から設定します。</p>
 <div class="formula-box">
@@ -487,7 +492,7 @@
 <p>チェックボックスのリンクセル（例：A1）には<code>TRUE</code>/<code>FALSE</code>が入ります。これをIF関数と組み合わせて行の表示切り替えができます。</p>
 <div class="excel-wrap">
 <div class="excel-header-bar">チェックボックス活用例</div>
-<table class="excel-grid">
+<div class="table-wrapper"><table class="excel-grid">
 <tr><th></th><th>A（リンクセル）</th><th>B（表示内容）</th></tr>
 <tr>
 <td class="row-num">1</td>
@@ -499,14 +504,14 @@
 <td style="color:#aaa">FALSE（チェックOFF）</td>
 <td class="formula-cell">=IF($A$2, "オプションB を含む", "")</td>
 </tr>
-</table>
+</table></div>
 </div>
 <div class="note-box tip">
 <strong>💡 活用アイデア：</strong>チェックボックスで「消費税を含む/含まない」「送料を加算する/しない」などの条件を切り替えて、合計金額セルを動的に変えることができます。VBA不要でインタラクティブな計算シートが作れます。
       </div>
 <h3>スクロールバー &horbar; 感覚的な数値入力</h3>
 <p>スクロールバーはスピンボタンとほぼ同じ仕組みですが、<strong>ドラッグ</strong>で素早く大きく動かせるのが特徴です。0〜100の「達成率」や「割引率」などを直感的に設定するのに向いています。</p>
-<table class="cmp-table">
+<div class="table-wrapper"><table class="cmp-table">
 <tr><th>コントロール</th><th>向いている用途</th><th>増分の操作方法</th></tr>
 <tr>
 <td><strong>スピンボタン</strong></td>
@@ -523,11 +528,11 @@
 <td>「A案/B案/C案」の択一選択</td>
 <td>選ぶだけ（1/2/3&hellip;を返す）</td>
 </tr>
-</table>
+</table></div>
 <!-- ===================== sec7 ===================== -->
 <h2 id="sec7"><span class="icon">⚖️</span> 7. フォームコントロール vs ActiveXコントロール</h2>
 <p>「挿入」を押すと上下2グループに分かれますが、<strong>実務ではフォームコントロールの使用を強く推奨</strong>します。</p>
-<table class="format-table">
+<div class="table-wrapper"><table class="format-table">
 <tr>
 <th>比較項目</th>
 <th>フォームコントロール（推奨）</th>
@@ -558,7 +563,7 @@
 <td>マクロ名をボタンに割り当て可能</td>
 <td>イベント駆動で高度な連携可能</td>
 </tr>
-</table>
+</table></div>
 <div class="xdemo-note-warn">
 <strong>⚠ ActiveXは基本的には使わない：</strong>VBA禁止環境では ActiveXコントロールにメリットがほぼありません。「開発タブ &rarr; 挿入」で表示される<strong>上段のフォームコントロール</strong>だけを使うのが安全です。
       </div>
@@ -582,6 +587,15 @@
         その他チェックボックス・スクロールバーも「リンクセルに値を返す」同じ仕組み。IF・XLOOKUP・SUMIF などと組み合わせることで、<strong>マウスだけで動く動的シート</strong>が VBA 不要で作れます。
       </div>
 
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../print/article_mail_print.html">宛名1ページ1枚 案内文書インスタント印刷 — スピンボタン＋Print_Area</a></li>
+<li><a href="../print/article_label_scrap.html">Excelシール残骸を活用 — 開始位置を指定して途中から印刷する方法</a></li>
+<li><a href="article_shape_circle.html">セルの文字を○で囲む 表示／非表示 — 名前の管理＋図形（VBA不要）</a></li>
+<li><a href="article_input_validation_sheet_protection.html">Excelで入力欄だけ編集できるようにする：入力規則とシート保護</a></li>
+</ul>
+</section>
 </article>
 </main>
 <footer class="site-footer">

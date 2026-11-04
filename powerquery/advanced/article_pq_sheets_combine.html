@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Power Queryで複数シートを1つにまとめる｜シートが増えても更新だけで使える｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="月別・支店別に分かれた複数シートを、Power Queryで1つの表にまとめる方法を手順で解説。シートが増えても更新だけで使える設計、集計シートの除外、二重計上の防ぎ方、数式でまとめる方法との使い分けまで、VBAなしで実現します。" name="description">
+<meta content="Power Queryで複数シートを1つにまとめる｜シートが増えても更新だけで使える｜Excel &times; No VBA Lab" property="og:title">
+<meta content="月別・支店別に分かれた複数シートを、Power Queryで1つの表にまとめる方法を手順で解説。シートが増えても更新だけで使える設計、集計シートの除外、二重計上の防ぎ方、数式でまとめる方法との使い分けまで、VBAなしで実現します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_sheets_combine.html" property="og:url">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_sheets_combine.html" rel="canonical">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Power Queryで複数シートを1つにまとめる｜シートが増えても更新だけで使える","description":"月別・支店別に分かれた複数シートを、Power Queryで1つの表にまとめる方法を手順で解説。シートが増えても更新だけで使える設計、集計シートの除外、二重計上の防ぎ方、数式でまとめる方法との使い分けまで、VBAなしで実現します。","author":{"@type":"Organization","name":"Excel × No VBA Lab"},"datePublished":"2026-11-04","dateModified":"2026-11-04","mainEntityOfPage":{"@type":"WebPage","@id":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_sheets_combine.html"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"},{"@type":"ListItem","position":2,"name":"パワークエリ","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/"},{"@type":"ListItem","position":3,"name":"複数シートをまとめる","item":"https://excel-lab-coder.github.io/Excel-No-VBA-Lab/powerquery/advanced/article_pq_sheets_combine.html"}]}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+</head>
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/">関数</a><a href="../../powerquery/" aria-current="true">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/">Word差し込み</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb"><a href="../../">ホーム</a><span>&gt;</span><a href="../../powerquery/">パワークエリ</a><span>&gt;</span><strong>複数シートをまとめる</strong></div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta"><span class="badge badge-all">Excel 2016以降</span><span class="article-date">更新日: 2026-11-04</span></div>
+<h1 class="article-title">Power Queryで複数シートを1つにまとめる：シートが増えても更新だけで使える</h1>
+<p class="article-lead">月別や支店別に分かれたシートをコピーしてつなぐ作業を、Power Queryで自動にします。シートを足して「更新」を押すだけで、1つの表に反映されます。</p>
+</div>
+<details class="auto-toc" open><summary>目次（8項目）</summary><nav aria-label="記事内の目次"><ol><li><a href="#sec-1">💡 まず方法を選ぶ</a></li><li><a href="#sec-2">📋 手順1：元のブックを確認する</a></li><li><a href="#sec-3">🔄 手順2：シートの一覧を取り込む</a></li><li><a href="#sec-4">✂️ 手順3：不要なシートを除いて、縦につなぐ</a></li><li><a href="#sec-5">🔁 シートが増えたとき</a></li><li><a href="#sec-6">⚠️ つまずきやすい点</a></li><li><a href="#sec-7">📎 同じブックの中でまとめたいとき</a></li><li><a href="#sec-8">🧮 数式で済ませる方法</a></li></ol></nav></details>
+<section class="method-section">
+<h2 id="sec-1">💡 まず方法を選ぶ</h2>
+<p>まとめたいシートがどこにあるかで、使う方法が変わります。一覧にして使い回すなら、別ブックから読み込む方法が扱いやすくなります。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">複数シートをまとめる方法</caption>
+<thead><tr><th scope="col">場面</th><th scope="col">方法</th><th scope="col">使える版</th></tr></thead>
+<tbody>
+<tr><td><strong>別のブックのシートをまとめる（おすすめ）</strong></td><td>Power Query（<code>Excel.Workbook</code>）</td><td>Excel 2016以降</td></tr>
+<tr><td>同じブックの中のシートをまとめる</td><td>各シートをテーブルにして Power Query（<code>Excel.CurrentWorkbook</code>）</td><td>Excel 2016以降</td></tr>
+<tr><td>合計だけ分かればよい</td><td>3D参照（<code>=SUM('4月:6月'!C2:C100)</code>）</td><td>Excel 2016以降</td></tr>
+<tr><td>数式で一覧にしたい</td><td>VSTACK と3D参照</td><td>Excel 2024 / Microsoft 365</td></tr>
+</tbody>
+</table></div>
+<div class="tip-box">💡 <strong>集計用のブックを分ける理由</strong><br><code>Excel.Workbook</code> が読むのは、保存されたファイルの中身です。元データと集計を別のブックにすると、集計シートを読み込んで数字が二重になる事故を防げます。</div>
+</section>
+<section class="method-section">
+<h2 id="sec-2">📋 手順1：元のブックを確認する</h2>
+<p>ここでは、次のようなブックを例にします。</p>
+<ul class="line-height-2"><li>ファイル：<code>C:\data\売上_2026.xlsx</code></li><li>シート：4月、5月、6月、入力例（まとめない）</li><li>どのシートも1行目が見出しで、列は「日付」「担当」「金額」</li></ul>
+<p>見出しの名前は、シートごとにそろえておきます。「金額」と「売上金額」のように違うと、別の列として扱われます。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-3">🔄 手順2：シートの一覧を取り込む</h2>
+<ol class="line-height-2">
+<li>集計用の新しいブックで、<strong>「データ」→「データの取得」→「ファイルから」→「Excel ブックから」</strong>を選びます。</li>
+<li>元のブックを選び、「開く」を押します（版によっては「インポート」と表示されます）。</li>
+<li>ナビゲーターで、シート名ではなく<strong>一番上のブック名</strong>を選びます。</li>
+<li>「データの変換」を押します。</li>
+</ol>
+<p>シートの一覧が表になって、Power Queryエディターに表示されます。主な列は次のとおりです。</p>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">取り込まれる列</caption>
+<thead><tr><th scope="col">列</th><th scope="col">内容</th></tr></thead>
+<tbody>
+<tr><td>Name</td><td>シート名</td></tr>
+<tr><td>Data</td><td>シートの中身（Table と表示される）</td></tr>
+<tr><td>Kind</td><td>種類（シートは Sheet）</td></tr>
+<tr><td>Hidden</td><td>非表示かどうか</td></tr>
+</tbody>
+</table></div>
+<p class="verify-note">画面の名前は、Excelの版によって少し異なる場合があります。ナビゲーターでブック名を選べないときは、シートを1つ選んで「データの変換」を押し、「適用したステップ」の「ナビゲーション」を削除すると同じ一覧になります。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-4">✂️ 手順3：不要なシートを除いて、縦につなぐ</h2>
+<ol class="line-height-2">
+<li>「Kind」列のフィルターで <strong>Sheet</strong> だけを残します。</li>
+<li>「Hidden」列のフィルターで <strong>FALSE</strong> だけを残します。</li>
+<li>「Name」列のフィルターで、まとめないシート（入力例など）のチェックを外します。</li>
+<li>「列の追加」→「カスタム列」で、列名を「表」、式を <code>Table.PromoteHeaders([Data], [PromoteAllScalars=true])</code> にします。各シートの1行目が見出しになります。</li>
+<li>「Name」列と「表」列だけを選び、「列の削除」→「他の列の削除」を選びます。</li>
+<li>「表」列の見出しの右にある展開ボタンを押し、「元の列名をプレフィックスとして使用します」のチェックを外して「OK」を押します。</li>
+<li>「Name」列の名前を「月」に変え、日付や金額の列にデータ型を設定します。</li>
+<li>「閉じて読み込む」で完了です。</li>
+</ol>
+<p>同じ処理をM言語で書くと、次のようになります。詳細エディターに貼り付ける場合は、ファイルの場所と列名を実際のものに置き換えてください。</p>
+<pre class="code-block" data-lang="m"><code>let
+    ソース = Excel.Workbook(File.Contents("C:\data\売上_2026.xlsx"), null, true),
+    シート = Table.SelectRows(ソース, each [Kind] = "Sheet" and [Hidden] = false and [Name] &lt;&gt; "入力例"),
+    見出し = Table.AddColumn(シート, "表", each Table.PromoteHeaders([Data], [PromoteAllScalars=true])),
+    列選択 = Table.SelectColumns(見出し, {"Name", "表"}),
+    展開 = Table.ExpandTableColumn(列選択, "表", {"日付", "担当", "金額"}),
+    列名 = Table.RenameColumns(展開, {{"Name", "月"}})
+in
+    列名</code></pre>
+</section>
+<section class="method-section">
+<h2 id="sec-5">🔁 シートが増えたとき</h2>
+<p>元のブックに「7月」シートを足して保存し、集計用のブックで<strong>「データ」→「すべて更新」</strong>を押します。シート名を指定していないので、新しいシートも自動で加わります。</p>
+<div class="xdemo-note-warn"><strong>⚠️ 列を増やしたときは展開の設定も直す</strong><br>展開する列名は固定で記録されます。あとから「備考」列を足しても、そのままでは表に出ません。「適用したステップ」の展開のステップを開き直して、列を追加します。</div>
+</section>
+<section class="method-section">
+<h2 id="sec-6">⚠️ つまずきやすい点</h2>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">よくある症状と確認すること</caption>
+<thead><tr><th scope="col">症状</th><th scope="col">原因</th><th scope="col">対処</th></tr></thead>
+<tbody>
+<tr><td>金額が2倍になる</td><td>集計シートや合計用のシートも読み込んでいる</td><td>「Name」列のフィルターで除外します。</td></tr>
+<tr><td>見出しが列名にならない</td><td>1行目にタイトルがある</td><td>式を <code>Table.PromoteHeaders(Table.Skip([Data], 2), [PromoteAllScalars=true])</code> のようにして、見出しまでの行を飛ばします（2は飛ばす行数）。</td></tr>
+<tr><td>値が null の列がある</td><td>シートによって見出しの名前が違う</td><td>元のシートの見出しをそろえます。</td></tr>
+<tr><td>途中に見出しの行や空行が混ざる</td><td>表の途中に見出しや合計がある</td><td>「日付」列などのフィルターで、不要な行を除きます。</td></tr>
+<tr><td>日付が 46113 のような数値で表示される</td><td>データ型を設定していない</td><td>日付の列のデータ型を「日付」にします。</td></tr>
+<tr><td>月の順に並ばない</td><td>元のブックのシートの順に並ぶ</td><td>シートの順をそろえるか、日付の列で並べ替えます。</td></tr>
+<tr><td>ファイルの場所を変えたらエラーになる</td><td>読み込み元のパスが変わった</td><td>「データの取得」→「データ ソースの設定」で変更します。</td></tr>
+</tbody>
+</table></div>
+<p>取り込んだ後は、月ごとの行数を元のシートと比べると、読み込み漏れや二重計上に気づきやすくなります。</p>
+<p class="verify-note">検証環境：Windows版 Excel（バージョン16.0、ビルド20625）、2026年11月4日。手順2の画面、この記事のM言語の式、シートの追加と更新、非表示シートの除外、数式の例を架空のブックで確認しました。手順3の画面操作はM言語の式で確認しています。Excel 2016・2019では確認していません。</p>
+</section>
+<section class="method-section">
+<h2 id="sec-7">📎 同じブックの中でまとめたいとき</h2>
+<p>Power Queryの <code>Excel.CurrentWorkbook</code> が読めるのは、テーブルや名前付き範囲で、<strong>シートそのものは読めません</strong>。先に各シートの表をテーブルにします。</p>
+<ol class="line-height-2">
+<li>各シートの表を選び、<kbd>Ctrl</kbd>+<kbd>T</kbd> でテーブルにします。</li>
+<li>「テーブル デザイン」タブで、名前を「売上_4月」「売上_5月」のように付けます。</li>
+<li>「データの取得」→「その他のデータ ソースから」→「空のクエリ」を選び、詳細エディターに次の式を入れます。</li>
+</ol>
+<pre class="code-block" data-lang="m"><code>let
+    ソース = Excel.CurrentWorkbook(),
+    対象 = Table.SelectRows(ソース, each Text.StartsWith([Name], "売上_")),
+    結合 = Table.Combine(対象[Content])
+in
+    結合</code></pre>
+<div class="xdemo-note-warn"><strong>⚠️ 結果のテーブルの名前に注意</strong><br>読み込んだ結果のテーブルは、同じブックの中のテーブルになります。その名前が「売上_」で始まると、更新のたびに結果まで読み込んでしまいます（検証では、更新のたびに4行→6行→8行と増えました）。「集計結果」のように別の名前にしてください。</div>
+</section>
+<section class="method-section">
+<h2 id="sec-8">🧮 数式で済ませる方法</h2>
+<p>合計だけ分かればよいときは、3D参照が手軽です。シート名の間のシートがすべて対象になります。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=SUM('4月:6月'!C2:C100)</span>
+</div>
+<p>Excel 2024 / Microsoft 365 では、VSTACKで一覧にできます。空行は FILTER で除きます。</p>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=LET(</span>
+<span class="code-line">  表, VSTACK('4月:6月'!A2:C100),</span>
+<span class="code-line">  FILTER(表, INDEX(表,,1)&lt;&gt;"")</span>
+<span class="code-line">)</span>
+</div>
+<div class="table-wrapper"><table class="func-table"><caption class="sr-only">数式とPower Queryの違い</caption>
+<thead><tr><th scope="col"></th><th scope="col">数式</th><th scope="col">Power Query</th></tr></thead>
+<tbody>
+<tr><td>結果の反映</td><td>自動で再計算</td><td>「更新」を押す</td></tr>
+<tr><td>シート名の列を付ける</td><td>工夫が必要</td><td>「Name」列で簡単</td></tr>
+<tr><td>行数が多いとき</td><td>重くなりやすい</td><td>更新のときだけ処理する</td></tr>
+<tr><td>整形やデータ型の設定</td><td>式が長くなる</td><td>ステップとして残る</td></tr>
+</tbody>
+</table></div>
+</section>
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="../../others/data/article_batch_merge_text.html">バッチファイルでフォルダ内のCSV・テキストを1つに結合する</a></li>
+<li><a href="article_pq_folder_monthly.html">Power Queryで毎月のファイルをまとめる：翌月も更新だけで使える設計</a></li>
+<li><a href="article_pq_merge_append.html">テーブルの結合 &horbar; マージと追加</a></li>
+<li><a href="../../others/data/article_external_links_break.html">「リンクが含まれています」の警告を解決する</a></li>
+<li><a href="../basic/article_pq_data_type.html">データ型の変換</a></li>
+<li><a href="https://learn.microsoft.com/en-us/powerquery-m/excel-currentworkbook">Excel.CurrentWorkbook（Microsoft公式・英語）</a></li>
+</ul>
+</section>
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js?v=20261103"></script>
+</body>
+</html>
