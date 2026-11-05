@@ -202,3 +202,4 @@ https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_batch_mer
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_reference_range.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_compound_lookup.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_amp_match.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_last_column_match.html

@@ -554,6 +554,17 @@
     {
       "category": "functions",
       "subcategory": "old_search",
+      "title": "行の一番右にある最終列を求める方法：途中に空白があっても使える数式",
+      "url": "functions/old/article_last_column_match.html",
+      "summary": "1行の中で一番右に入力があるセルの位置を、MATCHとINDEXで求めます。最終列の値、次の空き列、COUNTAとの違いも説明します。",
+      "level": 4,
+      "tags": ["最終列", "一番右", "空白を含む行", "MATCH(2"],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_search",
       "title": "INDEX:INDEXで可変範囲を作る：SUMとMATCHで使う参照の仕組み",
       "url": "functions/old/article_index_reference_range.html",
       "summary": "INDEXが返すセル参照を「:」でつなぎ、集計範囲や検索範囲を数式で切り替えます。相対位置の変換と、逆転・未一致・重複の動作も確認します。",

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>行の一番右にある最終列を求める方法｜途中に空白があっても使える数式｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="Excelで1行の中の一番右にある入力セルの位置を、MATCHとINDEXで求める方法を手順どおりに解説。途中に空白があっても使えます。最終列の値、次の空き列、列番号と列記号の求め方、COUNTAとの違いもまとめます。Excel 2016以降向け。" name="description">
+<meta content="行の一番右にある最終列を求める方法｜途中に空白があっても使える数式｜Excel &times; No VBA Lab" property="og:title">
+<meta content="Excelで1行の中の一番右にある入力セルの位置を、MATCHとINDEXで求める方法を手順どおりに解説。途中に空白があっても使えます。最終列の値、次の空き列、列番号と列記号の求め方、COUNTAとの違いもまとめます。Excel 2016以降向け。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_last_column_match.html" rel="canonical">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_last_column_match.html" property="og:url">
+<style>
+  /* ===== ページ固有スタイル：セル図解 ===== */
+  .ix-grid{border-collapse:collapse;font-size:.92em;margin:0;width:auto}
+  .ix-grid th,.ix-grid td{border:1px solid #cfd8dc;padding:6px 10px;text-align:center;white-space:nowrap;background:#fff;color:#263238}
+  .ix-grid th{background:#eceff1;font-weight:700}
+  .article-body table.ix-grid td.ix-on{background:#e8f5e9 !important;color:#1b5e20}
+  .article-body table.ix-grid td.ix-off{background:#f5f5f5 !important;color:#90a4ae}
+  .article-body table.ix-grid td.ix-hit{background:#ffe082 !important;color:#5d4037;font-weight:700;outline:2px solid #f57c00;outline-offset:-2px}
+  .ix-caption{font-size:.9em;font-weight:700;margin:14px 0 6px;color:#37474f}
+</style>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "datePublished": "2026-11-05",
+  "dateModified": "2026-11-05",
+  "headline": "行の一番右にある最終列を求める方法：途中に空白があっても使える数式",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "1行の中の一番右にある入力セルの位置を、MATCHとINDEXで求める方法を手順どおりに解説します。途中に空白があっても使えます。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "行の最終列を求める",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_last_column_match.html"
+    }
+  ]
+}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/" aria-current="true">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/">Word差し込み</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../">ホーム</a><span>&gt;</span>
+<a href="../../functions/">関数</a><span>&gt;</span>
+<strong>行の最終列を求める</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Excel 2016以降</span>
+<span class="article-date">更新日: 2026-11-05</span></div>
+<h1 class="article-title">行の一番右にある最終列を求める方法：途中に空白があっても使える数式</h1>
+</div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>1行の中で、一番右に入力があるセルの位置を知りたい。行によって入力の長さが違い、途中に空白があることもある。そんなときに使える数式です。</p>
+<div class="xdemo-note-good">
+<strong>完成した数式</strong><br>
+<code>=MATCH(2,INDEX(1/(A2:F2&lt;&gt;""),0))</code><br>
+A2:F2の中で、一番右に入力があるセルが左から何番目かを返します。Excel 2016以降で、通常の<kbd>Enter</kbd>で確定します。
+</div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-table">使用する表</h2>
+<p>2行目はD列まで入力があり、C列は空白です。結果は 4（D列）になります。</p>
+<div class="table-wrapper"><table class="ix-grid ix-fit"><caption class="sr-only">途中に空白がある行の例</caption>
+<thead><tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr></thead>
+<tbody>
+<tr><th>2</th><td>東京</td><td>100</td><td class="ix-off">（空白）</td><td class="ix-hit">要確認</td><td class="ix-off">（空白）</td><td class="ix-off">（空白）</td></tr>
+</tbody>
+</table></div>
+<p>入力の個数を数えるCOUNTAでは求められません。<code>=COUNTA(A2:F2)</code> は入力が3個なので 3 を返し、C列を指してしまいます。</p>
+</section>
+
+<section class="method-section">
+<h2 id="sec-steps">数式の組み立て方</h2>
+<h3>手順1：入力があるかどうかを判定する</h3>
+<p><code>A2:F2&lt;&gt;""</code> は、セルごとに「空白でなければTRUE」と判定します。</p>
+<h3>手順2：1をその結果で割る</h3>
+<p><code>1/(A2:F2&lt;&gt;"")</code> とすると、TRUEは1として計算されて 1 に、FALSEは0として計算されて <code>#DIV/0!</code> になります。つまり、入力があるセルだけが 1 になります。</p>
+<p class="ix-caption">図1：数式の中でできる配列</p>
+<div class="table-wrapper"><table class="ix-grid ix-fit"><caption class="sr-only">判定と割り算の結果</caption>
+<thead><tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr></thead>
+<tbody>
+<tr><th>位置</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr>
+<tr><th>セル</th><td>東京</td><td>100</td><td class="ix-off">空白</td><td>要確認</td><td class="ix-off">空白</td><td class="ix-off">空白</td></tr>
+<tr><th>判定</th><td class="ix-on">TRUE</td><td class="ix-on">TRUE</td><td class="ix-off">FALSE</td><td class="ix-on">TRUE</td><td class="ix-off">FALSE</td><td class="ix-off">FALSE</td></tr>
+<tr><th>1÷判定</th><td class="ix-on">1</td><td class="ix-on">1</td><td class="ix-off">#DIV/0!</td><td class="ix-hit">1</td><td class="ix-off">#DIV/0!</td><td class="ix-off">#DIV/0!</td></tr>
+</tbody>
+</table></div>
+<h3>手順3：INDEXで包む</h3>
+<p><code>INDEX(1/(A2:F2&lt;&gt;""),0)</code> と包むと、Excel 2016でも通常の<kbd>Enter</kbd>で配列として計算されます。</p>
+<h3>手順4：MATCHで2を探す</h3>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=MATCH(2,INDEX(1/(A2:F2&lt;&gt;""),0))</span></div>
+<p class="code-comment">結果は 4。</p>
+<p>配列の中身は 1 とエラーだけなので、2 はありません。MATCHの第3引数を省略すると「探す値以下で最も大きい値」を探します。今回の確認では、エラーは飛ばされ、<strong>一番右の 1 の位置</strong>が返りました。これが最終列です。</p>
+<div class="xdemo-note-info">
+<strong>なぜ「2」なのか</strong><br>
+配列の中の 1 より大きい値なら動きます。慣用的に 2 がよく使われます。第3引数に0を指定すると完全一致になり、2がないので <code>#N/A</code> になります。この式では第3引数を書きません。
+</div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-use">使い方</h2>
+<p>いずれもExcel 2016以降で、通常の<kbd>Enter</kbd>で確定します。結果は上の表の2行目のものです。</p>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">最終列を使った数式の例</caption>
+<thead><tr><th>知りたいこと</th><th>数式</th><th>結果</th></tr></thead>
+<tbody>
+<tr><td>最終列が何番目か</td><td><code>=MATCH(2,INDEX(1/(A2:F2&lt;&gt;""),0))</code></td><td>4</td></tr>
+<tr><td>最終列の値</td><td><code>=INDEX(A2:F2,MATCH(2,INDEX(1/(A2:F2&lt;&gt;""),0)))</code></td><td>要確認</td></tr>
+<tr><td>最終列の次（次の空き）が何番目か</td><td><code>=MATCH(2,INDEX(1/(A2:F2&lt;&gt;""),0))+1</code></td><td>5</td></tr>
+<tr><td>シートの列番号</td><td><code>=LOOKUP(2,1/(A2:F2&lt;&gt;""),COLUMN(A2:F2))</code></td><td>4</td></tr>
+<tr><td>列の記号</td><td><code>=SUBSTITUTE(ADDRESS(2,LOOKUP(2,1/(A2:F2&lt;&gt;""),COLUMN(A2:F2)),4),"2","")</code></td><td>D</td></tr>
+<tr><td>数値が入った最後の位置（文字は無視）</td><td><code>=MATCH(9.99E+307,A2:F2)</code></td><td>2</td></tr>
+</tbody>
+</table></div>
+<p>下の行へコピーすれば、行ごとに最終列を求められます。3行目がE列までなら、コピー先の結果は 5 です。数式は表の外（例：H列）に入れてください。</p>
+<h3>範囲がA列から始まらないとき</h3>
+<p>MATCHの結果は<strong>範囲の中での位置</strong>で、シートの列番号ではありません。B2:F2で調べると、同じD列でも 3 になります。列番号が必要なときは次のように直します。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=MATCH(2,INDEX(1/(B2:F2&lt;&gt;""),0))+COLUMN(B2)-1</span></div>
+<p class="code-comment">結果は 4。</p>
+</section>
+
+<section class="method-section">
+<h2 id="sec-traps">注意点</h2>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">条件ごとの結果</caption>
+<thead><tr><th>条件</th><th>結果</th><th>対処</th></tr></thead>
+<tbody>
+<tr><td>行全体が空白</td><td><code>#N/A</code></td><td><code>=IFERROR(数式,0)</code> で 0 にできます</td></tr>
+<tr><td>数式の結果が <code>""</code> のセル</td><td>空白として扱われます</td><td>入力として数えたくない場合はそのまま使えます</td></tr>
+<tr><td>スペースだけのセル</td><td>入力として数えられます</td><td><code>INDEX(1/(TRIM(A2:F2)&lt;&gt;""),0)</code> とすると空白扱いにできます</td></tr>
+<tr><td>エラー値のセル</td><td>入力として数えられず、飛ばされます</td><td>エラーのセルも最終列に含めるなら、先にエラーを解消します</td></tr>
+<tr><td>INDEXで包まない<br><code>=MATCH(2,1/(A2:F2&lt;&gt;""))</code></td><td>Excel 2016の通常のEnterでは <code>#VALUE!</code></td><td>INDEXで包むか、<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd>で確定します</td></tr>
+</tbody>
+</table></div>
+<h3>範囲は必要な列数に絞る</h3>
+<p>行全体（<code>$2:$2</code>）も指定できますが、16,384列すべてを毎回計算します。式を2,000個入れて全体を再計算すると、A〜F列の指定は約1.4ミリ秒、行全体の指定は約936ミリ秒でした（<span class="evidence-label measured">実測</span>Microsoft 365版ビルド16.0.20625、測定日2026-11-05、5回の中央値。Excel 2016では測っていません）。</p>
+<p>また、調べる範囲に数式自身のセルを含めると循環参照になります。行全体を指定した式を同じ行に置いたときは、循環参照になり結果は 0 でした。</p>
+<div class="xdemo-note-warn">
+<strong>確認した環境</strong><br>
+Microsoft 365版Excel（ビルド16.0.20625、確認日2026-11-05）で結果を確認しました。Excel 2016向けの結果は、この版の旧来の評価方式（<code>Range.Formula</code>）で入力したものです。Excel 2016の実機では確認していないため、最初に小さな表で試してから使ってください。
+</div>
+</section>
+
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_index_match.html">INDEX + MATCH（Excel 2016以降）</a>：基本の使い方</li>
+<li><a href="article_index_amp_match.html">A列とB列を結合して検索する方法：作業列なしのINDEX+MATCH</a></li>
+<li><a href="article_index_reference_range.html">INDEX:INDEXで可変範囲を作る</a>：最終列までの範囲を作るときに</li>
+<li><a href="../../others/ui/article_hyperlink_jump_last_row.html">Excelで最終行・次の空き行へジャンプする方法</a></li>
+</ul>
+<h3>出典（Microsoft公式）</h3>
+<ul class="line-height-2">
+<li><a href="https://support.microsoft.com/ja-jp/office/match-function-e8dffd45-c762-47d6-bf89-533f4a37673a" rel="noopener" target="_blank">MATCH 関数</a></li>
+<li><a href="https://support.microsoft.com/ja-jp/office/index-function-a5dcf0dd-996d-40a4-a822-b56b061328bd" rel="noopener" target="_blank">INDEX 関数</a></li>
+</ul>
+</section>
+
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js?v=20261103"></script>
+</body>
+</html>
