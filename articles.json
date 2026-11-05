@@ -545,7 +545,7 @@
       "subcategory": "old_search",
       "title": "INDEX&INDEXとMATCHでA列とB列を結合して検索する方法",
       "url": "functions/old/article_index_amp_match.html",
-      "summary": "A列とB列を数式の中で結合し、MATCHで2つの条件から値を取り出します。作業列なしで使える形を手順どおりに説明します。",
+      "summary": "A列とB列を数式の中で結合し、1つのセルの値をMATCHで探します。作業列なしの手順と、作業列との負荷の違いを説明します。",
       "level": 4,
       "tags": ["A列 B列 結合", "複数条件", "作業列なし", "INDEX&INDEX"],
       "version": "Excel 2016以降",

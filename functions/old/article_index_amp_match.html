@@ -13,9 +13,9 @@
 
   gtag('config', 'G-596JZ3M97H');
 </script>
-<meta content="A列とB列を数式の中で結合し、MATCHで検索する方法を手順どおりに解説。作業列なしで2つの条件から値を取り出せます。Excel 2016以降で使える形と、Ctrl+Shift+Enterが必要な形の違いもまとめます。" name="description">
+<meta content="A列とB列を数式の中で結合し、1つのセルの値をMATCHで検索する方法を手順どおりに解説。作業列なしで使えます。作業列との負荷の違いも実測で比較します。Excel 2016以降向け。" name="description">
 <meta content="INDEX&amp;INDEXとMATCHでA列とB列を結合して検索する｜作業列なし｜Excel &times; No VBA Lab" property="og:title">
-<meta content="A列とB列を数式の中で結合し、MATCHで検索する方法を手順どおりに解説。作業列なしで2つの条件から値を取り出せます。Excel 2016以降で使える形と、Ctrl+Shift+Enterが必要な形の違いもまとめます。" property="og:description">
+<meta content="A列とB列を数式の中で結合し、1つのセルの値をMATCHで検索する方法を手順どおりに解説。作業列なしで使えます。作業列との負荷の違いも実測で比較します。Excel 2016以降向け。" property="og:description">
 <meta content="article" property="og:type">
 <meta content="ja_JP" property="og:locale">
 <meta content="index, follow" name="robots">
@@ -36,6 +36,10 @@
   .article-body table.ix-grid td.ix-b{background:#e8f5e9 !important;color:#1b5e20}
   .article-body table.ix-grid td.ix-key{background:#fff8e1 !important;color:#5d4037}
   .article-body table.ix-grid td.ix-hit{background:#ffe082 !important;color:#5d4037;font-weight:700;outline:2px solid #f57c00;outline-offset:-2px}
+  .ix-num td,.ix-num th{text-align:right}
+  .ix-num td:first-child,.ix-num th:first-child,.ix-num td:nth-child(2),.ix-num th:nth-child(2){text-align:left}
+  .article-body table.ix-grid td.ix-on{background:#c8e6c9 !important;color:#1b5e20;font-weight:700}
+  @media (max-width:600px){.article-body table.ix-grid.ix-num{min-width:0 !important;width:100% !important;font-size:.8em}.article-body table.ix-grid.ix-num th,.article-body table.ix-grid.ix-num td{padding:5px 6px;white-space:normal;min-width:0 !important}.article-body table.ix-grid.ix-num td:nth-child(n+3){white-space:nowrap}}
   .ix-caption{font-size:.9em;font-weight:700;margin:14px 0 6px;color:#37474f}
 </style>
 <script type="application/ld+json">{
@@ -48,7 +52,7 @@
     "@type": "Person",
     "name": "Excel × No VBA Lab"
   },
-  "description": "A列とB列を数式の中で結合し、MATCHで検索する方法を手順どおりに解説します。作業列なしで2つの条件から値を取り出せます。"
+  "description": "A列とB列を数式の中で結合し、1つのセルの値をMATCHで検索する方法を手順どおりに解説します。作業列との負荷の違いも実測で比較します。"
 }</script>
 <script type="application/ld+json">{
   "@context": "https://schema.org",
@@ -110,25 +114,25 @@
 
 <section class="goal-section">
 <h2><span class="icon">💡</span> やりたいこと</h2>
-<p>「支店」と「商品」の2つで探して売上を取り出したいが、表に結合用の列（作業列）を足したくない。そんなときは、A列とB列を<strong>数式の中で結合</strong>して、MATCHで探します。</p>
+<p>「大阪」と「みかん」のように、A列とB列の組み合わせで検索して売上を取り出したい。でも、表に結合用の列（作業列）は足したくない。そんなときは、A列とB列を<strong>数式の中で結合</strong>して、MATCHで探します。</p>
 <div class="xdemo-note-good">
 <strong>完成した数式</strong><br>
-<code>=INDEX(C2:C6,MATCH(F2&amp;"|"&amp;G2,INDEX(A2:A6&amp;"|"&amp;B2:B6,0),0))</code><br>
-Excel 2016以降で、通常の<kbd>Enter</kbd>で確定します。
+<code>=INDEX(C2:C6,MATCH(F2,INDEX(A2:A6&amp;B2:B6,0),0))</code><br>
+F2に「大阪みかん」と入れると、売上の 60 が返ります。Excel 2016以降で、通常の<kbd>Enter</kbd>で確定します。
 </div>
 </section>
 
 <section class="method-section">
 <h2 id="sec-table">使用する表</h2>
-<p>F2とG2に探したい支店と商品を入れ、H2に売上を表示します。</p>
+<p>F2に探したい値を1つ入れ、G2に売上を表示します。検索値は「大阪みかん」のように、A列とB列をつないだ文字にします。</p>
 <div class="table-wrapper"><table class="ix-grid"><caption class="sr-only">支店、商品、売上の表と検索値</caption>
-<thead><tr><th></th><th>A：支店</th><th>B：商品</th><th>C：売上</th><th></th><th>F：支店</th><th>G：商品</th><th>H：結果</th></tr></thead>
+<thead><tr><th></th><th>A：支店</th><th>B：商品</th><th>C：売上</th><th></th><th>F：検索値</th><th>G：結果</th></tr></thead>
 <tbody>
-<tr><th>2</th><td>東京</td><td>りんご</td><td>120</td><td></td><td>大阪</td><td>みかん</td><td class="ix-hit">60</td></tr>
-<tr><th>3</th><td>東京</td><td>みかん</td><td>80</td><td></td><td></td><td></td><td></td></tr>
-<tr><th>4</th><td>大阪</td><td>りんご</td><td>200</td><td></td><td></td><td></td><td></td></tr>
-<tr><th>5</th><td class="ix-hit">大阪</td><td class="ix-hit">みかん</td><td class="ix-hit">60</td><td></td><td></td><td></td><td></td></tr>
-<tr><th>6</th><td>名古屋</td><td>りんご</td><td>150</td><td></td><td></td><td></td><td></td></tr>
+<tr><th>2</th><td>東京</td><td>りんご</td><td>120</td><td></td><td class="ix-key">大阪みかん</td><td class="ix-hit">60</td></tr>
+<tr><th>3</th><td>東京</td><td>みかん</td><td>80</td><td></td><td></td><td></td></tr>
+<tr><th>4</th><td>大阪</td><td>りんご</td><td>200</td><td></td><td></td><td></td></tr>
+<tr><th>5</th><td class="ix-hit">大阪</td><td class="ix-hit">みかん</td><td class="ix-hit">60</td><td></td><td></td><td></td></tr>
+<tr><th>6</th><td>名古屋</td><td>りんご</td><td>150</td><td></td><td></td><td></td></tr>
 </tbody>
 </table></div>
 </section>
@@ -143,7 +147,7 @@ Excel 2016以降で、通常の<kbd>Enter</kbd>で確定します。
 <h3>手順2：全行を結合する</h3>
 <p>同じことを全行まとめて行います。INDEXの番号を0にすると「全部」という意味になります。</p>
 <div class="code-block" data-lang="excel" data-label="部品（これだけでは完成しません）"><span class="code-line">INDEX(A2:A6&amp;B2:B6,0)</span></div>
-<p>この部分は、Excelの計算の中だけに、次のような結合した列を作ります。セルには何も増えません。</p>
+<p>この部分は、計算の中だけに、次のような結合した列を作ります。セルには何も増えません。</p>
 <p class="ix-caption">図1：数式の中だけにできる結合の列</p>
 <div class="table-wrapper"><table class="ix-grid"><caption class="sr-only">A列とB列を結合した結果</caption>
 <thead><tr><th>何番目</th><th>A列</th><th></th><th>B列</th><th></th><th>結合した結果</th></tr></thead>
@@ -157,69 +161,85 @@ Excel 2016以降で、通常の<kbd>Enter</kbd>で確定します。
 </table></div>
 
 <h3>手順3：MATCHで何番目かを探す</h3>
-<p>探す値も同じ形に結合し（<code>F2&amp;G2</code> は「大阪みかん」）、MATCHで位置を求めます。最後の0は「完全一致で探す」という指定です。</p>
-<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=MATCH(F2&amp;G2,INDEX(A2:A6&amp;B2:B6,0),0)</span></div>
+<p>F2の値が、結合した列の何番目にあるかを探します。最後の0は「完全一致で探す」という指定です。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=MATCH(F2,INDEX(A2:A6&amp;B2:B6,0),0)</span></div>
 <p class="code-comment">結果は 4。上から4番目という意味です（シートの行番号の5ではありません）。</p>
 
 <h3>手順4：INDEXで売上を取り出す</h3>
 <p>C列の4番目を取り出せば完成です。</p>
-<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=INDEX(C2:C6,MATCH(F2&amp;G2,INDEX(A2:A6&amp;B2:B6,0),0))</span></div>
-<p class="code-comment">結果は 60。</p>
-</section>
-
-<section class="method-section">
-<h2 id="sec-separator">区切り文字を入れる</h2>
-<p>単純に結合すると、別のデータが同じ文字になることがあります。</p>
-<div class="table-wrapper"><table class="ix-grid"><caption class="sr-only">区切り文字の有無の比較</caption>
-<thead><tr><th>A列</th><th>B列</th><th>そのまま結合</th><th>「|」を入れて結合</th></tr></thead>
-<tbody>
-<tr><td>12</td><td>345</td><td class="ix-hit">12345</td><td class="ix-key">12|345</td></tr>
-<tr><td>123</td><td>45</td><td class="ix-hit">12345</td><td class="ix-key">123|45</td></tr>
-</tbody>
-</table></div>
-<p>そのまま結合すると、123と45で探したのに、上の12と345の行を返しました。エラーにならないので気づきにくい誤りです。<strong>データに出てこない記号をはさむ</strong>と防げます。実務ではこちらの形を使ってください。</p>
-<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter（おすすめの形）"><span class="code-line">=INDEX(C2:C6,MATCH(F2&amp;"|"&amp;G2,INDEX(A2:A6&amp;"|"&amp;B2:B6,0),0))</span></div>
-<p class="code-comment">検索値の側と表の側の両方に、同じ区切り文字を入れます。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=INDEX(C2:C6,MATCH(F2,INDEX(A2:A6&amp;B2:B6,0),0))</span></div>
+<p class="code-comment">結果は 60。下の行へコピーするときは <code>=INDEX($C$2:$C$6,MATCH($F2,INDEX($A$2:$A$6&amp;$B$2:$B$6,0),0))</code> のように範囲を固定します。</p>
 </section>
 
 <section class="method-section">
 <h2 id="sec-forms">INDEX&amp;INDEXをMATCHに渡す書き方</h2>
-<p><code>INDEX(A2:A6,0)&amp;INDEX(B2:B6,0)</code> のように、INDEX同士をそのまま結合して渡すこともできます。ただし、入力方法に注意が必要です。</p>
+<p>INDEX同士をそのまま結合して渡すこともできますが、Excel 2016では入力方法に注意が必要です。</p>
 <div class="table-wrapper"><table class="ref-table"><caption class="sr-only">INDEXの書き方と入力方法の関係</caption>
 <thead><tr><th>MATCHの第2引数</th><th>Excel 2016：通常のEnter</th><th>Excel 2016：Ctrl+Shift+Enter</th><th>Microsoft 365：Enter</th></tr></thead>
 <tbody>
-<tr><td><code>INDEX(A2:A6&amp;B2:B6,0)</code></td><td>4</td><td>4</td><td>4</td></tr>
+<tr><td><code>INDEX(A2:A6&amp;B2:B6,0)</code>（おすすめ）</td><td>4</td><td>4</td><td>4</td></tr>
 <tr><td><code>INDEX(INDEX(A2:A6,0)&amp;INDEX(B2:B6,0),0)</code></td><td>4</td><td>4</td><td>4</td></tr>
 <tr><td><code>INDEX(A2:A6,0)&amp;INDEX(B2:B6,0)</code></td><td><code>#VALUE!</code></td><td>4</td><td>4</td></tr>
 </tbody>
 </table></div>
-<p>3つ目は、Excel 2016で通常の<kbd>Enter</kbd>を押すと動きません。入力方法を気にせず使えるので、この記事では1つ目をおすすめします。</p>
-<div class="xdemo-note-warn">
-<strong>確認した環境</strong><br>
-Microsoft 365版Excel（ビルド16.0.20625、確認日2026-11-05）で結果を確認しました。「Excel 2016」の2列は、この版の旧来の評価方式（<code>Range.Formula</code> と <code>Range.FormulaArray</code>）で入力した結果です。Excel 2016の実機では確認していないため、最初に小さな表で試してから使ってください。
-</div>
+<p>3つ目はExcel 2016で通常の<kbd>Enter</kbd>を押すと動きません。短くて入力方法を気にせず使える1つ目がおすすめです。</p>
 </section>
 
 <section class="method-section">
-<h2 id="sec-use">実務で使うときのポイント</h2>
-<h3>下の行へコピーする</h3>
-<p>範囲がずれないように「$」で固定します。F列とG列の行番号は固定しません。</p>
-<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=INDEX($C$2:$C$6,MATCH($F2&amp;"|"&amp;$G2,INDEX($A$2:$A$6&amp;"|"&amp;$B$2:$B$6,0),0))</span></div>
-<h3>見つからないときの表示を変える</h3>
-<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=IFERROR(INDEX(C2:C6,MATCH(F2&amp;"|"&amp;G2,INDEX(A2:A6&amp;"|"&amp;B2:B6,0),0)),"該当なし")</span></div>
-<h3>範囲はデータの行数に合わせる</h3>
-<p><code>A:A</code> のような列全体を指定すると、全行分の結合が行われて重くなります。数式を入れる行数やデータの行数が多いときは、次の表も確認してください。</p>
-<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">注意点と対処</caption>
-<thead><tr><th>こんなとき</th><th>起きること</th><th>対処</th></tr></thead>
+<h2 id="sec-load">作業列と比べると重い</h2>
+<p>この数式は表を変えずに済みますが、負荷は作業列より高くなります。数式の<strong>セルごとに、全行の結合をやり直す</strong>からです。作業列なら、結合は各行で1回だけで、MATCHは出来上がった列を探すだけです。</p>
+<div class="code-block" data-lang="excel" data-label="比較：作業列の場合（Excel 2016以降）"><span class="code-line">D2に =A2&amp;B2 を入れて下へコピー</span>
+<span class="code-line">=INDEX(C2:C6,MATCH(F2,D2:D6,0))</span></div>
+<p class="ix-caption">図2：全体を再計算したときの時間（ミリ秒）</p>
+<div class="table-wrapper"><table class="ix-grid ix-num"><caption class="sr-only">数式内で結合する方法と作業列の再計算時間</caption>
+<thead><tr><th>データ行数</th><th>検索する回数</th><th>数式の中で結合</th><th>作業列</th></tr></thead>
 <tbody>
-<tr><td>結果が <code>#N/A</code></td><td>一致するものがない</td><td>余分な空白、全角と半角、数値と文字列の違いを確認する</td></tr>
-<tr><td>同じ組み合わせが複数ある</td><td>最初の1件だけが返る</td><td>複数件は<a href="article_small_row_index_extract.html">ROW＋SMALL＋INDEX</a>で抽出する</td></tr>
-<tr><td>大文字と小文字を区別したい</td><td>MATCHでは区別されない（abcとABCは同じ）</td><td><a href="article_index_compound_lookup.html#sec-traps">応用編の注意点</a>のEXACTを使う</td></tr>
-<tr><td>検索値に <code>*</code> や <code>?</code> が入る</td><td>任意の文字として扱われる</td><td>記号の前に <code>~</code> を付ける</td></tr>
-<tr><td>数万行以上で何度も検索する</td><td>再計算が重くなる</td><td>表に結合列を作る方法を検討する</td></tr>
+<tr><td>1万行</td><td>1回</td><td>4.1</td><td>3.6</td></tr>
+<tr><td>1万行</td><td>1,000回</td><td>436</td><td>44</td></tr>
+<tr><td>10万行</td><td>1回</td><td>24</td><td>17</td></tr>
+<tr><td>10万行</td><td>1,000回</td><td>4,596</td><td>468</td></tr>
+<tr><td>45万行</td><td>1回</td><td>119</td><td>52</td></tr>
+<tr><td>45万行</td><td>100回</td><td>2,065</td><td>681</td></tr>
+<tr><td>45万行</td><td>1,000回</td><td class="ix-hit">20,931</td><td class="ix-on">2,245</td></tr>
 </tbody>
 </table></div>
-<p><span class="evidence-label measured">実測</span>45万行の表で1,000回検索すると、この書き方は約28秒、表に結合列を作る方法は約2.4秒でした（Microsoft 365版、測定日2026-11-05）。条件の詳細は<a href="article_index_compound_lookup.html#sec-speed">応用編の実測</a>をご覧ください。Excel 2016では測っていません。</p>
+<p class="code-comment" style="margin-top:8px"><span class="evidence-label measured">実測</span>Microsoft 365版Excel（ビルド16.0.20625、64ビット、8スレッド）、測定日2026-11-05。文字列キーの完全一致で、全体の再計算を5回測った中央値（45万行・1,000回の「数式の中で結合」のみ3回）。<strong>Excel 2016では測っていません</strong>。Excel 2016では数値や差の大きさが変わる可能性があります。</p>
+<ul class="line-height-2">
+<li><strong>検索が少なければ差は小さい：</strong>1万行で1回なら、ほぼ同じでした。</li>
+<li><strong>検索回数に比例して重くなる：</strong>45万行で1,000回では約21秒で、作業列の約9倍でした。</li>
+<li><strong>検索値を1つ変えるだけでも差が出る：</strong>45万行で約50ミリ秒に対し、作業列は約2ミリ秒でした。</li>
+</ul>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">方法の選び方</caption>
+<thead><tr><th>状況</th><th>向いている方法</th></tr></thead>
+<tbody>
+<tr><td>数千行までで、数式も数個〜数十個</td><td>この記事の数式</td></tr>
+<tr><td>表に列を足せない</td><td>この記事の数式。範囲はデータの行数に絞ります</td></tr>
+<tr><td>データや数式が多い、再計算が気になる</td><td><a href="article_index_match_multi.html">作業列（結合キー列）</a></td></tr>
+</tbody>
+</table></div>
+<p>表に列を足せない場合も、<code>A:A</code> のような列全体の指定は避けてください。全行分の結合が行われます。</p>
+</section>
+
+<section class="method-section">
+<h2 id="sec-use">うまくいかないとき</h2>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">よくある問題と対処</caption>
+<thead><tr><th>こんなとき</th><th>原因</th><th>対処</th></tr></thead>
+<tbody>
+<tr><td>結果が <code>#N/A</code></td><td>一致するものがない</td><td>余分な空白、全角と半角を確認します。表示を変えるなら <code>=IFERROR(数式,"該当なし")</code> で包みます</td></tr>
+<tr><td>A列・B列が数値で <code>#N/A</code></td><td>結合した結果は文字列なので、F2が数値だと一致しない</td><td><code>MATCH(F2&amp;"",…)</code> と書くか、F2を文字列にします</td></tr>
+<tr><td>違う行の値が返る</td><td>12と345、123と45は、どちらも「12345」になる</td><td>下の区切り文字を使います</td></tr>
+<tr><td>同じ組み合わせが複数ある</td><td>最初の1件だけが返る</td><td>複数件は<a href="article_small_row_index_extract.html">ROW＋SMALL＋INDEX</a>で抽出します</td></tr>
+<tr><td>大文字と小文字を区別したい</td><td>MATCHでは区別されない</td><td><a href="article_index_compound_lookup.html#sec-traps">応用編のEXACT</a>を使います</td></tr>
+</tbody>
+</table></div>
+<h3>同じ文字になるときは区切り文字を入れる</h3>
+<p>コードの組み合わせなどでは、記号をはさみます。F2には「12|345」のように入れます。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=INDEX(C2:C6,MATCH(F2,INDEX(A2:A6&amp;"|"&amp;B2:B6,0),0))</span></div>
+<p class="code-comment">区切り文字は、データに出てこない記号を選びます。</p>
+<div class="xdemo-note-warn">
+<strong>確認した環境</strong><br>
+Microsoft 365版Excel（ビルド16.0.20625、確認日2026-11-05）で結果を確認しました。「Excel 2016」の列は、この版の旧来の評価方式（<code>Range.Formula</code> と <code>Range.FormulaArray</code>）で入力した結果です。Excel 2016の実機では確認していないため、最初に小さな表で試してから使ってください。
+</div>
 </section>
 
 <section class="method-section">
