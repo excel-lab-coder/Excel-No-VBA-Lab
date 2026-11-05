@@ -543,6 +543,17 @@
     {
       "category": "functions",
       "subcategory": "old_search",
+      "title": "INDEX&INDEXとMATCHでA列とB列を結合して検索する方法",
+      "url": "functions/old/article_index_amp_match.html",
+      "summary": "A列とB列を数式の中で結合し、MATCHで2つの条件から値を取り出します。作業列なしで使える形を手順どおりに説明します。",
+      "level": 4,
+      "tags": ["A列 B列 結合", "複数条件", "作業列なし", "INDEX&INDEX"],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_search",
       "title": "INDEX:INDEXで可変範囲を作る：SUMとMATCHで使う参照の仕組み",
       "url": "functions/old/article_index_reference_range.html",
       "summary": "INDEXが返すセル参照を「:」でつなぎ、集計範囲や検索範囲を数式で切り替えます。相対位置の変換と、逆転・未一致・重複の動作も確認します。",

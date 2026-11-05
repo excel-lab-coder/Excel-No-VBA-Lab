@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>INDEX&amp;INDEXとMATCHでA列とB列を結合して検索する｜作業列なし｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="A列とB列を数式の中で結合し、MATCHで検索する方法を手順どおりに解説。作業列なしで2つの条件から値を取り出せます。Excel 2016以降で使える形と、Ctrl+Shift+Enterが必要な形の違いもまとめます。" name="description">
+<meta content="INDEX&amp;INDEXとMATCHでA列とB列を結合して検索する｜作業列なし｜Excel &times; No VBA Lab" property="og:title">
+<meta content="A列とB列を数式の中で結合し、MATCHで検索する方法を手順どおりに解説。作業列なしで2つの条件から値を取り出せます。Excel 2016以降で使える形と、Ctrl+Shift+Enterが必要な形の違いもまとめます。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_amp_match.html" rel="canonical">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_amp_match.html" property="og:url">
+<style>
+  /* ===== ページ固有スタイル：セル図解 ===== */
+  .ix-grid{border-collapse:collapse;font-size:.92em;margin:0;width:auto}
+  .ix-grid th,.ix-grid td{border:1px solid #cfd8dc;padding:6px 12px;text-align:center;white-space:nowrap;background:#fff;color:#263238}
+  .ix-grid th{background:#eceff1;font-weight:700}
+  .article-body table.ix-grid td.ix-a{background:#e3f2fd !important;color:#0d47a1}
+  .article-body table.ix-grid td.ix-b{background:#e8f5e9 !important;color:#1b5e20}
+  .article-body table.ix-grid td.ix-key{background:#fff8e1 !important;color:#5d4037}
+  .article-body table.ix-grid td.ix-hit{background:#ffe082 !important;color:#5d4037;font-weight:700;outline:2px solid #f57c00;outline-offset:-2px}
+  .ix-caption{font-size:.9em;font-weight:700;margin:14px 0 6px;color:#37474f}
+</style>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "datePublished": "2026-11-05",
+  "dateModified": "2026-11-05",
+  "headline": "INDEX&INDEXとMATCHでA列とB列を結合して検索する方法",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "A列とB列を数式の中で結合し、MATCHで検索する方法を手順どおりに解説します。作業列なしで2つの条件から値を取り出せます。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "INDEX&INDEXとMATCHで結合検索",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_amp_match.html"
+    }
+  ]
+}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/" aria-current="true">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/">Word差し込み</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../">ホーム</a><span>&gt;</span>
+<a href="../../functions/">関数</a><span>&gt;</span>
+<strong>INDEX&amp;INDEXとMATCHで結合検索</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Excel 2016以降</span>
+<span class="article-date">更新日: 2026-11-05</span></div>
+<h1 class="article-title">INDEX&amp;INDEXとMATCHでA列とB列を結合して検索する方法</h1>
+</div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>「支店」と「商品」の2つで探して売上を取り出したいが、表に結合用の列（作業列）を足したくない。そんなときは、A列とB列を<strong>数式の中で結合</strong>して、MATCHで探します。</p>
+<div class="xdemo-note-good">
+<strong>完成した数式</strong><br>
+<code>=INDEX(C2:C6,MATCH(F2&amp;"|"&amp;G2,INDEX(A2:A6&amp;"|"&amp;B2:B6,0),0))</code><br>
+Excel 2016以降で、通常の<kbd>Enter</kbd>で確定します。
+</div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-table">使用する表</h2>
+<p>F2とG2に探したい支店と商品を入れ、H2に売上を表示します。</p>
+<div class="table-wrapper"><table class="ix-grid"><caption class="sr-only">支店、商品、売上の表と検索値</caption>
+<thead><tr><th></th><th>A：支店</th><th>B：商品</th><th>C：売上</th><th></th><th>F：支店</th><th>G：商品</th><th>H：結果</th></tr></thead>
+<tbody>
+<tr><th>2</th><td>東京</td><td>りんご</td><td>120</td><td></td><td>大阪</td><td>みかん</td><td class="ix-hit">60</td></tr>
+<tr><th>3</th><td>東京</td><td>みかん</td><td>80</td><td></td><td></td><td></td><td></td></tr>
+<tr><th>4</th><td>大阪</td><td>りんご</td><td>200</td><td></td><td></td><td></td><td></td></tr>
+<tr><th>5</th><td class="ix-hit">大阪</td><td class="ix-hit">みかん</td><td class="ix-hit">60</td><td></td><td></td><td></td><td></td></tr>
+<tr><th>6</th><td>名古屋</td><td>りんご</td><td>150</td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table></div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-steps">数式の組み立て方</h2>
+<h3>手順1：INDEX&amp;INDEXで1行を結合する</h3>
+<p>「&amp;」は文字をつなぐ記号です。A列の4番目とB列の4番目をつなぎます。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=INDEX(A2:A6,4)&amp;INDEX(B2:B6,4)</span></div>
+<p class="code-comment">結果は 大阪みかん。</p>
+
+<h3>手順2：全行を結合する</h3>
+<p>同じことを全行まとめて行います。INDEXの番号を0にすると「全部」という意味になります。</p>
+<div class="code-block" data-lang="excel" data-label="部品（これだけでは完成しません）"><span class="code-line">INDEX(A2:A6&amp;B2:B6,0)</span></div>
+<p>この部分は、Excelの計算の中だけに、次のような結合した列を作ります。セルには何も増えません。</p>
+<p class="ix-caption">図1：数式の中だけにできる結合の列</p>
+<div class="table-wrapper"><table class="ix-grid"><caption class="sr-only">A列とB列を結合した結果</caption>
+<thead><tr><th>何番目</th><th>A列</th><th></th><th>B列</th><th></th><th>結合した結果</th></tr></thead>
+<tbody>
+<tr><th>1</th><td class="ix-a">東京</td><td>&amp;</td><td class="ix-b">りんご</td><td>→</td><td class="ix-key">東京りんご</td></tr>
+<tr><th>2</th><td class="ix-a">東京</td><td>&amp;</td><td class="ix-b">みかん</td><td>→</td><td class="ix-key">東京みかん</td></tr>
+<tr><th>3</th><td class="ix-a">大阪</td><td>&amp;</td><td class="ix-b">りんご</td><td>→</td><td class="ix-key">大阪りんご</td></tr>
+<tr><th>4</th><td class="ix-a">大阪</td><td>&amp;</td><td class="ix-b">みかん</td><td>→</td><td class="ix-hit">大阪みかん</td></tr>
+<tr><th>5</th><td class="ix-a">名古屋</td><td>&amp;</td><td class="ix-b">りんご</td><td>→</td><td class="ix-key">名古屋りんご</td></tr>
+</tbody>
+</table></div>
+
+<h3>手順3：MATCHで何番目かを探す</h3>
+<p>探す値も同じ形に結合し（<code>F2&amp;G2</code> は「大阪みかん」）、MATCHで位置を求めます。最後の0は「完全一致で探す」という指定です。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=MATCH(F2&amp;G2,INDEX(A2:A6&amp;B2:B6,0),0)</span></div>
+<p class="code-comment">結果は 4。上から4番目という意味です（シートの行番号の5ではありません）。</p>
+
+<h3>手順4：INDEXで売上を取り出す</h3>
+<p>C列の4番目を取り出せば完成です。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=INDEX(C2:C6,MATCH(F2&amp;G2,INDEX(A2:A6&amp;B2:B6,0),0))</span></div>
+<p class="code-comment">結果は 60。</p>
+</section>
+
+<section class="method-section">
+<h2 id="sec-separator">区切り文字を入れる</h2>
+<p>単純に結合すると、別のデータが同じ文字になることがあります。</p>
+<div class="table-wrapper"><table class="ix-grid"><caption class="sr-only">区切り文字の有無の比較</caption>
+<thead><tr><th>A列</th><th>B列</th><th>そのまま結合</th><th>「|」を入れて結合</th></tr></thead>
+<tbody>
+<tr><td>12</td><td>345</td><td class="ix-hit">12345</td><td class="ix-key">12|345</td></tr>
+<tr><td>123</td><td>45</td><td class="ix-hit">12345</td><td class="ix-key">123|45</td></tr>
+</tbody>
+</table></div>
+<p>そのまま結合すると、123と45で探したのに、上の12と345の行を返しました。エラーにならないので気づきにくい誤りです。<strong>データに出てこない記号をはさむ</strong>と防げます。実務ではこちらの形を使ってください。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter（おすすめの形）"><span class="code-line">=INDEX(C2:C6,MATCH(F2&amp;"|"&amp;G2,INDEX(A2:A6&amp;"|"&amp;B2:B6,0),0))</span></div>
+<p class="code-comment">検索値の側と表の側の両方に、同じ区切り文字を入れます。</p>
+</section>
+
+<section class="method-section">
+<h2 id="sec-forms">INDEX&amp;INDEXをMATCHに渡す書き方</h2>
+<p><code>INDEX(A2:A6,0)&amp;INDEX(B2:B6,0)</code> のように、INDEX同士をそのまま結合して渡すこともできます。ただし、入力方法に注意が必要です。</p>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">INDEXの書き方と入力方法の関係</caption>
+<thead><tr><th>MATCHの第2引数</th><th>Excel 2016：通常のEnter</th><th>Excel 2016：Ctrl+Shift+Enter</th><th>Microsoft 365：Enter</th></tr></thead>
+<tbody>
+<tr><td><code>INDEX(A2:A6&amp;B2:B6,0)</code></td><td>4</td><td>4</td><td>4</td></tr>
+<tr><td><code>INDEX(INDEX(A2:A6,0)&amp;INDEX(B2:B6,0),0)</code></td><td>4</td><td>4</td><td>4</td></tr>
+<tr><td><code>INDEX(A2:A6,0)&amp;INDEX(B2:B6,0)</code></td><td><code>#VALUE!</code></td><td>4</td><td>4</td></tr>
+</tbody>
+</table></div>
+<p>3つ目は、Excel 2016で通常の<kbd>Enter</kbd>を押すと動きません。入力方法を気にせず使えるので、この記事では1つ目をおすすめします。</p>
+<div class="xdemo-note-warn">
+<strong>確認した環境</strong><br>
+Microsoft 365版Excel（ビルド16.0.20625、確認日2026-11-05）で結果を確認しました。「Excel 2016」の2列は、この版の旧来の評価方式（<code>Range.Formula</code> と <code>Range.FormulaArray</code>）で入力した結果です。Excel 2016の実機では確認していないため、最初に小さな表で試してから使ってください。
+</div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-use">実務で使うときのポイント</h2>
+<h3>下の行へコピーする</h3>
+<p>範囲がずれないように「$」で固定します。F列とG列の行番号は固定しません。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=INDEX($C$2:$C$6,MATCH($F2&amp;"|"&amp;$G2,INDEX($A$2:$A$6&amp;"|"&amp;$B$2:$B$6,0),0))</span></div>
+<h3>見つからないときの表示を変える</h3>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=IFERROR(INDEX(C2:C6,MATCH(F2&amp;"|"&amp;G2,INDEX(A2:A6&amp;"|"&amp;B2:B6,0),0)),"該当なし")</span></div>
+<h3>範囲はデータの行数に合わせる</h3>
+<p><code>A:A</code> のような列全体を指定すると、全行分の結合が行われて重くなります。数式を入れる行数やデータの行数が多いときは、次の表も確認してください。</p>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">注意点と対処</caption>
+<thead><tr><th>こんなとき</th><th>起きること</th><th>対処</th></tr></thead>
+<tbody>
+<tr><td>結果が <code>#N/A</code></td><td>一致するものがない</td><td>余分な空白、全角と半角、数値と文字列の違いを確認する</td></tr>
+<tr><td>同じ組み合わせが複数ある</td><td>最初の1件だけが返る</td><td>複数件は<a href="article_small_row_index_extract.html">ROW＋SMALL＋INDEX</a>で抽出する</td></tr>
+<tr><td>大文字と小文字を区別したい</td><td>MATCHでは区別されない（abcとABCは同じ）</td><td><a href="article_index_compound_lookup.html#sec-traps">応用編の注意点</a>のEXACTを使う</td></tr>
+<tr><td>検索値に <code>*</code> や <code>?</code> が入る</td><td>任意の文字として扱われる</td><td>記号の前に <code>~</code> を付ける</td></tr>
+<tr><td>数万行以上で何度も検索する</td><td>再計算が重くなる</td><td>表に結合列を作る方法を検討する</td></tr>
+</tbody>
+</table></div>
+<p><span class="evidence-label measured">実測</span>45万行の表で1,000回検索すると、この書き方は約28秒、表に結合列を作る方法は約2.4秒でした（Microsoft 365版、測定日2026-11-05）。条件の詳細は<a href="article_index_compound_lookup.html#sec-speed">応用編の実測</a>をご覧ください。Excel 2016では測っていません。</p>
+</section>
+
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_index_match.html">INDEX + MATCH（Excel 2016以降）</a>：基本の使い方</li>
+<li><a href="article_index_match_multi.html">INDEX + MATCH + 結合キー列</a>：表に結合列を作る方法</li>
+<li><a href="article_index_compound_lookup.html">INDEX&amp;INDEXと複合検索：作業列なしの検索と45万行の実測</a>：詳しい応用編</li>
+<li><a href="article_index_reference_range.html">INDEX:INDEXで可変範囲を作る</a>：「:」でつなぐ別の使い方</li>
+</ul>
+<h3>出典（Microsoft公式）</h3>
+<ul class="line-height-2">
+<li><a href="https://support.microsoft.com/ja-jp/office/index-function-a5dcf0dd-996d-40a4-a822-b56b061328bd" rel="noopener" target="_blank">INDEX 関数</a></li>
+<li><a href="https://support.microsoft.com/ja-jp/office/match-function-e8dffd45-c762-47d6-bf89-533f4a37673a" rel="noopener" target="_blank">MATCH 関数</a></li>
+</ul>
+</section>
+
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js?v=20261103"></script>
+</body>
+</html>
