@@ -565,6 +565,17 @@
     {
       "category": "functions",
       "subcategory": "old_search",
+      "title": "行の中で最初に見つけたセルの右隣を取り出す方法：空白・入力・特定の文字",
+      "url": "functions/old/article_first_found_right_cell.html",
+      "summary": "1行を左から右へ探し、最初の入力・空白・特定の文字が見つかったセルの右隣を、INDEXとMATCHで取り出します。",
+      "level": 4,
+      "tags": ["右隣", "最初の空白", "最初の入力", "左から検索"],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_search",
       "title": "INDEX:INDEXで可変範囲を作る：SUMとMATCHで使う参照の仕組み",
       "url": "functions/old/article_index_reference_range.html",
       "summary": "INDEXが返すセル参照を「:」でつなぎ、集計範囲や検索範囲を数式で切り替えます。相対位置の変換と、逆転・未一致・重複の動作も確認します。",

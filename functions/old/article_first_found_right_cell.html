@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>行の中で最初に見つけたセルの右隣を取り出す方法｜INDEX+MATCH｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="1行を左から右へ探して、最初の入力・最初の空白・特定の文字が見つかったセルの右隣を、INDEXとMATCHで取り出す方法を解説。探す条件ごとの数式と、0が表示される場合などの注意点をまとめます。Excel 2016以降向け。" name="description">
+<meta content="行の中で最初に見つけたセルの右隣を取り出す方法｜INDEX+MATCH｜Excel &times; No VBA Lab" property="og:title">
+<meta content="1行を左から右へ探して、最初の入力・最初の空白・特定の文字が見つかったセルの右隣を、INDEXとMATCHで取り出す方法を解説。探す条件ごとの数式と、0が表示される場合などの注意点をまとめます。Excel 2016以降向け。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_first_found_right_cell.html" rel="canonical">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_first_found_right_cell.html" property="og:url">
+<style>
+  /* ===== ページ固有スタイル：セル図解 ===== */
+  .ix-grid{border-collapse:collapse;font-size:.92em;margin:0;width:auto}
+  .ix-grid th,.ix-grid td{border:1px solid #cfd8dc;padding:6px 10px;text-align:center;white-space:nowrap;background:#fff;color:#263238}
+  .ix-grid th{background:#eceff1;font-weight:700}
+  .article-body table.ix-grid td.ix-off{background:#f5f5f5 !important;color:#90a4ae}
+  .article-body table.ix-grid td.ix-hit{background:#ffe082 !important;color:#5d4037;font-weight:700;outline:2px solid #f57c00;outline-offset:-2px}
+  .article-body table.ix-grid td.ix-on{background:#c8e6c9 !important;color:#1b5e20;font-weight:700;outline:2px solid #2e7d32;outline-offset:-2px}
+  .ix-caption{font-size:.9em;font-weight:700;margin:14px 0 6px;color:#37474f}
+  .ix-steps{margin:12px 0 18px;padding-left:1.5em;line-height:1.9}
+</style>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "datePublished": "2026-11-05",
+  "dateModified": "2026-11-05",
+  "headline": "行の中で最初に見つけたセルの右隣を取り出す方法：空白・入力・特定の文字",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "1行を左から右へ探して、最初の入力・最初の空白・特定の文字が見つかったセルの右隣を、INDEXとMATCHで取り出す方法を解説します。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "見つけたセルの右隣を取り出す",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_first_found_right_cell.html"
+    }
+  ]
+}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/" aria-current="true">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/">Word差し込み</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../">ホーム</a><span>&gt;</span>
+<a href="../../functions/">関数</a><span>&gt;</span>
+<strong>見つけたセルの右隣を取り出す</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Excel 2016以降</span>
+<span class="article-date">更新日: 2026-11-05</span></div>
+<h1 class="article-title">行の中で最初に見つけたセルの右隣を取り出す方法：空白・入力・特定の文字</h1>
+</div>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> やりたいこと</h2>
+<p>1行を左から右へ見ていき、最初に見つかったセルの<strong>右隣の値</strong>を取り出したい。項目の位置が行ごとにずれている帳票などで使えます。</p>
+<div class="xdemo-note-good">
+<strong>基本の形</strong><br>
+<code>=INDEX(取り出す範囲,MATCH(探す条件)+1)</code><br>
+MATCHで見つけた位置に <code>+1</code> すると、1つ右のセルになります。Excel 2016以降で、通常の<kbd>Enter</kbd>で確定します。
+</div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-result">探す条件ごとの数式</h2>
+<p>A〜F列を左から探して、見つけたセルの右隣の値を取り出します。数式は表の外のセルに入れます。黄色が見つけたセル、緑が取り出すセルです。</p>
+<p class="ix-caption">図1：見つけたセルと、取り出す右隣のセル</p>
+<div class="table-wrapper"><table class="ix-grid"><caption class="sr-only">探す条件ごとの見つかるセルと右隣のセル</caption>
+<thead><tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>探すもの</th><th>結果</th></tr></thead>
+<tbody>
+<tr><th>2</th><td class="ix-off">空白</td><td class="ix-off">空白</td><td class="ix-hit">りんご</td><td class="ix-on">120</td><td class="ix-off">空白</td><td>済</td><td>最初の入力</td><td>120</td></tr>
+<tr><th>3</th><td>東京</td><td>100</td><td class="ix-hit">空白</td><td class="ix-on">要確認</td><td>200</td><td class="ix-off">空白</td><td>最初の空白</td><td>要確認</td></tr>
+<tr><th>4</th><td>商品A</td><td>50</td><td class="ix-hit">合計</td><td class="ix-on">170</td><td class="ix-off">空白</td><td>メモ</td><td>「合計」</td><td>170</td></tr>
+<tr><th>5</th><td>10</td><td>20</td><td class="ix-hit">東京</td><td class="ix-on">30</td><td class="ix-off">空白</td><td>40</td><td>最初の文字</td><td>30</td></tr>
+</tbody>
+</table></div>
+<h3>最初に入力があるセルの右隣</h3>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=INDEX(A2:G2,MATCH(TRUE,INDEX(A2:F2&lt;&gt;"",0),0)+1)</span></div>
+<p class="code-comment">結果は 120。文字でも数値でも、空白でなければ見つかります。</p>
+<h3>最初の空白の右隣</h3>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=INDEX(A3:G3,MATCH(TRUE,INDEX(A3:F3="",0),0)+1)</span></div>
+<p class="code-comment">結果は 要確認。上の式の <code>&lt;&gt;""</code> を <code>=""</code> に変えただけです。</p>
+<h3>特定の文字の右隣</h3>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=INDEX(A4:G4,MATCH("合計",A4:F4,0)+1)</span></div>
+<p class="code-comment">結果は 170。「合計」の部分はセル参照にもできます。</p>
+<h3>最初の文字の右隣（数値は飛ばす）</h3>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=INDEX(A5:G5,MATCH("*",A5:F5,0)+1)</span></div>
+<p class="code-comment">結果は 30。<code>*</code> は文字列だけに一致するので、10と20を飛ばして「東京」を見つけます。</p>
+<h3>最初の数値の右隣</h3>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=INDEX(A5:G5,MATCH(TRUE,INDEX(ISNUMBER(A5:F5),0),0)+1)</span></div>
+<p class="code-comment">結果は 20。最初の数値は A5 の 10 なので、その右の B5 を返します。</p>
+</section>
+
+<section class="method-section">
+<h2 id="sec-steps">数式の組み立て方</h2>
+<p>「最初に入力があるセルの右隣」を、2行目で順に組み立てます。</p>
+<ol class="ix-steps">
+<li><strong>入力があるかを判定する：</strong><code>A2:F2&lt;&gt;""</code> は、左から FALSE, FALSE, TRUE, TRUE, FALSE, TRUE になります。</li>
+<li><strong>INDEXで包む：</strong><code>INDEX(A2:F2&lt;&gt;"",0)</code> とすると、Excel 2016でも通常の<kbd>Enter</kbd>で配列として計算されます。</li>
+<li><strong>最初のTRUEを探す：</strong><code>=MATCH(TRUE,INDEX(A2:F2&lt;&gt;"",0),0)</code> の結果は 3（C列）です。</li>
+<li><strong>見つけたセル自身を確かめる：</strong><code>=INDEX(A2:G2,MATCH(TRUE,INDEX(A2:F2&lt;&gt;"",0),0))</code> の結果は りんご です。</li>
+<li><strong>1を足して右隣にする：</strong><code>+1</code> を入れると、結果は 120 になります。</li>
+</ol>
+<div class="xdemo-note-info">
+<strong>探す範囲より、取り出す範囲を1列広くする</strong><br>
+探す範囲はA〜F列、取り出す範囲はA〜G列です。F列で見つかったときに右隣のG列が必要だからです。取り出す範囲もA〜F列にすると、F列で見つかったときに <code>#REF!</code> になります。
+</div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-traps">注意点</h2>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">条件ごとの結果と対処</caption>
+<thead><tr><th>こんなとき</th><th>結果</th><th>対処</th></tr></thead>
+<tbody>
+<tr><td>右隣のセルが空白</td><td>0 と表示される</td><td>式の最後に <code>&amp;""</code> を付けると空白で表示されます。ただし結果は文字列になり、数値も文字列として返ります</td></tr>
+<tr><td>見つからない</td><td><code>#N/A</code></td><td><code>=IFERROR(数式,"なし")</code> で表示を変えます</td></tr>
+<tr><td>数式の結果が <code>""</code> のセル</td><td><code>=""</code> で探すと空白として見つかり、<code>*</code> では文字列として見つかる</td><td><code>*</code> の代わりに <code>?*</code> を使うと、1文字以上の文字列だけを探します</td></tr>
+<tr><td>本当に空のセルだけを探したい</td><td><code>=""</code> だと <code>""</code> のセルも含む</td><td><code>INDEX(ISBLANK(A3:F3),0)</code> を使います</td></tr>
+<tr><td>スペースだけのセル</td><td>入力として見つかる</td><td><code>INDEX(TRIM(A2:F2)&lt;&gt;"",0)</code> を使います</td></tr>
+<tr><td>INDEXで包まない<br><code>MATCH(TRUE,A2:F2&lt;&gt;"",0)</code></td><td>Excel 2016の通常のEnterでは <code>#VALUE!</code></td><td>INDEXで包むか、<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd>で確定します</td></tr>
+</tbody>
+</table></div>
+<h3>下の行へコピーする</h3>
+<p>行番号に「$」を付けずに入力すれば、そのまま下へコピーして行ごとに結果を出せます。数式は探す範囲の外に入れてください。</p>
+<h3>2つ右、縦方向にしたいとき</h3>
+<ul class="line-height-2">
+<li><strong>2つ右：</strong><code>+1</code> を <code>+2</code> に変え、取り出す範囲も2列広くします。</li>
+<li><strong>縦方向（下隣）：</strong>範囲を <code>A13:A16</code> のように列で指定すると、同じ考え方で下のセルを取り出せます。</li>
+</ul>
+<div class="xdemo-note-warn">
+<strong>確認した環境</strong><br>
+Microsoft 365版Excel（ビルド16.0.20625、確認日2026-11-05）で結果を確認しました。Excel 2016向けの結果は、この版の旧来の評価方式（<code>Range.Formula</code>）で入力したものです。Excel 2016の実機では確認していないため、最初に小さな表で試してから使ってください。
+</div>
+</section>
+
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_last_column_match.html">行の一番右にある最終列を求める方法</a>：左からではなく右端を求めるとき</li>
+<li><a href="article_index_match.html">INDEX + MATCH（Excel 2016以降）</a>：基本の使い方</li>
+<li><a href="article_index_amp_match.html">A列とB列を結合して検索する方法：作業列なしのINDEX+MATCH</a></li>
+</ul>
+<h3>出典（Microsoft公式）</h3>
+<ul class="line-height-2">
+<li><a href="https://support.microsoft.com/ja-jp/office/match-function-e8dffd45-c762-47d6-bf89-533f4a37673a" rel="noopener" target="_blank">MATCH 関数</a>：完全一致とワイルドカード</li>
+<li><a href="https://support.microsoft.com/ja-jp/office/index-function-a5dcf0dd-996d-40a4-a822-b56b061328bd" rel="noopener" target="_blank">INDEX 関数</a></li>
+</ul>
+</section>
+
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js?v=20261103"></script>
+</body>
+</html>

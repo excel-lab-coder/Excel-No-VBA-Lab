@@ -203,3 +203,4 @@ https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_r
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_compound_lookup.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_amp_match.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_last_column_match.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_first_found_right_cell.html
