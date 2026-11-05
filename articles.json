@@ -543,7 +543,7 @@
     {
       "category": "functions",
       "subcategory": "old_search",
-      "title": "INDEX&INDEXとMATCHでA列とB列を結合して検索する方法",
+      "title": "A列とB列を結合して検索する方法：作業列なしのINDEX+MATCH",
       "url": "functions/old/article_index_amp_match.html",
       "summary": "A列とB列を数式の中で結合し、1つのセルの値をMATCHで探します。作業列なしの手順と、作業列との負荷の違いを説明します。",
       "level": 4,
