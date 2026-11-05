@@ -543,6 +543,28 @@
     {
       "category": "functions",
       "subcategory": "old_search",
+      "title": "INDEX:INDEXで可変範囲を作る：SUMとMATCHで使う参照の仕組み",
+      "url": "functions/old/article_index_reference_range.html",
+      "summary": "INDEXが返すセル参照を「:」でつなぎ、集計範囲や検索範囲を数式で切り替えます。相対位置の変換と、逆転・未一致・重複の動作も確認します。",
+      "level": 5,
+      "tags": ["INDEX:INDEX", "可変範囲", "参照", "範囲を切り替える"],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_search",
+      "title": "INDEX&INDEXと複合検索：作業列なしの検索と45万行の実測",
+      "url": "functions/old/article_index_compound_lookup.html",
+      "summary": "複合キー、複数条件、複数列の一括取得を作業列なしで書く方法と、Ctrl+Shift+Enterが必要な条件を整理します。45万行の実測で作業列方式とも比較します。",
+      "level": 6,
+      "tags": ["複合キー", "複数条件", "配列数式", "大量データ", "作業列"],
+      "version": "Excel 2016以降",
+      "min_excel": 2016
+    },
+    {
+      "category": "functions",
+      "subcategory": "old_search",
       "title": "複数条件に合う行だけ連番を振る方法",
       "url": "functions/old/article_countifs_serial_number.html",
       "summary": "COUNTIFSで連番の土台を作り、必要なときだけIFで対象外を空白にする考え方を解説します。",

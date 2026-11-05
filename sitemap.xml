@@ -302,11 +302,11 @@
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_match.html</loc>
-    <lastmod>2026-11-04</lastmod>
+    <lastmod>2026-11-05</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_match_multi.html</loc>
-    <lastmod>2026-11-04</lastmod>
+    <lastmod>2026-11-05</lastmod>
   </url>
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_midb.html</loc>
@@ -803,5 +803,13 @@
   <url>
     <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_batch_merge_text.html</loc>
     <lastmod>2026-11-04</lastmod>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_reference_range.html</loc>
+    <lastmod>2026-11-05</lastmod>
+  </url>
+  <url>
+    <loc>https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_compound_lookup.html</loc>
+    <lastmod>2026-11-05</lastmod>
   </url>
 </urlset>

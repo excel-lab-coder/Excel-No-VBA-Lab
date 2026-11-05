@@ -199,3 +199,5 @@ https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_name_spli
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_phonetic_furigana.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/vba/article_vba_set_phonetic.html
 https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/data/article_batch_merge_text.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_reference_range.html
+https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_compound_lookup.html

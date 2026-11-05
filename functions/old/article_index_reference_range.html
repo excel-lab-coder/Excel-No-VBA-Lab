@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>INDEX:INDEXで可変範囲を作る｜SUMとMATCHの応用｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="ExcelのINDEXは値だけでなくセル参照も返します。INDEX:INDEXで集計範囲や検索範囲を数式で切り替える方法を、Excel 2016以降向けに図解。相対位置の変換、逆転・未一致・重複時の動作も確認します。" name="description">
+<meta content="INDEX:INDEXで可変範囲を作る｜SUMとMATCHの応用｜Excel &times; No VBA Lab" property="og:title">
+<meta content="ExcelのINDEXは値だけでなくセル参照も返します。INDEX:INDEXで集計範囲や検索範囲を数式で切り替える方法を、Excel 2016以降向けに図解。相対位置の変換、逆転・未一致・重複時の動作も確認します。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_reference_range.html" rel="canonical">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_reference_range.html" property="og:url">
+<style>
+  /* ===== ページ固有スタイル：セル図解 ===== */
+  .ix-grid{border-collapse:collapse;font-size:.88em;margin:0;width:auto}
+  .ix-grid th,.ix-grid td{border:1px solid #cfd8dc;padding:5px 9px;text-align:center;white-space:nowrap;background:#fff;color:#263238}
+  .ix-grid th{background:#eceff1;font-weight:700}
+  .article-body table.ix-grid td.ix-on{background:#c8e6c9 !important;color:#1b5e20;font-weight:700}
+  .article-body table.ix-grid td.ix-edge{background:#81c784 !important;color:#10381a;font-weight:700;outline:2px solid #2e7d32;outline-offset:-2px}
+  .article-body table.ix-grid td.ix-hit{background:#ffe082 !important;color:#5d4037;font-weight:700;outline:2px solid #f57c00;outline-offset:-2px}
+  .ix-grid td.ix-out{color:#90a4ae}
+  .ix-caption{font-size:.88em;font-weight:700;margin:14px 0 6px;color:#37474f}
+  .ix-steps{margin:12px 0 18px;padding-left:1.5em;line-height:1.9}
+</style>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "datePublished": "2026-11-05",
+  "dateModified": "2026-11-05",
+  "headline": "INDEX:INDEXで可変範囲を作る：SUMとMATCHで使う参照の仕組み",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "ExcelのINDEXは値だけでなくセル参照も返します。INDEX:INDEXで集計範囲や検索範囲を数式で切り替える方法を、Excel 2016以降向けに図解します。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "INDEX:INDEXで可変範囲を作る",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_reference_range.html"
+    }
+  ]
+}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/" aria-current="true">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/">Word差し込み</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../">ホーム</a><span>&gt;</span>
+<a href="../../functions/">関数</a><span>&gt;</span>
+<strong>INDEX:INDEXで可変範囲を作る</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Excel 2016以降</span>
+<span class="article-date">更新日: 2026-11-05</span></div>
+<h1 class="article-title">INDEX:INDEXで可変範囲を作る：SUMとMATCHで使う参照の仕組み</h1>
+</div>
+
+<details class="auto-toc" open><summary>目次（8項目）</summary><nav aria-label="記事内の目次"><ol style="list-style:none;padding-left:0"><li><a href="#verify-title">この記事の位置づけと検証範囲</a></li><li><a href="#sec-reference">1. INDEXは値だけでなく参照も返す</a></li><li><a href="#sec-operators">2. 「:」「&amp;」「+」は別の演算子</a></li><li><a href="#sec-variable">3. INDEX:INDEXで可変範囲を作る</a></li><li><a href="#sec-match">4. 作った範囲をMATCHで検索する</a></li><li><a href="#sec-edge">5. 逆転・未一致・重複の動作</a></li><li><a href="#sec-speed">6. 計算の負荷について</a></li><li><a href="#sec-summary">7. まとめと次に読む記事</a></li></ol></nav></details>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> この記事で理解すること</h2>
+<p>INDEXは「指定した位置の値を取り出す関数」として紹介されることが多いですが、セル範囲を渡した場合に返しているのは<strong>セルへの参照</strong>です。この性質を使うと、集計範囲や検索範囲を数式の中で切り替えられます。</p>
+<div class="xdemo-note-good">
+<strong>先に結論</strong><br>
+<code>=SUM(INDEX(B2:K2,1,M2):INDEX(B2:K2,1,N2))</code> は、M2とN2の列位置を両端とする範囲を作ってSUMへ渡します。<br>
+作業列を増やさずに範囲を切り替えられますが、範囲を作ることと、その範囲を調べることは別の処理です。検索を速くするかどうかは条件によって変わります。
+</div>
+</section>
+
+<aside class="article-context-box" aria-labelledby="verify-title">
+<h2 id="verify-title">この記事の位置づけと検証範囲</h2>
+<ul>
+<li><strong>記事タイプ：</strong>INDEX+MATCHの応用編です。基本は<a href="article_index_match.html">INDEX + MATCH</a>をご覧ください。</li>
+<li><strong>対象：</strong>この記事の数式は、断りがない限りExcel 2016以降で、通常の<kbd>Enter</kbd>で確定します。</li>
+<li><strong>確認した環境：</strong>Microsoft 365版Excel（ビルド16.0.20625、Windows、確認日2026-11-05）。数式は旧来の評価方式（<code>Range.Formula</code>）で入力し、結果を確かめました。</li>
+<li><strong>確認していないこと：</strong>Excel 2016の実機では開いていません。旧来の評価方式は互換のためのものですが、Excel 2016そのものの動作を確認したものではありません。</li>
+</ul>
+</aside>
+
+<section class="method-section">
+<h2 id="sec-reference">1. INDEXは値だけでなく参照も返す</h2>
+<p>A2:E2に 10、20、30、40、50 が入っているとします。次の2つの数式は、どちらもINDEXを使っていますが、やっていることが違います。</p>
+<p class="ix-caption">使用する表（2行目）</p>
+<div class="table-wrapper"><table class="ix-grid"><caption class="sr-only">A2からE2に10から50が入った表</caption>
+<thead><tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr></thead>
+<tbody><tr><th>2</th><td>10</td><td class="ix-edge">20</td><td class="ix-on">30</td><td class="ix-on">40</td><td class="ix-edge">50</td></tr></tbody>
+</table></div>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter">
+<span class="code-line">=INDEX(A2:E2,1,3)</span>
+</div>
+<p class="code-comment">結果は 30。C2の参照が返り、セルに表示するときに値になります。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter">
+<span class="code-line">=SUM(INDEX(A2:E2,1,2):INDEX(A2:E2,1,5))</span>
+</div>
+<p class="code-comment">結果は 140。B2とE2の参照を「:」でつないで B2:E2 を作り、SUMへ渡しています。上の図の濃い緑が両端です。</p>
+
+<h3>参照を返していることを確かめる</h3>
+<p>行番号や列番号を返す関数に渡すと、値ではなくセルの位置が渡っていることが分かります。</p>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">INDEXの参照を確認する数式と結果</caption>
+<thead><tr><th>数式（Excel 2016以降）</th><th>結果</th><th>読み方</th></tr></thead>
+<tbody>
+<tr><td><code>=ROW(INDEX(A2:E2,1,3))</code></td><td>2</td><td>C2の行番号</td></tr>
+<tr><td><code>=COLUMN(INDEX(A2:E2,1,3))</code></td><td>3</td><td>C2の列番号</td></tr>
+<tr><td><code>=CELL("address",INDEX(A2:E2,1,3))</code></td><td>$C$2</td><td>参照先のセル番地</td></tr>
+</tbody>
+</table></div>
+
+<h3>配列形式とセル範囲形式</h3>
+<p>Microsoftの説明では、INDEXには配列形式とセル範囲形式があります。第1引数に渡すものによって、返るものが変わります。</p>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">INDEXの配列形式とセル範囲形式の比較</caption>
+<thead><tr><th>形式</th><th>構文</th><th>第1引数の例</th><th>返るもの</th><th>「:」でつなぐと</th></tr></thead>
+<tbody>
+<tr><td>セル範囲形式</td><td><code>INDEX(reference, row_num, [column_num], [area_num])</code></td><td><code>A2:E2</code></td><td>セル参照</td><td>範囲になる（結果 140）</td></tr>
+<tr><td>配列形式</td><td><code>INDEX(array, row_num, [column_num])</code></td><td><code>{1,2,3}</code>、<code>A2:E2+1</code></td><td>値</td><td><code>#VALUE!</code></td></tr>
+</tbody>
+</table></div>
+<p>計算した結果の配列はセルではないので、参照を作れません。<code>=SUM(INDEX(A2:E2+1,1,2):INDEX(A2:E2+1,1,5))</code> は確認した環境で <code>#VALUE!</code> になりました。</p>
+<div class="xdemo-note-info">
+<strong>行番号・列番号に0を指定した場合</strong><br>
+0は「行全体」「列全体」を意味します。<code>=SUM(INDEX(A2:E2,1,0))</code> はA2:E2全体を合計し、結果は 150 です。位置を計算で求める場合、誤って0になると、1つのセルではなく全体が返る点に注意してください。
+</div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-operators">2. 「:」「&amp;」「+」は別の演算子</h2>
+<p>「INDEXを結合する」という言い方では、次の3つの違いが分かりません。どの記号を使うかで、結果はまったく変わります。A2:E2は上と同じです。</p>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">コロン、アンド、プラスの違い</caption>
+<thead><tr><th>記号</th><th>数式（Excel 2016以降）</th><th>結果</th><th>何をしているか</th></tr></thead>
+<tbody>
+<tr><td><strong>:</strong>（参照演算子）</td><td><code>=SUM(INDEX(A2:E2,1,2):INDEX(A2:E2,1,5))</code></td><td>140</td><td>2つの参照の間の<strong>セル範囲</strong>を作る</td></tr>
+<tr><td><strong>&amp;</strong>（文字列演算子）</td><td><code>=INDEX(A2:E2,1,2)&amp;INDEX(A2:E2,1,5)</code></td><td>2050</td><td>2つの値を<strong>文字列</strong>としてつなぐ</td></tr>
+<tr><td><strong>+</strong>（算術演算子）</td><td><code>=INDEX(A2:E2,1,2)+INDEX(A2:E2,1,5)</code></td><td>70</td><td>2つの値を<strong>足す</strong>（B2とE2だけ）</td></tr>
+</tbody>
+</table></div>
+<div class="xdemo-note-warn">
+<strong>「:」を文字列として連結しても範囲にはなりません</strong><br>
+<code>=SUM(INDEX(A2:E2,1,2)&amp;":"&amp;INDEX(A2:E2,1,5))</code> の結果は 140 ではなく、確認した環境では 0.868056 でした。B2とE2の<em>値</em>がつながって文字列「20:50」になり、これが時刻の20時50分（1日の約0.868）として数値に変換されたものと考えられます。エラーにならないので気づきにくい誤りです。
+</div>
+<p>「&amp;」を使う複合キー検索は、<a href="article_index_compound_lookup.html">INDEX&amp;INDEXと複合検索の記事</a>で扱います。</p>
+</section>
+
+<section class="method-section">
+<h2 id="sec-variable">3. INDEX:INDEXで可変範囲を作る</h2>
+<p>月別の表を例にします。B2:K2に4月から1月までの数値があり、途中の期間だけを合計します。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter">
+<span class="code-line">=SUM(INDEX(B2:K2,1,2):INDEX(B2:K2,1,6))</span>
+</div>
+<p class="code-comment">B2:K2の2番目（C2）から6番目（G2）まで、つまりC2:G2を合計します。結果は 2000 です。</p>
+
+<h3>開始位置と終了位置をセルで指定する</h3>
+<p>位置をセルから受け取れば、数式を書き換えずに対象を変えられます。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter">
+<span class="code-line">=SUM(INDEX(B2:K2,1,M2):INDEX(B2:K2,1,N2))</span>
+</div>
+<p class="ix-caption">図1：M2=2、N2=6のとき（C2:G2、合計 2000）</p>
+<div class="table-wrapper"><table class="ix-grid"><caption class="sr-only">C2からG2までが対象になった状態</caption>
+<thead><tr><th></th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>I</th><th>J</th><th>K</th></tr></thead>
+<tbody>
+<tr><th>1</th><td>4月</td><td>5月</td><td>6月</td><td>7月</td><td>8月</td><td>9月</td><td>10月</td><td>11月</td><td>12月</td><td>1月</td></tr>
+<tr><th>2</th><td class="ix-out">100</td><td class="ix-edge">200</td><td class="ix-on">300</td><td class="ix-on">400</td><td class="ix-on">500</td><td class="ix-edge">600</td><td class="ix-out">700</td><td class="ix-out">800</td><td class="ix-out">900</td><td class="ix-out">1000</td></tr>
+</tbody>
+</table></div>
+<p class="ix-caption">図2：M2=4、N2=8に書き換えたとき（E2:I2、合計 3000）</p>
+<div class="table-wrapper"><table class="ix-grid"><caption class="sr-only">E2からI2までが対象になった状態</caption>
+<thead><tr><th></th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>I</th><th>J</th><th>K</th></tr></thead>
+<tbody>
+<tr><th>1</th><td>4月</td><td>5月</td><td>6月</td><td>7月</td><td>8月</td><td>9月</td><td>10月</td><td>11月</td><td>12月</td><td>1月</td></tr>
+<tr><th>2</th><td class="ix-out">100</td><td class="ix-out">200</td><td class="ix-out">300</td><td class="ix-edge">400</td><td class="ix-on">500</td><td class="ix-on">600</td><td class="ix-on">700</td><td class="ix-edge">800</td><td class="ix-out">900</td><td class="ix-out">1000</td></tr>
+</tbody>
+</table></div>
+
+<h3>MATCHで開始列と終了列を求める</h3>
+<p>列位置の代わりに「5月」「9月」のような見出しで指定するには、MATCHで位置を求めます。M3に「5月」、N3に「9月」を入れた例です。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter">
+<span class="code-line">=SUM(INDEX(B2:K2,1,MATCH(M3,B1:K1,0)):INDEX(B2:K2,1,MATCH(N3,B1:K1,0)))</span>
+</div>
+<p class="code-comment">結果は 2000。どちらかの見出しが見つからないと <code>#N/A</code> になります。</p>
+
+<h3>数式の組み立て方</h3>
+<p>長い式を一度に書くと、どこで間違えたか分かりにくくなります。外側へ1段ずつ組み立てます。</p>
+<ol class="ix-steps">
+<li><strong>端の位置を単独で確かめる：</strong><code>=MATCH(M3,B1:K1,0)</code> が 2、<code>=MATCH(N3,B1:K1,0)</code> が 6 になることを見ます。</li>
+<li><strong>端のセルを確かめる：</strong><code>=CELL("address",INDEX(B2:K2,1,2))</code> が $C$2 を返すことを見ます。</li>
+<li><strong>「:」でつないでROWS・COLUMNSで幅を確かめる：</strong><code>=COLUMNS(INDEX(B2:K2,1,2):INDEX(B2:K2,1,6))</code> が 5 なら、5列の範囲ができています。</li>
+<li><strong>目的の関数で包む：</strong>SUMに置き換え、位置の数字をMATCHの式に差し替えます。</li>
+</ol>
+<div class="xdemo-note-info">
+<strong>範囲だけを確かめるときの注意</strong><br>
+<code>=INDEX(…):INDEX(…)</code> だけをセルに入力すると、Excel 2016では1つの値に絞られるか <code>#VALUE!</code> になります（確認した環境の旧来の評価方式では <code>#VALUE!</code>）。SUM、ROWS、COLUMNSなどの範囲を受け取る関数で包んで確かめてください。<br>
+よく使う範囲は、「数式」タブの「名前の管理」で名前を付けると、数式を短くできます。
+</div>
+
+<h3>この書き方が向いている場面</h3>
+<ul class="line-height-2">
+<li><strong>列数が変わる帳票：</strong>端の位置を見出しから求めれば、列が増えても範囲の指定を直さずに済みます。</li>
+<li><strong>見出しの位置が動く表：</strong>列が挿入されても、MATCHが見出しの新しい位置を返します。</li>
+<li><strong>集計の開始列・終了列を利用者に選ばせたい場合：</strong>入力セルを変えるだけで対象が変わります。</li>
+<li><strong>特定期間だけを集計する場合：</strong>開始月・終了月から範囲を作れます。</li>
+<li><strong>作業列を減らしたい場合：</strong>1つの数式の中で範囲を作れます。</li>
+</ul>
+<div class="xdemo-note-warn">
+<strong>見出しの<em>順序</em>が変わると、間に挟まる列も変わります</strong><br>
+INDEX:INDEXは両端の間にあるセルをすべて含みます。「5月」と「9月」の間に「合計」列が挿入されると、その列も合計に入ります。また月の並びが入れ替わると、意図しない月が範囲に入ります。時系列の順に並んでいることが前提です。
+</div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-match">4. 作った範囲をMATCHで検索する</h2>
+<p>INDEX:INDEXで作った範囲はセル範囲なので、MATCHの検索範囲としても渡せます。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter">
+<span class="code-line">=MATCH(500,INDEX(A2:A100,3):INDEX(A2:A100,10),0)</span>
+</div>
+<p class="code-comment">A2:A100の3番目はA4、10番目はA11です。A4:A11の中で500を探し、結果は 3 です。</p>
+
+<h3>相対位置に注意する</h3>
+<p>MATCHが返すのは<strong>渡された範囲の中での位置</strong>です。下の図の500はA6にあります。同じセルでも、基準によって数字が変わります。</p>
+<p class="ix-caption">図3：同じセルを指す3つの番号</p>
+<div class="table-wrapper"><table class="ix-grid"><caption class="sr-only">シート行、元の範囲の位置、切り出した範囲の位置の対応</caption>
+<thead><tr><th>シートの行</th><th>A列の値</th><th>A2:A100での位置</th><th>A4:A11での位置</th></tr></thead>
+<tbody>
+<tr><td class="ix-out">2</td><td class="ix-out">100</td><td class="ix-out">1</td><td class="ix-out">－</td></tr>
+<tr><td class="ix-out">3</td><td class="ix-out">200</td><td class="ix-out">2</td><td class="ix-out">－</td></tr>
+<tr><td>4</td><td class="ix-edge">300</td><td>3</td><td>1</td></tr>
+<tr><td>5</td><td class="ix-on">400</td><td>4</td><td>2</td></tr>
+<tr><td><strong>6</strong></td><td class="ix-hit">500</td><td><strong>5</strong></td><td><strong>3</strong></td></tr>
+<tr><td>7</td><td class="ix-on">600</td><td>6</td><td>4</td></tr>
+<tr><td>8</td><td class="ix-on">700</td><td>7</td><td>5</td></tr>
+<tr><td>9</td><td class="ix-on">800</td><td>8</td><td>6</td></tr>
+<tr><td>10</td><td class="ix-on">900</td><td>9</td><td>7</td></tr>
+<tr><td>11</td><td class="ix-edge">500</td><td>10</td><td>8</td></tr>
+<tr><td class="ix-out">12</td><td class="ix-out">1100</td><td class="ix-out">11</td><td class="ix-out">－</td></tr>
+</tbody>
+</table></div>
+<p>切り出した範囲での 3 を元の範囲での位置に直すには、<code>開始位置 - 1 + 相対位置</code>、つまり 3 - 1 + 3 = 5 と計算します。シートの行番号が必要な場合は、さらに元の範囲の先頭行との差（この例では 1）を足します。</p>
+
+<h3>開始点と終了点もMATCHで求める</h3>
+<p>J2に開始キー（300）、K2に終了キー（900）、H2に探す値（500）を入れた例です。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter">
+<span class="code-line">=MATCH(H2,INDEX(A2:A100,MATCH(J2,A2:A100,0)):INDEX(A2:A100,MATCH(K2,A2:A100,0)),0)</span>
+</div>
+<ol class="ix-steps">
+<li>1つ目の内側のMATCHが、開始キーの位置 3 を求めます。</li>
+<li>2つ目の内側のMATCHが、終了キーの位置 9 を求めます。</li>
+<li>2つのINDEXが、それぞれA4とA10の参照を返します。</li>
+<li>「:」がA4:A10という範囲を作ります。</li>
+<li>外側のMATCHがA4:A10の中で500を探し、相対位置 3 を返します。</li>
+</ol>
+
+<h3>別の列から結果を取り出す</h3>
+<p>B列の値を取り出す方法は2つあります。どちらも結果は同じ「品5」でした。</p>
+<p><strong>方法1：元の範囲での位置に直してからINDEXで取り出す</strong></p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter">
+<span class="code-line">=INDEX(B2:B100,MATCH(J2,A2:A100,0)-1+MATCH(H2,INDEX(A2:A100,MATCH(J2,A2:A100,0)):INDEX(A2:A100,MATCH(K2,A2:A100,0)),0))</span>
+</div>
+<p><strong>方法2：B列も同じ行範囲で切り出して、相対位置のまま使う</strong></p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter">
+<span class="code-line">=INDEX(INDEX(B2:B100,MATCH(J2,A2:A100,0)):INDEX(B2:B100,MATCH(K2,A2:A100,0)),MATCH(H2,INDEX(A2:A100,MATCH(J2,A2:A100,0)):INDEX(A2:A100,MATCH(K2,A2:A100,0)),0))</span>
+</div>
+<p class="code-comment">同じMATCHを数式の中で何度も書くので、読みにくくなります。</p>
+<h3>実務での使い方：位置を別のセルに置く</h3>
+<p>開始位置と終了位置をセルに分けると、数式が短くなり、途中の結果も目で確かめられます。作業列を使うことになりますが、1本の式より直しやすくなります。</p>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">開始位置と終了位置をセルに分けた例</caption>
+<thead><tr><th>セル</th><th>数式（Excel 2016以降・通常のEnter）</th><th>結果</th></tr></thead>
+<tbody>
+<tr><td>M2（開始位置）</td><td><code>=MATCH(J2,$A$2:$A$100,0)</code></td><td>3</td></tr>
+<tr><td>N2（終了位置）</td><td><code>=MATCH(K2,$A$2:$A$100,0)</code></td><td>9</td></tr>
+<tr><td>O2（元の範囲での位置）</td><td><code>=M2-1+MATCH(H2,INDEX($A$2:$A$100,M2):INDEX($A$2:$A$100,N2),0)</code></td><td>5</td></tr>
+<tr><td>P2（取得する値）</td><td><code>=INDEX($B$2:$B$100,O2)</code></td><td>品5</td></tr>
+</tbody>
+</table></div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-edge">5. 逆転・未一致・重複の動作</h2>
+<p>データは図3と同じです（A2:A15に100〜1400、ただしA11は重複する500）。確認した環境での結果です。</p>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">INDEX:INDEXとMATCHの特殊な条件での結果</caption>
+<thead><tr><th>条件</th><th>数式の要点</th><th>結果</th><th>解説</th></tr></thead>
+<tbody>
+<tr><td>開始と終了が逆</td><td><code>MATCH(500,INDEX(…,MATCH(900,…)):INDEX(…,MATCH(300,…)),0)</code></td><td>3</td><td>範囲はA4:A10として扱われ、相対位置は上から数えます。SUMも逆順で同じ合計になります。</td></tr>
+<tr><td>逆のまま元の位置へ変換</td><td><code>MATCH(900,…)-1+相対位置</code></td><td class="xd-hit">11（誤り）</td><td>エラーにならず、誤った位置になります。</td></tr>
+<tr><td>逆になる可能性がある場合</td><td><code>MIN(MATCH(J2,…),MATCH(K2,…))-1+相対位置</code></td><td>5</td><td>小さい方の位置を起点にします。</td></tr>
+<tr><td>探す値が範囲内にない</td><td><code>MATCH(999,…)</code></td><td><code>#N/A</code></td><td>範囲の外にあっても見つかりません。1400はA2:A100にはありますが、A4:A11で探すと <code>#N/A</code> です。</td></tr>
+<tr><td>開始キー・終了キーがない</td><td><code>INDEX(…,MATCH(999,…))</code></td><td><code>#N/A</code></td><td>内側のエラーがそのまま返ります。</td></tr>
+<tr><td>探す値が重複</td><td><code>MATCH(500,700〜1400の範囲,0)</code></td><td>4</td><td>範囲内で最初の一致（A11）を返します。範囲全体で探すと最初のA6（位置5）です。</td></tr>
+<tr><td>端のキーが重複</td><td><code>MATCH(500,A2:A100,0)</code></td><td>5</td><td>開始にも終了にも最初の位置が使われます。2つ目の500を端にすることはできません。</td></tr>
+<tr><td>列番号が表の外</td><td><code>INDEX(A2:E2,1,6)</code></td><td><code>#REF!</code></td><td>INDEXの範囲を超える位置は指定できません。</td></tr>
+<tr><td>列番号が0</td><td><code>SUM(INDEX(B2:K2,1,0):INDEX(B2:K2,1,3))</code></td><td>5500</td><td>0は行全体を指すため、範囲もB2:K2全体になります。</td></tr>
+</tbody>
+</table></div>
+<div class="xdemo-note-warn">
+<strong>IFERRORは原因を区別しません</strong><br>
+<code>=IFERROR(MATCH(…),"範囲内になし")</code> と書くと、探す値がない場合だけでなく、開始キーや終了キーが見つからない場合にも「範囲内になし」と表示されます。原因を分けたいときは、開始位置と終了位置を別のセルで確認してください。
+</div>
+<div class="xdemo-note-info">
+<strong>検索対象の並び順</strong><br>
+MATCHの照合の種類が0（完全一致）なら、検索範囲は並べ替えられていなくてもかまいません。一方、INDEX:INDEXで作る範囲そのものは、両端の間にあるセルを含むため、<b>探したいデータがその間にまとまっていること</b>が前提です。
+</div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-speed">6. 計算の負荷について</h2>
+<p><span class="evidence-label official">Microsoft公式</span>Microsoftの性能ガイドでは、INDEXは非揮発性、OFFSETは揮発性の関数とされ、揮発性の関数を減らす方法としてINDEXが挙げられています。</p>
+<p><span class="evidence-label measured">実測</span>10万行を合計する式を2,000個入れ、無関係なセルを変更して再計算しました（Microsoft 365版ビルド16.0.20625、2026-11-05、5回の中央値）。通常の範囲は0.9ミリ秒、<code>INDEX:INDEX</code>は0.8ミリ秒、<code>OFFSET</code>は517ミリ秒でした。この条件では、INDEX:INDEXは無関係なセルの変更では再計算されず、OFFSETは再計算されました。</p>
+<p>注意したいのは、INDEX:INDEXは範囲の参照を作っているだけで、その中の値を読むのはSUMやMATCHだという点です。範囲を狭めれば調べるセルは減りますが、開始位置と終了位置を毎回MATCHで探すと、その分の検索が増えます。</p>
+<p><span class="evidence-label measured">実測</span>45万行の測定（Microsoft 365版、2,000回の検索）では、端の位置が分かっている1,000行の範囲を調べると約0.04秒、端を全域のMATCHで探すと約9〜10秒で、全域検索の約8秒より短くなりませんでした。条件の詳細は<a href="article_index_compound_lookup.html#sec-speed">複合検索・大量データ編の実測</a>をご覧ください。Excel 2016では測っていないため、同じ結果になるとは限りません。</p>
+</section>
+
+<section class="method-section">
+<h2 id="sec-summary">7. まとめと次に読む記事</h2>
+<ul class="line-height-2">
+<li>INDEXをセル範囲に使うと、返るのは<strong>参照</strong>です。そのため「:」で範囲を作れます。</li>
+<li>「:」は範囲を作り、「&amp;」は文字列をつなぎ、「+」は値を足します。</li>
+<li>計算結果の配列を渡した配列形式のINDEXからは、範囲を作れません。</li>
+<li>MATCHの結果は<strong>渡した範囲の中での位置</strong>です。元の範囲での位置には <code>開始位置 - 1 + 相対位置</code> で直します。</li>
+<li>開始と終了の逆転はエラーになりませんが、位置を変換するときに誤りの原因になります。</li>
+</ul>
+<h3>出典（Microsoft公式）</h3>
+<ul class="line-height-2">
+<li><a href="https://support.microsoft.com/ja-jp/office/index-function-a5dcf0dd-996d-40a4-a822-b56b061328bd" rel="noopener" target="_blank">INDEX 関数</a>：配列形式とセル範囲形式、0の意味</li>
+<li><a href="https://support.microsoft.com/ja-jp/office/match-function-e8dffd45-c762-47d6-bf89-533f4a37673a" rel="noopener" target="_blank">MATCH 関数</a>：相対位置、照合の種類</li>
+<li><a href="https://support.microsoft.com/ja-jp/office/calculation-operators-and-precedence-in-excel-48be406d-4975-4d31-b2b8-7af9e0e2878a" rel="noopener" target="_blank">演算子と Excel での優先順位</a>：「:」「&amp;」「+」の定義</li>
+<li><a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/excel-performance/excel-tips-for-optimizing-performance-obstructions" rel="noopener" target="_blank">Excel performance: Tips for optimizing performance obstructions</a>：揮発性とINDEX（英語）</li>
+<li><a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/cells-and-ranges/range-formula-vs-formula2" rel="noopener" target="_blank">Range.Formula vs Range.Formula2</a>：旧来の評価方式（英語）</li>
+</ul>
+</section>
+
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_index_compound_lookup.html">INDEX&amp;INDEXと複合検索：作業列なしの検索と45万行の実測</a></li>
+<li><a href="article_index_match.html">INDEX + MATCH（Excel 2016以降）</a></li>
+<li><a href="article_index_match_multi.html">INDEX + MATCH + 結合キー列</a></li>
+<li><a href="../latest/article_xlookup_multi.html">XLOOKUP ネスト（多条件検索）</a></li>
+<li><a href="../../others/speed/article_01_lookup_speed.html">検索関数の速度と参照範囲</a></li>
+</ul>
+</section>
+
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js?v=20261103"></script>
+</body>
+</html>

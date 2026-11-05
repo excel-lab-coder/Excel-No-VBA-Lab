@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>INDEX&amp;INDEXと複合検索｜作業列なしの数式と45万行の実測｜Excel &times; No VBA Lab</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-596JZ3M97H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-596JZ3M97H');
+</script>
+<meta content="INDEXとMATCHで複合キー検索、複数条件検索、複数列の一括取得を作業列なしで組む手順を解説。Ctrl+Shift+Enterが必要な条件、文字列衝突の対策、45万行の実測による作業列方式との比較もまとめます。" name="description">
+<meta content="INDEX&amp;INDEXと複合検索｜作業列なしの数式と45万行の実測｜Excel &times; No VBA Lab" property="og:title">
+<meta content="INDEXとMATCHで複合キー検索、複数条件検索、複数列の一括取得を作業列なしで組む手順を解説。Ctrl+Shift+Enterが必要な条件、文字列衝突の対策、45万行の実測による作業列方式との比較もまとめます。" property="og:description">
+<meta content="article" property="og:type">
+<meta content="ja_JP" property="og:locale">
+<meta content="index, follow" name="robots">
+<link href="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_compound_lookup.html" rel="canonical">
+<link href="../../common.css?v=20261103" rel="stylesheet">
+<link href="../../article.css?v=20261103" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet"></noscript>
+<meta content="Excel × No VBA Lab" property="og:site_name">
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_compound_lookup.html" property="og:url">
+<style>
+  /* ===== ページ固有スタイル：セル図解 ===== */
+  .ix-grid{border-collapse:collapse;font-size:.88em;margin:0;width:auto}
+  .ix-grid th,.ix-grid td{border:1px solid #cfd8dc;padding:5px 9px;text-align:center;white-space:nowrap;background:#fff;color:#263238}
+  .ix-grid th{background:#eceff1;font-weight:700}
+  .article-body table.ix-grid td.ix-on{background:#c8e6c9 !important;color:#1b5e20;font-weight:700}
+  .article-body table.ix-grid td.ix-hit{background:#ffe082 !important;color:#5d4037;font-weight:700;outline:2px solid #f57c00;outline-offset:-2px}
+  .ix-grid td.ix-out{color:#90a4ae}
+  .ix-num td,.ix-num th{text-align:right}
+  .ix-num td:first-child,.ix-num th:first-child{text-align:left;white-space:normal;min-width:9em}
+  .ix-text2 td:nth-child(2),.ix-text2 th:nth-child(2){text-align:left;white-space:normal;min-width:10em}
+  .ix-text2 code{white-space:normal;word-break:break-all}
+  .ix-caption{font-size:.88em;font-weight:700;margin:14px 0 6px;color:#37474f}
+  .ix-steps{margin:12px 0 18px;padding-left:1.5em;line-height:1.9}
+</style>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "datePublished": "2026-11-05",
+  "dateModified": "2026-11-05",
+  "headline": "INDEX&INDEXと複合検索：作業列なしの検索と45万行の実測",
+  "author": {
+    "@type": "Person",
+    "name": "Excel × No VBA Lab"
+  },
+  "description": "INDEXとMATCHで複合キー検索、複数条件検索、複数列の一括取得を作業列なしで組む手順と、45万行の実測による作業列方式との比較をまとめます。"
+}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "ホーム",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "関数リファレンス",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "INDEX&INDEXと複合検索",
+      "item": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/functions/old/article_index_compound_lookup.html"
+    }
+  ]
+}</script>
+<meta content="https://excel-lab-coder.github.io/Excel-No-VBA-Lab/image/hero_ogp-1200.jpg" property="og:image">
+<meta content="summary_large_image" name="twitter:card">
+<link rel="icon" href="../../favicon.ico">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+</head>
+
+<body class="article-layout">
+<div class="reading-progress" aria-hidden="true"></div>
+<a class="skip-link" href="#main-content">メインコンテンツへスキップ</a>
+
+<header class="site-header">
+<div class="header-inner">
+<div class="header-brand">
+<div class="site-title"><a href="../../">Excel × No VBA Lab</a></div>
+<p class="site-subtitle"><span class="sub-quote">制限環境こそが最高の教師。</span></p>
+</div>
+</div>
+</header>
+<nav class="site-quicknav" aria-label="サイト内の主なページ"><a class="site-quicknav-search" href="../../#article-finder">🔍 記事を探す</a><a href="../../functions/" aria-current="true">関数</a><a href="../../powerquery/">Power Query</a><a href="../../cobol/">COBOL帳票</a><a href="../../qr/">QR入力</a><a href="../../others/word/">Word差し込み</a><a href="../../others/">現場実務</a><a href="../../thinking/">技術の流れ</a><a href="../../unlocked/">VBA・AI</a><a href="../../troubleshoot/">困りごと索引</a></nav>
+
+<main class="main-content" id="main-content">
+<div class="breadcrumb">
+<a href="../../">ホーム</a><span>&gt;</span>
+<a href="../../functions/">関数</a><span>&gt;</span>
+<strong>INDEX&amp;INDEXと複合検索</strong>
+</div>
+<article class="article-body">
+<div class="article-header">
+<div class="article-meta">
+<span class="badge badge-all">Excel 2016以降</span>
+<span class="badge badge-2021">XLOOKUPの節は2021以降</span>
+<span class="article-date">更新日: 2026-11-05</span></div>
+<h1 class="article-title">INDEX&amp;INDEXと複合検索：作業列なしの検索と45万行の実測</h1>
+</div>
+
+<details class="auto-toc" open><summary>目次（10項目）</summary><nav aria-label="記事内の目次"><ol style="list-style:none;padding-left:0"><li><a href="#verify-title">この記事の位置づけと検証範囲</a></li><li><a href="#sec-contrast">1. INDEX:INDEXとINDEX&amp;INDEXの違い</a></li><li><a href="#sec-key">2. 複合キー検索を組み立てる</a></li><li><a href="#sec-multi">3. 「*」で複数条件検索を組み立てる</a></li><li><a href="#sec-traps">4. 誤一致と型の注意点</a></li><li><a href="#sec-columns">5. 複数列をまとめて取得する</a></li><li><a href="#sec-xlookup">6. XLOOKUPで同じことをする</a></li><li><a href="#sec-speed">7. 45万行での速度の実測</a></li><li><a href="#sec-choice">8. 作業列なしと作業列の使い分け</a></li><li><a href="#sec-sources">まとめと出典</a></li></ol></nav></details>
+
+<section class="goal-section">
+<h2><span class="icon">💡</span> この記事で理解すること</h2>
+<p>Excel 2016でも、作業列を足さずに2条件で検索したり、1回の検索で複数列を取り出したりできます。この記事では数式を部品から順に組み立て、どの式が通常の<kbd>Enter</kbd>で動き、どの式に<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd>が必要かを整理します。</p>
+<div class="xdemo-note-good">
+<strong>先に結論</strong><br>
+複合キー：<code>=MATCH(G2&amp;"|"&amp;H2,INDEX(A2:A100&amp;"|"&amp;B2:B100,0),0)</code><br>
+複数条件：<code>=MATCH(1,INDEX((A2:A100=G2)*(B2:B100=H2),0),0)</code><br>
+どちらも作業列なしで書けますが、1回の検索ごとに全行分の配列を作ります。今回の45万行の測定では、作業列にMATCHを分けても<b>全体の再計算</b>はほぼ同じで、<b>値のセルを1つ直したときの再計算</b>に大きな差が出ました（約8秒と約5ミリ秒）。
+</div>
+</section>
+
+<aside class="article-context-box" aria-labelledby="verify-title">
+<h2 id="verify-title">この記事の位置づけと検証範囲</h2>
+<ul>
+<li><strong>記事タイプ：</strong>応用編です。参照の仕組みは<a href="article_index_reference_range.html">INDEX:INDEXで可変範囲を作る</a>、作業列で結合キーを作る基本は<a href="article_index_match_multi.html">INDEX + MATCH + 結合キー列</a>をご覧ください。</li>
+<li><strong>確認した環境：</strong>Microsoft 365版Excel（ビルド16.0.20625、64ビット、Windows 11、確認日2026-11-05）。</li>
+<li><strong>Excel 2016としての確認方法：</strong>旧来の評価方式で数式を入力しました。<code>Range.Formula</code>（通常の<kbd>Enter</kbd>に相当）と<code>Range.FormulaArray</code>（<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd>に相当）です。</li>
+<li><strong>確認していないこと：</strong>Excel 2016の実機では、数式も速度も確認していません。速度はとくに、同じ結果にならない可能性があります（<a href="#sec-speed">7章</a>）。</li>
+</ul>
+</aside>
+
+<section class="method-section">
+<h2 id="sec-contrast">1. INDEX:INDEXとINDEX&amp;INDEXの違い</h2>
+<p>記号1文字の違いですが、作るものが違います。A列が部署、B列が社員の表で比べます。</p>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">INDEX:INDEXとINDEX&amp;INDEXの比較</caption>
+<thead><tr><th></th><th>INDEX:INDEX</th><th>INDEX&amp;INDEX</th></tr></thead>
+<tbody>
+<tr><th>作るもの</th><td>セル範囲（参照）</td><td>文字列（値）</td></tr>
+<tr><th>例（Excel 2016以降）</th><td><code>INDEX(A2:E2,1,2):INDEX(A2:E2,1,5)</code></td><td><code>INDEX(A2:E2,1,2)&amp;INDEX(A2:E2,1,5)</code></td></tr>
+<tr><th>A2:E2が 10〜50 のとき</th><td>B2:E2（SUMすると 140）</td><td>文字列「2050」</td></tr>
+<tr><th>主な用途</th><td>集計範囲や検索範囲の切り替え</td><td>複数の値をつないだ検索キー</td></tr>
+<tr><th>数値の型</th><td>元のセルのまま</td><td>数値も文字列になる</td></tr>
+<tr><th>読みに行くセル</th><td>範囲を受け取った関数が読む</td><td>連結する時点で値を読む</td></tr>
+</tbody>
+</table></div>
+<p>以降の複合キーでは、列全体を要素ごとに連結します。1つのセル同士の連結とは次の点が違います。</p>
+<ul class="line-height-2">
+<li><code>G2&amp;"|"&amp;H2</code>：1つの文字列「12|345」になります。</li>
+<li><code>A2:A100&amp;"|"&amp;B2:B100</code>：配列として評価されると、行ごとに連結した99個の文字列になります。数式全体が配列として評価されないと、この結果にはなりません。</li>
+</ul>
+</section>
+
+<section class="method-section">
+<h2 id="sec-key">2. 複合キー検索を組み立てる</h2>
+<p>部署コードと社員コードの組み合わせで、名前を探す例です。部署コードと社員コードは文字列として入っています。</p>
+<p class="ix-caption">図1：使用する表と検索値</p>
+<div class="table-wrapper"><table class="ix-grid"><caption class="sr-only">部署、社員、名前の表と検索値</caption>
+<thead><tr><th></th><th>A：部署</th><th>B：社員</th><th>C：名前</th><th></th><th>G：部署</th><th>H：社員</th></tr></thead>
+<tbody>
+<tr><th>2</th><td class="ix-hit">12</td><td class="ix-hit">345</td><td class="ix-hit">田中</td><td></td><td>12</td><td>345</td></tr>
+<tr><th>3</th><td>123</td><td>45</td><td>鈴木</td><td></td><td>123</td><td>45</td></tr>
+</tbody>
+</table></div>
+<h3>手順1：キーの作り方を1行で確かめる</h3>
+<p>いきなり列全体に広げず、まず1行分を確かめます。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=A2&amp;"|"&amp;B2</span></div>
+<p class="code-comment">結果は 12|345。検索値の側も同じ形（<code>G2&amp;"|"&amp;H2</code>）にします。</p>
+<h3>手順2：列全体のキーをINDEXで包む</h3>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・部品の確認用"><span class="code-line">=INDEX(A2:A100&amp;"|"&amp;B2:B100,2)</span></div>
+<p class="code-comment">結果は 123|45（2番目のキー）。番号を変えると、中身を1件ずつ確認できます。</p>
+<h3>手順3：MATCHで位置を求める</h3>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=MATCH(G2&amp;"|"&amp;H2,INDEX(A2:A100&amp;"|"&amp;B2:B100,0),0)</span></div>
+<p class="code-comment">結果は 1。第2引数の0は「配列全体」、最後の0は「完全一致」です。</p>
+<h3>手順4：別の列から値を取り出す</h3>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=INDEX(C2:C100,MATCH(G2&amp;"|"&amp;H2,INDEX(A2:A100&amp;"|"&amp;B2:B100,0),0))</span></div>
+<p class="code-comment">結果は 田中。下の行へコピーするなら、範囲を <code>$A$2:$A$100</code> のように固定します。範囲は実際のデータ行数に合わせ、列全体を指定しないでください（全行分の文字列が作られます）。</p>
+
+<h3>通常のEnterで動く式、動かない式</h3>
+<p>確認した結果は次のとおりです。「通常」は旧来の評価方式での結果で、検索値が表の1行目に一致する条件です。</p>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">入力方法ごとの数式の動作</caption>
+<thead><tr><th>数式</th><th>通常のEnter</th><th>Ctrl+Shift+Enter</th></tr></thead>
+<tbody>
+<tr><td><code>=MATCH(G2&amp;"|"&amp;H2,INDEX(A2:A100&amp;"|"&amp;B2:B100,0),0)</code></td><td>1（正しい）</td><td>1</td></tr>
+<tr><td><code>=MATCH(G2&amp;"|"&amp;H2,A2:A100&amp;"|"&amp;B2:B100,0)</code></td><td><code>#VALUE!</code></td><td>1</td></tr>
+<tr><td><code>=MATCH(G2&amp;"|"&amp;H2,INDEX(A2:A100,0)&amp;"|"&amp;INDEX(B2:B100,0),0)</code></td><td><code>#VALUE!</code></td><td>1</td></tr>
+<tr><td><code>=MATCH(G2&amp;"|"&amp;H2,INDEX(INDEX(A2:A100,0)&amp;"|"&amp;INDEX(B2:B100,0),0),0)</code></td><td>1（正しい）</td><td>1</td></tr>
+</tbody>
+</table></div>
+<div class="xdemo-note-info">
+<strong>INDEXで包むと通常のEnterで動く理由</strong><br>
+INDEXの第1引数は配列を受け取れるので、その中の式は配列として計算されます。<code>INDEX(A2:A100,0)&amp;INDEX(B2:B100,0)</code> は「&amp;」の外側にINDEXの配列の受け皿がないため、通常の<kbd>Enter</kbd>では1つの値に絞られてしまいます。Microsoft 365で確認すると、この式には <code>@</code>（暗黙的な共通部分）が付きました。<br>
+Microsoft 365とExcel 2021では、どの式も<kbd>Enter</kbd>だけで配列として計算されますが、Excel 2016との共有を考えるなら、INDEXで包む形にそろえておくと安全です。
+</div>
+<div class="xdemo-note-warn">
+<strong>INDEXで包んでも、中にIF・IFERRORがあると配列になりません</strong><br>
+<code>=MATCH(1,INDEX(IF(A2:A100=G3,1,0)*(B2:B100=H3),0),0)</code> は、旧来の評価方式の通常入力でIFの中に <code>@</code> が付き、数式を入れた行によって結果が変わりました。IFやIFERRORを内側で使う式は、Excel 2016では<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd>で確定してください。
+</div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-multi">3. 「*」で複数条件検索を組み立てる</h2>
+<p>文字列をつながず、条件ごとの判定を掛け算する方法です。こちらは比較を列ごとに行うので、文字列の衝突が起きません。</p>
+<p class="ix-caption">図2：判定の配列を掛け算する（G3=123、H3=45で探す）</p>
+<div class="table-wrapper"><table class="ix-grid"><caption class="sr-only">条件判定の配列の掛け算</caption>
+<thead><tr><th>行</th><th>A2:A100=G3</th><th>×</th><th>B2:B100=H3</th><th>=</th><th>結果</th></tr></thead>
+<tbody>
+<tr><th>2</th><td>FALSE</td><td>×</td><td>FALSE</td><td>=</td><td class="ix-out">0</td></tr>
+<tr><th>3</th><td class="ix-on">TRUE</td><td>×</td><td class="ix-on">TRUE</td><td>=</td><td class="ix-hit">1</td></tr>
+<tr><th>4</th><td>FALSE</td><td>×</td><td>FALSE</td><td>=</td><td class="ix-out">0</td></tr>
+</tbody>
+</table></div>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=MATCH(1,INDEX((A2:A100=G3)*(B2:B100=H3),0),0)</span></div>
+<p class="code-comment">結果は 2。結果の配列の中で最初に 1 になる位置を探します。条件を増やすときは <code>*(C2:C100=I3)</code> を足します。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=INDEX(C2:C100,MATCH(1,INDEX((A2:A100=G3)*(B2:B100=H3),0),0))</span></div>
+<p class="code-comment">結果は 鈴木。INDEXで包まない <code>=MATCH(1,(A2:A100=G3)*(B2:B100=H3),0)</code> は、Excel 2016では<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd>が必要です。</p>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">アンド方式と掛け算方式の比較</caption>
+<thead><tr><th></th><th>「&amp;」の複合キー</th><th>「*」の条件判定</th></tr></thead>
+<tbody>
+<tr><th>比較のしかた</th><td>つないだ文字列を1回で比較</td><td>列ごとに比較</td></tr>
+<tr><th>文字列の衝突</th><td>起きることがある</td><td>起きない</td></tr>
+<tr><th>数値と文字列</th><td>区別されない</td><td>区別される</td></tr>
+<tr><th>ワイルドカード</th><td>検索値の <code>*</code> <code>?</code> が働く</td><td>「=」では文字どおりの比較</td></tr>
+<tr><th>検索値の長さ</th><td>300文字で <code>#VALUE!</code></td><td>300文字でも比較できた</td></tr>
+<tr><th>45万行の実測（1回の検索あたり）</th><td>約30ミリ秒</td><td>約40ミリ秒</td></tr>
+</tbody>
+</table></div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-traps">4. 誤一致と型の注意点</h2>
+<h3>文字列の衝突と区切り文字</h3>
+<p>部署12・社員345と、部署123・社員45を、区切りなしでつなぐと、どちらも「12345」になります。</p>
+<p class="ix-caption">図3：区切り文字の有無で変わる結果（部署123・社員45で検索）</p>
+<div class="table-wrapper"><table class="ix-grid"><caption class="sr-only">区切り文字の有無での比較</caption>
+<thead><tr><th>行</th><th>部署</th><th>社員</th><th>区切りなし</th><th>区切りあり</th></tr></thead>
+<tbody>
+<tr><th>2</th><td>12</td><td>345</td><td class="ix-hit">12345 ← 誤一致</td><td>12|345</td></tr>
+<tr><th>3</th><td>123</td><td>45</td><td>12345</td><td class="ix-on">123|45 ← 正しい</td></tr>
+</tbody>
+</table></div>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・誤った結果の例"><span class="code-line">=MATCH(G3&amp;H3,INDEX(A2:A100&amp;B2:B100,0),0)</span></div>
+<p class="code-comment">結果は 1（誤り）。エラーにならないので気づきにくい例です。区切り文字を入れると 2 になります。</p>
+<p>ただし、区切り文字がデータの中に含まれていると、また衝突します。部署「A」・社員「B|C」と、部署「A|B」・社員「C」は、どちらも「A|B|C」です。データに出てこない文字を選ぶか、「*」の方式を使ってください。</p>
+
+<h3>確認した動作の一覧</h3>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">複合キーと複数条件の注意点</caption>
+<thead><tr><th>項目</th><th>「&amp;」の複合キー</th><th>「*」の条件判定</th><th>対策</th></tr></thead>
+<tbody>
+<tr><td>数値と文字列<br>（数値の7と8で検索。文字列の行が先、数値の行が後）</td><td>先にある文字列の行に一致</td><td>数値の行に一致</td><td>元データの型をそろえる。「*」で型を無視するには <code>A2:A100&amp;""=G2&amp;""</code></td></tr>
+<tr><td>空白セル</td><td>検索値が両方空白だと、両方空白の行に一致（キーは「|」）</td><td>同じ</td><td>検索値の空白を先に判定する</td></tr>
+<tr><td>エラー値<br>（A列に<code>#N/A</code>の行がある）</td><td>その行を飛ばして、後の行に一致</td><td>同じ</td><td>IFERRORで包むと配列数式が必要になる</td></tr>
+<tr><td>大文字・小文字</td><td>区別しない（ABCでもabcの行に一致）</td><td>区別しない</td><td><code>INDEX(EXACT(A2:A100,G7)*EXACT(B2:B100,H7)=1,0)</code> を <code>MATCH(TRUE,…,0)</code> で探す（通常のEnter）</td></tr>
+<tr><td>ワイルドカード</td><td>検索値「*|X」が任意の部署に一致</td><td>文字どおり比較</td><td>記号を含むなら <code>~</code> で打ち消す</td></tr>
+<tr><td>重複</td><td colspan="2">どちらも最初の1件だけを返す</td><td>複数件が必要なら<a href="article_small_row_index_extract.html">ROW＋SMALL＋INDEX</a>、再計算が重ければ<a href="article_countif_extract.html">上行参照の連番＋INDEX＋MATCH</a></td></tr>
+<tr><td>長い検索値（300文字）</td><td><code>#VALUE!</code></td><td>エラーにならず比較（一致なしは <code>#N/A</code>）</td><td>Microsoftの説明では、MATCHの検索値に使える文字列は255文字まで</td></tr>
+</tbody>
+</table></div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-columns">5. 複数列をまとめて取得する</h2>
+<p>A列のIDで探して、B〜K列の10列を取り出す場面です。45万行のデータを想定します。</p>
+<h3>方法1：列ごとにコピーする（通常のEnter）</h3>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・通常のEnter"><span class="code-line">=INDEX(データ!$B$2:$K$450001,MATCH($A2,データ!$A$2:$A$450001,0),1)</span></div>
+<p class="code-comment">最後の1を列ごとに2、3…と変えます。1行につきMATCHが10回書かれます。</p>
+<h3>方法2：列番号を0にして配列数式で受ける</h3>
+<div class="code-block" data-lang="excel" data-label="Excel 2016：10セルを選択してCtrl+Shift+Enter"><span class="code-line">=INDEX(データ!$B$2:$K$450001,MATCH($A2,データ!$A$2:$A$450001,0),0)</span></div>
+<ol class="ix-steps">
+<li>結果を出す10セル（例：C2:L2）を横に選択します。</li>
+<li>選択したまま数式を入力します。</li>
+<li><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd>で確定します。数式が <code>{=…}</code> と表示され、10セルに値が入ります。</li>
+<li>下の行へ広げるときは、10セルをまとめて選択してコピーし、貼り付けます。</li>
+</ol>
+<p>1行につきMATCHは1回です。確認に使った小さな表（5列）でも、K4で検索して 42, 43, 44, 45, 46 が一度に返りました。</p>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">複数列取得で起きること</caption>
+<thead><tr><th>場面</th><th>結果</th></tr></thead>
+<tbody>
+<tr><td>通常の<kbd>Enter</kbd>で1セルだけに入力</td><td>取得する表の列と重ならない位置では <code>#VALUE!</code>。重なる列に置くと、その列の値だけが表示され、エラーにならないので注意が必要です。</td></tr>
+<tr><td>取得列より多いセルを選択</td><td>余ったセルは <code>#N/A</code></td></tr>
+<tr><td>配列の一部だけを変更・削除</td><td>Microsoftの説明では不可。変更は全体を選び直して行います。</td></tr>
+<tr><td>合計だけ必要な場合</td><td><code>=SUM(INDEX($B$2:$F$6,MATCH($H$2,$A$2:$A$6,0),0))</code> は通常の<kbd>Enter</kbd>で動きます。INDEXが行全体の参照を返すためです。</td></tr>
+<tr><td>Microsoft 365・Excel 2021</td><td>先頭セルに入力して<kbd>Enter</kbd>すると横にスピルします。Excel 2016にスピルはありません。</td></tr>
+</tbody>
+</table></div>
+<div class="xdemo-note-info">
+<strong>10個の独立した検索と、1回の一括取得の違い</strong><br>
+方法1は数式が独立しているので、列の入れ替えや1列だけの修正がしやすく、セルごとに書式やエラー処理も変えられます。方法2は検索が1回にまとまり、書き間違いの余地が減りますが、列の追加や修正には配列の選び直しが必要です。速度の差は<a href="#sec-speed">7章</a>の実測をご覧ください。
+</div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-xlookup">6. XLOOKUPで同じことをする</h2>
+<p><strong>XLOOKUPはExcel 2021以降とMicrosoft 365の関数で、Excel 2016では使えません。</strong>ここは比較のために載せています。ブックをExcel 2016の人と共有する場合は使わないでください。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2021以降・Microsoft 365"><span class="code-line">=XLOOKUP(A2,データ!A2:A450001,データ!B2:K450001)</span></div>
+<p class="code-comment">戻り範囲を10列にすると、右へスピルして10列が返ります。確認した小さな表でも 42, 43, 44, 45, 46 が返りました。</p>
+<p>XLOOKUPも参照を返すので、INDEXと同じように「:」でつなげます。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2021以降・Microsoft 365"><span class="code-line">=SUM(XLOOKUP("K3",A2:A6,C2:C6):XLOOKUP("K5",A2:A6,C2:C6))</span></div>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・同じ範囲をINDEXで"><span class="code-line">=SUM(INDEX(C2:C6,MATCH("K3",A2:A6,0)):INDEX(C2:C6,MATCH("K5",A2:A6,0)))</span></div>
+<p class="code-comment">どちらも結果は 129。Microsoftの説明にもXLOOKUPの戻り値を範囲として使う例があります。</p>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">INDEXとXLOOKUPの比較</caption>
+<thead><tr><th>やりたいこと</th><th>Excel 2016以降</th><th>Excel 2021以降・Microsoft 365</th></tr></thead>
+<tbody>
+<tr><td>複数列の取得</td><td><code>INDEX(範囲,MATCH(…),0)</code> を配列数式で</td><td><code>XLOOKUP(…)</code> がスピル</td></tr>
+<tr><td>範囲の作成</td><td><code>INDEX(…):INDEX(…)</code></td><td><code>XLOOKUP(…):XLOOKUP(…)</code></td></tr>
+<tr><td>未一致の表示</td><td><code>IFERROR</code> や <code>IFNA</code></td><td>第4引数で指定</td></tr>
+<tr><td>2条件</td><td><code>INDEX(…,0)</code> で包む</td><td><code>XLOOKUP(G2&amp;"|"&amp;H2,A2:A100&amp;"|"&amp;B2:B100,C2:C100)</code></td></tr>
+</tbody>
+</table></div>
+</section>
+
+<section class="method-section">
+<h2 id="sec-speed">7. 45万行での速度の実測</h2>
+<div class="xdemo-note-danger">
+<strong>この測定の読み方</strong><br>
+Microsoft 365版Excelでの測定です。<b>Excel 2016では測っていません。</b>Microsoftは、未並べ替えデータの完全一致のVLOOKUP・HLOOKUP・MATCHについて、Office 365 version 1809以降で検索列の内部キャッシュを再利用すると説明しています。そのため、Excel 2016では順位や秒数が大きく変わる可能性があります。下の数値をExcel 2016の所要時間として読まないでください。
+</div>
+<h3>測定条件</h3>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">測定条件</caption>
+<tbody>
+<tr><th>Excel</th><td>Microsoft 365版、ビルド16.0.20625、64ビット。測定日2026-11-05</td></tr>
+<tr><th>PC</th><td>Core Ultra 7 258V（8コア8スレッド）、メモリ約32GB、Windows 11。計算スレッド8</td></tr>
+<tr><th>データ</th><td>1万、10万、30万、45万行。A列はランダムな順の8文字の文字列ID（重複なし）、B〜K列は数値、ほかに数式なし</td></tr>
+<tr><th>検索</th><td>A〜Eは2,000回×10列（20,000セル）。Fは100回×位置のみ。検索値はすべて存在するIDをランダムに選択</td></tr>
+<tr><th>再計算</th><td>全体の再計算（<code>Application.CalculateFull</code>）を連続5回測定した中央値。結果の合計も照合済み</td></tr>
+</tbody>
+</table></div>
+
+<h3>方式の比較（全体の再計算）</h3>
+<div class="table-wrapper"><table class="ix-grid ix-num ix-text2"><caption class="sr-only">方式別の再計算時間（ミリ秒、中央値）</caption>
+<thead><tr><th>方式</th><th>数式の形</th><th>1万行</th><th>10万行</th><th>30万行</th><th>45万行</th></tr></thead>
+<tbody>
+<tr><td>A VLOOKUPを10列</td><td><code>VLOOKUP(id,表,列,FALSE)</code></td><td>112</td><td>1,357</td><td>5,236</td><td>8,431</td></tr>
+<tr><td>B INDEX+MATCHを10列</td><td><code>INDEX(表,MATCH(…),列)</code></td><td>124</td><td>1,358</td><td>5,482</td><td>8,355</td></tr>
+<tr><td>C 作業列＋INDEX</td><td><code>MATCH</code> を1列、<code>INDEX(表,$H2,列)</code></td><td>88</td><td>1,358</td><td>5,078</td><td>8,363</td></tr>
+<tr><td>D 配列数式（CSE）</td><td><code>{INDEX(表,MATCH(…),0)}</code></td><td>88</td><td>1,305</td><td>5,238</td><td>8,898</td></tr>
+<tr><td>E1 範囲限定（位置は既知）</td><td>1,000行の <code>INDEX:INDEX</code>、作業列</td><td class="ix-on">71</td><td class="ix-on">44</td><td class="ix-on">44</td><td class="ix-on">42</td></tr>
+<tr><td>E2 範囲限定（端をMATCH）</td><td>端の検索も作業列の中</td><td>171</td><td>1,435</td><td>5,147</td><td>9,723</td></tr>
+<tr><td>E3 範囲限定（端をMATCH、10列）</td><td>10列すべてに同じ式</td><td>272</td><td>2,219</td><td>6,130</td><td>9,260</td></tr>
+<tr><td>参考 XLOOKUP（2021以降）</td><td>1本で10列スピル</td><td>91</td><td>1,353</td><td>5,294</td><td>8,287</td></tr>
+</tbody>
+</table></div>
+<p class="code-comment" style="margin-top:8px">単位はミリ秒。E1で1万行の値が大きいのは測定の順序や負荷の影響の可能性があり、原因は確認していません。</p>
+<p><span class="evidence-label measured">実測</span>読み取れることは次の3つです。</p>
+<ul class="line-height-2">
+<li><strong>A〜Dの差は小さい：</strong>全体の再計算だけなら、45万行でどれも8秒台でした。この条件では、配列数式が作業列より遅いとも、作業列が配列数式より速いとも言えません。</li>
+<li><strong>端の位置が分かっていれば範囲限定は大きく効く：</strong>E1は45万行でも約0.04秒です。</li>
+<li><strong>端をMATCHで探すと効果が消える：</strong>E2・E3は全域検索と同じかそれ以上です。端を探すMATCHが全域を検索するためです。</li>
+</ul>
+
+<h3>時間は検索回数に比例するとは限らない</h3>
+<p>45万行で検索回数を変えました（3回の中央値、ミリ秒）。</p>
+<div class="table-wrapper"><table class="ix-grid ix-num"><caption class="sr-only">検索回数ごとの再計算時間</caption>
+<thead><tr><th>方式</th><th>200回</th><th>2,000回</th><th>20,000回</th></tr></thead>
+<tbody>
+<tr><td>B INDEX+MATCHを10列</td><td>7,438</td><td>8,282</td><td>9,463</td></tr>
+<tr><td>C 作業列＋INDEX</td><td>8,265</td><td>7,744</td><td>8,144</td></tr>
+</tbody>
+</table></div>
+<p>回数を100倍にしても、時間はほとんど増えていません。時間の大半は、検索そのものより、検索列を最初に準備する処理に使われていると考えられます（Microsoftの説明する内部キャッシュと整合しますが、Excelの内部を確認したものではありません）。行数との関係も単純な比例ではなく、方式Aの1万行と45万行では、行数の45倍に対して時間は約75倍でした。</p>
+<p>次の測定でも、キーの型と計算スレッドによって時間が変わりました。</p>
+<ul class="line-height-2">
+<li><strong>キーの型：</strong>45万行のMATCHで、文字列キーは約6.9秒、数値キーは約2.4秒でした（2,000回、列数の少ない表）。</li>
+<li><strong>計算スレッド：</strong>全域検索のA〜Dは、8スレッドで8秒台、1スレッドで約3.1〜3.5秒でした。範囲を限定したE1は、8スレッドで約42ミリ秒、1スレッドで約122ミリ秒です。スレッドが多いほど速いとは限りません。</li>
+</ul>
+
+<h3>作業列の効果が出るのは編集のとき</h3>
+<p>全体の再計算では差がなかった作業列ですが、セルを1つ変更した後の再計算（<kbd>F9</kbd>に相当、5回の中央値）では結果が大きく変わります。45万行、2,000回×10列です。</p>
+<div class="table-wrapper"><table class="ix-grid ix-num"><caption class="sr-only">セルを1つ編集した後の再計算時間</caption>
+<thead><tr><th>方式</th><th>値の列を1セル編集</th><th>キー列を1セル編集</th><th>検索値を1セル編集</th></tr></thead>
+<tbody>
+<tr><td>A VLOOKUPを10列</td><td>8,046</td><td>8,193</td><td>1.6</td></tr>
+<tr><td>B INDEX+MATCHを10列</td><td>8,197</td><td>8,362</td><td>1.5</td></tr>
+<tr><td>C 作業列＋INDEX</td><td class="ix-on">5.4</td><td>10,908</td><td>1.0</td></tr>
+<tr><td>D 配列数式（CSE）</td><td>9,228</td><td>7,765</td><td>1.1</td></tr>
+<tr><td>E1 範囲限定（位置は既知）</td><td class="ix-on">5.2</td><td class="ix-on">43</td><td>0.9</td></tr>
+</tbody>
+</table></div>
+<p class="code-comment" style="margin-top:8px">単位はミリ秒。</p>
+<p>理由は数式の依存関係です。Bの式は1本の中にMATCHとINDEXがあり、B〜K列を参照しています。そのため値の列を1セル直すと式全体が再計算され、MATCHも実行されます。Cでは、MATCHはキー列だけを参照する別のセルにあるので、値の列を直してもMATCHは実行されず、INDEXの再計算だけで済みます。</p>
+<p>キー列を編集すると、Cでも作業列のMATCHがすべて再計算されるので差はなくなります。編集するのが検索値だけなら、どの方式でも1行分の再計算で済みます。</p>
+<p><span class="evidence-label experience">実務経験</span>運営者には、45万行規模の検索でMATCHを作業列に分けて速くなった経験があります。ただし、当時の測定条件と秒数は確認できていないため、この測定と同じ原因だと断定はしません。</p>
+
+<h3>複合キーは検索回数に比例して重くなる</h3>
+<p>全域検索と違い、配列を作る方式は検索回数に比例して時間が増えました。45万行、位置だけを求める1列です（3回の中央値、ミリ秒）。</p>
+<div class="table-wrapper"><table class="ix-grid ix-num ix-text2"><caption class="sr-only">複合キー方式の検索回数別の再計算時間</caption>
+<thead><tr><th>方式</th><th>数式の形</th><th>100回</th><th>1,000回</th></tr></thead>
+<tbody>
+<tr><td>F1 文字列の配列</td><td><code>INDEX(A&amp;"|"&amp;B,0)</code></td><td>2,818</td><td>28,093</td></tr>
+<tr><td>F2 条件判定の配列</td><td><code>INDEX((A=x)*(B=y),0)</code></td><td>4,232</td><td>39,652</td></tr>
+<tr><td>F3 データ側にキー列（参考）</td><td><code>=A2&amp;"|"&amp;B2</code> を45万行＋MATCH</td><td>748</td><td class="ix-on">2,421</td></tr>
+</tbody>
+</table></div>
+<p>行数別では、F1が 1万行66、10万行684、30万行2,025、45万行3,138ミリ秒（100回）で、行数にもほぼ比例しました。「&amp;」の方が「*」より速い結果でしたが、これはこの測定のデータでの結果です。</p>
+<p>F3はキー列という作業列を増やす代わりに、1,000回でF1の約12分の1でした。Microsoftの性能ガイドも、検索のたびに文字列を連結する方法を、計算の負荷が大きいものとして挙げています。</p>
+
+<h3>INDEX:INDEX自体の負荷</h3>
+<ul class="line-height-2">
+<li>同じ全域を <code>INDEX(K,1):INDEX(K,行数)</code> で指定したMATCHは、45万行で約8.1秒で、直接指定（約8.3秒）との差は測定のばらつきの範囲でした。</li>
+<li>範囲内の値をつないでいるわけではないので、範囲を作るだけなら大きな負荷にはなりません。時間がかかるのは、その範囲を調べるMATCHや、端を探すMATCHです。</li>
+</ul>
+
+<h3>自分の環境で測る方法</h3>
+<p>VBAが使えなくても、大まかな比較はできます。作業はブックのコピーで行ってください。</p>
+<ol class="ix-steps">
+<li>「数式」タブの「計算方法の設定」を「手動」にします。</li>
+<li><strong>全体の再計算：</strong><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>F9</kbd>を押し、ステータスバーの「計算中」が消えるまでをストップウォッチで測ります。</li>
+<li><strong>編集後の再計算：</strong>普段直す種類のセルを1つ変更し、<kbd>F9</kbd>を押して測ります。</li>
+<li>それぞれ5回測り、中央値を比べます。ほかのアプリは閉じておきます。</li>
+</ol>
+</section>
+
+<section class="method-section">
+<h2 id="sec-choice">8. 作業列なしと作業列の使い分け</h2>
+<p>測定はMicrosoft 365版Excelのものなので、下の表は目安です。データが大きいときは、上の手順で実際のブックのコピーを測ってから決めてください。</p>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">状況別の方式の選び方</caption>
+<thead><tr><th>状況</th><th>向いている方式</th><th>理由</th></tr></thead>
+<tbody>
+<tr><td>数千行程度で、検索も少ない</td><td>作業列なし（<code>INDEX((A=x)*(B=y),0)</code> など）</td><td>表を変えずに済み、数式1本で完結します。</td></tr>
+<tr><td>同じキーで複数列を取り、値の列をよく編集する</td><td>検索シートに作業列（MATCH）＋INDEX</td><td>編集後の再計算でMATCHが実行されません。</td></tr>
+<tr><td>読み込んだデータを見るだけで、編集しない</td><td>保守しやすい方式</td><td>全体の再計算では方式の差が小さい結果でした。</td></tr>
+<tr><td>データがグループごとにまとまっている</td><td>小さな位置の表＋INDEX:INDEX</td><td>調べる行数を減らせます。端を全域のMATCHで探さないことが条件です。</td></tr>
+<tr><td>大量の行を複合キーで何度も検索する</td><td>データ側にキー列（区切り文字あり）</td><td>配列を毎回作らずに済みます。</td></tr>
+<tr><td>元データの形を変えられず、検索も少ない</td><td>作業列なしの複合キー</td><td>検索回数に比例する負荷を許容できる場合に限ります。</td></tr>
+<tr><td>全員がExcel 2021以降</td><td>XLOOKUP</td><td>配列数式が不要になります。Excel 2016には渡せません。</td></tr>
+</tbody>
+</table></div>
+
+<h3>作業列方式の組み方</h3>
+<p>作業列は元データではなく、<strong>検索シートの側</strong>に置けます。元の表に手を加えずに済みます。A列に検索するIDがあるとします。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・H2（作業列）"><span class="code-line">=MATCH($A2,データ!$A$2:$A$450001,0)</span></div>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・I2（右と下へコピー）"><span class="code-line">=IF(ISNA($H2),"",INDEX(データ!B$2:B$450001,$H2))</span></div>
+<p class="code-comment">列の <code>B$2:B$450001</code> は「$」を付けないので、右へコピーするとC列、D列に変わります。行は固定します。見つからないIDは <code>#N/A</code> が作業列に出て、結果の列は空欄になります。</p>
+
+<h3>段階検索の組み方：範囲限定を活かす</h3>
+<p>E1のように端の位置を速く求めるには、データが部署ごとにまとまっている場合に、別シートへ小さな位置の表を作ります。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・部署表のB2（開始位置）"><span class="code-line">=MATCH($A2,データ!$A$2:$A$450001,0)</span></div>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・部署表のC2（終了位置）"><span class="code-line">=$B2+COUNTIF(データ!$A$2:$A$450001,$A2)-1</span></div>
+<p class="code-comment">部署表のA列に部署コードを入れます。データが増えない運用なら、形式を選択して値にしておくと、再計算の対象から外せます。</p>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・検索シートのH2（部署表の行）"><span class="code-line">=MATCH($B2,部署表!$A$2:$A$451,0)</span></div>
+<div class="code-block" data-lang="excel" data-label="Excel 2016以降・検索シートのI2（データの位置）"><span class="code-line">=INDEX(部署表!$B$2:$B$451,$H2)-1+MATCH($A2,INDEX(データ!$B$2:$B$450001,INDEX(部署表!$B$2:$B$451,$H2)):INDEX(データ!$B$2:$B$450001,INDEX(部署表!$C$2:$C$451,$H2)),0)</span></div>
+<p class="code-comment">データのA列が部署、B列がIDの配置です。求めた位置は、INDEXで各列から値を取り出すのに使います。</p>
+<p><span class="evidence-label measured">実測</span>45万行、450部署、2,000回で、位置の表を値にした場合は約77ミリ秒、位置の表も数式のままだと約3.4秒でした（全域のMATCHは約6.9秒、いずれも1つの値を取得）。</p>
+<div class="xdemo-note-warn">
+<strong>段階検索の前提</strong><br>
+同じ部署の行が連続していることが前提です。データを並べ替えたり行を追加したりすると、位置の表を作り直す必要があります。位置の表を値にした場合は古い値のまま残り、エラーにならずに検索を失敗させることがあります。
+</div>
+
+<h3>保守性の比較</h3>
+<div class="table-wrapper"><table class="ref-table"><caption class="sr-only">方式ごとの保守性の比較</caption>
+<thead><tr><th>方式</th><th>良い点</th><th>注意点</th></tr></thead>
+<tbody>
+<tr><td>作業列なしの1本の式</td><td>列を増やさず、コピーしやすい</td><td>長くなりやすく、途中の結果を確認しにくい</td></tr>
+<tr><td>検索シートの作業列</td><td>途中の位置が見え、エラーの原因を切り分けやすい</td><td>列が増える。列を隠すなら説明を残す</td></tr>
+<tr><td>複数セルの配列数式</td><td>検索が1回にまとまる</td><td>一部だけの修正ができず、慣れていない人には直しにくい</td></tr>
+<tr><td>データ側のキー列</td><td>大量の検索で有利</td><td>データを貼り替えるたびに数式を伸ばす必要がある</td></tr>
+</tbody>
+</table></div>
+<p>複数行を取り出したい場合は、これらとは別の方法になります。<a href="article_small_row_index_extract.html">ROW＋SMALL＋INDEX</a>を第1候補に、再計算が重い場合は<a href="article_countif_extract.html">上行参照の連番＋INDEX＋MATCH</a>を検討してください。</p>
+</section>
+
+<section class="method-section">
+<h2 id="sec-sources">まとめと出典</h2>
+<ul class="line-height-2">
+<li>「:」は範囲を作り、「&amp;」は文字列を作ります。</li>
+<li>複合キーは <code>INDEX(A&amp;"|"&amp;B,0)</code>、複数条件は <code>INDEX((A=x)*(B=y),0)</code> で、Excel 2016でも通常の<kbd>Enter</kbd>で書けます（Excel 2016実機は未確認）。</li>
+<li>IF・IFERRORを内側に入れた式と、INDEXで包まない式には<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd>が必要です。</li>
+<li>区切りなしの連結は誤一致の原因になります。</li>
+<li>今回の測定（Microsoft 365版、45万行）では、作業列の効果は全体の再計算ではなく編集後の再計算で表れ、範囲限定は端の位置を全域のMATCHで探さないときに効きました。複合キーの配列は検索回数に比例して重くなりました。</li>
+<li>Excel 2016では同じ結果になるとは限らないので、実際のブックのコピーで測ってください。</li>
+</ul>
+<h3>出典（Microsoft公式）</h3>
+<ul class="line-height-2">
+<li><a href="https://support.microsoft.com/ja-jp/office/index-function-a5dcf0dd-996d-40a4-a822-b56b061328bd" rel="noopener" target="_blank">INDEX 関数</a>：配列形式とセル範囲形式、0の指定</li>
+<li><a href="https://support.microsoft.com/ja-jp/office/match-function-e8dffd45-c762-47d6-bf89-533f4a37673a" rel="noopener" target="_blank">MATCH 関数</a>：相対位置、最初の一致、大文字小文字、ワイルドカード</li>
+<li><a href="https://support.microsoft.com/ja-jp/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP 関数</a>：複数列の取得、範囲としての利用</li>
+<li><a href="https://support.microsoft.com/ja-jp/office/guidelines-and-examples-of-array-formulas-7d94a64e-3ff3-4686-9372-ecfd5caa57c7" rel="noopener" target="_blank">配列数式のガイドラインと例</a>：複数セルの配列数式の規則</li>
+<li><a href="https://support.microsoft.com/ja-jp/office/implicit-intersection-operator-ce3be07b-0101-4450-a24e-c1c999be2b34" rel="noopener" target="_blank">暗黙的なインターセクション演算子: @</a></li>
+<li><a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/cells-and-ranges/range-formula-vs-formula2" rel="noopener" target="_blank">Range.Formula vs Range.Formula2</a>：旧来の評価方式（英語）</li>
+<li><a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/excel-performance/excel-tips-for-optimizing-performance-obstructions" rel="noopener" target="_blank">Tips for optimizing performance obstructions</a>：MATCHの再利用、文字列連結の負荷（英語）</li>
+<li><a href="https://learn.microsoft.com/en-us/office/vba/excel/concepts/excel-performance/excel-performance-and-limit-improvements" rel="noopener" target="_blank">Excel performance and limit improvements</a>：検索キャッシュの対象バージョン（英語）</li>
+</ul>
+</section>
+
+<section class="method-section">
+<h2><span class="icon">🔗</span> 関連記事</h2>
+<ul class="line-height-2">
+<li><a href="article_index_reference_range.html">INDEX:INDEXで可変範囲を作る：SUMとMATCHで使う参照の仕組み</a></li>
+<li><a href="article_index_match_multi.html">INDEX + MATCH + 結合キー列</a></li>
+<li><a href="../latest/article_xlookup_joined_key.html">検索列2列を1つの検索値で探す方法</a></li>
+<li><a href="../../others/speed/article_01_lookup_speed.html">検索関数の速度と参照範囲</a></li>
+<li><a href="../../others/speed/article_memory_swap.html">メモリスワップと数式設計</a></li>
+</ul>
+</section>
+
+</article>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-trust" aria-label="運営情報と検証方針">
+    <p><strong>運営:</strong> Excel × No VBA Lab 運営者（個人）。VBA禁止環境でのExcel関数、Power Query、QRリーダー連携、COBOL帳票整形の実務検証メモを公開しています。</p>
+    <p><strong>想定する環境:</strong> Excel 2016 / 2019 / 2021 / 2024 / Microsoft 365、Windows版Excel、Power Query、USB-HID型QRリーダーを想定しています。関数の提供状況は更新チャネルや社内ポリシーで変わるため、実務適用前に必ずコピーで確認してください。</p>
+    <p><strong>免責:</strong> 掲載手順は業務適用前のバックアップ、権限者の承認、個人情報・機密情報を除外した検証を前提にしています。操作結果や運用判断は利用環境に合わせて確認してください。</p>
+    <p class="site-footer-links"><strong>公式参照:</strong> <a href="https://support.microsoft.com/en-us/office/excel-functions-by-category-5f91f4e9-7b42-46d2-9bd1-63f26a86c0eb" rel="noopener" target="_blank">Microsoft Excel関数一覧</a><a href="https://support.microsoft.com/en-us/office/xlookup-function-b7fd680e-6d10-43e6-84f9-88eae8bf5929" rel="noopener" target="_blank">XLOOKUP公式説明</a><a href="https://support.microsoft.com/en-us/office/power-query-for-excel-help-2b433a85-ddfb-420b-9cda-fe0e60b82a94" rel="noopener" target="_blank">Power Query公式ヘルプ</a><a href="https://learn.microsoft.com/en-us/powerquery-m/" rel="noopener" target="_blank">Power Query M言語リファレンス</a><a href="../../samples/">サンプルデータ</a></p>
+  </div>
+<div class="footer-contact-wrap">
+<a class="footer-contact-btn" href="https://forms.gle/6SnCHNWK6EcRy1XG8" rel="noopener">✉ お問い合わせ (Google Forms)</a>
+</div>
+<p>&copy; Excel × No VBA Lab — コンテンツは随時追加中です</p>
+  <p class="site-footer-legal-links">
+    <a href="../../about.html">運営者情報</a>
+    <span>|</span>
+    <a href="../../disclaimer.html">免責事項</a>
+    <span>|</span>
+    <a href="../../privacy.html">プライバシーポリシー</a>
+  </p>
+</footer>
+
+<script src="../../script.js?v=20261103"></script>
+</body>
+</html>

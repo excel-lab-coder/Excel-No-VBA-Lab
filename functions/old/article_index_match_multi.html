@@ -32,7 +32,7 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "datePublished": "2026-05-03",
-  "dateModified": "2026-11-04",
+  "dateModified": "2026-11-05",
   "headline": "INDEX + MATCH + 結合キー列",
   "author": {
     "@type": "Person",
@@ -94,7 +94,7 @@
 <div class="article-header">
 <div class="article-meta">
 <span class="badge badge-all">Excel 2016以降</span>
-<span class="article-date">更新日: 2026-11-04</span></div>
+<span class="article-date">更新日: 2026-11-05</span></div>
 <h1 class="article-title">INDEX + MATCH + 結合キー列：Excel 2016以降対応の「旧来型・多条件検索」</h1>
 </div>
 <section class="goal-section">
@@ -151,17 +151,17 @@
 <h3>実務での注意点</h3>
 <h4>結合するときは区切り文字を入れる</h4>
 <p>そのまま結合すると、「1」と「23」も「12」と「3」も同じ「123」になり、別のデータを拾うおそれがあります。データに出てこない記号をはさむと防げます。</p>
-<div class="code-block" data-lang="excel">
-<span class="code-line">=B2&amp;"|"&amp;C2</span>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=B2&amp;"|"&amp;C2</span>
 </div>
-<div class="code-block" data-lang="excel">
-<span class="code-line">=INDEX($D:$D, MATCH(F2&amp;"|"&amp;G2, $A:$A, 0))</span>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=INDEX($D:$D, MATCH(F2&amp;"|"&amp;G2, $A:$A, 0))</span>
 </div>
 <p class="code-comment">F2に店舗、G2に商品を入力する例です。検索する値も、同じ形で結合します。</p>
 <h4>作業列を追加できない場合</h4>
 <p>表の形を変えられないときは、条件を掛け算する書き方があります。Excel 2016でも、配列数式（<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd>）にせず使えます。</p>
-<div class="code-block" data-lang="excel">
-<span class="code-line">=INDEX(D2:D100, MATCH(1, INDEX((B2:B100=F2)*(C2:C100=G2),0), 0))</span>
+<div class="code-block" data-lang="excel">
+<span class="code-line">=INDEX(D2:D100, MATCH(1, INDEX((B2:B100=F2)*(C2:C100=G2),0), 0))</span>
 </div>
 <p class="code-comment">両方の条件に合う行だけが 1 になり、その最初の位置をMATCHで探します。範囲が広いと重くなるので、必要な行に絞って指定します。</p>
 </section>
@@ -172,6 +172,7 @@
 <li><a href="../latest/article_xlookup_multi.html">XLOOKUP ネスト（多条件検索）</a></li>
 <li><a href="../latest/article_xlookup_joined_key.html">検索列2列を1つの検索値で探す方法</a></li>
 <li><a href="article_countifs_serial_number.html">複数条件に合う行だけ連番を振る方法</a></li>
+<li><a href="article_index_compound_lookup.html">応用編：INDEX&amp;INDEXと複合検索・45万行の実測</a></li>
 </ul>
 </section>
 
