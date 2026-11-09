@@ -1320,32 +1320,6 @@
     },
     {
       "category": "qr",
-      "subcategory": "transfer",
-      "title": "⑨ QRコードで閉域環境のデータ転送 — ネットワーク不要・紙だけでExcelデータを別PCに移す",
-      "url": "qr/09_qr_closed_transfer.html",
-      "summary": "USBメモリ禁止・ネット接続不可でも、紙のQRコードだけでデータ転送する方法を解説します。",
-      "level": 6,
-      "tags": [
-        "impact"
-      ],
-      "version": "Excel 2016以降",
-      "min_excel": 2016
-    },
-    {
-      "category": "qr",
-      "subcategory": "transfer",
-      "title": "⑩ QRコードによるシステム間データ移行を検証する",
-      "url": "qr/10_qr_system_migration.html",
-      "summary": "APIもCSVインポートもなく、VBA・マクロも禁止された新システムへQRリーダーで流し込む移行手法です。",
-      "level": 7,
-      "tags": [
-        "impact"
-      ],
-      "version": "Excel 2016以降",
-      "min_excel": 2016
-    },
-    {
-      "category": "qr",
       "subcategory": "reader_check",
       "title": "⑫ 会社にあるQRリーダーでまず試す — メモ帳・Excel・Webシステムで安全確認",
       "url": "qr/12_qr_existing_reader_check.html",

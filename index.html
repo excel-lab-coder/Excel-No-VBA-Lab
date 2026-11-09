@@ -133,8 +133,6 @@
     { "@type": "ListItem", "position": 15, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/others/speed/article_01_lookup_speed.html", "name": "検索関数の速度と参照範囲" },
     { "@type": "ListItem", "position": 16, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/01_qr_barcode_control.html", "name": "① QRコードでWebシステム入力を自動化 — Excelで作ったQRにTab・Enterを埋め込む" },
     { "@type": "ListItem", "position": 17, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/07_qr_full_system.html", "name": "⑦ QRリーダー設定の全体像 — Webシステム入力向けフルシステム構築ガイド" },
-    { "@type": "ListItem", "position": 18, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/09_qr_closed_transfer.html", "name": "⑨ QRコードで閉域環境のデータ転送 — ネットワーク不要・紙だけでExcelデータを別PCに移す" },
-    { "@type": "ListItem", "position": 19, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/10_qr_system_migration.html", "name": "⑩ QRコードによるシステム間データ移行を検証する" },
         { "@type": "ListItem", "position": 20, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/14_qr_zebra_adf.html", "name": "⑭ Zebra 123Scan / ADF検証メモ — 区切り文字・ポーズ・可変件数の注意点" },
     { "@type": "ListItem", "position": 21, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/15_qr_honeywell_data_formatter.html", "name": "⑮ Honeywell EZConfig / Data Formatter検証メモ — NumEnter・ポーズ・設定紙展開の注意点" },
     { "@type": "ListItem", "position": 22, "url": "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/16_qr_opticon_universalconfig_streaming_control.html", "name": "⑯ Opticon / UniversalConfig実機検証メモ — 順次送信方式・Sleep・キー変換" },
@@ -590,7 +588,7 @@
 
         <p class="qr-desc">
           VBA・マクロ・RPA・PowerShellすべてが禁止された環境でも、Excelで作ったQR用データと<strong>QRリーダー／バーコードリーダー本体のキー送信設定</strong>を組み合わせて「読み取り → セル入力 → Tab移動 → 次の読み取り」を自動化。<br>
-          さらに閉域環境へのデータ転送、システム間データ移行まで。全角QR生成の記事は現在、動作再確認のため一時非公開です。<br>
+          全角QR生成の記事は現在、動作再確認のため一時非公開です。<br>
           Excel側の設計・QR生成・リーダー設定・実機検証までまとめて扱います。
         </p>
 
@@ -1386,12 +1384,6 @@
           <div class="curated-card-tags"><span class="tag-impact">🔥 即戦力</span><span class="tag-rare">💎 複合設計</span></div>
         </article>
         <article class="curated-card curated-card-combined">
-          <div class="curated-card-meta"><span class="curated-category">閉域データ転送</span><span class="rank-badge lv6">Lv.6</span></div>
-          <h3><a href="qr/09_qr_closed_transfer.html">ネットワーク不要・紙のQRで別PCへデータ転送</a></h3>
-          <p>USBメモリやネット接続を使いにくい環境で、QRをデータの受け渡し手段として利用します。</p>
-          <div class="curated-card-tags"><span class="tag-impact">🔥 制約環境向け</span><span class="tag-rare">💎 応用例</span></div>
-        </article>
-        <article class="curated-card curated-card-combined">
           <div class="curated-card-meta"><span class="curated-category">Word × QR</span><span class="rank-badge lv5">Lv.5</span></div>
           <h3><a href="others/word/article_mailmerge_qrcode.html">Word差し込み印刷でQRコードを差し込む</a></h3>
           <p>Excelの値をWord側でQR化し、宛名・案内・個別票へレコードごとに差し込みます。</p>
@@ -1547,12 +1539,6 @@
           <h3><a href="cobol/formula/05_article_cobol_qr_bridge.html">固定長帳票の対象者を別システムへQR入力</a></h3>
           <p>帳票から対象者だけを抽出し、半角QRを介して次の入力作業まで短縮します。</p>
           <div class="curated-card-tags"><span class="tag-impact">🔥 業務連携</span></div>
-        </article>
-        <article class="curated-card curated-card-impact">
-          <div class="curated-card-meta"><span class="curated-category">閉域データ転送</span><span class="rank-badge lv6">Lv.6</span></div>
-          <h3><a href="qr/09_qr_closed_transfer.html">紙のQRでネットワーク分離PCへデータを渡す</a></h3>
-          <p>ネット接続や外部記憶媒体を使いにくい環境で、少量データを物理的に受け渡します。</p>
-          <div class="curated-card-tags"><span class="tag-impact">🔥 制約環境向け</span></div>
         </article>
         <article class="curated-card curated-card-impact">
           <div class="curated-card-meta"><span class="curated-category">入力シート設計</span><span class="rank-badge lv3">Lv.3</span></div>
@@ -2984,7 +2970,7 @@
       VBA・マクロ・RPA・PowerShellすべてが禁止された環境でも、
       <strong>Excelで作ったQR用データ</strong>と
       <strong>QRリーダー本体のキー送信設定</strong>を組み合わせることで入力作業を自動化できます。
-      さらに閉域環境へのデータ転送、システム間移行まで扱います。全角QR生成の記事は現在、動作再確認のため一時非公開です。
+      全角QR生成の記事は現在、動作再確認のため一時非公開です。
       <strong>Excel側の設計・QR生成・リーダー設定・実機検証を組み合わせる</strong>アプローチです。
       QRリーダーはキーボード扱いのため多くのソフトに入力できますが、条件分岐はできません。
       画面判断はExcel側の事前設計や人間の確認に寄せるのが基本です。
@@ -3123,7 +3109,7 @@
     </li>
   </ul>
 
-  <h3 class="subcategory-heading">🔒 セクション2：機材選定・データ転送・移行シリーズ（全3記事）</h3>
+  <h3 class="subcategory-heading">🔒 セクション2：機材選定</h3>
 
   <ul class="article-list" id="list-qr-transfer">
     <li class="article-item">
@@ -3136,25 +3122,8 @@
       <p class="article-summary">筆者が検証した機種を中心に、選び方・USB-HID接続・設定方法まで解説します。</p>
     </li>
 
-    <li class="article-item">
-      <div class="level-bar lv-6">
-        <span class="level-label">Lv.6 かなり難</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
-      </div>
-      <a class="article-link" href="qr/09_qr_closed_transfer.html">⑨ QRコードで閉域環境のデータ転送 — ネットワーク不要・紙だけでExcelデータを別PCに移す</a>
-      <p class="article-summary">USBメモリ禁止・ネット接続不可でも、紙のQRコードだけでデータ転送する方法を解説します。</p>
-    </li>
-
-    <li class="article-item">
-      <div class="level-bar lv-7">
-        <span class="level-label">仕組みを解説</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
-      </div>
-      <a class="article-link" href="qr/10_qr_system_migration.html">⑩ QRコードによるシステム間データ移行を検証する</a>
-      <p class="article-summary">APIもCSVインポートもなく、VBA・マクロも禁止された新システムへQRリーダーで流し込む移行手法です。</p>
-    </li>
+    <li class="article-item article-item-note"><p class="article-summary">⑨ 欠番</p></li>
+    <li class="article-item article-item-note"><p class="article-summary">⑩ 欠番</p></li>
     <li class="article-item article-item-note"><p class="article-summary">⑪（全角QR生成VBA）は内容見直しのため一時非公開です。番号は欠番のままにしています。</p></li>
 
 

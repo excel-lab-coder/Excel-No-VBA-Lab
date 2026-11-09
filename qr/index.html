@@ -132,18 +132,6 @@
                     },
                     {
                         "@type":  "CreativeWork",
-                        "name":  "記事⑨ 閉域環境データ転送",
-                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/09_qr_closed_transfer.html",
-                        "position":  9
-                    },
-                    {
-                        "@type":  "CreativeWork",
-                        "name":  "記事⑩ システム間データ移行",
-                        "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/10_qr_system_migration.html",
-                        "position":  10
-                    },
-                    {
-                        "@type":  "CreativeWork",
                         "name":  "記事⑫ 会社にあるQRリーダーでまず試す",
                         "url":  "https://excel-lab-coder.github.io/Excel-No-VBA-Lab/qr/12_qr_existing_reader_check.html",
                         "position":  12
@@ -369,7 +357,7 @@
       VBA・マクロ・RPA・PowerShellすべてが禁止された環境でも、
       <strong>Excelで作ったQR用データ</strong>と
       <strong>QRリーダー本体のキー送信設定</strong>を組み合わせることで入力作業を自動化できます。
-      さらに閉域環境へのデータ転送、システム間移行まで扱います。全角QR生成の記事は現在、動作再確認のため一時非公開です。
+      全角QR生成の記事は現在、動作再確認のため一時非公開です。
       <strong>Excel側の設計・QR生成・リーダー設定・実機検証を組み合わせる</strong>アプローチです。
     </p>
 
@@ -501,7 +489,7 @@
     </li>
   </ul>
 
-  <h3 class="subcategory-heading">🔒 セクション2：機材選定・データ転送・移行シリーズ（全3記事）</h3>
+  <h3 class="subcategory-heading">🔒 セクション2：機材選定</h3>
 
   <ul class="article-list" id="list-qr-transfer">
     <li class="article-item">
@@ -514,25 +502,8 @@
       <p class="article-summary">筆者が検証した機種を中心に、選び方・USB-HID接続・設定方法まで解説します。</p>
     </li>
 
-    <li class="article-item">
-      <div class="level-bar lv-6">
-        <span class="level-label">Lv.6 かなり難</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
-      </div>
-      <a class="article-link" href="../qr/09_qr_closed_transfer.html">⑨ QRコードで閉域環境のデータ転送 — ネットワーク不要・紙だけでExcelデータを別PCに移す</a>
-      <p class="article-summary">USBメモリ禁止・ネット接続不可でも、紙のQRコードだけでデータ転送する方法を解説します。</p>
-    </li>
-
-    <li class="article-item">
-      <div class="level-bar lv-7">
-        <span class="level-label">仕組みを解説</span>
-        <span class="level-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
-        <span class="tag-row"><span class="tag-impact">🔥 即戦力</span></span>
-      </div>
-      <a class="article-link" href="../qr/10_qr_system_migration.html">⑩ QRコードによるシステム間データ移行を検証する</a>
-      <p class="article-summary">APIもCSVインポートもない新システムに、QRリーダーでデータを流し込む移行手法です。</p>
-    </li>
+    <li class="article-item article-item-note"><p class="article-summary">⑨ 欠番</p></li>
+    <li class="article-item article-item-note"><p class="article-summary">⑩ 欠番</p></li>
     <li class="article-item article-item-note"><p class="article-summary">⑪（全角QR生成VBA）は内容見直しのため一時非公開です。番号は欠番のままにしています。</p></li>
 
 
@@ -644,7 +615,6 @@
       <li><a class="article-link" href="./15_qr_honeywell_data_formatter.html">13. 記事⑮ <span class="maker-name maker-honeywell">Honeywell<span class="maker-kana">ハネウェル</span></span><br><span class="maker-tool">EZConfig / Data Formatter</span><br><span class="maker-topic">NumEnter・Delay・設定紙展開</span></a><p class="article-summary">HoneywellでKey Strokes側の扱いを確認する。</p></li>
       <li><a class="article-link" href="./16_qr_opticon_universalconfig_streaming_control.html">14. 記事⑯ <span class="maker-name maker-opticon">Opticon<span class="maker-kana">オプト</span></span><br><span class="maker-tool">UniversalConfig</span><br><span class="maker-topic">順次送信方式・Sleep・キー変換</span></a><p class="article-summary">Opticonの入力制御と設定保存・復元を確認する。</p></li>
       <li><a class="article-link" href="./17_qr_reader_recommendation_opticon_zebra_honeywell.html">15. 記事⑰ QRリーダー選定比較<br><span class="maker-compare-line"><span class="maker-name maker-opticon">Opticon<span class="maker-kana">オプト</span></span><span class="maker-name maker-zebra">Zebra<span class="maker-kana">ゼブラ</span></span><span class="maker-name maker-honeywell">Honeywell<span class="maker-kana">ハネウェル</span></span></span></a><p class="article-summary">どのメーカーを選ぶか、現場運用と復旧性から決める。</p></li>
-      <li><a class="article-link" href="./09_qr_closed_transfer.html">16. 記事⑨ 閉域環境データ転送</a><p class="article-summary">入力自動化を紙ベースのデータ転送へ広げる。</p></li>
       <li><a class="article-link" href="./19_qr_rpa_selenium_excel_qr_alternative.html">17. 記事⑲ RPA・Selenium代替案</a><p class="article-summary">キーボード扱いで広く動く強みと、条件分岐できない限界を確認する。</p></li>
     </ul>
   </section>
